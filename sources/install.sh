@@ -1,8 +1,6 @@
 #!/bin/bash
 # Author: Charlie BROMBERG (Shutdown - @_nwodtuhs)
 
-VERSION="3.1.12.dev"
-
 RED='\033[1;31m'
 BLUE='\033[1;34m'
 GREEN='\033[1;32m'
@@ -319,7 +317,8 @@ function install_impacket() {
   # 1291: [dacledit] New example script for DACL manipulation
   git config --global user.email "exegol@install.er"
   git config --global user.name "Exegol installer"
-  prs="1063 1090 1135 1154 1171 1177 1184 1201 1202 1224 1241 1249 1253 1256 1267 1270 1273 1275 1280 1288 1289 1290 1291"
+  # failing PRs: 1177 1241 1289 1290
+  prs="1063 1090 1135 1154 1171 1184 1201 1202 1224 1249 1253 1256 1267 1270 1273 1275 1280 1288 1291"
   for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --no-edit pull/$pr; done
   python3 -m pip install .
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
@@ -1192,10 +1191,10 @@ function ruler() {
 
 function ghidra() {
   colorecho "Installing Ghidra"
-  apt-get -y install openjdk-14-jdk
-  wget -P /tmp/ "https://ghidra-sre.org/ghidra_9.2.3_PUBLIC_20210325.zip"
-  unzip /tmp/ghidra_9.2.3_PUBLIC_20210325.zip -d /opt/tools
-  rm /tmp/ghidra_9.2.3_PUBLIC_20210325.zip
+  apt-get -y install openjdk-17-jdk
+  wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
+  unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
+  rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
 }
 
 function burp() {
@@ -1905,7 +1904,6 @@ function install_crackhound() {
 
 function install_base() {
   update || exit
-  echo $VERSION > /opt/.exegol_version
   echo '# Debian sources' | tee -a /etc/apt/sources.list
   echo 'deb http://deb.debian.org/debian/ bullseye main' | tee -a /etc/apt/sources.list
   echo 'deb-src http://deb.debian.org/debian/ bullseye main' | tee -a /etc/apt/sources.list
