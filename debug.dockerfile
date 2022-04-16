@@ -12,5 +12,7 @@ LABEL org.exegol.build_date="${BUILD_DATE}"
 LABEL org.exegol.app="Exegol"
 LABEL org.exegol.src_repository="https://github.com/ShutdownRepo/Exegol"
 
+RUN apt-get update && apt-get install zsh -y
+
 WORKDIR /data
 #CMD ["/bin/zsh"]
