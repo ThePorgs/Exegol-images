@@ -1,0 +1,3 @@
+- find a better way to install the tools (exegol repo?)
+- improve history and aliases so that only those of installed tools are present
+- find a better solution to aliases (/opt/tools/bin for symbolic links and aliases for commands with preset args?)
