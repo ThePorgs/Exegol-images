@@ -720,7 +720,7 @@ function gf_install() {
   gf -save redirect -HanrE 'url=|rt=|cgi-bin/redirect.cgi|continue=|dest=|destination=|go=|out=|redir=|redirect_uri=|redirect_url=|return=|return_path=|returnTo=|rurl=|target=|view=|from_url=|load_url=|file_url=|page_url=|file_name=|page=|folder=|folder_url=|login_url=|img_url=|return_url=|return_to=|next=|redirect=|redirect_to=|logout=|checkout=|checkout_url=|goto=|next_page=|file=|load_file='
 }
 
-function rockyou() {
+function decompress_rockyou() {
   colorecho "Decompressing rockyou.txt"
   gunzip -d /usr/share/wordlists/rockyou.txt.gz
 }
@@ -2070,6 +2070,7 @@ function install_wordlists_tools() {
   fapt cewl                       # Wordlist generator
   fapt cupp                       # User password profiler
   install_pass_station            # Default credentials database
+  decompress_rockyou
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
@@ -2498,7 +2499,7 @@ function install_resources() {
   mimipy
   plink
   deepce
-  rockyou
+  decompress_rockyou
   webshells
   mailsniper
   ysoserial_net
