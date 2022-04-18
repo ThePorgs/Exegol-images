@@ -1,4 +1,6 @@
 #!/bin/bash
+# Exit on error
+set -e
 
 echo "Running build hook !"
 TAG_COMMAND="-t $IMAGE_NAME"

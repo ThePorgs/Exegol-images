@@ -1,4 +1,6 @@
 #!/bin/bash
+# Exit on error
+set -e
 
 echo "Running push hook !"
 echo "Pushing every tag for docker repo $DOCKER_REPO"
