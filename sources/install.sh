@@ -2232,7 +2232,6 @@ function install_wordlists_tools() {
   fapt cewl                       # Wordlist generator
   fapt cupp                       # User password profiler
   install_pass_station            # Default credentials database
-  decompress_rockyou
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
