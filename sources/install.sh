@@ -300,7 +300,6 @@ function install_impacket() {
   colorecho "Installing Impacket scripts"
   git -C /opt/tools/ clone https://github.com/SecureAuthCorp/impacket
   cd /opt/tools/impacket/
-  # 1063: [ntlmrelayx] User-defined password for LDAP attack addComputer
   # 1090: [secretsdump] added custom ldap filter argument
   # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
   # 1154: [ntlmrelayx] Unfiltered SID query when operating ACL attack
@@ -310,14 +309,10 @@ function install_impacket() {
   # 1201: [describeTicket] Added describeTicket
   # 1202: [getST] Added self for getST
   # 1224: [renameMachine] Added renameMachine.py
-  # 1241: [ntlmrelayx] Multiple HTTP listeners at the same time
-  # 1249: [ntlmrelayx] Shadow Credentials in ntlmrelayx.py
   # 1253: [ntlmrelayx] Added LSA dump on top of SAM dump for ntlmrelayx
   # 1256: [tgssub] Added tgssub script for service substitution
   # 1267: [Get-GPPPasswords] Better handling of various XML files in Group Policy Preferences
   # 1270: [ticketer] Fix ticketer duration to support default 10 hours tickets
-  # 1273: [ntlmrelayx] Added flag --disable-multi
-  # 1275: [ntlmrelayx] Only dump AD CS once
   # 1280: [machineAccountQuota] added machineAccountQuota.py
   # 1288: [ntlmrelayx] LDAP attack: bypass computer creation restrictions with CVE-2021-34470
   # 1289: [ntlmrelayx] LDAP attack: Add DNS records through LDAP
@@ -325,8 +320,8 @@ function install_impacket() {
   # 1291: [dacledit] New example script for DACL manipulation
   git config --global user.email "exegol@install.er"
   git config --global user.name "Exegol installer"
-  prs="1063 1090 1135 1154 1171 1177 1184 1201 1202 1224 1241 1249 1253 1256 1267 1270 1273 1275 1280 1288 1289 1290 1291"
-  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge -X theirs --no-edit pull/$pr; done
+  prs="1090 1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291"
+  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
   python3 -m pip install .
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
@@ -573,7 +568,7 @@ function install_simplyemail() {
   colorecho "Installing SimplyEmail"
   git -C /opt/tools/ clone https://github.com/SimplySecurity/SimplyEmail.git
   cd /opt/tools/SimplyEmail/
-  sudo bash setup/setup.sh
+  sudo bash setup/setup.sh #TODO update install process ?
 }
 
 function privexchange() {
@@ -726,11 +721,6 @@ function gf_install() {
   cp -rv ~/go/src/github.com/tomnomnom/gf/examples/* ~/.gf
   # TODO: fix this when building : cp: cannot stat '/root/go/src/github.com/tomnomnom/gf/examples/*': No such file or directory
   gf -save redirect -HanrE 'url=|rt=|cgi-bin/redirect.cgi|continue=|dest=|destination=|go=|out=|redir=|redirect_uri=|redirect_url=|return=|return_path=|returnTo=|rurl=|target=|view=|from_url=|load_url=|file_url=|page_url=|file_name=|page=|folder=|folder_url=|login_url=|img_url=|return_url=|return_to=|next=|redirect=|redirect_to=|logout=|checkout=|checkout_url=|goto=|next_page=|file=|load_file='
-}
-
-function rockyou() {
-  colorecho "Decompressing rockyou.txt"
-  gunzip -d /usr/share/wordlists/rockyou.txt.gz
 }
 
 function rbcd-attack() {
@@ -1389,8 +1379,12 @@ function hashonymize() {
 
 function install_theHarvester() {
   colorecho "Installing theHarvester"
-  python3 -m pip install censys
-  apt -y install theharvester
+  apt-get install -y python3-virtualenv
+  cd /opt/tools/
+  git clone https://github.com/laramies/theHarvester
+  cd theHarvester
+  virtualenv -p /usr/bin/python3 /opt/tools/theHavester-venv
+  python3 -c "import os; os.system('virtualenv -p /usr/bin/python3 theharvenv 2>/dev/null && . theharvenv/bin/activate && python3 -m pip install -r requirements.txt');"
 }
 
 function install_pcsc() {
@@ -1401,16 +1395,17 @@ function install_pcsc() {
 function install_libnfc() {
   colorecho "Installing libnfc"
   apt install -y libnfc-dev libnfc-bin
-  cd /opt/tools/
-  wget http://dl.bintray.com/nfc-tools/sources/libnfc-1.7.1.tar.bz2
-  tar xjf libnfc-1.7.1.tar.bz2
-  cd libnfc-1.7.1
-  ./configure --with-drivers=all
-  make
-  make install
-  ldconfig
-  cd ../
-  rm libnfc-1.7.1.tar.bz2
+  # TODO fixme
+  #cd /opt/tools/
+  #wget http://dl.bintray.com/nfc-tools/sources/libnfc-1.7.1.tar.bz2 #broken link
+  #tar xjf libnfc-1.7.1.tar.bz2
+  #cd libnfc-1.7.1
+  #./configure --with-drivers=all
+  #make
+  #make install
+  #ldconfig
+  #cd ../
+  #rm libnfc-1.7.1.tar.bz2
 }
 
 function install_mfoc() {
@@ -2670,7 +2665,7 @@ function install_resources() {
   mimipy
   plink
   deepce
-  rockyou
+  install_wordlists
   webshells
   mailsniper
   ysoserial_net

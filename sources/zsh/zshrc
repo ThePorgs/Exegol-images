@@ -34,3 +34,8 @@ export PATH="$PATH:/root/.local/bin"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en
+
+
+function theharvester(){
+    python3 -c "import os; os.system('cd /opt/tools/theHarvester && . theharvenv/bin/activate && python3 theHarvester.py ""$@""');"
+}
