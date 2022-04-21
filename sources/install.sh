@@ -1906,12 +1906,14 @@ function install_searchsploit() {
   git clone https://github.com/offensive-security/exploitdb.git /opt/exploit-database
   ln -sf /opt/exploit-database/searchsploit /usr/local/bin/searchsploit
   cp -n /opt/exploit-database/.searchsploit_rc ~/
+  sed -i 's/\(.*[pP]aper.*\)/#\1/' ~/.searchsploit_rc
   searchsploit -u
 }
 
 function install_seclists(){
   colorecho "Installing Seclists"
   git -C /usr/share/ clone https://github.com/danielmiessler/SecLists.git seclists
+  cd /usr/share/seclists && rm -r LICENSE .git* CONTRIBUT* .bin
 }
 
 function install_wordlists(){
