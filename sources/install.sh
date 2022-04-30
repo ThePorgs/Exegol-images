@@ -197,6 +197,7 @@ function NoSQLMap() {
 }
 
 function install_odat() {
+  colorecho "Installing odat"
   odat_latest=$(curl -L -s https://github.com/quentinhardy/odat/releases/latest | grep tar.gz | cut -d '"' -f 2 | head -1)
   wget "https://github.com/$odat_latest" -O /tmp/odat_latest.tar.gz
   mkdir -p /opt/tools/odat
@@ -1923,7 +1924,7 @@ function install_base() {
   fapt python3                    # Python 3 language
   fapt python2-dev                # Python 2 language (dev version)
   fapt python3-dev                # Python 3 language (dev version)
-  fapt python3.9-venv
+  fapt python3-venv
   ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
   python-pip                      # Pip
   fapt python3-pip                # Pip
