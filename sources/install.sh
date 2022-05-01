@@ -32,16 +32,6 @@ function filesystem() {
   mkdir -p /opt/tools/
   mkdir -p /opt/tools/bin/
   mkdir -p /data/
-  mkdir -p /opt/resources/
-  mkdir -p /opt/resources/windows/
-  mkdir -p /opt/resources/linux/
-  mkdir -p /opt/resources/mac/
-  mkdir -p /opt/resources/cracking/
-  mkdir -p /opt/resources/webshells/
-  mkdir -p /opt/resources/webshells/PHP/
-  mkdir -p /opt/resources/webshells/ASPX/
-  mkdir -p /opt/resources/webshells/JSP/
-  mkdir -p "/opt/resources/encrypted disks/"
 }
 
 function install_ohmyzsh() {
@@ -330,6 +320,8 @@ function install_bloodhound.py() {
 
 function neo4j_install() {
   colorecho "Installing neo4j"
+  fapt openjdk-11-jre
+  update-java-alternatives --jre --set java-1.11.0-openjdk-amd64
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
   apt-get update
@@ -770,17 +762,6 @@ function install_ysoserial() {
   wget -O /opt/tools/ysoserial/ysoserial.jar "https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar"
 }
 
-function ysoserial_net() {
-  colorecho "Downloading ysoserial"
-  url=$(curl -s https://github.com/pwntester/ysoserial.net/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')
-  tag=${url##*/}
-  prefix=${tag:1}
-  wget -O /tmp/ysoserial_net.zip "$url/ysoserial-$prefix.zip"
-  unzip -d /opt/resources/windows/ /tmp/ysoserial_net.zip
-  mv /opt/resources/windows/Release/ /opt/resources/windows/ysoserial.net
-  rm /tmp/ysoserial_net.zip
-}
-
 function phpggc(){
   colorecho "Installing phpggc"
   git -C /opt/tools clone https://github.com/ambionics/phpggc.git
@@ -831,189 +812,6 @@ function install_proxmark3() {
 function checksec_py() {
   colorecho "Installing checksec.py"
   python3 -m pip install checksec.py
-}
-
-function sysinternals() {
-  colorecho "Downloading SysinternalsSuite"
-  wget -O /opt/resources/windows/sysinternals.zip "https://download.sysinternals.com/files/SysinternalsSuite.zip"
-  unzip -d /opt/resources/windows/sysinternals /opt/resources/windows/sysinternals.zip
-  rm /opt/resources/windows/sysinternals.zip
-}
-
-function winenum() {
-  colorecho "Downloading WinEnum"
-  git -C /opt/resources/windows/ clone https://github.com/mattiareggiani/WinEnum
-}
-
-function pspy() {
-  colorecho "Downloading pspy"
-  mkdir -p /opt/resources/linux/pspy
-  wget -O /opt/resources/linux/pspy/pspy32 "$(curl -s https://github.com/DominicBreuker/pspy/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/pspy32"
-  wget -O /opt/resources/linux/pspy/pspy64 "$(curl -s https://github.com/DominicBreuker/pspy/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/pspy64"
-  wget -O /opt/resources/linux/pspy/pspy32s "$(curl -s https://github.com/DominicBreuker/pspy/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/pspy32s"
-  wget -O /opt/resources/linux/pspy/pspy64s "$(curl -s https://github.com/DominicBreuker/pspy/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/pspy64s"
-}
-
-function peass() {
-  colorecho "Downloading PEAS Suite"
-  git -C /opt/resources/ clone https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite
-  cp -v /opt/resources/windows/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe /opt/resources/windows/winPEAS/winPEAS_x64.exe
-  cp -v /opt/resources/windows/winPEAS/winPEASexe/winPEAS/bin/x86/Release/winPEAS.exe /opt/resources/windows/winPEAS/winPEAS_x86.exe
-  mv /opt/resources/privilege-escalation-awesome-scripts-suite/linPEAS /opt/resources/linux
-  mv /opt/resources/privilege-escalation-awesome-scripts-suite/winPEAS /opt/resources/windows
-  rm -r /opt/resources/privilege-escalation-awesome-scripts-suite
-}
-
-function linux_smart_enumeration() {
-  colorecho "Downloading Linux Smart Enumeration"
-  wget -O /opt/resources/linux/lse.sh "https://github.com/diego-treitos/linux-smart-enumeration/raw/master/lse.sh"
-}
-
-function linenum() {
-  colorecho "Downloading LinEnum"
-  wget -O /opt/resources/linux/LinEnum.sh "https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"
-}
-
-function linux_exploit_suggester() {
-  colorecho "Downloading Linux Exploit Suggester"
-  wget -O /opt/resources/linux/les.sh "https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh"
-}
-
-function mimikatz() {
-  colorecho "Downloading mimikatz"
-  wget -O /opt/resources/windows/mimikatz.zip "$(curl -s https://github.com/gentilkiwi/mimikatz/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/mimikatz_trunk.zip"
-  unzip -d /opt/resources/windows/mimikatz /opt/resources/windows/mimikatz.zip
-}
-
-function mailsniper() {
-  colorecho "Downloading MailSniper"
-  git -C /opt/resources/windows/ clone https://github.com/dafthack/MailSniper
-}
-
-function nishang() {
-  colorecho "Downloading Nishang"
-  git -C /opt/resources/windows/ clone https://github.com/samratashok/nishang.git
-}
-
-function powersploit() {
-  colorecho "Downloading PowerSploit"
-  git -C /opt/resources/windows/ clone https://github.com/PowerShellMafia/PowerSploit
-}
-
-function privesccheck() {
-  colorecho "Downloading PrivescCheck"
-  git -C /opt/resources/windows/ clone https://github.com/itm4n/PrivescCheck
-}
-
-function sharpcollection() {
-  colorecho "Downloading SharpCollection"
-  git -C /opt/resources/windows/ clone https://github.com/Flangvik/SharpCollection
-}
-
-function rubeus() {
-  colorecho "Downloading Rubeus"
-  wget -P /opt/resources/windows/ "https://gitlab.com/onemask/pentest-tools/-/raw/master/windows/Rubeus_3.exe"
-  wget -P /opt/resources/windows/ "https://gitlab.com/onemask/pentest-tools/-/raw/master/windows/Rubeus_4.5.exe"
-}
-
-function inveigh() {
-  colorecho "Downloading Inveigh"
-  git -C /opt/resources/windows/ clone https://github.com/Kevin-Robertson/Inveigh
-}
-
-function sharphound() {
-  colorecho "Downloading SharpHound"
-  wget -P /opt/resources/windows/ "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Collectors/SharpHound.exe"
-  wget -P /opt/resources/windows/ "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Collectors/SharpHound.ps1"
-}
-
-function azurehound() {
-  colorecho "Downloading AzureHound"
-  wget -P /opt/resources/windows/ "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Collectors/AzureHound.ps1"
-}
-
-function juicypotato() {
-  colorecho "Downloading JuicyPotato"
-  wget -P /opt/resources/windows/ "$(curl -s https://github.com/ohpe/juicy-potato/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/JuicyPotato.exe"
-}
-
-function impacket_windows() {
-  colorecho "Downloading Impacket examples for Windows"
-  git -C /opt/resources/windows/ clone https://github.com/maaaaz/impacket-examples-windows
-}
-
-function webshells() {
-  colorecho "Downloading webshells"
-  git -C /opt/resources/webshells/PHP/ clone https://github.com/mIcHyAmRaNe/wso-webshell
-  # Setting password to exegol4thewin
-  sed -i 's/fa769dac7a0a94ee47d8ebe021eaba9e/0fc3bcf177377d328c77b2b51b7f3c9b/g' /opt/resources/webshells/PHP/wso-webshell/wso.php
-  echo 'exegol4thewin' > /opt/resources/webshells/PHP/wso-webshell/password.txt
-  git -C /opt/resources/webshells/PHP/ clone https://github.com/flozz/p0wny-shell
-  wget -O /opt/resources/webshells/ASPX/webshell.aspx "https://raw.githubusercontent.com/xl7dev/WebShell/master/Aspx/ASPX%20Shell.aspx"
-}
-
-function nc() {
-  colorecho "Downloading nc for Windows"
-  cp -v /usr/bin/nc.traditional /opt/resources/linux/nc
-  wget -P /opt/resources/windows/ "https://gitlab.com/onemask/pentest-tools/-/raw/master/windows/nc.exe"
-}
-
-function http-put-server() {
-  colorecho "Downloading http-put-server for Python3"
-  wget -O /opt/resources/linux/http-put-server.py https://gist.githubusercontent.com/mildred/67d22d7289ae8f16cae7/raw/214c213c9415da18a471d1ed04660022cce059ef/server.py
-}
-
-function spoolsample() {
-  colorecho "Downloading SpoolSample"
-  wget -P /opt/resources/windows/ "https://gitlab.com/onemask/pentest-tools/-/raw/master/windows/SpoolSample.exe"
-  wget -P /opt/resources/windows/ "https://gitlab.com/onemask/pentest-tools/-/raw/master/windows/SpoolSample_v4.5_x64..exe"
-}
-
-function diaghub() {
-  colorecho "Downloading DiagHub"
-  wget -P /opt/resources/windows/ "https://gitlab.com/onemask/pentest-tools/-/raw/master/windows/diaghub.exe"
-}
-
-function lazagne() {
-  colorecho "Downloading LaZagne"
-  git -C /tmp/ clone https://github.com/AlessandroZ/LaZagne
-  mv /tmp/LaZagne/Linux /opt/resources/linux/LaZagne
-  mv /tmp/LaZagne/Mac /opt/resources/mac/LaZagne
-  mv /tmp/LaZagne/Windows /opt/resources/widnows/LaZagne
-  wget -P /opt/resources/windows/LaZagne/ "$(curl -s https://github.com/AlessandroZ/LaZagne/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/lazagne.exe"
-  rm -r /tmp/LaZagne
-  # Add LaZagne Forensic? https://github.com/AlessandroZ/LaZagneForensic
-}
-
-function sublinacl() {
-  colorecho "Downloading Sublinacl"
-  wget -P /opt/resources/windows/ "https://gitlab.com/onemask/pentest-tools/-/raw/master/windows/sublinacl.exe"
-}
-
-function powersploit() {
-  colorecho "Downloading PowerSploit"
-  git -C /opt/resources/windows/ clone https://github.com/PowerShellMafia/PowerSploit
-}
-
-function mimipenguin() {
-  colorecho "Downloading mimipenguin"
-  git -C /opt/resources/linux/ clone https://github.com/huntergregal/mimipenguin
-}
-
-function mimipy() {
-  colorecho "Downloading mimipy"
-  git -C /opt/resources/linux/ clone https://github.com/n1nj4sec/mimipy
-}
-
-function plink() {
-  colorecho "Downloading plink"
-  wget -O /opt/resources/windows/plink32.exe "https://the.earth.li/~sgtatham/putty/latest/w32/plink.exe"
-  wget -O /opt/resources/windows/plink64.exe "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe"
-}
-
-function deepce() {
-  colorecho "Downloading deepce"
-  wget -O /opt/resources/linux/deepce "https://github.com/stealthcopter/deepce/raw/master/deepce.sh"
 }
 
 function arsenal() {
@@ -1203,16 +1001,6 @@ function burp() {
   # FIXME: add burp certificate to embedded firefox and chrome?
 }
 
-function bitleaker() {
-  colorecho "Downloading bitleaker for BitLocker TPM attacks"
-  git -C "/opt/resources/encrypted disks/" clone https://github.com/kkamagui/bitleaker
-}
-
-function napper() {
-  colorecho "Download napper for TPM vuln scanning"
-  git -C "/opt/resources/encrypted disks/" clone https://github.com/kkamagui/napper-for-tpm
-}
-
 function linkedin2username() {
   colorecho "Installing linkedin2username"
   git -C /opt/tools/ clone https://github.com/initstring/linkedin2username
@@ -1284,15 +1072,6 @@ function windapsearch-go() {
   colorecho "Installing Go windapsearch"
   wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
   chmod +x /opt/tools/bin/windapsearch
-}
-
-function icmpdoor() {
-  colorecho "Installing icmptools"
-  git -C /opt/tools/ clone https://github.com/krabelize/icmpdoor
-  mkdir -p /opt/resources/windows/icmptools/
-  cp -v /opt/tools/icmpdoor/binaries/x86_64-linux/* /opt/resources/windows/icmptools/
-  mkdir -p /opt/resources/linux/icmptools/
-  cp -v /opt/tools/icmpdoor/binaries/x86_64-linux/* /opt/resources/linux/icmptools/
 }
 
 function install_trilium() {
@@ -1486,20 +1265,6 @@ function install_adidnsdump() {
   git -C /opt/tools/ clone https://github.com/dirkjanm/adidnsdump
   cd /opt/tools/adidnsdump/
   python3 -m pip install .
-}
-
-function install_powermad() {
-  colorecho "Downloading Powermad for resources"
-  git -C /opt/resources/windows/ clone https://github.com/Kevin-Robertson/Powermad
-}
-
-function install_snaffler() {
-  colorecho "Downloading Snaffler for resources"
-  url=$(curl -s https://github.com/SnaffCon/Snaffler/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')
-  mkdir -p /opt/resources/windows/Snaffler
-  wget -O /opt/resources/windows/Snaffler.zip $url/Snaffler.zip
-  unzip -d /opt/resources/windows/Snaffler /opt/resources/windows/Snaffler.zip
-  rm -v /opt/resources/windows/Snaffler.zip
 }
 
 function install_dnschef() {
@@ -1762,15 +1527,6 @@ function install_eaphammer() {
   echo y | ./kali-setup
 }
 
-function download_hashcat_rules() {
-  colorecho "Download hashcat rules"
-  mkdir -p /opt/resources/cracking/hashcat_rules/
-  git -C /opt/resources/cracking/hashcat_rules/ clone https://github.com/NSAKEY/nsa-rules
-  wget -O /opt/resources/cracking/hashcat_rules/hob064.rule https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/master/hob064.rule
-  wget -O /opt/resources/cracking/hashcat_rules/d3adhob0.rule https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/master/d3adhob0.rule
-  wget -O /opt/resources/cracking/hashcat_rules/OneRuleToRuleThemAll.rule https://raw.githubusercontent.com/NotSoSecure/password_cracking_rules/master/OneRuleToRuleThemAll.rule
-}
-
 function install_vulny_code_static_analysis() {
   colorecho "Installing Vulny Code Static Analysis"
   git -C /opt/tools/ clone https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
@@ -1853,11 +1609,6 @@ function install_shadowcoerce() {
 function install_pwncat() {
   colorecho "Installing pwncat"
   python3 -m pipx install pwncat-cs
-}
-
-function the_hacker_recipes() {
-  colorecho "Adding The Hacker Recipes to the resources"
-  git -C /opt/resources/ clone https://github.com/ShutdownRepo/The-Hacker-Recipes
 }
 
 function install_dcsync() {
@@ -2216,6 +1967,7 @@ function install_web_tools() {
   install_httpx
   install_robotstester            # Robots.txt scanner
 #  install_gitrob                  # Senstive files reconnaissance in github
+  burp
 }
 
 # Package dedicated to command & control frameworks
@@ -2245,8 +1997,11 @@ function install_ad_tools() {
   install_crackmapexec            # Network scanner
   sprayhound                      # Password spraying tool
   install_smartbrute              # Password spraying tool
-  install_bloodhound.py                   # AD cartographer
+  install_bloodhound.py           # AD cartographer
   neo4j_install                   # Bloodhound dependency
+  bloodhound
+  bloodhound_old_v3
+  bloodhound_old_v2
   cypheroth                       # Bloodhound dependency
   # mitm6_sources                 # Install mitm6 from sources
   mitm6_pip                       # DNS server misconfiguration exploiter
@@ -2388,6 +2143,9 @@ function install_network_tools() {
   install_sshuttle                # Transparent proxy over SSH
   fapt dns2tcp                    # TCP tunnel over DNS
   install_eaphammer
+  fapt freerdp2-x11
+  fapt rdesktop
+  fapt xtightvncviewer
 }
 
 # Package dedicated to wifi pentest tools
@@ -2440,6 +2198,8 @@ function install_reverse_tools() {
   fapt wabt                       # The WebAssembly Binary Toolkit
   fapt ltrace
   fapt strace
+  ghidra
+  fapt jd-gui                     # Java decompiler
 }
 
 # Package dedicated to attack crypto
@@ -2449,62 +2209,9 @@ function install_crypto_tools() {
   echo "nothing to install"
 }
 
-# Package dedicated to GUI-based apps
-function install_GUI_tools() {
-  bloodhound
-  bloodhound_old_v3
-  bloodhound_old_v2
-  fapt freerdp2-x11
-  fapt rdesktop
-  ghidra
-  fapt xtightvncviewer
-  fapt jd-gui                     # Java decompiler
-  burp
-}
-
 # Package dedicated to SAST and DAST tools
 function install_code_analysis_tools() {
   install_vulny_code_static_analysis
-}
-
-# Package dedicated to the download of resources
-function install_resources() {
-  sysinternals
-  winenum
-  pspy
-  peass
-  linux_smart_enumeration
-  linenum
-  linux_exploit_suggester
-  mimikatz
-  nishang
-  powersploit
-  privesccheck
-  rubeus
-  inveigh
-  sharphound
-  juicypotato
-  impacket_windows
-  nc
-  spoolsample
-  diaghub
-  lazagne
-  sublinacl
-  mimipenguin
-  mimipy
-  plink
-  deepce
-  decompress_rockyou
-  webshells
-  mailsniper
-  ysoserial_net
-  bitleaker
-  napper
-  http-put-server
-  azurehound
-  icmpdoor
-  sharpcollection
-  the_hacker_recipes
 }
 
 # Function used to clean up post-install files
