@@ -990,6 +990,13 @@ function ghidra() {
   rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
 }
 
+function install_ida() {
+  colorecho "Installing IDA"
+  wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
+  /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
+  rm /tmp/idafree77_linux.run
+}
+
 function burp() {
   colorecho "Installing Burp"
   burp_version=$(curl -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
@@ -2199,6 +2206,7 @@ function install_reverse_tools() {
   fapt ltrace
   fapt strace
   ghidra
+  install_ida
   fapt jd-gui                     # Java decompiler
 }
 
