@@ -1192,7 +1192,7 @@ function ghidra() {
   rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
 }
 
-function ida() {
+function install_ida() {
   colorecho "Installing IDA"
   wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
   /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
