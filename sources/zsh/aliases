@@ -1,6 +1,7 @@
 #alias mitm6='python3 /opt/tools/mitm6/mitm6/mitm6.py'
 alias l='ls -alh'
 alias ipa='ip --brief --color a'
+alias ida='/opt/tools/idafree-7.7/ida64'
 alias nse='ls /usr/share/nmap/scripts | grep '
 alias scan-range='nmap -T5 -n -sn'
 alias http-server='python3 -m http.server'
