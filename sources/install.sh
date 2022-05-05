@@ -2467,7 +2467,7 @@ function install_GUI_tools() {
   fapt xtightvncviewer
   fapt jd-gui                     # Java decompiler
   burp
-  ida
+  install_ida
 }
 
 # Package dedicated to SAST and DAST tools
