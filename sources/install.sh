@@ -1711,7 +1711,8 @@ function install_base() {
   fapt jq                         # jq is a lightweight and flexible command-line JSON processor
   fapt iputils-ping               # Ping binary
   fapt iproute2                   # Firewall rules
-  fapt openvpn
+  fapt openvpn                    # Instal OpenVPN
+  fapt openresolv                 # Dependency for DNS resolv.conf update with OpenVPN connection (using script)
   install_mdcat                           # cat markdown files
   install_bat                             # Beautiful cat
   fapt tidy                       # TODO: comment this
