@@ -4,8 +4,8 @@ responder-http-off
 responder-http-on
 responder-smb-off
 responder-smb-on
-bloodhound.py -c All -d breaking.bad -u anonymous -p anonymous -dc DC01.BREAKING.BAD
-bloodhound.py -c All -d breaking.bad -u anonymous --hashes 'ffffffffffffffffffffffffffffffff':'a88baa3fdc8f581ee0fb05d7054d43e4' -dc DC01.BREAKING.BAD
+bloodhound.py --zip -c All -d breaking.bad -u anonymous -p anonymous -dc DC01.BREAKING.BAD
+bloodhound.py --zip -c All -d breaking.bad -u anonymous --hashes 'ffffffffffffffffffffffffffffffff':'a88baa3fdc8f581ee0fb05d7054d43e4' -dc DC01.BREAKING.BAD
 nslookup _ldap._tcp.dc._msdcs.BREAKING.BAD
 nslookup -type=srv _kerberos._tcp.BREAKING.BAD
 nslookup -type=srv _gc._tcp.BREAKING.BAD
