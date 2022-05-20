@@ -996,6 +996,7 @@ function ghidra() {
 function install_ida() {
   colorecho "Installing IDA"
   wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
+  chmod +x /tmp/idafree77_linux.run
   /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
   rm /tmp/idafree77_linux.run
 }
