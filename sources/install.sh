@@ -1577,6 +1577,11 @@ function install_httpx() {
   go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
 }
 
+function install_anew() {
+  colorecho "Installing anew"
+  go install -v github.com/tomnomnom/anew@latest
+}
+
 function install_tor() {
   colorecho "Installing tor"
   mkdir /opt/tools/tor
@@ -1975,8 +1980,9 @@ function install_web_tools() {
   install_nuclei                  # Vulnerability scanner
   install_prips                   # Print the IP addresses in a given range
   install_hakrevdns               # Reverse DNS lookups
-  install_httprobe
+  install_httprobe                #
   install_httpx
+  install_anew
   install_robotstester            # Robots.txt scanner
 #  install_gitrob                  # Senstive files reconnaissance in github
   burp
