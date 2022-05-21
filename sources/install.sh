@@ -1574,7 +1574,7 @@ function install_httprobe() {
 
 function install_httpx() {
   colorecho "Installing httpx"
-  python3 -m pipx install 'httpx[cli]'
+  go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
 }
 
 function install_tor() {
