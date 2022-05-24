@@ -234,6 +234,11 @@ function install_pass_station() {
   gem install pass-station
 }
 
+function install_username_anarchy() {
+  colorecho "Installing Username-Anarchy"
+  git -C /opt/tools/ clone https://github.com/urbanadventurer/username-anarchy
+}
+
 function evilwinrm() {
   colorecho "Installing evil-winrm"
   gem install evil-winrm
@@ -1279,8 +1284,8 @@ function install_adidnsdump() {
 }
 
 function install_dnschef() {
-    colorecho "Installing DNSChef"
-    git -C /opt/tools/ clone https://github.com/iphelix/dnschef
+  colorecho "Installing DNSChef"
+  git -C /opt/tools/ clone https://github.com/iphelix/dnschef
 }
 
 function install_h2csmuggler() {
@@ -1839,6 +1844,7 @@ function install_wordlists_tools() {
   fapt cewl                       # Wordlist generator
   fapt cupp                       # User password profiler
   install_pass_station            # Default credentials database
+  install_username_anarchy        # Generate possible usernames based on heuristics
   decompress_rockyou
 }
 
