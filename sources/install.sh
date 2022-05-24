@@ -234,6 +234,11 @@ function install_pass_station() {
   gem install pass-station
 }
 
+function install_username_anarchy() {
+  colorecho "Installing Username-Anarchy"
+  git -C /opt/tools/ clone https://github.com/urbanadventurer/username-anarchy
+}
+
 function evilwinrm() {
   colorecho "Installing evil-winrm"
   gem install evil-winrm
@@ -1279,8 +1284,8 @@ function install_adidnsdump() {
 }
 
 function install_dnschef() {
-    colorecho "Installing DNSChef"
-    git -C /opt/tools/ clone https://github.com/iphelix/dnschef
+  colorecho "Installing DNSChef"
+  git -C /opt/tools/ clone https://github.com/iphelix/dnschef
 }
 
 function install_h2csmuggler() {
@@ -1574,7 +1579,18 @@ function install_httprobe() {
 
 function install_httpx() {
   colorecho "Installing httpx"
-  python3 -m pipx install 'httpx[cli]'
+  go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+}
+
+function install_anew() {
+  colorecho "Installing anew"
+  go install -v github.com/tomnomnom/anew@latest
+}
+
+function install_naabu() {
+  colorecho "Installing naabu"
+  apt install -y libpcap-dev
+  go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
 }
 
 function install_tor() {
@@ -1828,6 +1844,7 @@ function install_wordlists_tools() {
   fapt cewl                       # Wordlist generator
   fapt cupp                       # User password profiler
   install_pass_station            # Default credentials database
+  install_username_anarchy        # Generate possible usernames based on heuristics
   decompress_rockyou
 }
 
@@ -1971,13 +1988,15 @@ function install_web_tools() {
   install_tomcatwardeployer       # Apache Tomcat auto WAR deployment & pwning tool
   install_clusterd                # Axis2/JBoss/ColdFusion/Glassfish/Weblogic/Railo scanner
   install_arjun                   # HTTP Parameter Discovery
-  install_gau
+  install_gau                     # Fetch known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, and Common Crawl.
   install_nuclei                  # Vulnerability scanner
   install_prips                   # Print the IP addresses in a given range
   install_hakrevdns               # Reverse DNS lookups
-  install_httprobe
-  install_httpx
+  install_httprobe                # Probe http
+  install_httpx                   # Probe http
+  install_anew                    # A tool for adding new lines to files, skipping duplicates
   install_robotstester            # Robots.txt scanner
+  install_naabu                   # Fast port scanner
 #  install_gitrob                  # Senstive files reconnaissance in github
   burp
 }
