@@ -13,12 +13,12 @@ function colorecho () {
 function update() {
   colorecho "Updating, upgrading, cleaning"
   echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-  apt -y update && apt -y install apt-utils dialog && apt -y upgrade && apt -y autoremove && apt clean
+  apt -y update && apt -y install apt-utils dialog && apt -y upgrade && apt -y autoremove && apt-get clean
 }
 
 function fapt() {
   colorecho "Installing apt package: $@"
-  apt install -y --no-install-recommends "$@" || exit
+  apt-get install -y --no-install-recommends "$@" || exit
 }
 
 function python-pip() {
@@ -58,7 +58,8 @@ function install_ohmyzsh() {
 function locales() {
   colorecho "Configuring locales"
   apt -y install locales
-  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
+  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+  locale-gen
 }
 
 function tmux() {
@@ -129,13 +130,13 @@ function OSRFramework() {
 
 function sn0int() {
   colorecho "Installing sn0int"
-  apt install debian- -y
+  apt-get install debian- -y
   gpg -a --export --keyring /usr/share/keyrings/debian-maintainers.gpg git@rxv.cc | apt-key add -
   apt-key adv --keyserver keyserver.ubuntu.com --refresh-keys git@rxv.cc
   echo deb http://apt.vulns.sexy stable main > /etc/apt/sources.list.d/apt-vulns-sexy.list
   apt update -y
-  apt install sn0int -y
-  apt install --fix-broken -y
+  apt-get install sn0int -y
+  apt-get install --fix-broken -y
 }
 
 function install_CloudFail() {
@@ -170,7 +171,7 @@ function JSParser() {
   cd /opt/tools/JSParser
   git checkout remotes/origin/master_upgrading_python3
   apt update
-  apt install python3-pycurl
+  apt-get install python3-pycurl
   python3 -m pip install -r requirements.txt
   python3 setup.py install
 }
@@ -592,7 +593,8 @@ function install_angr() {
   colorecho "Installing angr"
   fapt python3-dev libffi-dev build-essential virtualenvwrapper
   python3 -m pip install virtualenv virtualenvwrapper
-  mkvirtualenv --python=$(which python3) angr && python3 -m pip install angr
+  mkvirtualenv --python=$(which python3) angr
+  python3 -m pip install angr
 }
 
 function pwndbg() {
@@ -613,10 +615,11 @@ function darkarmour() {
 
 function powershell() {
   colorecho "Installing powershell"
-  apt install -y software-properties-common
+  apt-get install -y software-properties-common
   curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
   apt-add-repository https://packages.microsoft.com/debian/11/prod
-  apt update && apt install -y powershell
+  apt update
+  apt-get install -y powershell
   mv /opt/microsoft /opt/tools/microsoft
   rm /usr/bin/pwsh
   ln -s /opt/tools/microsoft/powershell/7/pwsh /usr/bin/pwsh
@@ -786,7 +789,8 @@ function install_john() {
   colorecho "Installing john the ripper"
   fapt qtbase5-dev
   git -C /opt/tools/ clone https://github.com/openwall/john
-  cd /opt/tools/john/src && ./configure && make
+  cd /opt/tools/john/src
+  ./configure && make
 }
 
 function install_nth() {
@@ -831,7 +835,7 @@ function arsenal() {
   python3 -m pip install -r requirements.txt
 }
 
-function bloodhound() {
+function bloodhound_v4() {
   echo "Installing BloodHound from sources"
   git -C /opt/tools/ clone https://github.com/BloodHoundAD/BloodHound/
   mv /opt/tools/BloodHound /opt/tools/BloodHound4
@@ -947,11 +951,11 @@ function pwnedornot() {
 function ghunt() {
   colorecho "Installing ghunt"
   apt update
-  apt install -y curl unzip gnupg
+  apt-get install -y curl unzip gnupg
   curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
   echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
   apt update
-  apt install -y google-chrome-stable
+  apt-get install -y google-chrome-stable
   rm -rf /var/lib/apt/lists/*
   git -C /opt/tools/ clone https://github.com/mxrch/GHunt
   cd /opt/tools/GHunt
@@ -996,7 +1000,7 @@ function ruler() {
 
 function ghidra() {
   colorecho "Installing Ghidra"
-  apt install -y openjdk-11-jdk
+  apt-get install -y openjdk-11-jdk
   #wget -P /tmp/ "https://ghidra-sre.org/ghidra_9.2.3_PUBLIC_20210325.zip"
   wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
   unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
@@ -1183,12 +1187,12 @@ function install_theHarvester() {
 
 function install_pcsc() {
   colorecho "Installing tools for PC/SC (smartcard)"
-  apt install -y pcsc-tools pcscd libpcsclite-dev libpcsclite1
+  apt-get install -y pcsc-tools pcscd libpcsclite-dev libpcsclite1
 }
 
 function install_libnfc() {
   colorecho "Installing libnfc"
-  apt install -y libnfc-dev libnfc-bin
+  apt-get install -y libnfc-dev libnfc-bin
   # TODO fixme
   #cd /opt/tools/
   #wget http://dl.bintray.com/nfc-tools/sources/libnfc-1.7.1.tar.bz2 #broken link
@@ -1214,7 +1218,7 @@ function install_mfoc() {
 
 function install_mfcuk() {
   colorecho "Installing mfcuk"
-  apt install -y mfcuk
+  apt-get install -y mfcuk
 }
 
 function install_libnfc-crypto1-crack() {
@@ -1404,7 +1408,8 @@ function install_bloodhound-quickwin() {
 function install_ldapsearch-ad() {
   colorecho "Installing ldapsearch-ad"
   git -C /opt/tools/ clone https://github.com/yaap7/ldapsearch-ad
-  cd /opt/tools/ldapsearch-ad/ && python3 -m pip install -r requirements.txt
+  cd /opt/tools/ldapsearch-ad/
+  python3 -m pip install -r requirements.txt
 }
 
 function install_ntlm-scanner() {
@@ -1595,7 +1600,7 @@ function install_anew() {
 
 function install_naabu() {
   colorecho "Installing naabu"
-  apt install -y libpcap-dev
+  apt-get install -y libpcap-dev
   go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
 }
 
@@ -1606,7 +1611,7 @@ function install_tor() {
   wget https://dist.torproject.org/tor-0.4.3.7.tar.gz
   tar xf tor-0.4.3.7.tar.gz
   cd tor-0.4.3.7
-  apt install libevent-dev
+  apt-get install libevent-dev
   ./configure
   make install
 }
@@ -1693,11 +1698,12 @@ function install_searchsploit() {
 function install_seclists(){
   colorecho "Installing Seclists"
   git -C /usr/share/ clone https://github.com/danielmiessler/SecLists.git seclists
-  cd /usr/share/seclists && rm -r LICENSE .git* CONTRIBUT* .bin
+  cd /usr/share/seclists
+  rm -r LICENSE .git* CONTRIBUT* .bin
 }
 
-function install_wordlists(){
-  colorecho "Installing Wordlists"
+function install_rockyou(){
+  colorecho "Installing rockyou"
   mkdir /usr/share/wordlists
   tar -xvf /usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /usr/share/wordlists/
   ln -s /usr/share/seclists/ /usr/share/wordlists/seclists
@@ -1738,8 +1744,8 @@ function install_joomscan(){
 
 function install_wpscan(){
   colorecho "Installing wpscan"
-  apt install -y procps ruby-dev
-  apt install -y apt-transport-https ca-certificates gnupg2 curl
+  apt-get install -y procps ruby-dev
+  apt-get install -y apt-transport-https ca-certificates gnupg2 curl
   curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
   curl -sSL https://get.rvm.io | bash -s stable --ruby
   gem install nokogiri
@@ -1755,7 +1761,8 @@ function install_go(){
   colorecho "Installing go (Golang)"
   cd /tmp/
   wget https://go.dev/dl/go1.18.linux-amd64.tar.gz
-  rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.linux-amd64.tar.gz
+  rm -rf /usr/local/go
+  tar -C /usr/local -xzf go1.18.linux-amd64.tar.gz
   export PATH=$PATH:/usr/local/go/bin
 }
 
@@ -1795,14 +1802,14 @@ function install_gpp-decrypt(){
 
 function install_smali(){
   colorecho "Installing smali"
-  apt install default-jre wget
+  apt-get install default-jre wget
   mkdir /opt/tools/smali/
   wget https://bitbucket.org/JesusFreke/smali/downloads/smali-2.5.2.jar -O /opt/tools/smali/smali-2.5.2.jar
 }
 
 function install_tesseract-ocr(){
   colorecho "Installing tesseract-ocr"
-  apt install -y tesseract-ocr
+  apt-get install -y tesseract-ocr
 }
 
 function install_dex2jar(){
@@ -1980,7 +1987,6 @@ function install_most_used_tools() {
   install_responder                       # LLMNR, NBT-NS and MDNS poisoner
   install_crackmapexec            # Network scanner
   install_impacket                        # Network protocols scripts
-  #TODO remove me imo fapt enum4linux                 # Hosts enumeration
   fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_smbmap                     # Allows users to enumerate samba share drives across an entire domain
   install_nuclei                  # Vulnerability scanner
@@ -2009,13 +2015,12 @@ function install_misc_tools() {
 # Package dedicated to the installation of wordlists and tools like wl generators
 function install_wordlists_tools() {
   fapt crunch                     # Wordlist generator
-  install_seclists                   # Awesome wordlists
-  install_wordlists                  # Basically installs rockyou (~same as Kali)
+  install_seclists                # Awesome wordlists
+  install_rockyou               # Basically installs rockyou (~same as Kali)
   fapt cewl                       # Wordlist generator
   fapt cupp                       # User password profiler
   install_pass_station            # Default credentials database
   install_username_anarchy        # Generate possible usernames based on heuristics
-  decompress_rockyou
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
@@ -2203,9 +2208,9 @@ function install_ad_tools() {
   install_smartbrute              # Password spraying tool
   install_bloodhound.py           # AD cartographer
   neo4j_install                   # Bloodhound dependency
-  bloodhound
-  bloodhound_old_v3
-  bloodhound_old_v2
+  bloodhound_v4
+#  bloodhound_old_v3
+#  bloodhound_old_v2
   cypheroth                       # Bloodhound dependency
   # mitm6_sources                 # Install mitm6 from sources
   mitm6_pip                       # DNS server misconfiguration exploiter
@@ -2226,7 +2231,6 @@ function install_ad_tools() {
   evilwinrm                       # WinRM shell
   pypykatz                        # Mimikatz implementation in pure Python
   enyx                            # Hosts discovery
-  #TODO remove me imo fapt enum4linux                 # Hosts enumeration
   enum4linux-ng                   # Hosts enumeration
   zerologon                       # Exploit for zerologon cve-2020-1472
   libmspack                       # Library for some loosely related Microsoft compression format
@@ -2406,7 +2410,7 @@ function install_reverse_tools() {
   fapt strace
   ghidra
   install_ida
-  fapt jd-gui                     # Java decompiler
+  install_jd-gui                     # Java decompiler
 }
 
 # Package dedicated to attack crypto
