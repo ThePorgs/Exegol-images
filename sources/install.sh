@@ -10,6 +10,15 @@ function colorecho () {
   echo -e "${BLUE}[EXEGOL] $@${NOCOLOR}"
 }
 
+function criticalecho () {
+  echo -e "${RED}[EXEGOL ERROR] $@${NOCOLOR}" 2>&1
+  exit 1
+}
+
+function criticalecho-noexit () {
+  echo -e "${RED}[EXEGOL ERROR] $@${NOCOLOR}" 2>&1
+}
+
 function update() {
   colorecho "Updating, upgrading, cleaning"
   echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -17,8 +26,15 @@ function update() {
 }
 
 function fapt() {
-  colorecho "Installing apt package: $@"
+  colorecho "Installing apt package(s): $@"
   apt-get install -y --no-install-recommends "$@" || exit
+}
+
+function fapt-noexit() {
+  # This function tries the same thing as fapt but doesn't exit in case something's wrong.
+  # Example: a package exists in amd64 but not arm64. I didn't find a way of knowing that beforehand.
+  colorecho "Installing (no-exit) apt package(s): $@"
+  apt-get install -y --no-install-recommends "$@" || echo -e "${RED}[EXEGOL ERROR] Package(s) $@ probably doesn't exist for architecture $ARCH, or no installation candidate was found...${NOCOLOR}" 2>&1
 }
 
 function python-pip() {
@@ -336,7 +352,15 @@ function install_bloodhound.py() {
 function neo4j_install() {
   colorecho "Installing neo4j"
   fapt openjdk-11-jre
-  update-java-alternatives --jre --set java-1.11.0-openjdk-amd64
+  if [[ "$ARCH" == "amd64" ]]
+  then
+    update-java-alternatives --jre --set java-1.11.0-openjdk-amd64
+  elif [[ "$ARCH" == "arm64" ]]
+  then
+    update-java-alternatives --jre --set java-1.11.0-openjdk-arm64
+  else
+    criticalecho "This installation function doesn't support architecture $ARCH"
+  fi
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
   apt update
@@ -507,7 +531,7 @@ function install_gitrob(){
   go install -v github.com/michenriksen/gitrob@latest
 }
 
-function gron() {
+function install_gron() {
   colorecho "Installing gron"
   go install -v github.com/tomnomnom/gron@latest
 }
@@ -663,17 +687,22 @@ function install_testssl() {
 function install_bat() {
   colorecho "Installing bat"
   version=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | grep "tag_name" | cut -d 'v' -f2 | cut -d '"' -f1)
-  wget https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_amd64.deb
-  fapt -f ./bat_$version\_amd64.deb
-  rm bat_$version\_amd64.deb
+  if [[ "$ARCH" == "amd64" ]]
+  then
+    wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_amd64.deb
+  elif [[ "$ARCH" == "arm64" ]]
+  then
+    wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_arm64.deb
+  else
+    criticalecho "This installation function doesn't support architecture $ARCH"
+  fi
+  fapt -f /tmp/bat.deb
+  rm /tmp/bat.deb
 }
 
 function install_mdcat() {
   colorecho "Installing mdcat"
-  # Installing cargo, a rust installer
-  curl https://sh.rustup.rs -sSf | sh -s -- -y
   source $HOME/.cargo/env
-  # Installing mdcat now
   cargo install mdcat
 }
 
@@ -840,6 +869,16 @@ function bloodhound_v4() {
   git -C /opt/tools/ clone https://github.com/BloodHoundAD/BloodHound/
   mv /opt/tools/BloodHound /opt/tools/BloodHound4
   zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
+  if [[ "$ARCH" == "amd64" ]]
+  then
+    ln -s /opt/tools/BloodHound4/BloodHound-linux-x64/BloodHound /opt/tools/BloodHound4/BloodHound
+  elif [[ "$ARCH" == "arm64" ]]
+  then
+    fapt libgbm1
+    ln -s /opt/tools/BloodHound4/BloodHound-linux-arm64/BloodHound /opt/tools/BloodHound4/BloodHound
+  else
+    criticalecho "This installation function doesn't support architecture $ARCH"
+  fi
   mkdir -p ~/.config/bloodhound
   cp -v /root/sources/bloodhound/config.json ~/.config/bloodhound/config.json
   cp -v /root/sources/bloodhound/customqueries.json ~/.config/bloodhound/customqueries.json
@@ -953,7 +992,7 @@ function ghunt() {
   apt update
   apt-get install -y curl unzip gnupg
   curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-  echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+  echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
   apt update
   apt-get install -y google-chrome-stable
   rm -rf /var/lib/apt/lists/*
@@ -1009,21 +1048,29 @@ function ghidra() {
 
 function install_ida() {
   colorecho "Installing IDA"
-  wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
-  chmod +x /tmp/idafree77_linux.run
-  /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
-  rm /tmp/idafree77_linux.run
+
+  if [[ "$ARCH" == "amd64" ]]
+  then
+    wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
+    chmod +x /tmp/idafree77_linux.run
+    /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
+    rm /tmp/idafree77_linux.run
+  elif [[ "$ARCH" == "arm64" ]]
+  then
+    criticalecho-noexit "This installation function doesn't support architecture $ARCH, IDA Free only supports x86/x64"
+  else
+    criticalecho "This installation function doesn't support architecture $ARCH"
+  fi
 }
 
 function burp() {
   colorecho "Installing Burp"
+  mkdir /opt/tools/BurpSuiteCommunity
   burp_version=$(curl -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
-  wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Linux" -O /tmp/burp.sh
-  chmod +x "/tmp/burp.sh"
-  /tmp/burp.sh -q
-  # FIXME: find a way to install in /opt/tools?
+  wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
   # FIXME: set up the dark theme right away?
   # FIXME: add burp certificate to embedded firefox and chrome?
+  # TODO: change Burp config to allow built-in browser to run
 }
 
 function linkedin2username() {
@@ -1095,7 +1142,15 @@ function phoneinfoga() {
 
 function windapsearch-go() {
   colorecho "Installing Go windapsearch"
-  wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
+  if [[ "$ARCH" == "amd64" ]]
+  then
+    wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
+  elif [[ "$ARCH" == "arm64" ]]
+  then
+    criticalecho-noexit "This installation function doesn't support architecture $ARCH"
+  else
+    criticalecho "This installation function doesn't support architecture $ARCH"
+  fi
   chmod +x /opt/tools/bin/windapsearch
 }
 
@@ -1134,7 +1189,15 @@ function kubectl(){
   colorecho "Installing kubectl"
   mkdir -p /opt/tools/kubectl
   cd /opt/tools/kubectl
-  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  if [[ "$ARCH" == "amd64" ]]
+  then
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  elif [[ "$ARCH" == "arm64" ]]
+  then
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
+  else
+    criticalecho "This installation function doesn't support architecture $ARCH"
+  fi
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 }
 
@@ -1359,7 +1422,15 @@ function install_ultimate_vimrc() {
 
 function install_ngrok() {
   colorecho "Installing ngrok"
-  wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+  if [[ "$ARCH" == "amd64" ]]
+  then
+    wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+  elif [[ "$ARCH" == "arm64" ]]
+  then
+    wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm64.zip
+  else
+    criticalecho "This installation function doesn't support architecture $ARCH"
+  fi
   unzip -d /opt/tools/bin/ /tmp/ngrok.zip
 }
 
@@ -1419,10 +1490,8 @@ function install_ntlm-scanner() {
 
 function install_rustscan() {
   colorecho "Installing RustScan"
-  mkdir -p /opt/tools/rustscan/
-  wget -qO- https://api.github.com/repos/RustScan/RustScan/releases/latest | grep "browser_download_url.*amd64.deb" | cut -d: -f2,3 | tr -d \" | wget -qO /opt/tools/rustscan/rustscan.deb -i-
-  dpkg -i /opt/tools/rustscan/rustscan.deb
-  #wget https://gist.github.com/snovvcrash/c7f8223cc27154555496a9cbb4650681/raw/a76a2c658370d8b823a8a38a860e4d88051b417e/rustscan-ports-top1000.toml -O /root/.rustscan.toml
+  source $HOME/.cargo/env
+  cargo install rustscan
 }
 
 function install_divideandscan() {
@@ -1760,9 +1829,17 @@ function install_padbuster(){
 function install_go(){
   colorecho "Installing go (Golang)"
   cd /tmp/
-  wget https://go.dev/dl/go1.18.linux-amd64.tar.gz
+  if [[ "$ARCH" == "amd64" ]]
+  then
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
+  elif [[ "$ARCH" == "arm64" ]]
+  then
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-arm64.tar.gz
+  else
+    criticalecho "This installation function doesn't support architecture $ARCH"
+  fi
   rm -rf /usr/local/go
-  tar -C /usr/local -xzf go1.18.linux-amd64.tar.gz
+  tar -C /usr/local -xzf /tmp/go.tar.gz
   export PATH=$PATH:/usr/local/go/bin
 }
 
@@ -1849,17 +1926,18 @@ function install_jd-gui(){
   wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
 }
 
+function install_rust_cargo() {
+  # Installing cargo, a rust installer
+  curl https://sh.rustup.rs -sSf | sh -s -- -y
+  source $HOME/.cargo/env
+}
 
 function install_base() {
   update || exit
-  echo '# Debian sources' | tee -a /etc/apt/sources.list
-  echo 'deb http://deb.debian.org/debian/ bullseye contrib non-free' | tee -a /etc/apt/sources.list
-  echo 'deb-src http://deb.debian.org/debian/ bullseye contrib non-free' | tee -a /etc/apt/sources.list
-  echo 'deb http://security.debian.org/debian-security bullseye-security contrib' | tee -a /etc/apt/sources.list
-  echo 'deb-src http://security.debian.org/debian-security bullseye-security contrib' | tee -a /etc/apt/sources.list
-  echo 'deb http://deb.debian.org/debian/ bullseye-updates contrib' | tee -a /etc/apt/sources.list
-  echo 'deb-src http://deb.debian.org/debian/ bullseye-updates contrib' | tee -a /etc/apt/sources.list
-  apt update
+  fapt software-properties-common
+  add-apt-repository contrib
+  add-apt-repository non-free
+  apt-get update
   fapt man                        # Most important
   fapt git                        # Git client
   fapt lsb-release
@@ -1879,6 +1957,7 @@ function install_base() {
   fapt python2-dev                # Python 2 language (dev version)
   fapt python3-dev                # Python 3 language (dev version)
   fapt python3-venv
+  install_rust_cargo
   ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
   python-pip                      # Pip
   fapt python3-pip                # Pip
@@ -1943,7 +2022,7 @@ function install_base() {
   fapt screen                     # CLI-based PuTT-like
   fapt p7zip-full                 # 7zip
   fapt p7zip-rar                  # 7zip rar module
-  fapt rar                        # rar
+  fapt-noexit rar                        # rar
   fapt unrar                      # unrar
   fapt xz-utils                   # xz (de)compression
   fapt xsltproc                   # apply XSLT stylesheets to XML documents (Nmap reports)
@@ -2090,7 +2169,7 @@ function install_osint_tools() {
   #Dark
   apt update
   install_tor					            # Tor proxy
-  fapt torbrowser-launcher        # Tor browser
+  fapt-noexit torbrowser-launcher        # Tor browser
   onionsearch                     # OnionSearch is a script that scrapes urls on different .onion search engines.
   install_pwndb					          # No need to say more, no ? Be responsible with this tool please !
   #Github
@@ -2100,7 +2179,7 @@ function install_osint_tools() {
   fapt whois                      # See information about a specific domain name or IP address
   ReconDog                        # Informations gathering tool
   JSParser                        # Parse JS files
-  gron                            # JSON parser
+  install_gron                            # JSON parser
   #install_ignorant                # holehe but for phone numbers
 }
 
@@ -2344,7 +2423,6 @@ function install_network_tools() {
   # Sn1per                        # Vulnerability scanner
   fapt tcpdump                    # Capture TCP traffic
   install_dnschef                 # Python DNS server
-  install_rustscan                # Fast port scanner
   install_divideandscan           # Python project to automate port scanning routine
   fapt iptables                   # iptables for the win
   fapt traceroute                 # ping ping
@@ -2406,7 +2484,7 @@ function install_reverse_tools() {
   fapt nasm                       # Netwide Assembler
   install_radare2                    # Awesome debugger
   fapt wabt                       # The WebAssembly Binary Toolkit
-  fapt ltrace
+  fapt-noexit ltrace
   fapt strace
   ghidra
   install_ida
@@ -2434,10 +2512,7 @@ function install_clean() {
 
 # Entry point for the installation
 if [[ $EUID -ne 0 ]]; then
-  echo -e "${RED}"
-  echo "You must be a root user" 2>&1
-  echo -e "${NOCOLOR}"
-  exit 1
+  criticalecho "You must be a root user"
 else
   if declare -f "$1" > /dev/null
   then
