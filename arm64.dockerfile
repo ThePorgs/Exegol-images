@@ -1,20 +1,18 @@
 # Author: Charlie BROMBERG (Shutdown - @_nwodtuhs)
 
-FROM --platform=linux/arm64 debian
+FROM --platform=linux/amd64 debian
 
 ARG TAG="local"
 ARG VERSION="local"
-ARG ARCH="arm64"
 ARG BUILD_DATE="n/a"
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"
-LABEL org.exegol.platform="${ARCH}"
 LABEL org.exegol.build_date="${BUILD_DATE}"
 LABEL org.exegol.app="Exegol"
 LABEL org.exegol.src_repository="https://github.com/ShutdownRepo/Exegol-images"
 
-RUN echo "${TAG}-${VERSION}-${ARCH}" > /opt/.exegol_version
+RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 
 ADD sources /root/sources
 RUN chmod +x /root/sources/install.sh

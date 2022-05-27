@@ -34,7 +34,7 @@ function fapt-noexit() {
   # This function tries the same thing as fapt but doesn't exit in case something's wrong.
   # Example: a package exists in amd64 but not arm64. I didn't find a way of knowing that beforehand.
   colorecho "Installing (no-exit) apt package(s): $@"
-  apt-get install -y --no-install-recommends "$@" || echo -e "${RED}[EXEGOL ERROR] Package(s) $@ probably doesn't exist for architecture $ARCH, or no installation candidate was found...${NOCOLOR}" 2>&1
+  apt-get install -y --no-install-recommends "$@" || echo -e "${RED}[EXEGOL ERROR] Package(s) $@ probably doesn't exist for architecture $(uname -m), or no installation candidate was found...${NOCOLOR}" 2>&1
 }
 
 function python-pip() {
@@ -352,14 +352,14 @@ function install_bloodhound.py() {
 function neo4j_install() {
   colorecho "Installing neo4j"
   fapt openjdk-11-jre
-  if [[ "$ARCH" == "amd64" ]]
+  if [[ $(uname -m) = 'x86_64' ]]
   then
     update-java-alternatives --jre --set java-1.11.0-openjdk-amd64
-  elif [[ "$ARCH" == "arm64" ]]
+  elif [[ $(uname -m) = 'arm64' ]]
   then
     update-java-alternatives --jre --set java-1.11.0-openjdk-arm64
   else
-    criticalecho "This installation function doesn't support architecture $ARCH"
+    criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
@@ -687,14 +687,14 @@ function install_testssl() {
 function install_bat() {
   colorecho "Installing bat"
   version=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | grep "tag_name" | cut -d 'v' -f2 | cut -d '"' -f1)
-  if [[ "$ARCH" == "amd64" ]]
+  if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_amd64.deb
-  elif [[ "$ARCH" == "arm64" ]]
+  elif [[ $(uname -m) = 'arm64' ]]
   then
     wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_arm64.deb
   else
-    criticalecho "This installation function doesn't support architecture $ARCH"
+    criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
   fapt -f /tmp/bat.deb
   rm /tmp/bat.deb
@@ -869,15 +869,15 @@ function bloodhound_v4() {
   git -C /opt/tools/ clone https://github.com/BloodHoundAD/BloodHound/
   mv /opt/tools/BloodHound /opt/tools/BloodHound4
   zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
-  if [[ "$ARCH" == "amd64" ]]
+  if [[ $(uname -m) = 'x86_64' ]]
   then
     ln -s /opt/tools/BloodHound4/BloodHound-linux-x64/BloodHound /opt/tools/BloodHound4/BloodHound
-  elif [[ "$ARCH" == "arm64" ]]
+  elif [[ $(uname -m) = 'arm64' ]]
   then
     fapt libgbm1
     ln -s /opt/tools/BloodHound4/BloodHound-linux-arm64/BloodHound /opt/tools/BloodHound4/BloodHound
   else
-    criticalecho "This installation function doesn't support architecture $ARCH"
+    criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
   mkdir -p ~/.config/bloodhound
   cp -v /root/sources/bloodhound/config.json ~/.config/bloodhound/config.json
@@ -1049,17 +1049,17 @@ function ghidra() {
 function install_ida() {
   colorecho "Installing IDA"
 
-  if [[ "$ARCH" == "amd64" ]]
+  if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
     chmod +x /tmp/idafree77_linux.run
     /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
     rm /tmp/idafree77_linux.run
-  elif [[ "$ARCH" == "arm64" ]]
+  elif [[ $(uname -m) = 'arm64' ]]
   then
-    criticalecho-noexit "This installation function doesn't support architecture $ARCH, IDA Free only supports x86/x64"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64"
   else
-    criticalecho "This installation function doesn't support architecture $ARCH"
+    criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
 }
 
@@ -1142,14 +1142,14 @@ function phoneinfoga() {
 
 function windapsearch-go() {
   colorecho "Installing Go windapsearch"
-  if [[ "$ARCH" == "amd64" ]]
+  if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
-  elif [[ "$ARCH" == "arm64" ]]
+  elif [[ $(uname -m) = 'arm64' ]]
   then
-    criticalecho-noexit "This installation function doesn't support architecture $ARCH"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   else
-    criticalecho "This installation function doesn't support architecture $ARCH"
+    criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
   chmod +x /opt/tools/bin/windapsearch
 }
@@ -1189,14 +1189,14 @@ function kubectl(){
   colorecho "Installing kubectl"
   mkdir -p /opt/tools/kubectl
   cd /opt/tools/kubectl
-  if [[ "$ARCH" == "amd64" ]]
+  if [[ $(uname -m) = 'x86_64' ]]
   then
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-  elif [[ "$ARCH" == "arm64" ]]
+  elif [[ $(uname -m) = 'arm64' ]]
   then
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
   else
-    criticalecho "This installation function doesn't support architecture $ARCH"
+    criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 }
@@ -1422,14 +1422,14 @@ function install_ultimate_vimrc() {
 
 function install_ngrok() {
   colorecho "Installing ngrok"
-  if [[ "$ARCH" == "amd64" ]]
+  if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-  elif [[ "$ARCH" == "arm64" ]]
+  elif [[ $(uname -m) = 'arm64' ]]
   then
     wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm64.zip
   else
-    criticalecho "This installation function doesn't support architecture $ARCH"
+    criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
   unzip -d /opt/tools/bin/ /tmp/ngrok.zip
 }
@@ -1829,14 +1829,14 @@ function install_padbuster(){
 function install_go(){
   colorecho "Installing go (Golang)"
   cd /tmp/
-  if [[ "$ARCH" == "amd64" ]]
+  if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
-  elif [[ "$ARCH" == "arm64" ]]
+  elif [[ $(uname -m) = 'arm64' ]]
   then
     wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-arm64.tar.gz
   else
-    criticalecho "This installation function doesn't support architecture $ARCH"
+    criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
   rm -rf /usr/local/go
   tar -C /usr/local -xzf /tmp/go.tar.gz
@@ -2517,6 +2517,16 @@ else
   if declare -f "$1" > /dev/null
   then
     if [[ -f '/.dockerenv' ]]; then
+      if [[ $(uname -m) = 'x86_64' ]]
+      then
+        criticalecho "running amd64"
+      elif [[ $(uname -m) = 'arm64' ]]
+      then
+        criticalecho "running arm64"
+      else
+        criticalecho "running something else"
+      fi
+      criticalecho $TARGETPLATFORM
       echo -e "${GREEN}"
       echo "This script is running in docker, as it should :)"
       echo "If you see things in red, don't panic, it's usually not errors, just badly handled colors"
