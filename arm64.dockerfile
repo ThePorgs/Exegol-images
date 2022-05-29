@@ -1,6 +1,6 @@
 # Author: Charlie BROMBERG (Shutdown - @_nwodtuhs)
 
-FROM debian
+FROM --platform=linux/amd64 debian
 
 ARG TAG="local"
 ARG VERSION="local"
