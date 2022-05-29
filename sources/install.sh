@@ -355,7 +355,7 @@ function neo4j_install() {
   if [[ $(uname -m) = 'x86_64' ]]
   then
     update-java-alternatives --jre --set java-1.11.0-openjdk-amd64
-  elif [[ $(uname -m) = 'arm64' ]]
+  elif [[ $(uname -m) = 'aarch64' ]]
   then
     update-java-alternatives --jre --set java-1.11.0-openjdk-arm64
   else
@@ -690,7 +690,7 @@ function install_bat() {
   if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_amd64.deb
-  elif [[ $(uname -m) = 'arm64' ]]
+  elif [[ $(uname -m) = 'aarch64' ]]
   then
     wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_arm64.deb
   else
@@ -872,7 +872,7 @@ function bloodhound_v4() {
   if [[ $(uname -m) = 'x86_64' ]]
   then
     ln -s /opt/tools/BloodHound4/BloodHound-linux-x64/BloodHound /opt/tools/BloodHound4/BloodHound
-  elif [[ $(uname -m) = 'arm64' ]]
+  elif [[ $(uname -m) = 'aarch64' ]]
   then
     fapt libgbm1
     ln -s /opt/tools/BloodHound4/BloodHound-linux-arm64/BloodHound /opt/tools/BloodHound4/BloodHound
@@ -1145,7 +1145,7 @@ function windapsearch-go() {
   if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
-  elif [[ $(uname -m) = 'arm64' ]]
+  elif [[ $(uname -m) = 'aarch64' ]]
   then
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   else
@@ -1192,7 +1192,7 @@ function kubectl(){
   if [[ $(uname -m) = 'x86_64' ]]
   then
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-  elif [[ $(uname -m) = 'arm64' ]]
+  elif [[ $(uname -m) = 'aarch64' ]]
   then
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
   else
@@ -1425,7 +1425,7 @@ function install_ngrok() {
   if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-  elif [[ $(uname -m) = 'arm64' ]]
+  elif [[ $(uname -m) = 'aarch64' ]]
   then
     wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm64.zip
   else
@@ -1832,7 +1832,7 @@ function install_go(){
   if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
-  elif [[ $(uname -m) = 'arm64' ]]
+  elif [[ $(uname -m) = 'aarch64' ]]
   then
     wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-arm64.tar.gz
   else
@@ -2517,16 +2517,6 @@ else
   if declare -f "$1" > /dev/null
   then
     if [[ -f '/.dockerenv' ]]; then
-      if [[ $(uname -m) = 'x86_64' ]]
-      then
-        criticalecho "running amd64"
-      elif [[ $(uname -m) = 'arm64' ]]
-      then
-        criticalecho "running arm64"
-      else
-        criticalecho "running something else"
-      fi
-      criticalecho $TARGETPLATFORM
       echo -e "${GREEN}"
       echo "This script is running in docker, as it should :)"
       echo "If you see things in red, don't panic, it's usually not errors, just badly handled colors"
