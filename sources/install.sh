@@ -999,7 +999,6 @@ function ghunt() {
   git -C /opt/tools/ clone https://github.com/mxrch/GHunt
   cd /opt/tools/GHunt
   python3 -m pip install -r requirements.txt
-  python3 download_chromedriver.py
 }
 
 function oaburl_py() {
