@@ -142,6 +142,14 @@
             }]
         },
         {
+            "name": "RBCD Delegation systems",
+            "category": "Ready to let the dogs out?",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p=(u)-[:AllowedToAct]->(c) RETURN p"
+            }]
+        },
+        {
             "name": "Unconstrained Delegation systems (without domain controllers)",
             "category": "Ready to let the dogs out?",
             "queryList": [{
@@ -163,14 +171,6 @@
             "queryList": [{
                 "final": true,
                 "query": "MATCH (n {owned:true}) MATCH p=shortestPath((n)-[:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin|ReadGMSAPassword|HasSIDHistory|CanPSRemote*1..]->(m:Computer {unconstraineddelegation: true})) WHERE NOT n=m RETURN p"
-            }]
-        },
-        {
-            "name": "Find computers with constrained delegation permissions and the corresponding targets where they allowed to delegate",
-            "category": "Ready to let the dogs out?",
-            "queryList": [{
-                "final": true,
-                "query": "MATCH (c:Computer) WHERE c.allowedtodelegate IS NOT NULL RETURN c"
             }]
         },
         {
