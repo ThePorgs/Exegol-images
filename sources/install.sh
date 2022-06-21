@@ -2065,6 +2065,7 @@ function install_most_used_tools() {
   install_responder                       # LLMNR, NBT-NS and MDNS poisoner
   install_crackmapexec            # Network scanner
   install_impacket                        # Network protocols scripts
+  enum4linux-ng
   fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_smbmap                     # Allows users to enumerate samba share drives across an entire domain
   install_nuclei                  # Vulnerability scanner
