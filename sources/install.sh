@@ -336,7 +336,7 @@ function install_impacket() {
   # prs="1090 1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291 1323"
   prs="1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291 1323"
   for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
-  python3 -m pip install .
+  python3 -m pipx install .
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
   cp -v /root/sources/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
