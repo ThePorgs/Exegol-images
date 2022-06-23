@@ -2030,6 +2030,7 @@ function install_base() {
   fapt tree
   fapt faketime
   fapt ruby ruby-dev
+  fapt libxml2-utils
 }
 
 # Package dedicated to most used offensive tools
