@@ -2305,8 +2305,6 @@ function install_ad_tools() {
   amber                           # AV evasion
   powershell                      # Windows Powershell for Linux
   krbrelayx                       # Kerberos unconstrained delegation abuse toolkit
-  rbcd-attack                     # Kerberos Resource-Based Constrained Delegation Attack
-  rbcd-permissions                # Kerberos Resource-Based Constrained Delegation Attack
   evilwinrm                       # WinRM shell
   pypykatz                        # Mimikatz implementation in pure Python
   enyx                            # Hosts discovery
@@ -2317,7 +2315,6 @@ function install_ad_tools() {
   windapsearch-go                 # Active Directory Domain enumeration through LDAP queries
   oaburl_py                       # Send request to the MS Exchange Autodiscover service
   LNKUp
-  mimikatz                        # AD vulnerability exploiter
   fapt samdump2                   # Dumps Windows 2k/NT/XP/Vista password hashes
   fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
@@ -2332,7 +2329,6 @@ function install_ad_tools() {
   install_gosecretsdump           # secretsdump in Go for heavy files
   install_adidnsdump              # enumerate DNS records in Domain or Forest DNS zones
   install_powermad                # MachineAccountQuota and DNS exploit tools
-  install_snaffler                # Shares enumeration and looting
   install_pygpoabuse              # TODO : comment this
   install_bloodhound-import       # Python script to import BH data to a neo4j db
   install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
@@ -2358,6 +2354,7 @@ function install_ad_tools() {
   install_ldaprelayscan
   install_goldencopy
   install_crackhound
+  python3 -m pip install --upgrade rich # temporary fix. Rich seems to be installed with a deprecated version. I need to find which tool requires this
 }
 
 # Package dedicated to mobile apps pentest tools
