@@ -279,7 +279,7 @@ function Bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  apt -y install libssl-dev libffi-dev python2-dev build-essential python3-winrm python3-venv
+  apt -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
   git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   cd /opt/tools/CrackMapExec
   # Redefining baseDN from domain name instead of KDC
@@ -288,7 +288,7 @@ function install_crackmapexec() {
   mkdir -p ~/.cme
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
   # this is for having the ability to check the source code when working with modules and so on
-  #git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
+#  git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
 #  apt -y install crackmapexec
   cp -v /root/sources/grc/conf.cme /usr/share/grc/conf.cme
 }
