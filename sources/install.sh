@@ -696,6 +696,15 @@ function install_testssl() {
   git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
 }
 
+function install_tls-scanner() {
+  colorecho "Installing TLS-Scanner"
+  fapt maven
+  git -C /opt/tools/ clone https://github.com/tls-attacker/TLS-Scanner
+  cd /opt/tools/TLS-Scanner
+  git submodule update --init --recursive
+  mvn clean package -DskipTests=true
+}
+
 function install_bat() {
   colorecho "Installing bat"
   version=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | grep "tag_name" | cut -d 'v' -f2 | cut -d '"' -f1)
@@ -2254,6 +2263,7 @@ function install_web_tools() {
   install_moodlescan              # Moodle scanner
   install_testssl                 # SSL/TLS scanner
   fapt sslscan                    # SSL/TLS scanner
+  install_tls-scanner             # SSL/TLS scanner
   fapt weevely                    # Awesome secure and light PHP webshell
   install_CloudFail                       # Cloudflare misconfiguration detector
   install_EyeWitness                      # Website screenshoter
