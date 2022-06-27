@@ -854,7 +854,7 @@ function install_proxmark3() {
 
 function checksec_py() {
   colorecho "Installing checksec.py"
-  python3 -m pip install checksec.py
+  python3 -m pipx install checksec.py
 }
 
 function arsenal() {
