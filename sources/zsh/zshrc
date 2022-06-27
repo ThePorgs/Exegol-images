@@ -6,6 +6,8 @@ export FZF_BASE=/opt/tools/fzf
 # Load plugin only for an interactive shell
 if [[ $- == *i* ]]; then
   plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm)
+else
+  plugins=(zsh-nvm)
 fi
 
 source $ZSH/oh-my-zsh.sh

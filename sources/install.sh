@@ -865,7 +865,7 @@ function arsenal() {
 }
 
 function bloodhound_v4() {
-  echo "Installing BloodHound from sources"
+  colorecho "Installing BloodHound from sources"
   git -C /opt/tools/ clone https://github.com/BloodHoundAD/BloodHound/
   mv /opt/tools/BloodHound /opt/tools/BloodHound4
   zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
@@ -885,7 +885,7 @@ function bloodhound_v4() {
 }
 
 function bloodhound_old_v3() {
-  echo "Installing Bloodhound v3 (just-in-case)"
+  colorecho "Installing Bloodhound v3 (just-in-case)"
   fapt libxss1
   wget -P /tmp/ "https://github.com/BloodHoundAD/BloodHound/releases/download/3.0.5/BloodHound-linux-x64.zip"
   unzip /tmp/BloodHound-linux-x64.zip -d /opt/tools/
@@ -894,7 +894,7 @@ function bloodhound_old_v3() {
 }
 
 function bloodhound_old_v2() {
-  echo "Installing BloodHound v2 (for older databases/collections)"
+  colorecho "Installing BloodHound v2 (for older databases/collections)"
   wget -P /tmp/ https://github.com/BloodHoundAD/BloodHound/releases/download/2.2.1/BloodHound-linux-x64.zip
   unzip /tmp/BloodHound-linux-x64.zip -d /opt/tools/
   mv /opt/tools/BloodHound-linux-x64 /opt/tools/BloodHound2
