@@ -1696,8 +1696,7 @@ function install_robotstester() {
   # https://github.com/p0dalirius/robotstester
   colorecho "Installing Robotstester"
   git -C /opt/tools/ clone https://github.com/p0dalirius/robotstester.git
-  cd /opt/tools/robotstester
-  python3 setup.py install
+  python3 -m pipx install /opt/tools/robotstester
 }
 
 function install_finduncommonshares() {
