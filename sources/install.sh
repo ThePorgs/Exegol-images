@@ -426,6 +426,15 @@ function install_empire() {
   ./setup/install.sh
 }
 
+function install_starkiller() {
+  colorecho "Installing Starkiller"
+  apt -y install libfuse2
+  version=$(curl -s https://github.com/BC-SECURITY/Starkiller/tags|grep /releases/tag/v -m1 |grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|cut -d 'v' -f2)
+  mkdir /opt/tools/starkiller
+  wget -O /opt/tools/starkiller/starkiller.AppImage https://github.com/BC-SECURITY/Starkiller/releases/download/v$version/starkiller-$version.AppImage
+  chmod +x /opt/tools/starkiller/starkiller.AppImage
+}
+
 function Sn1per() {
   colorecho "Installing Sn1per"
   git -C /opt/tools/ clone https://github.com/1N3/Sn1per
@@ -2260,11 +2269,11 @@ function install_web_tools() {
 # Package dedicated to command & control frameworks
 function install_c2_tools() {
   install_empire                  # Exploit framework
+  install_starkiller              # GUI for Empire
   install_metasploit              # Offensive framework
   install_routersploit            # Exploitation Framework for Embedded Devices
   install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
   # TODO: add Silentrinity
-  # TODO: add starkiller
   # TODO: add beef-xss
 }
 
