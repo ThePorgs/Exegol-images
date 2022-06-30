@@ -1994,6 +1994,7 @@ function install_base() {
   fapt iproute2                   # Firewall rules
   fapt openvpn                    # Instal OpenVPN
   fapt openresolv                 # Dependency for DNS resolv.conf update with OpenVPN connection (using script)
+  echo "/sbin/resolvconf -u" >> /etc/openvpn/update-resolv-conf  # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon
   install_mdcat                           # cat markdown files
   install_bat                             # Beautiful cat
   fapt tidy                       # TODO: comment this
