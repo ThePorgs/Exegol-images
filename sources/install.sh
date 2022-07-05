@@ -1461,6 +1461,8 @@ function install_rsactftool() {
 
 function install_feroxbuster() {
   colorecho "Installing feroxbuster"
+  mkdir /opt/tools/feroxbuster
+  cd /opt/tools/feroxbuster
   curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh | bash
 }
 
