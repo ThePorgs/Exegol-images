@@ -424,6 +424,8 @@ function install_empire() {
   colorecho "Applying Exegol specific patch"
   git apply /root/sources/patches/empire_install_sh_patch.diff
   ./setup/install.sh
+  # Changing password
+  sed -i 's/password123/exegol4thewin/' /opt/tools/Empire/empire/server/config.yaml
 }
 
 function Sn1per() {
