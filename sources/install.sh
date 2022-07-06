@@ -1212,6 +1212,12 @@ function awscli(){
   rm awscliv2.zip
 }
 
+function tldr() {
+  colorecho "Installing tldr"
+  apt-get install -y tldr 
+  tldr -u 
+}
+
 function install_scout() {
   colorecho "Installing ScoutSuite"
   python3 -m pip install scoutsuite
@@ -1757,12 +1763,6 @@ function install_crackhound() {
   git -C /opt/tools/ clone https://github.com/trustedsec/CrackHound
 }
 
-<<<<<<< HEAD
-function tldr() {
-  colorecho "Installing tldr"
-  apt-get -y install tldr
-  tldr -u
-=======
 function install_searchsploit() {
   colorecho "Installing Searchsploit"
   git clone https://github.com/offensive-security/exploitdb.git /opt/exploit-database
@@ -1938,7 +1938,6 @@ function install_rust_cargo() {
   # Installing cargo, a rust installer
   curl https://sh.rustup.rs -sSf | sh -s -- -y
   source $HOME/.cargo/env
->>>>>>> b65a5c58dbf9c2a67792d5a3c1d6c095c0f18891
 }
 
 function install_base() {
