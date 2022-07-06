@@ -868,7 +868,7 @@ function arsenal() {
 
 function install_tldr() {
   colorecho "Installing tldr"
-  apt-get -y install tldr
+  apt-get install -y tldr
   tldr -u
 }
 
