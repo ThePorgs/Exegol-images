@@ -866,6 +866,12 @@ function arsenal() {
   python3 -m pip install -r requirements.txt
 }
 
+function install_tldr() {
+  colorecho "Installing tldr"
+  apt -y install tldr
+  tldr -u
+}
+
 function bloodhound_v4() {
   colorecho "Installing BloodHound from sources"
   git -C /opt/tools/ clone https://github.com/BloodHoundAD/BloodHound/
@@ -1969,6 +1975,7 @@ function install_base() {
   tmux                            # Tmux
   fapt zsh                        # Awesome shell
   install_ohmyzsh                         # Awesome shell
+  install_tldr                    # TL;DR man     
   fapt python-setuptools
   fapt python3-setuptools
   python3 -m pip install wheel
