@@ -126,7 +126,7 @@
             }]
         },
         {
-            "name": "Unconstrained Delegation systems",
+            "name": "Unconstrained Delegations",
             "category": "Ready to let the dogs out?",
             "queryList": [{
                 "final": true,
@@ -134,15 +134,23 @@
             }]
         },
         {
-            "name": "Constrained Delegation systems",
+            "name": "Constrained Delegations (with Protocol Transition)",
             "category": "Ready to let the dogs out?",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(u)-[:AllowedToDelegate]->(c) RETURN p"
+                "query": "MATCH (c) WHERE NOT c.allowedtodelegate IS NULL AND c.trustedtoauth=true return c"
             }]
         },
         {
-            "name": "RBCD Delegation systems",
+            "name": "Constrained Delegations (without Protocol Transition)",
+            "category": "Ready to let the dogs out?",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH (c) WHERE NOT c.allowedtodelegate IS NULL AND c.trustedtoauth=false return c"
+            }]
+        },
+        {
+            "name": "Resource-Based Constrained Delegations",
             "category": "Ready to let the dogs out?",
             "queryList": [{
                 "final": true,

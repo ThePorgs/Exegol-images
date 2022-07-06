@@ -424,6 +424,8 @@ function install_empire() {
   colorecho "Applying Exegol specific patch"
   git apply /root/sources/patches/empire_install_sh_patch.diff
   ./setup/install.sh
+  # Changing password
+  sed -i 's/password123/exegol4thewin/' /opt/tools/Empire/empire/server/config.yaml
 }
 
 function install_starkiller() {
@@ -1470,6 +1472,8 @@ function install_rsactftool() {
 
 function install_feroxbuster() {
   colorecho "Installing feroxbuster"
+  mkdir /opt/tools/feroxbuster
+  cd /opt/tools/feroxbuster
   curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh | bash
 }
 
@@ -2003,6 +2007,7 @@ function install_base() {
   fapt iproute2                   # Firewall rules
   fapt openvpn                    # Instal OpenVPN
   fapt openresolv                 # Dependency for DNS resolv.conf update with OpenVPN connection (using script)
+  echo "/sbin/resolvconf -u" >> /etc/openvpn/update-resolv-conf  # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon
   install_mdcat                           # cat markdown files
   install_bat                             # Beautiful cat
   fapt tidy                       # TODO: comment this
