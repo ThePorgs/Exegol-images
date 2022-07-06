@@ -1551,6 +1551,11 @@ function install_petitpotam() {
   git -C /opt/tools/ clone https://github.com/topotam/PetitPotam
 }
 
+function install_DFSCoerce() {
+  colorecho "Installing DfsCoerce"
+  git -C /opt/tools/ clone https://github.com/Wh04m1001/DFSCoerce.git
+}
+
 function install_PKINITtools() {
   colorecho "Installing PKINITtools"
   git -C /opt/tools/ clone https://github.com/dirkjanm/PKINITtools
@@ -2340,6 +2345,7 @@ function install_ad_tools() {
   install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
   install_ntlm-scanner            # Python script to check public vulns on DCs
   install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
+  install_DFSCoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
   install_PKINITtools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
   install_manspider               # Snaffler-like in Python
