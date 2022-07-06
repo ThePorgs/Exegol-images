@@ -1675,6 +1675,12 @@ function install_crackhound() {
   git -C /opt/tools/ clone https://github.com/trustedsec/CrackHound
 }
 
+function tldr() {
+  colorecho "Installing tldr"
+  apt-get -y install tldr
+  tldr -u
+}
+
 function install_base() {
   update || exit
   echo '# Debian sources' | tee -a /etc/apt/sources.list
@@ -1711,6 +1717,7 @@ function install_base() {
   tmux                            # Tmux
   fapt zsh                        # Awesome shell
   install_ohmyzsh                         # Awesome shell
+  tldr                            # TL;DR man
   fapt python-setuptools
   fapt python3-setuptools
   python3 -m pip install wheel
