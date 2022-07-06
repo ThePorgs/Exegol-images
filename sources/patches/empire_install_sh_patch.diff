@@ -1,0 +1,67 @@
+diff --git a/setup/install.sh b/setup/install.sh
+index 5ceb47c1..989ef5bc 100755
+--- a/setup/install.sh
++++ b/setup/install.sh
+@@ -2,7 +2,7 @@
+ function install_powershell() {
+   echo -e "\x1b[1;34m[*] Installing PowerShell\x1b[0m"
+   if [ $OS_NAME == "DEBIAN" ]; then
+-    wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb
++    wget https://packages.microsoft.com/config/debian/$VERSION_ID/packages-microsoft-prod.deb
+     sudo dpkg -i packages-microsoft-prod.deb
+     sudo apt-get update
+     sudo apt-get install -y powershell
+@@ -59,10 +59,10 @@ sudo -v
+ PARENT_PATH=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; cd .. ; pwd -P )
+ OS_NAME=
+ VERSION_ID=
+-if grep "10.*" /etc/debian_version 2>/dev/null; then
+-  echo -e "\x1b[1;34m[*] Detected Debian 10\x1b[0m"
++if grep -E "10.*|11.*" /etc/debian_version 2>/dev/null; then
+   OS_NAME=DEBIAN
+-  VERSION_ID=$(cat /etc/debian_version)
++  VERSION_ID=$(cat /etc/debian_version | grep -o "^..")
++  echo -e "\x1b[1;34m[*] Detected Debian $VERSION_ID\x1b[0m"
+ elif grep -i "NAME=\"Ubuntu\"" /etc/os-release 2>/dev/null; then
+   OS_NAME=UBUNTU
+   VERSION_ID=$(grep -i VERSION_ID /etc/os-release | grep -o -E [[:digit:]]+\\.[[:digit:]]+)
+@@ -92,7 +92,8 @@ fi
+ install_powershell
+ 
+ echo -n -e "\x1b[1;33m[>] Do you want to install xar and bomutils? They are only needed to generate a .dmg stager (y/N)? \x1b[0m"
+-read answer
++echo "Exegol assumed yes"
++answer=y
+ if [ "$answer" != "${answer#[Yy]}" ] ;then
+   sudo apt-get install -y make autoconf g++ git zlib1g-dev libxml2-dev libssl1.1 libssl-dev
+   install_xar
+@@ -102,7 +103,8 @@ else
+ fi
+ 
+ echo -n -e "\x1b[1;33m[>] Do you want to install OpenJDK? It is only needed to generate a .jar stager (y/N)? \x1b[0m"
+-read answer
++echo "Exegol assumed yes"
++answer=y
+ if [ "$answer" != "${answer#[Yy]}" ] ;then
+   echo -e "\x1b[1;34m[*] Installing OpenJDK\x1b[0m"
+   sudo apt-get install -y default-jdk
+@@ -112,7 +114,7 @@ fi
+ 
+ echo -e "\x1b[1;34m[*] Installing dotnet for C# agents and modules\x1b[0m"
+ if [ $OS_NAME == "DEBIAN" ]; then
+-  wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
++  wget https://packages.microsoft.com/config/debian/$VERSION_ID/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+   sudo dpkg -i packages-microsoft-prod.deb
+   sudo apt-get update
+   sudo apt-get install -y apt-transport-https dotnet-sdk-3.1
+@@ -129,7 +131,8 @@ elif [ $OS_NAME == "KALI" ]; then
+ fi
+ 
+ echo -n -e "\x1b[1;33m[>] Do you want to install Nim and MinGW? It is only needed to generate a Nim stager (y/N)? \x1b[0m"
+-read answer
++echo "Exegol assumed yes"
++answer=y
+ if [ "$answer" != "${answer#[Yy]}" ] ;then
+   if [ $OS_NAME == "DEBIAN" ]; then
+     sudo apt install -y curl git gcc
+

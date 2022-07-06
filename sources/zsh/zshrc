@@ -17,7 +17,8 @@ PROMPT="$TIME_%{$FX[bold]$FG[013]%} %m %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_ch
 export GOPATH=$HOME/go
 export GO111MODULE=on
 export JOHN=/opt/tools/john/run
-export PATH=/opt/tools/bin:$JOHN:$GOPATH/bin:$PATH
+export PATH=/opt/tools/bin:$JOHN:$GOPATH/bin:/usr/local/go/bin:$PATH
+export PATH=/opt/tools/dex2jar/dex-tools-2.1:$PATH
 
 source /opt/.zsh_aliases
 source $HOME/.cargo/env
@@ -33,3 +34,8 @@ export PATH="$PATH:/root/.local/bin"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en
+
+
+function theharvester(){
+    python3 -c "import os; os.system('cd /opt/tools/theHarvester && . theharvenv/bin/activate && python3 theHarvester.py ""$@""');"
+}
