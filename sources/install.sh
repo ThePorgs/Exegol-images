@@ -1572,6 +1572,11 @@ function install_DFSCoerce() {
   git -C /opt/tools/ clone https://github.com/Wh04m1001/DFSCoerce.git
 }
 
+function install_coercer() {
+  colorecho "Installing Coercer"
+  git -C /opt/tools/ clone https://github.com/p0dalirius/Coercer
+}
+
 function install_PKINITtools() {
   colorecho "Installing PKINITtools"
   git -C /opt/tools/ clone https://github.com/dirkjanm/PKINITtools
@@ -2363,6 +2368,7 @@ function install_ad_tools() {
   install_ntlm-scanner            # Python script to check public vulns on DCs
   install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
   install_DFSCoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
+  install_coercer                 # Python script to coerce auth through multiple methods
   install_PKINITtools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
   install_manspider               # Snaffler-like in Python
