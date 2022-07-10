@@ -1783,6 +1783,12 @@ function install_crackhound() {
   git -C /opt/tools/ clone https://github.com/trustedsec/CrackHound
 }
 
+function install_kerbrute() {
+  colorecho "Installing Kerbrute"
+  wget https://github.com/ropnop/kerbrute/releases/latest/download/kerbrute_linux_amd64 -O /opt/tools/bin/kerbrute
+  chmod +x /opt/tools/bin/kerbrute
+}
+
 function install_searchsploit() {
   colorecho "Installing Searchsploit"
   git clone https://github.com/offensive-security/exploitdb.git /opt/exploit-database
@@ -2388,6 +2394,7 @@ function install_ad_tools() {
   install_ldaprelayscan
   install_goldencopy
   install_crackhound
+  install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
   python3 -m pip install --upgrade rich # temporary fix. Rich seems to be installed with a deprecated version. I need to find which tool requires this
 }
 
