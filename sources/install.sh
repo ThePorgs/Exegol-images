@@ -1624,7 +1624,7 @@ function install_ignorant() {
 function install_donpapi() {
   colorecho "Installing DonPAPI"
   git -C /opt/tools/ clone https://github.com/login-securite/DonPAPI.git
-  python3 -m pip install -r requirements.txt
+  python3 -m pip install -r /opt/tools/DonPAPI/requirements.txt
 }
 
 function install_gau() {
