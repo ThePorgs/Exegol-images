@@ -350,4 +350,5 @@ crackhound.py --verbose --password "exegol4thewin" --plain-text --plain-text --d
 kerbrute userenum -d BREAKING.BAD usernames.txt
 kerbrute passwordspray -d BREAKING.BAD domain_users.txt Password123
 kerbrute bruteuser -d BREAKING.BAD passwords.lst thoffman
+tls-scanner -connect example.com:443
 # -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #
