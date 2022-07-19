@@ -15,7 +15,7 @@ function prompt_char {
   if [ $UID -eq 0 ]; then echo "#"; else echo $; fi
 }
 LOGGING=""
-if [ "$(ps -ocommand= $(ps -oppid= $PPID | awk '{print $1}') | awk '{print $1}')" = 'script' ]; then
+if [ "$(ps -ocommand= $(ps -oppid= $PPID 2>/dev/null | awk '{print $1}') 2>/dev/null | awk '{print $1}')" = 'script' ]; then
     LOGGING="[🔴]"
 fi
 TIME_="%{$fg[white]%}[%{$fg[red]%}%D{%b %d, %Y - %T (%Z)}%{$fg[white]%}]%{$reset_color%}"
