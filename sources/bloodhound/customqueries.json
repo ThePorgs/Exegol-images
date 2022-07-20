@@ -227,7 +227,7 @@
             "category": "A one-man wolf pack",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(g)-[:AddAllowedToAct]->(c:Computer) WHERE g.objectid ENDS WITH "S-1-1-0" OR g.objectid ENDS WITH "-513" OR g.objectid ENDS WITH "S-1-5-11" OR g.objectid ENDS WITH "-515" RETURN p"
+                "query": "MATCH p=(g)-[:AddAllowedToAct]->(c:Computer) WHERE g.objectid ENDS WITH 'S-1-1-0' OR g.objectid ENDS WITH '-513' OR g.objectid ENDS WITH 'S-1-5-11' OR g.objectid ENDS WITH '-515' RETURN p"
             }]
         },
         {
