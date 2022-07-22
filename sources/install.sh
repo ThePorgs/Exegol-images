@@ -22,7 +22,7 @@ function criticalecho-noexit () {
 function update() {
   colorecho "Updating, upgrading, cleaning"
   echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-  apt -y update && apt -y install apt-utils dialog && apt -y upgrade && apt -y autoremove && apt-get clean
+  apt-get -y update && apt-get -y install apt-utils dialog && apt-get -y upgrade && apt-get -y autoremove && apt-get clean
 }
 
 function fapt() {
@@ -73,14 +73,14 @@ function install_ohmyzsh() {
 
 function locales() {
   colorecho "Configuring locales"
-  apt -y install locales
+  apt-get -y install locales
   sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
   locale-gen
 }
 
 function tmux() {
   colorecho "Installing tmux"
-  apt -y install tmux
+  apt-get -y install tmux
   cp -v /root/sources/tmux/tmux.conf ~/.tmux.conf
   touch ~/.hushlogin
 }
@@ -150,7 +150,7 @@ function sn0int() {
   gpg -a --export --keyring /usr/share/keyrings/debian-maintainers.gpg git@rxv.cc | apt-key add -
   apt-key adv --keyserver keyserver.ubuntu.com --refresh-keys git@rxv.cc
   echo deb http://apt.vulns.sexy stable main > /etc/apt/sources.list.d/apt-vulns-sexy.list
-  apt update -y
+  apt-get -y update
   apt-get install sn0int -y
   apt-get install --fix-broken -y
 }
@@ -186,7 +186,7 @@ function JSParser() {
   git -C /opt/tools/ clone https://github.com/rickjms1337/JSParser.git
   cd /opt/tools/JSParser
   git checkout remotes/origin/master_upgrading_python3
-  apt update
+  apt-get update
   apt-get install python3-pycurl
   python3 -m pip install -r requirements.txt
   python3 setup.py install
@@ -279,7 +279,7 @@ function Bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  apt -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
+  apt-get -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
   git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   cd /opt/tools/CrackMapExec
   # Redefining baseDN from domain name instead of KDC
@@ -289,7 +289,7 @@ function install_crackmapexec() {
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
   # this is for having the ability to check the source code when working with modules and so on
 #  git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
-#  apt -y install crackmapexec
+#  apt-get -y install crackmapexec
   cp -v /root/sources/grc/conf.cme /usr/share/grc/conf.cme
 }
 
@@ -302,7 +302,7 @@ function sprayhound() {
   colorecho "Installing sprayhound"
   git -C /opt/tools/ clone https://github.com/Hackndo/sprayhound
   cd /opt/tools/sprayhound
-  apt -y install libsasl2-dev libldap2-dev
+  apt-get -y install libsasl2-dev libldap2-dev
   python3 -m pip install "pyasn1<0.5.0,>=0.4.6"
   python3 setup.py install
 }
@@ -363,9 +363,9 @@ function neo4j_install() {
   fi
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
-  apt update
-  apt -y install --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
-  apt -y install neo4j
+  apt-get update
+  apt-get -y install --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
+  apt-get -y install neo4j
   #mkdir /usr/share/neo4j/conf
   neo4j-admin set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
@@ -401,7 +401,7 @@ function aclpwn() {
 
 function IceBreaker() {
   colorecho "Installing IceBreaker"
-  apt -y install lsb-release python3-libtmux python3-libnmap python3-ipython
+  apt-get -y install lsb-release python3-libtmux python3-libnmap python3-ipython
   python -m pip install pipenva
   git -C /opt/tools/ clone https://github.com/DanMcInerney/icebreaker
   cd /opt/tools/icebreaker/
@@ -431,7 +431,7 @@ function install_empire() {
 
 function install_starkiller() {
   colorecho "Installing Starkiller"
-  apt -y install libfuse2
+  apt-get -y install libfuse2
   version=$(curl -s https://github.com/BC-SECURITY/Starkiller/tags|grep /releases/tag/v -m1 |grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|cut -d 'v' -f2)
   mkdir /opt/tools/starkiller
   wget -O /opt/tools/starkiller/starkiller.AppImage https://github.com/BC-SECURITY/Starkiller/releases/download/v$version/starkiller-$version.AppImage
@@ -577,7 +577,7 @@ function install_proxychains() {
 
 function install_grc() {
   colorecho "Installing and configuring grc"
-  apt -y install grc
+  apt-get -y install grc
   cp -v /root/sources/grc/grc.conf /etc/grc.conf
 }
 
@@ -593,7 +593,7 @@ function pykek() {
 
 function install_autorecon() {
   colorecho "Installing autorecon"
-  apt -y install wkhtmltopdf python3-venv
+  apt-get -y install wkhtmltopdf python3-venv
   python3 -m pip install --user pipx
   python3 -m pipx ensurepath
   source ~/.bashrc
@@ -646,7 +646,7 @@ function darkarmour() {
   colorecho "Installing darkarmour"
   git -C /opt/tools/ clone https://github.com/bats3c/darkarmour
   cd /opt/tools/darkarmour
-  apt -y install mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 upx-ucl osslsigncode
+  apt-get -y install mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 upx-ucl osslsigncode
 }
 
 function powershell() {
@@ -654,7 +654,7 @@ function powershell() {
   apt-get install -y software-properties-common
   curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
   apt-add-repository https://packages.microsoft.com/debian/11/prod
-  apt update
+  apt-get update
   apt-get install -y powershell
   mv /opt/microsoft /opt/tools/microsoft
   rm /usr/bin/pwsh
@@ -684,7 +684,7 @@ function install_uberfile() {
 
 function kadimus() {
   colorecho "Installing kadimus"
-  apt -y install libcurl4-openssl-dev libpcre3-dev libssh-dev
+  apt-get -y install libcurl4-openssl-dev libpcre3-dev libssh-dev
   git -C /opt/tools/ clone https://github.com/P0cL4bs/Kadimus
   cd /opt/tools/Kadimus
   make
@@ -692,7 +692,7 @@ function kadimus() {
 
 function install_testssl() {
   colorecho "Installing testssl"
-  apt -y install bsdmainutils
+  apt-get -y install bsdmainutils
   git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
 }
 
@@ -756,7 +756,7 @@ function install_jwt_tool() {
 
 function jwt_cracker() {
   colorecho "Installing JWT cracker"
-  apt -y install npm
+  apt-get -y install npm
   npm install --global jwt-cracker
 }
 
@@ -865,7 +865,7 @@ function install_proxmark3() {
   colorecho "Installing proxmark3 client"
   colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3OTHER (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
   colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmak3/"
-  apt -y install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev
+  apt-get -y install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev
   git -C /opt/tools/ clone https://github.com/RfidResearchGroup/proxmark3.git
   cd /opt/tools/proxmark3
   make clean
@@ -930,7 +930,7 @@ function bloodhound_old_v2() {
 
 function bettercap_install() {
   colorecho "Installing Bettercap"
-  apt -y install libpcap-dev libusb-1.0-0-dev libnetfilter-queue-dev
+  apt-get -y install libpcap-dev libusb-1.0-0-dev libnetfilter-queue-dev
   go install -v github.com/bettercap/bettercap@latest
   /root/go/bin/bettercap -eval "caplets.update; ui.update; q"
   sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/http-ui.cap
@@ -950,7 +950,7 @@ function hcxtools() {
 
 function hcxdumptool() {
   colorecho "Installing hcxdumptool"
-  apt -y install libcurl4-openssl-dev libssl-dev
+  apt-get -y install libcurl4-openssl-dev libssl-dev
   git -C /opt/tools/ clone https://github.com/ZerBea/hcxdumptool
   cd /opt/tools/hcxdumptool
   make
@@ -981,7 +981,7 @@ function wifite2() {
 
 function wireshark_sources() {
   colorecho "Installing tshark, wireshark"
-  apt -y install cmake libgcrypt20-dev libglib2.0-dev libpcap-dev qtbase5-dev libssh-dev libsystemd-dev qtmultimedia5-dev libqt5svg5-dev qttools5-dev libc-ares-dev flex bison byacc
+  apt-get -y install cmake libgcrypt20-dev libglib2.0-dev libpcap-dev qtbase5-dev libssh-dev libsystemd-dev qtmultimedia5-dev libqt5svg5-dev qttools5-dev libc-ares-dev flex bison byacc
   wget -O /tmp/wireshark.tar.xz https://www.wireshark.org/download/src/wireshark-latest.tar.xz
   cd /tmp/
   tar -xvf /tmp/wireshark.tar.xz
@@ -1016,11 +1016,11 @@ function pwnedornot() {
 
 function ghunt() {
   colorecho "Installing ghunt"
-  apt update
+  apt-get update
   apt-get install -y curl unzip gnupg
   curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
   echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-  apt update
+  apt-get update
   apt-get install -y google-chrome-stable
   rm -rf /var/lib/apt/lists/*
   git -C /opt/tools/ clone https://github.com/mxrch/GHunt
@@ -1182,7 +1182,7 @@ function windapsearch-go() {
 
 function install_trilium() {
   colorecho "Installing Trilium (building from sources)"
-  apt -y install libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
+  apt-get -y install libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
   git -C /opt/tools/ clone -b stable https://github.com/zadam/trilium.git
   cd /opt/tools/trilium
   # the npm install needs to be executed in the zsh context where nvm is used to set the Node version to be used.
@@ -1331,7 +1331,7 @@ function install_mfdread() {
 
 function install_mousejack() {
   colorecho "Installing mousejack"
-  apt -y install sdcc binutils python git
+  apt-get -y install sdcc binutils python git
   python-pip
   git -C /opt/tools/ clone https://github.com/BastilleResearch/mousejack
   cd /opt/tools/mousejack
@@ -1356,12 +1356,12 @@ function install_gosecretsdump() {
 
 function install_hackrf() {
   colorecho "Installing HackRF tools"
-  apt -y install hackrf
+  apt-get -y install hackrf
 }
 
 function install_gqrx() {
   colorecho "Installing gqrx"
-  apt -y install gqrx-sdr
+  apt-get -y install gqrx-sdr
 }
 
 function install_sipvicious() {
@@ -1415,7 +1415,7 @@ function install_peepdf() {
 
 function install_volatility() {
   colorecho "Installing volatility"
-  apt -y install pcregrep libpcre++-dev python2-dev yara
+  apt-get -y install pcregrep libpcre++-dev python2-dev yara
   git -C /opt/tools/ clone https://github.com/volatilityfoundation/volatility
   cd /opt/tools/volatility
   python -m pip install pycrypto distorm3 pillow openpyxl ujson
@@ -1482,7 +1482,7 @@ function install_rsactftool() {
   colorecho "Installing RsaCtfTool"
   git -C /opt/tools/ clone https://github.com/Ganapati/RsaCtfTool
   cd /opt/tools/RsaCtfTool
-  apt -y install libgmp3-dev libmpc-dev
+  apt-get -y install libgmp3-dev libmpc-dev
   python3 -m pip install -r requirements.txt
 }
 
@@ -2166,7 +2166,7 @@ function install_osint_tools() {
   set_env
   #Picture And Videos
   youtubedl                       # Command-line program to download videos from YouTube.com and other video sites
-  apt update
+  apt-get update
   fapt exiftool                   # For read exif information
   fapt exifprobe                  # Probe and report structure and metadata content of camera image files
   #Subdomain
@@ -2205,16 +2205,16 @@ function install_osint_tools() {
   #Data visualization
   constellation                   # A graph-focused data visualisation and interactive analysis application.
   #Framework
-  apt update
+  apt-get update
   install_maltego                 # Maltego is a software used for open-source intelligence and forensics
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
   fapt recon-ng                   # External recon tool
-  # TODO : http://apt.vulns.sexy make apt update print a warning, and the repo has a weird name, we need to fix this in order to not alarm users
+  # TODO : http://apt.vulns.sexy make apt-get update print a warning, and the repo has a weird name, we need to fix this in order to not alarm users
   # sn0int                        # Semi-automatic OSINT framework and package manager
   OSRFramework                    # OSRFramework, the Open Sources Research Framework
   #Dark
-  apt update
+  apt-get update
   install_tor					            # Tor proxy
   fapt-noexit torbrowser-launcher        # Tor browser
   onionsearch                     # OnionSearch is a script that scrapes urls on different .onion search engines.
@@ -2222,7 +2222,7 @@ function install_osint_tools() {
   #Github
   githubemail                     # Retrieve a GitHub user's email even if it's not public
   #Other
-  apt update
+  apt-get update
   fapt whois                      # See information about a specific domain name or IP address
   ReconDog                        # Informations gathering tool
   JSParser                        # Parse JS files
