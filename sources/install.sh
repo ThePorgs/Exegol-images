@@ -427,6 +427,7 @@ function install_empire() {
   python3 -m pip install .
   # Changing password
   sed -i 's/password123/exegol4thewin/' /opt/tools/Empire/empire/server/config.yaml
+  sed -i 's/Password123!/exegol4thewin/' ~/.cme/cme.conf
 }
 
 function install_starkiller() {
