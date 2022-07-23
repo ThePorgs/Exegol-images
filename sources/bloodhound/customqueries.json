@@ -126,7 +126,7 @@
             }]
         },
         {
-            "name": "Unconstrained Delegation systems",
+            "name": "Unconstrained Delegations",
             "category": "Ready to let the dogs out?",
             "queryList": [{
                 "final": true,
@@ -134,11 +134,27 @@
             }]
         },
         {
-            "name": "Constrained Delegation systems",
+            "name": "Constrained Delegations (with Protocol Transition)",
             "category": "Ready to let the dogs out?",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(u)-[:AllowedToDelegate]->(c) RETURN p"
+                "query": "MATCH (c) WHERE NOT c.allowedtodelegate IS NULL AND c.trustedtoauth=true return c"
+            }]
+        },
+        {
+            "name": "Constrained Delegations (without Protocol Transition)",
+            "category": "Ready to let the dogs out?",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH (c) WHERE NOT c.allowedtodelegate IS NULL AND c.trustedtoauth=false return c"
+            }]
+        },
+        {
+            "name": "Resource-Based Constrained Delegations",
+            "category": "Ready to let the dogs out?",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p=(u)-[:AllowedToAct]->(c) RETURN p"
             }]
         },
         {
@@ -163,14 +179,6 @@
             "queryList": [{
                 "final": true,
                 "query": "MATCH (n {owned:true}) MATCH p=shortestPath((n)-[:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin|ReadGMSAPassword|HasSIDHistory|CanPSRemote*1..]->(m:Computer {unconstraineddelegation: true})) WHERE NOT n=m RETURN p"
-            }]
-        },
-        {
-            "name": "Find computers with constrained delegation permissions and the corresponding targets where they allowed to delegate",
-            "category": "Ready to let the dogs out?",
-            "queryList": [{
-                "final": true,
-                "query": "MATCH (c:Computer) WHERE c.allowedtodelegate IS NOT NULL RETURN c"
             }]
         },
         {
