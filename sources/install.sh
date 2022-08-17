@@ -311,7 +311,7 @@ function install_impacket() {
   colorecho "Installing Impacket scripts"
   git -C /opt/tools/ clone https://github.com/SecureAuthCorp/impacket
   cd /opt/tools/impacket/
-  # 1090: [secretsdump] added custom ldap filter argument
+  # 1090: [secretsdump.py] added custom ldap filter argument
   # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
   # 1154: [ntlmrelayx] Unfiltered SID query when operating ACL attack
   # 1171: [smbpasswd] Connect to RPC using alternative credentials
@@ -330,13 +330,24 @@ function install_impacket() {
   # 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
   # 1291: [dacledit] New example script for DACL manipulation
   # 1323: [owneredit.py] New example script to change an object's owner
+  # 1329: [secretsdump.py] Use a custom LDAP filter during a DCSync
   git config --global user.email "exegol@install.er"
   git config --global user.name "Exegol installer"
-  # skipping 1090, makes DCSync happen twice
-  # prs="1090 1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291 1323"
-  prs="1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291 1323"
+  # prs="1090 1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291 1323 1329"
+  # skipping 1177, makes CONFLICT
+  # skipping 1267, makes CONFLICT
+  # skipping 1289, makes CONFLICT
+  # skipping 1291, makes CONFLICT
+  # skipping 1323, makes CONFLICT
+  # skipping 1329, makes CONFLICT
+  prs="1177 1267 1289 1291 1323 1329"
   for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
-  python3 -m pipx install .
+  # skipping 1090, makes DCSync happen twice
+  # skipping 1184, makes findDelegation fail
+  # skipping 1290, merge fails
+  prs="1135 1154 1171 1201 1202 1224 1253 1256 1270 1280 1288"
+  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --no-edit pull/$pr; done
+  python3 -m pip install .
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
   cp -v /root/sources/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
@@ -427,7 +438,6 @@ function install_empire() {
   python3 -m pip install .
   # Changing password
   sed -i 's/password123/exegol4thewin/' /opt/tools/Empire/empire/server/config.yaml
-  sed -i 's/Password123!/exegol4thewin/' ~/.cme/cme.conf
 }
 
 function install_starkiller() {
@@ -1651,7 +1661,9 @@ function install_webclientservicescanner() {
 
 function install_certipy() {
   colorecho "Installing Certipy"
-  python3 -m pip install certipy
+  git -C /opt/tools/ clone https://github.com/ly4k/Certipy
+  cd /opt/tools/Certipy
+  python3 -m pipx install .
 }
 
 # Debian port : working ?
@@ -2366,6 +2378,7 @@ function install_ad_tools() {
   LNKUp
   fapt samdump2                   # Dumps Windows 2k/NT/XP/Vista password hashes
   fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+  fapt polenum
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_pth-tools               # Pass the hash attack
   install_smtp-user-enum             # SMTP user enumeration via VRFY, EXPN and RCPT
