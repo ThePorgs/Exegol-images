@@ -61,6 +61,22 @@
             }]
         },
         {
+            "name": "Connections between different domains/forests",
+            "category": "Tigers love pepper",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p = (a)-[r]->(b) WHERE NOT a.domain = b.domain RETURN p"
+            }]
+        },
+        {
+            "name": "Connections (ACEs only) between different domains/forests",
+            "category": "Tigers love pepper",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p = (a)-[r]->(b) WHERE NOT a.domain = b.domain AND r.isacl = True RETURN p"
+            }]
+        },
+        {
             "name": "Owned users with permissions against GPOs",
             "category": "Tigers love pepper",
             "queryList": [{
