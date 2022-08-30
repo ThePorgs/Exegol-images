@@ -480,6 +480,19 @@ function install_subfinder() {
   go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 }
 
+# A wrapper around grep, to help you grep for things
+function install_gf() {
+  go install github.com/tomnomnom/gf@latest
+  # Enable autocompletion
+  echo 'complete -W "$(gf -list)" gf' >> ~/.zshrc
+  cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
+  # Add patterns from 1ndianl33t
+  git -C /opt/tools/ https://github.com/1ndianl33t/Gf-Patterns
+  cp -r /opt/tools/Gf-Patterns/*.json ~/.gf
+  # Remove repo to save space
+  rm -r /opt/tools/Gf-Patterns
+}
+
 function install_gobuster() {
   colorecho "Installing gobuster"
   go install github.com/OJ/gobuster/v3@latest
