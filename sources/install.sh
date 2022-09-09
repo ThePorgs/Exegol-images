@@ -331,22 +331,28 @@ function install_impacket() {
   # 1291: [dacledit] New example script for DACL manipulation
   # 1323: [owneredit.py] New example script to change an object's owner
   # 1329: [secretsdump.py] Use a custom LDAP filter during a DCSync
-  git config --global user.email "exegol@install.er"
-  git config --global user.name "Exegol installer"
-  # prs="1090 1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291 1323 1329"
-  # skipping 1177, makes CONFLICT
-  # skipping 1267, makes CONFLICT
-  # skipping 1289, makes CONFLICT
-  # skipping 1291, makes CONFLICT
-  # skipping 1323, makes CONFLICT
-  # skipping 1329, makes CONFLICT
-  prs="1177 1267 1289 1291 1323 1329"
-  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
+  # 1353: [ntlmrelayx.py] add filter option
+  # 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
+  # 1391: [pac.py] Ticketer extra-pac implementation
+  # 1393: [rbcd.py] Handled SID not found in LDAP error #1393
+
   # skipping 1090, makes DCSync happen twice
   # skipping 1184, makes findDelegation fail
-  # skipping 1290, merge fails
-  prs="1135 1154 1171 1201 1202 1224 1253 1256 1270 1280 1288"
+  # skipping 1171 and 1177 for messing with smbpasswd, requires some fixing
+
+
+  git config --global user.email "exegol@install.er"
+  git config --global user.name "Exegol installer"
+
+  prs="1267 1289 1291 1323 1329 1353 1360 1391 1393"
+  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
+
+  prs="1135 1154 1202 1224 1253 1256"
   for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --no-edit pull/$pr; done
+
+  prs="1270 1280 1288 1201"
+  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
+
   python3 -m pip install .
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
@@ -2132,7 +2138,6 @@ function install_most_used_tools() {
   evilwinrm                       # WinRM shell
   install_john                    # Password cracker
   fapt hashcat                    # Password cracker
-  download_hashcat_rules
   fapt fcrackzip                  # Zip cracker
 }
 
@@ -2165,7 +2170,6 @@ function install_wordlists_tools() {
 # Package dedicated to offline cracking/bruteforcing tools
 function install_cracking_tools() {
   fapt hashcat                    # Password cracker
-  download_hashcat_rules
   install_john                    # Password cracker
   fapt fcrackzip                  # Zip cracker
   fapt pdfcrack                   # PDF cracker

