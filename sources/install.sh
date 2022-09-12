@@ -486,6 +486,19 @@ function install_subfinder() {
   go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 }
 
+# A wrapper around grep, to help you grep for things
+function install_gf() {
+  go install github.com/tomnomnom/gf@latest
+  # Enable autocompletion
+  echo 'complete -W "$(gf -list)" gf' >> ~/.zshrc
+  cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
+  # Add patterns from 1ndianl33t
+  git -C /opt/tools/ clone https://github.com/1ndianl33t/Gf-Patterns
+  cp -r /opt/tools/Gf-Patterns/*.json ~/.gf
+  # Remove repo to save space
+  rm -r /opt/tools/Gf-Patterns
+}
+
 function install_gobuster() {
   colorecho "Installing gobuster"
   go install github.com/OJ/gobuster/v3@latest
@@ -780,16 +793,6 @@ function jwt_cracker() {
 function wuzz() {
   colorecho "Installing wuzz"
   go install -v github.com/asciimoo/wuzz@latest
-}
-
-function gf_install() {
-  colorecho "Installing gf"
-  mkdir ~/.gf
-  go install -v github.com/tomnomnom/gf@latest
-  echo 'source $GOPATH/src/github.com/tomnomnom/gf/gf-completion.zsh' | tee -a ~/.zshrc
-  cp -rv ~/go/src/github.com/tomnomnom/gf/examples/* ~/.gf
-  # TODO: fix this when building : cp: cannot stat '/root/go/src/github.com/tomnomnom/gf/examples/*': No such file or directory
-  gf -save redirect -HanrE 'url=|rt=|cgi-bin/redirect.cgi|continue=|dest=|destination=|go=|out=|redir=|redirect_uri=|redirect_url=|return=|return_path=|returnTo=|rurl=|target=|view=|from_url=|load_url=|file_url=|page_url=|file_name=|page=|folder=|folder_url=|login_url=|img_url=|return_url=|return_to=|next=|redirect=|redirect_to=|logout=|checkout=|checkout_url=|goto=|next_page=|file=|load_file='
 }
 
 function rbcd-attack() {
@@ -2080,7 +2083,7 @@ function install_base() {
   fapt ncat                       # Socket manager
   fapt netcat-traditional         # Socket manager
   fapt socat                      # Socket manager
-  #gf_install                      # wrapper around grep
+  install_gf                      # wrapper around grep
   fapt rdate                      # tool for querying the current time from a network server
   fapt putty                      # GUI-based SSH, Telnet and Rlogin client
   fapt screen                     # CLI-based PuTT-like
