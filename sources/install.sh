@@ -309,13 +309,12 @@ function sprayhound() {
 
 function install_impacket() {
   colorecho "Installing Impacket scripts"
-  git -C /opt/tools/ clone https://github.com/SecureAuthCorp/impacket
-  cd /opt/tools/impacket/
-  # 1090: [secretsdump.py] added custom ldap filter argument
+  git -C /opt/tools/ clone https://github.com/ShutdownRepo/impacket
+  git -C /opt/tools/impacket checkout exegol
+
+  # Following PRs are merged in the forked repo
   # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
   # 1154: [ntlmrelayx] Unfiltered SID query when operating ACL attack
-  # 1171: [smbpasswd] Connect to RPC using alternative credentials
-  # 1177: [smbpasswd] Added Kerberos support
   # 1184: [findDelegation] Added user filter on findDelegation
   # 1201: [describeTicket] Added describeTicket
   # 1202: [getST] Added self for getST
@@ -325,35 +324,21 @@ function install_impacket() {
   # 1267: [Get-GPPPasswords] Better handling of various XML files in Group Policy Preferences
   # 1270: [ticketer] Fix ticketer duration to support default 10 hours tickets
   # 1280: [machineAccountQuota] added machineAccountQuota.py
-  # 1288: [ntlmrelayx] LDAP attack: bypass computer creation restrictions with CVE-2021-34470
   # 1289: [ntlmrelayx] LDAP attack: Add DNS records through LDAP
-  # 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
   # 1291: [dacledit] New example script for DACL manipulation
   # 1323: [owneredit.py] New example script to change an object's owner
   # 1329: [secretsdump.py] Use a custom LDAP filter during a DCSync
   # 1353: [ntlmrelayx.py] add filter option
-  # 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
-  # 1391: [pac.py] Ticketer extra-pac implementation
+  # 1391: [ticketer.py, pac.py] Ticketer extra-pac implementation
   # 1393: [rbcd.py] Handled SID not found in LDAP error #1393
+  # 1397: [mssqlclient.py] commands and prompt improvements
 
-  # skipping 1090, makes DCSync happen twice
-  # skipping 1184, makes findDelegation fail
-  # skipping 1171 and 1177 for messing with smbpasswd, requires some fixing
+  # Following PRs are not merged yet because of conflict or for other reasons, but should be merged soon
+  # to understand first 1288: [ntlmrelayx] LDAP attack: bypass computer creation restrictions with CVE-2021-34470
+  # conflict 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
+  # conflict 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
 
-
-  git config --global user.email "exegol@install.er"
-  git config --global user.name "Exegol installer"
-
-  prs="1267 1289 1291 1323 1329 1353 1360 1391 1393"
-  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
-
-  prs="1135 1154 1202 1224 1253 1256"
-  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --no-edit pull/$pr; done
-
-  prs="1270 1280 1288 1201"
-  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
-
-  python3 -m pip install .
+  python3 -m pip install /opt/tools/impacket/
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
   cp -v /root/sources/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
@@ -1921,7 +1906,9 @@ function install_smbmap(){
   colorecho "Installing smbmap"
   git -C /opt/tools/ clone -v https://github.com/ShawnDEvans/smbmap
   cd /opt/tools/smbmap
-  python3 -m pip install -r requirements.txt
+  # installing requirements manually to skip impacket overwrite
+  # wish we could install smbmap in virtual environment :'(
+  python3 -m pip install pyasn1 pycrypto configparser termcolor
 }
 
 function install_pth-tools(){
