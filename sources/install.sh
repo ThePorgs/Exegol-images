@@ -1762,11 +1762,6 @@ function install_pwncat() {
   python3 -m pipx install pwncat-cs
 }
 
-function install_dcsync() {
-  colorecho "Installing DCSync.py"
-  git -C /opt/tools/ clone https://github.com/n00py/DCSync
-}
-
 function install_gMSADumper() {
   colorecho "Installing gMSADumper"
   git -C /opt/tools/ clone https://github.com/micahvandeusen/gMSADumper
@@ -1984,6 +1979,21 @@ function install_rust_cargo() {
   source $HOME/.cargo/env
 }
 
+function install_exegol-history() {
+  colorecho "Installing Exegol-history"
+#  git -C /opt/tools/ clone https://github.com/ShutdownRepo/Exegol-history
+# todo : below is something basic. A nice tool being created for faster and smoother worflow
+  mkdir /opt/tools/Exegol-history
+  echo "export DOMAIN='DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export USER='someuser'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export PASSWORD='somepassword'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export NT_HASH='c1c635aa12ae60b7fe39e28456a7bac6'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export DC_IP='192.168.56.101'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export DC_HOST='DC01.DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export ATTACKER_IP='192.168.56.1'" >> /opt/tools/Exegol-history/profile.sh
+}
+
 function install_base() {
   update || exit
   fapt software-properties-common
@@ -2086,6 +2096,7 @@ function install_base() {
   fapt faketime
   fapt ruby ruby-dev
   fapt libxml2-utils
+  install_exegol-history
 }
 
 # Package dedicated to most used offensive tools
@@ -2404,7 +2415,6 @@ function install_ad_tools() {
   install_certipy
   npm install ntpsync             # sync local time with remote server
   install_shadowcoerce
-  install_dcsync
   install_gMSADumper
   install_modifyCertTemplate
   install_pylaps
