@@ -1802,8 +1802,7 @@ function install_kerbrute() {
 function install_hekatomb() {
   colorecho "Installing Hekatomb"
   git -C /opt/tools/ clone https://github.com/Processus-Thief/HEKATOMB
-  cd /opt/tools/HEKATOMB/
-  pip3 install -r requirements.txt
+  python3 -m pip install -r /opt/tools/HEKATOMB/requirements.txt
 }
 
 function install_searchsploit() {
