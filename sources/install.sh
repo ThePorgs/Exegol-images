@@ -1800,6 +1800,12 @@ function install_kerbrute() {
   chmod +x /opt/tools/bin/kerbrute
 }
 
+function install_hekatomb() {
+  colorecho "Installing Hekatomb"
+  git -C /opt/tools/ clone https://github.com/Processus-Thief/HEKATOMB
+  python3 -m pip install -r /opt/tools/HEKATOMB/requirements.txt
+}
+
 function install_searchsploit() {
   colorecho "Installing Searchsploit"
   git clone https://github.com/offensive-security/exploitdb.git /opt/exploit-database
@@ -2407,6 +2413,7 @@ function install_ad_tools() {
   install_PKINITtools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
   install_manspider               # Snaffler-like in Python
+  install_hekatomb                # DPAPI secrets grabber
   install_targetedKerberoast
   install_pcredz
   install_pywsus
