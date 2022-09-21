@@ -1799,6 +1799,13 @@ function install_kerbrute() {
   chmod +x /opt/tools/bin/kerbrute
 }
 
+function install_hekatomb() {
+  colorecho "Installing Hekatomb"
+  git -C /opt/tools/ clone https://github.com/Processus-Thief/HEKATOMB
+  cd /opt/tools/HEKATOMB/
+  pip3 install -r requirements.txt
+}
+
 function install_searchsploit() {
   colorecho "Installing Searchsploit"
   git clone https://github.com/offensive-security/exploitdb.git /opt/exploit-database
@@ -2406,6 +2413,7 @@ function install_ad_tools() {
   install_goldencopy
   install_crackhound
   install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
+  install_hekatomb                # DPAPI secrets grabber
   python3 -m pip install --upgrade rich # temporary fix. Rich seems to be installed with a deprecated version. I need to find which tool requires this
 }
 
