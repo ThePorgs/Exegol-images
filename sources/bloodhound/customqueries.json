@@ -239,19 +239,11 @@
             }]
         },
         {
-            "name": "Groups or users with the AddAllowedToAct right on a computer",
+            "name": "Objects with the AddAllowedToAct or WriteAccountRestrictions right on a computer",
             "category": "A nerdy hillbilly",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(g)-[:AddAllowedToAct]->(c:Computer) WHERE NOT g.highvalue RETURN p"
-            }]
-        },
-        {
-            "name": "Exploitable cases from any authenticated user with the AddAllowedToAct right on a computer",
-            "category": "A nerdy hillbilly",
-            "queryList": [{
-                "final": true,
-                "query": "MATCH p=(g)-[:AddAllowedToAct]->(c:Computer) WHERE g.objectid ENDS WITH 'S-1-1-0' OR g.objectid ENDS WITH '-513' OR g.objectid ENDS WITH 'S-1-5-11' OR g.objectid ENDS WITH '-515' RETURN p"
+                "query": "MATCH p=(g)-[:AddAllowedToAct|WriteAccountRestrictions]->(c:Computer) RETURN p"
             }]
         },
         {
