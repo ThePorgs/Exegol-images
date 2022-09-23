@@ -1802,7 +1802,7 @@ function install_kerbrute() {
 
 function install_hekatomb() {
   colorecho "Installing Hekatomb"
-  pip3 install hekatomb
+  python3 -m pip install hekatomb
 }
 
 function install_searchsploit() {
