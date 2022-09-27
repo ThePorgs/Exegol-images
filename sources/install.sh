@@ -1496,6 +1496,8 @@ function install_feroxbuster() {
   mkdir /opt/tools/feroxbuster
   cd /opt/tools/feroxbuster
   curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh | bash
+  # Adding a symbolic link in order for autorecon to be able to find the Feroxbuster binary
+  ln -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
 }
 
 function install_bloodhound-import() {
