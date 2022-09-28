@@ -2123,7 +2123,7 @@ function install_most_used_tools() {
   fapt nikto                      # Web scanner
   fapt sqlmap                     # SQL injection scanner
   fapt hydra                      # Login scanner
-  fapt joomscan                   # Joomla scanner
+  install_joomscan                   # Joomla scanner
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
