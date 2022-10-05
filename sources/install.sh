@@ -2094,6 +2094,7 @@ function install_most_used_tools() {
   install_gobuster                # Web fuzzer (pretty good for several extensions)
   install_ffuf                    # Web fuzzer (little favorites)
   fapt wfuzz                      # Web fuzzer (second favorites)
+  install_feroxbuster             # ffuf but with multithreaded recursion
   fapt nikto                      # Web scanner
   fapt sqlmap                     # SQL injection scanner
   fapt hydra                      # Login scanner
