@@ -2112,31 +2112,29 @@ function install_most_used_tools() {
   install_waybackurls             # Website history
   install_theHarvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
   install_simplyemail             # Gather emails
-  install_gobuster                # Web fuzzer (pretty good for several extensions)
   install_ffuf                    # Web fuzzer (little favorites)
-  fapt wfuzz                      # Web fuzzer (second favorites)
   fapt nikto                      # Web scanner
   fapt sqlmap                     # SQL injection scanner
   fapt hydra                      # Login scanner
-  install_joomscan                   # Joomla scanner
+  install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
   install_testssl                 # SSL/TLS scanner
   fapt sslscan                    # SSL/TLS scanner
   fapt weevely                    # Awesome secure and light PHP webshell
-  install_CloudFail                       # Cloudflare misconfiguration detector
-  install_EyeWitness                      # Website screenshoter
-  install_wafw00f                         # Waf detector
+  install_CloudFail               # Cloudflare misconfiguration detector
+  install_EyeWitness              # Website screenshoter
+  install_wafw00f                 # Waf detector
   install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
-  install_responder                       # LLMNR, NBT-NS and MDNS poisoner
+  install_responder               # LLMNR, NBT-NS and MDNS poisoner
   install_crackmapexec            # Network scanner
-  install_impacket                        # Network protocols scripts
-  enum4linux-ng
+  install_impacket                # Network protocols scripts
+  enum4linux-ng                   # Active Directory enumeration tool, improved Python alternative to enum4linux
   fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
-  install_smbmap                     # Allows users to enumerate samba share drives across an entire domain
+  install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_nuclei                  # Vulnerability scanner
   evilwinrm                       # WinRM shell
   install_john                    # Password cracker
