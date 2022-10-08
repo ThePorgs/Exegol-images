@@ -282,14 +282,12 @@ function install_crackmapexec() {
   apt-get -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
   git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   cd /opt/tools/CrackMapExec
-  # Redefining baseDN from domain name instead of KDC
-  curl --location https://github.com/byt3bl33d3r/CrackMapExec/pull/535.patch | git apply --verbose
   python3 -m pipx install .
+  crackmapexec
   mkdir -p ~/.cme
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
-  # this is for having the ability to check the source code when working with modules and so on
-#  git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
-#  apt-get -y install crackmapexec
+  # below is for having the ability to check the source code when working with modules and so on
+  # git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
   cp -v /root/sources/grc/conf.cme /usr/share/grc/conf.cme
 }
 
