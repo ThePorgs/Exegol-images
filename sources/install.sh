@@ -283,8 +283,9 @@ function install_crackmapexec() {
   git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   cd /opt/tools/CrackMapExec
   python3 -m pipx install .
-  crackmapexec
+  ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
+  [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
   # below is for having the ability to check the source code when working with modules and so on
   # git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
