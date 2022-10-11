@@ -253,7 +253,7 @@ secretsdump -ntds ntds.dit.save -system system.save LOCAL
 gosecretsdump -ntds ntds.dit.save -system system.save
 screen /dev/ttyACM0 115200
 httpmethods --threads 40 --location "http://$TARGET/"
-hakrawler -url "http://$TARGET/"
+echo "http://$TARGET/" | hakrawler -d 10
 adidnsdump -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --print-zones "$TARGET"
 proxychains adidnsdump --dns-tcp -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --print-zones "$TARGET"
 ngrok authtoken AUTHTOKEN:::https://dashboard.ngrok.com/get-started/your-authtoken
