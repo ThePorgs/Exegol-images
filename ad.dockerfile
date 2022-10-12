@@ -1,6 +1,6 @@
 # Author: Charlie BROMBERG (Shutdown - @_nwodtuhs)
 
-FROM kalilinux/kali-rolling
+FROM debian
 
 ARG TAG="local"
 ARG VERSION="local"
@@ -26,7 +26,7 @@ RUN /root/sources/install.sh install_base
 # this is a temporary limitation
 RUN /root/sources/install.sh install_misc_tools
 RUN /root/sources/install.sh install_wordlists_tools
-# RUN /root/sources/install.sh install_cracking_tools
+RUN /root/sources/install.sh install_cracking_tools
 # RUN /root/sources/install.sh install_osint_tools
 RUN /root/sources/install.sh install_web_tools
 RUN /root/sources/install.sh install_c2_tools

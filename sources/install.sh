@@ -282,14 +282,13 @@ function install_crackmapexec() {
   apt-get -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
   git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   cd /opt/tools/CrackMapExec
-  # Redefining baseDN from domain name instead of KDC
-  curl --location https://github.com/byt3bl33d3r/CrackMapExec/pull/535.patch | git apply --verbose
   python3 -m pipx install .
+  ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
+  [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
-  # this is for having the ability to check the source code when working with modules and so on
-#  git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
-#  apt-get -y install crackmapexec
+  # below is for having the ability to check the source code when working with modules and so on
+  # git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
   cp -v /root/sources/grc/conf.cme /usr/share/grc/conf.cme
 }
 
@@ -309,13 +308,12 @@ function sprayhound() {
 
 function install_impacket() {
   colorecho "Installing Impacket scripts"
-  git -C /opt/tools/ clone https://github.com/SecureAuthCorp/impacket
-  cd /opt/tools/impacket/
-  # 1090: [secretsdump] added custom ldap filter argument
+  git -C /opt/tools/ clone https://github.com/ShutdownRepo/impacket
+  git -C /opt/tools/impacket checkout exegol
+
+  # Following PRs are merged in the forked repo
   # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
   # 1154: [ntlmrelayx] Unfiltered SID query when operating ACL attack
-  # 1171: [smbpasswd] Connect to RPC using alternative credentials
-  # 1177: [smbpasswd] Added Kerberos support
   # 1184: [findDelegation] Added user filter on findDelegation
   # 1201: [describeTicket] Added describeTicket
   # 1202: [getST] Added self for getST
@@ -325,18 +323,21 @@ function install_impacket() {
   # 1267: [Get-GPPPasswords] Better handling of various XML files in Group Policy Preferences
   # 1270: [ticketer] Fix ticketer duration to support default 10 hours tickets
   # 1280: [machineAccountQuota] added machineAccountQuota.py
-  # 1288: [ntlmrelayx] LDAP attack: bypass computer creation restrictions with CVE-2021-34470
   # 1289: [ntlmrelayx] LDAP attack: Add DNS records through LDAP
-  # 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
   # 1291: [dacledit] New example script for DACL manipulation
   # 1323: [owneredit.py] New example script to change an object's owner
-  git config --global user.email "exegol@install.er"
-  git config --global user.name "Exegol installer"
-  # skipping 1090, makes DCSync happen twice
-  # prs="1090 1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291 1323"
-  prs="1135 1154 1171 1177 1184 1201 1202 1224 1253 1256 1267 1270 1280 1288 1289 1290 1291 1323"
-  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
-  python3 -m pipx install .
+  # 1329: [secretsdump.py] Use a custom LDAP filter during a DCSync
+  # 1353: [ntlmrelayx.py] add filter option
+  # 1391: [ticketer.py, pac.py] Ticketer extra-pac implementation
+  # 1393: [rbcd.py] Handled SID not found in LDAP error #1393
+  # 1397: [mssqlclient.py] commands and prompt improvements
+
+  # Following PRs are not merged yet because of conflict or for other reasons, but should be merged soon
+  # to understand first 1288: [ntlmrelayx] LDAP attack: bypass computer creation restrictions with CVE-2021-34470
+  # conflict 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
+  # conflict 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
+
+  python3 -m pip install /opt/tools/impacket/
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
   cp -v /root/sources/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
@@ -427,7 +428,6 @@ function install_empire() {
   python3 -m pip install .
   # Changing password
   sed -i 's/password123/exegol4thewin/' /opt/tools/Empire/empire/server/config.yaml
-  sed -i 's/Password123!/exegol4thewin/' ~/.cme/cme.conf
 }
 
 function install_starkiller() {
@@ -468,6 +468,19 @@ function assetfinder() {
 function install_subfinder() {
   colorecho "Installing subfinder"
   go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+}
+
+# A wrapper around grep, to help you grep for things
+function install_gf() {
+  go install github.com/tomnomnom/gf@latest
+  # Enable autocompletion
+  echo 'complete -W "$(gf -list)" gf' >> ~/.zshrc
+  cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
+  # Add patterns from 1ndianl33t
+  git -C /opt/tools/ clone https://github.com/1ndianl33t/Gf-Patterns
+  cp -r /opt/tools/Gf-Patterns/*.json ~/.gf
+  # Remove repo to save space
+  rm -r /opt/tools/Gf-Patterns
 }
 
 function install_gobuster() {
@@ -764,16 +777,6 @@ function jwt_cracker() {
 function wuzz() {
   colorecho "Installing wuzz"
   go install -v github.com/asciimoo/wuzz@latest
-}
-
-function gf_install() {
-  colorecho "Installing gf"
-  mkdir ~/.gf
-  go install -v github.com/tomnomnom/gf@latest
-  echo 'source $GOPATH/src/github.com/tomnomnom/gf/gf-completion.zsh' | tee -a ~/.zshrc
-  cp -rv ~/go/src/github.com/tomnomnom/gf/examples/* ~/.gf
-  # TODO: fix this when building : cp: cannot stat '/root/go/src/github.com/tomnomnom/gf/examples/*': No such file or directory
-  gf -save redirect -HanrE 'url=|rt=|cgi-bin/redirect.cgi|continue=|dest=|destination=|go=|out=|redir=|redirect_uri=|redirect_url=|return=|return_path=|returnTo=|rurl=|target=|view=|from_url=|load_url=|file_url=|page_url=|file_name=|page=|folder=|folder_url=|login_url=|img_url=|return_url=|return_to=|next=|redirect=|redirect_to=|logout=|checkout=|checkout_url=|goto=|next_page=|file=|load_file='
 }
 
 function rbcd-attack() {
@@ -1492,6 +1495,8 @@ function install_feroxbuster() {
   mkdir /opt/tools/feroxbuster
   cd /opt/tools/feroxbuster
   curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh | bash
+  # Adding a symbolic link in order for autorecon to be able to find the Feroxbuster binary
+  ln -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
 }
 
 function install_bloodhound-import() {
@@ -1651,7 +1656,9 @@ function install_webclientservicescanner() {
 
 function install_certipy() {
   colorecho "Installing Certipy"
-  python3 -m pip install certipy
+  git -C /opt/tools/ clone https://github.com/ly4k/Certipy
+  cd /opt/tools/Certipy
+  python3 -m pipx install .
 }
 
 # Debian port : working ?
@@ -1754,11 +1761,6 @@ function install_shadowcoerce() {
 function install_pwncat() {
   colorecho "Installing pwncat"
   python3 -m pipx install pwncat-cs
-}
-
-function install_dcsync() {
-  colorecho "Installing DCSync.py"
-  git -C /opt/tools/ clone https://github.com/n00py/DCSync
 }
 
 function install_gMSADumper() {
@@ -1900,7 +1902,9 @@ function install_smbmap(){
   colorecho "Installing smbmap"
   git -C /opt/tools/ clone -v https://github.com/ShawnDEvans/smbmap
   cd /opt/tools/smbmap
-  python3 -m pip install -r requirements.txt
+  # installing requirements manually to skip impacket overwrite
+  # wish we could install smbmap in virtual environment :'(
+  python3 -m pip install pyasn1 pycrypto configparser termcolor
 }
 
 function install_pth-tools(){
@@ -1974,6 +1978,21 @@ function install_rust_cargo() {
   # Installing cargo, a rust installer
   curl https://sh.rustup.rs -sSf | sh -s -- -y
   source $HOME/.cargo/env
+}
+
+function install_exegol-history() {
+  colorecho "Installing Exegol-history"
+#  git -C /opt/tools/ clone https://github.com/ShutdownRepo/Exegol-history
+# todo : below is something basic. A nice tool being created for faster and smoother worflow
+  mkdir /opt/tools/Exegol-history
+  echo "export DOMAIN='DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export USER='someuser'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export PASSWORD='somepassword'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export NT_HASH='c1c635aa12ae60b7fe39e28456a7bac6'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export DC_IP='192.168.56.101'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export DC_HOST='DC01.DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
+  echo "export ATTACKER_IP='192.168.56.1'" >> /opt/tools/Exegol-history/profile.sh
 }
 
 function install_base() {
@@ -2062,7 +2081,7 @@ function install_base() {
   fapt ncat                       # Socket manager
   fapt netcat-traditional         # Socket manager
   fapt socat                      # Socket manager
-  #gf_install                      # wrapper around grep
+  install_gf                      # wrapper around grep
   fapt rdate                      # tool for querying the current time from a network server
   fapt putty                      # GUI-based SSH, Telnet and Rlogin client
   fapt screen                     # CLI-based PuTT-like
@@ -2078,6 +2097,7 @@ function install_base() {
   fapt faketime
   fapt ruby ruby-dev
   fapt libxml2-utils
+  install_exegol-history
 }
 
 # Package dedicated to most used offensive tools
@@ -2091,36 +2111,33 @@ function install_most_used_tools() {
   install_waybackurls             # Website history
   install_theHarvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
   install_simplyemail             # Gather emails
-  install_gobuster                # Web fuzzer (pretty good for several extensions)
   install_ffuf                    # Web fuzzer (little favorites)
-  fapt wfuzz                      # Web fuzzer (second favorites)
   fapt nikto                      # Web scanner
   fapt sqlmap                     # SQL injection scanner
   fapt hydra                      # Login scanner
-  fapt joomscan                   # Joomla scanner
+  install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
   install_testssl                 # SSL/TLS scanner
   fapt sslscan                    # SSL/TLS scanner
   fapt weevely                    # Awesome secure and light PHP webshell
-  install_CloudFail                       # Cloudflare misconfiguration detector
-  install_EyeWitness                      # Website screenshoter
-  install_wafw00f                         # Waf detector
+  install_CloudFail               # Cloudflare misconfiguration detector
+  install_EyeWitness              # Website screenshoter
+  install_wafw00f                 # Waf detector
   install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
-  install_responder                       # LLMNR, NBT-NS and MDNS poisoner
+  install_responder               # LLMNR, NBT-NS and MDNS poisoner
   install_crackmapexec            # Network scanner
-  install_impacket                        # Network protocols scripts
-  enum4linux-ng
+  install_impacket                # Network protocols scripts
+  enum4linux-ng                   # Active Directory enumeration tool, improved Python alternative to enum4linux
   fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
-  install_smbmap                     # Allows users to enumerate samba share drives across an entire domain
+  install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_nuclei                  # Vulnerability scanner
   evilwinrm                       # WinRM shell
   install_john                    # Password cracker
   fapt hashcat                    # Password cracker
-  download_hashcat_rules
   fapt fcrackzip                  # Zip cracker
 }
 
@@ -2153,7 +2170,6 @@ function install_wordlists_tools() {
 # Package dedicated to offline cracking/bruteforcing tools
 function install_cracking_tools() {
   fapt hashcat                    # Password cracker
-  download_hashcat_rules
   install_john                    # Password cracker
   fapt fcrackzip                  # Zip cracker
   fapt pdfcrack                   # PDF cracker
@@ -2366,6 +2382,7 @@ function install_ad_tools() {
   LNKUp
   fapt samdump2                   # Dumps Windows 2k/NT/XP/Vista password hashes
   fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+  fapt polenum
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_pth-tools               # Pass the hash attack
   install_smtp-user-enum             # SMTP user enumeration via VRFY, EXPN and RCPT
@@ -2397,7 +2414,6 @@ function install_ad_tools() {
   install_certipy
   npm install ntpsync             # sync local time with remote server
   install_shadowcoerce
-  install_dcsync
   install_gMSADumper
   install_modifyCertTemplate
   install_pylaps
