@@ -892,6 +892,7 @@ function arsenal() {
 function install_tldr() {
   colorecho "Installing tldr"
   apt-get install -y tldr
+  mkdir -p ~/.local/share/tldr
   tldr -u
 }
 
