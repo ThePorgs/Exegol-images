@@ -176,9 +176,7 @@ function install_EyeWitness() {
 
 function install_wafw00f() {
   colorecho "Installing wafw00f"
-  git -C /opt/tools/ clone https://github.com/EnableSecurity/wafw00f
-  cd /opt/tools/wafw00f
-  python setup.py install
+  python3 -m pip install wafw00F
 }
 
 function JSParser() {
