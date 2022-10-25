@@ -27,7 +27,7 @@ export JOHN=/opt/tools/john/run
 export PATH=/opt/tools/bin:$JOHN:$GOPATH/bin:/usr/local/go/bin:$PATH
 export PATH=/opt/tools/dex2jar/dex-tools-2.1:$PATH
 
-source /opt/.zsh_aliases
+source /opt/.exegol_aliases
 source /opt/tools/Exegol-history/profile.sh
 source $HOME/.cargo/env
 

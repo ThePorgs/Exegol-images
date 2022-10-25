@@ -61,7 +61,7 @@ function install_ohmyzsh() {
   colorecho "Installing oh-my-zsh, config, history, aliases"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   cp -v /root/sources/zsh/history ~/.zsh_history
-  cp -v /root/sources/zsh/aliases /opt/.zsh_aliases
+  cp -v /root/sources/zsh/aliases /opt/.exegol_aliases
   cp -v /root/sources/zsh/zshrc ~/.zshrc
   git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-autosuggestions
   git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-syntax-highlighting
