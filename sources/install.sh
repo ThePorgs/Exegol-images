@@ -351,15 +351,7 @@ function install_bloodhound.py() {
 function neo4j_install() {
   colorecho "Installing neo4j"
   fapt openjdk-11-jre
-  if [[ $(uname -m) = 'x86_64' ]]
-  then
-    update-java-alternatives --jre --set java-1.11.0-openjdk-amd64
-  elif [[ $(uname -m) = 'aarch64' ]]
-  then
-    update-java-alternatives --jre --set java-1.11.0-openjdk-arm64
-  else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
-  fi
+  update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.11.0-openjdk*' -printf '%P')
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
   apt-get update
@@ -726,6 +718,9 @@ function install_bat() {
   elif [[ $(uname -m) = 'aarch64' ]]
   then
     wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_arm64.deb
+  elif [[ $(uname -m) = 'armv7l' ]]
+  then
+    wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_armhf.deb
   else
     criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
@@ -906,6 +901,10 @@ function bloodhound_v4() {
   then
     fapt libgbm1
     ln -s /opt/tools/BloodHound4/BloodHound-linux-arm64/BloodHound /opt/tools/BloodHound4/BloodHound
+  elif [[ $(uname -m) = 'armv7l' ]]
+  then
+    fapt libgbm1
+    ln -s /opt/tools/BloodHound4/BloodHound-linux-armv7l/BloodHound /opt/tools/BloodHound4/BloodHound
   else
     criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
@@ -1084,11 +1083,8 @@ function install_ida() {
     chmod +x /tmp/idafree77_linux.run
     /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
     rm /tmp/idafree77_linux.run
-  elif [[ $(uname -m) = 'aarch64' ]]
-  then
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64"
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64"
   fi
 }
 
@@ -1174,9 +1170,6 @@ function windapsearch-go() {
   if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
-  elif [[ $(uname -m) = 'aarch64' ]]
-  then
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   else
     criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
@@ -1224,6 +1217,9 @@ function kubectl(){
   elif [[ $(uname -m) = 'aarch64' ]]
   then
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
+  elif [[ $(uname -m) = 'armv7l' ]]
+  then
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
   else
     criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
@@ -1457,6 +1453,9 @@ function install_ngrok() {
   elif [[ $(uname -m) = 'aarch64' ]]
   then
     wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm64.zip
+  elif [[ $(uname -m) = 'armv7l' ]]
+  then
+    wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip
   else
     criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
@@ -1880,6 +1879,9 @@ function install_go(){
   elif [[ $(uname -m) = 'aarch64' ]]
   then
     wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-arm64.tar.gz
+  elif [[ $(uname -m) = 'armv7l' ]]
+  then
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-armv6l.tar.gz
   else
     criticalecho "This installation function doesn't support architecture $(uname -m)"
   fi
