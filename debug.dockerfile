@@ -14,6 +14,10 @@ LABEL org.exegol.src_repository="https://github.com/ShutdownRepo/Exegol-images"
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 
+RUN apt update
+RUN /root/sources/install.sh fapt zsh
+RUN /root/sources/install.sh install_ohmyzsh
+
 # ADD sources /root/sources
 # RUN chmod +x /root/sources/install.sh
 
