@@ -20,6 +20,7 @@ RUN chmod +x /root/sources/install.sh
 RUN uname -m
 RUN apt update
 
+RUN /root/sources/install.sh fapt git
 RUN /root/sources/install.sh fapt zsh
 RUN /root/sources/install.sh install_ohmyzsh
 
