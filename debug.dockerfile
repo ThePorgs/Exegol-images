@@ -21,6 +21,7 @@ RUN uname -m
 RUN apt update
 
 RUN /root/sources/install.sh fapt git
+RUN /root/sources/install.sh fapt ca-certificates
 RUN /root/sources/install.sh fapt curl
 RUN /root/sources/install.sh fapt zsh
 RUN /root/sources/install.sh install_ohmyzsh
