@@ -472,7 +472,7 @@ function install_subfinder() {
 function install_gf() {
   go install github.com/tomnomnom/gf@latest
   # Enable autocompletion
-  echo 'complete -W "$(gf -list)" gf' >> ~/.zshrc
+  echo 'source $GOPATH/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh' >> ~/.zshrc
   cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
   # Add patterns from 1ndianl33t
   git -C /opt/tools/ clone https://github.com/1ndianl33t/Gf-Patterns
