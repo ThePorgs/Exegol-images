@@ -34,7 +34,7 @@ function fapt-noexit() {
   # This function tries the same thing as fapt but doesn't exit in case something's wrong.
   # Example: a package exists in amd64 but not arm64. I didn't find a way of knowing that beforehand.
   colorecho "Installing (no-exit) apt package(s): $@"
-  apt-get install -y --no-install-recommends "$@" || echo -e "${RED}[EXEGOL ERROR] Package(s) $@ probably doesn't exist for architecture $(uname -m), or no installation candidate was found...${NOCOLOR}" 2>&1
+  apt-get install -y --no-install-recommends "$@" || echo -e "${RED}[EXEGOL ERROR] Package(s) $@ probably doesn't exist for architecture $(uname -m), or no installation candidate was found, or some other error...${NOCOLOR}" 2>&1
 }
 
 function python-pip() {
