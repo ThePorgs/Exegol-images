@@ -8,7 +8,8 @@ then
   # Lock file exists, exiting
   exit 0
 else
-  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] Deploying custom config"
+  echo "This log file is the result of the execution of the official and personal customization script"
+  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Deploying custom config (/exegol/load_custom_configs.sh) ===="
   echo > /exegol/.setup.lock
 fi
 
@@ -17,7 +18,7 @@ fi
 # End of the file - execute user custom procedure (or create it)
 if [ -f /my-resources/config/load_my_configs.sh ]
 then
-  echo "$(date +'%d-%m-%Y_%H-%M-%S')] Deploying 'my' config"
+  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Deploying 'my' config (/my-resources/config/load_my_configs.sh) ===="
   /my-resources/config/load_my_configs.sh
 else
   cp /exegol/templates/load_my_configs.sh /my-resources/config/load_my_configs.sh
