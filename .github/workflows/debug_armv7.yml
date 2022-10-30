@@ -1,4 +1,4 @@
-name: debug build
+name: debug armv7 full build
 
 on:
   push:

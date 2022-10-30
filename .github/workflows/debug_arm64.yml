@@ -1,4 +1,4 @@
-name: debug build
+name: debug arm64 light build
 
 on:
   push:
