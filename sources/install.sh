@@ -1801,7 +1801,7 @@ function install_kerbrute() {
 
 function install_searchsploit() {
   colorecho "Installing Searchsploit"
-  git clone https://github.com/offensive-security/exploitdb.git /opt/exploit-database
+  git clone https://github.com/offensive-security/exploitdb.git /opt/exploitdb
   ln -sf /opt/exploit-database/searchsploit /usr/local/bin/searchsploit
   cp -n /opt/exploit-database/.searchsploit_rc ~/
   sed -i 's/\(.*[pP]aper.*\)/#\1/' ~/.searchsploit_rc
