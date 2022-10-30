@@ -1996,8 +1996,18 @@ function install_exegol-history() {
   echo "export ATTACKER_IP='192.168.56.1'" >> /opt/tools/Exegol-history/profile.sh
 }
 
+function deploy_exegol() {
+  # Move exegol files to /
+  mv /root/sources/exegol /exegol
+  # Setup perms
+  chown -R root:root /exegol
+  chmod 644 /exegol/*.md
+  chmod 500 /exegol/*.sh
+}
+
 function install_base() {
   update || exit
+  deploy_exegol
   fapt software-properties-common
   add-apt-repository contrib
   add-apt-repository non-free

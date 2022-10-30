@@ -180,3 +180,11 @@ alias smbmap='python3 /opt/tools/smbmap/smbmap.py'
 alias feroxbuster='/opt/tools/feroxbuster/feroxbuster'
 alias tls-scanner='java -jar /opt/tools/TLS-Scanner/apps/TLS-Server-Scanner.jar'
 alias username-anarchy='/opt/tools/username-anarchy/username-anarchy'
+
+# Loads user-defined aliases if the file exists otherwise creates a default file if my-resources is enabled in the container
+if [ -f /my-resources/config/aliases ]
+then
+  source /my-resources/config/aliases
+else
+  [ -d "/my-resources" ] && mkdir -p /my-resources/config/ && cp /exegol/templates/aliases /my-resources/config/aliases
+fi
