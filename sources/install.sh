@@ -2003,6 +2003,7 @@ function deploy_exegol() {
   chown -R root:root /exegol
   chmod 644 /exegol/*.md
   chmod 500 /exegol/*.sh
+  chmod 660 /exegol/templates/*
 }
 
 function install_base() {
