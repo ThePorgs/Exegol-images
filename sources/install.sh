@@ -1997,6 +1997,7 @@ function install_exegol-history() {
 }
 
 function deploy_exegol() {
+  colorecho "Installing Exegol"
   # Move exegol files to /
   mv /root/sources/exegol /exegol
   # Setup perms

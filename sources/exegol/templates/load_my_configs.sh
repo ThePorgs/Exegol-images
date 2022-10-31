@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # This script will be executed on the first startup of each new container with the my-resources feature enabled.
 # You can add here any customization procedure (dependency installation, copy exotic configuration file, etc).

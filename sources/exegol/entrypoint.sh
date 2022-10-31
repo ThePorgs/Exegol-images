@@ -3,7 +3,7 @@
 # Function specific
 function load_config() {
     # Load custom config
-    /exegol/load_custom_configs.sh >> /var/log/exegol_custom.log
+    /exegol/load_custom_configs.sh &>> /var/log/exegol_custom.log
 }
 
 function endless() {

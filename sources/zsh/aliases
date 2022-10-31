@@ -186,5 +186,5 @@ if [ -f /my-resources/config/aliases ]
 then
   source /my-resources/config/aliases
 else
-  [ -d "/my-resources" ] && mkdir -p /my-resources/config/ && cp /exegol/templates/aliases /my-resources/config/aliases
+  cp /exegol/templates/aliases /my-resources/config/aliases
 fi

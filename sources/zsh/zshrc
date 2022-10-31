@@ -40,12 +40,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
 export PATH="$PATH:/root/.local/bin"
 
 # Add my-resources custom tools to PATH if my-resources is activated
-if [ -d "/my-resources/bin" ]
-then
-  export PATH="$PATH:/my-resources/bin"
-else
-  [ -d "/my-resources" ] && mkdir -p /my-resources/bin && export PATH="$PATH:/my-resources/bin"
-fi
+[ -d "/my-resources/bin" ] && export PATH="$PATH:/my-resources/bin"
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -60,5 +55,5 @@ if [ -f "/my-resources/config/zshrc" ]
 then
   source /my-resources/config/zshrc
 else
-  [ -d "/my-resources" ] && mkdir -p /my-resources/config/ && cp /exegol/templates/zshrc /my-resources/config/zshrc
+  cp /exegol/templates/zshrc /my-resources/config/zshrc
 fi
