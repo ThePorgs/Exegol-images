@@ -51,5 +51,5 @@ jobs:
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_repo }}:${{ steps.prepare_build.outputs.image_name }}
           platforms: linux/amd64
-          file: ./debug_allt.dockerfile
+          file: ./debug_all.dockerfile
           context: .
