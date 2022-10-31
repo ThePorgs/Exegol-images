@@ -1,4 +1,4 @@
-name: debug amd64 light build
+name: debug multi-arch light build
 
 on:
   push:
@@ -50,6 +50,6 @@ jobs:
             VERSION=${{ steps.prepare_build.outputs.image_version }}
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_repo }}:${{ steps.prepare_build.outputs.image_name }}
-          platforms: linux/amd64
-          file: ./debug_all.dockerfile
+          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          file: ./debug_light.dockerfile
           context: .

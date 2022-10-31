@@ -2597,7 +2597,7 @@ else
       echo "[!] Careful : this script is supposed to be run inside a docker/VM, do not run this on your host unless you know what you are doing and have done backups. You are warned :)"
       echo "[*] Sleeping 30 seconds, just in case... You can still stop this"
       echo -e "${NOCOLOR}"
-      sleep 30
+#      sleep 30
       "$@"
     fi
   else
