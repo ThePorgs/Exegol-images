@@ -306,6 +306,7 @@ function sprayhound() {
 
 function install_impacket() {
   colorecho "Installing Impacket scripts"
+  apt-get -y install libffi-dev
   git -C /opt/tools/ clone https://github.com/ShutdownRepo/impacket
   git -C /opt/tools/impacket checkout exegol
 
@@ -2021,6 +2022,7 @@ function install_base() {
   fapt python2-dev                # Python 2 language (dev version)
   fapt python3-dev                # Python 3 language (dev version)
   fapt python3-venv
+  fapt libffi-dev
   install_rust_cargo
   ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
   python-pip                      # Pip
