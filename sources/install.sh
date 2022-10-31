@@ -2027,6 +2027,7 @@ function install_base() {
   ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
   python-pip                      # Pip
   fapt python3-pip                # Pip
+  python3 pip install --upgrade pip
   filesystem
   set_env
   locales
