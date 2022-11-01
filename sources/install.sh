@@ -85,6 +85,21 @@ function tmux() {
   touch ~/.hushlogin
 }
 
+function install_gowitness() {
+  colorecho "Installing gowitness"
+  /usr/local/go/bin/go install github.com/sensepost/gowitness@latest
+}
+
+function install_goshs(){
+  colorecho "Installing goshs"
+  /usr/local/go/bin/go install github.com/patrickhener/goshs@latest
+}
+
+function install_sslyze(){
+  colorecho "Installing sslyze"
+  python3 -m pip install sslyze
+}
+
 function install_responder() {
   colorecho "Installing Responder"
   git -C /opt/tools/ clone https://github.com/lgandx/Responder
@@ -424,7 +439,7 @@ function install_empire() {
 function install_starkiller() {
   colorecho "Installing Starkiller"
   apt-get -y install libfuse2
-  version=$(curl -s https://github.com/BC-SECURITY/Starkiller/tags|grep /releases/tag/v -m1 |grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|cut -d 'v' -f2)
+  version=$(curl -s https://github.com/BC-SECURITY/Starkiller/tags|grep /releases/tag/v -m1 |grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|cut -d 'v' -f2|head -n 1)
   mkdir /opt/tools/starkiller
   wget -O /opt/tools/starkiller/starkiller.AppImage https://github.com/BC-SECURITY/Starkiller/releases/download/v$version/starkiller-$version.AppImage
   chmod +x /opt/tools/starkiller/starkiller.AppImage
@@ -2147,6 +2162,7 @@ function install_most_used_tools() {
 
 # Package dedicated to offensive miscellaneous tools
 function install_misc_tools() {
+  install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
   fapt rlwrap                     # Reverse shell utility
   install_shellerator             # Reverse shell generator
@@ -2285,6 +2301,7 @@ function install_web_tools() {
   install_testssl                 # SSL/TLS scanner
   fapt sslscan                    # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
+  install_sslyze                  # SSL/TLS scanner
   fapt weevely                    # Awesome secure and light PHP webshell
   install_CloudFail                       # Cloudflare misconfiguration detector
   install_EyeWitness                      # Website screenshoter
@@ -2292,6 +2309,7 @@ function install_web_tools() {
   install_wafw00f                         # Waf detector
   CORScanner                      # CORS misconfiguration detector
   hakrawler                       # Web endpoint discovery
+  install_gowitness               # Web screenshot utility
   LinkFinder                      # Discovers endpoint JS files
   timing_attack                   # Cryptocraphic timing attack
   install_updog                           # New HTTPServer
