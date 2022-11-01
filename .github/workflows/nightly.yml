@@ -50,6 +50,6 @@ jobs:
             VERSION=${{ steps.prepare_build.outputs.image_version }}
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_repo }}:${{ steps.prepare_build.outputs.image_name }}
-          platforms: linux/amd64,linux/arm64/v8
+          platforms: linux/amd64,linux/arm64
           file: ./Dockerfile
           context: .
