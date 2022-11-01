@@ -723,7 +723,7 @@ function install_bat() {
   then
     wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_armhf.deb
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   fapt -f /tmp/bat.deb
   rm /tmp/bat.deb
@@ -907,7 +907,7 @@ function bloodhound_v4() {
     fapt libgbm1
     ln -s /opt/tools/BloodHound4/BloodHound-linux-armv7l/BloodHound /opt/tools/BloodHound4/BloodHound
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   mkdir -p ~/.config/bloodhound
   cp -v /root/sources/bloodhound/config.json ~/.config/bloodhound/config.json
@@ -1172,7 +1172,7 @@ function windapsearch-go() {
   then
     wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   chmod +x /opt/tools/bin/windapsearch
 }
@@ -1222,7 +1222,7 @@ function kubectl(){
   then
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 }
@@ -1458,7 +1458,7 @@ function install_ngrok() {
   then
     wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   unzip -d /opt/tools/bin/ /tmp/ngrok.zip
 }
@@ -1884,7 +1884,7 @@ function install_go(){
   then
     wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-armv6l.tar.gz
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   rm -rf /usr/local/go
   tar -C /usr/local -xzf /tmp/go.tar.gz
@@ -2593,14 +2593,11 @@ else
       echo "A successful build will output the following last line:"
       echo "  Successfully tagged nwodtuhs/exegol:latest"
       echo -e "${NOCOLOR}"
-      sleep 2
       "$@"
     else
       echo -e "${RED}"
       echo "[!] Careful : this script is supposed to be run inside a docker/VM, do not run this on your host unless you know what you are doing and have done backups. You are warned :)"
-      echo "[*] Sleeping 30 seconds, just in case... You can still stop this"
       echo -e "${NOCOLOR}"
-#      sleep 30
       "$@"
     fi
   else
