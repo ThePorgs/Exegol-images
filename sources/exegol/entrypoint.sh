@@ -24,5 +24,15 @@ function ovpn() {
     endless
 }
 
+function cmd() {
+  load_config
+  command_line=${*:2}
+  echo "Executing: $command_line"
+  $command_line
+}
+
+# Default action is "default"
+func_name="${1:-default}"
+
 # Dynamic execution
-$1 "$@"
+$func_name "$@" || (echo "An error occurred executing the '$func_name' action. Your image version is probably out of date for this feature. Please update your image."; exit 1)
