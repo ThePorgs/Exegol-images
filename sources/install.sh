@@ -433,7 +433,7 @@ function install_empire() {
 function install_starkiller() {
   colorecho "Installing Starkiller"
   apt-get -y install libfuse2
-  version=$(curl -s https://github.com/BC-SECURITY/Starkiller/tags|grep /releases/tag/v -m1 |grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|cut -d 'v' -f2)
+  version=$(curl -s https://github.com/BC-SECURITY/Starkiller/tags|grep /releases/tag/v -m1 |grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|head -1 |cut -d 'v' -f2)
   mkdir /opt/tools/starkiller
   wget -O /opt/tools/starkiller/starkiller.AppImage https://github.com/BC-SECURITY/Starkiller/releases/download/v$version/starkiller-$version.AppImage
   chmod +x /opt/tools/starkiller/starkiller.AppImage
