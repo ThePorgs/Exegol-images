@@ -17,15 +17,15 @@ fi
 if [ -d "/opt/my-resources" ]
 then
   # Setup basic structure
-  [ -d "/opt/my-resources/setup" ] || mkdir -p /opt/my-resources/setup/
-  [ -d "/opt/my-resources/bin" ] || mkdir -p /opt/my-resources/bin/
+  [ -d "/opt/my-resources/setup" ] || (mkdir /opt/my-resources/setup && chmod 770 /opt/my-resources/setup)
+  [ -d "/opt/my-resources/bin" ] || (mkdir /opt/my-resources/bin && chmod 770 /opt/my-resources/bin)
 else
   echo "Exiting, 'my-resources' is disabled"
   exit 0
 fi
 
 # Copying README.md to /opt/my-resources/ (first use)
-[ -f /opt/my-resources/setup/README.md ] || cp /.exegol/skel/README.md /opt/my-resources/setup/README.md
+[ -f /opt/my-resources/setup/README.md ] || cp --preserve=mode /.exegol/skel/README.md /opt/my-resources/setup/README.md
 
 #TODO implement tmux custom
 

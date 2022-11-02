@@ -2022,9 +2022,8 @@ function deploy_exegol() {
   mkdir /var/log/exegol
   # Setup perms
   chown -R root:root /.exegol
-  chmod 644 /.exegol/*.md
   chmod 500 /.exegol/*.sh
-  chmod 660 /.exegol/skel/*
+  find /.exegol/skel/ -type f -exec chmod 660 {} \;
 }
 
 function install_base() {
