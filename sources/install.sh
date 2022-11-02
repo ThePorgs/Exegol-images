@@ -49,6 +49,7 @@ function filesystem() {
   mkdir -p /opt/tools/
   mkdir -p /opt/tools/bin/
   mkdir -p /data/
+  mkdir -p /var/log/exegol
 }
 
 function set_env(){
@@ -1998,13 +1999,16 @@ function install_exegol-history() {
 
 function deploy_exegol() {
   colorecho "Installing Exegol"
-  # Move exegol files to /
-  mv /root/sources/exegol /exegol
+  # Moving exegol files to /
+  mv /root/sources/exegol /.exegol
+  # Moving supported custom configurations in /opt
+  mv /.exegol/skel/supported_setups.md /opt/
+  mkdir /var/log/exegol
   # Setup perms
-  chown -R root:root /exegol
-  chmod 644 /exegol/*.md
-  chmod 500 /exegol/*.sh
-  chmod 660 /exegol/templates/*
+  chown -R root:root /.exegol
+  chmod 644 /.exegol/*.md
+  chmod 500 /.exegol/*.sh
+  chmod 660 /.exegol/skel/*
 }
 
 function install_base() {

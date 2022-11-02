@@ -50,4 +50,4 @@ RUN rm -rf /root/sources
 
 WORKDIR /data
 
-ENTRYPOINT ["/exegol/entrypoint.sh"]
+ENTRYPOINT ["/.exegol/entrypoint.sh"]

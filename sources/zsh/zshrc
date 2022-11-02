@@ -43,7 +43,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
 export PATH="$PATH:/root/.local/bin"
 
 # Add my-resources custom tools to PATH if my-resources is activated
-[ -d "/my-resources/bin" ] && export PATH="$PATH:/my-resources/bin"
+[ -d /opt/my-resources/bin ] && export PATH="$PATH:/opt/my-resources/bin"
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -54,9 +54,10 @@ function theharvester(){
 }
 
 # At the end, loads user-defined zshrc post-routines if the file exists otherwise creates a default file if my-resources is enabled in the container
-if [ -f "/my-resources/config/zshrc" ]
+if [ -f /opt/my-resources/setup/zsh/zshrc ]
 then
-  source /my-resources/config/zshrc
+  source /opt/my-resources/setup/zsh/zshrc
 else
-  cp /exegol/templates/zshrc /my-resources/config/zshrc
+  [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
+  cp /.exegol/skel/zsh/zshrc /opt/my-resources/setup/zsh/zshrc
 fi
