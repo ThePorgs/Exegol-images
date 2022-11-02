@@ -49,3 +49,8 @@ export LANGUAGE=en_US:en
 function theharvester(){
     python3 -c "import os; os.system('cd /opt/tools/theHarvester && . theharvenv/bin/activate && python3 theHarvester.py ""$@""');"
 }
+
+function fzf-creds(){
+    cat $1 | fzf
+}
+
