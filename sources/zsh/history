@@ -341,5 +341,9 @@ kerbrute userenum -d "$DOMAIN" usernames.txt
 kerbrute passwordspray -d "$DOMAIN" domain_users.txt Password123
 kerbrute bruteuser -d "$DOMAIN" passwords.lst thoffman
 tls-scanner -connect "$TARGET":443
-hekatomb -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET" -debug -dnstcp
+gowitness nmap -f nmap.xml --open --service-contains http --delay 5 --timeout 5
+goshs -b "goshs":"exegol4thewin" --ssl --self-signed -p 8000 -d /workspace
+goshs -b "goshs":"exegol4thewin" --ssl --self-signed --read-only -p 8001 -d /opt/resources
+goshs -b "goshs":"exegol4thewin" --ssl --self-signed --read-only -p 8002 -d /my-ressources
+sslyze --sslv2 --sslv3 --tlsv1 --tlsv1_1 --tlsv1_2 --tlsv1_3 --heartbleed --robot --openssl_ccs --compression --reneg --certinfo --elliptic_curves --early_data --fallback --json_out=sslyze.json $TARGET
 # -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #

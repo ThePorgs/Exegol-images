@@ -86,6 +86,21 @@ function tmux() {
   touch ~/.hushlogin
 }
 
+function install_gowitness() {
+  colorecho "Installing gowitness"
+  /usr/local/go/bin/go install github.com/sensepost/gowitness@latest
+}
+
+function install_goshs(){
+  colorecho "Installing goshs"
+  /usr/local/go/bin/go install github.com/patrickhener/goshs@latest
+}
+
+function install_sslyze(){
+  colorecho "Installing sslyze"
+  python3 -m pip install sslyze
+}
+
 function install_responder() {
   colorecho "Installing Responder"
   git -C /opt/tools/ clone https://github.com/lgandx/Responder
@@ -307,6 +322,7 @@ function sprayhound() {
 
 function install_impacket() {
   colorecho "Installing Impacket scripts"
+  apt-get -y install libffi-dev
   git -C /opt/tools/ clone https://github.com/ShutdownRepo/impacket
   git -C /opt/tools/impacket checkout exegol
 
@@ -424,7 +440,7 @@ function install_empire() {
 function install_starkiller() {
   colorecho "Installing Starkiller"
   apt-get -y install libfuse2
-  version=$(curl -s https://github.com/BC-SECURITY/Starkiller/tags|grep /releases/tag/v -m1 |grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|cut -d 'v' -f2)
+  version=$(curl -s https://github.com/BC-SECURITY/Starkiller/tags|grep /releases/tag/v -m1 |grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|cut -d 'v' -f2|head -n 1)
   mkdir /opt/tools/starkiller
   wget -O /opt/tools/starkiller/starkiller.AppImage https://github.com/BC-SECURITY/Starkiller/releases/download/v$version/starkiller-$version.AppImage
   chmod +x /opt/tools/starkiller/starkiller.AppImage
@@ -723,7 +739,7 @@ function install_bat() {
   then
     wget -O /tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_armhf.deb
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   fapt -f /tmp/bat.deb
   rm /tmp/bat.deb
@@ -907,7 +923,7 @@ function bloodhound_v4() {
     fapt libgbm1
     ln -s /opt/tools/BloodHound4/BloodHound-linux-armv7l/BloodHound /opt/tools/BloodHound4/BloodHound
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   mkdir -p ~/.config/bloodhound
   cp -v /root/sources/bloodhound/config.json ~/.config/bloodhound/config.json
@@ -1172,7 +1188,7 @@ function windapsearch-go() {
   then
     wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   chmod +x /opt/tools/bin/windapsearch
 }
@@ -1222,7 +1238,7 @@ function kubectl(){
   then
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 }
@@ -1458,7 +1474,7 @@ function install_ngrok() {
   then
     wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   unzip -d /opt/tools/bin/ /tmp/ngrok.zip
 }
@@ -1802,9 +1818,9 @@ function install_kerbrute() {
 
 function install_searchsploit() {
   colorecho "Installing Searchsploit"
-  git clone https://github.com/offensive-security/exploitdb.git /opt/exploit-database
-  ln -sf /opt/exploit-database/searchsploit /usr/local/bin/searchsploit
-  cp -n /opt/exploit-database/.searchsploit_rc ~/
+  git clone https://github.com/offensive-security/exploitdb.git /opt/exploitdb
+  ln -sf /opt/exploitdb/searchsploit /usr/local/bin/searchsploit
+  cp -n /opt/exploitdb/.searchsploit_rc ~/
   sed -i 's/\(.*[pP]aper.*\)/#\1/' ~/.searchsploit_rc
   searchsploit -u
 }
@@ -1884,7 +1900,7 @@ function install_go(){
   then
     wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-armv6l.tar.gz
   else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   rm -rf /usr/local/go
   tar -C /usr/local -xzf /tmp/go.tar.gz
@@ -2037,10 +2053,12 @@ function install_base() {
   fapt python2-dev                # Python 2 language (dev version)
   fapt python3-dev                # Python 3 language (dev version)
   fapt python3-venv
+  fapt libffi-dev
   install_rust_cargo
   ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
   python-pip                      # Pip
   fapt python3-pip                # Pip
+  python3 pip install --upgrade pip
   filesystem
   set_env
   locales
@@ -2160,6 +2178,7 @@ function install_most_used_tools() {
 
 # Package dedicated to offensive miscellaneous tools
 function install_misc_tools() {
+  install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
   fapt rlwrap                     # Reverse shell utility
   install_shellerator             # Reverse shell generator
@@ -2298,6 +2317,7 @@ function install_web_tools() {
   install_testssl                 # SSL/TLS scanner
   fapt sslscan                    # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
+  install_sslyze                  # SSL/TLS scanner
   fapt weevely                    # Awesome secure and light PHP webshell
   install_CloudFail                       # Cloudflare misconfiguration detector
   install_EyeWitness                      # Website screenshoter
@@ -2305,6 +2325,7 @@ function install_web_tools() {
   install_wafw00f                         # Waf detector
   CORScanner                      # CORS misconfiguration detector
   hakrawler                       # Web endpoint discovery
+  install_gowitness               # Web screenshot utility
   LinkFinder                      # Discovers endpoint JS files
   timing_attack                   # Cryptocraphic timing attack
   install_updog                           # New HTTPServer
@@ -2606,14 +2627,11 @@ else
       echo "A successful build will output the following last line:"
       echo "  Successfully tagged nwodtuhs/exegol:latest"
       echo -e "${NOCOLOR}"
-      sleep 2
       "$@"
     else
       echo -e "${RED}"
       echo "[!] Careful : this script is supposed to be run inside a docker/VM, do not run this on your host unless you know what you are doing and have done backups. You are warned :)"
-      echo "[*] Sleeping 30 seconds, just in case... You can still stop this"
       echo -e "${NOCOLOR}"
-      sleep 30
       "$@"
     fi
   else
