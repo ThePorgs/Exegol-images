@@ -1174,7 +1174,7 @@ function windapsearch-go() {
   colorecho "Installing Go windapsearch"
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
+    wget -O /opt/tools/bin/windapsearch "$(curl -o /dev/null -Ls -w %{url_effective} https://github.com/ropnop/go-windapsearch/releases/latest/ |  sed 's/tag/download/')/windapsearch-linux-amd64"
   elif [[ $(uname -m) = 'aarch64' ]]
   then
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
