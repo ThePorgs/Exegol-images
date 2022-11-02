@@ -1,6 +1,9 @@
 # Basic system config / hardening
 umask 0007
 
+# Automatically exit the shell when receiving SIGTERM (when the container is stopping)
+trap exit TERM
+
 # ZSH setup
 export ZSH="/root/.oh-my-zsh"
 ZSH_THEME="gentoo"
