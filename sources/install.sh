@@ -69,7 +69,6 @@ function install_ohmyzsh() {
   git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-completions
   git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/agkozak/zsh-z
   git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/lukechilds/zsh-nvm
-  git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-history-substring-search
   zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
 }
 
