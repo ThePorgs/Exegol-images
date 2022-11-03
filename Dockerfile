@@ -51,4 +51,5 @@ RUN /root/sources/install.sh install_clean
 RUN rm -rf /root/sources
 
 WORKDIR /data
-#CMD ["/bin/zsh"]
+
+ENTRYPOINT ["/.exegol/entrypoint.sh"]

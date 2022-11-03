@@ -1,6 +1,9 @@
 # Basic system config / hardening
 umask 0007
 
+# Automatically exit the shell when receiving SIGTERM (when the container is stopping)
+trap exit TERM
+
 # ZSH setup
 export ZSH="/root/.oh-my-zsh"
 ZSH_THEME="gentoo"
@@ -27,7 +30,7 @@ export JOHN=/opt/tools/john/run
 export PATH=/opt/tools/bin:$JOHN:$GOPATH/bin:/usr/local/go/bin:$PATH
 export PATH=/opt/tools/dex2jar/dex-tools-2.1:$PATH
 
-source /opt/.zsh_aliases
+source /opt/.exegol_aliases
 source /opt/tools/Exegol-history/profile.sh
 source $HOME/.cargo/env
 
@@ -39,8 +42,8 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
 # In case pipx ensurepath didn't work
 export PATH="$PATH:/root/.local/bin"
 
-# Add my-resources custom tools to PATH
-[ -d "/my-resources/bin" ] && export PATH="$PATH:/my-resources/bin"
+# Add my-resources custom tools to PATH if my-resources is activated
+[ -d /opt/my-resources/bin ] && export PATH="$PATH:/opt/my-resources/bin"
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -49,3 +52,12 @@ export LANGUAGE=en_US:en
 function theharvester(){
     python3 -c "import os; os.system('cd /opt/tools/theHarvester && . theharvenv/bin/activate && python3 theHarvester.py ""$@""');"
 }
+
+# At the end, loads user-defined zshrc post-routines if the file exists otherwise creates a default file if my-resources is enabled in the container
+if [ -f /opt/my-resources/setup/zsh/zshrc ]
+then
+  source /opt/my-resources/setup/zsh/zshrc
+else
+  [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
+  cp /.exegol/skel/zsh/zshrc /opt/my-resources/setup/zsh/zshrc
+fi
