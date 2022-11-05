@@ -32,6 +32,15 @@ function shutdown() {
     exit 0
 }
 
+function resolv_docker_host() {
+  # On docker desktop host, resolving the host.docker.internal before starting a VPN connection for GUI applications
+  docker_ip=$(getent hosts host.docker.internal | head -n1 | awk '{ print $1 }')
+  if [ "$docker_ip" ]; then
+    # Add docker internal host resolution to the hosts file to preserve access to the X server
+    echo "$docker_ip        host.docker.internal" >> /etc/hosts
+  fi
+}
+
 # Managed features
 function default() {
     load_setups
@@ -40,6 +49,7 @@ function default() {
 
 function ovpn() {
 	load_setups
+	[[ "$DISPLAY" == *"host.docker.internal"* ]] && resolv_docker_host
 	openvpn $2 | tee /var/log/exegol/vpn.log
 	# TODO add log rotation
 	endless
