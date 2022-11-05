@@ -55,10 +55,10 @@ fi
 ##### Install custom APT packages
 if [ -d "$MY_Setup_PATH/apt" ]; then
   # Deploy custom apt repository
-  cp "$MY_Setup_PATH/apt/apt_sources.list" /etc/apt/sources.list.d/user_sources.list
+  cp "$MY_Setup_PATH/apt/sources.list" /etc/apt/sources.list.d/user_sources.list
   # Register custom repo's GPG keys
   mkdir /tmp/aptkeys
-  grep -vE "^(\s*|#.*)$" < $MY_Setup_PATH/apt/apt_keys.list | while IFS= read -r key_url; do
+  grep -vE "^(\s*|#.*)$" < $MY_Setup_PATH/apt/keys.list | while IFS= read -r key_url; do
     wget -nv "$key_url" -O "/tmp/aptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
   done
   gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key
@@ -69,13 +69,13 @@ if [ -d "$MY_Setup_PATH/apt" ]; then
   apt-get update
   # Install every packages listed in the file
   # shellcheck disable=SC2046
-  apt-get install -y $(grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/apt/apt_packages.list" | tr "\n" " ")
+  apt-get install -y $(grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/apt/packages.list" | tr "\n" " ")
 else
   # Import file template
   mkdir "$MY_Setup_PATH/apt" && chmod 770 "$MY_Setup_PATH/apt"
-  cp --preserve=mode /.exegol/skel/apt/apt_sources.list "$MY_Setup_PATH/apt/apt_sources.list"
-  cp --preserve=mode /.exegol/skel/apt/apt_sources.list "$MY_Setup_PATH/apt/apt_keys.list"
-  cp --preserve=mode /.exegol/skel/apt/apt_packages.list "$MY_Setup_PATH/apt/apt_packages.list"
+  cp --preserve=mode /.exegol/skel/apt/sources.list "$MY_Setup_PATH/apt/sources.list"
+  cp --preserve=mode /.exegol/skel/apt/sources.list "$MY_Setup_PATH/apt/keys.list"
+  cp --preserve=mode /.exegol/skel/apt/packages.list "$MY_Setup_PATH/apt/packages.list"
 fi
 
 # Executing user setup (or create the file)
