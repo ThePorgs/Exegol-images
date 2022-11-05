@@ -19,9 +19,14 @@ function shutdown() {
     # SIGTERM received (the container is stopping).
     # Shutting down the container.
     # Sending SIGTERM to all interactive process for proper closing
-    kill $(pgrep -x -f zsh) 2>/dev/null
-    kill $(pgrep -x -f bash) 2>/dev/null
-    kill $(pgrep -x -f tmux) 2>/dev/null
+    # shellcheck disable=SC2046
+    kill $(pgrep -x -f -- zsh) 2>/dev/null
+    # shellcheck disable=SC2046
+    kill $(pgrep -x -f -- -zsh) 2>/dev/null
+    # shellcheck disable=SC2046
+    kill $(pgrep -x -f -- bash) 2>/dev/null
+    # shellcheck disable=SC2046
+    kill $(pgrep -x -f -- -bash) 2>/dev/null
     # Wait for shell logging compression
     wait_list=$(pgrep -f "filelog=/workspace/logs/")
     for i in $wait_list
