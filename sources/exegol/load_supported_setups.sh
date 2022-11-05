@@ -3,41 +3,89 @@
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
-if [ -f /.exegol/.setup.lock ]
-then
+if [ -f /.exegol/.setup.lock ]; then
   # Lock file exists, exiting
   exit 0
 else
   echo "This log file is the result of the execution of the official and personal customization script"
   echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
-  echo > /.exegol/.setup.lock
+  echo >/.exegol/.setup.lock
 fi
 
+# Root my-resources PATH
+MY_Root_PATH="/opt/my-resources"
+# Setup directory for user customization
+MY_Setup_PATH="$MY_Root_PATH/setup"
+
 # Deploying the /opt/my-resources/ folder if not already there
-if [ -d "/opt/my-resources" ]
-then
+if [ -d "$MY_Root_PATH" ]; then
   # Setup basic structure
-  [ -d "/opt/my-resources/setup" ] || (mkdir /opt/my-resources/setup && chmod 770 /opt/my-resources/setup)
-  [ -d "/opt/my-resources/bin" ] || (mkdir /opt/my-resources/bin && chmod 770 /opt/my-resources/bin)
+  [ -d "$MY_Setup_PATH" ] || (mkdir "$MY_Setup_PATH" && chmod 770 "$MY_Setup_PATH")
+  [ -d "$MY_Root_PATH/bin" ] || (mkdir "$MY_Root_PATH/bin" && chmod 770 "$MY_Root_PATH/bin")
 else
   echo "Exiting, 'my-resources' is disabled"
   exit 0
 fi
 
 # Copying README.md to /opt/my-resources/ (first use)
-[ -f /opt/my-resources/setup/README.md ] || cp --preserve=mode /.exegol/skel/README.md /opt/my-resources/setup/README.md
+[ -f "$MY_Setup_PATH/README.md" ] || cp --preserve=mode /.exegol/skel/README.md "$MY_Setup_PATH/README.md"
 
-#TODO implement tmux custom
+##### TMUX deployment
+if [ -d "$MY_Setup_PATH/tmux" ]; then
+  # copy tmux/tmux.conf to ~/.tmux.conf
+  [ -f "$MY_Setup_PATH/tmux/tmux.conf" ] && cp "$MY_Setup_PATH/tmux/tmux.conf" ~/.tmux.conf
+else
+  mkdir "$MY_Setup_PATH/tmux" && chmod 770 "$MY_Setup_PATH/tmux"
+fi
+
+##### VIM deployment
+if [ -d "$MY_Setup_PATH/vim" ]; then
+  # Copy vim/vimrc to ~/.vimrc
+  [ -f "$MY_Setup_PATH/vim/vimrc" ] && cp "$MY_Setup_PATH/vim/vimrc" ~/.vimrc
+  # Copy every subdir configs to ~/.vim directory
+  for path in "$MY_Setup_PATH/vim/autoload" "$MY_Setup_PATH/vim/backup" "$MY_Setup_PATH/vim/colors" "$MY_Setup_PATH/vim/plugged" "$MY_Setup_PATH/vim/bundle"; do
+    [ "$(ls -A $path)" ] && mkdir -p ~/.vim && cp -rf $path ~/.vim
+  done
+else
+  # Create supported directories struct
+  mkdir -p "$MY_Setup_PATH/vim/autoload" "$MY_Setup_PATH/vim/backup" "$MY_Setup_PATH/vim/colors" "$MY_Setup_PATH/vim/plugged" "$MY_Setup_PATH/vim/bundle"
+  chmod 770 -R "$MY_Setup_PATH/vim"
+fi
+
+##### Install custom APT packages
+if [ -d "$MY_Setup_PATH/apt" ]; then
+  # Deploy custom apt repository
+  cp "$MY_Setup_PATH/apt/apt_sources.list" /etc/apt/sources.list.d/user_sources.list
+  # Register custom repo's GPG keys
+  mkdir /tmp/aptkeys
+  grep -vE "^(\s*|#.*)$" < $MY_Setup_PATH/apt/apt_keys.list | while IFS= read -r key_url; do
+    wget -nv "$key_url" -O "/tmp/aptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
+  done
+  gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key
+  gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes
+  chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
+  rm -r /tmp/aptkeys
+  # Update package list from repos
+  apt-get update
+  # Install every packages listed in the file
+  # shellcheck disable=SC2046
+  apt-get install -y $(grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/apt/apt_packages.list" | tr "\n" " ")
+else
+  # Import file template
+  mkdir "$MY_Setup_PATH/apt" && chmod 770 "$MY_Setup_PATH/apt"
+  cp --preserve=mode /.exegol/skel/apt/apt_sources.list "$MY_Setup_PATH/apt/apt_sources.list"
+  cp --preserve=mode /.exegol/skel/apt/apt_sources.list "$MY_Setup_PATH/apt/apt_keys.list"
+  cp --preserve=mode /.exegol/skel/apt/apt_packages.list "$MY_Setup_PATH/apt/apt_packages.list"
+fi
 
 # Executing user setup (or create the file)
-if [ -f /opt/my-resources/setup/load_user_setup.sh ]
-then
-  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading user setup (/opt/my-resources/setup/load_user_setup.sh) ===="
-  /opt/my-resources/setup/load_user_setup.sh
+if [ -f "$MY_Setup_PATH/load_user_setup.sh" ]; then
+  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading user setup ($MY_Setup_PATH/load_user_setup.sh) ===="
+  $MY_Setup_PATH/load_user_setup.sh
 else
-  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== User setup loader missing, deploying it (/opt/my-resources/setup/load_user_setup.sh) ===="
-  cp /.exegol/skel/load_user_setup.sh /opt/my-resources/setup/load_user_setup.sh
-  chmod 760 /opt/my-resources/setup/load_user_setup.sh
+  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== User setup loader missing, deploying it ($MY_Setup_PATH/load_user_setup.sh) ===="
+  cp /.exegol/skel/load_user_setup.sh "$MY_Setup_PATH/load_user_setup.sh"
+  chmod 760 "$MY_Setup_PATH/load_user_setup.sh"
 fi
 
 echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== End of custom setups loading ===="
