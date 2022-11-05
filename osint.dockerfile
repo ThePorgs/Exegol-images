@@ -48,6 +48,6 @@ RUN /root/sources/install.sh install_clean
 
 RUN rm -rf /root/sources
 
-WORKDIR /data
+WORKDIR /workspace
 
 ENTRYPOINT ["/.exegol/entrypoint.sh"]
