@@ -2013,6 +2013,13 @@ function install_exegol-history() {
   echo "export ATTACKER_IP='192.168.56.1'" >> /opt/tools/Exegol-history/profile.sh
 }
 
+function install_logrotate() {
+  colorecho "Installing logrotate"
+  fapt logrotate
+  mv /root/sources/logrotate/* /etc/logrotate.d/
+  chmod 644 /etc/logrotate.d/*
+}
+
 function deploy_exegol() {
   colorecho "Installing Exegol"
   # Moving exegol files to /
@@ -2132,6 +2139,7 @@ function install_base() {
   fapt ruby ruby-dev
   fapt libxml2-utils
   install_exegol-history
+  install_logrotate
 }
 
 # Package dedicated to most used offensive tools

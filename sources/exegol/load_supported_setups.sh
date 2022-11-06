@@ -3,14 +3,8 @@
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
-if [ -f /.exegol/.setup.lock ]; then
-  # Lock file exists, exiting
-  exit 0
-else
-  echo "This log file is the result of the execution of the official and personal customization script"
-  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
-  echo >/.exegol/.setup.lock
-fi
+echo "This log file is the result of the execution of the official and personal customization script"
+echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
 
 # Root my-resources PATH
 MY_Root_PATH="/opt/my-resources"
@@ -24,7 +18,7 @@ if [ -d "$MY_Root_PATH" ]; then
   [ -d "$MY_Root_PATH/bin" ] || (mkdir "$MY_Root_PATH/bin" && chmod 770 "$MY_Root_PATH/bin")
 else
   echo "Exiting, 'my-resources' is disabled"
-  exit 0
+  exit 1
 fi
 
 # Copying README.md to /opt/my-resources/ (first use)
@@ -58,12 +52,14 @@ if [ -d "$MY_Setup_PATH/apt" ]; then
   cp "$MY_Setup_PATH/apt/sources.list" /etc/apt/sources.list.d/user_sources.list
   # Register custom repo's GPG keys
   mkdir /tmp/aptkeys
-  grep -vE "^(\s*|#.*)$" < $MY_Setup_PATH/apt/keys.list | while IFS= read -r key_url; do
+  grep -vE "^(\s*|#.*)$" <$MY_Setup_PATH/apt/keys.list | while IFS= read -r key_url; do
     wget -nv "$key_url" -O "/tmp/aptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
   done
-  gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key
-  gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes
-  chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
+  if [ "$(ls /tmp/aptkeys/*.key 2>/dev/null)" ]; then
+    gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key && \
+    gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes && \
+    chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
+  fi
   rm -r /tmp/aptkeys
   # Update package list from repos
   apt-get update
