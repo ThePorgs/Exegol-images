@@ -49,7 +49,7 @@ fi
 ##### Install custom APT packages
 if [ -d "$MY_Setup_PATH/apt" ]; then
   # Deploy custom apt repository
-  cp "$MY_Setup_PATH/apt/sources.list" /etc/apt/sources.list.d/user_sources.list
+  cp "$MY_Setup_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
   # Register custom repo's GPG keys
   mkdir /tmp/aptkeys
   grep -vE "^(\s*|#.*)$" <$MY_Setup_PATH/apt/keys.list | while IFS= read -r key_url; do
