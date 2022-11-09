@@ -7,9 +7,30 @@ For more information, the online documentation can be consulted: https://exegol.
 
 ## Supported configurations
 
+### apt
+
+- Custom APT **repositories** can be added in exegol by filling in the `/opt/my-resources/setup/apt/sources.list` file
+- Importing custom repositories usually requires importing **GPG keys** as well, which can be done by entering trusted GPG keys download URLs in the `/opt/my-resources/setup/apt/keys.list` file
+- To install **APT packages** automatically (after updating the repository including the custom ones), just enter a list of package names in the `/opt/my-resources/setup/apt/packages.list` file
+
+### zsh
 - **aliases**: Any custom alias can be defined in the `/opt/my-resources/setup/zsh/aliases` file. This file is automatically loaded by zsh.
 - **zshrc**: It is possible to add commands at the end of the zshrc routine in `/opt/my-resources/setup/zsh/zshrc` file.
-- **tmux**: TODO
+
+### vim
+
+- To automatically overwrite the `~/.vimrc` configuration file, simply create the file `/opt/my-resources/setup/vim/vimrc`
+- vim configuration folders are also automatically synchronized:
+  - `/opt/my-resources/setup/vim/autoload/*` --> `~/.vim/autoload/`
+  - `/opt/my-resources/setup/vim/backup/*` --> `~/.vim/backup/`
+  - `/opt/my-resources/setup/vim/colors/*` --> `~/.vim/colors/`
+  - `/opt/my-resources/setup/vim/plugged/*` --> `~/.vim/plugged/`
+  - `/opt/my-resources/setup/vim/bundle/*` --> `~/.vim/bundle/`
+
+### tmux 
+
+To automatically overwrite the `~/.tmux.conf` configuration file, simply create the file `/opt/my-resources/setup/tmux/tmux.conf`
+
 
 ## Advanced customizations
 
