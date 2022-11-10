@@ -2060,6 +2060,7 @@ function install_base() {
   fapt python3-dev                # Python 3 language (dev version)
   fapt python3-venv
   fapt libffi-dev
+  fapt rustc
   install_rust_cargo
   ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
   python-pip                      # Pip
