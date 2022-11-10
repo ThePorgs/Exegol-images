@@ -49,10 +49,6 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en
 
-function theharvester(){
-    python3 -c "import os; os.system('cd /opt/tools/theHarvester && . theharvenv/bin/activate && python3 theHarvester.py ""$@""');"
-}
-
 # At the end, loads user-defined zshrc post-routines if the file exists otherwise creates a default file if my-resources is enabled in the container
 if [ -f /opt/my-resources/setup/zsh/zshrc ]
 then

@@ -180,6 +180,7 @@ alias smbmap='python3 /opt/tools/smbmap/smbmap.py'
 alias feroxbuster='/opt/tools/feroxbuster/feroxbuster'
 alias tls-scanner='java -jar /opt/tools/TLS-Scanner/apps/TLS-Server-Scanner.jar'
 alias username-anarchy='/opt/tools/username-anarchy/username-anarchy'
+alias theHarvester.py='python3 /opt/tools/theHarvester/theHarvester.py'
 
 # Loads user-defined aliases if the file exists otherwise creates a default file if my-resources is enabled in the container
 if [ -f /opt/my-resources/setup/zsh/aliases ]
