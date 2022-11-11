@@ -68,9 +68,8 @@ function ovpn() {
 
 function cmd() {
   load_setups
-  command_line=${*:2}
-  # echo "Executing: $command_line"
-  $command_line
+  # echo "Executing: ${*:2}"
+  "${@:2}"
 }
 
 function compatibility() {
