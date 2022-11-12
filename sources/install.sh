@@ -2000,6 +2000,20 @@ function install_fierce() {
   python3 -m pipx install /opt/tools/fierce
 }
 
+function install_openvpn() {
+  fapt openvpn                    # Instal OpenVPN
+  fapt openresolv                 # Dependency for DNS resolv.conf update with OpenVPN connection (using script)
+
+  # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
+  line=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  sed -i ${line}'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  line=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  sed -i ${line}'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+  line=$(($line + 1))
+  sed -i ${line}'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+}
+
 function install_exegol-history() {
   colorecho "Installing Exegol-history"
 #  git -C /opt/tools/ clone https://github.com/ShutdownRepo/Exegol-history
@@ -2103,9 +2117,7 @@ function install_base() {
   fapt jq                         # jq is a lightweight and flexible command-line JSON processor
   fapt iputils-ping               # Ping binary
   fapt iproute2                   # Firewall rules
-  fapt openvpn                    # Instal OpenVPN
-  fapt openresolv                 # Dependency for DNS resolv.conf update with OpenVPN connection (using script)
-  echo '[ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || exit 0' >> /etc/openvpn/update-resolv-conf  # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon
+  install_openvpn                 # install OpenVPN
   install_mdcat                           # cat markdown files
   install_bat                             # Beautiful cat
   fapt tidy                       # TODO: comment this
