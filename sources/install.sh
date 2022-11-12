@@ -370,7 +370,9 @@ function neo4j_install() {
   fapt openjdk-17-jre
   update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.17.0-openjdk*' -printf '%P')
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
-  echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
+  # TODO temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
+  #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
+  echo 'deb https://debian.neo4j.com stable 4.4' | tee /etc/apt/sources.list.d/neo4j.list
   apt-get update
   apt-get -y install --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
   apt-get -y install neo4j
