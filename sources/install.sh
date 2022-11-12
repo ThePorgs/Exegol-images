@@ -1199,7 +1199,7 @@ function install_trilium() {
   git -C /opt/tools/ clone -b stable https://github.com/zadam/trilium.git
   cd /opt/tools/trilium
   # the npm install needs to be executed in the zsh context where nvm is used to set the Node version to be used.
-  zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm use node && npm install && npm rebuild"
+  zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild"
   mkdir -p /root/.local/share/trilium-data
   cp -v /root/sources/trilium/* /root/.local/share/trilium-data
 }
@@ -1994,19 +1994,26 @@ function install_rust_cargo() {
   source $HOME/.cargo/env
 }
 
+function install_fierce() {
+  colorecho "Installing fierce"
+  git -C /opt/tools/ clone https://github.com/mschwager/fierce
+  python3 -m pipx install /opt/tools/fierce
+}
+
 function install_exegol-history() {
   colorecho "Installing Exegol-history"
 #  git -C /opt/tools/ clone https://github.com/ShutdownRepo/Exegol-history
 # todo : below is something basic. A nice tool being created for faster and smoother worflow
   mkdir /opt/tools/Exegol-history
-  echo "export DOMAIN='DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
-  echo "export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'" >> /opt/tools/Exegol-history/profile.sh
-  echo "export USER='someuser'" >> /opt/tools/Exegol-history/profile.sh
-  echo "export PASSWORD='somepassword'" >> /opt/tools/Exegol-history/profile.sh
-  echo "export NT_HASH='c1c635aa12ae60b7fe39e28456a7bac6'" >> /opt/tools/Exegol-history/profile.sh
-  echo "export DC_IP='192.168.56.101'" >> /opt/tools/Exegol-history/profile.sh
-  echo "export DC_HOST='DC01.DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
-  echo "export ATTACKER_IP='192.168.56.1'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export DOMAIN='DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export USER='someuser'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export PASSWORD='somepassword'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export NT_HASH='c1c635aa12ae60b7fe39e28456a7bac6'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export DC_IP='192.168.56.101'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export DC_HOST='DC01.DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export TARGET='192.168.56.69'" >> /opt/tools/Exegol-history/profile.sh
+  echo "#export ATTACKER_IP='192.168.56.1'" >> /opt/tools/Exegol-history/profile.sh
 }
 
 function install_logrotate() {
@@ -2234,7 +2241,6 @@ function install_osint_tools() {
   findomain                       # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
   #DNS
   fapt dnsenum                    # DNSEnum is a command-line tool that automatically identifies basic DNS records
-  fapt dnsrecon                   # DNS Enumeration Script
   #Email
   holehe                          # Check if the mail is used on different sites
   install_simplyemail             # Gather emails
@@ -2540,6 +2546,7 @@ function install_network_tools() {
   fapt freerdp2-x11
   fapt rdesktop
   fapt xtightvncviewer
+  install_fierce
 }
 
 # Package dedicated to wifi pentest tools
