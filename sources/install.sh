@@ -2002,6 +2002,14 @@ function install_fierce() {
   python3 -m pipx install /opt/tools/fierce
 }
 
+function install_yarn() {
+  colorecho "Installing yarn"
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+  apt update
+  apt install -y yarn
+}
+
 function install_openvpn() {
   fapt openvpn                    # Instal OpenVPN
   fapt openresolv                 # Dependency for DNS resolv.conf update with OpenVPN connection (using script)
@@ -2100,6 +2108,7 @@ function install_base() {
   install_grc
   fapt npm                        # Node Package Manager
   install_nvm
+  install_yarn
   install_go                      # Golang language
   fapt gem                        # Install ruby packages
   fapt automake                   # Automake
