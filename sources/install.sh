@@ -296,6 +296,8 @@ function install_crackmapexec() {
   apt-get -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
   git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   cd /opt/tools/CrackMapExec
+  # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+  source $HOME/.cargo/env
   python3 -m pipx install .
   ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
