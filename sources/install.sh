@@ -367,17 +367,18 @@ function install_bloodhound.py() {
 
 function neo4j_install() {
   colorecho "Installing neo4j"
-  fapt openjdk-17-jre
-  update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.17.0-openjdk*' -printf '%P')
+  fapt openjdk-11-jre
+  # TODO: when temporary fix is not needed anymore --> fapt openjdk-17-jre
+  update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.11.0-openjdk*' -printf '%P')
+  # TODO: when temporary fix is not needed anymore --> update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.17.0-openjdk*' -printf '%P')
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
-  # TODO temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
+  # TODO: temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
   #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
   echo 'deb https://debian.neo4j.com stable 4.4' | tee /etc/apt/sources.list.d/neo4j.list
   apt-get update
   apt-get -y install --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
   apt-get -y install neo4j
-  #mkdir /usr/share/neo4j/conf
-  neo4j-admin dbms set-initial-password exegol4thewin
+  # TODO: when temporary fix is not needed anymore --> neo4j-admin dbms set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
   touch /usr/share/neo4j/logs/neo4j.log
 }
@@ -1991,7 +1992,7 @@ function install_jd-gui(){
 }
 
 function install_rust_cargo() {
-  # Installing cargo, a rust installer
+  colorecho "Installing rustc, cargo, rustup"
   curl https://sh.rustup.rs -sSf | sh -s -- -y
   source $HOME/.cargo/env
 }
@@ -2087,7 +2088,6 @@ function install_base() {
   fapt python3-dev                # Python 3 language (dev version)
   fapt python3-venv
   fapt libffi-dev
-  fapt rustc
   install_rust_cargo
   ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
   python-pip                      # Pip
