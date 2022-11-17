@@ -5,6 +5,12 @@ on:
     branches:
       - dev
 
+env:
+  DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
+  DOCKER_PROD_REPO: "nwodtuhs/exegol-dev"
+  IMAGE_BASE_NAME: "debug"
+  DOCKERFILE: "./debug.dockerfile"
+
 jobs:
   arm64_buildx:
     timeout-minutes: 360
@@ -17,8 +23,8 @@ jobs:
         name: Prepare build
         id: prepare_build
         run: |
-          IMAGE_NAME="debug-arm64"
-          DOCKER_REPO=nwodtuhs/exegol-builds
+          IMAGE_NAME="${IMAGE_BASE_NAME}-arm64"
+          DOCKER_REPO=${DOCKER_INTERMEDIATE_REPO}
           COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
           IMAGE_VERSION=${COMMIT_ID:0:8}
           BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -52,7 +58,7 @@ jobs:
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_repo }}:${{ steps.prepare_build.outputs.image_name }}
           platforms: linux/arm64
-          file: ./debug.dockerfile
+          file: ${{env.DOCKERFILE}}
           context: .
   amd64_buildx:
     timeout-minutes: 360
@@ -65,8 +71,8 @@ jobs:
         name: Prepare build
         id: prepare_build
         run: |
-          IMAGE_NAME="debug-amd64"
-          DOCKER_REPO=nwodtuhs/exegol-builds
+          IMAGE_NAME="${IMAGE_BASE_NAME}-amd64"
+          DOCKER_REPO=${DOCKER_INTERMEDIATE_REPO}
           COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
           IMAGE_VERSION=${COMMIT_ID:0:8}
           BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -100,15 +106,14 @@ jobs:
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_repo }}:${{ steps.prepare_build.outputs.image_name }}
           platforms: linux/amd64
-          file: ./debug.dockerfile
+          file: ${{env.DOCKERFILE}}
           context: .
   manifest_build:
     timeout-minutes: 60
-    needs: [ arm64_buildx, amd64_buildx ]
-    runs-on: self-hosted
+    needs: [arm64_buildx, amd64_buildx]
+    runs-on: [self-hosted, Linux]
     steps:
       - name: Login to Dockerhub
-        if: success()
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -117,13 +122,14 @@ jobs:
         name: Create and push manifest
         if: success()
         run: |
-          docker manifest create nwodtuhs/exegol-dev:debug nwodtuhs/exegol-builds:debug-arm64 nwodtuhs/exegol-builds:debug-amd64
-          docker manifest push nwodtuhs/exegol-dev:debug
-          docker manifest rm nwodtuhs/exegol-dev:debug
+          docker manifest create ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME} ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
+          docker manifest rm ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
       -
         name: Remove intermediate images
-        if: success()
         run: |
+          apt-get update
+          apt-get install -y jq
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{'username': \"${{ secrets.DOCKER_USERNAME }}\", 'password': \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/nwodtuhs/exegol-builds/tags/debug-arm64/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/nwodtuhs/exegol-builds/tags/debug-amd64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
