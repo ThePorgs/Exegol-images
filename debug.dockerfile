@@ -14,15 +14,16 @@ LABEL org.exegol.src_repository="https://github.com/ShutdownRepo/Exegol-images"
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 
-#ADD sources /root/sources
-#RUN chmod +x /root/sources/install.sh
+ADD sources /root/sources
+RUN chmod +x /root/sources/install.sh
 
-#RUN /root/sources/install.sh install_base
+RUN /root/sources/install.sh deploy_exegol
+RUN /root/sources/install.sh update
+RUN apt-get update && apt-get install -y git curl zsh zip wget python3 vim procps
+RUN /root/sources/install.sh install_ohmyzsh
 
-#RUN /root/sources/install.sh install_clean
+RUN /root/sources/install.sh install_clean
 
-#RUN rm -rf /root/sources
-
-WORKDIR /data
+WORKDIR /workspace
 
 ENTRYPOINT ["/.exegol/entrypoint.sh"]

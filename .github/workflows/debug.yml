@@ -17,7 +17,7 @@ jobs:
         name: Prepare build
         id: prepare_build
         run: |
-          IMAGE_NAME="nightly"
+          IMAGE_NAME="debug-arm64"
           DOCKER_REPO=nwodtuhs/exegol-builds
           COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
           IMAGE_VERSION=${COMMIT_ID:0:8}
@@ -65,7 +65,7 @@ jobs:
         name: Prepare build
         id: prepare_build
         run: |
-          IMAGE_NAME="nightly"
+          IMAGE_NAME="debug-amd64"
           DOCKER_REPO=nwodtuhs/exegol-builds
           COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
           IMAGE_VERSION=${COMMIT_ID:0:8}
@@ -114,15 +114,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       -
-        name: Create manifest
+        name: Create and push manifest
         if: success()
         run: |
           docker manifest create nwodtuhs/exegol-dev:debug nwodtuhs/exegol-builds:debug-arm64 nwodtuhs/exegol-builds:debug-amd64
-      -
-        name: Push manifest
-        if: success()
-        run: |
           docker manifest push nwodtuhs/exegol-dev:debug
+          docker manifest rm nwodtuhs/exegol-dev:debug
       -
         name: Remove intermediate images
         if: success()
