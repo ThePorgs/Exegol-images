@@ -74,6 +74,17 @@ else
   cp --preserve=mode /.exegol/skel/apt/packages.list "$MY_Setup_PATH/apt/packages.list"
 fi
 
+##### Install custom PIP3 packages
+if [ -d "$MY_Setup_PATH/python3" ]; then
+  # Install every pip3 packages listed in the requirements.txt file
+  python3 -m pip install -r "$MY_Setup_PATH/python3/requirements.txt"
+else
+  # Import file template
+  mkdir "$MY_Setup_PATH/python3" && chmod 770 "$MY_Setup_PATH/python3"
+  cp --preserve=mode /.exegol/skel/python3/requirements.txt "$MY_Setup_PATH/python3/requirements.txt"
+fi
+
+
 # Executing user setup (or create the file)
 if [ -f "$MY_Setup_PATH/load_user_setup.sh" ]; then
   echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading user setup ($MY_Setup_PATH/load_user_setup.sh) ===="
