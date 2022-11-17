@@ -2,12 +2,12 @@ name: nightly build
 
 on:
   push:
-    branches: dev
+    branches: donotrun
 
 jobs:
   buildx:
     timeout-minutes: 2880
-    runs-on: self-hosted
+    runs-on: donotrun
     steps:
       - 
         name: Checkout
@@ -17,7 +17,7 @@ jobs:
         id: prepare_build
         run: |
           IMAGE_NAME="nightly"
-          DOCKER_REPO=nwodtuhs/exegol-dev
+          DOCKER_REPO=nwodtuhs/exegol-builds
           COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
           IMAGE_VERSION=${COMMIT_ID:0:8}
           BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
