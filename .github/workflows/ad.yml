@@ -5,25 +5,30 @@ on:
     tags:
       - '*'
 
+env:
+  DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
+  DOCKER_PROD_REPO: "nwodtuhs/exegol-dev"
+  IMAGE_BASE_NAME: "ad"
+  DOCKERFILE: "./ad.dockerfile"
+
 jobs:
-  buildx:
-    timeout-minutes: 2880
-    runs-on: self-hosted
+  arm64_buildx:
+    timeout-minutes: 360
+    runs-on: [self-hosted, arm64]
     steps:
-      - 
+      -
         name: Checkout
         uses: actions/checkout@v2
       -
         name: Prepare build
         id: prepare_build
         run: |
-          IMAGE_NAME="ad"
-          DOCKER_REPO=nwodtuhs/exegol-dev
-          IMAGE_VERSION=${GITHUB_REF/refs\/tags\//}
-          IMAGE_TAGS="${DOCKER_REPO}:${IMAGE_NAME},${DOCKER_REPO}:${IMAGE_NAME}-${IMAGE_VERSION}"
+          IMAGE_NAME="${IMAGE_BASE_NAME}-arm64"
+          DOCKER_REPO=${DOCKER_INTERMEDIATE_REPO}
+          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          IMAGE_VERSION=${COMMIT_ID:0:8}
           BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           echo "image_repo=${DOCKER_REPO}" >> $GITHUB_OUTPUT
-          echo "image_tags=${IMAGE_TAGS}" >> $GITHUB_OUTPUT
           echo "image_name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
           echo "build_date=${BUILD_DATE}" >> $GITHUB_OUTPUT
@@ -51,7 +56,78 @@ jobs:
             TAG=${{ steps.prepare_build.outputs.image_name }}
             VERSION=${{ steps.prepare_build.outputs.image_version }}
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
-          tags: ${{ steps.prepare_build.outputs.image_tags }}
-          platforms: linux/amd64,linux/arm64
-          file: ./ad.dockerfile
+          tags: ${{ steps.prepare_build.outputs.image_repo }}:${{ steps.prepare_build.outputs.image_name }}
+          platforms: linux/arm64
+          file: ${{env.DOCKERFILE}}
           context: .
+  amd64_buildx:
+    timeout-minutes: 360
+    runs-on: [self-hosted, amd64]
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Prepare build
+        id: prepare_build
+        run: |
+          IMAGE_NAME="${IMAGE_BASE_NAME}-amd64"
+          DOCKER_REPO=${DOCKER_INTERMEDIATE_REPO}
+          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          IMAGE_VERSION=${COMMIT_ID:0:8}
+          BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "image_repo=${DOCKER_REPO}" >> $GITHUB_OUTPUT
+          echo "image_name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "build_date=${BUILD_DATE}" >> $GITHUB_OUTPUT
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to Dockerhub
+        if: success()
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      -
+        name: Build and push the image
+        if: success()
+        uses: docker/build-push-action@v3
+        with:
+          outputs: type=image,push=true
+          build-args: |
+            TAG=${{ steps.prepare_build.outputs.image_name }}
+            VERSION=${{ steps.prepare_build.outputs.image_version }}
+            BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
+          tags: ${{ steps.prepare_build.outputs.image_repo }}:${{ steps.prepare_build.outputs.image_name }}
+          platforms: linux/amd64
+          file: ${{env.DOCKERFILE}}
+          context: .
+  manifest_build:
+    timeout-minutes: 60
+    needs: [arm64_buildx, amd64_buildx]
+    runs-on: self-hosted
+    steps:
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      -
+        name: Create and push manifest
+        if: success()
+        run: |
+          docker manifest create ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME} ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
+          docker manifest rm ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
+      -
+        name: Remove intermediate images
+        run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
