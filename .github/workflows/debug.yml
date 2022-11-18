@@ -127,14 +127,13 @@ jobs:
     needs: amd64_buildx
     runs-on: [self-hosted, amd64]
     strategy:
-      max-parallel: 5
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix) }}
     steps:
       -
         name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd ${{ matrix.command }}
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   push_amd64:
     needs: image_amd64_tests
     runs-on: [self-hosted, amd64]

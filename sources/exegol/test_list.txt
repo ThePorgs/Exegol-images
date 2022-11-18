@@ -1,3 +1,5 @@
 zsh --help
 tmux -V
 openvpn --version
+alias ipa
+echo "$(ls -lha /)" | grep root && echo 'test'
