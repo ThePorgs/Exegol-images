@@ -142,27 +142,27 @@ jobs:
         name: List available tests
         id: set-matrix
         run: |
-          echo "::set-output name=matrix_base::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_base | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_misc::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_misc | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_wordlists::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_wordlists | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_cracking::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_cracking | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_osint::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_osint | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_web::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_web | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_c2::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_c2 | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_ad::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_ad | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_mobile::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_mobile | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_iot::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_iot | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_rfid::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_rfid | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_voip::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_voip | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_sdr::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_sdr | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_network::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_network | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_wifi_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_wifi_tools | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_forensic_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_forensic_tools | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_cloud_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_cloud_tools | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_steganography_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_steganography_tools | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_reverse_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_reverse_tools | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_crypto_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_crypto_tools | jq -R -s -c 'split("\n")[:-1]')"
-          echo "::set-output name=matrix_code_analysis_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_code_analysis_tools | jq -R -s -c 'split("\n")[:-1]')"
+          echo "matrix_base=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_base | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_misc=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_misc | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_wordlists=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_wordlists | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_cracking=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_cracking | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_osint=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_osint | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_web=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_web | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_c2=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_c2 | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_ad=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_ad | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_mobile=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_mobile | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_iot=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_iot | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_rfid=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_rfid | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_voip=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_voip | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_sdr=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_sdr | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_network=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_network | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_wifi_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_wifi_tools | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_forensic_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_forensic_tools | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_cloud_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_cloud_tools | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_steganography_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_steganography_tools | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_reverse_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_reverse_tools | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_crypto_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_crypto_tools | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_code_analysis_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_code_analysis_tools | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
   amd64_tests_base:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_base != '[]' && needs.amd64_buildx.outputs.matrix_base != '' }}
