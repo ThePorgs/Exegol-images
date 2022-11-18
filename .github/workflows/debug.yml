@@ -149,7 +149,7 @@ jobs:
           echo "matrix_osint=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_osint | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_web=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_web | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_c2=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_c2 | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_ad=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_ad | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_ad=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_ad || echo' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_mobile=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_mobile | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_iot=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_iot | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_rfid=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_rfid | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
