@@ -163,55 +163,260 @@ jobs:
           echo "::set-output name=matrix_reverse_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_reverse_tools | jq -R -s -c 'split("\n")[:-1]')"
           echo "::set-output name=matrix_crypto_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_crypto_tools | jq -R -s -c 'split("\n")[:-1]')"
           echo "::set-output name=matrix_code_analysis_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_code_analysis_tools | jq -R -s -c 'split("\n")[:-1]')"
-  amd64_tests:
+  amd64_tests_base:
     needs: amd64_buildx
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
       matrix:
-        matrix_base: ${{ fromJson(needs.amd64_buildx.outputs.matrix_base) }}
-        matrix_misc: ${{ fromJson(needs.amd64_buildx.outputs.matrix_misc) }}
-        matrix_wordlists: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wordlists) }}
-        matrix_cracking: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cracking) }}
-        matrix_osint: ${{ fromJson(needs.amd64_buildx.outputs.matrix_osint) }}
-        matrix_web: ${{ fromJson(needs.amd64_buildx.outputs.matrix_web) }}
-        matrix_c2: ${{ fromJson(needs.amd64_buildx.outputs.matrix_c2) }}
-        matrix_ad: ${{ fromJson(needs.amd64_buildx.outputs.matrix_ad) }}
-        matrix_mobile: ${{ fromJson(needs.amd64_buildx.outputs.matrix_mobile) }}
-        matrix_iot: ${{ fromJson(needs.amd64_buildx.outputs.matrix_iot) }}
-        matrix_rfid: ${{ fromJson(needs.amd64_buildx.outputs.matrix_rfid) }}
-        matrix_voip: ${{ fromJson(needs.amd64_buildx.outputs.matrix_voip) }}
-        matrix_sdr: ${{ fromJson(needs.amd64_buildx.outputs.matrix_sdr) }}
-        matrix_network: ${{ fromJson(needs.amd64_buildx.outputs.matrix_network) }}
-        matrix_wifi_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wifi_tools) }}
-        matrix_forensic_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_forensic_tools) }}
-        matrix_cloud_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cloud_tools) }}
-        matrix_steganography_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_steganography_tools) }}
-        matrix_reverse_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_reverse_tools) }}
-        matrix_crypto_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_crypto_tools) }}
-        matrix_code_analysis_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_code_analysis_tools) }}
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_base) }}
     steps:
       -
         name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_cracking }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_osint }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_web }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_c2 }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_ad }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_mobile }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_iot }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_rfid }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_voip }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_sdr }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_network }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_wifi_tools }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_forensic_tools }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_cloud_tools }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_steganography_tools }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_reverse_tools }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_crypto_tools }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_code_analysis_tools }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_misc:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_misc) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_wordlists:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wordlists) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_cracking:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cracking) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_osint:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_osint) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_web:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_web) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_c2:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_c2) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_ad:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_ad) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_mobile:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_mobile) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_iot:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_iot) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_rfid:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_rfid) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_voip:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_voip) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_sdr:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_sdr) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_network:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_network) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_wifi_tools:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wifi_tools) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_forensic_tools:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_forensic_tools) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_cloud_tools:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cloud_tools) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_steganography_tools:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_steganography_tools) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_reverse_tools:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_reverse_tools) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_crypto_tools:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_crypto_tools) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  amd64_tests_code_analysis_tools:
+    needs: amd64_buildx
+    runs-on: [self-hosted, amd64]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_code_analysis_tools) }}
+    steps:
+      -
+        name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+          
+
   push_amd64:
     needs: amd64_tests
     runs-on: [self-hosted, amd64]
