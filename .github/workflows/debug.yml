@@ -133,7 +133,7 @@ jobs:
       -
         name: Image command testing
         run: |
-          docker run --rm ${{ DOCKER_INTERMEDIATE_REPO }}:${{ IMAGE_BASE_NAME }}-amd64 cmd ${{ martix.command }}
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd ${{ martix.command }}
   push_amd64:
     needs: image_amd64_tests
     runs-on: [self-hosted, amd64]
