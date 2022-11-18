@@ -418,7 +418,28 @@ jobs:
           
 
   push_amd64:
-    needs: amd64_tests
+    needs:
+      - amd64_tests_base
+      - amd64_tests_misc
+      - amd64_tests_wordlists
+      - amd64_tests_cracking
+      - amd64_tests_osint
+      - amd64_tests_web
+      - amd64_tests_c2
+      - amd64_tests_ad
+      - amd64_tests_mobile
+      - amd64_tests_iot
+      - amd64_tests_rfid
+      - amd64_tests_voip
+      - amd64_tests_sdr
+      - amd64_tests_network
+      - amd64_tests_wifi_tools
+      - amd64_tests_forensic_tools
+      - amd64_tests_cloud_tools
+      - amd64_tests_steganography_tools
+      - amd64_tests_reverse_tools
+      - amd64_tests_crypto_tools
+      - amd64_tests_code_analysis_tools
     runs-on: [self-hosted, amd64]
     steps:
       -
