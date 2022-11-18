@@ -137,7 +137,7 @@ jobs:
           echo $command_encoded
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo $command_encoded | base64 -d)"
   push_amd64:
-    needs: image_amd64_tests
+    needs: amd64_tests
     runs-on: [self-hosted, amd64]
     steps:
       -
