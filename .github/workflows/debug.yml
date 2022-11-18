@@ -465,7 +465,7 @@ jobs:
     steps:
       -
         name: Login to Dockerhub
-        if: success()
+        if: success() || skipped()
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
