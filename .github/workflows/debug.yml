@@ -9,6 +9,7 @@ env:
   DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
   DOCKER_PROD_REPO: "nwodtuhs/exegol-dev"
   IMAGE_BASE_NAME: "debug"
+  IMAGE_BUILD_FULL_NAME: ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}
   DOCKERFILE: "./debug.dockerfile"
 
 jobs:
@@ -134,7 +135,7 @@ jobs:
       -
         name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd ${{ matrix.command }}
+          docker run --rm ${{ env.IMAGE_BUILD_FULL_NAME }}-amd64 cmd ${{ matrix.command }}
   push_amd64:
     needs: image_amd64_tests
     runs-on: [self-hosted, amd64]
@@ -148,10 +149,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       -
         name: Push docker image
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
+        run: docker push ${{ env.IMAGE_BUILD_FULL_NAME }}-amd64
 #  manifest_build:
 #    timeout-minutes: 60
 #    needs: [arm64_buildx, amd64_buildx]
