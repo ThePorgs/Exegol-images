@@ -127,8 +127,9 @@ jobs:
     needs: amd64_buildx
     runs-on: [self-hosted, amd64]
     strategy:
-        matrix:
-            command: ${{ fromJson(needs.amd64_buildx.outputs.matrix) }}
+      max-parallel: 5
+      matrix:
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix) }}
     steps:
       -
         name: Image command testing
