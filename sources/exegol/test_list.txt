@@ -1,0 +1,3 @@
+zsh --help
+tmux --help
+openvpn --help
