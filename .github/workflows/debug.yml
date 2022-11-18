@@ -165,6 +165,7 @@ jobs:
           echo "::set-output name=matrix_code_analysis_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_code_analysis_tools | jq -R -s -c 'split("\n")[:-1]')"
   amd64_tests_base:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_base != '[]' && needs.amd64_buildx.outputs.matrix_base != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -177,6 +178,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_misc:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_misc != '[]' && needs.amd64_buildx.outputs.matrix_misc != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -189,6 +191,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_wordlists:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_wordlists != '[]' && needs.amd64_buildx.outputs.matrix_wordlists != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -201,6 +204,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_cracking:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_cracking != '[]' && needs.amd64_buildx.outputs.matrix_cracking != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -213,6 +217,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_osint:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_osint != '[]' && needs.amd64_buildx.outputs.matrix_osint != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -225,6 +230,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_web:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_web != '[]' && needs.amd64_buildx.outputs.matrix_web != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -237,6 +243,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_c2:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_c2 != '[]' && needs.amd64_buildx.outputs.matrix_c2 != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -249,6 +256,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_ad:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_ad != '[]' && needs.amd64_buildx.outputs.matrix_ad != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -261,6 +269,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_mobile:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_mobile != '[]' && needs.amd64_buildx.outputs.matrix_mobile != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -273,6 +282,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_iot:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_iot != '[]' && needs.amd64_buildx.outputs.matrix_iot != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -285,6 +295,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_rfid:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_rfid != '[]' && needs.amd64_buildx.outputs.matrix_rfid != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -297,6 +308,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_voip:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_voip != '[]' && needs.amd64_buildx.outputs.matrix_voip != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -309,6 +321,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_sdr:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_sdr != '[]' && needs.amd64_buildx.outputs.matrix_sdr != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -321,6 +334,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_network:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_network != '[]' && needs.amd64_buildx.outputs.matrix_network != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -333,6 +347,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_wifi_tools:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_wifi_tools != '[]' && needs.amd64_buildx.outputs.matrix_wifi_tools != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -345,6 +360,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_forensic_tools:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_forensic_tools != '[]' && needs.amd64_buildx.outputs.matrix_forensic_tools != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -357,6 +373,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_cloud_tools:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_cloud_tools != '[]' && needs.amd64_buildx.outputs.matrix_cloud_tools != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -369,6 +386,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_steganography_tools:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_steganography_tools != '[]' && needs.amd64_buildx.outputs.matrix_steganography_tools != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -381,6 +399,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_reverse_tools:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_reverse_tools != '[]' && needs.amd64_buildx.outputs.matrix_reverse_tools != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -393,6 +412,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_crypto_tools:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_crypto_tools != '[]' && needs.amd64_buildx.outputs.matrix_crypto_tools != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
@@ -405,6 +425,7 @@ jobs:
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_code_analysis_tools:
     needs: amd64_buildx
+    if: ${{ needs.amd64_buildx.outputs.matrix_code_analysis_tools != '[]' && needs.amd64_buildx.outputs.matrix_code_analysis_tools != '' }}
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
