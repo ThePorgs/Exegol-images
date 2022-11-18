@@ -126,8 +126,8 @@ jobs:
   amd64_tests:
     needs: amd64_buildx
     runs-on: [self-hosted, amd64]
-    if: always()
     strategy:
+      fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix) }}
     steps:
