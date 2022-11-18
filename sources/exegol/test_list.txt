@@ -1,3 +1,3 @@
 zsh --help
-tmux --help
-openvpn --help
+tmux -V
+openvpn --version
