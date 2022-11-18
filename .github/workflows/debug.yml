@@ -150,7 +150,6 @@ jobs:
         name: Push docker image
         uses: docker/build-push-action@v3
         with:
-          context: .
           push: true
           tags: ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
 #  manifest_build:
