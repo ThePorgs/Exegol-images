@@ -1,6 +1,0 @@
-zsh --help
-tmux -V
-openvpn --version
-alias ipa
-ls -lha /.exegol  # test comment after command
-fail_mode

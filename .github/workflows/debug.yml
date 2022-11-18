@@ -78,7 +78,24 @@ jobs:
     timeout-minutes: 360
     runs-on: [self-hosted, amd64]
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix_cracking: ${{ steps.set-matrix.outputs.matrix_cracking }}
+      matrix_osint: ${{ stps.set-matrix.outputs.matrix_osint }}
+      matrix_web: ${{ stps.set-matrix.outputs.matrix_web }}
+      matrix_c2: ${{ steps.set-matrix.outputs.matrix_c2 }}
+      matrix_ad: ${{ steps.set-matrix.outputs.matrix_ad }}
+      matrix_mobile: ${{ steps.set-matrix.outputs.matrix_mobile }}
+      matrix_iot: ${{ stps.set-matrix.outputs.matrix_iot }}
+      matrix_rfid: ${{ steps.set-matrix.outputs.matrix_rfid }}
+      matrix_voip: ${{ steps.set-matrix.outputs.matrix_voip }}
+      matrix_sdr: ${{ stps.set-matrix.outputs.matrix_sdr }}
+      matrix_network: ${{ stps.set-matrix.outputs.matrix_network }}
+      matrix_wifi_tools: ${{ steps.set-matrix.outputs.matrix_wifi_tools }}
+      matrix_forensic_tools: ${{ steps.set-matrix.outputs.matrix_forensic_tools }}
+      matrix_cloud_tools: ${{ stps.set-matrix.outputs.matrix_cloud_tools }}
+      matrix_steganography_tools: ${{ stps.set-matrix.outputs.matrix_steganography_tools }}
+      matrix_reverse_tools: ${{ stps.set-matrix.outputs.matrix_reverse_tools }}
+      matrix_crypto_tools: ${{ steps.set-matrix.outputs.matrix_crypto_tools }}
+      matrix_code_analysis_tools: ${{ stps.set-matrix.outputs.matrix_code_analysis_tools }}
     steps:
       -
         name: Checkout
@@ -121,19 +138,71 @@ jobs:
       -
         name: List available tests
         id: set-matrix
-        run: echo "::set-output name=matrix::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests.txt | jq -R -s -c 'split("\n")[:-1]')"
+        run: |
+          echo "::set-output name=matrix_cracking::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_base | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_osint::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_misc | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_web::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_wordlists | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_c2::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_cracking | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_ad::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_osint | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_mobile::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_web | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_iot::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_c2 | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_rfid::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_ad | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_voip::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_mobile | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_sdr::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_iot | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_network::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_rfid | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_wifi_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_voip | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_forensic_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_sdr | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_cloud_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_network | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_steganography_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_wifi_tools | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_reverse_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_forensic_tools | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_crypto_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_cloud_tools | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=matrix_code_analysis_tools::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests/package_steganography_tools | jq -R -s -c 'split("\n")[:-1]')"
   amd64_tests:
     needs: amd64_buildx
     runs-on: [self-hosted, amd64]
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix) }}
+        matrix_cracking: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cracking) }}
+        matrix_osint: ${{ fromJson(needs.amd64_buildx.outputs.matrix_osint) }}
+        matrix_web: ${{ fromJson(needs.amd64_buildx.outputs.matrix_web) }}
+        matrix_c2: ${{ fromJson(needs.amd64_buildx.outputs.matrix_c2) }}
+        matrix_ad: ${{ fromJson(needs.amd64_buildx.outputs.matrix_ad) }}
+        matrix_mobile: ${{ fromJson(needs.amd64_buildx.outputs.matrix_mobile) }}
+        matrix_iot: ${{ fromJson(needs.amd64_buildx.outputs.matrix_iot) }}
+        matrix_rfid: ${{ fromJson(needs.amd64_buildx.outputs.matrix_rfid) }}
+        matrix_voip: ${{ fromJson(needs.amd64_buildx.outputs.matrix_voip) }}
+        matrix_sdr: ${{ fromJson(needs.amd64_buildx.outputs.matrix_sdr) }}
+        matrix_network: ${{ fromJson(needs.amd64_buildx.outputs.matrix_network) }}
+        matrix_wifi_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wifi_tools) }}
+        matrix_forensic_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_forensic_tools) }}
+        matrix_cloud_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cloud_tools) }}
+        matrix_steganography_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_steganography_tools) }}
+        matrix_reverse_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_reverse_tools) }}
+        matrix_crypto_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_crypto_tools) }}
+        matrix_code_analysis_tools: ${{ fromJson(needs.amd64_buildx.outputs.matrix_code_analysis_tools) }}
     steps:
       -
         name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_cracking }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_osint }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_web }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_c2 }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_ad }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_mobile }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_iot }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_rfid }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_voip }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_sdr }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_network }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_wifi_tools }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_forensic_tools }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_cloud_tools }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_steganography_tools }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_reverse_tools }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_crypto_tools }}"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.matrix_code_analysis_tools }}"
   push_amd64:
     needs: amd64_tests
     runs-on: [self-hosted, amd64]
