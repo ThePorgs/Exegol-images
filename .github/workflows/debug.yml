@@ -120,8 +120,7 @@ jobs:
           file: ${{env.DOCKERFILE}}
           context: .
       -
-        name: List tests
-        uses: actions/checkout@v2
+        name: List available tests
         id: set-matrix
         run: echo "::set-output name=matrix::$(jq -R -s -c 'split("\n")[:-1]' sources/exegol/test_list.txt)"
   image_amd64_tests:
