@@ -122,7 +122,7 @@ jobs:
       -
         name: List available tests
         id: set-matrix
-        run: echo "::set-output name=matrix::$(jq -R -s -c 'split("\n")[:-1]' sources/exegol/test_list.txt)"
+        run: echo "::set-output name=matrix::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/test_list.txt | jq -R -s -c 'split("\n")[:-1]')"
   amd64_tests:
     needs: amd64_buildx
     runs-on: [self-hosted, amd64]
