@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y sudo git curl zsh zip wget ncat dnsutil
 RUN /root/sources/install.sh filesystem
 RUN /root/sources/install.sh set_env
 RUN /root/sources/install.sh locales
+RUN /root/sources/install.sh install_rust_cargo
 RUN /root/sources/install.sh tmux
 RUN /root/sources/install.sh install_ohmyzsh
 RUN /root/sources/install.sh install_fzf
