@@ -126,6 +126,7 @@ jobs:
   amd64_tests:
     needs: amd64_buildx
     runs-on: [self-hosted, amd64]
+    if: always()
     strategy:
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix) }}
@@ -137,6 +138,7 @@ jobs:
   push_amd64:
     needs: amd64_tests
     runs-on: [self-hosted, amd64]
+    if: success()
     steps:
       -
         name: Login to Dockerhub

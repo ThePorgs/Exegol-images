@@ -2,5 +2,7 @@ zsh --help
 tmux -V
 openvpn --version
 alias ipa
+ipa
+command_missing_test
 echo "$(ls -lha /)" | grep root
 echo 'test'
