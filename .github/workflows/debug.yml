@@ -138,7 +138,6 @@ jobs:
   push_amd64:
     needs: amd64_tests
     runs-on: [self-hosted, amd64]
-    if: success()
     steps:
       -
         name: Login to Dockerhub
