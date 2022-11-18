@@ -121,7 +121,7 @@ jobs:
       -
         name: List available tests
         id: set-matrix
-        run: echo "::set-output name=matrix::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/test_list.txt | jq -R -s -c 'split("\n")[:-1]')"
+        run: echo "::set-output name=matrix::$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd cat /.exegol/build_pipeline_tests.txt | jq -R -s -c 'split("\n")[:-1]')"
   amd64_tests:
     needs: amd64_buildx
     runs-on: [self-hosted, amd64]
@@ -151,7 +151,7 @@ jobs:
   clean_amd64:
     needs: push_amd64
     runs-on: [self-hosted, amd64]
-    if: always()
+    if: always()  # always mode clean the environment even when the task is cancelled by a user
     steps:
       -
         name: Clean unused dangling images
