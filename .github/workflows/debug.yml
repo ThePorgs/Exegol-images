@@ -117,7 +117,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           outputs: type=image,push=true
-          load: true
           build-args: |
             TAG=${{ steps.prepare_build.outputs.image_name }}
             VERSION=${{ steps.prepare_build.outputs.image_version }}
