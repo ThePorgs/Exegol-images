@@ -2696,7 +2696,7 @@ function package_osint() {
   # Github
   install_githubemail                     # Retrieve a GitHub user's email even if it's not public
   # Other
-  fapt whois                      # See information about a specific domain name or IP address
+  # fapt whois                      # See information about a specific domain name or IP address
   install_recondog                        # Informations gathering tool
   install_jsparser                        # Parse JS files
   install_gron                            # JSON parser
