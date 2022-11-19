@@ -876,7 +876,7 @@ function install_bat() {
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
-  fapt -f /tmp/bat.deb
+  apt-get install -f /tmp/bat.deb
   rm /tmp/bat.deb
 }
 
