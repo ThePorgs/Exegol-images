@@ -463,7 +463,13 @@ jobs:
     runs-on: [self-hosted, test]
     if: always()
     steps:
-      - run: echo "${{ toJSON(needs) }}"
+      - run: | 
+            echo "${{ toJSON(needs) }}"
+            echo ${{ needs.*.result }}
+            echo ${{ needs.*.result == 'success' }}
+            echo ${{ needs.*.result == 'skipped' }}
+            echo ${{ !contains(needs.*.result, 'failure') }}
+            echo ${{ !contains(needs.*.result, 'cancelled') }}
   push_amd64:
     needs:
       - amd64_tests_base
@@ -492,9 +498,7 @@ jobs:
       -
         name: Login to Dockerhub
         if: |
-          always() &&
-          !contains(needs.*.result, 'failure') &&
-          !contains(needs.*.result, 'cancelled')
+          always() && (needs.*.result == 'success' || needs.*.result == 'skipped')
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
