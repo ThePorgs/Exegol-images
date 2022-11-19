@@ -16,7 +16,7 @@ RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 
 ADD sources /root/sources
 RUN chmod +x /root/sources/install.sh
-
+ENV PIPELINE_TESTS_FILE=package_ad
 RUN /root/sources/install.sh deploy_exegol
 RUN /root/sources/install.sh update
 RUN apt-get update && apt-get install -y sudo git curl zsh zip wget ncat dnsutils python3 python3-setuptools python3-pip vim nano procps automake autoconf make
