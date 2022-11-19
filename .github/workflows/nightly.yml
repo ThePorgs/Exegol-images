@@ -3,7 +3,7 @@ name: nightly build
 on:
   push:
     branches:
-      - cicd
+      - disable
 
 env:
   DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"

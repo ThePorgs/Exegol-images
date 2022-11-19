@@ -142,27 +142,27 @@ jobs:
         name: List available tests
         id: set-matrix
         run: |
-          echo "matrix_ad=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_ad || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_base=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_base || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_c2=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_c2 || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_cloud=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cloud || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_code_analysis=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_code_analysis || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_cracking=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cracking || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_crypto=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_crypto || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_forensic=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_forensic || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_iot=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_iot || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_misc=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_misc || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_mobile=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_mobile || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_network=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_network || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_osint=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_osint || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_reverse=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_reverse || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_rfid=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_rfid || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_sdr=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_sdr || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_steganography=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_steganography || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_voip=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_voip || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_web=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_web || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_wifi=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wifi || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_wordlists=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wordlists || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_ad=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_ad || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_base=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_base || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_c2=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_c2 || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_cloud=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cloud || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_code_analysis=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_code_analysis || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_cracking=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cracking || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_crypto=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_crypto || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_forensic=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_forensic || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_iot=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_iot || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_misc=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_misc || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_mobile=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_mobile || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_network=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_network || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_osint=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_osint || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_reverse=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_reverse || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_rfid=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_rfid || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_sdr=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_sdr || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_steganography=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_steganography || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_voip=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_voip || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_web=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_web || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_wifi=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wifi || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_wordlists=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wordlists || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
   amd64_tests_base:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_base != '[]' && needs.amd64_buildx.outputs.matrix_base != '' }}
@@ -464,11 +464,32 @@ jobs:
     if: always()
     steps:
       - run: | 
-            [[ ${{ !contains(needs.*.result, 'failure') }} == 'true' &&  ${{ !contains(needs.*.result, 'cancelled') }} == 'true' ]] && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
+            [[ ${{ !contains(needs.*.result, 'failure') }} == 'true' &&  ${{ !contains(needs.*.result, 'cancelled') }} == 'true' && ${{ contains(needs.*.result, 'success') }} == 'true' ]] && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
   push_amd64:
-    needs: test_results_amd64
+    needs:
+      - amd64_tests_base
+      - amd64_tests_misc
+      - amd64_tests_wordlists
+      - amd64_tests_cracking
+      - amd64_tests_osint
+      - amd64_tests_web
+      - amd64_tests_c2
+      - amd64_tests_ad
+      - amd64_tests_mobile
+      - amd64_tests_iot
+      - amd64_tests_rfid
+      - amd64_tests_voip
+      - amd64_tests_sdr
+      - amd64_tests_network
+      - amd64_tests_wifi
+      - amd64_tests_forensic
+      - amd64_tests_cloud
+      - amd64_tests_steganography
+      - amd64_tests_reverse
+      - amd64_tests_crypto
+      - amd64_tests_code_analysis
     runs-on: [self-hosted, test]
-    if: always() && needs.test_results_amd64.result == 'success'
+    if: always() && !contains(needs.*.result, 'failure') == 'true' && !contains(needs.*.result, 'cancelled') == 'true' && contains(needs.*.result, 'success') == 'true'
     steps:
       -
         name: Login to Dockerhub
