@@ -437,7 +437,7 @@ jobs:
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
           
-  test_amd64:
+  test_results_amd64:
     needs:
       - amd64_tests_base
       - amd64_tests_misc
@@ -464,40 +464,11 @@ jobs:
     if: always()
     steps:
       - run: | 
-            echo "${{ toJSON(needs) }}"
-            echo ${{ needs.*.result }}
-            echo ${{ needs.*.result == 'success' }}
-            echo ${{ needs.*.result == 'skipped' }}
-            echo ${{ !contains(needs.*.result, 'failure') }}
-            echo ${{ !contains(needs.*.result, 'cancelled') }}
-            echo ${{ contains(needs.*.result, 'skipped') }}
-            [[ ${{ !contains(needs.*.result, 'failure') }} == 'true' &&  ${{ !contains(needs.*.result, 'cancelled') }} == 'true' ]] && echo OK || echo KO
+            [[ ${{ !contains(needs.*.result, 'failure') }} == 'true' &&  ${{ !contains(needs.*.result, 'cancelled') }} == 'true' ]] && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
   push_amd64:
-    needs:
-      - amd64_tests_base
-      - amd64_tests_misc
-      - amd64_tests_wordlists
-      - amd64_tests_cracking
-      - amd64_tests_osint
-      - amd64_tests_web
-      - amd64_tests_c2
-      - amd64_tests_ad
-      - amd64_tests_mobile
-      - amd64_tests_iot
-      - amd64_tests_rfid
-      - amd64_tests_voip
-      - amd64_tests_sdr
-      - amd64_tests_network
-      - amd64_tests_wifi_tools
-      - amd64_tests_forensic_tools
-      - amd64_tests_cloud_tools
-      - amd64_tests_steganography_tools
-      - amd64_tests_reverse_tools
-      - amd64_tests_crypto_tools
-      - amd64_tests_code_analysis_tools
+    needs: test_results_amd64
     runs-on: [self-hosted, test]
-    if: |
-      !contains(needs.*.result, 'failure') == 'true' && !contains(needs.*.result, 'cancelled') == 'true'
+    if: success()
     steps:
       -
         name: Login to Dockerhub
