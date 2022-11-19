@@ -465,7 +465,6 @@ jobs:
     steps:
       - run: | 
             echo "${{ toJSON(needs) }}"
-            echo ${{ always() }} 
             echo ${{ needs.*.result }}
             echo ${{ needs.*.result == 'success' }}
             echo ${{ needs.*.result == 'skipped' }}
