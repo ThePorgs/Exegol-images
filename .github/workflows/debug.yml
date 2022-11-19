@@ -439,6 +439,7 @@ jobs:
           
   test_results_amd64:
     needs:
+      - amd64_buildx
       - amd64_tests_base
       - amd64_tests_misc
       - amd64_tests_wordlists
@@ -464,9 +465,10 @@ jobs:
     if: always()
     steps:
       - run: | 
-            [[ ${{ !contains(needs.*.result, 'failure') }} == 'true' &&  ${{ !contains(needs.*.result, 'cancelled') }} == 'true' && ${{ contains(needs.*.result, 'success') }} == 'true' ]] && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
+            [[ ${{ !contains(needs.*.result, 'failure') }} == 'true' &&  ${{ !contains(needs.*.result, 'cancelled') }} == 'true' ]] && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
   push_amd64:
     needs:
+      - amd64_buildx
       - amd64_tests_base
       - amd64_tests_misc
       - amd64_tests_wordlists
@@ -489,7 +491,7 @@ jobs:
       - amd64_tests_crypto
       - amd64_tests_code_analysis
     runs-on: [self-hosted, test]
-    if: always() && !contains(needs.*.result, 'failure') == 'true' && !contains(needs.*.result, 'cancelled') == 'true' && contains(needs.*.result, 'success') == 'true'
+    if: always() && !contains(needs.*.result, 'failure') == 'true' && !contains(needs.*.result, 'cancelled') == 'true'
     steps:
       -
         name: Login to Dockerhub
