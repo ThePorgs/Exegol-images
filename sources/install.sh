@@ -185,7 +185,7 @@ function install_goshs(){
 
 function install_sslyze(){
   colorecho "Installing sslyze"
-  python3 -m pip install sslyze
+  python3 -m pipx install sslyze
   add-history sslyze
 }
 
@@ -254,7 +254,7 @@ function install_wikileaker() {
 
 function install_osrframework() {
   colorecho "Installing OSRFramework"
-  python3 -m pip install osrframework
+  python3 -m pipx install osrframework
 }
 
 function install_cloudfail() {
@@ -282,7 +282,7 @@ function install_eyewitness() {
 
 function install_wafw00f() {
   colorecho "Installing wafw00f"
-  python3 -m pip install wafw00F
+  python3 -m pipx install wafw00F
 }
 
 function install_jsparser() {
@@ -359,7 +359,7 @@ function install_blazy() {
 function install_xsstrike() {
   colorecho "Installing XSStrike"
   git -C /opt/tools/ clone https://github.com/s0md3v/XSStrike.git
-  python3 -m pip install fuzzywuzzy
+  python3 -m pipx install fuzzywuzzy
   add-aliases xsstrike
 }
 
@@ -414,7 +414,7 @@ function install_crackmapexec() {
 
 function install_lsassy() {
   colorecho "Installing lsassy"
-  python3 -m pip install lsassy
+  python3 -m pipx install lsassy
   add-history lsassy
   add-test-command "lsassy --version"
 }
@@ -463,7 +463,8 @@ function install_impacket() {
   # conflict 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
   # conflict 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
 
-  python3 -m pip install /opt/tools/impacket/
+  python3 -m pipx install /opt/tools/impacket/
+
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
   cp -v /root/sources/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
@@ -617,17 +618,13 @@ function install_kiterunner() {
 
 function install_dirsearch() {
   colorecho "Installing dirsearch"
-  git -C /opt/tools/ clone https://github.com/maurosoria/dirsearch
-  cd /opt/tools/dirsearch/ || exit
-  python3 -m pip install .
+  python3 -m pipx install git+https://github.com/maurosoria/dirsearch
   add-history dirsearch
 }
 
 function install_cmsmap() {
   colorecho "Installing CMSmap"
-  git -C /opt/tools/ clone https://github.com/Dionach/CMSmap.git
-  cd /opt/tools/CMSmap/ || exit
-  python3 -m pip install .
+  python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
   cmsmap -U PC
   add-history cmsmap
 }
@@ -662,7 +659,7 @@ function install_moodlescan() {
 
 function install_arjun() {
   colorecho "Installing arjun"
-  python3 -m pip install arjun
+  python3 -m pipx install arjun
 }
 
 function install_ffuf() {
@@ -934,7 +931,7 @@ function install_wuzz() {
 
 function install_pypykatz() {
   colorecho "Installing pypykatz"
-  python3 -m pip install pypykatz
+  python3 -m pipx install pypykatz
   add-history pypykatz
 }
 
@@ -1005,7 +1002,7 @@ function install_john() {
 
 function install_name-that-hash() {
   colorecho "Installing Name-That-Hash"
-  python3 -m pip install name-that-hash
+  python3 -m pipx install name-that-hash
   add-history name-that-hash
 }
 
@@ -1317,7 +1314,7 @@ function install_carbon14() {
 
 function install_youtubedl() {
   colorecho "Installing youtube-dl"
-  python3 -m pip install youtube-dl
+  python3 -m pipx install youtube-dl
 }
 
 function install_ipinfo() {
@@ -1337,13 +1334,13 @@ function install_constellation() {
 
 function install_holehe() {
   colorecho "Installing holehe"
-  python3 -m pip install holehe
+  python3 -m pipx install holehe
   add-history holehe
 }
 
 function install_twint() {
   colorecho "Installing twint"
-  python3 -m pip install twint
+  python3 -m pipx install twint
   add-history twint
 }
 
@@ -1355,7 +1352,7 @@ function install_tiktokscraper() {
 
 function install_h8mail() {
   colorecho "Installing h8mail"
-  python3 -m pip install h8mail
+  python3 -m pipx install h8mail
   add-history h8mail
 }
 
@@ -1443,7 +1440,8 @@ function install_awscli(){
 
 function install_scout() {
   colorecho "Installing ScoutSuite"
-  python3 -m pip install scoutsuite
+  python3 -m pipx install scoutsuite
+
 }
 
 function install_jdwp_shellifier(){
@@ -1454,7 +1452,7 @@ function install_jdwp_shellifier(){
 
 function install_maigret_pip() {
   colorecho "Installing maigret"
-  python3 -m pip install maigret
+  python3 -m pipx install maigret
   add-history maigret
 }
 
@@ -1596,9 +1594,7 @@ function install_httpmethods() {
 
 function install_adidnsdump() {
   colorecho "Installing adidnsdump"
-  git -C /opt/tools/ clone https://github.com/dirkjanm/adidnsdump
-  cd /opt/tools/adidnsdump/ || exit
-  python3 -m pip install .
+  python3 -m pipx install git+https://github.com/dirkjanm/adidnsdump
   add-history adidnsdump
 }
 
@@ -1611,7 +1607,7 @@ function install_dnschef() {
 function install_h2csmuggler() {
   colorecho "Installing h2csmuggler"
   git -C /opt/tools/ clone https://github.com/BishopFox/h2csmuggler
-  python3 -m pip install h2
+  python3 -m pipx install h2
   add-aliases h2csmuggler
 }
 
@@ -1652,12 +1648,12 @@ function install_zsteg() {
 
 function install_stegolsb() {
   colorecho "Installing stegolsb"
-  python3 -m pip install stego-lsb
+  python3 -m pipx install stego-lsb
 }
 
 function install_whatportis() {
   colorecho "Installing whatportis"
-  python3 -m pip install whatportis
+  python3 -m pipx install whatportis
   echo y | whatportis --update
   add-history whatportis
 }
@@ -1727,7 +1723,7 @@ function install_feroxbuster() {
 
 function install_bloodhound-import() {
   colorecho "Installing bloodhound-import"
-  python3 -m pip install bloodhound-import
+  python3 -m pipx install bloodhound-import
   add-history bloodhound-import
 }
 
@@ -1764,9 +1760,7 @@ function install_rustscan() {
 
 function install_divideandscan() {
   colorecho "Installing DivideAndScan"
-  git -C /opt/tools/ clone https://github.com/snovvcrash/DivideAndScan
-  cd /opt/tools/DivideAndScan || exit
-  python3 -m pip install .
+  python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
   add-history divideandscan
 }
 
@@ -1806,12 +1800,12 @@ function install_smartbrute() {
 
 function install_frida() {
   colorecho "Installing frida"
-  python3 -m pip install frida-tools
+  python3 -m pipx install frida-tools
 }
 
 function install_androguard() {
   colorecho "Installing androguard"
-  python3 -m pip install androguard
+  python3 -m pipx install androguard
 }
 
 function install_petitpotam() {
@@ -2054,7 +2048,7 @@ function install_ldaprelayscan() {
 
 function install_goldencopy() {
   colorecho "Installing GoldenCopy"
-  python3 -m pip install goldencopy
+  python3 -m pipx install goldencopy
   add-aliases goldencopy
   add-history goldencopy
 }
@@ -2198,7 +2192,7 @@ function install_pth-tools(){
 
 function install_smtp-user-enum(){
   colorecho "Installing smtp-user-enum"
-  python3 -m pip install smtp-user-enum
+  python3 -m pipx install smtp-user-enum
   add-history smtp-user-enum
 }
 
@@ -2506,6 +2500,7 @@ function package_base() {
   fapt python3-setuptools
   python3 -m pip install wheel
   python -m pip install wheel
+  install_pipx
   install_fzf                             # File fuzzer
   install_grc
   fapt npm                        # Node Package Manager
@@ -2532,10 +2527,10 @@ function package_base() {
   install_openvpn                 # install OpenVPN
   install_mdcat                           # cat markdown files
   install_bat                             # Beautiful cat
-  fapt tidy                       
+  fapt tidy
   fapt mlocate
-  install_xsel                       
-  fapt libtool                    
+  install_xsel
+  fapt libtool
   install_dnsutils                   # DNS utilities like dig and nslookup
   fapt dos2unix                   # Convert encoded dos script
   DEBIAN_FRONTEND=noninteractive fapt macchanger  # Macchanger
@@ -2559,7 +2554,6 @@ function package_base() {
   fapt unrar                      # unrar
   fapt xz-utils                   # xz (de)compression
   fapt xsltproc                   # apply XSLT stylesheets to XML documents (Nmap reports)
-  install_pipx
   fapt parallel
   fapt tree
   install_faketime
