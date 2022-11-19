@@ -36,13 +36,13 @@ RUN /root/sources/install.sh package_rfid
 RUN /root/sources/install.sh package_voip
 RUN /root/sources/install.sh package_sdr
 RUN /root/sources/install.sh package_network
-RUN /root/sources/install.sh package_wifi_tools
-RUN /root/sources/install.sh package_forensic_tools
-RUN /root/sources/install.sh package_cloud_tools
-RUN /root/sources/install.sh package_steganography_tools
-RUN /root/sources/install.sh package_reverse_tools
-RUN /root/sources/install.sh package_crypto_tools
-RUN /root/sources/install.sh package_code_analysis_tools
+RUN /root/sources/install.sh package_wifi
+RUN /root/sources/install.sh package_forensic
+RUN /root/sources/install.sh package_cloud
+RUN /root/sources/install.sh package_steganography
+RUN /root/sources/install.sh package_reverse
+RUN /root/sources/install.sh package_crypto
+RUN /root/sources/install.sh package_code_analysis
 
 RUN /root/sources/install.sh post_install_clean
 

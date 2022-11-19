@@ -2484,12 +2484,13 @@ function package_base() {
   fapt python3-pip                # Pip
   python3 pip install --upgrade pip
   filesystem
+  install_go                      # Golang language
   set_go_env
   install_locales
   install_tmux                            # Tmux
   fapt zsh                        # Awesome shell
   install_ohmyzsh                         # Awesome shell
-  install_tldr                    # TL;DR man     
+  install_tldr                    # TL;DR man
   fapt python-setuptools
   fapt python3-setuptools
   python3 -m pip install wheel
@@ -2499,7 +2500,6 @@ function package_base() {
   fapt npm                        # Node Package Manager
   install_nvm
   install_yarn
-  install_go                      # Golang language
   fapt gem                        # Install ruby packages
   fapt automake                   # Automake
   fapt autoconf                   # Autoconf
@@ -2561,6 +2561,7 @@ function package_base() {
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
   export PIPELINE_TESTS_FILE="package_misc"
+  set_go_env
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
   install_rlwrap                     # Reverse shell utility
@@ -2578,6 +2579,7 @@ function package_misc() {
 # Package dedicated to most used offensive tools
 function package_most_used() {
   export PIPELINE_TESTS_FILE="package_most_used"
+  set_go_env
   install_searchsploit            # Exploitdb local search engine
   install_metasploit              # Offensive framework
   install_nmap                    # Port scanner
@@ -2619,6 +2621,7 @@ function package_most_used() {
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
   export PIPELINE_TESTS_FILE="package_wordlists"
+  set_go_env
   fapt crunch                     # Wordlist generator
   install_seclists                # Awesome wordlists
   install_rockyou                 # Basically installs rockyou (~same as Kali)
@@ -2631,6 +2634,7 @@ function package_wordlists() {
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
   export PIPELINE_TESTS_FILE="package_cracking"
+  set_go_env
   install_hashcat                    # Password cracker
   install_john                    # Password cracker
   fapt fcrackzip                  # Zip cracker
@@ -2782,6 +2786,7 @@ function package_web() {
 # Package dedicated to command & control frameworks
 function package_c2() {
   export PIPELINE_TESTS_FILE="package_c2"
+  set_go_env
   install_empire                  # Exploit framework
   install_starkiller              # GUI for Empire
   install_metasploit              # Offensive framework
@@ -2873,6 +2878,7 @@ function package_ad() {
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
   export PIPELINE_TESTS_FILE="package_mobile"
+  set_go_env
   fapt android-tools-adb
   install_smali
   install_dex2jar
@@ -2886,12 +2892,14 @@ function package_mobile() {
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
   export PIPELINE_TESTS_FILE="package_voip"
+  set_go_env
   install_sipvicious              # Set of tools for auditing SIP based VOIP systems
 }
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
   export PIPELINE_TESTS_FILE="package_rfid"
+  set_go_env
   fapt git
   fapt libusb-dev
   fapt autoconf
