@@ -769,8 +769,8 @@ function install_pwntools() {
   colorecho "Installing pwntools"
   python -m pip install pwntools
   python3 -m pip install pwntools
-  aaa "python -c 'import pwn'"
-  aaa "python3 -c 'import pwn'"
+  add-test-command "python -c 'import pwn'"
+  add-test-command "python3 -c 'import pwn'"
 }
 
 function install_angr() {
@@ -779,7 +779,7 @@ function install_angr() {
   python3 -m pip install virtualenv virtualenvwrapper
   mkvirtualenv --python="$(which python3)" angr
   python3 -m pip install angr
-  aaa "python3 -c 'import angr'"
+  add-test-command "python3 -c 'import angr'"
 }
 
 function install_pwndbg() {
@@ -790,7 +790,7 @@ function install_pwndbg() {
   ./setup.sh
   echo 'set disassembly-flavor intel' >> ~/.gdbinit
   add-aliases gdb
-  aaa "gdb --help"
+  add-test-command "gdb --help"
 }
 
 function install_darkarmour() {
@@ -1038,7 +1038,7 @@ function install_proxmark3() {
 function install_checksec-py() {
   colorecho "Installing checksec.py"
   python3 -m pipx install checksec.py
-  aaa "checksec --help"
+  add-test-command "checksec --help"
 }
 
 function install_arsenal() {
@@ -1426,22 +1426,32 @@ function install_kubectl(){
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+  add-test-command "kubectl --help"
 }
 
 function install_awscli(){
   colorecho "Installing aws cli"
   cd /tmp || exit
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  elif [[ $(uname -m) = 'aarch64' ]]
+  then
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
+  fi
   unzip awscliv2.zip
   ./aws/install -i /opt/tools/aws-cli -b /usr/local/bin
   rm -rf aws
   rm awscliv2.zip
+  add-test-command "aws --version"
 }
 
 function install_scout() {
   colorecho "Installing ScoutSuite"
   python3 -m pipx install scoutsuite
-
+  add-test-command "scout --help"
 }
 
 function install_jdwp_shellifier(){
@@ -1639,16 +1649,19 @@ function install_volatility2() {
   # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161
   ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
   add-aliases volatility
+  add-test-command "volatility --help"
 }
 
 function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
+  add-test-command "zsteg --help"
 }
 
 function install_stegolsb() {
   colorecho "Installing stegolsb"
   python3 -m pipx install stego-lsb
+  add-test-command "stegolsb --version"
 }
 
 function install_whatportis() {
@@ -1778,6 +1791,7 @@ function install_trid() {
   chmod +x trid
   python3 tridupdate.py
   add-aliases trid
+  add-test-command "trid | grep 'This help'"
 }
 
 function install_pcredz() {
@@ -1920,7 +1934,7 @@ function install_vulny-code-static-analysis() {
   colorecho "Installing Vulny Code Static Analysis"
   git -C /opt/tools/ clone https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
   add-aliases vulny-code-static-analysis
-  aaa "vulny-code-static-analysis --help"
+  add-test-command "vulny-code-static-analysis --help"
 }
 
 function install_nuclei() {
@@ -2245,7 +2259,7 @@ function install_radare2(){
   colorecho "Installing radare2"
   git -C /opt/tools/ clone https://github.com/radareorg/radare2
   /opt/tools/radare2/sys/install.sh
-  aaa "radare2 -h"
+  add-test-command "radare2 -h"
 }
 
 function install_jd-gui(){
@@ -2986,7 +3000,7 @@ function package_wifi() {
 
 # Package dedicated to forensic tools
 function package_forensic() {
-  # CI/CD install_ []
+  # CI/CD install_ [x]
   export PIPELINE_TESTS_FILE="package_forensic"
   fapt pst-utils                  # Reads a PST and prints the tree structure to the console
   fapt binwalk                    # Tool to find embedded files
@@ -2998,7 +3012,7 @@ function package_forensic() {
 
 # Package dedicated to steganography tools
 function package_steganography() {
-  # CI/CD install_ []
+  # CI/CD install_ [x]
   export PIPELINE_TESTS_FILE="package_steganography"
   install_zsteg                   # Detect stegano-hidden data in PNG & BMP
   fapt stegosuite
@@ -3008,7 +3022,7 @@ function package_steganography() {
 
 # Package dedicated to cloud tools
 function package_cloud() {
-  # CI/CD install_ []
+  # CI/CD install_ [x]
   export PIPELINE_TESTS_FILE="package_cloud"
   install_kubectl
   install_awscli
