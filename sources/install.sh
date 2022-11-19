@@ -772,6 +772,8 @@ function install_pwntools() {
   colorecho "Installing pwntools"
   python -m pip install pwntools
   python3 -m pip install pwntools
+  aaa "python -c 'import pwn'"
+  aaa "python3 -c 'import pwn'"
 }
 
 function install_angr() {
@@ -780,6 +782,7 @@ function install_angr() {
   python3 -m pip install virtualenv virtualenvwrapper
   mkvirtualenv --python="$(which python3)" angr
   python3 -m pip install angr
+  aaa "python3 -c 'import angr'"
 }
 
 function install_pwndbg() {
@@ -790,6 +793,7 @@ function install_pwndbg() {
   ./setup.sh
   echo 'set disassembly-flavor intel' >> ~/.gdbinit
   add-aliases gdb
+  aaa "gdb --help"
 }
 
 function install_darkarmour() {
@@ -1037,6 +1041,7 @@ function install_proxmark3() {
 function install_checksec-py() {
   colorecho "Installing checksec.py"
   python3 -m pipx install checksec.py
+  aaa "checksec --help"
 }
 
 function install_arsenal() {
@@ -1253,6 +1258,7 @@ function install_ghidra() {
   unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
   rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
   add-aliases ghidra
+  # TODO add-test-command GUI app
 }
 
 function install_ida() {
@@ -1268,6 +1274,7 @@ function install_ida() {
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64"
   fi
   add-aliases ida
+  # TODO add-test-command GUI app
 }
 
 function install_burpsuite() {
@@ -1919,6 +1926,7 @@ function install_vulny-code-static-analysis() {
   colorecho "Installing Vulny Code Static Analysis"
   git -C /opt/tools/ clone https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
   add-aliases vulny-code-static-analysis
+  aaa "vulny-code-static-analysis --help"
 }
 
 function install_nuclei() {
@@ -2243,6 +2251,7 @@ function install_radare2(){
   colorecho "Installing radare2"
   git -C /opt/tools/ clone https://github.com/radareorg/radare2
   /opt/tools/radare2/sys/install.sh
+  aaa "radare2 -h"
 }
 
 function install_jd-gui(){
@@ -2250,6 +2259,7 @@ function install_jd-gui(){
   mkdir -p /opt/tools/jd-gui && cd /opt/tools/jd-gui || exit
   wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
   add-aliases jd-gui
+  # TODO add-test-command GUI app
 }
 
 function install_rust_cargo() {
@@ -2982,6 +2992,7 @@ function package_wifi() {
 
 # Package dedicated to forensic tools
 function package_forensic() {
+  # CI/CD install_ []
   export PIPELINE_TESTS_FILE="package_forensic"
   fapt pst-utils                  # Reads a PST and prints the tree structure to the console
   fapt binwalk                    # Tool to find embedded files
@@ -2993,6 +3004,7 @@ function package_forensic() {
 
 # Package dedicated to steganography tools
 function package_steganography() {
+  # CI/CD install_ []
   export PIPELINE_TESTS_FILE="package_steganography"
   install_zsteg                   # Detect stegano-hidden data in PNG & BMP
   fapt stegosuite
@@ -3002,6 +3014,7 @@ function package_steganography() {
 
 # Package dedicated to cloud tools
 function package_cloud() {
+  # CI/CD install_ []
   export PIPELINE_TESTS_FILE="package_cloud"
   install_kubectl
   install_awscli
@@ -3010,6 +3023,7 @@ function package_cloud() {
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
+  # CI/CD install_ [x]
   export PIPELINE_TESTS_FILE="package_reverse"
   install_pwntools                        # CTF framework and exploit development library
   install_pwndbg                          # Advanced Gnu Debugger
