@@ -470,6 +470,7 @@ jobs:
             echo ${{ needs.*.result == 'skipped' }}
             echo ${{ !contains(needs.*.result, 'failure') }}
             echo ${{ !contains(needs.*.result, 'cancelled') }}
+            echo ${{ contains(needs.*.result, 'skipped') }}
   push_amd64:
     needs:
       - amd64_tests_base
