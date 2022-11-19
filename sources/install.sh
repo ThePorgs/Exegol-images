@@ -2685,7 +2685,7 @@ function package_osint() {
   install_maltego                 # Maltego is a software used for open-source intelligence and forensics
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
-  fapt recon-ng                   # External recon tool
+  # fapt recon-ng                   # External recon tool
   # TODO : http://apt.vulns.sexy make apt-get update print a warning, and the repo has a weird name, we need to fix this in order to not alarm users
   install_osrframework                    # OSRFramework, the Open Sources Research Framework
   # Dark
