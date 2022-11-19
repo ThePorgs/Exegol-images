@@ -21,10 +21,10 @@ RUN /root/sources/install.sh deploy_exegol
 RUN /root/sources/install.sh update
 RUN apt-get update && apt-get install -y sudo git curl zsh zip wget ncat dnsutils python3 python3-setuptools python3-pip vim nano procps automake autoconf make
 RUN /root/sources/install.sh filesystem
-RUN /root/sources/install.sh set_env
-RUN /root/sources/install.sh locales
+RUN /root/sources/install.sh set_go_env
+RUN /root/sources/install.sh install_locales
 RUN /root/sources/install.sh install_rust_cargo
-RUN /root/sources/install.sh tmux
+RUN /root/sources/install.sh install_tmux
 RUN /root/sources/install.sh install_ohmyzsh
 RUN /root/sources/install.sh install_fzf
 RUN /root/sources/install.sh install_openvpn
