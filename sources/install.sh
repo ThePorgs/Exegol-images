@@ -25,12 +25,12 @@ function criticalecho-noexit () {
 
 function add-aliases() {
   colorecho "Adding aliases for: $*"
-  cat "/root/sources/zsh/aliases.d/$*" >> /opt/.exegol_aliases
+  cat "/root/sources/zsh/aliases.d/$*" | sed '/^$/d' | perl -pe 'chomp if eof' && echo '' >> /opt/.exegol_aliases
 }
 
 function add-history() {
   colorecho "Adding history commands for: $*"
-  cat "/root/sources/zsh/history.d/$*" >> ~/.zsh_history
+  cat "/root/sources/zsh/history.d/$*" | sed '/^$/d' | perl -pe 'chomp if eof' && echo '' >> /opt/.zsh_history
 }
 
 function add-test-command() {
