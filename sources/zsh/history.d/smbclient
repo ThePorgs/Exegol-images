@@ -1,0 +1,5 @@
+smbclient --list "$TARGET"
+smbclient --no-pass --user '' "//$TARGET/SYSVOL"
+smbclient --no-pass --user '' --list "$TARGET"
+rpcclient -U "$DOMAIN"/"$USER" "$TARGET"
+rpcclient -U '' -N "$DC_HOST"

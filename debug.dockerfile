@@ -1,4 +1,4 @@
-# Author: Charlie BROMBERG (Shutdown - @_nwodtuhs)
+# Author: The Exegol Project
 
 FROM debian
 
@@ -32,7 +32,7 @@ RUN /root/sources/install.sh install_pipx
 RUN /root/sources/install.sh install_exegol-history
 RUN /root/sources/install.sh install_logrotate
 
-RUN /root/sources/install.sh install_clean
+RUN /root/sources/install.sh post_install_clean
 
 WORKDIR /workspace
 

@@ -1,0 +1,2 @@
+alias ghunt='cd /opt/tools/GHunt/ && echo "[*] changed dir : cd /opt/tools/GHunt/" && python3 ghunt.py '
+alias ghunt-config='cd /opt/tools/GHunt/ && echo "[*] changed dir : cd /opt/tools/GHunt/" && python3 check_and_gen.py'

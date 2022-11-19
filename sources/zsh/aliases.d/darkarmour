@@ -1,0 +1,1 @@
+alias darkarmour='cd /opt/tools/darkarmour/ && echo "[*] changed dir : cd /opt/tools/darkarmour/" && python3 darkarmour.py'

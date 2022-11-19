@@ -1,0 +1,1 @@
+updog --ssl --port 9090 --password "exegol4thewin" --directory /opt/resources

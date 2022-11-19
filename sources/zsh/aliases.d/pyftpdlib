@@ -1,0 +1,1 @@
+alias ftp-server='python3 -m pyftpdlib'

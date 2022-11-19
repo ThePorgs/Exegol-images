@@ -1,0 +1,3 @@
+john --format=NT --wordlist=/usr/share/wordlists/rockyou.txt --fork=10 HashToPwn.txt --rules=all
+john --format=krb5tgs --wordlist=`fzf-wordlists` Kerberoastables.txt
+john --wordlist=`fzf-wordlists` ASREProastables.txt
