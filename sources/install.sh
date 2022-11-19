@@ -512,8 +512,8 @@ function install_neo4j() {
 function install_cyperoth() {
   colorecho "Installing cypheroth"
   git -C /opt/tools/ clone https://github.com/seajaysec/cypheroth/
-  add-aliases cyperoth
-  add-history cyperoth
+  add-aliases cypheroth
+  add-history cypheroth
   add-test-command "cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
 }
 
@@ -1793,6 +1793,7 @@ function install_smartbrute() {
   git -C /opt/tools/ clone https://github.com/ShutdownRepo/smartbrute
   cd /opt/tools/smartbrute || exit
   python3 -m pip install -r requirements.txt
+  add-aliases smartbrute
   add-test-command "smartbrute --help"
 }
 
