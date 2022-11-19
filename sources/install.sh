@@ -866,17 +866,17 @@ function install_bat() {
   version="$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | grep 'tag_name' | cut -d 'v' -f2 | cut -d '"' -f1)"
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    wget -O "/tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_amd64.deb"
+    wget -O /tmp/bat.deb "https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_amd64.deb"
   elif [[ $(uname -m) = 'aarch64' ]]
   then
-    wget -O "/tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_arm64.deb"
+    wget -O /tmp/bat.deb "https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_arm64.deb"
   elif [[ $(uname -m) = 'armv7l' ]]
   then
-    wget -O "/tmp/bat.deb https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_armhf.deb"
+    wget -O /tmp/bat.deb "https://github.com/sharkdp/bat/releases/download/v$version/bat_$version\_armhf.deb"
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
-  apt-get install -f /tmp/bat.deb
+  fapt -f /tmp/bat.deb
   rm /tmp/bat.deb
 }
 
