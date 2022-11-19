@@ -465,6 +465,7 @@ jobs:
     steps:
       - run: | 
             echo "${{ toJSON(needs) }}"
+            echo ${{ always() }} 
             echo ${{ needs.*.result }}
             echo ${{ needs.*.result == 'success' }}
             echo ${{ needs.*.result == 'skipped' }}
@@ -495,10 +496,11 @@ jobs:
       - amd64_tests_crypto_tools
       - amd64_tests_code_analysis_tools
     runs-on: [self-hosted, test]
+    if: |
+      !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
     steps:
       -
         name: Login to Dockerhub
-        if: !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
