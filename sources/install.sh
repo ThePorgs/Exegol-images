@@ -409,14 +409,14 @@ function install_crackmapexec() {
   cp -v /root/sources/grc/conf.cme /usr/share/grc/conf.cme
   add-aliases crackmapexec
   add-history crackmapexec
-  aaa "crackmapexec --help"
+  add-test-command "crackmapexec --help"
 }
 
 function install_lsassy() {
   colorecho "Installing lsassy"
   python3 -m pip install lsassy
   add-history lsassy
-  aaa "lsassy --version"
+  add-test-command "lsassy --version"
 }
 
 function install_sprayhound() {
@@ -427,7 +427,7 @@ function install_sprayhound() {
   python3 -m pip install "pyasn1<0.5.0,>=0.4.6"
   python3 setup.py install
   add-history sprayhound
-  aaa "sprayhound --help"
+  add-test-command "sprayhound --help"
 }
 
 function install_impacket() {
@@ -472,13 +472,13 @@ function install_impacket() {
 
   add-aliases impacket
   add-history impacket
-  aaa "ntlmrelayx.py --help"
-  aaa "secretsdump.py --help"
-  aaa "Get-GPPPassword.py --help"
-  aaa "getST.py --help | grep 'u2u'"
-  aaa "ticketer.py --help | grep impersonate"
-  aaa "dacledit.py --help"
-  aaa "describeTicket.py --help"
+  add-test-command "ntlmrelayx.py --help"
+  add-test-command "secretsdump.py --help"
+  add-test-command "Get-GPPPassword.py --help"
+  add-test-command "getST.py --help | grep 'u2u'"
+  add-test-command "ticketer.py --help | grep impersonate"
+  add-test-command "dacledit.py --help"
+  add-test-command "describeTicket.py --help"
 }
 
 function install_bloodhound-py() {
@@ -486,7 +486,7 @@ function install_bloodhound-py() {
   git -C /opt/tools/ clone https://github.com/fox-it/BloodHound.py
   add-aliases bloodhound-py
   add-history bloodhound-py
-  aaa "bloodhound.py --help"
+  add-test-command "bloodhound.py --help"
 }
 
 function install_neo4j() {
@@ -506,7 +506,7 @@ function install_neo4j() {
   mkdir -p /usr/share/neo4j/logs/
   touch /usr/share/neo4j/logs/neo4j.log
   add-history neo4j
-  aaa "neo4j version"
+  add-test-command "neo4j version"
 }
 
 function install_cyperoth() {
@@ -514,7 +514,7 @@ function install_cyperoth() {
   git -C /opt/tools/ clone https://github.com/seajaysec/cypheroth/
   add-aliases cyperoth
   add-history cyperoth
-  aaa "cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
+  add-test-command "cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
 }
 
 function install_mitm6_sources() {
@@ -532,13 +532,13 @@ function install_mitm6_pip() {
   cd /usr/lib/x86_64-linux-gnu/ || exit
   ln -s -f libc.a liblibc.a
   add-history mitm6
-  aaa "mitm6 --help"
+  add-test-command "mitm6 --help"
 }
 
 function install_aclpwn() {
   colorecho "Installing aclpwn with pip"
   python3 -m pipx install git+https://github.com/aas-n/aclpwn.py
-  aaa "aclpwn -h"
+  add-test-command "aclpwn -h"
 }
 
 function install_routersploit() {
@@ -756,7 +756,7 @@ function install_privexchange() {
   git -C /opt/tools/ clone https://github.com/dirkjanm/PrivExchange
   add-aliases privexchange
   add-history privexchange
-  aaa "python3 /opt/tools/PrivExchange/privexchange.py --help"
+  add-test-command "python3 /opt/tools/PrivExchange/privexchange.py --help"
 }
 
 function install_lnkup() {
@@ -876,7 +876,7 @@ function install_bat() {
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
   fi
-  fapt -f /tmp/bat.deb
+  apt-get install -f /tmp/bat.deb
   rm /tmp/bat.deb
 }
 
@@ -1793,7 +1793,7 @@ function install_smartbrute() {
   git -C /opt/tools/ clone https://github.com/ShutdownRepo/smartbrute
   cd /opt/tools/smartbrute || exit
   python3 -m pip install -r requirements.txt
-  aaa "smartbrute --help"
+  add-test-command "smartbrute --help"
 }
 
 function install_frida() {
