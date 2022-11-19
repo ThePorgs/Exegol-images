@@ -468,7 +468,7 @@ jobs:
   push_amd64:
     needs: test_results_amd64
     runs-on: [self-hosted, test]
-    if: needs.test_results_amd64.result == 'success'
+    if: always() && needs.test_results_amd64.result == 'success'
     steps:
       -
         name: Login to Dockerhub
