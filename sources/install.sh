@@ -3049,6 +3049,7 @@ function package_reverse() {
 
 # Package dedicated to attack crypto
 function package_crypto() {
+  export PIPELINE_TESTS_FILE="package_crypto"
 #  install_rsactftool              # attack rsa
 # todo : install_rsactftool function fails and make the whole build stop, temporarily removing
   echo "nothing to install"
@@ -3056,6 +3057,7 @@ function package_crypto() {
 
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
+  export PIPELINE_TESTS_FILE="package_code_analysis"
   install_vulny-code-static-analysis
 }
 

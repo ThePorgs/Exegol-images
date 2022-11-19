@@ -92,13 +92,13 @@ jobs:
       matrix_voip: ${{ steps.set-matrix.outputs.matrix_voip }}
       matrix_sdr: ${{ steps.set-matrix.outputs.matrix_sdr }}
       matrix_network: ${{ steps.set-matrix.outputs.matrix_network }}
-      matrix_wifi_tools: ${{ steps.set-matrix.outputs.matrix_wifi_tools }}
-      matrix_forensic_tools: ${{ steps.set-matrix.outputs.matrix_forensic_tools }}
-      matrix_cloud_tools: ${{ steps.set-matrix.outputs.matrix_cloud_tools }}
-      matrix_steganography_tools: ${{ steps.set-matrix.outputs.matrix_steganography_tools }}
-      matrix_reverse_tools: ${{ steps.set-matrix.outputs.matrix_reverse_tools }}
-      matrix_crypto_tools: ${{ steps.set-matrix.outputs.matrix_crypto_tools }}
-      matrix_code_analysis_tools: ${{ steps.set-matrix.outputs.matrix_code_analysis_tools }}
+      matrix_wifi: ${{ steps.set-matrix.outputs.matrix_wifi }}
+      matrix_forensic: ${{ steps.set-matrix.outputs.matrix_forensic }}
+      matrix_cloud: ${{ steps.set-matrix.outputs.matrix_cloud }}
+      matrix_steganography: ${{ steps.set-matrix.outputs.matrix_steganography }}
+      matrix_reverse: ${{ steps.set-matrix.outputs.matrix_reverse }}
+      matrix_crypto: ${{ steps.set-matrix.outputs.matrix_crypto }}
+      matrix_code_analysis: ${{ steps.set-matrix.outputs.matrix_code_analysis }}
     steps:
       -
         name: Checkout
@@ -145,23 +145,23 @@ jobs:
           echo "matrix_ad=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_ad || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_base=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_base || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_c2=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_c2 || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_cloud_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cloud_tools || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_code_analysis_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_code_analysis_tools || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_cloud=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cloud || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_code_analysis=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_code_analysis || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_cracking=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cracking || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_crypto_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_crypto_tools || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_forensic_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_forensic_tools || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_crypto=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_crypto || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_forensic=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_forensic || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_iot=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_iot || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_misc=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_misc || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_mobile=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_mobile || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_network=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_network || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_osint=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_osint || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_reverse_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_reverse_tools || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_reverse=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_reverse || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_rfid=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_rfid || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_sdr=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_sdr || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_steganography_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_steganography_tools || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_steganography=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_steganography || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_voip=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_voip || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_web=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_web || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-          echo "matrix_wifi_tools=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wifi_tools || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+          echo "matrix_wifi=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wifi || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "matrix_wordlists=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wordlists || echo' | grep -ve '^\s*$' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
   amd64_tests_base:
     needs: amd64_buildx
@@ -345,92 +345,92 @@ jobs:
         name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
-  amd64_tests_wifi_tools:
+  amd64_tests_wifi:
     needs: amd64_buildx
-    if: ${{ needs.amd64_buildx.outputs.matrix_wifi_tools != '[]' && needs.amd64_buildx.outputs.matrix_wifi_tools != '' }}
+    if: ${{ needs.amd64_buildx.outputs.matrix_wifi != '[]' && needs.amd64_buildx.outputs.matrix_wifi != '' }}
     runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wifi_tools) }}
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wifi) }}
     steps:
       -
         name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
-  amd64_tests_forensic_tools:
+  amd64_tests_forensic:
     needs: amd64_buildx
-    if: ${{ needs.amd64_buildx.outputs.matrix_forensic_tools != '[]' && needs.amd64_buildx.outputs.matrix_forensic_tools != '' }}
+    if: ${{ needs.amd64_buildx.outputs.matrix_forensic != '[]' && needs.amd64_buildx.outputs.matrix_forensic != '' }}
     runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_forensic_tools) }}
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_forensic) }}
     steps:
       -
         name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
-  amd64_tests_cloud_tools:
+  amd64_tests_cloud:
     needs: amd64_buildx
-    if: ${{ needs.amd64_buildx.outputs.matrix_cloud_tools != '[]' && needs.amd64_buildx.outputs.matrix_cloud_tools != '' }}
+    if: ${{ needs.amd64_buildx.outputs.matrix_cloud != '[]' && needs.amd64_buildx.outputs.matrix_cloud != '' }}
     runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cloud_tools) }}
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cloud) }}
     steps:
       -
         name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
-  amd64_tests_steganography_tools:
+  amd64_tests_steganography:
     needs: amd64_buildx
-    if: ${{ needs.amd64_buildx.outputs.matrix_steganography_tools != '[]' && needs.amd64_buildx.outputs.matrix_steganography_tools != '' }}
+    if: ${{ needs.amd64_buildx.outputs.matrix_steganography != '[]' && needs.amd64_buildx.outputs.matrix_steganography != '' }}
     runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_steganography_tools) }}
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_steganography) }}
     steps:
       -
         name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
-  amd64_tests_reverse_tools:
+  amd64_tests_reverse:
     needs: amd64_buildx
-    if: ${{ needs.amd64_buildx.outputs.matrix_reverse_tools != '[]' && needs.amd64_buildx.outputs.matrix_reverse_tools != '' }}
+    if: ${{ needs.amd64_buildx.outputs.matrix_reverse != '[]' && needs.amd64_buildx.outputs.matrix_reverse != '' }}
     runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_reverse_tools) }}
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_reverse) }}
     steps:
       -
         name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
-  amd64_tests_crypto_tools:
+  amd64_tests_crypto:
     needs: amd64_buildx
-    if: ${{ needs.amd64_buildx.outputs.matrix_crypto_tools != '[]' && needs.amd64_buildx.outputs.matrix_crypto_tools != '' }}
+    if: ${{ needs.amd64_buildx.outputs.matrix_crypto != '[]' && needs.amd64_buildx.outputs.matrix_crypto != '' }}
     runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_crypto_tools) }}
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_crypto) }}
     steps:
       -
         name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
-  amd64_tests_code_analysis_tools:
+  amd64_tests_code_analysis:
     needs: amd64_buildx
-    if: ${{ needs.amd64_buildx.outputs.matrix_code_analysis_tools != '[]' && needs.amd64_buildx.outputs.matrix_code_analysis_tools != '' }}
+    if: ${{ needs.amd64_buildx.outputs.matrix_code_analysis != '[]' && needs.amd64_buildx.outputs.matrix_code_analysis != '' }}
     runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_code_analysis_tools) }}
+        command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_code_analysis) }}
     steps:
       -
         name: Image command testing
@@ -453,13 +453,13 @@ jobs:
       - amd64_tests_voip
       - amd64_tests_sdr
       - amd64_tests_network
-      - amd64_tests_wifi_tools
-      - amd64_tests_forensic_tools
-      - amd64_tests_cloud_tools
-      - amd64_tests_steganography_tools
-      - amd64_tests_reverse_tools
-      - amd64_tests_crypto_tools
-      - amd64_tests_code_analysis_tools
+      - amd64_tests_wifi
+      - amd64_tests_forensic
+      - amd64_tests_cloud
+      - amd64_tests_steganography
+      - amd64_tests_reverse
+      - amd64_tests_crypto
+      - amd64_tests_code_analysis
     runs-on: [self-hosted, test]
     if: always()
     steps:
