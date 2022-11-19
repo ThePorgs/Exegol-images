@@ -1,0 +1,1 @@
+bloodhound-import -du neo4j -dp exegol4thewin *.json

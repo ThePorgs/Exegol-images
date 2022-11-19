@@ -1,0 +1,1 @@
+alias tls-scanner='java -jar /opt/tools/TLS-Scanner/apps/TLS-Server-Scanner.jar'

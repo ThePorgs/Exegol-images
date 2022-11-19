@@ -1,0 +1,1 @@
+alias ntlmv1-multi='python3 /opt/tools/ntlmv1-multi/ntlmv1.py'

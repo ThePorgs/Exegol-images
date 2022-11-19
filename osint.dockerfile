@@ -1,4 +1,4 @@
-# Author: Charlie BROMBERG (Shutdown - @_nwodtuhs)
+# Author: The Exegol Project
 
 FROM debian
 
@@ -17,34 +17,32 @@ RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 ADD sources /root/sources
 RUN chmod +x /root/sources/install.sh
 
-RUN /root/sources/install.sh install_base
+RUN /root/sources/install.sh package_base
 
-# WARNING: install_most_used_tools can't be used with other functions other than: install_base, install_clean
-# RUN /root/sources/install.sh install_most_used_tools
+# WARNING: package_most_used can't be used with other functions other than: package_base, post_install_clean
+# RUN /root/sources/install.sh package_most_used
 
-# WARNING: the following installs (except: install_base, install_clean) can't be used with install_most_used_tools
-# this is a temporary limitation
-RUN /root/sources/install.sh install_misc_tools
-# RUN /root/sources/install.sh install_wordlists_tools
-# RUN /root/sources/install.sh install_cracking_tools
-RUN /root/sources/install.sh install_osint_tools
-# RUN /root/sources/install.sh install_web_tools
-# RUN /root/sources/install.sh install_c2_tools
-# RUN /root/sources/install.sh install_services_tools
-# RUN /root/sources/install.sh install_ad_tools
-# RUN /root/sources/install.sh install_mobile_tools
-# RUN /root/sources/install.sh install_iot_tools
-# RUN /root/sources/install.sh install_rfid_tools
-# RUN /root/sources/install.sh install_sdr_tools
-# RUN /root/sources/install.sh install_network_tools
-# RUN /root/sources/install.sh install_wifi_tools
-# RUN /root/sources/install.sh install_forensic_tools
-# RUN /root/sources/install.sh install_cloud_tools
-# RUN /root/sources/install.sh install_steganography_tools
-# RUN /root/sources/install.sh install_reverse_tools
-# RUN /root/sources/install.sh install_code_analysis_tools
+# WARNING: the following installs (except: package_base, post_install_clean) can't be used with package_most_used
+RUN /root/sources/install.sh package_misc
+# RUN /root/sources/install.sh package_wordlists
+# RUN /root/sources/install.sh package_cracking
+RUN /root/sources/install.sh package_osint
+# RUN /root/sources/install.sh package_web
+# RUN /root/sources/install.sh package_c2
+# RUN /root/sources/install.sh package_ad
+# RUN /root/sources/install.sh package_mobile
+# RUN /root/sources/install.sh package_iot
+# RUN /root/sources/install.sh package_rfid
+# RUN /root/sources/install.sh package_sdr
+# RUN /root/sources/install.sh package_network
+# RUN /root/sources/install.sh package_wifi
+# RUN /root/sources/install.sh package_forensic
+# RUN /root/sources/install.sh package_cloud
+# RUN /root/sources/install.sh package_steganography
+# RUN /root/sources/install.sh package_reverse
+# RUN /root/sources/install.sh package_code_analysis
 
-RUN /root/sources/install.sh install_clean
+RUN /root/sources/install.sh post_install_clean
 
 RUN rm -rf /root/sources
 

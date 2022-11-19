@@ -1,4 +1,4 @@
-# Author: Charlie BROMBERG (Shutdown - @_nwodtuhs)
+# Author: The Exegol Project
 
 FROM debian
 
@@ -20,9 +20,9 @@ RUN chmod +x /root/sources/install.sh
 RUN /root/sources/install.sh deploy_exegol
 RUN /root/sources/install.sh update
 RUN apt-get update && apt-get install -y git curl zsh zip wget python3 vim procps
-RUN /root/sources/install.sh install_ohmyzsh
+RUN /root/sources/install.sh package_ohmyzsh
 
-RUN /root/sources/install.sh install_clean
+RUN /root/sources/install.sh post_install_clean
 
 WORKDIR /workspace
 

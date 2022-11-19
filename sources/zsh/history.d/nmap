@@ -1,0 +1,11 @@
+nmap --script 'smb-enum*' --script-args unsafe=1 -T5 "$TARGET"
+nmap --script broadcast-dhcp-discover
+nmap --script dns-srv-enum --script-args dns-srv-enum.domain="$DOMAIN"
+nmap --script http-ntlm-info --script-args http-ntlm-info.root=/ews/ -p 443 mx.example.com
+nmap --script smb-enum-shares -p 139,445 -T4 -Pn "$TARGET"
+nmap --script=ldap-search -p 389 "$TARGET"
+nmap -Pn -v -sS -F "$TARGET"
+nmap -p 5900 --script=realvnc-auth-bypass "$TARGET"
+nmap -sC -sV -p 139,445,80,21 "$TARGET"
+nmap -sS -n --open -p 88 "$TARGET"
+nmap -sS -p 3268,3269 "$TARGET"

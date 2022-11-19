@@ -1,0 +1,1 @@
+alias starkiller='echo "Make sure to have a privileged container to run Starkiller";/opt/tools/starkiller/starkiller.AppImage --no-sandbox'

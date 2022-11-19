@@ -1,0 +1,2 @@
+kadimus --cookie 'PHPSESSID=qsh5s21mo54qds7v5384f1q34' -u "http://$TARGET/?page=file1.php"
+kadimus -u "http://$TARGET/?page=file1.php"

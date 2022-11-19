@@ -1,0 +1,1 @@
+cewl --depth 10 --with-numbers --write cewl.txt "$TARGET"

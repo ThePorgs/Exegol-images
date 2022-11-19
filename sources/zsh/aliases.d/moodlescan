@@ -1,0 +1,1 @@
+alias moodlescan='python3 /opt/tools/moodlescan/moodlescan.py'

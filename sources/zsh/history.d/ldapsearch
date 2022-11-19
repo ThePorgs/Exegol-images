@@ -1,0 +1,1 @@
+ldapsearch -x -l "$DC_HOST" -D '' -w '' -b 'dc=DOMAIN,dc=LOCAL'

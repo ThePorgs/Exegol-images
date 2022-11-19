@@ -1,0 +1,1 @@
+modifyCertTemplate.py -template KerberosAuthentication -get-acl "$DOMAIN"/"$USER":"$PASSWORD"
