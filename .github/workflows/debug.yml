@@ -498,8 +498,7 @@ jobs:
     steps:
       -
         name: Login to Dockerhub
-        if: |
-          always() && (needs.*.result == 'success' || needs.*.result == 'skipped')
+        if: !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
