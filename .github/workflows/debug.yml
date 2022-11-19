@@ -3,7 +3,7 @@ name: debug build
 on:
   push:
     branches:
-      - donotbuild
+      - cicd
 
 env:
   DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
@@ -76,7 +76,7 @@ jobs:
 #          tags: ${{ steps.prepare_build.outputs.image_full_name }}
   amd64_buildx:
     timeout-minutes: 360
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     outputs:
       matrix_base: ${{ steps.set-matrix.outputs.matrix_base }}
       matrix_misc: ${{ steps.set-matrix.outputs.matrix_misc }}
@@ -166,7 +166,7 @@ jobs:
   amd64_tests_base:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_base != '[]' && needs.amd64_buildx.outputs.matrix_base != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -179,7 +179,7 @@ jobs:
   amd64_tests_misc:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_misc != '[]' && needs.amd64_buildx.outputs.matrix_misc != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -192,7 +192,7 @@ jobs:
   amd64_tests_wordlists:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_wordlists != '[]' && needs.amd64_buildx.outputs.matrix_wordlists != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -205,7 +205,7 @@ jobs:
   amd64_tests_cracking:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_cracking != '[]' && needs.amd64_buildx.outputs.matrix_cracking != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -218,7 +218,7 @@ jobs:
   amd64_tests_osint:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_osint != '[]' && needs.amd64_buildx.outputs.matrix_osint != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -231,7 +231,7 @@ jobs:
   amd64_tests_web:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_web != '[]' && needs.amd64_buildx.outputs.matrix_web != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -244,7 +244,7 @@ jobs:
   amd64_tests_c2:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_c2 != '[]' && needs.amd64_buildx.outputs.matrix_c2 != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -257,7 +257,7 @@ jobs:
   amd64_tests_ad:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_ad != '[]' && needs.amd64_buildx.outputs.matrix_ad != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -270,7 +270,7 @@ jobs:
   amd64_tests_mobile:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_mobile != '[]' && needs.amd64_buildx.outputs.matrix_mobile != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -283,7 +283,7 @@ jobs:
   amd64_tests_iot:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_iot != '[]' && needs.amd64_buildx.outputs.matrix_iot != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -296,7 +296,7 @@ jobs:
   amd64_tests_rfid:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_rfid != '[]' && needs.amd64_buildx.outputs.matrix_rfid != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -309,7 +309,7 @@ jobs:
   amd64_tests_voip:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_voip != '[]' && needs.amd64_buildx.outputs.matrix_voip != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -322,7 +322,7 @@ jobs:
   amd64_tests_sdr:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_sdr != '[]' && needs.amd64_buildx.outputs.matrix_sdr != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -335,7 +335,7 @@ jobs:
   amd64_tests_network:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_network != '[]' && needs.amd64_buildx.outputs.matrix_network != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -348,7 +348,7 @@ jobs:
   amd64_tests_wifi_tools:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_wifi_tools != '[]' && needs.amd64_buildx.outputs.matrix_wifi_tools != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -361,7 +361,7 @@ jobs:
   amd64_tests_forensic_tools:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_forensic_tools != '[]' && needs.amd64_buildx.outputs.matrix_forensic_tools != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -374,7 +374,7 @@ jobs:
   amd64_tests_cloud_tools:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_cloud_tools != '[]' && needs.amd64_buildx.outputs.matrix_cloud_tools != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -387,7 +387,7 @@ jobs:
   amd64_tests_steganography_tools:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_steganography_tools != '[]' && needs.amd64_buildx.outputs.matrix_steganography_tools != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -400,7 +400,7 @@ jobs:
   amd64_tests_reverse_tools:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_reverse_tools != '[]' && needs.amd64_buildx.outputs.matrix_reverse_tools != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -413,7 +413,7 @@ jobs:
   amd64_tests_crypto_tools:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_crypto_tools != '[]' && needs.amd64_buildx.outputs.matrix_crypto_tools != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -426,7 +426,7 @@ jobs:
   amd64_tests_code_analysis_tools:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_code_analysis_tools != '[]' && needs.amd64_buildx.outputs.matrix_code_analysis_tools != '' }}
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     strategy:
       fail-fast: false
       matrix:
@@ -437,7 +437,33 @@ jobs:
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
           
-
+  test_amd64:
+    needs:
+      - amd64_tests_base
+      - amd64_tests_misc
+      - amd64_tests_wordlists
+      - amd64_tests_cracking
+      - amd64_tests_osint
+      - amd64_tests_web
+      - amd64_tests_c2
+      - amd64_tests_ad
+      - amd64_tests_mobile
+      - amd64_tests_iot
+      - amd64_tests_rfid
+      - amd64_tests_voip
+      - amd64_tests_sdr
+      - amd64_tests_network
+      - amd64_tests_wifi_tools
+      - amd64_tests_forensic_tools
+      - amd64_tests_cloud_tools
+      - amd64_tests_steganography_tools
+      - amd64_tests_reverse_tools
+      - amd64_tests_crypto_tools
+      - amd64_tests_code_analysis_tools
+    runs-on: [self-hosted, test]
+    if: always()
+    steps:
+      - run: echo "${{ toJSON(needs) }}"
   push_amd64:
     needs:
       - amd64_tests_base
@@ -461,7 +487,7 @@ jobs:
       - amd64_tests_reverse_tools
       - amd64_tests_crypto_tools
       - amd64_tests_code_analysis_tools
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     steps:
       -
         name: Login to Dockerhub
@@ -478,7 +504,7 @@ jobs:
         run: docker push ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
   clean_amd64:
     needs: push_amd64
-    runs-on: [self-hosted, amd64]
+    runs-on: [self-hosted, test]
     if: always()  # always mode clean the environment even when the task is cancelled by a user
     steps:
       -
