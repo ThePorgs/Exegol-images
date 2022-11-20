@@ -32,6 +32,7 @@ RUN /root/sources/install.sh install_pipx
 RUN /root/sources/install.sh install_exegol-history
 RUN /root/sources/install.sh install_logrotate
 RUN /root/sources/install.sh install_pwntools
+RUN /root/sources/install.sh add-test-command "fail_command"
 
 RUN /root/sources/install.sh post_install_clean
 
