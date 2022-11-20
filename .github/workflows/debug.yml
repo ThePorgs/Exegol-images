@@ -3,7 +3,7 @@ name: debug build
 on:
   push:
     branches:
-      - cicd
+      - debugonly
 
 env:
   DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
@@ -786,6 +786,7 @@ jobs:
     timeout-minutes: 60
     needs: [arm64_push, amd64_push]
     runs-on: self-hosted
+    if: success()
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
