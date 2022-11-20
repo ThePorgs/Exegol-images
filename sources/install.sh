@@ -60,7 +60,6 @@ function post_install_clean() {
   colorecho "Cleaning..."
   updatedb
   rm -rfv /tmp/*
-  split -l 200 -d /.exegol/build_pipeline_tests/commands.txt /.exegol/build_pipeline_tests/tests.
   echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
 }
 

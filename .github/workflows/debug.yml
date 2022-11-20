@@ -74,14 +74,23 @@ jobs:
       - name: List available tests
         id: set-matrix
         run: |
-          ID=$(docker run --rm -d ${{ steps.prepare_build.outputs.image_full_name }} endless)
-          [ $(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt && [ $(wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d ' ' -f 1) -lt 1000 ] && echo 0 || echo 1') == "1" ] && (echo "Too many command to test!" && exit 1)
-          docker exec $ID zsh -c 'split -d -n 4 /.exegol/build_pipeline_tests/all_commands.sorted.txt /.exegol/build_pipeline_tests/part'
-          echo "matrix_p1=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part01' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-          echo "matrix_p2=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part02' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-          echo "matrix_p3=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part03' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-          echo "matrix_p4=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part04' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          ID=$(docker run --rm -t -d ${{ steps.prepare_build.outputs.image_full_name }} endless)
+          docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt'
+          line_count=$(docker exec $ID zsh -c 'wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d " " -f 1')
+          echo "$line_count test commands found!"
+          if [ $line_count -lt 1000 ]; then
+            docker exec $ID zsh -c 'split -d -n 4 /.exegol/build_pipeline_tests/all_commands.sorted.txt /.exegol/build_pipeline_tests/part'
+            echo "matrix_p1=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part01' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p2=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part02' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p3=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part03' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p4=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part04' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            return_code=0
+          else
+            echo "Too many command to test! ($line_count/1000)"
+            return_code=1
+          fi
           docker stop $ID
+          exit $return_code
   amd64_t1:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_p1 != '[]' && needs.amd64_buildx.outputs.matrix_p1 != '' }}
@@ -224,14 +233,23 @@ jobs:
       - name: List available tests
         id: set-matrix
         run: |
-          ID=$(docker run --rm -d ${{ steps.prepare_build.outputs.image_full_name }} endless)
-          [ $(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt && [ $(wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d ' ' -f 1) -lt 1000 ] && echo 0 || echo 1') == "1" ] && (echo "Too many command to test!" && exit 1)
-          docker exec $ID zsh -c 'split -d -n 4 /.exegol/build_pipeline_tests/all_commands.sorted.txt /.exegol/build_pipeline_tests/part'
-          echo "matrix_p1=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part01' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-          echo "matrix_p2=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part02' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-          echo "matrix_p3=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part03' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-          echo "matrix_p4=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part04' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          ID=$(docker run --rm -t -d ${{ steps.prepare_build.outputs.image_full_name }} endless)
+          docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt'
+          line_count=$(docker exec $ID zsh -c 'wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d " " -f 1')
+          echo "$line_count test commands found!"
+          if [ $line_count -lt 1000 ]; then
+            docker exec $ID zsh -c 'split -d -n 4 /.exegol/build_pipeline_tests/all_commands.sorted.txt /.exegol/build_pipeline_tests/part'
+            echo "matrix_p1=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part01' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p2=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part02' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p3=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part03' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p4=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part04' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            return_code=0
+          else
+            echo "Too many command to test! ($line_count/1000)"
+            return_code=1
+          fi
           docker stop $ID
+          exit $return_code
   arm64_t1:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_p1 != '[]' && needs.arm64_buildx.outputs.matrix_p1 != '' }}
