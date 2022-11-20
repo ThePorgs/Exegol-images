@@ -156,18 +156,6 @@ jobs:
           )
           docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
 
-  amd64_test_results:
-    needs:
-      - amd64_buildx
-      - amd64_t1
-      - amd64_t2
-      - amd64_t3
-      - amd64_t4
-    runs-on: [ self-hosted, test ]
-    if: always()
-    steps:
-      - run: |
-          (${{ !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}) && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
   amd64_push:
     needs:
       - amd64_buildx
@@ -320,18 +308,6 @@ jobs:
           )
           docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
 
-  arm64_test_results:
-    needs:
-      - arm64_buildx
-      - arm64_t1
-      - arm64_t2
-      - arm64_t3
-      - arm64_t4
-    runs-on: [ self-hosted, arm64 ]
-    if: always()
-    steps:
-      - run: |
-          (${{ !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}) && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
   arm64_push:
     needs:
       - arm64_buildx
