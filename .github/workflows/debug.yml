@@ -3,7 +3,7 @@ name: debug build
 on:
   push:
     branches:
-      - debugonly
+      - cicd
 
 env:
   DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
