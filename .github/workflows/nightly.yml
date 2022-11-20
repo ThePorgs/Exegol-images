@@ -220,6 +220,7 @@ jobs:
             return_code=0
           else
             echo "Too many command to test! (${line_count}/1000)"
+            echo "Maximum of 250 tests per matrix."
             return_code=1
           fi
           docker stop $ID

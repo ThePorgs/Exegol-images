@@ -386,6 +386,7 @@ function install_evilwinrm() {
   colorecho "Installing evil-winrm"
   gem install evil-winrm
   add-history evil-winrm
+  aaa "evil-winrm --help"
 }
 
 function install_bolt() {
@@ -746,7 +747,9 @@ function install_autorecon() {
   apt-get -y install wkhtmltopdf python3-venv
   python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
   add-history autorecon
-  add-test-command "autorecon --version"
+  # test below cannot work because test runner cannot have a valid display
+  # add-test-command "autorecon --version"
+  add-test-command "which autorecon"
 }
 
 function install_simplyemail() {
@@ -773,13 +776,14 @@ function install_lnkup() {
   python -m pip install -r requirements.txt
   add-aliases lnkup
   add-history lnkup
+  aaa "lnk-generate.py --help"
 }
 
 function install_pwntools() {
   colorecho "Installing pwntools"
   python -m pip install pwntools
   python3 -m pip install pwntools
-  add-test-command "whoami; python -c 'import pwn;print(\"1\")'"
+  add-test-command "python -c 'import pwn'"
   add-test-command "python3 -c 'import pwn'"
 }
 
@@ -810,19 +814,26 @@ function install_darkarmour() {
   apt-get -y install mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 upx-ucl osslsigncode
   add-aliases darkarmour
   add-history darkarmour
+  aaa "darkarmour --help"
 }
 
 function install_powershell() {
   colorecho "Installing powershell"
-  apt-get install -y software-properties-common
-  curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-  apt-add-repository https://packages.microsoft.com/debian/11/prod
-  apt-get update
-  apt-get install -y powershell
-  mv /opt/microsoft /opt/tools/microsoft
-  rm /usr/bin/pwsh
-  ln -s /opt/tools/microsoft/powershell/7/pwsh /opt/tools/bin/pwsh
-  add-aliases powershell
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    apt-get install -y software-properties-common
+    curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+    apt-add-repository https://packages.microsoft.com/debian/11/prod
+    apt-get update
+    apt-get install -y powershell
+    mv /opt/microsoft /opt/tools/microsoft
+    rm /usr/bin/pwsh
+    ln -s /opt/tools/microsoft/powershell/7/pwsh /opt/tools/bin/pwsh
+    add-aliases powershell
+    # TODO add-test-command
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+  fi
 }
 
 function install_fzf() {
@@ -885,7 +896,7 @@ function install_bat() {
   then
     wget -O /tmp/bat.deb "https://github.com/sharkdp/bat/releases/download/v"$version"/bat_"$version"_armhf.deb"
   else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
   fapt -f /tmp/bat.deb
   rm /tmp/bat.deb
@@ -913,6 +924,10 @@ function install_krbrelayx() {
   cp -v /root/sources/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
   add-aliases krbrelayx
   add-history krbrelayx
+  aaa "krbrelayx.py --help"
+  aaa "addspn.py --help"
+  aaa "addspn.py --help"
+  aaa "printerbug.py --help"
 }
 
 function install_hakrawler() {
@@ -943,6 +958,7 @@ function install_pypykatz() {
   colorecho "Installing pypykatz"
   python3 -m pipx install pypykatz
   add-history pypykatz
+  aaa "pypykatz version"
 }
 
 function install_enyx() {
@@ -950,6 +966,7 @@ function install_enyx() {
   git -C /opt/tools/ clone https://github.com/trickster0/Enyx
   add-aliases enyx
   add-history enyx
+  aaa "enyx"
 }
 
 function install_enum4linux-ng() {
@@ -957,6 +974,7 @@ function install_enum4linux-ng() {
   git -C /opt/tools/ clone https://github.com/cddmp/enum4linux-ng
   add-aliases enum4linux-ng
   add-history enum4linux-ng
+  aaa "enum4linux-ng --help"
 }
 
 function install_git-dumper() {
@@ -1024,6 +1042,7 @@ function install_zerologon() {
   mv /opt/tools/CVE-2020-1472 /opt/tools/zerologon-exploit
   add-aliases zerologon
   add-history zerologon
+  aaa "zerologon-scan | grep Usage"
 }
 
 function install_proxmark3() {
@@ -1079,7 +1098,7 @@ function install_bloodhound() {
     fapt libgbm1
     ln -s /opt/tools/BloodHound4/BloodHound-linux-armv7l/BloodHound /opt/tools/BloodHound4/BloodHound
   else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
   mkdir -p ~/.config/bloodhound
   cp -v /root/sources/bloodhound/config.json ~/.config/bloodhound/config.json
@@ -1123,6 +1142,9 @@ function install_hcxtools() {
   fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
   git -C /opt/tools/ clone https://github.com/ZerBea/hcxtools
   cd /opt/tools/hcxtools/ || exit
+  # Checking out to specific commit is a temporary fix to the project no compiling anymore.
+  # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxtools/issues/233)
+  git checkout 5937d2ad9d021f3b5e2edd55d79439b8485d3222
   make
   make install
   add-history hcxtools
@@ -1135,6 +1157,9 @@ function install_hcxdumptool() {
   apt-get -y install libcurl4-openssl-dev libssl-dev
   git -C /opt/tools/ clone https://github.com/ZerBea/hcxdumptool
   cd /opt/tools/hcxdumptool || exit
+  # Checking out to specific commit is a temporary fix to the project no compiling anymore.
+  # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232)
+  git checkout git checkout 56d078de4d6f5cef07b378707ab478fde03168c0
   make
   make install
   ln -s /usr/local/bin/hcxpcapngtool /usr/local/bin/hcxpcaptool
@@ -1226,6 +1251,7 @@ function install_oaburl() {
   chmod +x /opt/tools/OABUrl/oaburl.py
   add-aliases oaburl
   add-history oaburl
+  aaa "oaburl.py --help"
 }
 
 function install_libmspack() {
@@ -1236,27 +1262,25 @@ function install_libmspack() {
   ./configure
   make
   add-aliases libmspack
-}
-
-function install_peas_offensive() {
-  colorecho "Installing PEAS-Offensive"
-  git -C /opt/tools/ clone https://github.com/snovvcrash/peas.git peas-offensive
-  python3 -m pip install pipenv
-  cd /opt/tools/peas-offensive || exit
-  pipenv --python 2.7 install -r requirements.txt
+  aaa "oabextract"
 }
 
 function install_ruler() {
   colorecho "Downloading ruler and form templates"
-  mkdir -p /opt/tools/ruler/templates
-  wget -O /opt/tools/ruler/ruler "$(curl -s https://github.com/sensepost/ruler/releases/latest | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/ruler-linux64"
-  chmod +x /opt/tools/ruler/ruler
+  git -C /opt/tools clone https://github.com/sensepost/ruler/
+  cd /opt/tools/ruler || exit
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    GOOS=linux GOARCH=amd64 go build -o ruler
+  elif [[ $(uname -m) = 'aarch64' ]]
+  then
+    GOOS=linux GOARCH=arm64 go build -o ruler
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+  fi
   ln -s /opt/tools/ruler/ruler /opt/tools/bin/ruler
-  wget -O /opt/tools/ruler/templates/formdeletetemplate.bin "https://github.com/sensepost/ruler/raw/master/templates/formdeletetemplate.bin"
-  wget -O /opt/tools/ruler/templates/formtemplate.bin "https://github.com/sensepost/ruler/raw/master/templates/formtemplate.bin"
-  wget -O /opt/tools/ruler/templates/img0.bin "https://github.com/sensepost/ruler/raw/master/templates/img0.bin"
-  wget -O /opt/tools/ruler/templates/img1.bin "https://github.com/sensepost/ruler/raw/master/templates/img1.bin"
   add-history ruler
+  aaa "ruler --version"
 }
 
 function install_ghidra() {
@@ -1380,8 +1404,9 @@ function install_windapsearch-go() {
   if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /opt/tools/bin/windapsearch "$(curl -o /dev/null -Ls -w %{url_effective} https://github.com/ropnop/go-windapsearch/releases/latest/ |  sed 's/tag/download/')/windapsearch-linux-amd64"
+    # TODO add-test-command
   else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
   chmod +x /opt/tools/bin/windapsearch
   add-history windapsearch
@@ -1404,6 +1429,7 @@ function install_ntlmv1-multi() {
   git -C /opt/tools clone https://github.com/evilmog/ntlmv1-multi
   add-aliases ntlmv1-multi
   add-history ntlmv1-multi
+  aaa "ntlmv1-multi --ntlmv1 a::a:a:a:a"
 }
 
 function install_droopescan() {
@@ -1435,7 +1461,7 @@ function install_kubectl(){
   then
     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
   else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
   add-test-command "kubectl --help"
@@ -1451,7 +1477,7 @@ function install_awscli(){
   then
     curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
   else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
   unzip awscliv2.zip
   ./aws/install -i /opt/tools/aws-cli -b /usr/local/bin
@@ -1480,15 +1506,25 @@ function install_maigret_pip() {
 
 function install_amber() {
   colorecho "Installing amber"
+  # Installing keystone requirement
+  git -C /opt/tools/ clone git clone https://github.com/EgeBalci/keystone
+  cd /opt/tools/keystone/ || exit
+  mkdir build
+  cd build || exit
+  ../make-lib.sh
+  cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;X86" -G "Unix Makefiles" ..
+  make -j8
+  make install && ldconfig
+  # Installing amber
   go install -v github.com/EgeBalci/amber@latest
   add-history amber
+  aaa "amber --help"
 }
 
 function install_hashonymize() {
   colorecho "Installing hashonymizer"
-  git -C /opt/tools/ clone https://github.com/ShutdownRepo/hashonymize
-  cd /opt/tools/hashonymize || exit
-  python3 setup.py install
+  python3 -m pipx install git+https://github.com/ShutdownRepo/hashonymize
+  aaa "hashonymize --help"
 }
 
 function install_theharvester() {
@@ -1598,6 +1634,7 @@ function install_gosecretsdump() {
   git -C /opt/tools/ clone https://github.com/c-sto/gosecretsdump
   go install -v github.com/C-Sto/gosecretsdump@latest
   add-history gosecretsdump
+  aaa "gosecretsdump -version"
 }
 
 function install_hackrf() {
@@ -1609,7 +1646,9 @@ function install_hackrf() {
 function install_gqrx() {
   colorecho "Installing gqrx"
   apt-get -y install gqrx-sdr
-  add-test-command "gqrx --help"
+  # test below cannot work because test runner cannot have a valid display
+  # add-test-command "gqrx --help"
+  add-test-command "which gqrx"
 }
 
 function install_sipvicious() {
@@ -1632,6 +1671,7 @@ function install_adidnsdump() {
   colorecho "Installing adidnsdump"
   python3 -m pipx install git+https://github.com/dirkjanm/adidnsdump
   add-history adidnsdump
+  aaa "adidnsdump --help"
 }
 
 function install_dnschef() {
@@ -1716,7 +1756,7 @@ function install_ngrok() {
   then
     wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip
   else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
   unzip -d /opt/tools/bin/ /tmp/ngrok.zip
   add-history ngrok
@@ -1741,6 +1781,7 @@ function install_pygpoabuse() {
   colorecho "Installing pyGPOabuse"
   git -C /opt/tools/ clone https://github.com/Hackndo/pyGPOAbuse
   add-aliases pygpoabuse
+  aaa "pygpoabuse --help"
 }
 
 function install_rsactftool() {
@@ -1767,6 +1808,7 @@ function install_bloodhound-import() {
   colorecho "Installing bloodhound-import"
   python3 -m pipx install bloodhound-import
   add-history bloodhound-import
+  aaa "bloodhound-import --help"
 }
 
 function install_bloodhound-quickwin() {
@@ -1775,6 +1817,7 @@ function install_bloodhound-quickwin() {
   git -C /opt/tools/ clone https://github.com/kaluche/bloodhound-quickwin
   add-aliases bloodhound-quickwin
   add-history bloodhound-quickwin
+  aaa "bloodhound-quickwin --help"
 }
 
 function install_ldapsearch-ad() {
@@ -1785,13 +1828,7 @@ function install_ldapsearch-ad() {
   add-aliases ldapsearch-ad
   add-history ldapsearch-ad
   add-history ldapsearch
-}
-
-function install_ntlm-scanner() {
-  colorecho "Installing ntlm-scanner"
-  git -C /opt/tools/ clone https://github.com/preempt/ntlm-scanner
-  add-aliases ntlm-scanner
-  add-history ntlm-scanner
+  aaa "ldapsearch-ad --version"
 }
 
 function install_rustscan() {
@@ -1831,6 +1868,7 @@ function install_pcredz() {
   python3 -m pip install Cython python-libpcap
   git -C /opt/tools/ clone https://github.com/lgandx/PCredz
   add-aliases pcredz
+  aaa "PCredz --help"
 }
 
 function install_smartbrute() {
@@ -1861,6 +1899,7 @@ function install_petitpotam() {
   git -C /opt/tools/ clone https://github.com/topotam/PetitPotam
   add-aliases petitpotam
   add-history petitpotam
+  aaa "petitpotam.py --help"
 }
 
 function install_dfscoerce() {
@@ -1868,19 +1907,22 @@ function install_dfscoerce() {
   git -C /opt/tools/ clone https://github.com/Wh04m1001/DFSCoerce.git
   add-aliases dfscoerce
   add-history dfscoerce
+  aaa "dfscoerce.py --help"
 }
 
 function install_coercer() {
   colorecho "Installing Coercer"
   python3 -m pipx install git+https://github.com/p0dalirius/Coercer
   add-history coercer
+  aaa "coercer --help"
 }
 
-function install_PKINITtools() {
+function install_pkinittools() {
   colorecho "Installing PKINITtools"
   git -C /opt/tools/ clone https://github.com/dirkjanm/PKINITtools
   add-aliases pkinittools
   add-history pkinittools
+  aaa "gettgtpkinit.py --help"
 }
 
 function install_pywhisker() {
@@ -1890,6 +1932,7 @@ function install_pywhisker() {
   python3 -m pip install -r requirements.txt
   add-aliases pywhisker
   add-history pywhisker
+  aaa "pywhisker.py --help"
 }
 
 function install_targetedKerberoast() {
@@ -1899,6 +1942,7 @@ function install_targetedKerberoast() {
   python3 -m pip install -r requirements.txt
   add-aliases targetedkerberoast
   add-history targetedkerberoast
+  aaa "targetedKerberoast.py --help"
 }
 
 function install_manspider() {
@@ -1908,6 +1952,7 @@ function install_manspider() {
   install_tesseract-ocr
   python3 -m pipx install git+https://github.com/blacklanternsecurity/MANSPIDER
   add-history manspider
+  aaa "manspider --help"
 }
 
 function install_pywsus() {
@@ -1919,6 +1964,7 @@ function install_pywsus() {
   python3 -m pip install -r ./requirements.txt
   add-aliases pywsus
   add-history pywsus
+  aaa "pywsus.py --help"
 }
 
 function install_ignorant() {
@@ -1932,6 +1978,7 @@ function install_donpapi() {
   python3 -m pip install -r /opt/tools/DonPAPI/requirements.txt
   add-aliases donpapi
   add-history donpapi
+  aaa "DonPAPI.py --help"
 }
 
 function install_gau() {
@@ -1945,12 +1992,14 @@ function install_webclientservicescanner() {
   cd /opt/tools/WebclientServiceScanner || exit
   python3 setup.py install
   add-history webclientservicescanner
+  aaa "webclientservicescanner --help"
 }
 
 function install_certipy() {
   colorecho "Installing Certipy"
   python3 -m pipx install git+https://github.com/ly4k/Certipy
   add-history certipy
+  aaa "certipy --version"
 }
 
 function install_eaphammer() {
@@ -2050,6 +2099,7 @@ function install_finduncommonshares() {
   python3 -m pip install -r requirements.txt
   add-aliases finduncommonshares
   add-history finduncommonshares
+  aaa "FindUncommonShares.py --help"
 }
 
 function install_shadowcoerce() {
@@ -2057,6 +2107,7 @@ function install_shadowcoerce() {
   git -C /opt/tools/ clone https://github.com/ShutdownRepo/ShadowCoerce
   add-aliases shadowcoerce
   add-history shadowcoerce
+  aaa "shadowcoerce.py --help"
 }
 
 function install_pwncat() {
@@ -2069,6 +2120,7 @@ function install_gmsadumper() {
   git -C /opt/tools/ clone https://github.com/micahvandeusen/gMSADumper
   add-aliases gmsadumper
   add-history gmsadumper
+  aaa "gMSADumper.py --help"
 }
 
 function install_modifyCertTemplate() {
@@ -2076,12 +2128,14 @@ function install_modifyCertTemplate() {
   git -C /opt/tools/ clone https://github.com/fortalice/modifyCertTemplate
   add-aliases modifycerttemplate
   add-history modifycerttemplate
+  aaa "modifyCertTemplate.py --help"
 }
 
 function install_pylaps() {
   colorecho "Installing pyLAPS"
   git -C /opt/tools/ clone https://github.com/p0dalirius/pyLAPS
   add-history pylaps
+  aaa "pyLAPS.py --help"
 }
 
 function install_ldaprelayscan() {
@@ -2091,13 +2145,14 @@ function install_ldaprelayscan() {
   python3 -m pip install -r requirements.txt
   add-aliases ldaprelayscan
   add-history ldaprelayscan
+  aaa "LdapRelayScan.py --help"
 }
 
 function install_goldencopy() {
   colorecho "Installing GoldenCopy"
   python3 -m pipx install goldencopy
-  add-aliases goldencopy
   add-history goldencopy
+  aaa "goldencopy --help"
 }
 
 function install_crackhound() {
@@ -2105,13 +2160,21 @@ function install_crackhound() {
   git -C /opt/tools/ clone https://github.com/trustedsec/CrackHound
   add-aliases crackhound
   add-history crackhound
+  aaa "crackhound.py --help"
 }
 
 function install_kerbrute() {
   colorecho "Installing Kerbrute"
-  wget https://github.com/ropnop/kerbrute/releases/latest/download/kerbrute_linux_amd64 -O /opt/tools/bin/kerbrute
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    wget https://github.com/ropnop/kerbrute/releases/latest/download/kerbrute_linux_amd64 -O /opt/tools/bin/kerbrute
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+  fi
   chmod +x /opt/tools/bin/kerbrute
   add-history kerbrute
+  # TODO add-test-command
+  # FIXME ARM platforms install ?
 }
 
 function install_searchsploit() {
@@ -2202,7 +2265,7 @@ function install_go(){
   then
     wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-armv6l.tar.gz
   else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
   rm -rf /usr/local/go
   tar -C /usr/local -xzf /tmp/go.tar.gz
@@ -2227,6 +2290,7 @@ function install_smbmap(){
   python3 -m pip install pyasn1 pycrypto configparser termcolor
   add-aliases smbmap
   add-history smbmap
+  aaa "smbmap --help"
 }
 
 function install_pth-tools(){
@@ -2235,12 +2299,15 @@ function install_pth-tools(){
   cd /opt/tools/pth-toolkit || exit
   for bin_name in pth*; do ln -s "/opt/tools/pth-toolkit/$bin_name" "/opt/tools/bin/$bin_name"; done
   add-history pth-tools
+  # TODO add-test-command
+  # FIXME probably won't work for ARM platforms
 }
 
 function install_smtp-user-enum(){
   colorecho "Installing smtp-user-enum"
   python3 -m pipx install smtp-user-enum
   add-history smtp-user-enum
+  aaa "smtp-user-enum --help"
 }
 
 function install_gpp-decrypt(){
@@ -2248,6 +2315,7 @@ function install_gpp-decrypt(){
   python3 -m pip install pycrypto colorama
   git -C /opt/tools/ clone -v https://github.com/t0thkr1s/gpp-decrypt
   add-aliases gpp-decrypt
+  aaa "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
 }
 
 function install_smali(){
@@ -2440,6 +2508,7 @@ function install_nbtscan() {
   colorecho "Installing nbtscan"
   fapt nbtscan
   add-history nbtscan
+  aaa "nbtscan 127.0.0.1"
 }
 
 function install_ntpdate() {
@@ -2452,12 +2521,14 @@ function install_onesixtyone() {
   colorecho "Installing onesixtyone"
   fapt onesixtyone
   add-history onesixtyone
+  aaa "onesixtyone 127.0.0.1 public"
 }
 
 function install_polenum() {
   colorecho "Installing polenum"
   fapt polenum
   add-history polenum
+  aaa "polenum --help"
 }
 
 function install_rlwrap() {
@@ -2506,7 +2577,9 @@ function install_freerdp2-x11() {
   colorecho "Installing freerdp2-x11"
   fapt freerdp2-x11
   add-history xfreerdp
-  add-test-command "xfreerdp /version"
+  # test below cannot work because test runner cannot have a valid display
+  # add-test-command "xfreerdp /version"
+  add-test-command "which xfreerdp"
 }
 
 # Package dedicated to the basic things the env needs
@@ -2855,6 +2928,7 @@ function package_c2() {
   # CI/CD fapt etc []
   # CI/CD install_ []
   set_go_env
+  # TODO -- stopped here for add-test-command
   install_empire                  # Exploit framework
   install_starkiller              # GUI for Empire
   install_metasploit              # Offensive framework
@@ -2864,7 +2938,8 @@ function package_c2() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
-  # CI/CD install_ []
+  # CI/CD fapt etc []
+  # CI/CD install_ [x]
   set_go_env
   install_responder                       # LLMNR, NBT-NS and MDNS poisoner
   install_ldapdomaindump
@@ -2895,7 +2970,6 @@ function package_ad() {
   install_enum4linux-ng                   # Hosts enumeration
   install_zerologon                       # Exploit for zerologon cve-2020-1472
   install_libmspack                       # Library for some loosely related Microsoft compression format
-  install_peas_offensive                  # Library and command line application for running commands on Microsoft Exchange
   install_windapsearch-go                 # Active Directory Domain enumeration through LDAP queries
   install_oaburl                       # Send request to the MS Exchange Autodiscover service
   install_lnkup
@@ -2913,16 +2987,14 @@ function package_ad() {
   install_hashonymize                     # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
   install_gosecretsdump           # secretsdump in Go for heavy files
   install_adidnsdump              # enumerate DNS records in Domain or Forest DNS zones
-  install_powermad                # MachineAccountQuota and DNS exploit tools
-  install_pygpoabuse              
+  install_pygpoabuse
   install_bloodhound-import       # Python script to import BH data to a neo4j db
   install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
   install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
-  install_ntlm-scanner            # Python script to check public vulns on DCs
   install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
-  install_DFSCoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
+  install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
   install_coercer                 # Python script to coerce auth through multiple methods
-  install_PKINITtools             # Python scripts to use kerberos PKINIT to obtain TGT
+  install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
   install_manspider               # Snaffler-like in Python
   install_targetedKerberoast
