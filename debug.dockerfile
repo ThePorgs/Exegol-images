@@ -19,7 +19,7 @@ RUN chmod +x /root/sources/install.sh
 ENV PIPELINE_TESTS_FILE=package_ad
 RUN /root/sources/install.sh deploy_exegol
 RUN /root/sources/install.sh update
-RUN apt-get update && apt-get install -y sudo git curl zsh zip wget ncat dnsutils python3 python3-setuptools python3-pip vim nano procps automake autoconf make
+RUN apt-get update && apt-get install -y sudo git curl zsh zip wget ncat dnsutils python2 python3 python3-setuptools python3-pip vim nano procps automake autoconf make
 RUN /root/sources/install.sh filesystem
 RUN /root/sources/install.sh set_go_env
 RUN /root/sources/install.sh install_locales
@@ -29,10 +29,12 @@ RUN /root/sources/install.sh install_ohmyzsh
 RUN /root/sources/install.sh install_fzf
 RUN /root/sources/install.sh install_openvpn
 RUN /root/sources/install.sh install_pipx
+RUN /root/sources/install.sh install_python3
+RUN /root/sources/install.sh install_python-pip
 RUN /root/sources/install.sh install_exegol-history
 RUN /root/sources/install.sh install_logrotate
 RUN /root/sources/install.sh install_pwntools
-RUN /root/sources/install.sh add-test-command "fail_command"
+#RUN /root/sources/install.sh add-test-command "fail_command"
 
 RUN /root/sources/install.sh post_install_clean
 
