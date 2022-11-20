@@ -465,7 +465,7 @@ jobs:
     if: always()
     steps:
       - run: | 
-            [[ ${{ !contains(needs.*.result, 'failure') }} == 'true' &&  ${{ !contains(needs.*.result, 'cancelled') }} == 'true' ]] && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
+            (${{ !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}) && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
   push_amd64:
     needs:
       - amd64_buildx
