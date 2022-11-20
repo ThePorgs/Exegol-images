@@ -786,7 +786,7 @@ jobs:
     timeout-minutes: 60
     needs: [arm64_push, amd64_push]
     runs-on: self-hosted
-    if: ${{ success() }}
+    if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
