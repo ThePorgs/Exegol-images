@@ -12,71 +12,9 @@ env:
   DOCKERFILE: "./debug.dockerfile"
 
 jobs:
-#  arm64_buildx:
-#    timeout-minutes: 360
-#    runs-on: [self-hosted, arm64]
-#    steps:
-#      -
-#        name: Checkout
-#        uses: actions/checkout@v3
-#      -
-#        name: Prepare build
-#        id: prepare_build
-#        run: |
-#          IMAGE_NAME="${IMAGE_BASE_NAME}-arm64"
-#          DOCKER_REPO=${DOCKER_INTERMEDIATE_REPO}
-#          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
-#          IMAGE_VERSION=${COMMIT_ID:0:8}
-#          BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-#          echo "image_repo=${DOCKER_REPO}" >> $GITHUB_OUTPUT
-#          echo "image_name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
-#          echo "image_full_name=${DOCKER_REPO}:${IMAGE_NAME}" >> $GITHUB_OUTPUT
-#          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
-#          echo "build_date=${BUILD_DATE}" >> $GITHUB_OUTPUT
-#      -
-#        name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
-#      -
-#        name: Set up Docker Buildx
-#        id: buildx
-#        uses: docker/setup-buildx-action@v2
-#      -
-#        name: Login to Dockerhub
-#        if: success()
-#        uses: docker/login-action@v2
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
-#      -
-#        name: Build and load the image
-#        if: success()
-#        uses: docker/build-push-action@v3
-#        with:
-#          # outputs: type=image,push=true
-#          load: true
-#          build-args: |
-#            TAG=${{ steps.prepare_build.outputs.image_name }}
-#            VERSION=${{ steps.prepare_build.outputs.image_version }}
-#            BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
-#          tags: ${{ steps.prepare_build.outputs.image_full_name }}
-#          platforms: linux/arm64
-#          file: ${{env.DOCKERFILE}}
-#          context: .
-#      -
-#        name: Image testing
-#        if: success()
-#        run: |
-#          docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} tests
-#      -
-#        name: Push docker image
-#        uses: docker/build-push-action@v3
-#        with:
-#          context: .
-#          push: true
-#          tags: ${{ steps.prepare_build.outputs.image_full_name }}
   amd64_buildx:
     timeout-minutes: 360
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     outputs:
       matrix_base: ${{ steps.set-matrix.outputs.matrix_base }}
       matrix_misc: ${{ steps.set-matrix.outputs.matrix_misc }}
@@ -100,11 +38,9 @@ jobs:
       matrix_crypto: ${{ steps.set-matrix.outputs.matrix_crypto }}
       matrix_code_analysis: ${{ steps.set-matrix.outputs.matrix_code_analysis }}
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Prepare build
+      - name: Prepare build
         id: prepare_build
         run: |
           IMAGE_NAME="${IMAGE_BASE_NAME}-amd64"
@@ -117,15 +53,12 @@ jobs:
           echo "image_full_name=${DOCKER_REPO}:${IMAGE_NAME}" >> $GITHUB_OUTPUT
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
           echo "build_date=${BUILD_DATE}" >> $GITHUB_OUTPUT
-      -
-        name: Set up QEMU
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Build and load the image
+      - name: Build and load the image
         if: success()
         uses: docker/build-push-action@v3
         with:
@@ -138,8 +71,7 @@ jobs:
           platforms: linux/amd64
           file: ${{env.DOCKERFILE}}
           context: .
-      -
-        name: List available tests
+      - name: List available tests
         id: set-matrix
         run: |
           echo "matrix_ad=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_ad || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
@@ -166,277 +98,256 @@ jobs:
   amd64_tests_base:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_base != '[]' && needs.amd64_buildx.outputs.matrix_base != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_base) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_misc:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_misc != '[]' && needs.amd64_buildx.outputs.matrix_misc != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_misc) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_wordlists:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_wordlists != '[]' && needs.amd64_buildx.outputs.matrix_wordlists != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wordlists) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_cracking:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_cracking != '[]' && needs.amd64_buildx.outputs.matrix_cracking != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cracking) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_osint:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_osint != '[]' && needs.amd64_buildx.outputs.matrix_osint != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_osint) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_web:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_web != '[]' && needs.amd64_buildx.outputs.matrix_web != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_web) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_c2:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_c2 != '[]' && needs.amd64_buildx.outputs.matrix_c2 != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_c2) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_ad:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_ad != '[]' && needs.amd64_buildx.outputs.matrix_ad != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_ad) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_mobile:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_mobile != '[]' && needs.amd64_buildx.outputs.matrix_mobile != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_mobile) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_iot:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_iot != '[]' && needs.amd64_buildx.outputs.matrix_iot != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_iot) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_rfid:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_rfid != '[]' && needs.amd64_buildx.outputs.matrix_rfid != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_rfid) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_voip:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_voip != '[]' && needs.amd64_buildx.outputs.matrix_voip != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_voip) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_sdr:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_sdr != '[]' && needs.amd64_buildx.outputs.matrix_sdr != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_sdr) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_network:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_network != '[]' && needs.amd64_buildx.outputs.matrix_network != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_network) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_wifi:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_wifi != '[]' && needs.amd64_buildx.outputs.matrix_wifi != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_wifi) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_forensic:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_forensic != '[]' && needs.amd64_buildx.outputs.matrix_forensic != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_forensic) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_cloud:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_cloud != '[]' && needs.amd64_buildx.outputs.matrix_cloud != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_cloud) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_steganography:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_steganography != '[]' && needs.amd64_buildx.outputs.matrix_steganography != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_steganography) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_reverse:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_reverse != '[]' && needs.amd64_buildx.outputs.matrix_reverse != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_reverse) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_crypto:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_crypto != '[]' && needs.amd64_buildx.outputs.matrix_crypto != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_crypto) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
   amd64_tests_code_analysis:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_code_analysis != '[]' && needs.amd64_buildx.outputs.matrix_code_analysis != '' }}
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     strategy:
       fail-fast: false
       matrix:
         command: ${{ fromJson(needs.amd64_buildx.outputs.matrix_code_analysis) }}
     steps:
-      -
-        name: Image command testing
+      - name: Image command testing
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
-          
+
   amd64_test_results:
     needs:
       - amd64_buildx
@@ -461,53 +372,436 @@ jobs:
       - amd64_tests_reverse
       - amd64_tests_crypto
       - amd64_tests_code_analysis
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     if: always()
     steps:
-      - run: | 
-            (${{ !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}) && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
+      - run: |
+          (${{ !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}) && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
   amd64_push:
     needs: amd64_test_results
-    runs-on: [self-hosted, test]
+    runs-on: [ self-hosted, test ]
     if: always() && needs.amd64_test_results.result == 'success'
     steps:
-      -
-        name: Login to Dockerhub
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push docker image
+        run: docker push ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
+  amd64_clean:
+    needs: amd64_push
+    runs-on: [ self-hosted, test ]
+    if: always()  # always mode clean the environment even when the task is cancelled by a user
+    steps:
+      - name: Clean unused dangling images
+        run: docker image prune --filter "label=org.exegol.app=Exegol" --force
+
+  arm64_buildx:
+    timeout-minutes: 360
+    runs-on: [ self-hosted, arm64 ]
+    outputs:
+      matrix_base: ${{ steps.set-matrix.outputs.matrix_base }}
+      matrix_misc: ${{ steps.set-matrix.outputs.matrix_misc }}
+      matrix_wordlists: ${{ steps.set-matrix.outputs.matrix_wordlists }}
+      matrix_cracking: ${{ steps.set-matrix.outputs.matrix_cracking }}
+      matrix_osint: ${{ steps.set-matrix.outputs.matrix_osint }}
+      matrix_web: ${{ steps.set-matrix.outputs.matrix_web }}
+      matrix_c2: ${{ steps.set-matrix.outputs.matrix_c2 }}
+      matrix_ad: ${{ steps.set-matrix.outputs.matrix_ad }}
+      matrix_mobile: ${{ steps.set-matrix.outputs.matrix_mobile }}
+      matrix_iot: ${{ steps.set-matrix.outputs.matrix_iot }}
+      matrix_rfid: ${{ steps.set-matrix.outputs.matrix_rfid }}
+      matrix_voip: ${{ steps.set-matrix.outputs.matrix_voip }}
+      matrix_sdr: ${{ steps.set-matrix.outputs.matrix_sdr }}
+      matrix_network: ${{ steps.set-matrix.outputs.matrix_network }}
+      matrix_wifi: ${{ steps.set-matrix.outputs.matrix_wifi }}
+      matrix_forensic: ${{ steps.set-matrix.outputs.matrix_forensic }}
+      matrix_cloud: ${{ steps.set-matrix.outputs.matrix_cloud }}
+      matrix_steganography: ${{ steps.set-matrix.outputs.matrix_steganography }}
+      matrix_reverse: ${{ steps.set-matrix.outputs.matrix_reverse }}
+      matrix_crypto: ${{ steps.set-matrix.outputs.matrix_crypto }}
+      matrix_code_analysis: ${{ steps.set-matrix.outputs.matrix_code_analysis }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Prepare build
+        id: prepare_build
+        run: |
+          IMAGE_NAME="${IMAGE_BASE_NAME}-arm64"
+          DOCKER_REPO=${DOCKER_INTERMEDIATE_REPO}
+          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          IMAGE_VERSION=${COMMIT_ID:0:8}
+          BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "image_repo=${DOCKER_REPO}" >> $GITHUB_OUTPUT
+          echo "image_name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "image_full_name=${DOCKER_REPO}:${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "build_date=${BUILD_DATE}" >> $GITHUB_OUTPUT
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and load the image
+        if: success()
+        uses: docker/build-push-action@v3
+        with:
+          load: true
+          build-args: |
+            TAG=${{ steps.prepare_build.outputs.image_name }}
+            VERSION=${{ steps.prepare_build.outputs.image_version }}
+            BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
+          tags: ${{ steps.prepare_build.outputs.image_full_name }}
+          platforms: linux/arm64
+          file: ${{env.DOCKERFILE}}
+          context: .
+      - name: List available tests
+        id: set-matrix
+        run: |
+          echo "matrix_ad=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_ad || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_base=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_base || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_c2=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_c2 || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_cloud=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cloud || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_code_analysis=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_code_analysis || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_cracking=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_cracking || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_crypto=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_crypto || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_forensic=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_forensic || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_iot=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_iot || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_misc=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_misc || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_mobile=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_mobile || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_network=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_network || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_osint=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_osint || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_reverse=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_reverse || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_rfid=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_rfid || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_sdr=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_sdr || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_steganography=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_steganography || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_voip=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_voip || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_web=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_web || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_wifi=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wifi || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_wordlists=$(docker run --rm ${{ steps.prepare_build.outputs.image_full_name }} cmd zsh -c 'cat /.exegol/build_pipeline_tests/package_wordlists || echo' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+  arm64_tests_base:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_base != '[]' && needs.arm64_buildx.outputs.matrix_base != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_base) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_misc:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_misc != '[]' && needs.arm64_buildx.outputs.matrix_misc != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_misc) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_wordlists:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_wordlists != '[]' && needs.arm64_buildx.outputs.matrix_wordlists != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_wordlists) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_cracking:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_cracking != '[]' && needs.arm64_buildx.outputs.matrix_cracking != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_cracking) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_osint:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_osint != '[]' && needs.arm64_buildx.outputs.matrix_osint != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_osint) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_web:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_web != '[]' && needs.arm64_buildx.outputs.matrix_web != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_web) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_c2:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_c2 != '[]' && needs.arm64_buildx.outputs.matrix_c2 != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_c2) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_ad:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_ad != '[]' && needs.arm64_buildx.outputs.matrix_ad != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_ad) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_mobile:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_mobile != '[]' && needs.arm64_buildx.outputs.matrix_mobile != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_mobile) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_iot:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_iot != '[]' && needs.arm64_buildx.outputs.matrix_iot != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_iot) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_rfid:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_rfid != '[]' && needs.arm64_buildx.outputs.matrix_rfid != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_rfid) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_voip:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_voip != '[]' && needs.arm64_buildx.outputs.matrix_voip != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_voip) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_sdr:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_sdr != '[]' && needs.arm64_buildx.outputs.matrix_sdr != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_sdr) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_network:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_network != '[]' && needs.arm64_buildx.outputs.matrix_network != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_network) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_wifi:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_wifi != '[]' && needs.arm64_buildx.outputs.matrix_wifi != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_wifi) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_forensic:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_forensic != '[]' && needs.arm64_buildx.outputs.matrix_forensic != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_forensic) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_cloud:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_cloud != '[]' && needs.arm64_buildx.outputs.matrix_cloud != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_cloud) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_steganography:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_steganography != '[]' && needs.arm64_buildx.outputs.matrix_steganography != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_steganography) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_reverse:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_reverse != '[]' && needs.arm64_buildx.outputs.matrix_reverse != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_reverse) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_crypto:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_crypto != '[]' && needs.arm64_buildx.outputs.matrix_crypto != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_crypto) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+  arm64_tests_code_analysis:
+    needs: arm64_buildx
+    if: ${{ needs.arm64_buildx.outputs.matrix_code_analysis != '[]' && needs.arm64_buildx.outputs.matrix_code_analysis != '' }}
+    runs-on: [ self-hosted, arm64 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_code_analysis) }}
+    steps:
+      - name: Image command testing
+        run: |
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
+
+  arm64_test_results:
+    needs:
+      - arm64_buildx
+      - arm64_tests_base
+      - arm64_tests_misc
+      - arm64_tests_wordlists
+      - arm64_tests_cracking
+      - arm64_tests_osint
+      - arm64_tests_web
+      - arm64_tests_c2
+      - arm64_tests_ad
+      - arm64_tests_mobile
+      - arm64_tests_iot
+      - arm64_tests_rfid
+      - arm64_tests_voip
+      - arm64_tests_sdr
+      - arm64_tests_network
+      - arm64_tests_wifi
+      - arm64_tests_forensic
+      - arm64_tests_cloud
+      - arm64_tests_steganography
+      - arm64_tests_reverse
+      - arm64_tests_crypto
+      - arm64_tests_code_analysis
+    runs-on: [ self-hosted, arm64 ]
+    if: always()
+    steps:
+      - run: |
+          (${{ !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}) && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
+  arm64_push:
+    needs: arm64_test_results
+    runs-on: [ self-hosted, arm64 ]
+    if: always() && needs.arm64_test_results.result == 'success'
+    steps:
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push docker image
+        run: docker push ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64
+  arm64_clean:
+    needs: arm64_push
+    runs-on: [ self-hosted, arm64 ]
+    if: always()  # always mode clean the environment even when the task is cancelled by a user
+    steps:
+      - name: Clean unused dangling images
+        run: docker image prune --filter "label=org.exegol.app=Exegol" --force
+
+  manifest_build:
+    timeout-minutes: 60
+    needs: [arm64_push, amd64_push]
+    runs-on: self-hosted
+    steps:
+      - name: Login to Dockerhub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       -
-        name: Push docker image
-        run: docker push ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
-  amd64_clean:
-    needs: amd64_push
-    runs-on: [self-hosted, test]
-    if: always()  # always mode clean the environment even when the task is cancelled by a user
-    steps:
+        name: Create and push manifest
+        if: success()
+        run: |
+          docker manifest create ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME} ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
+          docker manifest rm ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
       -
-        name: Clean unused dangling images
-        run: docker image prune --filter "label=org.exegol.app=Exegol" --force
-#  manifest_build:
-#    timeout-minutes: 60
-#    needs: [arm64_buildx, amd64_buildx]
-#    runs-on: self-hosted
-#    steps:
-#      - name: Login to Dockerhub
-#        uses: docker/login-action@v2
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
-#      -
-#        name: Create and push manifest
-#        if: success()
-#        run: |
-#          docker manifest create ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME} ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-amd64
-#          docker manifest push ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
-#          docker manifest rm ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
-#      -
-#        name: Remove intermediate images
-#        run: |
-#          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-#          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
-#          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
+        name: Remove intermediate images
+        run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
