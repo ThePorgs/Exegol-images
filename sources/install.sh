@@ -37,7 +37,6 @@ function add-history() {
 
 function add-test-command() {
   colorecho "Adding build pipeline test command: $*"
-  mkdir -p /.exegol/build_pipeline_tests/
   echo "$*" >> "/.exegol/build_pipeline_tests/all_commands.txt"
 }
 
@@ -75,6 +74,8 @@ function filesystem() {
   mkdir -p /opt/tools/bin/
   mkdir -p /data/
   mkdir -p /var/log/exegol
+  mkdir -p /.exegol/build_pipeline_tests/
+  touch /.exegol/build_pipeline_tests/all_commands.txt
 }
 
 function set_go_env(){
@@ -532,10 +533,13 @@ function install_mitm6_sources() {
 
 function install_mitm6_pip() {
   colorecho "Installing mitm6 with pip"
-  python3 -m pip install service_identity
-  python3 -m pip install mitm6
-  cd /usr/lib/x86_64-linux-gnu/ || exit
-  ln -s -f libc.a liblibc.a
+  # commenting line below as I'm not sure what it's needed for
+  # python3 -m pip install service_identity
+  python3 -m pipx install mitm6
+  # commenting lines below as they probably were temporary fixes to something.
+  # if they need to be enabled again, architecture needs to be taken into account
+  # cd /usr/lib/x86_64-linux-gnu/ || exit
+  # ln -s -f libc.a liblibc.a
   add-history mitm6
   add-test-command "mitm6 --help"
 }
