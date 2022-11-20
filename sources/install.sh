@@ -719,6 +719,7 @@ function install_proxychains() {
   make install-config
   cp -v /root/sources/proxychains/proxychains.conf /etc/proxychains.conf
   add-aliases proxychains
+  add-test-command "proxychains4 echo test"
 }
 
 function install_grc() {
@@ -745,6 +746,7 @@ function install_autorecon() {
   apt-get -y install wkhtmltopdf python3-venv
   python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
   add-history autorecon
+  add-test-command "autorecon --version"
 }
 
 function install_simplyemail() {
@@ -1014,11 +1016,6 @@ function install_name-that-hash() {
   add-history name-that-hash
 }
 
-function install_memcached-cli() {
-  colorecho "Installing memcached-cli"
-  npm install -g memcached-cli
-}
-
 function install_zerologon() {
   colorecho "Pulling CVE-2020-1472 exploit and scan scripts"
   git -C /opt/tools/ clone https://github.com/SecuraBV/CVE-2020-1472
@@ -1041,6 +1038,7 @@ function install_proxmark3() {
   make install PLATFORM=PM3OTHER
   add-aliases proxmark3
   add-history proxmark3
+  add-test-command "proxmark3 --version"
 }
 
 function install_checksec-py() {
@@ -1117,6 +1115,7 @@ function install_bettercap() {
   sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/https-ui.cap
   sed -i 's/set api.rest.password pass/set api.rest.password exegol4thewin/g' /usr/local/share/bettercap/caplets/https-ui.cap
   add-aliases bettercap
+  add-test-command "bettercap --version"
 }
 
 function install_hcxtools() {
@@ -1127,6 +1126,8 @@ function install_hcxtools() {
   make
   make install
   add-history hcxtools
+  add-test-command "hcxpcapngtool --version"
+  add-test-command "hcxhashtool --version"
 }
 
 function install_hcxdumptool() {
@@ -1138,6 +1139,7 @@ function install_hcxdumptool() {
   make install
   ln -s /usr/local/bin/hcxpcapngtool /usr/local/bin/hcxpcaptool
   add-history hcxdumptool
+  add-test-command "hcxdumptool --version"
 }
 
 function install_pyrit() {
@@ -1152,6 +1154,7 @@ function install_pyrit() {
   python2.7 setup.py clean
   python2.7 setup.py build
   python2.7 setup.py install
+  add-test-command "pyrit help"
 }
 
 function install_wifite2() {
@@ -1159,6 +1162,7 @@ function install_wifite2() {
   git -C /opt/tools/ clone https://github.com/derv82/wifite2.git
   cd /opt/tools/wifite2/ || exit
   python3 setup.py install
+  add-test-command "wifite --help"
 }
 
 function install_wireshark_sources() {
@@ -1498,12 +1502,14 @@ function install_theharvester() {
 function install_pcsc() {
   colorecho "Installing tools for PC/SC (smartcard)"
   apt-get install -y pcsc-tools pcscd libpcsclite-dev libpcsclite1
+  add-test-command "pcsc_scan -V"
+  add-test-command "pcscd --version"
 }
 
 function install_libnfc() {
   colorecho "Installing libnfc"
   apt-get install -y libnfc-dev libnfc-bin
-  # TODO fixme
+  # FIXME
   #cd /opt/tools/
   #wget http://dl.bintray.com/nfc-tools/sources/libnfc-1.7.1.tar.bz2 #broken link
   #tar xjf libnfc-1.7.1.tar.bz2
@@ -1515,6 +1521,7 @@ function install_libnfc() {
   #cd ../
   #rm libnfc-1.7.1.tar.bz2
   add-history libnfc
+  add-test-command "nfc-scan-device -h"
 }
 
 function install_mfoc() {
@@ -1526,11 +1533,13 @@ function install_mfoc() {
   make
   make install
   add-history mfoc
+  add-test-command "mfoc -h"
 }
 
 function install_mfcuk() {
   colorecho "Installing mfcuk"
-  apt-get install -y mfcuk
+  fapt mfcuk
+  add-test-command "mfcuk -i whatever"
 }
 
 function install_libnfc-crypto1-crack() {
@@ -1546,6 +1555,7 @@ function install_libnfc-crypto1-crack() {
   cp libnfc_crypto1_crack /opt/tools/bin
   add-aliases libnfc-crypto1-crack
   add-history libnfc-crypto1-crack
+  # add-test-command "" # TODO
 }
 
 function install_mfdread() {
@@ -1554,6 +1564,7 @@ function install_mfdread() {
   git -C /opt/tools/ clone https://github.com/zhovner/mfdread
   add-aliases mfdread
   add-history mfdread
+  add-test-command "mfdread /opt/tools/mfdread/dump.mfd"
 }
 
 function install_mousejack() {
@@ -1568,14 +1579,18 @@ function install_mousejack() {
   make
   add-aliases mousejack
   add-history mousejack
+  add-test-command "nrf24-scanner.py --help"
+  add-test-command "nrf24-sniffer.py --help"
+  add-test-command "nrf24-network-mapper.py --help"
 }
 
 function install_jackit() {
   colorecho "Installing jackit"
   git -C /opt/tools/ clone https://github.com/insecurityofthings/jackit
   cd /opt/tools/jackit || exit
-  pip install -e .
+  python -m pip install .
   add-history jackit
+  add-test-command "jackit --help"
 }
 
 function install_gosecretsdump() {
@@ -1588,11 +1603,13 @@ function install_gosecretsdump() {
 function install_hackrf() {
   colorecho "Installing HackRF tools"
   apt-get -y install hackrf
+  add-test-command "hackrf_debug --help"
 }
 
 function install_gqrx() {
   colorecho "Installing gqrx"
   apt-get -y install gqrx-sdr
+  add-test-command "gqrx --help"
 }
 
 function install_sipvicious() {
@@ -1600,6 +1617,7 @@ function install_sipvicious() {
   git -C /opt/tools/ clone https://github.com/enablesecurity/sipvicious.git
   cd /opt/tools/sipvicious/ || exit
   python3 setup.py install
+  add-test-command "sipvicious_svcrack --version"
 }
 
 function install_httpmethods() {
@@ -1620,6 +1638,7 @@ function install_dnschef() {
   colorecho "Installing DNSChef"
   git -C /opt/tools/ clone https://github.com/iphelix/dnschef
   add-aliases dnschef
+  add-test-command "dnschef --help"
 }
 
 function install_h2csmuggler() {
@@ -1705,8 +1724,9 @@ function install_ngrok() {
 
 function install_chisel() {
   colorecho "Installing chisel"
-  go install github.com/jpillora/chisel@latest -v
-  #FIXME: add windows pre-compiled binaries in /opt/ressources/windows?
+  go install -v github.com/jpillora/chisel@latest
+  # TODO: add windows pre-compiled binaries in /opt/ressources/windows?
+  add-test-command "chisel --help"
 }
 
 function install_sshuttle() {
@@ -1714,6 +1734,7 @@ function install_sshuttle() {
   git -C /opt/tools/ clone https://github.com/sshuttle/sshuttle.git
   cd /opt/tools/sshuttle || exit
   python3 setup.py install
+  add-test-command "sshuttle --version"
 }
 
 function install_pygpoabuse() {
@@ -1783,6 +1804,7 @@ function install_divideandscan() {
   colorecho "Installing DivideAndScan"
   python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
   add-history divideandscan
+  add-test-command "divideandscan --help"
 }
 
 function install_trid() {
@@ -1823,11 +1845,13 @@ function install_smartbrute() {
 function install_frida() {
   colorecho "Installing frida"
   python3 -m pipx install frida-tools
+  add-test-command "frida --version"
 }
 
 function install_androguard() {
   colorecho "Installing androguard"
   python3 -m pipx install androguard
+  add-test-command "androguard --version"
 }
 
 function install_petitpotam() {
@@ -1936,6 +1960,7 @@ function install_eaphammer() {
   cd /opt/tools/eaphammer || exit
   echo y | ./kali-setup
   add-aliases eaphammer
+  add-test-command "eaphammer --help"
 }
 
 function install_vulny-code-static-analysis() {
@@ -2231,6 +2256,7 @@ function install_smali(){
   mkdir /opt/tools/smali/
   wget https://bitbucket.org/JesusFreke/smali/downloads/smali-2.5.2.jar -O /opt/tools/smali/smali-2.5.2.jar
   add-aliases smali
+  add-test-command "smali --version"
 }
 
 function install_tesseract-ocr(){
@@ -2240,9 +2266,11 @@ function install_tesseract-ocr(){
 
 function install_dex2jar(){
   colorecho "Installing dex2jar"
-  mkdir /opt/tools/dex2jar/ && cd /opt/tools/dex2jar || exit
-  wget https://github.com/pxb1988/dex2jar/releases/latest/download/dex2jar-2.1.zip -O dex2jar.zip
-  unzip dex2jar.zip
+  wget https://github.com/pxb1988/dex2jar/releases/latest/download/dex2jar-2.1.zip -O /tmp/dex2jar.zip
+  unzip /tmp/dex2jar.zip -d /opt/tools/
+  mv /opt/tools/dex-tools-2.1/ /opt/tools/dex2jar
+  find /opt/tools/dex2jar -type f -name "*.sh" -exec ln -s '{}' /opt/tools/bin ';'
+  add-test-command "d2j-dex2jar.sh --help"
 }
 
 function install_hostapd-wpe(){
@@ -2288,6 +2316,7 @@ function install_fierce() {
   colorecho "Installing fierce"
   python3 -m pipx install git+https://github.com/mschwager/fierce
   add-history fierce
+  add-test-command "fierce --help"
 }
 
 function install_yarn() {
@@ -2303,6 +2332,7 @@ function install_aircrack-ng() {
   fapt aircrack-ng
   add-aliases aircrack-ng
   add-history aircrack-ng
+  add-test-command "aircrack-ng --help"
 }
 
 function install_emacs-nox() {
@@ -2316,6 +2346,7 @@ function install_nmap() {
   fapt nmap
   add-aliases nmap
   add-history nmap
+  add-test-command "nmap --version"
 }
 
 function install_php() {
@@ -2402,6 +2433,7 @@ function install_masscan() {
   colorecho "Installing masscan"
   fapt masscan
   add-history masscan
+  add-test-command "masscan --version | grep 'Masscan version'"
 }
 
 function install_nbtscan() {
@@ -2474,10 +2506,13 @@ function install_freerdp2-x11() {
   colorecho "Installing freerdp2-x11"
   fapt freerdp2-x11
   add-history xfreerdp
+  add-test-command "xfreerdp /version"
 }
 
 # Package dedicated to the basic things the env needs
 function package_base() {
+  # CI/CD fapt etc []
+  # CI/CD install_ []
   update || exit
   deploy_exegol
   fapt software-properties-common
@@ -2586,6 +2621,8 @@ function package_base() {
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
+  # CI/CD fapt etc []
+  # CI/CD install_ []
   set_go_env
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
@@ -2603,6 +2640,8 @@ function package_misc() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
+  # CI/CD fapt etc []
+  # CI/CD install_ []
   set_go_env
   install_searchsploit            # Exploitdb local search engine
   install_metasploit              # Offensive framework
@@ -2644,6 +2683,8 @@ function package_most_used() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
+  # CI/CD fapt etc []
+  # CI/CD install_ []
   set_go_env
   fapt crunch                     # Wordlist generator
   install_seclists                # Awesome wordlists
@@ -2656,6 +2697,8 @@ function package_wordlists() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
+  # CI/CD fapt etc []
+  # CI/CD install_ []
   set_go_env
   install_hashcat                    # Password cracker
   install_john                    # Password cracker
@@ -2667,6 +2710,8 @@ function package_cracking() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
+  # CI/CD fapt etc []
+  # CI/CD install_ []
   set_go_env
   # Picture And Videos
   install_youtubedl                       # Command-line program to download videos from YouTube.com and other video sites
@@ -2710,7 +2755,7 @@ function package_osint() {
   install_maltego                 # Maltego is a software used for open-source intelligence and forensics
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
-  # fapt recon-ng                   # External recon tool
+  # fapt recon-ng                   # External recon tool FIXME
   # TODO : http://apt.vulns.sexy make apt-get update print a warning, and the repo has a weird name, we need to fix this in order to not alarm users
   install_osrframework                    # OSRFramework, the Open Sources Research Framework
   # Dark
@@ -2721,7 +2766,7 @@ function package_osint() {
   # Github
   install_githubemail                     # Retrieve a GitHub user's email even if it's not public
   # Other
-  # fapt whois                      # See information about a specific domain name or IP address
+  # fapt whois                      # See information about a specific domain name or IP address FIXME
   install_recondog                        # Informations gathering tool
   install_jsparser                        # Parse JS files
   install_gron                            # JSON parser
@@ -2730,6 +2775,8 @@ function package_osint() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
+  # CI/CD fapt etc []
+  # CI/CD install_ []
   set_go_env
   install_gobuster                # Web fuzzer (pretty good for several extensions)
   install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
@@ -2805,6 +2852,8 @@ function package_web() {
 
 # Package dedicated to command & control frameworks
 function package_c2() {
+  # CI/CD fapt etc []
+  # CI/CD install_ []
   set_go_env
   install_empire                  # Exploit framework
   install_starkiller              # GUI for Empire
@@ -2815,6 +2864,7 @@ function package_c2() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
+  # CI/CD install_ []
   set_go_env
   install_responder                       # LLMNR, NBT-NS and MDNS poisoner
   install_ldapdomaindump
@@ -2895,6 +2945,8 @@ function package_ad() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
+  # CI/CD fapt etc []
+  # CI/CD install_ [x]
   set_go_env
   fapt android-tools-adb
   install_smali
@@ -2908,12 +2960,16 @@ function package_mobile() {
 
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
+  # CI/CD fapt etc []
+  # CI/CD install_ [x]
   set_go_env
   install_sipvicious              # Set of tools for auditing SIP based VOIP systems
 }
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
+  # CI/CD fapt etc []
+  # CI/CD install_ [x]
   set_go_env
   fapt git
   fapt libusb-dev
@@ -2930,84 +2986,93 @@ function package_rfid() {
 
 # Package dedicated to IoT tools
 function package_iot() {
+  # CI/CD fapt etc []
+  # CI/CD install_ [x]
   fapt avrdude
   fapt minicom
 }
 
 # Package dedicated to SDR
 function package_sdr() {
-  install_mousejack               # tools for mousejacking
-  install_jackit                  # tools for mousejacking
-  install_hackrf                  # tools for hackrf
-  install_gqrx                    # spectrum analyzer for SDR
-  fapt rtl-433                    # decode radio transmissions from devices on the ISM bands
+  # CI/CD fapt etc []
+  # CI/CD install_ [x]
+  install_mousejack                       # tools for mousejacking
+  install_jackit                          # tools for mousejacking
+  install_hackrf                          # tools for hackrf
+  install_gqrx                            # spectrum analyzer for SDR
+  fapt rtl-433                            # decode radio transmissions from devices on the ISM bands
 }
 
 # Package dedicated to network pentest tools
 function package_network() {
+  # CI/CD fapt etc []
+  # CI/CD install_ [x]
   export PATH=$PATH:/usr/local/go/bin
   install_proxychains                     # Network tool
   DEBIAN_FRONTEND=noninteractive fapt wireshark # Wireshark packet sniffer
   DEBIAN_FRONTEND=noninteractive fapt tshark    # Tshark packet sniffer
   # install_wireshark_sources             # Install Wireshark from sources
-  fapt hping3                     # Discovery tool
-  install_masscan                    # Port scanner
-  install_nmap                       # Port scanner
-  install_autorecon               # External recon tool
-  fapt tcpdump                    # Capture TCP traffic
-  install_dnschef                 # Python DNS server
-  install_divideandscan           # Python project to automate port scanning routine
-  fapt iptables                   # iptables for the win
-  fapt traceroute                 # ping ping
-  install_chisel                  # Fast TCP/UDP tunnel over HTTP
-  install_sshuttle                # Transparent proxy over SSH
-  fapt dns2tcp                    # TCP tunnel over DNS
+  fapt hping3                             # Discovery tool
+  install_masscan                         # Port scanner
+  install_nmap                            # Port scanner
+  install_autorecon                       # External recon tool
+  fapt tcpdump                            # Capture TCP traffic
+  install_dnschef                         # Python DNS server
+  install_divideandscan                   # Python project to automate port scanning routine
+  fapt iptables                           # iptables for the win
+  fapt traceroute                         # ping ping
+  install_chisel                          # Fast TCP/UDP tunnel over HTTP
+  install_sshuttle                        # Transparent proxy over SSH
+  fapt dns2tcp                            # TCP tunnel over DNS
   install_eaphammer
   install_freerdp2-x11
   fapt rdesktop
   fapt xtightvncviewer
   install_fierce
-  fapt ssh-audit                  # SSH server audit
-  fapt hydra                      # Login scanner
-  install_memcached-cli           
-  fapt mariadb-client             # Mariadb client
-  fapt redis-tools                # Redis protocol
-  install_odat                    # Oracle Database Attacking Tool
+  fapt ssh-audit                          # SSH server audit
+  fapt hydra                              # Login scanner
+  fapt mariadb-client                     # Mariadb client
+  fapt redis-tools                        # Redis protocol
+  # install_odat                            # Oracle Database Attacking Tool, FIXME
 }
 
 # Package dedicated to wifi pentest tools
 function package_wifi() {
+  # CI/CD fapt etc []
+  # CI/CD install_ [x]
   set_go_env
   install_pyrit                           # Databases of pre-computed WPA/WPA2-PSK authentication phase
   install_wifite2                         # Retrieving password of a wireless access point (router)
-  install_aircrack-ng                # WiFi security auditing tools suite
-  # install_hostapd-wpe            # Modified hostapd to facilitate AP impersonation attacks -> broken install, need official release of hostapd-2.6.tar.gz
-  fapt reaver                     # Brute force attack against Wifi Protected Setup
-  fapt bully                      # WPS brute force attack
-  fapt cowpatty                   # WPA2-PSK Cracking
-  install_bettercap               # MiTM tool
+  install_aircrack-ng                     # WiFi security auditing tools suite
+  # install_hostapd-wpe                   # Modified hostapd to facilitate AP impersonation attacks, FIXME broken install, need official release of hostapd-2.6.tar.gz
+  fapt reaver                             # Brute force attack against Wifi Protected Setup
+  fapt bully                              # WPS brute force attack
+  fapt cowpatty                           # WPA2-PSK Cracking
+  install_bettercap                       # MiTM tool
   install_hcxtools                        # Tools for PMKID and other wifi attacks
   install_hcxdumptool                     # Small tool to capture packets from wlan devices
 }
 
 # Package dedicated to forensic tools
 function package_forensic() {
+  # CI/CD fapt etc []
   # CI/CD install_ [x]
-  fapt pst-utils                  # Reads a PST and prints the tree structure to the console
-  fapt binwalk                    # Tool to find embedded files
-  fapt foremost                   # Alternative to binwalk
-  install_volatility2             # Memory analysis tool
-  install_trid                    # filetype detection tool
-  # install_peepdf                  # PDF analysis
+  fapt pst-utils                          # Reads a PST and prints the tree structure to the console
+  fapt binwalk                            # Tool to find embedded files
+  fapt foremost                           # Alternative to binwalk
+  install_volatility2                     # Memory analysis tool
+  install_trid                            # filetype detection tool
+  # install_peepdf                        # PDF analysis FIXME
 }
 
 # Package dedicated to steganography tools
 function package_steganography() {
+  # CI/CD fapt etc []
   # CI/CD install_ [x]
-  install_zsteg                   # Detect stegano-hidden data in PNG & BMP
+  install_zsteg                           # Detect stegano-hidden data in PNG & BMP
   fapt stegosuite
   fapt steghide
-  install_stegolsb                # (including wavsteg)
+  install_stegolsb                        # (including wavsteg)
 }
 
 # Package dedicated to cloud tools
@@ -3015,35 +3080,37 @@ function package_cloud() {
   # CI/CD install_ [x]
   install_kubectl
   install_awscli
-  install_scout                   # Multi-Cloud Security Auditing Tool
+  install_scout                           # Multi-Cloud Security Auditing Tool
 }
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
+  # CI/CD fapt etc []
   # CI/CD install_ [x]
   install_pwntools                        # CTF framework and exploit development library
   install_pwndbg                          # Advanced Gnu Debugger
-  install_angr                    # Binary analysis
+  install_angr                            # Binary analysis
   install_checksec-py                     # Check security on binaries
-  fapt nasm                       # Netwide Assembler
-  install_radare2                    # Awesome debugger
-  fapt wabt                       # The WebAssembly Binary Toolkit
+  fapt nasm                               # Netwide Assembler
+  install_radare2                         # Awesome debugger
+  fapt wabt                               # The WebAssembly Binary Toolkit
   fapt-noexit ltrace
   fapt strace
   install_ghidra
   install_ida
-  install_jd-gui                     # Java decompiler
+  install_jd-gui                          # Java decompiler
 }
 
 # Package dedicated to attack crypto
 function package_crypto() {
-#  install_rsactftool              # attack rsa
-# todo : install_rsactftool function fails and make the whole build stop, temporarily removing
+  # install_rsactftool              # attack rsa FIXME
   echo "nothing to install"
 }
 
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
+  # CI/CD fapt etc [x]
+  # CI/CD install_ [x]
   install_vulny-code-static-analysis
 }
 
