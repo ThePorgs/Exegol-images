@@ -575,8 +575,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          export CMD="${{ matrix.command }}"
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 --env CMD="${{ matrix.command }}" cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   arm64_tests_mobile:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_mobile != '[]' && needs.arm64_buildx.outputs.matrix_mobile != '' }}
