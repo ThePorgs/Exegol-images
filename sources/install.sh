@@ -467,6 +467,9 @@ function install_impacket() {
 
   python3 -m pipx install /opt/tools/impacket/
 
+  # chardet is not in requirements.txt and is needed by Get-GPPPassword.py
+  python3 -m pipx inject impacket chardet
+
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
   cp -v /root/sources/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
