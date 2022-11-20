@@ -437,7 +437,7 @@ jobs:
         run: |
           docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval ${{ matrix.command }}"
           
-  test_results_amd64:
+  amd64_test_results:
     needs:
       - amd64_buildx
       - amd64_tests_base
@@ -466,32 +466,10 @@ jobs:
     steps:
       - run: | 
             (${{ !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}) && (echo 'All tests were successful!' && exit 0) || (echo 'Some tests failed, the image will not be pushed'; exit 1)
-  push_amd64:
-    needs:
-      - amd64_buildx
-      - amd64_tests_base
-      - amd64_tests_misc
-      - amd64_tests_wordlists
-      - amd64_tests_cracking
-      - amd64_tests_osint
-      - amd64_tests_web
-      - amd64_tests_c2
-      - amd64_tests_ad
-      - amd64_tests_mobile
-      - amd64_tests_iot
-      - amd64_tests_rfid
-      - amd64_tests_voip
-      - amd64_tests_sdr
-      - amd64_tests_network
-      - amd64_tests_wifi
-      - amd64_tests_forensic
-      - amd64_tests_cloud
-      - amd64_tests_steganography
-      - amd64_tests_reverse
-      - amd64_tests_crypto
-      - amd64_tests_code_analysis
+  amd64_push:
+    needs: amd64_test_results
     runs-on: [self-hosted, test]
-    if: always() && !contains(needs.*.result, 'failure') == 'true' && !contains(needs.*.result, 'cancelled') == 'true'
+    if: always() && needs.amd64_test_results.result == 'success'
     steps:
       -
         name: Login to Dockerhub
@@ -502,8 +480,8 @@ jobs:
       -
         name: Push docker image
         run: docker push ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
-  clean_amd64:
-    needs: push_amd64
+  amd64_clean:
+    needs: amd64_push
     runs-on: [self-hosted, test]
     if: always()  # always mode clean the environment even when the task is cancelled by a user
     steps:
