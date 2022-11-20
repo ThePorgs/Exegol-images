@@ -3,7 +3,7 @@ name: debug build
 on:
   push:
     branches:
-      - cicd
+      - disable
 
 env:
   DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
@@ -20,23 +20,6 @@ jobs:
       matrix_p2: ${{ steps.set-matrix.outputs.matrix_p2 }}
       matrix_p3: ${{ steps.set-matrix.outputs.matrix_p3 }}
       matrix_p4: ${{ steps.set-matrix.outputs.matrix_p4 }}
-      matrix_osint: ${{ steps.set-matrix.outputs.matrix_osint }}
-      matrix_web: ${{ steps.set-matrix.outputs.matrix_web }}
-      matrix_c2: ${{ steps.set-matrix.outputs.matrix_c2 }}
-      matrix_ad: ${{ steps.set-matrix.outputs.matrix_ad }}
-      matrix_mobile: ${{ steps.set-matrix.outputs.matrix_mobile }}
-      matrix_iot: ${{ steps.set-matrix.outputs.matrix_iot }}
-      matrix_rfid: ${{ steps.set-matrix.outputs.matrix_rfid }}
-      matrix_voip: ${{ steps.set-matrix.outputs.matrix_voip }}
-      matrix_sdr: ${{ steps.set-matrix.outputs.matrix_sdr }}
-      matrix_network: ${{ steps.set-matrix.outputs.matrix_network }}
-      matrix_wifi: ${{ steps.set-matrix.outputs.matrix_wifi }}
-      matrix_forensic: ${{ steps.set-matrix.outputs.matrix_forensic }}
-      matrix_cloud: ${{ steps.set-matrix.outputs.matrix_cloud }}
-      matrix_steganography: ${{ steps.set-matrix.outputs.matrix_steganography }}
-      matrix_reverse: ${{ steps.set-matrix.outputs.matrix_reverse }}
-      matrix_crypto: ${{ steps.set-matrix.outputs.matrix_crypto }}
-      matrix_code_analysis: ${{ steps.set-matrix.outputs.matrix_code_analysis }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
