@@ -20,6 +20,7 @@ ENV PIPELINE_TESTS_FILE=package_ad
 RUN /root/sources/install.sh deploy_exegol
 RUN /root/sources/install.sh update
 RUN apt-get update && apt-get install -y sudo git curl zsh zip wget ncat dnsutils python2 python3 python3-setuptools python3-pip vim nano procps automake autoconf make
+RUN ln -s /usr/bin/python2.7 /usr/bin/python
 RUN /root/sources/install.sh filesystem
 RUN /root/sources/install.sh set_go_env
 RUN /root/sources/install.sh install_locales
