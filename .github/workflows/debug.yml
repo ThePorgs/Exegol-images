@@ -80,13 +80,13 @@ jobs:
           echo "$line_count test commands found!"
           if [ $line_count -lt 1000 ]; then
             docker exec $ID zsh -c 'split -d -n 4 /.exegol/build_pipeline_tests/all_commands.sorted.txt /.exegol/build_pipeline_tests/part'
-            echo "matrix_p1=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part00' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p2=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part01' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p3=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part02' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p4=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part03' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p1=$(docker exec $ID zsh -c 'head /.exegol/build_pipeline_tests/all_commands.sorted.txt -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p2=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +251 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p3=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +501 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p4=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +751 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
             return_code=0
           else
-            echo "Too many command to test! ($line_count/1000)"
+            echo "Too many command to test! (${line_count}/1000)"
             return_code=1
           fi
           docker stop $ID
@@ -176,7 +176,7 @@ jobs:
       - amd64_t3
       - amd64_t4
     runs-on: [ self-hosted, test ]
-    if: ${{ always() && !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
@@ -244,13 +244,13 @@ jobs:
           echo "$line_count test commands found!"
           if [ $line_count -lt 1000 ]; then
             docker exec $ID zsh -c 'split -d -n 4 /.exegol/build_pipeline_tests/all_commands.sorted.txt /.exegol/build_pipeline_tests/part'
-            echo "matrix_p1=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part00' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p2=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part01' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p3=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part02' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p4=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/part03' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p1=$(docker exec $ID zsh -c 'head /.exegol/build_pipeline_tests/all_commands.sorted.txt -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p2=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +251 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p3=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +501 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p4=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +751 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
             return_code=0
           else
-            echo "Too many command to test! ($line_count/1000)"
+            echo "Too many command to test! (${line_count}/1000)"
             return_code=1
           fi
           docker stop $ID
@@ -340,7 +340,7 @@ jobs:
       - arm64_t3
       - arm64_t4
     runs-on: [ self-hosted, arm64 ]
-    if: ${{ always() && !contains(needs.*.result, 'failure') }} && ${{ !contains(needs.*.result, 'cancelled') }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
