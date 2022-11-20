@@ -106,7 +106,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_misc:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_misc != '[]' && needs.amd64_buildx.outputs.matrix_misc != '' }}
@@ -118,7 +118,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_wordlists:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_wordlists != '[]' && needs.amd64_buildx.outputs.matrix_wordlists != '' }}
@@ -130,7 +130,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_cracking:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_cracking != '[]' && needs.amd64_buildx.outputs.matrix_cracking != '' }}
@@ -142,7 +142,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_osint:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_osint != '[]' && needs.amd64_buildx.outputs.matrix_osint != '' }}
@@ -154,7 +154,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_web:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_web != '[]' && needs.amd64_buildx.outputs.matrix_web != '' }}
@@ -166,7 +166,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_c2:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_c2 != '[]' && needs.amd64_buildx.outputs.matrix_c2 != '' }}
@@ -178,7 +178,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_ad:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_ad != '[]' && needs.amd64_buildx.outputs.matrix_ad != '' }}
@@ -190,7 +190,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_mobile:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_mobile != '[]' && needs.amd64_buildx.outputs.matrix_mobile != '' }}
@@ -202,7 +202,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_iot:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_iot != '[]' && needs.amd64_buildx.outputs.matrix_iot != '' }}
@@ -214,7 +214,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_rfid:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_rfid != '[]' && needs.amd64_buildx.outputs.matrix_rfid != '' }}
@@ -226,7 +226,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_voip:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_voip != '[]' && needs.amd64_buildx.outputs.matrix_voip != '' }}
@@ -238,7 +238,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_sdr:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_sdr != '[]' && needs.amd64_buildx.outputs.matrix_sdr != '' }}
@@ -250,7 +250,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_network:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_network != '[]' && needs.amd64_buildx.outputs.matrix_network != '' }}
@@ -262,7 +262,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_wifi:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_wifi != '[]' && needs.amd64_buildx.outputs.matrix_wifi != '' }}
@@ -274,7 +274,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_forensic:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_forensic != '[]' && needs.amd64_buildx.outputs.matrix_forensic != '' }}
@@ -286,7 +286,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_cloud:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_cloud != '[]' && needs.amd64_buildx.outputs.matrix_cloud != '' }}
@@ -298,7 +298,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_steganography:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_steganography != '[]' && needs.amd64_buildx.outputs.matrix_steganography != '' }}
@@ -310,7 +310,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_reverse:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_reverse != '[]' && needs.amd64_buildx.outputs.matrix_reverse != '' }}
@@ -322,7 +322,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_crypto:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_crypto != '[]' && needs.amd64_buildx.outputs.matrix_crypto != '' }}
@@ -334,7 +334,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   amd64_tests_code_analysis:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_code_analysis != '[]' && needs.amd64_buildx.outputs.matrix_code_analysis != '' }}
@@ -346,7 +346,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
 
   amd64_test_results:
     needs:
@@ -491,7 +491,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_misc:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_misc != '[]' && needs.arm64_buildx.outputs.matrix_misc != '' }}
@@ -503,7 +503,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_wordlists:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_wordlists != '[]' && needs.arm64_buildx.outputs.matrix_wordlists != '' }}
@@ -551,7 +551,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_c2:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_c2 != '[]' && needs.arm64_buildx.outputs.matrix_c2 != '' }}
@@ -563,7 +563,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_ad:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_ad != '[]' && needs.arm64_buildx.outputs.matrix_ad != '' }}
@@ -575,7 +575,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_mobile:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_mobile != '[]' && needs.arm64_buildx.outputs.matrix_mobile != '' }}
@@ -587,7 +587,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_iot:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_iot != '[]' && needs.arm64_buildx.outputs.matrix_iot != '' }}
@@ -599,7 +599,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_rfid:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_rfid != '[]' && needs.arm64_buildx.outputs.matrix_rfid != '' }}
@@ -611,7 +611,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_voip:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_voip != '[]' && needs.arm64_buildx.outputs.matrix_voip != '' }}
@@ -623,7 +623,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_sdr:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_sdr != '[]' && needs.arm64_buildx.outputs.matrix_sdr != '' }}
@@ -635,7 +635,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_network:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_network != '[]' && needs.arm64_buildx.outputs.matrix_network != '' }}
@@ -647,7 +647,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_wifi:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_wifi != '[]' && needs.arm64_buildx.outputs.matrix_wifi != '' }}
@@ -659,7 +659,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_forensic:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_forensic != '[]' && needs.arm64_buildx.outputs.matrix_forensic != '' }}
@@ -671,7 +671,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_cloud:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_cloud != '[]' && needs.arm64_buildx.outputs.matrix_cloud != '' }}
@@ -683,7 +683,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_steganography:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_steganography != '[]' && needs.arm64_buildx.outputs.matrix_steganography != '' }}
@@ -695,7 +695,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_reverse:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_reverse != '[]' && needs.arm64_buildx.outputs.matrix_reverse != '' }}
@@ -707,7 +707,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_crypto:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_crypto != '[]' && needs.arm64_buildx.outputs.matrix_crypto != '' }}
@@ -719,7 +719,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
   arm64_tests_code_analysis:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_code_analysis != '[]' && needs.arm64_buildx.outputs.matrix_code_analysis != '' }}
@@ -731,7 +731,7 @@ jobs:
     steps:
       - name: Image command testing
         run: |
-          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(echo ${{ matrix.command }} | base64 -d)"
+          docker run --rm ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c "autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $(${{ matrix.command }})"
 
   arm64_test_results:
     needs:

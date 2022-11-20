@@ -774,7 +774,7 @@ function install_pwntools() {
   colorecho "Installing pwntools"
   python -m pip install pwntools
   python3 -m pip install pwntools
-  add-test-command "python -c 'import pwn'"
+  add-test-command "whoami; python -c 'import pwn;print(1)'"
   add-test-command "python3 -c 'import pwn'"
 }
 
