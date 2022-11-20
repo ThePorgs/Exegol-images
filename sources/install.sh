@@ -38,7 +38,7 @@ function add-history() {
 function add-test-command() {
   colorecho "Adding build pipeline test command: $*"
   mkdir -p /.exegol/build_pipeline_tests/
-  echo "$*" >> "/.exegol/build_pipeline_tests/$PIPELINE_TESTS_FILE"
+  echo "$*" >> "/.exegol/build_pipeline_tests/all_commands.txt"
 }
 
 function fapt() {
@@ -2475,7 +2475,6 @@ function install_freerdp2-x11() {
 
 # Package dedicated to the basic things the env needs
 function package_base() {
-  export PIPELINE_TESTS_FILE="package_base"
   update || exit
   deploy_exegol
   fapt software-properties-common
@@ -2584,7 +2583,6 @@ function package_base() {
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
-  export PIPELINE_TESTS_FILE="package_misc"
   set_go_env
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
@@ -2602,7 +2600,6 @@ function package_misc() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
-  export PIPELINE_TESTS_FILE="package_most_used"
   set_go_env
   install_searchsploit            # Exploitdb local search engine
   install_metasploit              # Offensive framework
@@ -2644,7 +2641,6 @@ function package_most_used() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
-  export PIPELINE_TESTS_FILE="package_wordlists"
   set_go_env
   fapt crunch                     # Wordlist generator
   install_seclists                # Awesome wordlists
@@ -2657,7 +2653,6 @@ function package_wordlists() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
-  export PIPELINE_TESTS_FILE="package_cracking"
   set_go_env
   install_hashcat                    # Password cracker
   install_john                    # Password cracker
@@ -2669,7 +2664,6 @@ function package_cracking() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
-  export PIPELINE_TESTS_FILE="package_osint"
   set_go_env
   # Picture And Videos
   install_youtubedl                       # Command-line program to download videos from YouTube.com and other video sites
@@ -2733,7 +2727,6 @@ function package_osint() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
-  export PIPELINE_TESTS_FILE="package_web"
   set_go_env
   install_gobuster                # Web fuzzer (pretty good for several extensions)
   install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
@@ -2809,7 +2802,6 @@ function package_web() {
 
 # Package dedicated to command & control frameworks
 function package_c2() {
-  export PIPELINE_TESTS_FILE="package_c2"
   set_go_env
   install_empire                  # Exploit framework
   install_starkiller              # GUI for Empire
@@ -2820,7 +2812,6 @@ function package_c2() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
-  export PIPELINE_TESTS_FILE="package_ad"
   set_go_env
   install_responder                       # LLMNR, NBT-NS and MDNS poisoner
   install_ldapdomaindump
@@ -2901,7 +2892,6 @@ function package_ad() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
-  export PIPELINE_TESTS_FILE="package_mobile"
   set_go_env
   fapt android-tools-adb
   install_smali
@@ -2915,14 +2905,12 @@ function package_mobile() {
 
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
-  export PIPELINE_TESTS_FILE="package_voip"
   set_go_env
   install_sipvicious              # Set of tools for auditing SIP based VOIP systems
 }
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
-  export PIPELINE_TESTS_FILE="package_rfid"
   set_go_env
   fapt git
   fapt libusb-dev
@@ -2939,14 +2927,12 @@ function package_rfid() {
 
 # Package dedicated to IoT tools
 function package_iot() {
-  export PIPELINE_TESTS_FILE="package_iot"
   fapt avrdude
   fapt minicom
 }
 
 # Package dedicated to SDR
 function package_sdr() {
-  export PIPELINE_TESTS_FILE="package_sdr"
   install_mousejack               # tools for mousejacking
   install_jackit                  # tools for mousejacking
   install_hackrf                  # tools for hackrf
@@ -2956,7 +2942,6 @@ function package_sdr() {
 
 # Package dedicated to network pentest tools
 function package_network() {
-  export PIPELINE_TESTS_FILE="package_network"
   export PATH=$PATH:/usr/local/go/bin
   install_proxychains                     # Network tool
   DEBIAN_FRONTEND=noninteractive fapt wireshark # Wireshark packet sniffer
@@ -2989,7 +2974,6 @@ function package_network() {
 
 # Package dedicated to wifi pentest tools
 function package_wifi() {
-  export PIPELINE_TESTS_FILE="package_wifi"
   set_go_env
   install_pyrit                           # Databases of pre-computed WPA/WPA2-PSK authentication phase
   install_wifite2                         # Retrieving password of a wireless access point (router)
@@ -3006,7 +2990,6 @@ function package_wifi() {
 # Package dedicated to forensic tools
 function package_forensic() {
   # CI/CD install_ [x]
-  export PIPELINE_TESTS_FILE="package_forensic"
   fapt pst-utils                  # Reads a PST and prints the tree structure to the console
   fapt binwalk                    # Tool to find embedded files
   fapt foremost                   # Alternative to binwalk
@@ -3018,7 +3001,6 @@ function package_forensic() {
 # Package dedicated to steganography tools
 function package_steganography() {
   # CI/CD install_ [x]
-  export PIPELINE_TESTS_FILE="package_steganography"
   install_zsteg                   # Detect stegano-hidden data in PNG & BMP
   fapt stegosuite
   fapt steghide
@@ -3028,7 +3010,6 @@ function package_steganography() {
 # Package dedicated to cloud tools
 function package_cloud() {
   # CI/CD install_ [x]
-  export PIPELINE_TESTS_FILE="package_cloud"
   install_kubectl
   install_awscli
   install_scout                   # Multi-Cloud Security Auditing Tool
@@ -3037,7 +3018,6 @@ function package_cloud() {
 # Package dedicated to reverse engineering tools
 function package_reverse() {
   # CI/CD install_ [x]
-  export PIPELINE_TESTS_FILE="package_reverse"
   install_pwntools                        # CTF framework and exploit development library
   install_pwndbg                          # Advanced Gnu Debugger
   install_angr                    # Binary analysis
@@ -3054,7 +3034,6 @@ function package_reverse() {
 
 # Package dedicated to attack crypto
 function package_crypto() {
-  export PIPELINE_TESTS_FILE="package_crypto"
 #  install_rsactftool              # attack rsa
 # todo : install_rsactftool function fails and make the whole build stop, temporarily removing
   echo "nothing to install"
@@ -3062,7 +3041,6 @@ function package_crypto() {
 
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
-  export PIPELINE_TESTS_FILE="package_code_analysis"
   install_vulny-code-static-analysis
 }
 
