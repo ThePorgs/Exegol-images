@@ -1939,6 +1939,7 @@ function install_smartbrute() {
   cd /opt/tools/smartbrute || exit
   python3 -m pip install -r requirements.txt
   add-aliases smartbrute
+  add-history smartbrute
   add-test-command "smartbrute --help"
 }
 
