@@ -557,20 +557,76 @@ function install_routersploit() {
   cd /opt/tools/routersploit || exit
   python3 -m pip install -r requirements.txt
   add-aliases routersploit
+  aaa "rsf --help"
 }
 
 function install_empire() {
   colorecho "Installing Empire"
-  python3 -m pip install poetry
+
+  # Installing apt requirements
+  DEBIAN_FRONTEND=noninteractive apt-get install -y wget sudo git python3-dev python3-pip xclip apt-transport-https \
+  autoconf g++ git zlib1g-dev libxml2-dev libssl1.1 libssl-dev default-jdk curl git gcc nim
+
+  # Installing xar (as per https://github.com/BC-SECURITY/Empire/blob/master/setup/install.sh)
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    wget https://github.com/BC-SECURITY/xar/archive/xar-1.6.1-patch.tar.gz
+    rm -rf xar-1.6.1
+    rm -rf xar-1.6.1-patch/xar
+    rm -rf xar-xar-1.6.1-patch
+    tar -xvf xar-1.6.1-patch.tar.gz && mv xar-xar-1.6.1-patch/xar/ xar-1.6.1/
+    (cd xar-1.6.1 && ./autogen.sh --build=x86_64-unknown-linux-gnu)
+    (cd xar-1.6.1 && ./configure --build=x86_64-unknown-linux-gnu)
+    (cd xar-1.6.1 && make)
+    (cd xar-1.6.1 && make install)
+    rm -rf xar-1.6.1
+    rm -rf xar-1.6.1-patch/xar
+    rm -rf xar-xar-1.6.1-patch
+  elif [[ $(uname -m) = 'aarch64' ]]
+  then
+    wget https://github.com/BC-SECURITY/xar/archive/xar-1.6.1-patch.tar.gz
+    rm -rf xar-1.6.1
+    rm -rf xar-1.6.1-patch/xar
+    rm -rf xar-xar-1.6.1-patch
+    tar -xvf xar-1.6.1-patch.tar.gz && mv xar-xar-1.6.1-patch/xar/ xar-1.6.1/
+    (cd xar-1.6.1 && ./autogen.sh --build=aarch64-unknown-linux-gnu)
+    (cd xar-1.6.1 && ./configure --build=aarch64-unknown-linux-gnu)
+    (cd xar-1.6.1 && make)
+    (cd xar-1.6.1 && make install)
+    rm -rf xar-1.6.1
+    rm -rf xar-1.6.1-patch/xar
+    rm -rf xar-xar-1.6.1-patch
+  else
+    criticalecho-noexit "This installation function (xar) doesn't support architecture $(uname -m)" && r
+  fi
+
+  # Installing bomutils (as per https://github.com/BC-SECURITY/Empire/blob/master/setup/install.sh)
+  rm -rf bomutils
+  git clone https://github.com/BC-SECURITY/bomutils.git
+  (cd bomutils && make)
+  (cd bomutils && make install)
+  chmod 755 bomutils/build/bin/mkbom && sudo cp bomutils/build/bin/mkbom /usr/local/bin/.
+  rm -rf bomutils
+
+  # Installing powershell
+  install_powershell
+
+  # Installing dotnet sdk 6.0
+  curl -L -o /tmp/dotnet-install.sh https://dot.net/v1/dotnet-install.sh
+  chmod +x /tmp/dotnet-install.sh
+  /tmp/dotnet-install.sh --channel 6.0
+  rm /tmp/dotnet-install.sh
+
   git -C /opt/tools/ clone --recursive https://github.com/BC-SECURITY/Empire
   cd /opt/tools/Empire/ || exit
-  colorecho "Applying Exegol specific patch"
-  git apply /root/sources/patches/empire_install_sh_patch.diff
-  ./setup/install.sh
-  python3 -m pip install .
+
+  python3 -m pip install poetry
+  poetry install # FIXME doesn't work
+
   # Changing password
   sed -i 's/password123/exegol4thewin/' /opt/tools/Empire/empire/server/config.yaml
   add-aliases empire
+  # TODO add-test-command
 }
 
 function install_starkiller() {
@@ -821,19 +877,22 @@ function install_powershell() {
   colorecho "Installing powershell"
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    apt-get install -y software-properties-common
-    curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-    apt-add-repository https://packages.microsoft.com/debian/11/prod
-    apt-get update
-    apt-get install -y powershell
-    mv /opt/microsoft /opt/tools/microsoft
-    rm /usr/bin/pwsh
-    ln -s /opt/tools/microsoft/powershell/7/pwsh /opt/tools/bin/pwsh
-    add-aliases powershell
-    # TODO add-test-command
+    curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.0/powershell-7.3.0-linux-x64.tar.gz
+  elif [[ $(uname -m) = 'aarch64' ]]
+  then
+    curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.0/powershell-7.3.0-linux-arm64.tar.gz
+  elif [[ $(uname -m) = 'armv7l' ]]
+  then
+    curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.0/powershell-7.3.0-linux-arm32.tar.gz
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
+  mkdir -p /opt/tools/powershell/7
+  tar zxf /tmp/powershell.tar.gz -C /opt/tools/powershell/7
+  chmod +x /opt/tools/powershell/7/pwsh
+  ln -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
+  rm /tmp/powershell.tar.gz
+  aaa "powershell -Version"
 }
 
 function install_fzf() {
@@ -2113,6 +2172,7 @@ function install_shadowcoerce() {
 function install_pwncat() {
   colorecho "Installing pwncat"
   python3 -m pipx install pwncat-cs
+  aaa "pwncat-cs --version"
 }
 
 function install_gmsadumper() {
@@ -2279,6 +2339,7 @@ function install_metasploit(){
   curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
   cd /opt/tools || exit
   rm -rf /tmp/metasploit_install
+  aaa "msfconsole --version"
 }
 
 function install_smbmap(){
@@ -2584,8 +2645,8 @@ function install_freerdp2-x11() {
 
 # Package dedicated to the basic things the env needs
 function package_base() {
-  # CI/CD fapt etc []
-  # CI/CD install_ []
+  # CI/CD fapt etc [] TODO
+  # CI/CD install_ [] TODO
   update || exit
   deploy_exegol
   fapt software-properties-common
@@ -2688,14 +2749,15 @@ function package_base() {
   install_faketime
   fapt ruby ruby-dev
   install_libxml2-utils
+  fapt nim
   install_exegol-history
   install_logrotate
 }
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
-  # CI/CD fapt etc []
-  # CI/CD install_ []
+  # CI/CD fapt etc [] TODO
+  # CI/CD install_ [] TODO
   set_go_env
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
@@ -2713,8 +2775,8 @@ function package_misc() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
-  # CI/CD fapt etc []
-  # CI/CD install_ []
+  # CI/CD fapt etc [] TODO
+  # CI/CD install_ [] TODO
   set_go_env
   install_searchsploit            # Exploitdb local search engine
   install_metasploit              # Offensive framework
@@ -2756,8 +2818,8 @@ function package_most_used() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
-  # CI/CD fapt etc []
-  # CI/CD install_ []
+  # CI/CD fapt etc [] TODO
+  # CI/CD install_ [] TODO
   set_go_env
   fapt crunch                     # Wordlist generator
   install_seclists                # Awesome wordlists
@@ -2770,8 +2832,8 @@ function package_wordlists() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
-  # CI/CD fapt etc []
-  # CI/CD install_ []
+  # CI/CD fapt etc [] TODO
+  # CI/CD install_ [] TODO
   set_go_env
   install_hashcat                    # Password cracker
   install_john                    # Password cracker
@@ -2783,8 +2845,8 @@ function package_cracking() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
-  # CI/CD fapt etc []
-  # CI/CD install_ []
+  # CI/CD fapt etc [] TODO
+  # CI/CD install_ [] TODO
   set_go_env
   # Picture And Videos
   install_youtubedl                       # Command-line program to download videos from YouTube.com and other video sites
@@ -2848,8 +2910,8 @@ function package_osint() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
-  # CI/CD fapt etc []
-  # CI/CD install_ []
+  # CI/CD fapt etc [] TODO
+  # CI/CD install_ [] TODO
   set_go_env
   install_gobuster                # Web fuzzer (pretty good for several extensions)
   install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
@@ -2925,12 +2987,11 @@ function package_web() {
 
 # Package dedicated to command & control frameworks
 function package_c2() {
-  # CI/CD fapt etc []
-  # CI/CD install_ []
+  # CI/CD fapt etc [] TODO
+  # CI/CD install_ [x]
   set_go_env
-  # TODO -- stopped here for add-test-command
-  install_empire                  # Exploit framework
-  install_starkiller              # GUI for Empire
+  # install_empire                  # Exploit framework FIXME
+  # install_starkiller              # GUI for Empire, commenting while Empire install is not fixed
   install_metasploit              # Offensive framework
   install_routersploit            # Exploitation Framework for Embedded Devices
   install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
@@ -2938,7 +2999,7 @@ function package_c2() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   set_go_env
   install_responder                       # LLMNR, NBT-NS and MDNS poisoner
@@ -3017,7 +3078,7 @@ function package_ad() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   set_go_env
   fapt android-tools-adb
@@ -3032,7 +3093,7 @@ function package_mobile() {
 
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   set_go_env
   install_sipvicious              # Set of tools for auditing SIP based VOIP systems
@@ -3040,7 +3101,7 @@ function package_voip() {
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   set_go_env
   fapt git
@@ -3058,7 +3119,7 @@ function package_rfid() {
 
 # Package dedicated to IoT tools
 function package_iot() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   fapt avrdude
   fapt minicom
@@ -3066,7 +3127,7 @@ function package_iot() {
 
 # Package dedicated to SDR
 function package_sdr() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   install_mousejack                       # tools for mousejacking
   install_jackit                          # tools for mousejacking
@@ -3077,7 +3138,7 @@ function package_sdr() {
 
 # Package dedicated to network pentest tools
 function package_network() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   export PATH=$PATH:/usr/local/go/bin
   install_proxychains                     # Network tool
@@ -3110,7 +3171,7 @@ function package_network() {
 
 # Package dedicated to wifi pentest tools
 function package_wifi() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   set_go_env
   install_pyrit                           # Databases of pre-computed WPA/WPA2-PSK authentication phase
@@ -3127,7 +3188,7 @@ function package_wifi() {
 
 # Package dedicated to forensic tools
 function package_forensic() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   fapt pst-utils                          # Reads a PST and prints the tree structure to the console
   fapt binwalk                            # Tool to find embedded files
@@ -3139,7 +3200,7 @@ function package_forensic() {
 
 # Package dedicated to steganography tools
 function package_steganography() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   install_zsteg                           # Detect stegano-hidden data in PNG & BMP
   fapt stegosuite
@@ -3157,7 +3218,7 @@ function package_cloud() {
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
-  # CI/CD fapt etc []
+  # CI/CD fapt etc [] TODO
   # CI/CD install_ [x]
   install_pwntools                        # CTF framework and exploit development library
   install_pwndbg                          # Advanced Gnu Debugger
@@ -3181,7 +3242,6 @@ function package_crypto() {
 
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
-  # CI/CD fapt etc [x]
   # CI/CD install_ [x]
   install_vulny-code-static-analysis
 }
