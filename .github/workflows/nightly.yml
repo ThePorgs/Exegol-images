@@ -324,6 +324,10 @@ jobs:
       - amd64_t2
       - amd64_t3
       - amd64_t4
+      - arm64_t1
+      - arm64_t2
+      - arm64_t3
+      - arm64_t4
     runs-on: self-hosted
     if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     steps:
