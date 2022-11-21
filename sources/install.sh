@@ -510,6 +510,7 @@ function install_neo4j() {
   apt-get -y install --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
   apt-get -y install neo4j
   # TODO: when temporary fix is not needed anymore --> neo4j-admin dbms set-initial-password exegol4thewin
+  neo4j-admin set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
   touch /usr/share/neo4j/logs/neo4j.log
   add-history neo4j
@@ -1218,7 +1219,7 @@ function install_hcxdumptool() {
   cd /opt/tools/hcxdumptool || exit
   # Checking out to specific commit is a temporary fix to the project no compiling anymore.
   # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232)
-  git checkout git checkout 56d078de4d6f5cef07b378707ab478fde03168c0
+  git checkout 56d078de4d6f5cef07b378707ab478fde03168c0
   make
   make install
   ln -s /usr/local/bin/hcxpcapngtool /usr/local/bin/hcxpcaptool
