@@ -2188,6 +2188,7 @@ function install_gmsadumper() {
 function install_pylaps() {
   colorecho "Installing pyLAPS"
   git -C /opt/tools/ clone https://github.com/p0dalirius/pyLAPS
+  add-alias pylaps
   add-history pylaps
   add-test-command "pyLAPS.py --help"
 }
