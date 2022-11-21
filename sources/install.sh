@@ -59,6 +59,7 @@ function post_install_clean() {
   colorecho "Cleaning..."
   updatedb
   rm -rfv /tmp/*
+  cat /opt/.zsh_history >> ~/.zsh_history
   echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
 }
 
