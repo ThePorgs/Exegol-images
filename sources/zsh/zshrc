@@ -26,6 +26,14 @@ PROMPT="$LOGGING$TIME_%{$FX[bold]$FG[013]%} %m %{$fg_bold[blue]%}%(!.%1~.%c) $(p
 
 export GO111MODULE=on
 
+# zsh history config
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000000
+setopt INC_APPEND_HISTORY
+export HISTTIMEFORMAT="[%F %T] "
+setopt EXTENDED_HISTORY
+setopt HIST_FIND_NO_DUPS
+
 # Adding exegol bins to PATH
 export PATH=/opt/tools/bin:$PATH
 
