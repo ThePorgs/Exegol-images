@@ -2050,9 +2050,7 @@ function install_gau() {
 
 function install_webclientservicescanner() {
   colorecho "Installing webclientservicescanner"
-  git -C /opt/tools/ clone https://github.com/Hackndo/WebclientServiceScanner
-  cd /opt/tools/WebclientServiceScanner || exit
-  python3 setup.py install
+  python3 -m pipx install git+https://github.com/Hackndo/WebclientServiceScanner
   add-history webclientservicescanner
   add-test-command "webclientservicescanner --help"
 }
