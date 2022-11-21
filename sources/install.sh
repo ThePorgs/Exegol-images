@@ -1841,6 +1841,7 @@ function install_sshuttle() {
 function install_pygpoabuse() {
   colorecho "Installing pyGPOabuse"
   git -C /opt/tools/ clone https://github.com/Hackndo/pyGPOAbuse
+  python3 -m pip install -r /opt/tools/pyGPOAbuse/requirements.txt
   add-aliases pygpoabuse
   add-test-command "pygpoabuse --help"
 }
