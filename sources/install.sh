@@ -2184,14 +2184,6 @@ function install_gmsadumper() {
   add-test-command "gMSADumper.py --help"
 }
 
-function install_modifyCertTemplate() {
-  colorecho "Installing modifyCertTemplate"
-  git -C /opt/tools/ clone https://github.com/fortalice/modifyCertTemplate
-  add-aliases modifycerttemplate
-  add-history modifycerttemplate
-  add-test-command "modifyCertTemplate.py --help"
-}
-
 function install_pylaps() {
   colorecho "Installing pyLAPS"
   git -C /opt/tools/ clone https://github.com/p0dalirius/pyLAPS
@@ -3068,7 +3060,6 @@ function package_ad() {
   npm install ntpsync             # sync local time with remote server
   install_shadowcoerce
   install_gmsadumper
-  install_modifyCertTemplate
   install_pylaps
   install_finduncommonshares
   install_ldaprelayscan
