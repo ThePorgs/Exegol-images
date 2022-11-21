@@ -1,0 +1,1 @@
+alias corscanner='python3 /opt/tools/CORScanner/cors_scan.py'

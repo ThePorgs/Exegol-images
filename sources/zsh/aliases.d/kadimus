@@ -1,0 +1,1 @@
+alias kadimus='cd /opt/tools/Kadimus && echo "[*] changed dir : cd /opt/tools/Kadimus/"  && /opt/tools/Kadimus/kadimus'

@@ -1,0 +1,2 @@
+windapsearch --dc "$DC_HOST" --module metadata
+windapsearch --dc "$DC_HOST" --module users

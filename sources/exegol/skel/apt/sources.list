@@ -1,0 +1,2 @@
+# This file allows to add apt repository, in order to install various packages later on
+# At the first start of an exegol container, this file will be copied to /etc/apt/sources.list.d/exegol_user_sources.list

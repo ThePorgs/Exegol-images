@@ -1,0 +1,1 @@
+alias fzf-wordlists='find /usr/share/seclists /usr/share/wordlists /usr/share/wfuzz /usr/share/dirb -type f | fzf'

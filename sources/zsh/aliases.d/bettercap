@@ -1,0 +1,1 @@
+alias bettercap-ui='bettercap -caplet http-ui'

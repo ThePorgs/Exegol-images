@@ -1,0 +1,1 @@
+alias modifyCertTemplate.py='python3 /opt/tools/modifyCertTemplate/modifyCertTemplate.py'

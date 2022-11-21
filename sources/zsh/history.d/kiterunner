@@ -1,0 +1,7 @@
+kr brute https://target.com/subapp/ -A=aspx-210328:20000 -x 20 -j 1
+kr brute https://target.com/subapp/ -w dirsearch.txt -x 20 -j 1 -exml,asp,aspx,ashx -D
+kr scan hosts.txt -A=apiroutes-210328:20000 -x 5 -j 100 --fail-status-codes 400,401,404,403,501,502,426,411
+kr scan https://target.com:8443/ -w  /opt/tools/kiterunner/routes-large.kite -A=apiroutes-210228:20000 -x 10 --ignore-length=34
+kr scan target.com -w /opt/tools/kiterunner/routes-large.kite -A=apiroutes-210228:20000 -x 10 --ignore-length=34
+kr scan target.com -w routes.kite -A=apiroutes-210328:20000 -x 20 -j 1 --fail-status-codes 400,401,404,403,501,502,426,411
+kr scan targets.txt -w /opt/tools/kiterunner/routes-small.kite -A=apiroutes-210228:20000 -x 10 --ignore-length=34
