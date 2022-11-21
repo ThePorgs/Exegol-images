@@ -62,10 +62,10 @@ jobs:
           line_count=$(docker exec $ID zsh -c 'wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d " " -f 1')
           echo "$line_count test commands found!"
           if [ $line_count -lt 1000 ]; then
-            echo "matrix_p1=$(docker exec $ID zsh -c 'head /.exegol/build_pipeline_tests/all_commands.sorted.txt -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p2=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +251 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p3=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +501 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p4=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +751 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p1=$(docker exec $ID zsh -c 'head /.exegol/build_pipeline_tests/all_commands.sorted.txt -n 250' | grep -vE '^\s*$' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p2=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +251 | head -n 250' | grep -vE '^\s*$' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p3=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +501 | head -n 250' | grep -vE '^\s*$' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p4=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +751 | head -n 250' | grep -vE '^\s*$' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
             return_code=0
           else
             echo "Too many command to test! (${line_count}/1000)"
@@ -213,10 +213,10 @@ jobs:
           line_count=$(docker exec $ID zsh -c 'wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d " " -f 1')
           echo "$line_count test commands found!"
           if [ $line_count -lt 1000 ]; then
-            echo "matrix_p1=$(docker exec $ID zsh -c 'head /.exegol/build_pipeline_tests/all_commands.sorted.txt -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p2=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +251 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p3=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +501 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
-            echo "matrix_p4=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +751 | head -n 250' | sed '/^$/d' | perl -pe 'chomp if eof' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p1=$(docker exec $ID zsh -c 'head /.exegol/build_pipeline_tests/all_commands.sorted.txt -n 250' | grep -vE '^\s*$' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p2=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +251 | head -n 250' | grep -vE '^\s*$' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p3=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +501 | head -n 250' | grep -vE '^\s*$' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+            echo "matrix_p4=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +751 | head -n 250' | grep -vE '^\s*$' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
             return_code=0
           else
             echo "Too many command to test! (${line_count}/1000)"
