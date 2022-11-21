@@ -1566,7 +1566,7 @@ function install_maigret_pip() {
 function install_amber() {
   colorecho "Installing amber"
   # Installing keystone requirement
-  git -C /opt/tools/ clone git clone https://github.com/EgeBalci/keystone
+  git -C /opt/tools/ clone https://github.com/EgeBalci/keystone
   cd /opt/tools/keystone/ || exit
   mkdir build
   cd build || exit
