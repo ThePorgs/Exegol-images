@@ -1935,10 +1935,7 @@ function install_pcredz() {
 
 function install_smartbrute() {
   colorecho "Installing smartbrute"
-  git -C /opt/tools/ clone https://github.com/ShutdownRepo/smartbrute
-  cd /opt/tools/smartbrute || exit
-  python3 -m pip install -r requirements.txt
-  add-aliases smartbrute
+  python3 -m pipx install git+https://github.com/ShutdownRepo/smartbrute
   add-history smartbrute
   add-test-command "smartbrute --help"
 }
@@ -2638,6 +2635,11 @@ function install_freerdp2-x11() {
   add-test-command "which xfreerdp"
 }
 
+function install_patator() {
+  colorecho "Installing patator"
+  fapt patator # messes up with lib, it installs python3-impacket (0.9.22-2)
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   # CI/CD fapt etc [] TODO
@@ -2927,7 +2929,7 @@ function package_web() {
   install_kadimus                         # LFI scanner
   install_fuxploider                      # File upload scanner
   install_blazy                           # Login scanner
-  fapt patator                    # Login scanner
+  # install_patator                    # Login scanner # FIXME
   install_joomscan                # Joomla scanner
   install_wpscan                     # Wordpress scanner
   install_droopescan              # Drupal scanner
