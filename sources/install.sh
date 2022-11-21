@@ -386,7 +386,7 @@ function install_evilwinrm() {
   colorecho "Installing evil-winrm"
   gem install evil-winrm
   add-history evil-winrm
-  aaa "evil-winrm --help"
+  add-test-command "evil-winrm --help"
 }
 
 function install_bolt() {
@@ -557,7 +557,7 @@ function install_routersploit() {
   cd /opt/tools/routersploit || exit
   python3 -m pip install -r requirements.txt
   add-aliases routersploit
-  aaa "rsf --help"
+  add-test-command "rsf --help"
 }
 
 function install_empire() {
@@ -832,7 +832,7 @@ function install_lnkup() {
   python -m pip install -r requirements.txt
   add-aliases lnkup
   add-history lnkup
-  aaa "lnk-generate.py --help"
+  add-test-command "lnk-generate.py --help"
 }
 
 function install_pwntools() {
@@ -870,7 +870,7 @@ function install_darkarmour() {
   apt-get -y install mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 upx-ucl osslsigncode
   add-aliases darkarmour
   add-history darkarmour
-  aaa "darkarmour --help"
+  add-test-command "darkarmour --help"
 }
 
 function install_powershell() {
@@ -892,7 +892,7 @@ function install_powershell() {
   chmod +x /opt/tools/powershell/7/pwsh
   ln -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
   rm /tmp/powershell.tar.gz
-  aaa "powershell -Version"
+  add-test-command "powershell -Version"
 }
 
 function install_fzf() {
@@ -983,10 +983,10 @@ function install_krbrelayx() {
   cp -v /root/sources/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
   add-aliases krbrelayx
   add-history krbrelayx
-  aaa "krbrelayx.py --help"
-  aaa "addspn.py --help"
-  aaa "addspn.py --help"
-  aaa "printerbug.py --help"
+  add-test-command "krbrelayx.py --help"
+  add-test-command "addspn.py --help"
+  add-test-command "addspn.py --help"
+  add-test-command "printerbug.py --help"
 }
 
 function install_hakrawler() {
@@ -1017,7 +1017,7 @@ function install_pypykatz() {
   colorecho "Installing pypykatz"
   python3 -m pipx install pypykatz
   add-history pypykatz
-  aaa "pypykatz version"
+  add-test-command "pypykatz version"
 }
 
 function install_enyx() {
@@ -1025,7 +1025,7 @@ function install_enyx() {
   git -C /opt/tools/ clone https://github.com/trickster0/Enyx
   add-aliases enyx
   add-history enyx
-  aaa "enyx"
+  add-test-command "enyx"
 }
 
 function install_enum4linux-ng() {
@@ -1033,7 +1033,7 @@ function install_enum4linux-ng() {
   git -C /opt/tools/ clone https://github.com/cddmp/enum4linux-ng
   add-aliases enum4linux-ng
   add-history enum4linux-ng
-  aaa "enum4linux-ng --help"
+  add-test-command "enum4linux-ng --help"
 }
 
 function install_git-dumper() {
@@ -1101,7 +1101,7 @@ function install_zerologon() {
   mv /opt/tools/CVE-2020-1472 /opt/tools/zerologon-exploit
   add-aliases zerologon
   add-history zerologon
-  aaa "zerologon-scan | grep Usage"
+  add-test-command "zerologon-scan | grep Usage"
 }
 
 function install_proxmark3() {
@@ -1310,7 +1310,7 @@ function install_oaburl() {
   chmod +x /opt/tools/OABUrl/oaburl.py
   add-aliases oaburl
   add-history oaburl
-  aaa "oaburl.py --help"
+  add-test-command "oaburl.py --help"
 }
 
 function install_libmspack() {
@@ -1321,7 +1321,7 @@ function install_libmspack() {
   ./configure
   make
   add-aliases libmspack
-  aaa "oabextract"
+  add-test-command "oabextract"
 }
 
 function install_ruler() {
@@ -1339,7 +1339,7 @@ function install_ruler() {
   fi
   ln -s /opt/tools/ruler/ruler /opt/tools/bin/ruler
   add-history ruler
-  aaa "ruler --version"
+  add-test-command "ruler --version"
 }
 
 function install_ghidra() {
@@ -1488,7 +1488,7 @@ function install_ntlmv1-multi() {
   git -C /opt/tools clone https://github.com/evilmog/ntlmv1-multi
   add-aliases ntlmv1-multi
   add-history ntlmv1-multi
-  aaa "ntlmv1-multi --ntlmv1 a::a:a:a:a"
+  add-test-command "ntlmv1-multi --ntlmv1 a::a:a:a:a"
 }
 
 function install_droopescan() {
@@ -1577,13 +1577,13 @@ function install_amber() {
   # Installing amber
   go install -v github.com/EgeBalci/amber@latest
   add-history amber
-  aaa "amber --help"
+  add-test-command "amber --help"
 }
 
 function install_hashonymize() {
   colorecho "Installing hashonymizer"
   python3 -m pipx install git+https://github.com/ShutdownRepo/hashonymize
-  aaa "hashonymize --help"
+  add-test-command "hashonymize --help"
 }
 
 function install_theharvester() {
@@ -1693,7 +1693,7 @@ function install_gosecretsdump() {
   git -C /opt/tools/ clone https://github.com/c-sto/gosecretsdump
   go install -v github.com/C-Sto/gosecretsdump@latest
   add-history gosecretsdump
-  aaa "gosecretsdump -version"
+  add-test-command "gosecretsdump -version"
 }
 
 function install_hackrf() {
@@ -1730,7 +1730,7 @@ function install_adidnsdump() {
   colorecho "Installing adidnsdump"
   python3 -m pipx install git+https://github.com/dirkjanm/adidnsdump
   add-history adidnsdump
-  aaa "adidnsdump --help"
+  add-test-command "adidnsdump --help"
 }
 
 function install_dnschef() {
@@ -1840,7 +1840,7 @@ function install_pygpoabuse() {
   colorecho "Installing pyGPOabuse"
   git -C /opt/tools/ clone https://github.com/Hackndo/pyGPOAbuse
   add-aliases pygpoabuse
-  aaa "pygpoabuse --help"
+  add-test-command "pygpoabuse --help"
 }
 
 function install_rsactftool() {
@@ -1867,7 +1867,7 @@ function install_bloodhound-import() {
   colorecho "Installing bloodhound-import"
   python3 -m pipx install bloodhound-import
   add-history bloodhound-import
-  aaa "bloodhound-import --help"
+  add-test-command "bloodhound-import --help"
 }
 
 function install_bloodhound-quickwin() {
@@ -1876,7 +1876,7 @@ function install_bloodhound-quickwin() {
   git -C /opt/tools/ clone https://github.com/kaluche/bloodhound-quickwin
   add-aliases bloodhound-quickwin
   add-history bloodhound-quickwin
-  aaa "bloodhound-quickwin --help"
+  add-test-command "bloodhound-quickwin --help"
 }
 
 function install_ldapsearch-ad() {
@@ -1887,7 +1887,7 @@ function install_ldapsearch-ad() {
   add-aliases ldapsearch-ad
   add-history ldapsearch-ad
   add-history ldapsearch
-  aaa "ldapsearch-ad --version"
+  add-test-command "ldapsearch-ad --version"
 }
 
 function install_rustscan() {
@@ -1927,7 +1927,7 @@ function install_pcredz() {
   python3 -m pip install Cython python-libpcap
   git -C /opt/tools/ clone https://github.com/lgandx/PCredz
   add-aliases pcredz
-  aaa "PCredz --help"
+  add-test-command "PCredz --help"
 }
 
 function install_smartbrute() {
@@ -1958,7 +1958,7 @@ function install_petitpotam() {
   git -C /opt/tools/ clone https://github.com/topotam/PetitPotam
   add-aliases petitpotam
   add-history petitpotam
-  aaa "petitpotam.py --help"
+  add-test-command "petitpotam.py --help"
 }
 
 function install_dfscoerce() {
@@ -1966,14 +1966,14 @@ function install_dfscoerce() {
   git -C /opt/tools/ clone https://github.com/Wh04m1001/DFSCoerce.git
   add-aliases dfscoerce
   add-history dfscoerce
-  aaa "dfscoerce.py --help"
+  add-test-command "dfscoerce.py --help"
 }
 
 function install_coercer() {
   colorecho "Installing Coercer"
   python3 -m pipx install git+https://github.com/p0dalirius/Coercer
   add-history coercer
-  aaa "coercer --help"
+  add-test-command "coercer --help"
 }
 
 function install_pkinittools() {
@@ -1981,7 +1981,7 @@ function install_pkinittools() {
   git -C /opt/tools/ clone https://github.com/dirkjanm/PKINITtools
   add-aliases pkinittools
   add-history pkinittools
-  aaa "gettgtpkinit.py --help"
+  add-test-command "gettgtpkinit.py --help"
 }
 
 function install_pywhisker() {
@@ -1991,7 +1991,7 @@ function install_pywhisker() {
   python3 -m pip install -r requirements.txt
   add-aliases pywhisker
   add-history pywhisker
-  aaa "pywhisker.py --help"
+  add-test-command "pywhisker.py --help"
 }
 
 function install_targetedKerberoast() {
@@ -2001,7 +2001,7 @@ function install_targetedKerberoast() {
   python3 -m pip install -r requirements.txt
   add-aliases targetedkerberoast
   add-history targetedkerberoast
-  aaa "targetedKerberoast.py --help"
+  add-test-command "targetedKerberoast.py --help"
 }
 
 function install_manspider() {
@@ -2011,7 +2011,7 @@ function install_manspider() {
   install_tesseract-ocr
   python3 -m pipx install git+https://github.com/blacklanternsecurity/MANSPIDER
   add-history manspider
-  aaa "manspider --help"
+  add-test-command "manspider --help"
 }
 
 function install_pywsus() {
@@ -2023,7 +2023,7 @@ function install_pywsus() {
   python3 -m pip install -r ./requirements.txt
   add-aliases pywsus
   add-history pywsus
-  aaa "pywsus.py --help"
+  add-test-command "pywsus.py --help"
 }
 
 function install_ignorant() {
@@ -2037,7 +2037,7 @@ function install_donpapi() {
   python3 -m pip install -r /opt/tools/DonPAPI/requirements.txt
   add-aliases donpapi
   add-history donpapi
-  aaa "DonPAPI.py --help"
+  add-test-command "DonPAPI.py --help"
 }
 
 function install_gau() {
@@ -2051,14 +2051,14 @@ function install_webclientservicescanner() {
   cd /opt/tools/WebclientServiceScanner || exit
   python3 setup.py install
   add-history webclientservicescanner
-  aaa "webclientservicescanner --help"
+  add-test-command "webclientservicescanner --help"
 }
 
 function install_certipy() {
   colorecho "Installing Certipy"
   python3 -m pipx install git+https://github.com/ly4k/Certipy
   add-history certipy
-  aaa "certipy --version"
+  add-test-command "certipy --version"
 }
 
 function install_eaphammer() {
@@ -2158,7 +2158,7 @@ function install_finduncommonshares() {
   python3 -m pip install -r requirements.txt
   add-aliases finduncommonshares
   add-history finduncommonshares
-  aaa "FindUncommonShares.py --help"
+  add-test-command "FindUncommonShares.py --help"
 }
 
 function install_shadowcoerce() {
@@ -2166,13 +2166,13 @@ function install_shadowcoerce() {
   git -C /opt/tools/ clone https://github.com/ShutdownRepo/ShadowCoerce
   add-aliases shadowcoerce
   add-history shadowcoerce
-  aaa "shadowcoerce.py --help"
+  add-test-command "shadowcoerce.py --help"
 }
 
 function install_pwncat() {
   colorecho "Installing pwncat"
   python3 -m pipx install pwncat-cs
-  aaa "pwncat-cs --version"
+  add-test-command "pwncat-cs --version"
 }
 
 function install_gmsadumper() {
@@ -2180,7 +2180,7 @@ function install_gmsadumper() {
   git -C /opt/tools/ clone https://github.com/micahvandeusen/gMSADumper
   add-aliases gmsadumper
   add-history gmsadumper
-  aaa "gMSADumper.py --help"
+  add-test-command "gMSADumper.py --help"
 }
 
 function install_modifyCertTemplate() {
@@ -2188,14 +2188,14 @@ function install_modifyCertTemplate() {
   git -C /opt/tools/ clone https://github.com/fortalice/modifyCertTemplate
   add-aliases modifycerttemplate
   add-history modifycerttemplate
-  aaa "modifyCertTemplate.py --help"
+  add-test-command "modifyCertTemplate.py --help"
 }
 
 function install_pylaps() {
   colorecho "Installing pyLAPS"
   git -C /opt/tools/ clone https://github.com/p0dalirius/pyLAPS
   add-history pylaps
-  aaa "pyLAPS.py --help"
+  add-test-command "pyLAPS.py --help"
 }
 
 function install_ldaprelayscan() {
@@ -2205,14 +2205,14 @@ function install_ldaprelayscan() {
   python3 -m pip install -r requirements.txt
   add-aliases ldaprelayscan
   add-history ldaprelayscan
-  aaa "LdapRelayScan.py --help"
+  add-test-command "LdapRelayScan.py --help"
 }
 
 function install_goldencopy() {
   colorecho "Installing GoldenCopy"
   python3 -m pipx install goldencopy
   add-history goldencopy
-  aaa "goldencopy --help"
+  add-test-command "goldencopy --help"
 }
 
 function install_crackhound() {
@@ -2220,7 +2220,7 @@ function install_crackhound() {
   git -C /opt/tools/ clone https://github.com/trustedsec/CrackHound
   add-aliases crackhound
   add-history crackhound
-  aaa "crackhound.py --help"
+  add-test-command "crackhound.py --help"
 }
 
 function install_kerbrute() {
@@ -2339,7 +2339,7 @@ function install_metasploit(){
   curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
   cd /opt/tools || exit
   rm -rf /tmp/metasploit_install
-  aaa "msfconsole --version"
+  add-test-command "msfconsole --version"
 }
 
 function install_smbmap(){
@@ -2351,7 +2351,7 @@ function install_smbmap(){
   python3 -m pip install pyasn1 pycrypto configparser termcolor
   add-aliases smbmap
   add-history smbmap
-  aaa "smbmap --help"
+  add-test-command "smbmap --help"
 }
 
 function install_pth-tools(){
@@ -2368,7 +2368,7 @@ function install_smtp-user-enum(){
   colorecho "Installing smtp-user-enum"
   python3 -m pipx install smtp-user-enum
   add-history smtp-user-enum
-  aaa "smtp-user-enum --help"
+  add-test-command "smtp-user-enum --help"
 }
 
 function install_gpp-decrypt(){
@@ -2376,7 +2376,7 @@ function install_gpp-decrypt(){
   python3 -m pip install pycrypto colorama
   git -C /opt/tools/ clone -v https://github.com/t0thkr1s/gpp-decrypt
   add-aliases gpp-decrypt
-  aaa "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
+  add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
 }
 
 function install_smali(){
@@ -2569,7 +2569,7 @@ function install_nbtscan() {
   colorecho "Installing nbtscan"
   fapt nbtscan
   add-history nbtscan
-  aaa "nbtscan 127.0.0.1"
+  add-test-command "nbtscan 127.0.0.1"
 }
 
 function install_ntpdate() {
@@ -2582,14 +2582,14 @@ function install_onesixtyone() {
   colorecho "Installing onesixtyone"
   fapt onesixtyone
   add-history onesixtyone
-  aaa "onesixtyone 127.0.0.1 public"
+  add-test-command "onesixtyone 127.0.0.1 public"
 }
 
 function install_polenum() {
   colorecho "Installing polenum"
   fapt polenum
   add-history polenum
-  aaa "polenum --help"
+  add-test-command "polenum --help"
 }
 
 function install_rlwrap() {
