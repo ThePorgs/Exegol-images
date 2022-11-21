@@ -888,11 +888,12 @@ function install_powershell() {
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
-  mkdir -p /opt/tools/powershell/7
-  tar zxf /tmp/powershell.tar.gz -C /opt/tools/powershell/7
-  chmod +x /opt/tools/powershell/7/pwsh
-  ln -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
-  rm /tmp/powershell.tar.gz
+  mkdir -v -p /opt/tools/powershell/7
+  tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
+  chmod -v +x /opt/tools/powershell/7/pwsh
+  ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
+  ln -v -s /opt/tools/bin/pwsh /opt/tools/bin/powershell
+  rm -v /tmp/powershell.tar.gz
   add-test-command "powershell -Version"
 }
 
