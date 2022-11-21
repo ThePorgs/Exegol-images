@@ -211,10 +211,9 @@ function install_responder() {
 
 function install_sublist3r() {
   colorecho "Installing Sublist3r"
-  git -C /opt/tools/ clone https://github.com/aboul3la/Sublist3r.git
-  python3 -m pip install -r /opt/tools/Sublist3r/requirements.txt
-  add-aliases sublist3r
+  python3 -m pipx install git+https://github.com/aboul3la/Sublist3r
   add-history sublist3r
+  add-test-command "sublist3r --help"
 }
 
 function install_recondog() {
@@ -222,21 +221,14 @@ function install_recondog() {
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
   python3 -m pip install -r /opt/tools/ReconDog/requirements.txt
   add-aliases recondog
+  add-test-command "recondog --help"
 }
 
 function install_githubemail() {
   colorecho "Installing github-email"
   npm install --global github-email
   add-history github-email
-}
-
-function install_onionsearch() {
-  colorecho "Installing onionsearch"
-  git -C /opt/tools/ clone https://github.com/megadose/onionsearch
-  cd /opt/tools/onionsearch || exit
-  python3 setup.py install
-  rm -rf /opt/tools/onionsearch
-  add-history onionsearch
+  add-test-command "github-email whatever"
 }
 
 function install_photon() {
@@ -244,19 +236,12 @@ function install_photon() {
   git -C /opt/tools/ clone https://github.com/s0md3v/photon
   python3 -m pip install -r /opt/tools/photon/requirements.txt
   add-aliases photon
-}
-
-function install_wikileaker() {
-  colorecho "Installing WikiLeaker"
-  git -C /opt/tools/ clone https://github.com/jocephus/WikiLeaker.git
-  python3 -m pip install -r /opt/tools/WikiLeaker/requirements.txt
-  add-aliases wikileaker
-  add-history wikileaker
+  add-test-command "photon.py --help"
 }
 
 function install_osrframework() {
   colorecho "Installing OSRFramework"
-  python3 -m pipx install osrframework
+#  python3 -m pipx install # https://github.com/i3visio/osrframework/issues/382
 }
 
 function install_cloudfail() {
@@ -265,6 +250,7 @@ function install_cloudfail() {
   python3 -m pip install -r /opt/tools/CloudFail/requirements.txt
   add-aliases cloudfail
   add-history cloudfail
+  add-test-command "cloudfail --help"
 }
 
 function install_oneforall() {
@@ -285,17 +271,6 @@ function install_eyewitness() {
 function install_wafw00f() {
   colorecho "Installing wafw00f"
   python3 -m pipx install wafw00F
-}
-
-function install_jsparser() {
-  colorecho "Installing JSParser"
-  git -C /opt/tools/ clone https://github.com/rickjms1337/JSParser.git
-  cd /opt/tools/JSParser || exit
-  git checkout remotes/origin/master_upgrading_python3
-  apt-get update
-  apt-get install python3-pycurl
-  python3 -m pip install -r requirements.txt
-  python3 setup.py install
 }
 
 function install_linkfinder() {
@@ -644,12 +619,14 @@ function install_assetfinder() {
   colorecho "Installing assetfinder"
   go install -v github.com/tomnomnom/assetfinder@latest
   add-history assetfinder
+  add-test-command "assetfinder thehacker.recipes"
 }
 
 function install_subfinder() {
   colorecho "Installing subfinder"
   go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
   add-history subfinder
+  add-test-command "subfinder -version"
 }
 
 function install_gf() {
@@ -738,6 +715,7 @@ function install_waybackurls() {
   colorecho "Installing waybackurls"
   go install -v github.com/tomnomnom/waybackurls@latest
   add-history waybackurls
+  add-test-command "waybackurls -h"
 }
 
 function install_gitrob(){
@@ -748,6 +726,7 @@ function install_gitrob(){
 function install_gron() {
   colorecho "Installing gron"
   go install -v github.com/tomnomnom/gron@latest
+  add-test-command "gron --help"
 }
 
 function install_timing_attack() {
@@ -763,8 +742,19 @@ function install_updog() {
 
 function install_findomain() {
   colorecho "Installing findomain"
-  wget -O /opt/tools/bin/findomain https://github.com/Edu4rdSHL/findomain/releases/latest/download/findomain-linux
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    wget -O /tmp/findomain.zip "https://github.com/findomain/findomain/releases/latest/download/findomain-linux.zip"
+  elif [[ $(uname -m) = 'aarch64' ]]
+  then
+    wget -O /tmp/findomain.zip "https://github.com/findomain/findomain/releases/latest/download/findomain-aarch64.zip"
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+  fi
+  unzip -d /opt/tools/bin/ /tmp/findomain.zip
   chmod +x /opt/tools/bin/findomain
+  rm /tmp/findomain.zip
+  add-test-command "findomain --version"
 }
 
 function install_proxychains() {
@@ -816,6 +806,7 @@ function install_simplyemail() {
   bash setup/setup.sh #TODO update install process ?
   add-aliases simplyemail
   add-history simplyemail
+  add-test-command "SimplyEmail -l"
 }
 
 function install_privexchange() {
@@ -1268,26 +1259,30 @@ function install_wireshark_sources() {
 
 function install_infoga() {
   colorecho "Installing infoga"
-  git -C /opt/tools/ clone https://github.com/m4ll0k/Infoga.git
+  git -C /opt/tools/ clone https://github.com/m4ll0k/Infoga
   find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
   cd /opt/tools/Infoga || exit
-  python setup.py install
+  python3 -m pip install .
   add-aliases infoga
   add-history infoga
+  add-test-command "infoga.py --help"
 }
 
 function install_buster() {
   colorecho "Installing buster"
-  git -C /opt/tools/ clone https://github.com/sham00n/buster.git
-  cd /opt/tools/buster || exit
-  python3 setup.py install
+  ptyhon3 -m pipx install git+https://github.com/sham00n/buster
   add-history buster
+  add-test-command "buster --help"
 }
 
 function install_pwnedornot() {
   colorecho "Installing pwnedornot"
   git -C /opt/tools/ clone https://github.com/thewhiteh4t/pwnedOrNot
+  python3 -m pip install requests html2text
+  mkdir -p "$HOME/.config/pwnedornot"
+  cp config.json "$HOME/.config/pwnedornot/config.json"
   add-aliases pwnedornot
+  add-test-command "pwnedornot.py --help"
 }
 
 function install_ghunt() {
@@ -1303,6 +1298,7 @@ function install_ghunt() {
   cd /opt/tools/GHunt || exit
   python3 -m pip install -r requirements.txt
   add-aliases ghunt
+  # TODO add-test-command
 }
 
 function install_oaburl() {
@@ -1389,6 +1385,7 @@ function install_linkedin2username() {
   python3 -m python -m pip install -r requirements.txt
   add-aliases linkedin2username
   add-history linkedin2username
+  add-test-command "linkedin2username.py --help"
 }
 
 function install_toutatis() {
@@ -1398,6 +1395,7 @@ function install_toutatis() {
   python3 setup.py install
   add-aliases toutatis
   add-history toutatis
+  add-test-command "toutatis --help"
 }
 
 function install_carbon14() {
@@ -1407,32 +1405,42 @@ function install_carbon14() {
   python3 -m pip install -r requirements.txt
   add-aliases carbon14
   add-history carbon14
+  add-test-command "carbon14.py --help"
 }
 
 function install_youtubedl() {
   colorecho "Installing youtube-dl"
   python3 -m pipx install youtube-dl
+  add-test-command "youtube-dl --version"
 }
 
 function install_ipinfo() {
   colorecho "Installing ipinfo"
   sudo npm install ipinfo-cli --global
   add-history ipinfo
+  add-test-command "ipinfo 127.0.0.1"
 }
 
 function install_constellation() {
   colorecho "Installing constellation"
-  cd /opt/tools/ || exit
-  wget https://github.com/constellation-app/constellation/releases/download/v2.1.1/constellation-linux-v2.1.1.tar.gz
-  tar xvf constellation-linux-v2.1.1.tar.gz
-  rm constellation-linux-v2.1.1.tar.gz
-  ln -s /opt/tools/constellation/bin/constellation /opt/tools/bin/constellation
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    wget -O /tmp/constellation.tar.gz https://github.com/constellation-app/constellation/releases/download/v2.1.1/constellation-linux-v2.1.1.tar.gz
+    tar xvf /tmp/constellation.tar.gz -C /opt/tools/
+    rm /tmp/constellation.tar.gz
+    ln -s /opt/tools/constellation/bin/constellation /opt/tools/bin/constellation
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+  fi
+  # TODO ARM64 install
+  # TODO add-test-command
 }
 
 function install_holehe() {
   colorecho "Installing holehe"
   python3 -m pipx install holehe
   add-history holehe
+  add-test-command "holehe --help"
 }
 
 function install_twint() {
@@ -1441,30 +1449,35 @@ function install_twint() {
   add-history twint
 }
 
-function install_tiktokscraper() {
-  colorecho "Installing tiktok-scraper"
-  npm i -g tiktok-scraper
-  add-history tiktok-scraper
-}
-
 function install_h8mail() {
   colorecho "Installing h8mail"
   python3 -m pipx install h8mail
   add-history h8mail
+  add-test-command "h8mail --help"
 }
 
 function install_phoneinfoga() {
   colorecho "Installing phoneinfoga"
-  curl -sSL https://raw.githubusercontent.com/sundowndev/PhoneInfoga/master/support/scripts/install | bash
-  sudo mv ./phoneinfoga /opt/tools/bin
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    wget -O /tmp/phoneinfoga.tar.gz "https://github.com/sundowndev/phoneinfoga/releases/latest/download/phoneinfoga_Linux_x86_64.tar.gz"
+  elif [[ $(uname -m) = 'aarch64' ]]
+  then
+    wget -O /tmp/phoneinfoga.tar.gz "https://github.com/sundowndev/phoneinfoga/releases/latest/download/phoneinfoga_Linux_arm64.tar.gz"
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+  fi
+  tar xfv /tmp/phoneinfoga.tar.gz -C /opt/tools/bin/
+  rm /tmp/phoneinfoga.tar.gz
   add-history phoneinfoga
+  add-test-command "phoneinfoga help"
 }
 
 function install_windapsearch-go() {
   colorecho "Installing Go windapsearch"
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    wget -O /opt/tools/bin/windapsearch "$(curl -o /dev/null -Ls -w %{url_effective} https://github.com/ropnop/go-windapsearch/releases/latest/ |  sed 's/tag/download/')/windapsearch-linux-amd64"
+    wget -O /opt/tools/bin/windapsearch "https://github.com/ropnop/go-windapsearch/releases/latest/download/windapsearch-linux-amd64"
     # TODO add-test-command
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
@@ -1559,10 +1572,11 @@ function install_jdwp_shellifier(){
   add-aliases jdwp_shellifier
 }
 
-function install_maigret_pip() {
+function install_maigret() {
   colorecho "Installing maigret"
   python3 -m pipx install maigret
   add-history maigret
+  add-test-command "maigret --help"
 }
 
 function install_amber() {
@@ -2123,14 +2137,16 @@ function install_naabu() {
 
 function install_tor() {
   colorecho "Installing tor"
-  mkdir /opt/tools/tor
-  cd /opt/tools/tor || exit
-  wget https://dist.torproject.org/tor-0.4.3.7.tar.gz
-  tar xf tor-0.4.3.7.tar.gz
-  cd tor-0.4.3.7 || exit
-  apt-get install libevent-dev
-  ./configure
-  make install
+  fapt tor
+  echo 'SOCKSPort 127.0.0.1:9050' >> /etc/tor/torrc
+  service tor restart
+  add-test-command "curl -x socks5h://localhost:9050 https://check.torproject.org/api/ip"
+}
+
+function install_torbrowser() {
+  colorecho "Installing torbrowser"
+  # TODO : also need to find out how to install for ARM
+  # TODO add-test-command
 }
 
 function install_pwndb() {
@@ -2140,6 +2156,7 @@ function install_pwndb() {
   chmod +x pwndb.py
   add-aliases pwndb
   add-history pwndb
+  add-test-command "pwndb --help"
 }
 
 function install_robotstester() {
@@ -2255,25 +2272,33 @@ function install_rockyou(){
 function install_amass(){
   colorecho "Installing Amass"
   go install -v github.com/OWASP/Amass/v3/...@master
+  add-test-command "amass -version"
 }
 
 function install_maltego(){
   colorecho "Installing Maltego"
   wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
   dpkg -i /tmp/maltegov4.3_package.deb
+  # TODO add-test-command
 }
 
 function install_spiderfoot(){
   colorecho "Installing Spiderfoot"
   git -C /opt/tools/ clone https://github.com/smicallef/spiderfoot.git # depends on alias declaration in order to work
+  python3 -m pip install -r /opt/tools/spiderfoot/requirements.txt
   add-aliases spiderfoot
+  add-history spiderfoot
+  add-test-command "spiderfoot --help"
+  add-test-command "spiderfoot-cli --help"
 }
 
 function install_finalrecon(){
   colorecho "Installing FinalRecon"
-  git -C /opt/tools/ clone https://github.com/thewhiteh4t/FinalRecon.git
+  git -C /opt/tools/ clone https://github.com/thewhiteh4t/FinalRecon
   cd /opt/tools/FinalRecon || exit
   pip3 install -r requirements.txt
+  add-aliases finalrecon
+  add-test-command "finalrecon --help"
 }
 
 function install_xsser(){
@@ -2545,7 +2570,7 @@ function install_hashcat() {
 
 function install_ldapdomaindump() {
   colorecho "Installing ldapdomaindump"
-  pipx install git+https://github.com/dirkjanm/ldapdomaindump
+  python3 -m pipx install git+https://github.com/dirkjanm/ldapdomaindump
   add-history ldapdomaindump
   add-test-command "ldapdomaindump --help"
 }
@@ -2782,7 +2807,7 @@ function package_most_used() {
   install_subfinder               # Subdomain bruteforcer
   install_autorecon               # External recon tool
   install_waybackurls             # Website history
-  install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
+  # install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
   install_simplyemail             # Gather emails
   install_ffuf                    # Web fuzzer (little favorites)
   install_sqlmap                     # SQL injection scanner
@@ -2843,64 +2868,46 @@ function package_cracking() {
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
   # CI/CD fapt etc [] TODO
-  # CI/CD install_ [] TODO
+  # CI/CD install_ [x]
   set_go_env
-  # Picture And Videos
   install_youtubedl                       # Command-line program to download videos from YouTube.com and other video sites
   fapt exiftool                   # For read exif information
   fapt exifprobe                  # Probe and report structure and metadata content of camera image files
-  # Subdomain
   install_sublist3r                       # Fast subdomains enumeration tool
   install_assetfinder                     # Find domains and subdomains potentially related to a given domain
   install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
   install_amass                   # OWASP Amass tool suite is used to build a network map of the target
   install_findomain                       # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
-  # DNS
   fapt dnsenum                    # DNSEnum is a command-line tool that automatically identifies basic DNS records
-  # Email
   install_holehe                          # Check if the mail is used on different sites
   install_simplyemail             # Gather emails
-  install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
+  # install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
   install_h8mail                          # Email OSINT & Password breach hunting tool
   install_infoga                          # Gathering email accounts informations
   install_buster                          # An advanced tool for email reconnaissance
   install_pwnedornot                      # OSINT Tool for Finding Passwords of Compromised Email Addresses
-  install_ghunt                           # Investigate Google Accounts with emails
-  # Phone
+  # install_ghunt                           # Investigate Google Accounts with emails FIXME
   install_phoneinfoga                     # Advanced information gathering & OSINT framework for phone numbers
-  # Social Network
-  install_maigret_pip                     # Search pseudos and information about users on many platforms
+  install_maigret                     # Search pseudos and information about users on many platforms
   install_linkedin2username               # Generate username lists for companies on LinkedIn
   install_toutatis                        # Toutatis is a tool that allows you to extract information from instagrams accounts
-  install_tiktokscraper                   # TikTok Scraper. Download video posts, collect user/trend/hashtag/music feed metadata, sign URL and etc
-  # Website
   install_waybackurls             # Website history
   install_carbon14                        # OSINT tool for estimating when a web page was written
-  install_wikileaker                      # A WikiLeaks scraper
   install_photon                          # Incredibly fast crawler designed for OSINT.
   install_cloudfail               # Utilize misconfigured DNS and old database records to find hidden IP's behind the CloudFlare network
-  # IP
   install_ipinfo                          # Get information about an IP address using command line with ipinfo.io
-  # Data visualization
   install_constellation                   # A graph-focused data visualisation and interactive analysis application.
-  # Framework
   install_maltego                 # Maltego is a software used for open-source intelligence and forensics
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
   # fapt recon-ng                   # External recon tool FIXME
-  # TODO : http://apt.vulns.sexy make apt-get update print a warning, and the repo has a weird name, we need to fix this in order to not alarm users
-  install_osrframework                    # OSRFramework, the Open Sources Research Framework
-  # Dark
+  # install_osrframework                    # OSRFramework, the Open Sources Research Framework FIXME
   install_tor					            # Tor proxy
-  fapt-noexit torbrowser-launcher        # Tor browser
-  install_onionsearch                     # OnionSearch is a script that scrapes urls on different .onion search engines.
+  # install_torbrowser        # Tor browser FIXME
   install_pwndb					          # No need to say more, no ? Be responsible with this tool please !
-  # Github
   install_githubemail                     # Retrieve a GitHub user's email even if it's not public
-  # Other
   # fapt whois                      # See information about a specific domain name or IP address FIXME
   install_recondog                        # Informations gathering tool
-  install_jsparser                        # Parse JS files
   install_gron                            # JSON parser
   # install_ignorant                # holehe but for phone numbers
 }

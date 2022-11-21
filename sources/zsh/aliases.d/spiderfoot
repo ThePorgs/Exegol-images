@@ -1,4 +1,4 @@
-alias sfcli.py='python3 /opt/tools/spiderfoot/sf.py'
+alias sfcli.py='python3 /opt/tools/spiderfoot/sfcli.py'
 alias spiderfoot='python3 /opt/tools/spiderfoot/sf.py'
 alias sf.py='python3 /opt/tools/spiderfoot/sf.py'
-alias spiderfootcli='python3 /opt/tools/spiderfoot/sf.py'
+alias spiderfootcli='python3 /opt/tools/spiderfoot/sfcli.py'
