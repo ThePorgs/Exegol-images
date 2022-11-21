@@ -1686,6 +1686,12 @@ function install_nuclei() {
   nuclei -update-templates
 }
 
+function install_katana() {
+  # Crawling and Spidering
+  colorecho "Installing Katana"
+  go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+}
+
 function install_prips() {
   # Print the IP addresses in a given range
   colorecho "Installing Prips"
@@ -2135,6 +2141,7 @@ function install_most_used_tools() {
   fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_nuclei                  # Vulnerability scanner
+  install_katana                  # Crawling and Spidering
   evilwinrm                       # WinRM shell
   install_john                    # Password cracker
   fapt hashcat                    # Password cracker
@@ -2311,6 +2318,7 @@ function install_web_tools() {
   install_arjun                   # HTTP Parameter Discovery
   install_nuclei                  # Needed for gau install
   install_gau                     #
+  install_katana                  # Crawling and Spidering
   install_prips                   # Print the IP addresses in a given range
   install_hakrevdns               # Reverse DNS lookups
   install_httprobe                # Probe http
