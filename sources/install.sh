@@ -3150,7 +3150,7 @@ function package_network() {
   install_chisel                          # Fast TCP/UDP tunnel over HTTP
   install_sshuttle                        # Transparent proxy over SSH
   fapt dns2tcp                            # TCP tunnel over DNS
-  install_eaphammer
+  # install_eaphammer                     # FIXME
   install_freerdp2-x11
   fapt rdesktop
   fapt xtightvncviewer
