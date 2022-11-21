@@ -146,7 +146,7 @@ jobs:
       - amd64_t3
       - amd64_t4
     runs-on: [ self-hosted, amd64 ]
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    if: ${{ always() && !contains(needs.amd64_buildx.result, 'failure') && !contains(needs.amd64_buildx.result, 'cancelled') }} # if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
@@ -298,7 +298,7 @@ jobs:
       - arm64_t3
       - arm64_t4
     runs-on: [ self-hosted, arm64 ]
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    if: ${{ always() && !contains(needs.arm64_buildx.result, 'failure') && !contains(needs.arm64_buildx.result, 'cancelled') }} # if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
@@ -317,7 +317,13 @@ jobs:
 
   manifest_build:
     timeout-minutes: 60
-    needs: [arm64_push, amd64_push]
+    needs:
+      - arm64_push
+      - amd64_push
+      - amd64_t1
+      - amd64_t2
+      - amd64_t3
+      - amd64_t4
     runs-on: self-hosted
     if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     steps:
