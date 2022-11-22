@@ -349,3 +349,4 @@ objection --gadget asvid.github.io.fridaapp explore
 spiderfoot -l 127.0.0.1:9889
 brakeman /path/to/rails/application
 semgrep -e '$X == $X' --lang=py path/to/src
+tailscale up --advertise-routes=10.10.11.0/2

@@ -1762,6 +1762,12 @@ function install_shuffledns() {
   go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
 }
 
+function install_tailscale() {
+  curl -fsSL https://tailscale.com/install.sh | sh
+  ## If we have "failed to connect to local tailscaled", we need to fix with :
+  ## tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &>/dev/null &
+}
+
 function install_anew() {
   colorecho "Installing anew"
   go install -v github.com/tomnomnom/anew@latest
@@ -2558,6 +2564,7 @@ function install_network_tools() {
   fapt xtightvncviewer
   install_dnsx
   install_shuffledns
+  install_tailscale
 }
 
 # Package dedicated to wifi pentest tools
