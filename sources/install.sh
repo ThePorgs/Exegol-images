@@ -457,8 +457,8 @@ function install_impacket() {
   add-test-command "ntlmrelayx.py --help"
   add-test-command "secretsdump.py --help"
   add-test-command "Get-GPPPassword.py --help"
-  add-test-command "getST.py --help | grep 'u2u'"
-  add-test-command "ticketer.py --help | grep impersonate"
+  add-test-command "getST.py --help && getST.py --help | grep 'u2u'"
+  add-test-command "ticketer.py --help && ticketer.py --help | grep impersonate"
   add-test-command "dacledit.py --help"
   add-test-command "describeTicket.py --help"
 }
@@ -497,7 +497,7 @@ function install_cyperoth() {
   git -C /opt/tools/ clone https://github.com/seajaysec/cypheroth/
   add-aliases cypheroth
   add-history cypheroth
-  add-test-command "cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
+  add-test-command "cypheroth --help; cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
 }
 
 function install_mitm6_sources() {
@@ -1094,7 +1094,7 @@ function install_zerologon() {
   mv /opt/tools/CVE-2020-1472 /opt/tools/zerologon-exploit
   add-aliases zerologon
   add-history zerologon
-  add-test-command "zerologon-scan | grep Usage"
+  add-test-command "zerologon-scan; zerologon-scan | grep Usage"
 }
 
 function install_proxmark3() {
@@ -1934,7 +1934,7 @@ function install_trid() {
   chmod +x trid
   python3 tridupdate.py
   add-aliases trid
-  add-test-command "trid | grep 'This help'"
+  add-test-command "trid '-?'; trid | grep 'This help'"
 }
 
 function install_pcredz() {
@@ -2578,7 +2578,7 @@ function install_masscan() {
   colorecho "Installing masscan"
   fapt masscan
   add-history masscan
-  add-test-command "masscan --version | grep 'Masscan version'"
+  add-test-command "masscan --help; masscan --version | grep 'Masscan version'"
 }
 
 function install_nbtscan() {

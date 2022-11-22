@@ -54,8 +54,8 @@ source $HOME/.cargo/env
 # Color correction for zsh-syntax-highlighting
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
 
-# In case pipx ensurepath didn't work
-export PATH="$PATH:/root/.local/bin"
+# In case pipx ensurepath didn't work, and positionning pipx in priority
+export PATH="/root/.local/bin:$PATH"
 
 # Add my-resources custom tools to PATH if my-resources is activated
 [ -d /opt/my-resources/bin ] && export PATH="$PATH:/opt/my-resources/bin"
