@@ -1708,6 +1708,11 @@ function install_vulny_code_static_analysis() {
   git -C /opt/tools/ clone https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
 }
 
+function install_brakeman() {
+  colorecho "Installing Brakeman"
+  gem install brakeman
+}
+
 function install_GPOwned() {
   colorecho "Installing GPOwned"
   git -C /opt/tools/ clone https://github.com/X-C3LL/GPOwned
@@ -2617,6 +2622,7 @@ function install_crypto_tools() {
 # Package dedicated to SAST and DAST tools
 function install_code_analysis_tools() {
   install_vulny_code_static_analysis
+  install_brakeman
 }
 
 # Function used to clean up post-install files

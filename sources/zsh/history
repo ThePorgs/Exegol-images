@@ -347,3 +347,4 @@ hekatomb -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET" -debug -dnstcp
 # -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #
 objection --gadget asvid.github.io.fridaapp explore
 spiderfoot -l 127.0.0.1:9889
+brakeman /path/to/rails/application
