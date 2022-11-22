@@ -2605,7 +2605,8 @@ function install_onesixtyone() {
 
 function install_polenum() {
   colorecho "Installing polenum"
-  fapt polenum
+  git -C /opt/tools/ clone https://github.com/Wh1t3Fox/polenum
+  python3 -m pip install impacket
   add-history polenum
   add-test-command "polenum --help"
 }
