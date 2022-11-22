@@ -251,7 +251,7 @@ function install_cloudfail() {
   python3 -m pip install -r /opt/tools/CloudFail/requirements.txt
   add-aliases cloudfail
   add-history cloudfail
-  add-test-command "cloudfail --help"
+  add-test-command "cloudfail.py --help"
 }
 
 function install_oneforall() {
@@ -2140,7 +2140,6 @@ function install_tor() {
   colorecho "Installing tor"
   fapt tor
   echo 'SOCKSPort 127.0.0.1:9050' >> /etc/tor/torrc
-  service tor restart
   add-test-command "curl -x socks5h://localhost:9050 https://check.torproject.org/api/ip"
 }
 
