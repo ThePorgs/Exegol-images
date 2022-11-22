@@ -2139,7 +2139,7 @@ function install_tor() {
   colorecho "Installing tor"
   fapt tor
   echo 'SOCKSPort 127.0.0.1:9050' >> /etc/tor/torrc
-  add-test-command "curl -x socks5h://localhost:9050 https://check.torproject.org/api/ip"
+  add-test-command "service tor start"
 }
 
 function install_torbrowser() {
