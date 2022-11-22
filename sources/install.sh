@@ -1853,6 +1853,8 @@ function install_maltego(){
 function install_spiderfoot(){
   colorecho "Installing Spiderfoot"
   git -C /opt/tools/ clone https://github.com/smicallef/spiderfoot.git # depends on alias declaration in order to work
+  cd /opt/tools/spiderfoot/
+  pip3 install -r requirements.txt
 }
 
 function install_finalrecon(){
