@@ -1570,6 +1570,11 @@ function install_frida() {
   python3 -m pip install frida-tools
 }
 
+function install_objection() {
+  colorecho "Installing objection"
+  pip3 install objection
+}
+
 function install_androguard() {
   colorecho "Installing androguard"
   python3 -m pip install androguard
@@ -2444,6 +2449,7 @@ function install_mobile_tools() {
   fapt apksigner
   fapt apktool
   install_frida
+  install_objection
   install_androguard              # Reverse engineering and analysis of Android applications
 }
 
