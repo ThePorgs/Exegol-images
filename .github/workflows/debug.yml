@@ -47,7 +47,7 @@ jobs:
         with:
           load: true
           build-args: |
-            TAG=${{ steps.prepare_build.outputs.image_name }}
+            TAG=${{ env.IMAGE_BASE_NAME }}
             VERSION=${{ steps.prepare_build.outputs.image_version }}
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_full_name }}
@@ -95,7 +95,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
+          echo "Using image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}}' $image_name)"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   amd64_t2:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_p2 != '[]' && needs.amd64_buildx.outputs.matrix_p2 != '' }}
@@ -111,7 +113,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
+          echo "Using image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}}' $image_name)"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   amd64_t3:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_p3 != '[]' && needs.amd64_buildx.outputs.matrix_p3 != '' }}
@@ -127,7 +131,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
+          echo "Using image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}}' $image_name)"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   amd64_t4:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_p4 != '[]' && needs.amd64_buildx.outputs.matrix_p4 != '' }}
@@ -143,7 +149,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
+          echo "Using image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}}' $image_name)"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
 
   amd64_clean:
     needs:
@@ -192,7 +200,7 @@ jobs:
         with:
           load: true
           build-args: |
-            TAG=${{ steps.prepare_build.outputs.image_name }}
+            TAG=${{ env.IMAGE_BASE_NAME }}
             VERSION=${{ steps.prepare_build.outputs.image_version }}
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_full_name }}
@@ -240,7 +248,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+          echo "Using image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}}' $image_name)"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   arm64_t2:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_p2 != '[]' && needs.arm64_buildx.outputs.matrix_p2 != '' }}
@@ -256,7 +266,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+          echo "Using image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}}' $image_name)"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   arm64_t3:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_p3 != '[]' && needs.arm64_buildx.outputs.matrix_p3 != '' }}
@@ -272,7 +284,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+          echo "Using image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}}' $image_name)"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   arm64_t4:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_p4 != '[]' && needs.arm64_buildx.outputs.matrix_p4 != '' }}
@@ -288,7 +302,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+          echo "Using image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}}' $image_name)"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
 
   arm64_clean:
     needs:
