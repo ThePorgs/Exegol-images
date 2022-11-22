@@ -1428,6 +1428,35 @@ function install_volatility() {
   ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
 }
 
+function install_python3.9() {
+  colorecho "Installing python3.9"
+  mkdir /opt/python3.9
+  cd /opt/python3.9
+  wget https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
+  tar -xf Python-3.9.1.tgz
+  cd Python-3.9.1
+  ./configure --enable-optimizations
+  make -j 12
+  sudo make altinstall
+  rm ../Python-3.9.1.tgz
+}
+
+function rebuild_python3.9() {
+  colorecho "Rebuild python3.9"
+  cd /opt/python3.9/Python-3.9.1
+  sudo make altinstall
+}
+
+function install_volatility3() {
+  colorecho "Installing volatility3"
+  apt-get install -y libbz2-dev lzma liblzma-dev
+  rebuild_python3.9
+  git -C /opt/tools/ clone https://github.com/volatilityfoundation/volatility3.git
+  cd /opt/tools/volatility3
+  python3.9 setup.py build
+  python3.9 setup.py install
+}
+
 function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
@@ -2115,6 +2144,7 @@ function install_base() {
   fapt ruby ruby-dev
   fapt libxml2-utils
   install_exegol-history
+  install_python3.9
 }
 
 # Package dedicated to most used offensive tools
@@ -2541,6 +2571,7 @@ function install_forensic_tools() {
   fapt binwalk                    # Tool to find embedded files
   fapt foremost                   # Alternative to binwalk
   install_volatility              # Memory analysis tool
+  install_volatility3
   install_trid                    # filetype detection tool
   #install_peepdf                  # PDF analysis
 }
