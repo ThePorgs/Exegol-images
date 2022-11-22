@@ -181,3 +181,4 @@ alias feroxbuster='/opt/tools/feroxbuster/feroxbuster'
 alias tls-scanner='java -jar /opt/tools/TLS-Scanner/apps/TLS-Server-Scanner.jar'
 alias username-anarchy='/opt/tools/username-anarchy/username-anarchy'
 alias volatility3='python3.9 /opt/tools/volatility3/vol.py'
+alias www="python3 -m http.server 8000"

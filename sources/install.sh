@@ -1768,6 +1768,16 @@ function install_tailscale() {
   ## tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &>/dev/null &
 }
 
+function install_ligolo-ng() {
+  colorecho "Installing ligolo-ng"
+  git -C /opt/tools/ clone https://github.com/nicocha30/ligolo-ng.git
+  cd /opt/tools/ligolo-ng
+  go build -o agent cmd/agent/main.go
+  go build -o proxy cmd/proxy/main.go
+  GOOS=windows go build -o agent.exe cmd/agent/main.go
+  GOOS=windows go build -o proxy.exe cmd/proxy/main.go
+}
+
 function install_anew() {
   colorecho "Installing anew"
   go install -v github.com/tomnomnom/anew@latest
@@ -2565,6 +2575,7 @@ function install_network_tools() {
   install_dnsx
   install_shuffledns
   install_tailscale
+  install_ligolo-ng
 }
 
 # Package dedicated to wifi pentest tools
