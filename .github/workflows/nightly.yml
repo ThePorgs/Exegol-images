@@ -47,13 +47,20 @@ jobs:
         with:
           load: true
           build-args: |
-            TAG=${{ steps.prepare_build.outputs.image_name }}
+            TAG=${{ env.IMAGE_BASE_NAME }}
             VERSION=${{ steps.prepare_build.outputs.image_version }}
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_full_name }}
           platforms: linux/amd64
           file: ${{env.DOCKERFILE}}
           context: .
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push docker image
+        run: docker push ${{ steps.prepare_build.outputs.image_full_name }}
       - name: List available tests
         id: set-matrix
         run: |
@@ -69,6 +76,7 @@ jobs:
             return_code=0
           else
             echo "Too many command to test! (${line_count}/1000)"
+            echo "Maximum of 250 tests per matrix."
             return_code=1
           fi
           docker stop $ID
@@ -88,7 +96,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
+          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   amd64_t2:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_p2 != '[]' && needs.amd64_buildx.outputs.matrix_p2 != '' }}
@@ -104,7 +114,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
+          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   amd64_t3:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_p3 != '[]' && needs.amd64_buildx.outputs.matrix_p3 != '' }}
@@ -120,7 +132,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
+          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   amd64_t4:
     needs: amd64_buildx
     if: ${{ needs.amd64_buildx.outputs.matrix_p4 != '[]' && needs.amd64_buildx.outputs.matrix_p4 != '' }}
@@ -136,27 +150,16 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
+          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
 
-  amd64_push:
+  amd64_clean:
     needs:
-      - amd64_buildx
       - amd64_t1
       - amd64_t2
       - amd64_t3
       - amd64_t4
-    runs-on: [ self-hosted, amd64 ]
-    if: ${{ always() && !contains(needs.amd64_buildx.result, 'failure') && !contains(needs.amd64_buildx.result, 'cancelled') }} # if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-    steps:
-      - name: Login to Dockerhub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push docker image
-        run: docker push ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
-  amd64_clean:
-    needs: amd64_push
     runs-on: [ self-hosted, amd64 ]
     if: always()  # always mode clean the environment even when the task is cancelled by a user
     steps:
@@ -198,13 +201,20 @@ jobs:
         with:
           load: true
           build-args: |
-            TAG=${{ steps.prepare_build.outputs.image_name }}
+            TAG=${{ env.IMAGE_BASE_NAME }}
             VERSION=${{ steps.prepare_build.outputs.image_version }}
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_full_name }}
           platforms: linux/arm64
           file: ${{env.DOCKERFILE}}
           context: .
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push docker image
+        run: docker push ${{ steps.prepare_build.outputs.image_full_name }}
       - name: List available tests
         id: set-matrix
         run: |
@@ -240,7 +250,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   arm64_t2:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_p2 != '[]' && needs.arm64_buildx.outputs.matrix_p2 != '' }}
@@ -256,7 +268,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   arm64_t3:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_p3 != '[]' && needs.arm64_buildx.outputs.matrix_p3 != '' }}
@@ -272,7 +286,9 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
   arm64_t4:
     needs: arm64_buildx
     if: ${{ needs.arm64_buildx.outputs.matrix_p4 != '[]' && needs.arm64_buildx.outputs.matrix_p4 != '' }}
@@ -288,27 +304,16 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          docker run --rm --env CMD="$COMMAND" ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
+          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+          docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
 
-  arm64_push:
+  arm64_clean:
     needs:
-      - arm64_buildx
       - arm64_t1
       - arm64_t2
       - arm64_t3
       - arm64_t4
-    runs-on: [ self-hosted, arm64 ]
-    if: ${{ always() && !contains(needs.arm64_buildx.result, 'failure') && !contains(needs.arm64_buildx.result, 'cancelled') }} # if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-    steps:
-      - name: Login to Dockerhub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push docker image
-        run: docker push ${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64
-  arm64_clean:
-    needs: arm64_push
     runs-on: [ self-hosted, arm64 ]
     if: always()  # always mode clean the environment even when the task is cancelled by a user
     steps:
@@ -318,8 +323,6 @@ jobs:
   manifest_build:
     timeout-minutes: 60
     needs:
-      - arm64_push
-      - amd64_push
       - amd64_t1
       - amd64_t2
       - amd64_t3
@@ -336,15 +339,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Create and push manifest
+      - name: Create and push manifest
         if: success()
         run: |
           docker manifest create ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME} ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_INTERMEDIATE_REPO}:${IMAGE_BASE_NAME}-amd64
           docker manifest push ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_PROD_REPO}:${IMAGE_BASE_NAME}
-      -
-        name: Remove intermediate images
+      - name: Remove intermediate images
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_INTERMEDIATE_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
