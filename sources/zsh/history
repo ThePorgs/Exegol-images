@@ -238,6 +238,7 @@ buster -e 'j********9@g****.com' -f john -l doe -b '****1989'
 cloudfail.py --target seo.com --tor
 assetfinder google.com
 subfinder -d freelancer.com
+subfinder -silent -d example.com | dnsx -silent
 theHarvester -d github.com -b all
 nfc-scan-device -v
 nfc-list

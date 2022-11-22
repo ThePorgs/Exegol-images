@@ -1708,6 +1708,11 @@ function install_httpx() {
   go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
 }
 
+function install_dnsx() {
+  colorecho "Installing dnsx"
+  go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+}
+
 function install_anew() {
   colorecho "Installing anew"
   go install -v github.com/tomnomnom/anew@latest
@@ -2315,6 +2320,7 @@ function install_web_tools() {
   install_hakrevdns               # Reverse DNS lookups
   install_httprobe                # Probe http
   install_httpx                   # Probe http
+  install_dnsx
   install_anew                    # A tool for adding new lines to files, skipping duplicates
   install_robotstester            # Robots.txt scanner
   install_naabu                   # Fast port scanner
