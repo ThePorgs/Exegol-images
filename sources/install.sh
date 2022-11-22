@@ -645,7 +645,7 @@ function install_gf() {
 
 function install_gobuster() {
   colorecho "Installing gobuster"
-  go install github.com/OJ/gobuster/v3@latest
+  go install -v github.com/OJ/gobuster/v3@latest
   add-history gobuster
 }
 
@@ -1271,7 +1271,7 @@ function install_infoga() {
 
 function install_buster() {
   colorecho "Installing buster"
-  ptyhon3 -m pipx install git+https://github.com/sham00n/buster
+  python3 -m pipx install git+https://github.com/sham00n/buster
   add-history buster
   add-test-command "buster --help"
 }
