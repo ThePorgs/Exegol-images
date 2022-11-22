@@ -312,6 +312,7 @@ prips -i4 192.168.0.10 192.168.0.250
 prips 173.0.84.0/24 | hakrevdns
 nuclei -u https://example.com
 httpx -probe -list hosts.txt -tech-detect -status-code -fr
+shuffledns -d example.com -list example-subdomains.txt -r resolvers.txt
 prips 192.168.56.0/24|hakrevdns -d|httpx -probe -tech-detect -status-code -fr
 ntpdate -u "$TARGET"
 renameMachine.py -current-name 'testcomputer$' -new-name 'DC01' -dc-ip dc01 "$DOMAIN"/"$USER":"$PASSWORD"

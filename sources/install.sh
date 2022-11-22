@@ -1713,6 +1713,11 @@ function install_dnsx() {
   go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
 }
 
+function install_shuffledns() {
+  colorecho "Installing shuffledns"
+  go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+}
+
 function install_anew() {
   colorecho "Installing anew"
   go install -v github.com/tomnomnom/anew@latest
@@ -2320,7 +2325,6 @@ function install_web_tools() {
   install_hakrevdns               # Reverse DNS lookups
   install_httprobe                # Probe http
   install_httpx                   # Probe http
-  install_dnsx
   install_anew                    # A tool for adding new lines to files, skipping duplicates
   install_robotstester            # Robots.txt scanner
   install_naabu                   # Fast port scanner
@@ -2504,6 +2508,8 @@ function install_network_tools() {
   fapt freerdp2-x11
   fapt rdesktop
   fapt xtightvncviewer
+  install_dnsx
+  install_shuffledns
 }
 
 # Package dedicated to wifi pentest tools
