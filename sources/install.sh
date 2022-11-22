@@ -32,7 +32,7 @@ function add-aliases() {
 function add-history() {
   colorecho "Adding history commands for: $*"
   # Removing add empty lines and the last trailing newline if any, and adding a trailing newline.
-  grep -vE "^\s*$" "/root/sources/zsh/history.d/$*" >> /opt/.zsh_history
+  grep -vE "^\s*$" "/root/sources/zsh/history.d/$*" >> ~/.zsh_history
 }
 
 function add-test-command() {
@@ -59,7 +59,6 @@ function post_install_clean() {
   colorecho "Cleaning..."
   updatedb
   rm -rfv /tmp/*
-  cat /opt/.zsh_history >> ~/.zsh_history
   echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
 }
 
