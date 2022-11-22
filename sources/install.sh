@@ -2297,9 +2297,9 @@ function install_finalrecon(){
   colorecho "Installing FinalRecon"
   git -C /opt/tools/ clone https://github.com/thewhiteh4t/FinalRecon
   cd /opt/tools/FinalRecon || exit
-  pip3 install -r requirements.txt
+  python3 -m pip install -r requirements.txt
   add-aliases finalrecon
-  add-test-command "finalrecon --help"
+  add-test-command "finalrecon.py --help"
 }
 
 function install_xsser(){
