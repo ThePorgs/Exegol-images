@@ -1741,7 +1741,7 @@ function install_tor() {
   wget https://dist.torproject.org/tor-0.4.3.7.tar.gz
   tar xf tor-0.4.3.7.tar.gz
   cd tor-0.4.3.7
-  apt-get install libevent-dev
+  apt-get install -y libevent-dev
   ./configure
   make install
 }
