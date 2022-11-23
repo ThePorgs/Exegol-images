@@ -34,7 +34,7 @@ function shutdown() {
   # shellcheck disable=SC2046
   kill $(pgrep -x -f -- -bash) 2>/dev/null
   # Wait for every active process to exit (e.g: shell logging compression, VPN closing)
-  wait_list="$(pgrep -f ".log" | grep -vE '^1$')"
+  wait_list="$(pgrep -f "(.log|start.sh)" | grep -vE '^1$')"
   for i in $wait_list; do
     # Waiting for: $i PID process to exit
     tail --pid="$i" -f /dev/null
