@@ -193,6 +193,12 @@ function install_sslyze(){
   add-test-command "sslyze --help"
 }
 
+function install_weevely() {
+  colorecho "Installing weevely"
+  fapt weevely
+  add-test-command "weevely --help"
+}
+
 function install_responder() {
   colorecho "Installing Responder"
   git -C /opt/tools/ clone https://github.com/lgandx/Responder
@@ -950,6 +956,12 @@ function install_testssl() {
   add-test-command "testssl --help"
 }
 
+function install_sslscan() {
+  colorecho "Installing sslscan"
+  fapt sslscan
+  add-test-command "sslscan --version"
+}
+
 function install_tls-scanner() {
   colorecho "Installing TLS-Scanner"
   fapt maven
@@ -1092,6 +1104,12 @@ function install_ysoserial() {
   wget -O /opt/tools/ysoserial/ysoserial.jar "https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar"
   add-aliases ysoserial
   add-test-command "ysoserial --help |& grep 'spring-core:4.1.4.RELEASE'"
+}
+
+function install_whatweb() {
+  colorecho "Installing whatweb"
+  fapt whatweb
+  add-test-command "whatweb --version"
 }
 
 function install_phpggc(){
@@ -2160,6 +2178,7 @@ function install_prips() {
   colorecho "Installing Prips"
   fapt prips
   add-history prips
+  add-test-command "prips --help"
 }
 
 function install_hakrevdns() {
@@ -2167,28 +2186,33 @@ function install_hakrevdns() {
   colorecho "Installing Hakrevdns"
   go install github.com/hakluke/hakrevdns@latest
   add-history hakrevdns
+  add-test-command "hakrevdns --help |& grep 'Protocol to use for lookups'"
 }
 
 function install_httprobe() {
   colorecho "Installing httprobe"
   go install -v github.com/tomnomnom/httprobe@latest
+  add-test-command "httprobe --help"
 }
 
 function install_httpx() {
   colorecho "Installing httpx"
   go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
   add-history httpx
+  add-test-command "httpx --help"
 }
 
 function install_anew() {
   colorecho "Installing anew"
   go install -v github.com/tomnomnom/anew@latest
+  add-test-command "anew --help"
 }
 
 function install_naabu() {
   colorecho "Installing naabu"
   apt-get install -y libpcap-dev
   go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
+  add-test-command "naabu --help"
 }
 
 function install_tor() {
@@ -2220,6 +2244,7 @@ function install_robotstester() {
   colorecho "Installing Robotstester"
   python3 -m pipx install git+https://github.com/p0dalirius/robotstester
   add-history robotstester
+  add-test-command "robotstester --help"
 }
 
 function install_finduncommonshares() {
@@ -2712,6 +2737,7 @@ function install_sqlmap() {
   colorecho "Installing sqlmap"
   fapt sqlmap
   add-history sqlmap
+  add-test-command "sqlmap --version"
 }
 
 function install_ssh() {
@@ -2894,8 +2920,8 @@ function package_most_used() {
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
   install_testssl                 # SSL/TLS scanner
-  fapt sslscan                    # SSL/TLS scanner
-  fapt weevely                    # Awesome secure and light PHP webshell
+  install_sslscan                   # SSL/TLS scanner
+  install_weevely                    # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
   install_wafw00f                 # Waf detector
@@ -2917,7 +2943,7 @@ function package_most_used() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
-  # CI/CD fapt etc [] TODO
+  # CI/CD fapt etc [x]
   # CI/CD install_ [x]
   set_go_env
   install_crunch                  # Wordlist generator
@@ -2991,8 +3017,8 @@ function package_osint() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
-  # CI/CD fapt etc [] TODO
-  # CI/CD install_ [] TODO
+  # CI/CD fapt etc [x]
+  # CI/CD install_ [x]
   set_go_env
   install_gobuster                # Web fuzzer (pretty good for several extensions)
   install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
@@ -3001,11 +3027,11 @@ function package_web() {
   install_dirb                    # Web fuzzer
   install_wfuzz                   # Web fuzzer (second favorites) FIXME Pycurl is not compiled against Openssl
   install_dirsearch               # Web fuzzer
-  fapt sqlmap                     # SQL injection scanner
-  install_ssrfmap                 # SSRF scanner
-  install_gopherus                # SSRF helper
-  install_nosqlmap                # NoSQL scanner
-  install_xsstrike                # XSS scanner
+  install_sqlmap                  # SQL injection scanner
+  install_ssrfmap                         # SSRF scanner
+  install_gopherus                        # SSRF helper
+  install_nosqlmap                        # NoSQL scanner
+  install_xsstrike                        # XSS scanner
   install_xspear                  # XSS scanner
   # install_xsser                   # XSS scanner FIXME missing install
   install_xsrfprobe               # CSRF scanner
@@ -3020,16 +3046,16 @@ function package_web() {
   install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
   install_moodlescan              # Moodle scanner
   install_testssl                 # SSL/TLS scanner
-  fapt sslscan                    # SSL/TLS scanner
+  install_sslscan                 # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
   install_sslyze                  # SSL/TLS scanner
-  fapt weevely                    # Awesome secure and light PHP webshell
-  install_cloudfail               # Cloudflare misconfiguration detector
-  install_eyewitness              # Website screenshoter
-  install_oneforall               # subdomain enumeration tool
-  install_wafw00f                 # Waf detector
-  install_corscanner              # CORS misconfiguration detector
-  install_hakrawler               # Web endpoint discovery
+  install_weevely                    # Awesome secure and light PHP webshell
+  install_cloudfail                       # Cloudflare misconfiguration detector
+  install_eyewitness                      # Website screenshoter
+  install_oneforall                       
+  install_wafw00f                         # Waf detector
+  install_corscanner                      # CORS misconfiguration detector
+  install_hakrawler                       # Web endpoint discovery
   install_gowitness               # Web screenshot utility
   install_linkfinder              # Discovers endpoint JS files
   install_timing_attack           # Cryptocraphic timing attack
@@ -3040,10 +3066,10 @@ function package_web() {
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
-  fapt whatweb                    # Recognises web technologies including content management
-  install_phpggc                  # php deserialization payloads
-  install_symfony-exploits        # symfony secret fragments exploit
-  install_jdwp_shellifier         # exploit java debug
+  install_whatweb                    # Recognises web technologies including content management
+  install_phpggc                          # php deserialization payloads
+  install_symfony-exploits                #  symfony secret fragments exploit
+  install_jdwp_shellifier                 # exploit java debug
   install_httpmethods             # Tool for HTTP methods enum & verb tampering
   install_h2csmuggler             # Tool for HTTP2 smuggling
   install_byp4xx                  # Tool to automate 40x errors bypass attempts
