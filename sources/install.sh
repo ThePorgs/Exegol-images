@@ -1078,12 +1078,21 @@ function install_john() {
   ./configure && make
   ln -s /opt/tools/john/run/john /opt/tools/bin/john
   add-history john
+  add-test-command "john --help"
+}
+
+function install_fcrackzip() {
+  colorecho "Installing fcrackzip"
+  fapt fcrackzip
+  add-history fcrackzip
+  add-test-command fcrackzip --help
 }
 
 function install_name-that-hash() {
   colorecho "Installing Name-That-Hash"
   python3 -m pipx install name-that-hash
   add-history name-that-hash
+  add-test-command "nth --help"
 }
 
 function install_zerologon() {
@@ -2561,10 +2570,23 @@ function install_fcrackzip() {
   add-history fcrackzip
 }
 
+function install_pdfcrack() {
+  colorecho "Installing pdfcrack"
+  fapt pdfcrack
+  add-test-command "pdfcrack --help"
+}
+
+function install_bruteforce-luks() {
+  colorecho "Installing bruteforce-luks"
+  fapt bruteforce-luks
+  add-test-command "bruteforce-luks -h |& grep 'Print progress info'"
+}
+
 function install_hashcat() {
   colorecho "Installing hashcat"
   fapt hashcat
   add-history hashcat
+  add-test-command "hashcat --help"
 }
 
 function install_ldapdomaindump() {
@@ -2856,15 +2878,15 @@ function package_wordlists() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
-  # CI/CD fapt etc [] TODO
-  # CI/CD install_ [] TODO
+  # CI/CD fapt etc [x]
+  # CI/CD install_ [x]
   set_go_env
-  install_hashcat                    # Password cracker
+  install_hashcat                 # Password cracker
   install_john                    # Password cracker
-  fapt fcrackzip                  # Zip cracker
-  fapt pdfcrack                   # PDF cracker
-  fapt bruteforce-luks            # Find the password of a LUKS encrypted volume
-  install_name-that-hash                     # Name-That-Hash, the hash identifier tool
+  install_fcrackzip               # Zip cracker
+  install_pdfcrack                # PDF cracker
+  install_bruteforce-luks         # Find the password of a LUKS encrypted volume
+  install_name-that-hash          # Name-That-Hash, the hash identifier tool
 }
 
 # Package dedicated to osint, recon and passive tools
