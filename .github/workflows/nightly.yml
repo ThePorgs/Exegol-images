@@ -3,7 +3,7 @@ name: nightly build
 on:
   push:
     branches:
-      - cicd
+      - dev
 
 env:
   DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
@@ -244,15 +244,16 @@ jobs:
       matrix:
         command: ${{ fromJson(needs.arm64_buildx.outputs.matrix_p1) }}
     steps:
-      - name: Login to Dockerhub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Force update local image
-        run: |
-          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
-          docker pull $image_name
+# Step for multi-runner tests (add a specific tag on arm32 runner dedicated / available for tests)
+#      - name: Login to Dockerhub
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#      - name: Force update local image
+#        run: |
+#          image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
+#          docker pull $image_name
       - name: Image command testing
         run: |
           COMMAND=$(cat <<EOF
