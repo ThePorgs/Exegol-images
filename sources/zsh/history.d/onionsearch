@@ -1,2 +1,0 @@
-onionsearch 'computer'
-onionsearch 'computer' --engines tor66 deeplink phobos --limit 3

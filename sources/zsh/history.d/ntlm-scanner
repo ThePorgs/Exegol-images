@@ -1,4 +1,0 @@
-ntlm-scanner -vuln CVE-2019-1019 -target "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
-ntlm-scanner -vuln CVE-2019-1338 -target "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
-ntlm-scanner -vuln CVE-2019-1166 -target "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
-ntlm-scanner -vuln CVE-2019-1040 -target "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"

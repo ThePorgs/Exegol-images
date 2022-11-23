@@ -16,6 +16,7 @@ For more information, the online documentation can be consulted: https://exegol.
 ### zsh
 - **aliases**: Any custom alias can be defined in the `/opt/my-resources/setup/zsh/aliases` file. This file is automatically loaded by zsh.
 - **zshrc**: It is possible to add commands at the end of the zshrc routine in `/opt/my-resources/setup/zsh/zshrc` file.
+- **history**: it is possible to automatically add history commands at the end of `~/.zsh_history` from the file `/opt/my-resources/setup/zsh/history`.
 
 ### vim
 
@@ -30,6 +31,10 @@ For more information, the online documentation can be consulted: https://exegol.
 ### tmux 
 
 To automatically overwrite the `~/.tmux.conf` configuration file, simply create the file `/opt/my-resources/setup/tmux/tmux.conf`
+
+### python3 / pip3
+
+The `/opt/my-resources/setup/python3/requirements.txt` file allows the user to list a set of packages to install with constraints just like a classic **requirements.txt** file.
 
 
 ## Advanced customizations

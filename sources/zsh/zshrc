@@ -24,11 +24,26 @@ fi
 TIME_="%{$fg[white]%}[%{$fg[red]%}%D{%b %d, %Y - %T (%Z)}%{$fg[white]%}]%{$reset_color%}"
 PROMPT="$LOGGING$TIME_%{$FX[bold]$FG[013]%} %m %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_char)%{$reset_color%} "
 
-export GOPATH=$HOME/go
 export GO111MODULE=on
+
+# zsh history config
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000000
+setopt INC_APPEND_HISTORY
+export HISTTIMEFORMAT="[%F %T] "
+setopt EXTENDED_HISTORY
+setopt HIST_FIND_NO_DUPS
+
+# Adding exegol bins to PATH
+export PATH=/opt/tools/bin:$PATH
+
+# Adding john to PATH
 export JOHN=/opt/tools/john/run
-export PATH=/opt/tools/bin:$JOHN:$GOPATH/bin:/usr/local/go/bin:$PATH
-export PATH=/opt/tools/dex2jar/dex-tools-2.1:$PATH
+export PATH=$JOHN:$PATH
+
+# Adding GO to PATH
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
 
 source /opt/.exegol_aliases
 source /opt/tools/Exegol-history/profile.sh
@@ -39,8 +54,8 @@ source $HOME/.cargo/env
 # Color correction for zsh-syntax-highlighting
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
 
-# In case pipx ensurepath didn't work
-export PATH="$PATH:/root/.local/bin"
+# In case pipx ensurepath didn't work, and positionning pipx in priority
+export PATH="/root/.local/bin:$PATH"
 
 # Add my-resources custom tools to PATH if my-resources is activated
 [ -d /opt/my-resources/bin ] && export PATH="$PATH:/opt/my-resources/bin"
