@@ -2707,6 +2707,7 @@ function package_base() {
   install_locales
   install_tmux                            # Tmux
   fapt zsh                        # Awesome shell
+  fapt asciinema                  # shell recording
   install_ohmyzsh                         # Awesome shell
   install_tldr                    # TL;DR man
   fapt python-setuptools
