@@ -345,16 +345,24 @@ function install_xspear() {
   gem install XSpear
 }
 
+function install_cupp() {
+  colorecho "Installing cupp"
+  fapt cupp
+  add-test-command "cupp --help"
+}
+
 function install_pass_station() {
   colorecho "Installing Pass Station"
   gem install pass-station
   add-history pass-station
+  add-test-command "pass-station --help"
 }
 
 function install_username-anarchy() {
   colorecho "Installing Username-Anarchy"
   git -C /opt/tools/ clone https://github.com/urbanadventurer/username-anarchy
   add-aliases username-anarchy
+  add-test-command "username-anarchy --help"
 }
 
 function install_evilwinrm() {
@@ -2263,11 +2271,18 @@ function install_searchsploit() {
   searchsploit -u
 }
 
+function install_crunch() {
+  colorecho "Installing crunch"
+  fapt crunch
+  add-test-command "crunch --help"
+}
+
 function install_seclists(){
   colorecho "Installing Seclists"
   git -C /usr/share/ clone https://github.com/danielmiessler/SecLists.git seclists
   cd /usr/share/seclists || exit
   rm -r LICENSE .git* CONTRIBUT* .bin
+  add-test-command "[ -d '/usr/share/seclists/Discovery/' ]"
 }
 
 function install_rockyou(){
@@ -2275,6 +2290,7 @@ function install_rockyou(){
   mkdir /usr/share/wordlists
   tar -xvf /usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /usr/share/wordlists/
   ln -s /usr/share/seclists/ /usr/share/wordlists/seclists
+  add-test-command "[ -f '/usr/share/wordlists/rockyou.txt' ]"
 }
 
 function install_amass(){
@@ -2865,13 +2881,13 @@ function package_most_used() {
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
   # CI/CD fapt etc [] TODO
-  # CI/CD install_ [] TODO
+  # CI/CD install_ [x]
   set_go_env
-  fapt crunch                     # Wordlist generator
+  install_crunch                  # Wordlist generator
   install_seclists                # Awesome wordlists
   install_rockyou                 # Basically installs rockyou (~same as Kali)
-  install_cewl                    # Wordlist generator
-  fapt cupp                       # User password profiler
+  # install_cewl                    # Wordlist generator FIXME
+  install_cupp                    # User password profiler
   install_pass_station            # Default credentials database
   install_username-anarchy        # Generate possible usernames based on heuristics
 }
