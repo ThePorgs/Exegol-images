@@ -177,6 +177,7 @@ function install_gowitness() {
   colorecho "Installing gowitness"
   go install -v github.com/sensepost/gowitness@latest
   add-history gowitness
+  add-test-command "gowitness --help"
 }
 
 function install_goshs(){
@@ -189,6 +190,7 @@ function install_sslyze(){
   colorecho "Installing sslyze"
   python3 -m pipx install sslyze
   add-history sslyze
+  add-test-command "sslyze --help"
 }
 
 function install_responder() {
@@ -258,6 +260,7 @@ function install_oneforall() {
   git -C /opt/tools/ clone https://github.com/shmilylty/OneForAll.git
   python3 -m pip install -r /opt/tools/OneForAll/requirements.txt
   add-aliases oneforall
+  add-test-command "(setsid oneforall --help) </dev/null |& cat"
 }
 
 function install_eyewitness() {
@@ -266,11 +269,13 @@ function install_eyewitness() {
   cd /opt/tools/EyeWitness/Python/setup || exit
   ./setup.sh
   add-aliases eyewitness
+  add-test-command "add-test-command"
 }
 
 function install_wafw00f() {
   colorecho "Installing wafw00f"
   python3 -m pipx install wafw00F
+  add-test-command "wafw00f --help"
 }
 
 function install_linkfinder() {
@@ -280,6 +285,7 @@ function install_linkfinder() {
   python3 -m pip install -r requirements.txt
   python3 setup.py install
   add-aliases linkfinder
+  add-test-command "add-test-command"
 }
 
 function install_ssrfmap() {
@@ -288,6 +294,7 @@ function install_ssrfmap() {
   cd /opt/tools/SSRFmap || exit
   python3 -m pip install -r requirements.txt
   add-aliases ssrfmap
+  add-test-command "ssrfmap --help"
 }
 
 function install_nosqlmap() {
@@ -296,6 +303,7 @@ function install_nosqlmap() {
   cd /opt/tools/NoSQLMap || exit
   python setup.py install
   add-aliases nosqlmap
+  add-test-command "nosqlmap --help"
 }
 
 function install_odat() {
@@ -315,6 +323,7 @@ function install_fuxploider() {
   cd /opt/tools/fuxploider || exit
   python3 -m pip install -r requirements.txt
   add-aliases fuxploider
+  add-test-command "fuxploider --help"
 }
 
 function install_corscanner() {
@@ -323,14 +332,7 @@ function install_corscanner() {
   cd /opt/tools/CORScanner || exit
   python3 -m pip install -r requirements.txt
   add-aliases corscanner
-}
-
-function install_blazy() {
-  colorecho "Installing Blazy"
-  git -C /opt/tools/ clone https://github.com/UltimateHackers/Blazy
-  cd /opt/tools/Blazy || exit
-  python -m pip install -r requirements.txt
-  add-aliases blazy
+  add-test-command "add-test-command"
 }
 
 function install_xsstrike() {
@@ -338,11 +340,13 @@ function install_xsstrike() {
   git -C /opt/tools/ clone https://github.com/s0md3v/XSStrike.git
   python3 -m pipx install fuzzywuzzy
   add-aliases xsstrike
+  add-test-command "XSStrike --help"
 }
 
 function install_xspear() {
   colorecho "Installing XSpear"
   gem install XSpear
+  add-test-command "XSpear --help"
 }
 
 function install_cupp() {
@@ -376,6 +380,7 @@ function install_bolt() {
   colorecho "Installing Bolt"
   git -C /opt/tools/ clone https://github.com/s0md3v/Bolt.git
   add-aliases bolt
+  add-test-command "bolt --help"
 }
 
 function install_crackmapexec() {
@@ -654,6 +659,7 @@ function install_gobuster() {
   colorecho "Installing gobuster"
   go install -v github.com/OJ/gobuster/v3@latest
   add-history gobuster
+  add-test-command "gobuster --help"
 }
 
 function install_kiterunner() {
@@ -665,12 +671,14 @@ function install_kiterunner() {
   make build
   ln -s "$(pwd)/dist/kr" /opt/tools/bin/kr
   add-history kitrunner
+  add-test-command "kr --help"
 }
 
 function install_dirsearch() {
   colorecho "Installing dirsearch"
   python3 -m pipx install git+https://github.com/maurosoria/dirsearch
   add-history dirsearch
+  add-test-command "dirsearch --help"
 }
 
 function install_cmsmap() {
@@ -678,14 +686,16 @@ function install_cmsmap() {
   python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
   cmsmap -U PC
   add-history cmsmap
+  add-test-command "cmsmap --help |& grep 'Post Exploitation'"
 }
 
 function install_tomcatwardeployer() {
   colorecho "Installing tomcatWarDeployer"
   git -C /opt/tools/ clone https://github.com/mgeeky/tomcatWarDeployer.git
   cd /opt/tools/tomcatWarDeployer/ || exit
-  python -m pip install -r requirements.txt
+  python3 -m pip install -r requirements.txt
   add-aliases tomcatwardeployer
+  add-test-command "tomcatWarDeployer --help"
 }
 
 function install_clusterd() {
@@ -696,6 +706,7 @@ function install_clusterd() {
   echo -e '#!/bin/sh\n(cd /opt/tools/clusterd/ && python clusterd.py $@)' > /usr/local/bin/clusterd
   chmod +x /usr/local/bin/clusterd
   add-history clusterd
+  add-test-command "clusterd --help"
 }
 
 function install_moodlescan() {
@@ -706,17 +717,20 @@ function install_moodlescan() {
   /opt/tools/moodlescan/moodlescan.py -a
   add-aliases moodlescan
   add-history moodlescan
+  add-test-command "moodlescan --help"
 }
 
 function install_arjun() {
   colorecho "Installing arjun"
   python3 -m pipx install arjun
+  add-test-command "arjun --help"
 }
 
 function install_ffuf() {
   colorecho "Installing ffuf"
   go install -v github.com/ffuf/ffuf@latest
   add-history ffuf
+  add-test-command "ffuf --help"
 }
 
 function install_waybackurls() {
@@ -740,12 +754,14 @@ function install_gron() {
 function install_timing_attack() {
   colorecho "Installing timing_attack"
   gem install timing_attack
+  add-test-command "timing_attack --help"
 }
 
 function install_updog() {
   colorecho "Installing updog"
   python3 -m pipx install updog
   add-history updog
+  add-test-command "updog --help"
 }
 
 function install_findomain() {
@@ -923,6 +939,7 @@ function install_kadimus() {
   make
   add-aliases kadimus
   add-history kadimus
+  add-test-command "kadimus --help"
 }
 
 function install_testssl() {
@@ -930,6 +947,7 @@ function install_testssl() {
   apt-get -y install bsdmainutils
   git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
   add-aliases testssl
+  add-test-command "testssl --help"
 }
 
 function install_tls-scanner() {
@@ -941,6 +959,7 @@ function install_tls-scanner() {
   mvn clean package -DskipTests=true
   add-aliases tls-scanner
   add-history tls-scanner
+  add-test-command "tls-scanner --help"
 }
 
 function install_bat() {
@@ -973,6 +992,7 @@ function install_xsrfprobe() {
   git -C /opt/tools/ clone https://github.com/0xInfection/XSRFProbe
   cd /opt/tools/XSRFProbe || exit
   python3 setup.py install
+  add-test-command "xsrfprobe --help"
 }
 
 function install_krbrelayx() {
@@ -994,6 +1014,7 @@ function install_hakrawler() {
   colorecho "Installing hakrawler"
   go install -v github.com/hakluke/hakrawler@latest
   add-history hakrawler
+  add-test-command "hakrawler --help"
 }
 
 function install_jwt_tool() {
@@ -1001,17 +1022,20 @@ function install_jwt_tool() {
   git -C /opt/tools/ clone https://github.com/ticarpi/jwt_tool
   python3 -m pip install pycryptodomex
   add-aliases jwt_tool
+  add-test-command "jwt_tool --help"
 }
 
 function install_jwt_cracker() {
   colorecho "Installing JWT cracker"
   apt-get -y install npm
   npm install --global jwt-cracker
+  add-test-command "jwt-cracker --help"
 }
 
 function install_wuzz() {
   colorecho "Installing wuzz"
   go install -v github.com/asciimoo/wuzz@latest
+  add-test-command "wuzz --help"
 }
 
 function install_pypykatz() {
@@ -1043,12 +1067,14 @@ function install_git-dumper() {
   cd /opt/tools/git-dumper || exit
   python3 -m pip install -r requirements.txt
   add-aliases git-dumper
+  add-test-command "git-dumper --help"
 }
 
 function install_gittools() {
   colorecho "Installing GitTools"
   git -C /opt/tools/ clone https://github.com/internetwache/GitTools.git
   add-aliases gittools
+  add-test-command "gitdumper --help |& grep 'USAGE: http://target.tld/.git/'"
 }
 
 function install_gopherus() {
@@ -1057,6 +1083,7 @@ function install_gopherus() {
   cd /opt/tools/Gopherus || exit
   ./install.sh
   add-aliases install_gopherus
+  add-test-command "gopherus --help"
 }
 
 function install_ysoserial() {
@@ -1064,18 +1091,21 @@ function install_ysoserial() {
   mkdir /opt/tools/ysoserial/
   wget -O /opt/tools/ysoserial/ysoserial.jar "https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar"
   add-aliases ysoserial
+  add-test-command "ysoserial --help |& grep 'spring-core:4.1.4.RELEASE'"
 }
 
 function install_phpggc(){
   colorecho "Installing phpggc"
   git -C /opt/tools clone https://github.com/ambionics/phpggc.git
   add-aliases phpggc
+  add-test-command "phpggc --help"
 }
 
 function install_symfony-exploits(){
   colorecho "Installing symfony-exploits"
   git -C /opt/tools clone https://github.com/ambionics/symfony-exploits
   add-aliases symfony-exploits
+  add-test-command "secret_fragment_exploit.py --help"
 }
 
 function install_john() {
@@ -1529,6 +1559,7 @@ function install_droopescan() {
   cd /opt/tools/droopescan || exit
   python3 -m pip install -r requirements.txt
   python3 setup.py install
+  add-test-command "droopescan --help"
 }
 
 function install_drupwn() {
@@ -1536,6 +1567,7 @@ function install_drupwn() {
   git -C /opt/tools clone https://github.com/immunIT/drupwn.git
   cd /opt/tools/drupwn || exit
   python3 setup.py install
+  add-test-command "drupwn --help"
 }
 
 function install_kubectl(){
@@ -1587,6 +1619,7 @@ function install_jdwp_shellifier(){
   colorecho "Installing jdwp_shellifier"
   git -C /opt/tools/ clone https://github.com/IOActive/jdwp-shellifier.git
   add-aliases jdwp_shellifier
+  add-test-command "jdwp-shellifier.py --help"
 }
 
 function install_maigret() {
@@ -1757,6 +1790,7 @@ function install_httpmethods() {
   cd /opt/tools/httpmethods || exit
   python3 setup.py install
   add-history httpmethods
+  add-test-command "httpmethods --help"
 }
 
 function install_adidnsdump() {
@@ -1778,12 +1812,14 @@ function install_h2csmuggler() {
   git -C /opt/tools/ clone https://github.com/BishopFox/h2csmuggler
   python3 -m pipx install h2
   add-aliases h2csmuggler
+  add-test-command "h2csmuggler --help"
 }
 
 function install_byp4xx() {
   colorecho "Installing byp4xx"
   git -C /opt/tools/ clone https://github.com/lobuhi/byp4xx
   add-aliases byp4xx
+  add-test-command "byp4xx |& grep 'HIGH WORKLOAD! >65k requests!'"
 }
 
 function install_pipx() {
@@ -1895,6 +1931,7 @@ function install_feroxbuster() {
   ln -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
   add-aliases feroxbuster
   add-history feroxbuster
+  add-test-command "feroxbuster --help"
 }
 
 function install_bloodhound-import() {
@@ -2075,6 +2112,7 @@ function install_donpapi() {
 function install_gau() {
   colorecho "Installing gau"
   GO111MODULE=on go install -v github.com/lc/gau@latest
+  add-test-command "gau --help"
 }
 
 function install_webclientservicescanner() {
@@ -2114,6 +2152,7 @@ function install_nuclei() {
   go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
   nuclei -update-templates
   add-history nuclei
+  add-test-command "nuclei --version"
 }
 
 function install_prips() {
@@ -2334,6 +2373,7 @@ function install_joomscan(){
   colorecho "Installing joomscan"
   git -C /opt/tools/ clone https://github.com/rezasp/joomscan.git
   add-aliases joomscan
+  add-test-command "joomscan --version"
 }
 
 function install_wpscan(){
@@ -2345,12 +2385,7 @@ function install_wpscan(){
   gem install nokogiri
   gem install wpscan
   add-history wpscan
-}
-
-function install_padbuster(){
-  colorecho "Installing padbuster"
-  git -C /opt/tools/ clone https://github.com/AonCyberLabs/PadBuster
-  add-aliases padbuster
+  add-test-command "wpscan --help"
 }
 
 function install_go(){
@@ -2566,6 +2601,7 @@ function install_dirb() {
   colorecho "Installing dirb"
   fapt dirb
   add-history dirb
+  add-test-command "dirb | grep '<username:password>'"
 }
 
 function install_dnsutils() {
@@ -2688,6 +2724,7 @@ function install_wfuzz() {
   colorecho "Installing wfuzz"
   fapt wfuzz
   add-history wfuzz
+  add-test-command "wfuzz --help"
 }
 
 function install_freerdp2-x11() {
@@ -2962,23 +2999,22 @@ function package_web() {
   install_amass                   # Web fuzzer
   install_ffuf                    # Web fuzzer (little favorites)
   install_dirb                    # Web fuzzer
-  install_wfuzz                      # Web fuzzer (second favorites)
+  install_wfuzz                   # Web fuzzer (second favorites) FIXME Pycurl is not compiled against Openssl
   install_dirsearch               # Web fuzzer
   fapt sqlmap                     # SQL injection scanner
-  install_ssrfmap                         # SSRF scanner
-  install_gopherus                        # SSRF helper
-  install_nosqlmap                        # NoSQL scanner
-  install_xsstrike                        # XSS scanner
+  install_ssrfmap                 # SSRF scanner
+  install_gopherus                # SSRF helper
+  install_nosqlmap                # NoSQL scanner
+  install_xsstrike                # XSS scanner
   install_xspear                  # XSS scanner
-  install_xsser                   # XSS scanner
-  install_xsrfprobe                       # CSRF scanner
-  install_bolt                            # CSRF scanner
-  install_kadimus                         # LFI scanner
-  install_fuxploider                      # File upload scanner
-  install_blazy                           # Login scanner
-  # install_patator                    # Login scanner # FIXME
+  # install_xsser                   # XSS scanner FIXME missing install
+  install_xsrfprobe               # CSRF scanner
+  install_bolt                    # CSRF scanner
+  install_kadimus                 # LFI scanner
+  install_fuxploider              # File upload scanner
+  # install_patator               # Login scanner # FIXME
   install_joomscan                # Joomla scanner
-  install_wpscan                     # Wordpress scanner
+  install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
   install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
@@ -2988,27 +3024,26 @@ function package_web() {
   install_tls-scanner             # SSL/TLS scanner
   install_sslyze                  # SSL/TLS scanner
   fapt weevely                    # Awesome secure and light PHP webshell
-  install_cloudfail                       # Cloudflare misconfiguration detector
-  install_eyewitness                      # Website screenshoter
-  install_oneforall                       
-  install_wafw00f                         # Waf detector
-  install_corscanner                      # CORS misconfiguration detector
-  install_hakrawler                       # Web endpoint discovery
+  install_cloudfail               # Cloudflare misconfiguration detector
+  install_eyewitness              # Website screenshoter
+  install_oneforall               # subdomain enumeration tool
+  install_wafw00f                 # Waf detector
+  install_corscanner              # CORS misconfiguration detector
+  install_hakrawler               # Web endpoint discovery
   install_gowitness               # Web screenshot utility
-  install_linkfinder                      # Discovers endpoint JS files
-  install_timing_attack                   # Cryptocraphic timing attack
-  install_updog                           # New HTTPServer
+  install_linkfinder              # Discovers endpoint JS files
+  install_timing_attack           # Cryptocraphic timing attack
+  install_updog                   # New HTTPServer
   install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
-  install_jwt_cracker                     # JWT cracker and bruteforcer
-  install_wuzz                            # Burp cli
+  install_jwt_cracker             # JWT cracker and bruteforcer
+  install_wuzz                    # Burp cli
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
-  install_padbuster               # Automated script to perform a Padding Oracle attack
   install_ysoserial               # Deserialization payloads
   fapt whatweb                    # Recognises web technologies including content management
-  install_phpggc                          # php deserialization payloads
-  install_symfony-exploits                #  symfony secret fragments exploit
-  install_jdwp_shellifier                 # exploit java debug
+  install_phpggc                  # php deserialization payloads
+  install_symfony-exploits        # symfony secret fragments exploit
+  install_jdwp_shellifier         # exploit java debug
   install_httpmethods             # Tool for HTTP methods enum & verb tampering
   install_h2csmuggler             # Tool for HTTP2 smuggling
   install_byp4xx                  # Tool to automate 40x errors bypass attempts
@@ -3017,7 +3052,7 @@ function package_web() {
   install_clusterd                # Axis2/JBoss/ColdFusion/Glassfish/Weblogic/Railo scanner
   install_arjun                   # HTTP Parameter Discovery
   install_nuclei                  # Needed for gau install
-  install_gau                     #
+  install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
   install_prips                   # Print the IP addresses in a given range
   install_hakrevdns               # Reverse DNS lookups
   install_httprobe                # Probe http
@@ -3025,7 +3060,7 @@ function package_web() {
   install_anew                    # A tool for adding new lines to files, skipping duplicates
   install_robotstester            # Robots.txt scanner
   install_naabu                   # Fast port scanner
-  # install_gitrob                  # Senstive files reconnaissance in github
+  # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
 }
 

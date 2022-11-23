@@ -1,1 +1,1 @@
-alias tomcatWarDeployer='python /opt/tools/tomcatWarDeployer/tomcatWarDeployer.py'
+alias tomcatWarDeployer='python3 /opt/tools/tomcatWarDeployer/tomcatWarDeployer.py'
