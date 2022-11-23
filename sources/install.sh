@@ -2605,8 +2605,9 @@ function install_polenum() {
   colorecho "Installing polenum"
   git -C /opt/tools/ clone https://github.com/Wh1t3Fox/polenum
   python3 -m pip install impacket
+  add-aliases polenum
   add-history polenum
-  add-test-command "polenum --help"
+  add-test-command "polenum.py --help"
 }
 
 function install_rlwrap() {
