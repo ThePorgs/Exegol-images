@@ -1640,8 +1640,8 @@ function install_scout() {
 
 function install_jdwp_shellifier(){
   colorecho "Installing jdwp_shellifier"
-  git -C /opt/tools/ clone https://github.com/IOActive/jdwp-shellifier.git
-  add-aliases jdwp_shellifier
+  git -C /opt/tools/ clone https://github.com/IOActive/jdwp-shellifier
+  add-aliases jdwp-shellifier
   add-test-command "jdwp-shellifier.py --help"
 }
 
