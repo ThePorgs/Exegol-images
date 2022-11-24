@@ -695,7 +695,7 @@ function install_cmsmap() {
   python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
   cmsmap -U PC
   add-history cmsmap
-  add-test-command "cmsmap --help |& grep 'Post Exploitation'"
+  add-test-command "cmsmap --help; cmsmap --help |& grep 'Post Exploitation'"
 }
 
 function install_tomcatwardeployer() {
@@ -863,7 +863,7 @@ function install_lnkup() {
 function install_samdump2() {
   colorecho "Installing samdump2"
   fapt samdump2
-  add-test-command "samdump2 -h |& grep 'enable debugging'"
+  add-test-command "samdump2 -h; samdump2 -h |& grep 'enable debugging'"
 }
 
 function install_pwntools() {
@@ -1097,7 +1097,7 @@ function install_gittools() {
   colorecho "Installing GitTools"
   git -C /opt/tools/ clone https://github.com/internetwache/GitTools.git
   add-aliases gittools
-  add-test-command "gitdumper --help |& grep 'USAGE: http://target.tld/.git/'"
+  add-test-command "gitdumper --help; gitdumper --help |& grep 'USAGE: http://target.tld/.git/'"
 }
 
 function install_gopherus() {
@@ -1114,7 +1114,7 @@ function install_ysoserial() {
   mkdir /opt/tools/ysoserial/
   wget -O /opt/tools/ysoserial/ysoserial.jar "https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar"
   add-aliases ysoserial
-  add-test-command "ysoserial --help |& grep 'spring-core:4.1.4.RELEASE'"
+  add-test-command "ysoserial --help; ysoserial --help |& grep 'spring-core:4.1.4.RELEASE'"
 }
 
 function install_whatweb() {
@@ -2214,7 +2214,7 @@ function install_hakrevdns() {
   colorecho "Installing Hakrevdns"
   go install github.com/hakluke/hakrevdns@latest
   add-history hakrevdns
-  add-test-command "hakrevdns --help |& grep 'Protocol to use for lookups'"
+  add-test-command "hakrevdns --help; hakrevdns --help |& grep 'Protocol to use for lookups'"
 }
 
 function install_httprobe() {
@@ -2826,6 +2826,43 @@ function install_patator() {
   fapt patator # messes up with lib, it installs python3-impacket (0.9.22-2)
 }
 
+function install_exiftool() {
+  colorecho "Installing exiftool"
+  fapt exiftool
+  add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png"
+}
+
+function install_exifprobe() {
+  colorecho "Installing exifprobe"
+  fapt exifprobe
+  add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"
+}
+
+function install_dnsenum() {
+  colorecho "Installing dnsenum"
+  fapt dnsenum
+  add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'"
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   # CI/CD fapt etc [] TODO
@@ -3029,18 +3066,18 @@ function package_cracking() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
-  # CI/CD fapt etc [] TODO
+  # CI/CD fapt etc [x]
   # CI/CD install_ [x]
   set_go_env
   install_youtubedl                       # Command-line program to download videos from YouTube.com and other video sites
-  fapt exiftool                   # For read exif information
-  fapt exifprobe                  # Probe and report structure and metadata content of camera image files
+  install_exiftool                   # For read exif information
+  install_exifprobe                  # Probe and report structure and metadata content of camera image files
   install_sublist3r                       # Fast subdomains enumeration tool
   install_assetfinder                     # Find domains and subdomains potentially related to a given domain
   install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
   install_amass                   # OWASP Amass tool suite is used to build a network map of the target
   install_findomain                       # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
-  fapt dnsenum                    # DNSEnum is a command-line tool that automatically identifies basic DNS records
+  install_dnsenum                    # DNSEnum is a command-line tool that automatically identifies basic DNS records
   install_holehe                          # Check if the mail is used on different sites
   install_simplyemail             # Gather emails
   # install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
