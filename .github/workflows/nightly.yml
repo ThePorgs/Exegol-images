@@ -96,6 +96,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
+          echo "$ ${COMMAND}"
           image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
@@ -114,6 +115,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
+          echo "$ ${COMMAND}"
           image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
@@ -132,6 +134,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
+          echo "$ ${COMMAND}"
           image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
@@ -150,6 +153,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
+          echo "$ ${COMMAND}"
           image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
@@ -260,6 +264,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
+          echo "$ ${COMMAND}"
           image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
@@ -278,6 +283,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
+          echo "$ ${COMMAND}"
           image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
@@ -296,6 +302,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
+          echo "$ ${COMMAND}"
           image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
@@ -314,6 +321,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
+          echo "$ ${COMMAND}"
           image_name="${{ env.DOCKER_INTERMEDIATE_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           docker run --rm --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source <(grep -v oh-my-zsh.sh ~/.zshrc); eval $CMD'
