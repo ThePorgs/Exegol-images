@@ -3017,10 +3017,20 @@ function install_traceroute() {
   fapt traceroute
 }
 
+function install_wireshark() {
+  colorecho "Installing Wireshark"
+  DEBIAN_FRONTEND=noninteractive fapt wireshark
+  #TODO add-test-command
+}
+
+function install_tshark() {
+  colorecho "Installing tshark"
+  DEBIAN_FRONTEND=noninteractive fapt tshark
+  add-test-command "tshark --version"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
-  # CI/CD fapt etc [x]
-  # CI/CD install_ [x]
   update || exit
   deploy_exegol
   fapt software-properties-common
@@ -3038,27 +3048,27 @@ function package_base() {
   install_curl                    # HTTP handler
   fapt wget                       # Wget
   fapt gnupg2                     # gnugpg
-  install_python3-pyftpdlib          # FTP server python library
-  install_php                        # Php language
+  install_python3-pyftpdlib       # FTP server python library
+  install_php                     # Php language
   fapt python2                    # Python 2 language
-  install_python3                    # Python 3 language
+  install_python3                 # Python 3 language
   fapt python2-dev                # Python 2 language (dev version)
   fapt python3-dev                # Python 3 language (dev version)
   fapt python3-venv
   fapt libffi-dev
   install_rust_cargo
   ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
-  install_python-pip                      # Pip
+  install_python-pip              # Pip
   fapt python3-pip                # Pip
   python3 pip install --upgrade pip
   filesystem
   install_go                      # Golang language
   set_go_env
   install_locales
-  install_tmux                            # Tmux
+  install_tmux                    # Tmux
   fapt zsh                        # Awesome shell
   fapt asciinema                  # shell recording
-  install_ohmyzsh                         # Awesome shell
+  install_ohmyzsh                 # Awesome shell
   install_tldr                    # TL;DR man
   fapt python-setuptools
   fapt python3-setuptools
@@ -3133,16 +3143,16 @@ function package_misc() {
   set_go_env
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
-  install_rlwrap                     # Reverse shell utility
+  install_rlwrap                  # Reverse shell utility
   install_shellerator             # Reverse shell generator
   install_uberfile                # file uploader/downloader commands generator
-  install_arsenal                         # Cheatsheets tool
+  install_arsenal                 # Cheatsheets tool
   install_trilium                 # notes taking tool
-  install_exiftool                   # Meta information reader/writer
-  install_imagemagick                # Copy, modify, and distribute image
+  install_exiftool                # Meta information reader/writer
+  install_imagemagick             # Copy, modify, and distribute image
   install_ngrok                   # expose a local development server to the Internet
   install_whatportis              # Search default port number
-  install_ascii                      # The ascii table in the shell
+  install_ascii                   # The ascii table in the shell
 }
 
 # Package dedicated to most used offensive tools
@@ -3155,18 +3165,18 @@ function package_most_used() {
   install_subfinder               # Subdomain bruteforcer
   install_autorecon               # External recon tool
   install_waybackurls             # Website history
-  # install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
+  # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
   install_simplyemail             # Gather emails
   install_ffuf                    # Web fuzzer (little favorites)
-  install_sqlmap                     # SQL injection scanner
-  install_hydra                      # Login scanner
+  install_sqlmap                  # SQL injection scanner
+  install_hydra                   # Login scanner
   install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
   install_testssl                 # SSL/TLS scanner
-  install_sslscan                   # SSL/TLS scanner
-  install_weevely                    # Awesome secure and light PHP webshell
+  install_sslscan                 # SSL/TLS scanner
+  install_weevely                 # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
   install_wafw00f                 # Waf detector
@@ -3176,14 +3186,14 @@ function package_most_used() {
   install_responder               # LLMNR, NBT-NS and MDNS poisoner
   install_crackmapexec            # Network scanner
   install_impacket                # Network protocols scripts
-  install_enum4linux-ng                   # Active Directory enumeration tool, improved Python alternative to enum4linux
-  install_smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+  install_enum4linux-ng           # Active Directory enumeration tool, improved Python alternative to enum4linux
+  install_smbclient               # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_nuclei                  # Vulnerability scanner
-  install_evilwinrm                       # WinRM shell
+  install_evilwinrm               # WinRM shell
   install_john                    # Password cracker
-  install_hashcat                    # Password cracker
-  install_fcrackzip                  # Zip cracker
+  install_hashcat                 # Password cracker
+  install_fcrackzip               # Zip cracker
 }
 
 # Package dedicated to the installation of wordlists and tools like wl generators
@@ -3192,7 +3202,7 @@ function package_wordlists() {
   install_crunch                  # Wordlist generator
   install_seclists                # Awesome wordlists
   install_rockyou                 # Basically installs rockyou (~same as Kali)
-  # install_cewl                    # Wordlist generator FIXME
+  # install_cewl                  # Wordlist generator FIXME
   install_cupp                    # User password profiler
   install_pass_station            # Default credentials database
   install_username-anarchy        # Generate possible usernames based on heuristics
@@ -3212,46 +3222,46 @@ function package_cracking() {
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
   set_go_env
-  install_youtubedl                       # Command-line program to download videos from YouTube.com and other video sites
-  install_exiftool                   # For read exif information
-  install_exifprobe                  # Probe and report structure and metadata content of camera image files
-  install_sublist3r                       # Fast subdomains enumeration tool
-  install_assetfinder                     # Find domains and subdomains potentially related to a given domain
+  install_youtubedl               # Command-line program to download videos from YouTube.com and other video sites
+  install_exiftool                # For read exif information
+  install_exifprobe               # Probe and report structure and metadata content of camera image files
+  install_sublist3r               # Fast subdomains enumeration tool
+  install_assetfinder             # Find domains and subdomains potentially related to a given domain
   install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
   install_amass                   # OWASP Amass tool suite is used to build a network map of the target
-  install_findomain                       # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
-  install_dnsenum                    # DNSEnum is a command-line tool that automatically identifies basic DNS records
-  install_holehe                          # Check if the mail is used on different sites
+  install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
+  install_dnsenum                 # DNSEnum is a command-line tool that automatically identifies basic DNS records
+  install_holehe                  # Check if the mail is used on different sites
   install_simplyemail             # Gather emails
-  # install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
-  install_h8mail                          # Email OSINT & Password breach hunting tool
-  install_infoga                          # Gathering email accounts informations
-  install_buster                          # An advanced tool for email reconnaissance
-  install_pwnedornot                      # OSINT Tool for Finding Passwords of Compromised Email Addresses
-  # install_ghunt                           # Investigate Google Accounts with emails FIXME
-  install_phoneinfoga                     # Advanced information gathering & OSINT framework for phone numbers
-  install_maigret                     # Search pseudos and information about users on many platforms
-  install_linkedin2username               # Generate username lists for companies on LinkedIn
-  install_toutatis                        # Toutatis is a tool that allows you to extract information from instagrams accounts
+  # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
+  install_h8mail                  # Email OSINT & Password breach hunting tool
+  install_infoga                  # Gathering email accounts informations
+  install_buster                  # An advanced tool for email reconnaissance
+  install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
+  # install_ghunt                 # Investigate Google Accounts with emails FIXME
+  install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
+  install_maigret                 # Search pseudos and information about users on many platforms
+  install_linkedin2username       # Generate username lists for companies on LinkedIn
+  install_toutatis                # Toutatis is a tool that allows you to extract information from instagrams accounts
   install_waybackurls             # Website history
-  install_carbon14                        # OSINT tool for estimating when a web page was written
-  install_photon                          # Incredibly fast crawler designed for OSINT.
+  install_carbon14                # OSINT tool for estimating when a web page was written
+  install_photon                  # Incredibly fast crawler designed for OSINT.
   install_cloudfail               # Utilize misconfigured DNS and old database records to find hidden IP's behind the CloudFlare network
-  install_ipinfo                          # Get information about an IP address using command line with ipinfo.io
-  install_constellation                   # A graph-focused data visualisation and interactive analysis application.
+  install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
+  install_constellation           # A graph-focused data visualisation and interactive analysis application.
   install_maltego                 # Maltego is a software used for open-source intelligence and forensics
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
-  # fapt recon-ng                   # External recon tool FIXME
-  # install_osrframework                    # OSRFramework, the Open Sources Research Framework FIXME
+  # fapt recon-ng                 # External recon tool FIXME
+  # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
   install_tor					            # Tor proxy
-  # install_torbrowser        # Tor browser FIXME
+  # install_torbrowser            # Tor browser FIXME
   install_pwndb					          # No need to say more, no ? Be responsible with this tool please !
-  install_githubemail                     # Retrieve a GitHub user's email even if it's not public
-  # fapt whois                      # See information about a specific domain name or IP address FIXME
-  install_recondog                        # Informations gathering tool
-  install_gron                            # JSON parser
-  # install_ignorant                # holehe but for phone numbers
+  install_githubemail             # Retrieve a GitHub user's email even if it's not public
+  # fapt whois                    # See information about a specific domain name or IP address FIXME
+  install_recondog                # Informations gathering tool
+  install_gron                    # JSON parser
+  # install_ignorant              # holehe but for phone numbers
 }
 
 # Package dedicated to applicative and active web pentest tools
@@ -3265,12 +3275,12 @@ function package_web() {
   install_wfuzz                   # Web fuzzer (second favorites) FIXME Pycurl is not compiled against Openssl
   install_dirsearch               # Web fuzzer
   install_sqlmap                  # SQL injection scanner
-  install_ssrfmap                         # SSRF scanner
-  install_gopherus                        # SSRF helper
-  install_nosqlmap                        # NoSQL scanner
-  install_xsstrike                        # XSS scanner
+  install_ssrfmap                 # SSRF scanner
+  install_gopherus                # SSRF helper
+  install_nosqlmap                # NoSQL scanner
+  install_xsstrike                # XSS scanner
   install_xspear                  # XSS scanner
-  # install_xsser                   # XSS scanner FIXME missing install
+  # install_xsser                 # XSS scanner FIXME missing install
   install_xsrfprobe               # CSRF scanner
   install_bolt                    # CSRF scanner
   install_kadimus                 # LFI scanner
@@ -3286,13 +3296,13 @@ function package_web() {
   install_sslscan                 # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
   install_sslyze                  # SSL/TLS scanner
-  install_weevely                    # Awesome secure and light PHP webshell
-  install_cloudfail                       # Cloudflare misconfiguration detector
-  install_eyewitness                      # Website screenshoter
+  install_weevely                 # Awesome secure and light PHP webshell
+  install_cloudfail               # Cloudflare misconfiguration detector
+  install_eyewitness              # Website screenshoter
   install_oneforall                       
-  install_wafw00f                         # Waf detector
-  install_corscanner                      # CORS misconfiguration detector
-  install_hakrawler                       # Web endpoint discovery
+  install_wafw00f                 # Waf detector
+  install_corscanner              # CORS misconfiguration detector
+  install_hakrawler               # Web endpoint discovery
   install_gowitness               # Web screenshot utility
   install_linkfinder              # Discovers endpoint JS files
   install_timing_attack           # Cryptocraphic timing attack
@@ -3303,10 +3313,10 @@ function package_web() {
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
-  install_whatweb                    # Recognises web technologies including content management
-  install_phpggc                          # php deserialization payloads
-  install_symfony-exploits                #  symfony secret fragments exploit
-  install_jdwp_shellifier                 # exploit java debug
+  install_whatweb                 # Recognises web technologies including content management
+  install_phpggc                  # php deserialization payloads
+  install_symfony-exploits        #  symfony secret fragments exploit
+  install_jdwp_shellifier         # exploit java debug
   install_httpmethods             # Tool for HTTP methods enum & verb tampering
   install_h2csmuggler             # Tool for HTTP2 smuggling
   install_byp4xx                  # Tool to automate 40x errors bypass attempts
@@ -3330,8 +3340,8 @@ function package_web() {
 # Package dedicated to command & control frameworks
 function package_c2() {
   set_go_env
-  # install_empire                  # Exploit framework FIXME
-  # install_starkiller              # GUI for Empire, commenting while Empire install is not fixed
+  # install_empire                # Exploit framework FIXME
+  # install_starkiller            # GUI for Empire, commenting while Empire install is not fixed
   install_metasploit              # Offensive framework
   install_routersploit            # Exploitation Framework for Embedded Devices
   install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
@@ -3340,50 +3350,50 @@ function package_c2() {
 # Package dedicated to internal Active Directory tools
 function package_ad() {
   set_go_env
-  install_responder                       # LLMNR, NBT-NS and MDNS poisoner
+  install_responder               # LLMNR, NBT-NS and MDNS poisoner
   install_ldapdomaindump
   install_crackmapexec            # Network scanner
-  install_sprayhound                      # Password spraying tool
+  install_sprayhound              # Password spraying tool
   install_smartbrute              # Password spraying tool
   install_bloodhound-py           # AD cartographer
   install_neo4j                   # Bloodhound dependency
   install_bloodhound
   # install_bloodhound_old_v3
   # install_bloodhound_old_v2
-  install_cyperoth                       # Bloodhound dependency
-  # install_mitm6_sources                 # Install mitm6 from sources
-  install_mitm6_pip                       # DNS server misconfiguration exploiter
-  install_aclpwn                          # ACL exploiter
-  install_impacket                        # Network protocols scripts
-  install_pykek                           # AD vulnerability exploiter
-  install_lsassy                          # Credentials extracter
-  install_privexchange                    # Exchange exploiter
-  install_ruler                           # Exchange exploiter
-  install_darkarmour                      # Windows AV evasion
-  install_amber                           # AV evasion
-  install_powershell                      # Windows Powershell for Linux
-  install_krbrelayx                       # Kerberos unconstrained delegation abuse toolkit
-  install_evilwinrm                       # WinRM shell
-  install_pypykatz                        # Mimikatz implementation in pure Python
-  install_enyx                            # Hosts discovery
-  install_enum4linux-ng                   # Hosts enumeration
-  install_zerologon                       # Exploit for zerologon cve-2020-1472
-  install_libmspack                       # Library for some loosely related Microsoft compression format
-  install_windapsearch-go                 # Active Directory Domain enumeration through LDAP queries
-  install_oaburl                       # Send request to the MS Exchange Autodiscover service
+  install_cyperoth                # Bloodhound dependency
+  # install_mitm6_sources         # Install mitm6 from sources
+  install_mitm6_pip               # DNS server misconfiguration exploiter
+  install_aclpwn                  # ACL exploiter
+  install_impacket                # Network protocols scripts
+  install_pykek                   # AD vulnerability exploiter
+  install_lsassy                  # Credentials extracter
+  install_privexchange            # Exchange exploiter
+  install_ruler                   # Exchange exploiter
+  install_darkarmour              # Windows AV evasion
+  install_amber                   # AV evasion
+  install_powershell              # Windows Powershell for Linux
+  install_krbrelayx               # Kerberos unconstrained delegation abuse toolkit
+  install_evilwinrm               # WinRM shell
+  install_pypykatz                # Mimikatz implementation in pure Python
+  install_enyx                    # Hosts discovery
+  install_enum4linux-ng           # Hosts enumeration
+  install_zerologon               # Exploit for zerologon cve-2020-1472
+  install_libmspack               # Library for some loosely related Microsoft compression format
+  install_windapsearch-go         # Active Directory Domain enumeration through LDAP queries
+  install_oaburl                  # Send request to the MS Exchange Autodiscover service
   install_lnkup
-  install_samdump2                   # Dumps Windows 2k/NT/XP/Vista password hashes
-  install_smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+  install_samdump2                # Dumps Windows 2k/NT/XP/Vista password hashes
+  install_smbclient               # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_polenum
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_pth-tools               # Pass the hash attack
-  install_smtp-user-enum             # SMTP user enumeration via VRFY, EXPN and RCPT
-  install_onesixtyone                # SNMP scanning
-  install_nbtscan                    # NetBIOS scanning tool
-  install_rpcbind                    # RPC scanning
-  install_gpp-decrypt                # Decrypt a given GPP encrypted string
-  install_ntlmv1-multi                    # NTLMv1 multi tools: modifies NTLMv1/NTLMv1-ESS/MSCHAPv2
-  install_hashonymize                     # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
+  install_smtp-user-enum          # SMTP user enumeration via VRFY, EXPN and RCPT
+  install_onesixtyone             # SNMP scanning
+  install_nbtscan                 # NetBIOS scanning tool
+  install_rpcbind                 # RPC scanning
+  install_gpp-decrypt             # Decrypt a given GPP encrypted string
+  install_ntlmv1-multi            # NTLMv1 multi tools: modifies NTLMv1/NTLMv1-ESS/MSCHAPv2
+  install_hashonymize             # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
   install_gosecretsdump           # secretsdump in Go for heavy files
   install_adidnsdump              # enumerate DNS records in Domain or Forest DNS zones
   install_pygpoabuse
@@ -3454,103 +3464,103 @@ function package_iot() {
 
 # Package dedicated to SDR
 function package_sdr() {
-  install_mousejack                       # tools for mousejacking
-  install_jackit                          # tools for mousejacking
-  install_hackrf                          # tools for hackrf
-  install_gqrx                            # spectrum analyzer for SDR
-  install_rtl-433                            # decode radio transmissions from devices on the ISM bands
+  install_mousejack               # tools for mousejacking
+  install_jackit                  # tools for mousejacking
+  install_hackrf                  # tools for hackrf
+  install_gqrx                    # spectrum analyzer for SDR
+  install_rtl-433                 # decode radio transmissions from devices on the ISM bands
 }
 
 # Package dedicated to network pentest tools
 function package_network() {
   export PATH=$PATH:/usr/local/go/bin
-  install_proxychains                     # Network tool
-  DEBIAN_FRONTEND=noninteractive fapt wireshark # Wireshark packet sniffer
-  DEBIAN_FRONTEND=noninteractive fapt tshark    # Tshark packet sniffer
-  # install_wireshark_sources             # Install Wireshark from sources
-  install_hping3                          # Discovery tool
-  install_masscan                         # Port scanner
-  install_nmap                            # Port scanner
-  install_autorecon                       # External recon tool
-  install_tcpdump                            # Capture TCP traffic
-  install_dnschef                         # Python DNS server
-  install_divideandscan                   # Python project to automate port scanning routine
-  install_iptables                           # iptables for the win
-  install_traceroute                         # ping ping
-  install_chisel                          # Fast TCP/UDP tunnel over HTTP
-  install_sshuttle                        # Transparent proxy over SSH
-  install_dns2tcp                            # TCP tunnel over DNS
-  # install_eaphammer                     # FIXME
+  install_proxychains             # Network tool
+  install_wireshark               # Wireshark packet sniffer
+  install_tshark                  # Tshark packet sniffer
+  # install_wireshark_sources     # Install Wireshark from sources
+  install_hping3                  # Discovery tool
+  install_masscan                 # Port scanner
+  install_nmap                    # Port scanner
+  install_autorecon               # External recon tool
+  install_tcpdump                 # Capture TCP traffic
+  install_dnschef                 # Python DNS server
+  install_divideandscan           # Python project to automate port scanning routine
+  install_iptables                # iptables for the win
+  install_traceroute              # ping ping
+  install_chisel                  # Fast TCP/UDP tunnel over HTTP
+  install_sshuttle                # Transparent proxy over SSH
+  install_dns2tcp                 # TCP tunnel over DNS
+  # install_eaphammer             # FIXME
   install_freerdp2-x11
   install_rdesktop
   install_xtightvncviewer
   install_fierce
-  install_ssh-audit                          # SSH server audit
-  install_hydra                              # Login scanner
-  install_mariadb-client                     # Mariadb client
-  install_redis-tools                        # Redis protocol
-  # install_odat                            # Oracle Database Attacking Tool, FIXME
+  install_ssh-audit               # SSH server audit
+  install_hydra                   # Login scanner
+  install_mariadb-client          # Mariadb client
+  install_redis-tools             # Redis protocol
+  # install_odat                  # Oracle Database Attacking Tool, FIXME
 }
 
 # Package dedicated to wifi pentest tools
 function package_wifi() {
   set_go_env
-  install_pyrit                           # Databases of pre-computed WPA/WPA2-PSK authentication phase
-  install_wifite2                         # Retrieving password of a wireless access point (router)
-  install_aircrack-ng                     # WiFi security auditing tools suite
-  # install_hostapd-wpe                   # Modified hostapd to facilitate AP impersonation attacks, FIXME broken install, need official release of hostapd-2.6.tar.gz
-  install_reaver                             # Brute force attack against Wifi Protected Setup
-  install_bully                              # WPS brute force attack
-  install_cowpatty                           # WPA2-PSK Cracking
-  install_bettercap                       # MiTM tool
-  install_hcxtools                        # Tools for PMKID and other wifi attacks
-  install_hcxdumptool                     # Small tool to capture packets from wlan devices
+  install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
+  install_wifite2                 # Retrieving password of a wireless access point (router)
+  install_aircrack-ng             # WiFi security auditing tools suite
+  # install_hostapd-wpe           # Modified hostapd to facilitate AP impersonation attacks, FIXME broken install, need official release of hostapd-2.6.tar.gz
+  install_reaver                  # Brute force attack against Wifi Protected Setup
+  install_bully                   # WPS brute force attack
+  install_cowpatty                # WPA2-PSK Cracking
+  install_bettercap               # MiTM tool
+  install_hcxtools                # Tools for PMKID and other wifi attacks
+  install_hcxdumptool             # Small tool to capture packets from wlan devices
 }
 
 # Package dedicated to forensic tools
 function package_forensic() {
-  install_pst-utils                          # Reads a PST and prints the tree structure to the console
-  install_binwalk                            # Tool to find embedded files
-  install_foremost                           # Alternative to binwalk
-  install_volatility2                     # Memory analysis tool
-  install_trid                            # filetype detection tool
-  # install_peepdf                        # PDF analysis FIXME
+  install_pst-utils               # Reads a PST and prints the tree structure to the console
+  install_binwalk                 # Tool to find embedded files
+  install_foremost                # Alternative to binwalk
+  install_volatility2             # Memory analysis tool
+  install_trid                    # filetype detection tool
+  # install_peepdf                # PDF analysis FIXME
 }
 
 # Package dedicated to steganography tools
 function package_steganography() {
-  install_zsteg                           # Detect stegano-hidden data in PNG & BMP
+  install_zsteg                   # Detect stegano-hidden data in PNG & BMP
   install_stegosuite
   install_steghide
-  install_stegolsb                        # (including wavsteg)
+  install_stegolsb                # (including wavsteg)
 }
 
 # Package dedicated to cloud tools
 function package_cloud() {
   install_kubectl
   install_awscli
-  install_scout                           # Multi-Cloud Security Auditing Tool
+  install_scout                   # Multi-Cloud Security Auditing Tool
 }
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
-  install_pwntools                        # CTF framework and exploit development library
-  install_pwndbg                          # Advanced Gnu Debugger
-  install_angr                            # Binary analysis
-  install_checksec-py                     # Check security on binaries
-  install_nasm                               # Netwide Assembler
-  install_radare2                         # Awesome debugger
-  install_wabt                               # The WebAssembly Binary Toolkit
+  install_pwntools                # CTF framework and exploit development library
+  install_pwndbg                  # Advanced Gnu Debugger
+  install_angr                    # Binary analysis
+  install_checksec-py             # Check security on binaries
+  install_nasm                    # Netwide Assembler
+  install_radare2                 # Awesome debugger
+  install_wabt                    # The WebAssembly Binary Toolkit
   install_ltrace
   install_strace
   install_ghidra
   install_ida
-  install_jd-gui                          # Java decompiler
+  install_jd-gui                  # Java decompiler
 }
 
 # Package dedicated to attack crypto
 function package_crypto() {
-  # install_rsactftool              # attack rsa FIXME
+  # install_rsactftool            # attack rsa FIXME
   echo "nothing to install"
 }
 
