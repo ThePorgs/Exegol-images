@@ -660,6 +660,8 @@ function install_gf() {
   cp -r /opt/tools/Gf-Patterns/*.json ~/.gf
   # Remove repo to save space
   rm -r /opt/tools/Gf-Patterns
+  add-test-command "gf --list"
+  add-test-command "ls ~/.gf | grep 'redirect.json'"
 }
 
 function install_gobuster() {
@@ -998,12 +1000,14 @@ function install_bat() {
   fi
   apt-get install -f /tmp/bat.deb
   rm /tmp/bat.deb
+  add-test-command "bat --version"
 }
 
 function install_mdcat() {
   colorecho "Installing mdcat"
   source "$HOME/.cargo/env"
   cargo install mdcat
+  add-test-command "mdcat --version"
 }
 
 function install_xsrfprobe() {
@@ -2828,7 +2832,7 @@ function package_base() {
   python3 -m pip install wheel
   python -m pip install wheel
   install_pipx
-  install_fzf                             # File fuzzer
+  install_fzf                     # File fuzzer
   install_grc
   fapt npm                        # Node Package Manager
   install_nvm
@@ -2852,18 +2856,18 @@ function package_base() {
   fapt iputils-ping               # Ping binary
   fapt iproute2                   # Firewall rules
   install_openvpn                 # install OpenVPN
-  install_mdcat                           # cat markdown files
-  install_bat                             # Beautiful cat
+  install_mdcat                   # cat markdown files
+  install_bat                     # Beautiful cat
   fapt tidy
   fapt mlocate
   install_xsel
   fapt libtool
-  install_dnsutils                   # DNS utilities like dig and nslookup
+  install_dnsutils                # DNS utilities like dig and nslookup
   fapt dos2unix                   # Convert encoded dos script
   DEBIAN_FRONTEND=noninteractive fapt macchanger  # Macchanger
-  install_samba                      # Samba
+  install_samba                   # Samba
   fapt ftp                        # FTP client
-  install_ssh                        # SSH client
+  install_ssh                     # SSH client
   fapt sshpass                    # SSHpass (wrapper for using SSH with password on the CLI)
   fapt telnet                     # Telnet client
   fapt nfs-common                 # NFS client
@@ -2877,7 +2881,7 @@ function package_base() {
   fapt screen                     # CLI-based PuTT-like
   fapt p7zip-full                 # 7zip
   fapt p7zip-rar                  # 7zip rar module
-  fapt-noexit rar                        # rar
+  fapt-noexit rar                 # rar
   fapt unrar                      # unrar
   fapt xz-utils                   # xz (de)compression
   fapt xsltproc                   # apply XSLT stylesheets to XML documents (Nmap reports)
