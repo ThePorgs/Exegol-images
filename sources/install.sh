@@ -1833,7 +1833,7 @@ function install_dnschef() {
 function install_h2csmuggler() {
   colorecho "Installing h2csmuggler"
   git -C /opt/tools/ clone https://github.com/BishopFox/h2csmuggler
-  python3 -m pipx install h2
+  python3 -m pip install h2
   add-aliases h2csmuggler
   add-test-command "h2csmuggler --help"
 }
