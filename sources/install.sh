@@ -143,6 +143,7 @@ function install_python-pip() {
   curl --insecure https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
   python get-pip.py
   rm get-pip.py
+  add-test-command "pip --version"
 }
 
 function install_ohmyzsh() {
@@ -168,7 +169,7 @@ function install_locales() {
 
 function install_tmux() {
   colorecho "Installing tmux"
-  apt-get -y install tmux
+  fapt tmux
   cp -v /root/sources/tmux/tmux.conf ~/.tmux.conf
   touch ~/.hushlogin
 }
@@ -934,6 +935,7 @@ function install_fzf() {
   cd /opt/tools/fzf || exit
   ./install --all
   add-aliases fzf
+  add-test-command "fzf --version"
 }
 
 function install_shellerator() {
@@ -1206,7 +1208,7 @@ function install_arsenal() {
 
 function install_tldr() {
   colorecho "Installing tldr"
-  apt-get install -y tldr
+  fapt tldr
   mkdir -p ~/.local/share/tldr
   tldr -u
 }
@@ -1877,6 +1879,7 @@ function install_pipx() {
   colorecho "Installing pipx"
   python3 -m pip install pipx
   pipx ensurepath
+  add-test-command "pipx --version"
 }
 
 function install_peepdf() {
@@ -2468,6 +2471,7 @@ function install_go(){
   rm -rf /usr/local/go
   tar -C /usr/local -xzf /tmp/go.tar.gz
   export PATH=$PATH:/usr/local/go/bin
+  add-test-command "go version"
 }
 
 function install_metasploit(){
@@ -2601,6 +2605,7 @@ function install_rust_cargo() {
   colorecho "Installing rustc, cargo, rustup"
   curl https://sh.rustup.rs -sSf | sh -s -- -y
   source "$HOME/.cargo/env"
+  add-test-command "cargo --version"
 }
 
 function install_fierce() {
@@ -2872,11 +2877,76 @@ function install_ascii() {
   add-test-command "ascii -v"
 }
 
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
+
+function install_() {
+  colorecho "Installing "
+  fapt
+  add-test-command ""
+}
 
 # Package dedicated to the basic things the env needs
 function package_base() {
-  # CI/CD fapt etc [] TODO
-  # CI/CD install_ [] TODO
+  # CI/CD fapt etc [x]
+  # CI/CD install_ [x]
   update || exit
   deploy_exegol
   fapt software-properties-common
@@ -2890,7 +2960,6 @@ function package_base() {
   fapt zip
   fapt unzip
   fapt kmod
-  # fapt gifsicle
   fapt sudo                       # Sudo
   install_curl                    # HTTP handler
   fapt wget                       # Wget
@@ -2987,8 +3056,6 @@ function package_base() {
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
-  # CI/CD fapt etc [x]
-  # CI/CD install_ [x]
   set_go_env
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
@@ -3006,8 +3073,6 @@ function package_misc() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
-  # CI/CD fapt etc [x]
-  # CI/CD install_ [x]
   set_go_env
   install_searchsploit            # Exploitdb local search engine
   install_metasploit              # Offensive framework
@@ -3049,8 +3114,6 @@ function package_most_used() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
-  # CI/CD fapt etc [x]
-  # CI/CD install_ [x]
   set_go_env
   install_crunch                  # Wordlist generator
   install_seclists                # Awesome wordlists
@@ -3063,8 +3126,6 @@ function package_wordlists() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
-  # CI/CD fapt etc [x]
-  # CI/CD install_ [x]
   set_go_env
   install_hashcat                 # Password cracker
   install_john                    # Password cracker
@@ -3076,8 +3137,6 @@ function package_cracking() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
-  # CI/CD fapt etc [x]
-  # CI/CD install_ [x]
   set_go_env
   install_youtubedl                       # Command-line program to download videos from YouTube.com and other video sites
   install_exiftool                   # For read exif information
@@ -3123,8 +3182,6 @@ function package_osint() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
-  # CI/CD fapt etc [x]
-  # CI/CD install_ [x]
   set_go_env
   install_gobuster                # Web fuzzer (pretty good for several extensions)
   install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
@@ -3198,8 +3255,6 @@ function package_web() {
 
 # Package dedicated to command & control frameworks
 function package_c2() {
-  # CI/CD fapt etc [] TODO
-  # CI/CD install_ [x]
   set_go_env
   # install_empire                  # Exploit framework FIXME
   # install_starkiller              # GUI for Empire, commenting while Empire install is not fixed
@@ -3210,8 +3265,6 @@ function package_c2() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
-  # CI/CD fapt etc [x]
-  # CI/CD install_ [x]
   set_go_env
   install_responder                       # LLMNR, NBT-NS and MDNS poisoner
   install_ldapdomaindump
