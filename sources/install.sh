@@ -479,6 +479,8 @@ function install_impacket() {
   add-test-command "Get-GPPPassword.py --help"
   add-test-command "getST.py --help && getST.py --help | grep 'u2u'"
   add-test-command "ticketer.py --help && ticketer.py --help | grep impersonate"
+  add-test-command "ticketer.py --help && ticketer.py --help | grep hours"
+  add-test-command "ticketer.py --help && ticketer.py --help | grep extra-pac"
   add-test-command "dacledit.py --help"
   add-test-command "describeTicket.py --help"
 }
