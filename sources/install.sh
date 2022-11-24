@@ -2655,7 +2655,7 @@ function install_fcrackzip() {
 function install_pdfcrack() {
   colorecho "Installing pdfcrack"
   fapt pdfcrack
-  add-test-command "pdfcrack --help"
+  add-test-command "pdfcrack --version"
 }
 
 function install_bruteforce-luks() {
