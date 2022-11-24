@@ -188,7 +188,14 @@ function install_goshs(){
 
 function install_sslyze(){
   colorecho "Installing sslyze"
-  python3 -m pipx install sslyze
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    python3 -m pipx install sslyze
+  else
+    # https://github.com/nabla-c0d3/nassl/issues/86
+    # FIXME we need some tinkering here to make it work on aarch64
+    criticalecho-noexit "This installation function (xar) doesn't support architecture $(uname -m)" && r
+  fi
   add-history sslyze
   add-test-command "sslyze --help"
 }
@@ -566,37 +573,27 @@ function install_empire() {
   autoconf g++ git zlib1g-dev libxml2-dev libssl1.1 libssl-dev default-jdk curl git gcc nim
 
   # Installing xar (as per https://github.com/BC-SECURITY/Empire/blob/master/setup/install.sh)
+  wget https://github.com/BC-SECURITY/xar/archive/xar-1.6.1-patch.tar.gz
+  rm -rf xar-1.6.1
+  rm -rf xar-1.6.1-patch/xar
+  rm -rf xar-xar-1.6.1-patch
+  tar -xvf xar-1.6.1-patch.tar.gz && mv xar-xar-1.6.1-patch/xar/ xar-1.6.1/
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    wget https://github.com/BC-SECURITY/xar/archive/xar-1.6.1-patch.tar.gz
-    rm -rf xar-1.6.1
-    rm -rf xar-1.6.1-patch/xar
-    rm -rf xar-xar-1.6.1-patch
-    tar -xvf xar-1.6.1-patch.tar.gz && mv xar-xar-1.6.1-patch/xar/ xar-1.6.1/
     (cd xar-1.6.1 && ./autogen.sh --build=x86_64-unknown-linux-gnu)
     (cd xar-1.6.1 && ./configure --build=x86_64-unknown-linux-gnu)
-    (cd xar-1.6.1 && make)
-    (cd xar-1.6.1 && make install)
-    rm -rf xar-1.6.1
-    rm -rf xar-1.6.1-patch/xar
-    rm -rf xar-xar-1.6.1-patch
   elif [[ $(uname -m) = 'aarch64' ]]
   then
-    wget https://github.com/BC-SECURITY/xar/archive/xar-1.6.1-patch.tar.gz
-    rm -rf xar-1.6.1
-    rm -rf xar-1.6.1-patch/xar
-    rm -rf xar-xar-1.6.1-patch
-    tar -xvf xar-1.6.1-patch.tar.gz && mv xar-xar-1.6.1-patch/xar/ xar-1.6.1/
     (cd xar-1.6.1 && ./autogen.sh --build=aarch64-unknown-linux-gnu)
     (cd xar-1.6.1 && ./configure --build=aarch64-unknown-linux-gnu)
-    (cd xar-1.6.1 && make)
-    (cd xar-1.6.1 && make install)
-    rm -rf xar-1.6.1
-    rm -rf xar-1.6.1-patch/xar
-    rm -rf xar-xar-1.6.1-patch
   else
     criticalecho-noexit "This installation function (xar) doesn't support architecture $(uname -m)" && r
   fi
+  (cd xar-1.6.1 && make)
+  (cd xar-1.6.1 && make install)
+  rm -rf xar-1.6.1
+  rm -rf xar-1.6.1-patch/xar
+  rm -rf xar-xar-1.6.1-patch
 
   # Installing bomutils (as per https://github.com/BC-SECURITY/Empire/blob/master/setup/install.sh)
   rm -rf bomutils
