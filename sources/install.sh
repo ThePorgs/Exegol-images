@@ -275,7 +275,7 @@ function install_eyewitness() {
   cd /opt/tools/EyeWitness/Python/setup || exit
   ./setup.sh
   add-aliases eyewitness
-  add-test-command "add-test-command"
+  add-test-command "eyewitness --help"
 }
 
 function install_wafw00f() {
@@ -291,7 +291,7 @@ function install_linkfinder() {
   python3 -m pip install -r requirements.txt
   python3 setup.py install
   add-aliases linkfinder
-  add-test-command "add-test-command"
+  add-test-command "linkfinder --help"
 }
 
 function install_ssrfmap() {
@@ -338,7 +338,7 @@ function install_corscanner() {
   cd /opt/tools/CORScanner || exit
   python3 -m pip install -r requirements.txt
   add-aliases corscanner
-  add-test-command "add-test-command"
+  add-test-command "corscanner --help"
 }
 
 function install_xsstrike() {
