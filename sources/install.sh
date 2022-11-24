@@ -184,6 +184,7 @@ function install_goshs(){
   colorecho "Installing goshs"
   go install -v github.com/patrickhener/goshs@latest
   add-history goshs
+  add-test-command "goshs -v"
 }
 
 function install_sslyze(){
@@ -939,11 +940,13 @@ function install_shellerator() {
   colorecho "Installing shellerator"
   python3 -m pipx install git+https://github.com/ShutdownRepo/shellerator
   add-history shellerator
+  add-test-command "shellerator --help"
 }
 
 function install_uberfile() {
   colorecho "Installing uberfile"
   python3 -m pipx install git+https://github.com/ShutdownRepo/uberfile
+  add-test-command "uberfile --help"
 }
 
 function install_kadimus() {
@@ -1196,10 +1199,9 @@ function install_checksec-py() {
 
 function install_arsenal() {
   echo "Installing Arsenal"
-  git -C /opt/tools/ clone https://github.com/Orange-Cyberdefense/arsenal
-  cd /opt/tools/arsenal || exit
-  python3 -m pip install -r requirements.txt
+  python3 -m pipx install git+https://github.com/Orange-Cyberdefense/arsenal
   add-aliases arsenal
+  add-test-command "arsenal --version"
 }
 
 function install_tldr() {
@@ -1572,6 +1574,9 @@ function install_trilium() {
   mkdir -p /root/.local/share/trilium-data
   cp -v /root/sources/trilium/* /root/.local/share/trilium-data
   add-aliases trilium
+  # Start the trilium, sleep for 3 sec, attempt to stop it
+  # Stop command will fail if trilium isn't running
+  add-test-command "trilium-start sleep 3; trilium-stop"
 }
 
 function install_ntlmv1-multi() {
@@ -1910,6 +1915,7 @@ function install_whatportis() {
   python3 -m pipx install whatportis
   echo y | whatportis --update
   add-history whatportis
+  add-test-command "whatportis --version"
 }
 
 function install_ultimate_vimrc() {
@@ -1934,6 +1940,7 @@ function install_ngrok() {
   fi
   unzip -d /opt/tools/bin/ /tmp/ngrok.zip
   add-history ngrok
+  add-test-command "ngrok version"
 }
 
 function install_chisel() {
@@ -2356,11 +2363,13 @@ function install_kerbrute() {
 
 function install_searchsploit() {
   colorecho "Installing Searchsploit"
-  git clone https://github.com/offensive-security/exploitdb.git /opt/exploitdb
-  ln -sf /opt/exploitdb/searchsploit /usr/local/bin/searchsploit
-  cp -n /opt/exploitdb/.searchsploit_rc ~/
+  git -C /opt/tools/ clone https://gitlab.com/exploit-database/exploitdb
+  ln -sf /opt/tools/exploitdb/searchsploit /opt/tools/bin/searchsploit
+  cp -n /opt/tools/exploitdb/.searchsploit_rc ~/
   sed -i 's/\(.*[pP]aper.*\)/#\1/' ~/.searchsploit_rc
+  sed -i 's/opt\/exploitdb/opt\/tools\/exploitdb/' ~/.searchsploit_rc
   searchsploit -u
+  add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
 }
 
 function install_crunch() {
@@ -2771,6 +2780,7 @@ function install_rlwrap() {
   colorecho "Installing rlwrap"
   fapt rlwrap
   add-history rlwrap
+  add-test-command "rlwrap --version"
 }
 
 function install_samba() {
@@ -2850,16 +2860,16 @@ function install_hydra() {
   add-test-command "hydra --help; hydra -help |& grep 'more command line options'"
 }
 
-function install_() {
-  colorecho "Installing "
-  fapt
-  add-test-command ""
+function install_imagemagick() {
+  colorecho "Installing imagemagick"
+  fapt imagemagick
+  add-test-command "convert -version"
 }
 
-function install_() {
-  colorecho "Installing "
-  fapt
-  add-test-command ""
+function install_ascii() {
+  colorecho "Installing ascii"
+  fapt ascii
+  add-test-command "ascii -v"
 }
 
 
@@ -2977,8 +2987,8 @@ function package_base() {
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
-  # CI/CD fapt etc [] TODO
-  # CI/CD install_ [] TODO
+  # CI/CD fapt etc [x]
+  # CI/CD install_ [x]
   set_go_env
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
@@ -2987,11 +2997,11 @@ function package_misc() {
   install_uberfile                # file uploader/downloader commands generator
   install_arsenal                         # Cheatsheets tool
   install_trilium                 # notes taking tool
-  fapt exiftool                   # Meta information reader/writer
-  fapt imagemagick                # Copy, modify, and distribute image
+  install_exiftool                   # Meta information reader/writer
+  install_imagemagick                # Copy, modify, and distribute image
   install_ngrok                   # expose a local development server to the Internet
   install_whatportis              # Search default port number
-  fapt ascii                      # The ascii table in the shell
+  install_ascii                      # The ascii table in the shell
 }
 
 # Package dedicated to most used offensive tools
