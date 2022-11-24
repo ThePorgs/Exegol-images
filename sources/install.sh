@@ -432,6 +432,7 @@ function install_impacket() {
   apt-get -y install libffi-dev
   git -C /opt/tools/ clone https://github.com/ShutdownRepo/impacket
   git -C /opt/tools/impacket checkout exegol
+  add-test-command "[ -d '/opt/tools/impacket/impacket' ]"
 
   # Following PRs are merged in the forked repo
   # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
@@ -816,7 +817,7 @@ function install_pykek() {
   colorecho "Installing Python Kernel Exploit Kit (pykek) for MS14-068"
   git -C /opt/tools/ clone https://github.com/preempt/pykek
   add-aliases pykek
-  # TODO add-test-command
+  add-test-command "ms14-068.py |& grep '<clearPassword>'"
 }
 
 function install_autorecon() {
@@ -855,6 +856,12 @@ function install_lnkup() {
   add-aliases lnkup
   add-history lnkup
   add-test-command "lnk-generate.py --help"
+}
+
+function install_samdump2() {
+  colorecho "Installing samdump2"
+  fapt samdump2
+  add-test-command "samdump2 -h |& grep 'enable debugging'"
 }
 
 function install_pwntools() {
@@ -1543,12 +1550,12 @@ function install_windapsearch-go() {
   if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -O /opt/tools/bin/windapsearch "https://github.com/ropnop/go-windapsearch/releases/latest/download/windapsearch-linux-amd64"
-    # TODO add-test-command
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
   chmod +x /opt/tools/bin/windapsearch
   add-history windapsearch
+  add-test-command "windapsearch --help"
 }
 
 function install_trilium() {
@@ -2322,7 +2329,7 @@ function install_kerbrute() {
   fi
   chmod +x /opt/tools/bin/kerbrute
   add-history kerbrute
-  # TODO add-test-command
+  add-test-command "kerbrute --help"
   # FIXME ARM platforms install ?
 }
 
@@ -2687,6 +2694,12 @@ function install_nbtscan() {
   add-test-command "nbtscan 127.0.0.1"
 }
 
+function install_rpcbind() {
+  colorecho "Installing rpcbind"
+  fapt rpcbind
+  add-test-command "rpcbind"
+}
+
 function install_ntpdate() {
   colorecho "Installing ntpdate"
   fapt ntpdate
@@ -2725,6 +2738,7 @@ function install_smbclient() {
   colorecho "Installing smbclient"
   fapt smbclient
   add-history smbclient
+  add-test-command "smbclient --help"
 }
 
 function install_snmp() {
@@ -3104,7 +3118,7 @@ function package_c2() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
-  # CI/CD fapt etc [] TODO
+  # CI/CD fapt etc [x]
   # CI/CD install_ [x]
   set_go_env
   install_responder                       # LLMNR, NBT-NS and MDNS poisoner
@@ -3139,15 +3153,15 @@ function package_ad() {
   install_windapsearch-go                 # Active Directory Domain enumeration through LDAP queries
   install_oaburl                       # Send request to the MS Exchange Autodiscover service
   install_lnkup
-  fapt samdump2                   # Dumps Windows 2k/NT/XP/Vista password hashes
-  fapt smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+  install_samdump2                   # Dumps Windows 2k/NT/XP/Vista password hashes
+  install_smbclient                  # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_polenum
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_pth-tools               # Pass the hash attack
   install_smtp-user-enum             # SMTP user enumeration via VRFY, EXPN and RCPT
   install_onesixtyone                # SNMP scanning
   install_nbtscan                    # NetBIOS scanning tool
-  fapt rpcbind                    # RPC scanning
+  install_rpcbind                    # RPC scanning
   install_gpp-decrypt                # Decrypt a given GPP encrypted string
   install_ntlmv1-multi                    # NTLMv1 multi tools: modifies NTLMv1/NTLMv1-ESS/MSCHAPv2
   install_hashonymize                     # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
@@ -3169,7 +3183,6 @@ function package_ad() {
   install_donpapi
   install_webclientservicescanner
   install_certipy
-  npm install ntpsync             # sync local time with remote server
   install_shadowcoerce
   install_gmsadumper
   install_pylaps
