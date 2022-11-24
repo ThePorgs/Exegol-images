@@ -2844,10 +2844,10 @@ function install_dnsenum() {
   add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'"
 }
 
-function install_() {
-  colorecho "Installing "
-  fapt
-  add-test-command ""
+function install_hydra() {
+  colorecho "Installing hydra"
+  fapt hydra
+  add-test-command "hydra --help; hydra -help |& grep 'more command line options'"
 }
 
 function install_() {
@@ -2996,8 +2996,8 @@ function package_misc() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
-  # CI/CD fapt etc [] TODO
-  # CI/CD install_ [] TODO
+  # CI/CD fapt etc [x]
+  # CI/CD install_ [x]
   set_go_env
   install_searchsploit            # Exploitdb local search engine
   install_metasploit              # Offensive framework
@@ -3010,7 +3010,7 @@ function package_most_used() {
   install_simplyemail             # Gather emails
   install_ffuf                    # Web fuzzer (little favorites)
   install_sqlmap                     # SQL injection scanner
-  fapt hydra                      # Login scanner
+  install_hydra                      # Login scanner
   install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
