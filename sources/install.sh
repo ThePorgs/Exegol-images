@@ -1,8 +1,6 @@
 #!/bin/bash
 # Author: The Exegol Project
 
-# TODO add add-test-command in all tools
-
 RED='\033[1;31m'
 BLUE='\033[1;34m'
 GREEN='\033[1;32m'
