@@ -1139,8 +1139,8 @@ function install_john() {
   git -C /opt/tools/ clone https://github.com/openwall/john
   cd /opt/tools/john/src || exit
   ./configure && make
-  ln -s /opt/tools/john/run/john /opt/tools/bin/john
-  add-history john
+  add-aliases john-the-ripper
+  add-history john-the-ripper
   add-test-command "john --help"
 }
 
