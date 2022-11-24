@@ -1687,6 +1687,25 @@ function install_theharvester() {
   add-history theharvester
 }
 
+function install_libusb-dev() {
+  colorecho "Installing libusb-dev"
+  fapt libusb-dev
+  add-test-command "dpkg -l libusb-dev | grep 'libusb-dev'"
+
+}
+
+function install_autoconf() {
+  colorecho "Installing autoconf"
+  fapt autoconf
+  add-test-command "autoconf --version"
+}
+
+function install_nfct() {
+  colorecho "Installing nfct"
+  fapt nfct
+  add-test-command "nfct --help |& grep 'nfct command'"
+}
+
 function install_pcsc() {
   colorecho "Installing tools for PC/SC (smartcard)"
   apt-get install -y pcsc-tools pcscd libpcsclite-dev libpcsclite1
@@ -1743,7 +1762,7 @@ function install_libnfc-crypto1-crack() {
   cp libnfc_crypto1_crack /opt/tools/bin
   add-aliases libnfc-crypto1-crack
   add-history libnfc-crypto1-crack
-  # add-test-command "" # TODO
+  add-test-command "libnfc_crypto1_crack --help |& grep 'libnfc.buses'"
 }
 
 function install_mfdread() {
@@ -2489,6 +2508,12 @@ function install_gpp-decrypt(){
   add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
 }
 
+function install_android-tools-adb() {
+  colorecho "Installing android-tools-adb"
+  fapt android-tools-adb
+  add-test-command "adb --help"
+}
+
 function install_smali(){
   colorecho "Installing smali"
   apt-get install default-jre wget
@@ -2510,6 +2535,24 @@ function install_dex2jar(){
   mv /opt/tools/dex-tools-2.1/ /opt/tools/dex2jar
   find /opt/tools/dex2jar -type f -name "*.sh" -exec ln -s '{}' /opt/tools/bin ';'
   add-test-command "d2j-dex2jar.sh --help"
+}
+
+function install_zipalign() {
+  colorecho "Installing zipalign"
+  fapt zipalign
+  add-test-command "zipalign --help |& grep 'verbose output'"
+}
+
+function install_apksigner() {
+  colorecho "Installing apksigner"
+  fapt apksigner
+  add-test-command "apksigner --version"
+}
+
+function install_apktool() {
+  colorecho "Installing apktool"
+  fapt apktool
+  add-test-command "apktool --version"
 }
 
 function install_hostapd-wpe(){
@@ -3197,22 +3240,22 @@ function package_ad() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
-  # CI/CD fapt etc [] TODO
+  # CI/CD fapt etc [x]
   # CI/CD install_ [x]
   set_go_env
-  fapt android-tools-adb
+  install_android-tools-adb
   install_smali
   install_dex2jar
-  fapt zipalign
-  fapt apksigner
-  fapt apktool
+  install_zipalign
+  install_apksigner
+  install_apktool
   install_frida
   install_androguard              # Reverse engineering and analysis of Android applications
 }
 
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
-  # CI/CD fapt etc [] TODO
+  # CI/CD fapt etc [x]
   # CI/CD install_ [x]
   set_go_env
   install_sipvicious              # Set of tools for auditing SIP based VOIP systems
@@ -3220,13 +3263,12 @@ function package_voip() {
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
-  # CI/CD fapt etc [] TODO
+  # CI/CD fapt etc [x]
   # CI/CD install_ [x]
   set_go_env
-  fapt git
-  fapt libusb-dev
-  fapt autoconf
-  fapt nfct
+  install_libusb-dev
+  install_autoconf
+  install_nfct
   install_pcsc
   install_libnfc                  # NFC library
   install_mfoc                    # Tool for nested attack on Mifare Classic
