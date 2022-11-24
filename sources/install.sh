@@ -2877,16 +2877,16 @@ function install_ascii() {
   add-test-command "ascii -v"
 }
 
-function install_() {
-  colorecho "Installing "
-  fapt
-  add-test-command ""
+function install_avrdude() {
+  colorecho "Installing avrdude"
+  fapt avrdude
+  add-test-command "avrdude '-?'"
 }
 
-function install_() {
-  colorecho "Installing "
-  fapt
-  add-test-command ""
+function install_minicom() {
+  colorecho "Installing minicom"
+  fapt minicom
+  add-test-command "minicom --version; minicom --version |& grep 'This program is free software'"
 }
 
 function install_() {
@@ -3380,10 +3380,8 @@ function package_rfid() {
 
 # Package dedicated to IoT tools
 function package_iot() {
-  # CI/CD fapt etc [] TODO
-  # CI/CD install_ [x]
-  fapt avrdude
-  fapt minicom
+  install_avrdude
+  install_minicom
 }
 
 # Package dedicated to SDR
