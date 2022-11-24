@@ -834,6 +834,12 @@ function install_autorecon() {
   add-test-command "which autorecon"
 }
 
+function install_tcpdump() {
+  colorecho "Installing tcpdump"
+  fapt tcpdump
+  add-test-command "tcpdump --version"
+}
+
 function install_simplyemail() {
   colorecho "Installing SimplyEmail"
   git -C /opt/tools/ clone https://github.com/SimplySecurity/SimplyEmail.git
@@ -1829,6 +1835,12 @@ function install_gqrx() {
   add-test-command "which gqrx"
 }
 
+function install_rtl-433() {
+  colorecho "Installing rtl-433"
+  fapt rtl-433
+  add-test-command "dpkg -l rtl-433 | grep 'rtl-433'"
+}
+
 function install_sipvicious() {
   colorecho "Installing SIPVicious"
   git -C /opt/tools/ clone https://github.com/enablesecurity/sipvicious.git
@@ -2028,6 +2040,12 @@ function install_divideandscan() {
   python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
   add-history divideandscan
   add-test-command "divideandscan --help"
+}
+
+function install_iptables() {
+  colorecho "Installing iptables"
+  fapt iptables
+  add-test-command "iptables --version"
 }
 
 function install_trid() {
@@ -2739,6 +2757,12 @@ function install_ldapdomaindump() {
   add-test-command "ldapdomaindump --help"
 }
 
+function install_hping3() {
+  colorecho "Installing hping3"
+  fapt hping3
+  add-test-command "hping3 --version"
+}
+
 function install_masscan() {
   colorecho "Installing masscan"
   fapt masscan
@@ -3436,7 +3460,7 @@ function package_sdr() {
   install_jackit                          # tools for mousejacking
   install_hackrf                          # tools for hackrf
   install_gqrx                            # spectrum analyzer for SDR
-  fapt rtl-433                            # decode radio transmissions from devices on the ISM bands
+  install_rtl-433                            # decode radio transmissions from devices on the ISM bands
 }
 
 # Package dedicated to network pentest tools
@@ -3446,14 +3470,14 @@ function package_network() {
   DEBIAN_FRONTEND=noninteractive fapt wireshark # Wireshark packet sniffer
   DEBIAN_FRONTEND=noninteractive fapt tshark    # Tshark packet sniffer
   # install_wireshark_sources             # Install Wireshark from sources
-  fapt hping3                             # Discovery tool
+  install_hping3                          # Discovery tool
   install_masscan                         # Port scanner
   install_nmap                            # Port scanner
   install_autorecon                       # External recon tool
-  fapt tcpdump                            # Capture TCP traffic
+  install_tcpdump                            # Capture TCP traffic
   install_dnschef                         # Python DNS server
   install_divideandscan                   # Python project to automate port scanning routine
-  fapt iptables                           # iptables for the win
+  install_iptables                           # iptables for the win
   install_traceroute                         # ping ping
   install_chisel                          # Fast TCP/UDP tunnel over HTTP
   install_sshuttle                        # Transparent proxy over SSH
