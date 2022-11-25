@@ -4,7 +4,7 @@ on:
       DOCKER_BUILD_REPO:
         required: true
         type: string
-      IMAGE_NAME:
+      IMAGE_BASE_NAME:
         required: true
         type: string
       ARCH:
@@ -28,7 +28,7 @@ jobs:
           ${{ matrix.command }}
           EOF
           )
-          image_name="${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_NAME }}-${{ inputs.ARCH }}"
+          image_name="${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}"
           echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
           echo "$ ${COMMAND}"
           docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
