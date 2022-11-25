@@ -4,13 +4,16 @@ on:
       DOCKER_BUILD_REPO:
         required: true
         type: string
+      DOCKER_TARGET_REPO:
+        required: true
+        type: string
       IMAGE_BASE_NAME:
         required: true
         type: string
       DOCKERFILE:
         required: true
         type: string
-      ARCH:
+      SUPPORTED_ARCH:
         required: true
         type: string
 
