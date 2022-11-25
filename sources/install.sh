@@ -1581,7 +1581,7 @@ function install_trilium() {
   add-aliases trilium
   # Start the trilium, sleep for 3 sec, attempt to stop it
   # Stop command will fail if trilium isn't running
-  add-test-command "trilium-start; sleep 3; trilium-stop'"
+  add-test-command "trilium-start; sleep 3; trilium-stop"
 }
 
 function install_ntlmv1-multi() {
