@@ -1,7 +1,16 @@
 on:
   workflow_call:
     inputs:
-      SUPPORTED_ARCH:
+      DOCKER_BUILD_REPO:
+        required: true
+        type: string
+      IMAGE_BASE_NAME:
+        required: true
+        type: string
+      DOCKERFILE:
+        required: true
+        type: string
+      ARCH:
         required: true
         type: string
 
