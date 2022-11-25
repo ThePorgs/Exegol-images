@@ -7,7 +7,7 @@ on:
 
 jobs:
   building_debug:
-    name: Build & test debug
+    name: Builds & tests
     strategy:
       matrix:
         target: ["debug", "light"]
