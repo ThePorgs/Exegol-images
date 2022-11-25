@@ -7,13 +7,16 @@ on:
 
 jobs:
   building_debug:
-    name: Building debug
-    uses: ./.github/workflows/building.yml
+    name: Build & test debug
+    strategy:
+      matrix:
+        target: ["debug", "light"]
+    uses: ./.github/workflows/modules/full_build.yml
     with:
       DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
       DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
-      IMAGE_BASE_NAME: "debug"
-      DOCKERFILE: "./debug.dockerfile"
+      IMAGE_BASE_NAME: ${{ matrix.target }}
+      DOCKERFILE: ./${{ matrix.target }}.dockerfile
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
