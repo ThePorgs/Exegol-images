@@ -22,7 +22,9 @@ on:
 jobs:
   buildx:
     timeout-minutes: 360
-    runs-on: [ self-hosted, inputs.ARCH ]
+    runs-on:
+      - self-hosted
+      - ${{ inputs.ARCH }}
     outputs:
       matrix_tests: ${{ steps.set-matrix.outputs.matrix_tests }}
     steps:
@@ -96,7 +98,9 @@ jobs:
 
   clean:
     needs: buildx
-    runs-on: [ self-hosted, inputs.ARCH ]
+    runs-on:
+      - self-hosted
+      - ${{ inputs.ARCH }}
     if: always()  # always mode clean the environment even when the task is cancelled by a user
     steps:
       - name: Clean unused dangling images
