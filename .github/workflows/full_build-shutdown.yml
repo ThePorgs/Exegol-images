@@ -35,7 +35,6 @@ jobs:
         run: |
           echo ${{ env.INPUT_SUPPORTED_ARCH }}
           echo ${{ inputs.SUPPORTED_ARCH.include }}
-          echo ${{ fromJson(inputs.SUPPORTED_ARCH.include) }}
           echo 'matrix=["amd64","arm64"]'
           echo 'matrix=["amd64","arm64"]' >> $GITHUB_OUTPUT
 
