@@ -6,6 +6,18 @@ on:
         type: string
 
 jobs:
+  setup:
+    runs-on: self-hosted
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      -
+        id: set-matrix
+        name: "Setup output"
+        run: |
+          echo "matrix={\"include\":[{\"arch\":\"amd64\"},{\"arch\":\"arm64\"}]}"
+          echo "matrix={\"include\":[{\"arch\":\"amd64\"},{\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
+
   exec:
     needs: setup
     strategy:
