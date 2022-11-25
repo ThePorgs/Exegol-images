@@ -8,23 +8,20 @@ on:
 jobs:
   building_debug:
     name: Preparing
-# Wait for bug fix for github: https://github.com/orgs/community/discussions/32023
-#    strategy:
+    strategy:
       # fail-fast: false
-#      matrix:
-#        include:
-#          - tag: debug
-#            dockerfile: "debug.dockerfile"
+      matrix:
+        include:
+          - tag: debug
+            dockerfile: "debug.dockerfile"
 #          - tag: nightly
 #            dockerfile: "Dockerfile"
     uses: ./.github/workflows/full_build.yml
     with:
       DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
       DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
-      #IMAGE_BASE_NAME: ${{ matrix.tag }}
-      #DOCKERFILE: ${{ matrix.dockerfile }}
-      IMAGE_BASE_NAME: "debug"
-      DOCKERFILE: "debug.dockerfile"
+      IMAGE_BASE_NAME: ${{ matrix.tag }}
+      DOCKERFILE: ${{ matrix.dockerfile }}
       SUPPORTED_ARCH: '["amd64","arm64"]'
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
