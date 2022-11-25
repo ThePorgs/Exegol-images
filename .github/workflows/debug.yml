@@ -13,7 +13,7 @@ env:
 
 jobs:
   building_debug:
-    uses: ./building.yml
+    uses: ./.github/workflows/building.yml
     with:
       DOCKER_BUILD_REPO: ${{ env.DOCKER_INTERMEDIATE_REPO }}
       DOCKER_TARGET_REPO: ${{ env.DOCKER_PROD_REPO }}
