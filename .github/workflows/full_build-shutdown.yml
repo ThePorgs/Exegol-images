@@ -34,6 +34,7 @@ jobs:
         name: "Debug exec shutdown"
         run: |
           echo ${{ env.INPUT_SUPPORTED_ARCH }}
+          echo ${{ inputs.SUPPORTED_ARCH }}
           echo 'matrix=["amd64","arm64"]'
           echo 'matrix=["amd64","arm64"]' >> $GITHUB_OUTPUT
 
