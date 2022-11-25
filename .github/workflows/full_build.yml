@@ -28,7 +28,7 @@ jobs:
       - self-hosted
     env:
       debug: ${{ inputs.SUPPORTED_ARCH }}
-      debug_bis: ${{ fromJson(inputs.SUPPORTED_ARCH).include }}
+      debug_bis: ${{ toJson(fromJson(inputs.SUPPORTED_ARCH).include) }}
 
     steps:
       -
