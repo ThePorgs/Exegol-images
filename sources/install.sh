@@ -191,13 +191,13 @@ function install_sslyze(){
   if [[ $(uname -m) = 'x86_64' ]]
   then
     python3 -m pipx install sslyze
+    add-history sslyze
+    add-test-command "sslyze --help"
   else
     # https://github.com/nabla-c0d3/nassl/issues/86
-    # FIXME we need some tinkering here to make it work on aarch64
+    # FIXME we need some tinkering here to make it work on aarch64 (and move back add-history / add-test-command)
     criticalecho-noexit "This installation function (xar) doesn't support architecture $(uname -m)" && r
   fi
-  add-history sslyze
-  add-test-command "sslyze --help"
 }
 
 function install_weevely() {
