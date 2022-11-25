@@ -31,3 +31,6 @@ jobs:
       DOCKER_BUILD_REPO: " "
       IMAGE_BASE_NAME: " "
       DOCKERFILE: " "
+    secrets:
+      DOCKER_USERNAME: ""
+      DOCKER_PASSWORD: ""
