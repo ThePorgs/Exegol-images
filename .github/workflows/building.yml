@@ -88,7 +88,6 @@ jobs:
   tests:
     name: Tests ${{ inputs.ARCH }}
     needs: buildx
-    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests) }}

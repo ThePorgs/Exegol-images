@@ -48,7 +48,8 @@ jobs:
     needs: debug
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson('{"include":[{"arch":"amd64"},{"arch":"arm64"}]}') }}
+      matrix:
+        arch: ${{ fromJson('["amd64","arm64"]') }}
     uses: ./.github/workflows/building.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
