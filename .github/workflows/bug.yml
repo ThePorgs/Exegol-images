@@ -9,22 +9,20 @@ jobs:
   setup:
     runs-on: self-hosted
     outputs:
-      data: ${{ steps.set-matrix.outputs.data }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       -
         id: set-matrix
         name: "Setup output"
         run: |
-          echo "data={\"include\":[{\"arch\":\"amd64\"},{\"arch\":\"arm64\"}]}"
-          echo "data={\"include\":[{\"arch\":\"amd64\"},{\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
+          echo "matrix={\"include\":[{\"arch\":\"amd64\"},{\"arch\":\"arm64\"}]}"
+          echo "matrix={\"include\":[{\"arch\":\"amd64\"},{\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
 
   exec:
     needs: setup
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.setup.outputs.data) }}
-      # matrix: ${{ fromJson('{"include":[{"arch":"amd64"},{"arch":"arm64"}') }}
-         #arch: ${{ fromJson('["amd64","arm64"]') }}
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
     uses: ./.github/workflows/building.yml
     with:
       ARCH: ${{ matrix.arch }}

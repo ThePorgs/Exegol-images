@@ -24,25 +24,23 @@ on:
 
 jobs:
   debug:
-    runs-on:
-      - self-hosted
+    runs-on: self-hosted
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      data: ${{ steps.set-matrix.outputs.data }}
     steps:
       -
         id: set-matrix
-        name: "Debug exec"
+        name: "Setup output"
         run: |
-          echo 'matrix=["amd64","arm64"]'
-          echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
+          echo "data={\"include\":[{\"arch\":\"amd64\"},{\"arch\":\"arm64\"}]}"
+          echo "data={\"include\":[{\"arch\":\"amd64\"},{\"arch\":\"arm64\"}]}" >> $GITHUB_OUTPUT
 
   build_tests:
     name: Builds & tests
     needs: debug
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.debug.outputs.matrix) }}
-         #arch: ${{ fromJson('["amd64","arm64"]') }}
+      matrix: ${{ fromJson(needs.debug.outputs.data) }}
     uses: ./.github/workflows/building.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
