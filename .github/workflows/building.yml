@@ -116,7 +116,7 @@ jobs:
 #      TESTS: ${{ matrix.tests }}
           
   test1:
-    name: Test ${{ inputs.ARCH }}
+    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
     needs: buildx
     if: ${{ needs.buildx.outputs.matrix_p1 != '[]' && needs.buildx.outputs.matrix_p1 != '' }}
     runs-on:
@@ -138,7 +138,7 @@ jobs:
           echo "$ ${COMMAND}"
           docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
   test2:
-    name: Test ${{ inputs.ARCH }}
+    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
     needs: buildx
     if: ${{ needs.buildx.outputs.matrix_p2 != '[]' && needs.buildx.outputs.matrix_p2 != '' }}
     runs-on:
@@ -160,7 +160,7 @@ jobs:
           echo "$ ${COMMAND}"
           docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
   test3:
-    name: Test ${{ inputs.ARCH }}
+    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
     needs: buildx
     if: ${{ needs.buildx.outputs.matrix_p3 != '[]' && needs.buildx.outputs.matrix_p3 != '' }}
     runs-on:
@@ -182,7 +182,7 @@ jobs:
           echo "$ ${COMMAND}"
           docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
   test4:
-    name: Test ${{ inputs.ARCH }}
+    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
     needs: buildx
     if: ${{ needs.buildx.outputs.matrix_p4 != '[]' && needs.buildx.outputs.matrix_p4 != '' }}
     runs-on:
