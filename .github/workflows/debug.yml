@@ -9,6 +9,7 @@ jobs:
   building_debug:
     name: Preparing
     strategy:
+      # fail-fast: false
       matrix:
         include:
           - tag: debug

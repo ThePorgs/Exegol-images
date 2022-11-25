@@ -80,13 +80,14 @@ jobs:
           line_count=$(docker exec $ID zsh -c 'wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d " " -f 1')
           echo "$line_count test commands found!"
           docker exec $ID python3 /.exegol/build_pipeline_tests/ingest_tests.py
-          echo "matrix_tests=$(docker exec $ID zsh -c 'cat /.exegol/tests.json'" >> $GITHUB_OUTPUT
+          echo "matrix_tests=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json'" >> $GITHUB_OUTPUT
           docker stop $ID
           exit $return_code
   tests:
     name: Tests
     needs: buildx
     strategy:
+      fail-fast: false
       matrix:
         tests: ${{ fromJson(needs.buildx.outputs.matrix_tests) }}
     uses: ./.github/workflows/testing.yml

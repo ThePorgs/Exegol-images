@@ -10,7 +10,7 @@ def divide_tests(l, n):
 
 
 # Reading all test commands and converting to JSON structure
-infile_path = "all_commands.txt"
+infile_path = "/.exegol/build_pipeline_tests/all_commands.sorted.txt"
 with open(infile_path, 'r') as f:
     all_tests = f.read().splitlines()
     print(f"[+] Read all tests from {infile_path}")
@@ -21,7 +21,7 @@ with open(infile_path, 'r') as f:
 
 
 # Writing to tests.json
-outfile_path = "tests.json"
+outfile_path = "/.exegol/build_pipeline_tests/tests.json"
 with open(outfile_path, "w") as outfile:
     outfile.write(json_tests)
     print(f"[+] JSON structure written to file {outfile_path}")
