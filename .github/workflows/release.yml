@@ -1,0 +1,9 @@
+on:
+  push:
+    tags:
+      - *
+
+jobs:
+  import_image:
+    runs-on: self-hosted
+    name: TODO

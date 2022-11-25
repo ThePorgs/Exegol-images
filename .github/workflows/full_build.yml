@@ -5,7 +5,8 @@ on:
         required: true
         type: string
       DOCKER_TARGET_REPO:
-        required: true
+        required: false
+        default: ''
         type: string
       IMAGE_BASE_NAME:
         required: true
@@ -43,7 +44,7 @@ jobs:
     timeout-minutes: 60
     needs: build_tests
     runs-on: self-hosted
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO != '' }}
     env:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       DOCKER_TARGET_REPO: ${{ inputs.DOCKER_TARGET_REPO }}
@@ -66,3 +67,24 @@ jobs:
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
+
+  clean_runner:
+    # Remove final image without DOCKER_TARGET_REPO set
+    name: Clean final image
+    needs: build_tests
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO == '' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Wait for bug fix for github: https://github.com/orgs/community/discussions/32023
+        #arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
+        arch: ["amd64", "arm64"]
+    env:
+      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - name: Remove image
+        run: |
+          docker rmi ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}
+      # TODO add remove from registry

@@ -101,19 +101,19 @@ jobs:
           docker stop $ID
           exit $return_code
 # TODO with fix: https://github.com/orgs/community/discussions/32023
-  tests:
-    name: Tests ${{ inputs.ARCH }}
-    needs: buildx
-    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
-    uses: ./.github/workflows/testing.yml
-    with:
-      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
-      ARCH: ${{ inputs.arch }}
-      TESTS: ${{ matrix.tests }}
+#  tests:
+#    name: Tests ${{ inputs.ARCH }}
+#    needs: buildx
+#    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}
+#    strategy:
+#      fail-fast: false
+#      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
+#    uses: ./.github/workflows/testing.yml
+#    with:
+#      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+#      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+#      ARCH: ${{ inputs.arch }}
+#      TESTS: ${{ matrix.tests }}
           
   test1:
     name: Test ${{ inputs.ARCH }}
