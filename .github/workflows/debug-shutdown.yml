@@ -1,4 +1,4 @@
-name: debug build
+name: debug shutdown build
 
 on:
   push:
