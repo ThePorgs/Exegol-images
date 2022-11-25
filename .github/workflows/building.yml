@@ -104,9 +104,10 @@ jobs:
   tests:
     name: Tests ${{ inputs.ARCH }}
     needs: buildx
+    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests) }}
+      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
     uses: ./.github/workflows/testing.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
