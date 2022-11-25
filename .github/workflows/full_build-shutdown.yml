@@ -33,7 +33,7 @@ jobs:
         id: set-matrix
         name: "Debug exec"
         run: |
-          echo ${{ inputs.env.INPUT_SUPPORTED_ARCH }}
+          echo ${{ env.INPUT_SUPPORTED_ARCH }}
           echo 'matrix=["amd64","arm64"]'
           echo 'matrix=["amd64","arm64"]' >> $GITHUB_OUTPUT
 
