@@ -8,12 +8,12 @@ on:
 jobs:
   building_debug:
     name: Preparing
-#    strategy:
+    strategy:
       # fail-fast: false
-#      matrix:
-#        include:
-#          - tag: debug
-#            dockerfile: "debug.dockerfile"
+      matrix:
+        include:
+          - tag: debug
+            dockerfile: "debug.dockerfile"
           #- tag: nightly
           #  dockerfile: "Dockerfile"
     uses: ./.github/workflows/bug.yml
