@@ -29,11 +29,15 @@ jobs:
     env:
       debug: ${{ inputs.SUPPORTED_ARCH }}
       debug_bis: ${{ fromJson(inputs.SUPPORTED_ARCH).include }}
-    run: |
-      echo $debug
-      echo $debug_bis
-      echo ${{ inputs.SUPPORTED_ARCH }}
-      echo ${{ fromJson(inputs.SUPPORTED_ARCH) }}
+
+    steps:
+      -
+        name: "Debug exec"
+        run: |
+          echo $debug
+          echo $debug_bis
+          echo ${{ inputs.SUPPORTED_ARCH }}
+          echo ${{ fromJson(inputs.SUPPORTED_ARCH) }}
   build_tests:
     name: Builds & tests
     needs: debug
