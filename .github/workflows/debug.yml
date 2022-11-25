@@ -10,13 +10,13 @@ jobs:
     name: Builds & tests
     strategy:
       matrix:
-        target: ["debug", "light"]
+        tag: ["debug", "light"]
     uses: ./.github/workflows/modules/full_build.yml
     with:
       DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
       DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
-      IMAGE_BASE_NAME: ${{ matrix.target }}
-      DOCKERFILE: ./${{ matrix.target }}.dockerfile
+      IMAGE_BASE_NAME: ${{ matrix.tag }}
+      DOCKERFILE: ./${{ matrix.tag }}.dockerfile
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
