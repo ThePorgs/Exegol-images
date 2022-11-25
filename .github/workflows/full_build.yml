@@ -26,25 +26,30 @@ jobs:
   debug:
     runs-on:
       - self-hosted
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     env:
       debug: ${{ inputs.SUPPORTED_ARCH }}
       debug_bis: ${{ toJson(fromJson(inputs.SUPPORTED_ARCH).include) }}
 
     steps:
       -
+        id: set-matrix
         name: "Debug exec"
         run: |
           echo $debug
           echo $debug_bis
           echo ${{ inputs.SUPPORTED_ARCH }}
           echo ${{ fromJson(inputs.SUPPORTED_ARCH) }}
+          echo 'matrix={"include":[{"arch":"amd64"},{"arch":"arm64"}]}'
+          echo 'matrix={"include":[{"arch":"amd64"},{"arch":"arm64"}]}' >> $GITHUB_OUTPUT
+
   build_tests:
     name: Builds & tests
     needs: debug
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
     uses: ./.github/workflows/building.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
