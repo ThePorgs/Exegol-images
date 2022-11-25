@@ -14,8 +14,8 @@ jobs:
         include:
           - tag: debug
             dockerfile: "debug.dockerfile"
-#          - tag: nightly
-#            dockerfile: "Dockerfile"
+          - tag: nightly
+            dockerfile: "Dockerfile"
     uses: ./.github/workflows/full_build.yml
     with:
       DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
