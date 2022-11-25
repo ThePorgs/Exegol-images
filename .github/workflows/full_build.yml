@@ -41,6 +41,7 @@ jobs:
   build_tests:
     name: Builds & tests
     needs: debug
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
