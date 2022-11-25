@@ -25,8 +25,6 @@ jobs:
       matrix: ${{ fromJson(needs.setup.outputs.data) }}
       # matrix: ${{ fromJson('{"include":[{"arch":"amd64"},{"arch":"arm64"}') }}
          #arch: ${{ fromJson('["amd64","arm64"]') }}
-    runs-on: self-hosted
-    steps:
-      - name: test
-        run: |
-          echo ${{ matrix.arch }}
+    uses: ./.github/workflows/building.yml
+    with:
+      ARCH: ${{ matrix.arch }}
