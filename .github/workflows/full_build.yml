@@ -20,14 +20,14 @@ on:
         required: true
 
 env:
-  archs: ["amd64", "arm64"]
+  SUPPORTED_ARCH: '["amd64", "arm64"]'
 
 jobs:
   build_tests:
     name: Builds & tests
     strategy:
       matrix:
-        arch: ${{ env.archs }}
+        arch: ${{ fromJson(env.SUPPORTED_ARCH) }}
     uses: ./.github/workflows/building.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
