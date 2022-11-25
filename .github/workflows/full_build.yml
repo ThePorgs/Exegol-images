@@ -27,8 +27,7 @@ jobs:
     name: Builds & tests
     strategy:
       fail-fast: false
-      matrix:
-        arch: ${{ fromJson(inputs.SUPPORTED_ARCH).archs }}
+      matrix: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
     uses: ./.github/workflows/building.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
