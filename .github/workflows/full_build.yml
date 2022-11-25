@@ -14,8 +14,7 @@ on:
         required: true
         type: string
       SUPPORTED_ARCH:
-        required: false
-        default: '{"archs":["amd64", "arm64"]}'
+        required: true
         type: string
     secrets:
       DOCKER_PASSWORD:
