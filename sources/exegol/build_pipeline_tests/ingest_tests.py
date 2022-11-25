@@ -16,7 +16,7 @@ with open(infile_path, 'r') as f:
     print(f"[+] Read all tests from {infile_path}")
     d = {'tests': list(divide_tests(all_tests, MAX_JOBS))}
     print(f"[+] Divided into chunks of size {MAX_JOBS}")
-    json_tests = json.dumps(d, indent=4)
+    json_tests = json.dumps(d)
     print("[+] Converted to JSON structure")
 
 
