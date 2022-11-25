@@ -15,7 +15,8 @@ on:
         type: string
       SUPPORTED_ARCH:
         required: false
-        default: ["amd64", "arm64"]
+        default: '["amd64", "arm64"]'
+        type: string
     secrets:
       DOCKER_PASSWORD:
         required: true
@@ -27,7 +28,7 @@ jobs:
     name: Builds & tests
     strategy:
       matrix:
-        arch: ${{ inputs.SUPPORTED_ARCH }}
+        arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
     uses: ./.github/workflows/building.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
