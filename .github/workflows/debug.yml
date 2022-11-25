@@ -22,7 +22,7 @@ jobs:
       DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
       IMAGE_BASE_NAME: ${{ matrix.tag }}
       DOCKERFILE: ${{ matrix.dockerfile }}
-      SUPPORTED_ARCH: '{"arch":["amd64", "arm64"]}'
+      SUPPORTED_ARCH: '{"include":[{"arch":"amd64"}, {"arch":"arm64"}]}'
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
