@@ -25,7 +25,6 @@ on:
 jobs:
   build_tests:
     name: Builds & tests
-    needs: debug
     strategy:
       fail-fast: false
       matrix:
