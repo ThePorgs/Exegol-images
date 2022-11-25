@@ -6,7 +6,7 @@ MAX_JOBS = 250
 # Dividing all_tests list into chunks of size n
 def divide_tests(l, n):
     for i in range(0, len(l), n):
-        yield l[i:i + n]
+        yield str(l[i:i + n])
 
 
 # Reading all test commands and converting to JSON structure

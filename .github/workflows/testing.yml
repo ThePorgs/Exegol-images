@@ -12,6 +12,7 @@ on:
         type: string
       TESTS:
         required: true
+        type: string
 
 
 jobs:
@@ -20,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ inputs.TESTS }}
+        command: ${{ fromJson(inputs.TESTS) }}
     steps:
       - name: Image command testing
         run: |
