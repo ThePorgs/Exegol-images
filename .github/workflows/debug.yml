@@ -5,20 +5,15 @@ on:
     branches:
       - cicd
 
-env:
-  DOCKER_INTERMEDIATE_REPO: "nwodtuhs/exegol-builds"
-  DOCKER_PROD_REPO: "nwodtuhs/exegol-dev"
-  IMAGE_BASE_NAME: "debug"
-  DOCKERFILE: "./debug.dockerfile"
-
 jobs:
   building_debug:
+    name: Building debug
     uses: ./.github/workflows/building.yml
     with:
-      DOCKER_BUILD_REPO: ${{ env.DOCKER_INTERMEDIATE_REPO }}
-      DOCKER_TARGET_REPO: ${{ env.DOCKER_PROD_REPO }}
-      IMAGE_BASE_NAME: ${{ env.IMAGE_BASE_NAME }}
-      DOCKERFILE: ${{ env.DOCKERFILE }}
+      DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+      DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
+      IMAGE_BASE_NAME: "debug"
+      DOCKERFILE: "./debug.dockerfile"
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
