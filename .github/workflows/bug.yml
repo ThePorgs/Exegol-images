@@ -28,3 +28,6 @@ jobs:
     uses: ./.github/workflows/building.yml
     with:
       ARCH: ${{ matrix.arch }}
+      DOCKER_BUILD_REPO: " "
+      IMAGE_BASE_NAME: " "
+      DOCKERFILE: " "
