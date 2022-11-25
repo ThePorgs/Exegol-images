@@ -425,11 +425,8 @@ function install_lsassy() {
 
 function install_sprayhound() {
   colorecho "Installing sprayhound"
-  git -C /opt/tools/ clone https://github.com/Hackndo/sprayhound
-  cd /opt/tools/sprayhound || exit
   apt-get -y install libsasl2-dev libldap2-dev
-  python3 -m pip install "pyasn1<0.5.0,>=0.4.6"
-  python3 setup.py install
+  python3 -m pipx install git+https://github.com/Hackndo/sprayhound
   add-history sprayhound
   add-test-command "sprayhound --help"
 }
