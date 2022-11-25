@@ -1,9 +1,5 @@
-name: bug poc
-
 on:
-  push:
-    branches:
-      - cicd
+  workflow_call:
 
 jobs:
   setup:
