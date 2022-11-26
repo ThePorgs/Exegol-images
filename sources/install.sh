@@ -186,18 +186,18 @@ function install_goshs(){
   add-test-command "goshs -v"
 }
 
-function install_sslyze(){
+function instalsslyzel_sslyze(){
   colorecho "Installing sslyze"
   if [[ $(uname -m) = 'x86_64' ]]
   then
     python3 -m pipx install sslyze
-    add-history sslyze
-    add-test-command "sslyze --help"
   else
     # https://github.com/nabla-c0d3/nassl/issues/86
     # FIXME we need some tinkering here to make it work on aarch64 (and move back add-history / add-test-command)
-    criticalecho-noexit "This installation function (xar) doesn't support architecture $(uname -m)" && r
+    criticalecho-noexit "This installation function (sslyze) doesn't support architecture $(uname -m)" && return
   fi
+  add-history sslyze
+  add-test-command "sslyze --help"
 }
 
 function install_weevely() {
@@ -425,11 +425,8 @@ function install_lsassy() {
 
 function install_sprayhound() {
   colorecho "Installing sprayhound"
-  git -C /opt/tools/ clone https://github.com/Hackndo/sprayhound
-  cd /opt/tools/sprayhound || exit
   apt-get -y install libsasl2-dev libldap2-dev
-  python3 -m pip install "pyasn1<0.5.0,>=0.4.6"
-  python3 setup.py install
+  python3 -m pipx install git+https://github.com/Hackndo/sprayhound
   add-history sprayhound
   add-test-command "sprayhound --help"
 }
@@ -587,7 +584,7 @@ function install_empire() {
     (cd xar-1.6.1 && ./autogen.sh --build=aarch64-unknown-linux-gnu)
     (cd xar-1.6.1 && ./configure --build=aarch64-unknown-linux-gnu)
   else
-    criticalecho-noexit "This installation function (xar) doesn't support architecture $(uname -m)" && r
+    criticalecho-noexit "This installation function (xar) doesn't support architecture $(uname -m)" && return
   fi
   (cd xar-1.6.1 && make)
   (cd xar-1.6.1 && make install)
@@ -1436,7 +1433,6 @@ function install_ghidra() {
 
 function install_ida() {
   colorecho "Installing IDA"
-
   if [[ $(uname -m) = 'x86_64' ]]
   then
     wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
@@ -1444,7 +1440,7 @@ function install_ida() {
     /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
     rm /tmp/idafree77_linux.run
   else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64"
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64" && return
   fi
   add-aliases ida
   # TODO add-test-command GUI app
@@ -2360,6 +2356,7 @@ function install_goldencopy() {
 function install_crackhound() {
   colorecho "Installing CrackHound"
   git -C /opt/tools/ clone https://github.com/trustedsec/CrackHound
+  python3 -m pip install -r /opt/tools/CrackHound/requirements.txt
   add-aliases crackhound
   add-history crackhound
   add-test-command "crackhound.py --help"
@@ -3294,7 +3291,7 @@ function package_web() {
   install_testssl                 # SSL/TLS scanner
   install_sslscan                 # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
-  install_sslyze                  # SSL/TLS scanner
+  install_                  # SSL/TLS scanner
   install_weevely                 # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
