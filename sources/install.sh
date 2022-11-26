@@ -1859,6 +1859,7 @@ function install_adidnsdump() {
 function install_dnschef() {
   colorecho "Installing DNSChef"
   git -C /opt/tools/ clone https://github.com/iphelix/dnschef
+  python3 -m pip install -r /opt/tools/dnschef/requirements.txt
   add-aliases dnschef
   add-test-command "dnschef --help"
 }
@@ -2231,7 +2232,7 @@ function install_prips() {
 function install_hakrevdns() {
   # Reverse DNS lookups
   colorecho "Installing Hakrevdns"
-  go install github.com/hakluke/hakrevdns@latest
+  go install -v github.com/hakluke/hakrevdns@latest
   add-history hakrevdns
   add-test-command "hakrevdns --help; hakrevdns --help |& grep 'Protocol to use for lookups'"
 }
@@ -2447,6 +2448,9 @@ function install_xsser(){
 function install_joomscan(){
   colorecho "Installing joomscan"
   git -C /opt/tools/ clone https://github.com/rezasp/joomscan.git
+  fapt libc6-dev gcc libcrypt-ssleay-perl openssl libssl-dev libz-dev
+  cpanm Bundle::LWP
+  cpanm LWP::Protocol::https
   add-aliases joomscan
   add-test-command "joomscan --version"
 }
@@ -3128,6 +3132,7 @@ function package_base() {
   fapt ruby ruby-dev
   install_libxml2-utils
   fapt nim
+  fapt perl
   install_exegol-history
   install_logrotate
 }
