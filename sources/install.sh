@@ -2507,7 +2507,7 @@ function install_mobile_tools() {
   fapt apksigner
   fapt apktool
   install_frida
-  install_objection
+  install_objection		  # Runtime mobile exploration toolkit
   install_androguard              # Reverse engineering and analysis of Android applications
 }
 
@@ -2572,10 +2572,10 @@ function install_network_tools() {
   fapt freerdp2-x11
   fapt rdesktop
   fapt xtightvncviewer
-  install_dnsx
-  install_shuffledns
-  install_tailscale
-  install_ligolo-ng
+  install_dnsx			  # Fast and multi-purpose DNS toolkit
+  install_shuffledns		  # Wrapper around massdns to enumerate valid subdomains
+  install_tailscale		  # Zero config VPN for building secure networks
+  install_ligolo-ng		  # Tunneling tool that uses a TUN interface
 }
 
 # Package dedicated to wifi pentest tools
@@ -2599,7 +2599,7 @@ function install_forensic_tools() {
   fapt binwalk                    # Tool to find embedded files
   fapt foremost                   # Alternative to binwalk
   install_volatility              # Memory analysis tool
-  install_volatility3
+  install_volatility3		  # Memory analysis tool v2
   install_trid                    # filetype detection tool
   #install_peepdf                  # PDF analysis
 }
@@ -2645,8 +2645,8 @@ function install_crypto_tools() {
 # Package dedicated to SAST and DAST tools
 function install_code_analysis_tools() {
   install_vulny_code_static_analysis
-  install_brakeman
-  install_semgrep
+  install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
+  install_semgrep                 # Static analysis engine for finding bugs and vulnerabilities
 }
 
 # Function used to clean up post-install files
