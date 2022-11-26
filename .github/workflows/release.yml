@@ -12,16 +12,18 @@ jobs:
       # fail-fast: false
       matrix:
         include:
-          - tag: full
-            dockerfile: "Dockerfile"
-          - tag: light
-            dockerfile: "light.dockerfile"
-          - tag: ad
-            dockerfile: "ad.dockerfile"
-          - tag: web
-            dockerfile: "web.dockerfile"
-          - tag: osint
-            dockerfile: "osint.dockerfile"
+          - tag: debug
+            dockerfile: "debug.dockerfile"
+#          - tag: full
+#            dockerfile: "Dockerfile"
+#          - tag: light
+#            dockerfile: "light.dockerfile"
+#          - tag: ad
+#            dockerfile: "ad.dockerfile"
+#          - tag: web
+#            dockerfile: "web.dockerfile"
+#          - tag: osint
+#            dockerfile: "osint.dockerfile"
     uses: ./.github/workflows/full_build.yml
     with:
       DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
