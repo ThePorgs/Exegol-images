@@ -392,6 +392,7 @@ function install_evilwinrm() {
 function install_bolt() {
   colorecho "Installing Bolt"
   git -C /opt/tools/ clone https://github.com/s0md3v/Bolt.git
+  python3 -m pip install -r /opt/tools/Bolt/requirements.txt
   add-aliases bolt
   add-test-command "bolt --help"
 }
@@ -435,7 +436,6 @@ function install_impacket() {
   colorecho "Installing Impacket scripts"
   apt-get -y install libffi-dev
   git -C /opt/tools/ clone https://github.com/ThePorgs/impacket
-  git -C /opt/tools/impacket checkout exegol
   add-test-command "[ -d '/opt/tools/impacket/impacket' ]"
 
   # Following PRs are merged in the forked repo
@@ -466,6 +466,7 @@ function install_impacket() {
   # conflict 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
 
   python3 -m pipx install /opt/tools/impacket/
+  python3 -m pipx inject impacket chardet
 
   cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
   cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
