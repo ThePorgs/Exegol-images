@@ -2393,6 +2393,7 @@ function install_web_tools() {
   install_naabu                   # Fast port scanner
 #  install_gitrob                  # Senstive files reconnaissance in github
   burp
+  fapt swaks			  # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 }
 
 # Package dedicated to command & control frameworks
