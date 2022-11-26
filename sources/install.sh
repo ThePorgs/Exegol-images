@@ -436,7 +436,6 @@ function install_impacket() {
   colorecho "Installing Impacket scripts"
   apt-get -y install libffi-dev
   git -C /opt/tools/ clone https://github.com/ThePorgs/impacket
-  add-test-command "[ -d '/opt/tools/impacket/impacket' ]"
 
   # Following PRs are merged in the forked repo
   # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
@@ -2503,7 +2502,7 @@ function install_smbmap(){
   cd /opt/tools/smbmap || exit
   # installing requirements manually to skip impacket overwrite
   # wish we could install smbmap in virtual environment :'(
-  python3 -m pip install pyasn1 pycrypto configparser termcolor
+  python3 -m pip install pyasn1 pycrypto configparser termcolor impacket
   add-aliases smbmap
   add-history smbmap
   add-test-command "smbmap --help"
