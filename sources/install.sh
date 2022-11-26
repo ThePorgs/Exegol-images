@@ -106,6 +106,10 @@ function Sublist3r() {
   python3 -m pip install -r /opt/tools/Sublist3r/requirements.txt
 }
 
+function install_php_filter_chain_generator() {
+  git -C /opt/tools/ clone https://github.com/synacktiv/php_filter_chain_generator.git
+}
+
 function ReconDog() {
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
@@ -2394,6 +2398,7 @@ function install_web_tools() {
 #  install_gitrob                  # Senstive files reconnaissance in github
   burp
   fapt swaks			  # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
+  install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
 }
 
 # Package dedicated to command & control frameworks
