@@ -29,6 +29,7 @@ jobs:
     timeout-minutes: 360
     runs-on:
       - self-hosted
+      - builder
       - ${{ inputs.ARCH }}
     outputs:
       matrix_tests: ${{ steps.set-matrix.outputs.matrix_tests }}
@@ -79,13 +80,6 @@ jobs:
           platforms: linux/${{ inputs.ARCH }}
           file: ${{ inputs.DOCKERFILE }}
           context: .
-      - name: Login to Dockerhub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push docker image
-        run: docker push ${{ steps.prepare_build.outputs.image_full_name }}
       - name: List available tests
         id: set-matrix
         run: |
@@ -109,11 +103,28 @@ jobs:
           fi
           docker stop $ID
           exit $return_code
+  push:
+    name: Push ${{ inputs.ARCH }}
+    timeout-minutes: 360
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    steps:
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push docker image
+        run: docker push ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
 # TODO with fix: https://github.com/orgs/community/discussions/32023
 #  tests:
 #    name: Tests ${{ inputs.ARCH }}
-#    needs: buildx
-#    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}
+#    needs: 
+#      - buildx
+#      - push
+#    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
 #    strategy:
 #      fail-fast: false
 #      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
@@ -126,10 +137,13 @@ jobs:
           
   test1:
     name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
-    needs: buildx
+    needs: 
+      - buildx
+      - push
     if: ${{ needs.buildx.outputs.matrix_p1 != '[]' && needs.buildx.outputs.matrix_p1 != '' }}
     runs-on:
       - self-hosted
+      - tester
       - ${{ inputs.ARCH }}
     strategy:
       fail-fast: false
@@ -148,10 +162,13 @@ jobs:
           docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
   test2:
     name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
-    needs: buildx
+    needs: 
+      - buildx
+      - push
     if: ${{ needs.buildx.outputs.matrix_p2 != '[]' && needs.buildx.outputs.matrix_p2 != '' }}
     runs-on:
       - self-hosted
+      - tester
       - ${{ inputs.ARCH }}
     strategy:
       fail-fast: false
@@ -170,10 +187,13 @@ jobs:
           docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
   test3:
     name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
-    needs: buildx
+    needs: 
+      - buildx
+      - push
     if: ${{ needs.buildx.outputs.matrix_p3 != '[]' && needs.buildx.outputs.matrix_p3 != '' }}
     runs-on:
       - self-hosted
+      - tester
       - ${{ inputs.ARCH }}
     strategy:
       fail-fast: false
@@ -192,10 +212,13 @@ jobs:
           docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
   test4:
     name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
-    needs: buildx
+    needs: 
+      - buildx
+      - push
     if: ${{ needs.buildx.outputs.matrix_p4 != '[]' && needs.buildx.outputs.matrix_p4 != '' }}
     runs-on:
       - self-hosted
+      - tester
       - ${{ inputs.ARCH }}
     strategy:
       fail-fast: false
@@ -215,14 +238,16 @@ jobs:
 
   clean:
     name: Cleaning ${{ inputs.ARCH }}
-    needs: 
+    needs:
       - buildx
+      - push
       - test1
       - test2
       - test3
       - test4
     runs-on:
       - self-hosted
+      - builder
       - ${{ inputs.ARCH }}
     if: always()  # always mode clean the environment even when the task is cancelled by a user
     steps:
@@ -230,3 +255,29 @@ jobs:
         run: docker image prune --filter "label=org.exegol.app=Exegol" --force
       - name: Clean unused volume
         run: docker volume prune --force
+
+  clean_build_images:
+    # Remove final image (free disk space)
+    name: Clean docker image
+    needs:
+      - buildx
+      - push
+      - test1
+      - test2
+      - test3
+      - test4
+    if: ${{ always() && needs.buildx.result == 'success' && needs.push.result == 'success' }}
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    env:
+      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      ARCH: ${{ inputs.ARCH }}
+    steps:
+      - name: Remove build image ${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+        run: |
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}
+          echo "Removing $image_name"
+          docker image inspect $image_name && docker rmi $image_name
