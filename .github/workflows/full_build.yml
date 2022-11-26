@@ -11,6 +11,10 @@ on:
       IMAGE_BASE_NAME:
         required: true
         type: string
+      IMAGE_VERSION:
+        required: false
+        default: ''
+        type: string
       DOCKERFILE:
         required: true
         type: string
@@ -36,6 +40,7 @@ jobs:
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
     secrets: inherit
@@ -58,17 +63,24 @@ jobs:
       - name: Create and push manifest
         if: success()
         run: |
-          echo "Create manifest for $archs"
+          echo "Create manifest"
           docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
+      - name: Create and push version manifest
+        if: success() && inputs.IMAGE_VERSION != ''
+        run: |
+          echo "Create version manifest"
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
       - name: Remove intermediate images
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
 
-  clean_runner:
+  clean_build_images:
     # Remove final image without DOCKER_TARGET_REPO set
     name: Clean final image
     needs: build_tests
