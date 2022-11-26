@@ -56,7 +56,9 @@ jobs:
           BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           echo "image_repo=${DOCKER_REPO}" >> $GITHUB_OUTPUT
           echo "image_name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "image_full_name=${DOCKER_REPO}:${IMAGE_NAME}"
           echo "image_full_name=${DOCKER_REPO}:${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "image_version=${IMAGE_VERSION}"
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
           echo "build_date=${BUILD_DATE}" >> $GITHUB_OUTPUT
       - name: Set up QEMU
