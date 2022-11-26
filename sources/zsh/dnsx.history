@@ -1,0 +1,1 @@
+subfinder -silent -d example.com | dnsx -silent

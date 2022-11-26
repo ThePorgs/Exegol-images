@@ -1,0 +1,1 @@
+tailscale up --advertise-routes=10.10.11.0/24

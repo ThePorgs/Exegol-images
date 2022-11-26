@@ -1,0 +1,1 @@
+shuffledns -d example.com -list example-subdomains.txt -r resolvers.txt

@@ -238,7 +238,6 @@ buster -e 'j********9@g****.com' -f john -l doe -b '****1989'
 cloudfail.py --target seo.com --tor
 assetfinder google.com
 subfinder -d freelancer.com
-subfinder -silent -d example.com | dnsx -silent
 theHarvester -d github.com -b all
 nfc-scan-device -v
 nfc-list
@@ -312,7 +311,6 @@ prips -i4 192.168.0.10 192.168.0.250
 prips 173.0.84.0/24 | hakrevdns
 nuclei -u https://example.com
 httpx -probe -list hosts.txt -tech-detect -status-code -fr
-shuffledns -d example.com -list example-subdomains.txt -r resolvers.txt
 prips 192.168.56.0/24|hakrevdns -d|httpx -probe -tech-detect -status-code -fr
 ntpdate -u "$TARGET"
 renameMachine.py -current-name 'testcomputer$' -new-name 'DC01' -dc-ip dc01 "$DOMAIN"/"$USER":"$PASSWORD"
@@ -345,8 +343,4 @@ kerbrute bruteuser -d "$DOMAIN" passwords.lst thoffman
 tls-scanner -connect "$TARGET":443
 hekatomb -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET" -debug -dnstcp
 # -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #
-objection --gadget asvid.github.io.fridaapp explore
 spiderfoot -l 127.0.0.1:9889
-brakeman /path/to/rails/application
-semgrep -e '$X == $X' --lang=py path/to/src
-tailscale up --advertise-routes=10.10.11.0/2
