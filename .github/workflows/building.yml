@@ -228,3 +228,5 @@ jobs:
     steps:
       - name: Clean unused dangling images
         run: docker image prune --filter "label=org.exegol.app=Exegol" --force
+      - name: Clean unused volume
+        run: docker volume prune --force

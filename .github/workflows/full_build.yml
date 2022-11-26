@@ -81,10 +81,10 @@ jobs:
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
 
   clean_build_images:
-    # Remove final image without DOCKER_TARGET_REPO set
-    name: Clean final image
+    # Remove final image (free disk space)
+    name: Clean docker image
     needs: build_tests
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO == '' }}
+    if: ${{ always() }}
     strategy:
       fail-fast: false
       matrix:
@@ -99,7 +99,9 @@ jobs:
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       ARCH: ${{ matrix.arch }}
     steps:
-      - name: Remove image
+      - name: Remove build image ${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
         run: |
-          docker rmi ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}
+          echo "Removing $image_name"
+          docker image inspect $image_name && docker rmi $image_name
       # TODO add remove from registry
