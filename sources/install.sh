@@ -1081,8 +1081,7 @@ function install_enyx() {
 
 function install_enum4linux-ng() {
   colorecho "Installing enum4linux-ng"
-  git -C /opt/tools/ clone https://github.com/cddmp/enum4linux-ng
-  add-aliases enum4linux-ng
+  python3 -m pipx install git+https://github.com/cddmp/enum4linux-ng
   add-history enum4linux-ng
   add-test-command "enum4linux-ng --help"
 }
