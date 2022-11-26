@@ -343,4 +343,3 @@ kerbrute bruteuser -d "$DOMAIN" passwords.lst thoffman
 tls-scanner -connect "$TARGET":443
 hekatomb -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET" -debug -dnstcp
 # -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #
-spiderfoot -l 127.0.0.1:9889
