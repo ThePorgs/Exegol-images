@@ -3133,6 +3133,7 @@ function package_base() {
   fapt perl
   install_exegol-history
   install_logrotate
+  fapt openjdk-17-jre
 }
 
 # Package dedicated to offensive miscellaneous tools
