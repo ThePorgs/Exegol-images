@@ -1,0 +1,20 @@
+name: PR dev
+
+on:
+  pull_request:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      - dev
+
+jobs:
+  building_pr:
+    name: Preparing
+    uses: ./.github/workflows/full_build.yml
+    with:
+      DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+      IMAGE_BASE_NAME: "pr-dev"
+      DOCKERFILE: "Dockerfile"
+      SUPPORTED_ARCH: '["amd64","arm64"]'
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
