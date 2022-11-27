@@ -1,9 +1,9 @@
 name: Release OSINT
 
-#on:
-#  push:
-#    tags:
-#      - '*'
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   release_image:
