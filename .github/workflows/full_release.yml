@@ -1,4 +1,4 @@
-name: FULL release
+name: Release FULL
 
 on:
   push:

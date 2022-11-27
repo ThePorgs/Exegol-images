@@ -1,4 +1,4 @@
-name: AD release
+name: Release AD
 
 on:
   push:

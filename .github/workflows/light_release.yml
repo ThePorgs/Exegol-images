@@ -1,4 +1,4 @@
-name: LIGHT release
+name: Release LIGHT
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: OSINT release
+name: Release OSINT
 
 on:
   push:
