@@ -3168,7 +3168,7 @@ function package_most_used() {
   install_ffuf                    # Web fuzzer (little favorites)
   install_sqlmap                  # SQL injection scanner
   install_hydra                   # Login scanner
-  install_joomscan                # Joomla scanner
+  # install_joomscan                # Joomla scanner FIXME (https://github.com/ThePorgs/Exegol-images/actions/runs/3557732633/jobs/5977150292)
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
