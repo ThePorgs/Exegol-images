@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  building_pr_main:
+  release_images:
     name: Preparing
     strategy:
       # fail-fast: false
