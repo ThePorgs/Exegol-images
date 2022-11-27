@@ -110,6 +110,8 @@ jobs:
       - self-hosted
       - builder
       - ${{ inputs.ARCH }}
+    needs: buildx
+    if: ${{ always() && needs.buildx.result == 'success' }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
