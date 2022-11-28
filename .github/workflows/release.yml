@@ -3,7 +3,7 @@ name: tag release deployment
 on:
   push:
     tags:
-      - '*'
+      - disable #'*'
 
 jobs:
   release_images:
