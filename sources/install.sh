@@ -3284,7 +3284,7 @@ function package_web() {
   install_kadimus                 # LFI scanner
   install_fuxploider              # File upload scanner
   # install_patator               # Login scanner # FIXME
-  install_joomscan                # Joomla scanner
+  # install_joomscan                # Joomla scanner FIXME (https://github.com/ThePorgs/Exegol-images/actions/runs/3557732633/jobs/5977150292)
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
