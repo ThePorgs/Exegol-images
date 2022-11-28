@@ -1,0 +1,2 @@
+theHarvester -d github.com -b all
+theHarvester.py -d "$DOMAIN" -g -s -r -f "$DOMAIN.xml" -b all

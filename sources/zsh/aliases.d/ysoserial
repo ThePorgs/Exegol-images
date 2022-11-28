@@ -1,0 +1,1 @@
+alias ysoserial='java -jar /opt/tools/ysoserial/ysoserial.jar'

@@ -1,0 +1,87 @@
+name: 🐞 Bug report [IMAGE]
+description: Report a bug in Exegol IMAGE to help us improve the Exegol environment
+title: "[BUG] <title>"
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Verification before publication:
+        
+        - You are creating a feature request in the Exegol **IMAGE** repository (the exegol environment)! 
+        > If your request concerns the exegol command specific to the Exegol **WRAPPER**, please open your issue on the [Exegol](https://github.com/ThePorgs/Exegol) repository.
+        - Check that there is not already a issue for the **same** problem.
+        - Some problems are already well known and can be found in the **documentation** or on the Exegol **Discord**.
+
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: |
+        A clear and concise description of what the bug is.
+
+        Include both the current behavior (what you are seeing) as well as what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Create a container with Exegol image tag '...' in version 'x.y.z' with parameters '...'
+        2. Run the command `...`
+        3. Error message
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Exegol Wrapper Version
+      description: |
+        Paste output of `exegol version -vvv`.
+      placeholder: |
+        Paste your output here or a screenshot.
+      render: Text
+    validations:
+      required: True
+  - type: textarea
+    attributes:
+      label: Exegol container information
+      description: |
+        Paste output of `exegol info -vv <container_name>`.
+      placeholder: |
+        Paste your output here or a screenshot.
+      render: Text
+    validations:
+      required: True
+  - type: textarea
+    attributes:
+      label: Exception
+      description: |
+        If applicable, copy paste your exception stack:
+      placeholder: |
+        Paste your stacktrace here
+      render: Text
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: |
+        Add your customization logs `zcat /var/log/exegol/load_setups.log.gz || cat /var/log/exegol/load_setups.log`
+      placeholder: |
+        Paste your logs
+      render: Text
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: |
+        Links? References? Screenshot? Anything that will give us more context about the issue you are encountering!
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: "Thanks for completing our form!"

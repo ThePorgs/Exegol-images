@@ -1,0 +1,3 @@
+# The customization of some tools may require the installation of some packages or other dependencies.
+# To simplify this process, the name of the packages to be installed can be listed in this file.
+# All packages listed below will be installed automatically when creating a new Exegol container.

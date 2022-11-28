@@ -1,0 +1,1 @@
+tls-scanner -connect "$TARGET":443

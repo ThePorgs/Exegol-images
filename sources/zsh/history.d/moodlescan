@@ -1,0 +1,1 @@
+moodlescan -r -u "http://$TARGET/"

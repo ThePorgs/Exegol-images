@@ -1,0 +1,2 @@
+alias http-server='python3 -m http.server'
+alias pip3='python3 -m pip'

