@@ -112,7 +112,7 @@ function install_openvpn() {
 
 function install_exegol-history() {
   colorecho "Installing Exegol-history"
-#  git -C /opt/tools/ clone https://github.com/ShutdownRepo/Exegol-history
+#  git -C /opt/tools/ clone https://github.com/ThePorgs/Exegol-history
 # todo : below is something basic. A nice tool being created for faster and smoother worflow
   mkdir /opt/tools/Exegol-history
   echo "#export INTERFACE='eth0'" >> /opt/tools/Exegol-history/profile.sh
