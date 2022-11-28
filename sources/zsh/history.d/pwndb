@@ -1,0 +1,1 @@
+pwndb --target @example.com --output txt

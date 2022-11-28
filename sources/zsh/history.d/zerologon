@@ -1,0 +1,2 @@
+zerologon-restore "$DOMAIN"/dc01@"$DC_HOST" -target-ip "$TARGET" -hexpass "69762...6945d"
+zerologon-scan DC01 "$DC_HOST"

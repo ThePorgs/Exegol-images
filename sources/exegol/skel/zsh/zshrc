@@ -1,0 +1,4 @@
+# Config file dedicated to the user's personal zshrc profile shared between all exegol containers.
+# This file is sourced in /root/.zshrc file.
+# Alternatively, the /opt/my-resources/setup/load_user_setup.sh file can be used to operate the change once (instead of sourcing a file for each zsh instance)
+

@@ -1,0 +1,5 @@
+alias describeTicket='grc describeTicket.py'
+alias ntlmrelayx='grc ntlmrelayx.py'
+alias secretsdump='grc secretsdump.py'
+alias rbcd='grc rbcd.py'
+alias Get-GPPPassword='grc Get-GPPPassword.py'
