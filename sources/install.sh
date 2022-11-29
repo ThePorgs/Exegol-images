@@ -1911,6 +1911,8 @@ function install_volatility2() {
 
 function install_volatility3() {
   colorecho "Installing volatility3"
+  #python3 -m pipx install git+https://github.com/volatilityfoundation/volatility3 ## FIXME (Crypto + Yara)
+  # ~/.local/pipx/venvs/volatility3/bin/vol
   git -C /opt/tools/ clone https://github.com/volatilityfoundation/volatility3.git
   cd /opt/tools/volatility3
   python3 setup.py build
@@ -2097,8 +2099,7 @@ function install_frida() {
 
 function install_objection() {
   colorecho "Installing objection"
-  pip3 install Flask==2.0.3
-  pip3 install objection
+  python3 -m pipx install git+https://github.com/sensepost/objection
   add-history objection 
   add-test-command "objection --help"
 }
@@ -2306,8 +2307,6 @@ function install_tailscale() {
   curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
   chmod o+r /usr/share/keyrings/tailscale-archive-keyring.gpg
   curl -fsSL https://tailscale.com/install.sh | sh
-  ## Start tailscale in userspace networking mode 
-  tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &>/dev/null &
   add-history tailscale
   add-test-command "tailscale --help"
 }
@@ -2320,7 +2319,8 @@ function install_ligolo-ng() {
   go build -o proxy cmd/proxy/main.go
   GOOS=windows go build -o agent.exe cmd/agent/main.go
   GOOS=windows go build -o proxy.exe cmd/proxy/main.go
-  add-test-command "[ -d '/opt/tools/ligolo-ng' ]"
+  add-aliases ligolo-ng
+  add-test-command "/opt/tools/ligolo-ng/agent --help && ligolo-proxy --help"
 }
 
 function install_anew() {
