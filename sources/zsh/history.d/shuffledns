@@ -1,1 +1,4 @@
 shuffledns -d example.com -list example-subdomains.txt -r resolvers.txt
+subfinder -d example.com | shuffledns -d example.com -r resolvers.txt
+shuffledns -d example.com -w wordlist.txt -r resolvers.txt
+echo example.com | shuffledns -w wordlist.txt -r resolvers.txt

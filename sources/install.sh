@@ -108,6 +108,8 @@ function Sublist3r() {
 
 function install_php_filter_chain_generator() {
   git -C /opt/tools/ clone https://github.com/synacktiv/php_filter_chain_generator.git
+  add-aliases php_filter_chain_generator
+  add-test-command "php_filter_chain_generator --help"
 }
 
 function ReconDog() {
@@ -1432,33 +1434,15 @@ function install_volatility() {
   ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
 }
 
-function install_python3.9() {
-  colorecho "Installing python3.9"
-  mkdir /opt/python3.9
-  cd /opt/python3.9
-  wget https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
-  tar -xf Python-3.9.1.tgz
-  cd Python-3.9.1
-  ./configure --enable-optimizations
-  make -j 12
-  sudo make altinstall
-  rm ../Python-3.9.1.tgz
-}
-
-function rebuild_python3.9() {
-  colorecho "Rebuild python3.9"
-  cd /opt/python3.9/Python-3.9.1
-  sudo make altinstall
-}
-
 function install_volatility3() {
   colorecho "Installing volatility3"
-  apt-get install -y libbz2-dev lzma liblzma-dev
-  rebuild_python3.9
   git -C /opt/tools/ clone https://github.com/volatilityfoundation/volatility3.git
   cd /opt/tools/volatility3
-  python3.9 setup.py build
-  python3.9 setup.py install
+  python3 setup.py build
+  python3 setup.py install
+  add-aliases volatility3
+  add-history volatility3
+  add-test-command "volatility3 --help"
 }
 
 function install_zsteg() {
@@ -1605,7 +1589,10 @@ function install_frida() {
 
 function install_objection() {
   colorecho "Installing objection"
+  pip3 install Flask==2.0.3
   pip3 install objection
+  add-history objection 
+  add-test-command "objection --help"
 }
 
 function install_androguard() {
@@ -1715,11 +1702,15 @@ function install_vulny_code_static_analysis() {
 function install_brakeman() {
   colorecho "Installing Brakeman"
   gem install brakeman
+  add-history brakeman 
+  add-test-command "brakeman --help"
 }
 
 function install_semgrep() {
   colorecho "Installing semgrep"
   pip3 install semgrep
+  add-history semgrep
+  add-test-command "semgrep --help"
 }
 
 function install_GPOwned() {
@@ -1759,17 +1750,26 @@ function install_httpx() {
 function install_dnsx() {
   colorecho "Installing dnsx"
   go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+  add-history dnsx
+  add-test-command "dnsx --help"
 }
 
 function install_shuffledns() {
   colorecho "Installing shuffledns"
   go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+  add-history shuffledns 
+  add-test-command "shuffledns --help"
 }
 
 function install_tailscale() {
+  # https://github.com/tailscale/tailscale/issues/4338
+  curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
+  chmod o+r /usr/share/keyrings/tailscale-archive-keyring.gpg
   curl -fsSL https://tailscale.com/install.sh | sh
-  ## If we have "failed to connect to local tailscaled", we need to fix with :
-  ## tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &>/dev/null &
+  ## Start tailscale in userspace networking mode 
+  tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &>/dev/null &
+  add-history tailscale
+  add-test-command "tailscale --help"
 }
 
 function install_ligolo-ng() {
@@ -1780,6 +1780,7 @@ function install_ligolo-ng() {
   go build -o proxy cmd/proxy/main.go
   GOOS=windows go build -o agent.exe cmd/agent/main.go
   GOOS=windows go build -o proxy.exe cmd/proxy/main.go
+  add-test-command "[ -d '/opt/tools/ligolo-ng' ]"
 }
 
 function install_anew() {
@@ -2397,7 +2398,7 @@ function install_web_tools() {
   install_naabu                   # Fast port scanner
 #  install_gitrob                  # Senstive files reconnaissance in github
   burp
-  fapt swaks			  # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
+  fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
 }
 
@@ -2513,7 +2514,7 @@ function install_mobile_tools() {
   fapt apksigner
   fapt apktool
   install_frida
-  install_objection		  # Runtime mobile exploration toolkit
+  install_objection               # Runtime mobile exploration toolkit
   install_androguard              # Reverse engineering and analysis of Android applications
 }
 
@@ -2578,10 +2579,10 @@ function install_network_tools() {
   fapt freerdp2-x11
   fapt rdesktop
   fapt xtightvncviewer
-  install_dnsx			  # Fast and multi-purpose DNS toolkit
-  install_shuffledns		  # Wrapper around massdns to enumerate valid subdomains
-  install_tailscale		  # Zero config VPN for building secure networks
-  install_ligolo-ng		  # Tunneling tool that uses a TUN interface
+  install_dnsx                    # Fast and multi-purpose DNS toolkit
+  install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
+  install_tailscale               # Zero config VPN for building secure networks
+  install_ligolo-ng               # Tunneling tool that uses a TUN interface
 }
 
 # Package dedicated to wifi pentest tools
@@ -2605,7 +2606,7 @@ function install_forensic_tools() {
   fapt binwalk                    # Tool to find embedded files
   fapt foremost                   # Alternative to binwalk
   install_volatility              # Memory analysis tool
-  install_volatility3		  # Memory analysis tool v2
+  install_volatility3             # Memory analysis tool v2
   install_trid                    # filetype detection tool
   #install_peepdf                  # PDF analysis
 }
