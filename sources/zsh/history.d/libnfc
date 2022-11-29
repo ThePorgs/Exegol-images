@@ -1,0 +1,3 @@
+nfc-scan-device -v
+nfc-list
+nfc-mfclassic W A B original.dmp magic-gen1.dmp

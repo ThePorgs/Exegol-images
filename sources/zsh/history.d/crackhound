@@ -1,0 +1,1 @@
+crackhound.py --verbose --password 'exegol4thewin' --plain-text --plain-text --domain "$DOMAIN" --file ownedusers.txt --add-password

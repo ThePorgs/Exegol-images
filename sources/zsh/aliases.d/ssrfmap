@@ -1,0 +1,1 @@
+alias ssrfmap='cd /opt/tools/SSRFmap && echo "[*] changed dir : cd /opt/tools/SSRFmap/"  && python3 /opt/tools/SSRFmap/ssrfmap.py'

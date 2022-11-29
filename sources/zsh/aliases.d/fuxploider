@@ -1,0 +1,1 @@
+alias fuxploider='cd /opt/tools/fuxploider && echo "[*] changed dir : cd /opt/tools/fuxploider/"  && python3 fuxploider.py'

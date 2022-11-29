@@ -1,0 +1,6 @@
+alias proxmark3='echo "[+] the proxmark3 client is compiled for non-official/clone devices, make sure to compile again if you use an official device, before doing anything else"; proxmark3'
+alias pm3='echo "[+] the proxmark3 client is compiled for non-official/clone devices, make sure to compile again if you use an official device, before doing anything else"; pm3'
+alias pm3-flash='echo "[+] the proxmark3 client is compiled for non-official/clone devices, make sure to compile again if you use an official device, before doing anything else"; pm3-flash'
+alias pm3-flash-all='echo "[+] the proxmark3 client is compiled for non-official/clone devices, make sure to compile again if you use an official device, before doing anything else"; pm3-flash-all'
+alias pm3-flash-bootrom='echo "[+] the proxmark3 client is compiled for non-official/clone devices, make sure to compile again if you use an official device, before doing anything else"; pm3-flash-bootrom'
+alias pm3-flash-fullimage='echo "[+] the proxmark3 client is compiled for non-official/clone devices, make sure to compile again if you use an official device, before doing anything else"; pm3-flash-fullimage'

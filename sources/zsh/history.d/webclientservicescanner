@@ -1,0 +1,1 @@
+webclientservicescanner -dc-ip "$DC_HOST" "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"

@@ -1,0 +1,2 @@
+twint -u username --since '2015-12-20 20:30:15'
+twint -g='48.880048,2.385939,1km' -o file.csv --csv

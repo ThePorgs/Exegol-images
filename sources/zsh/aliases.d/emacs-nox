@@ -1,0 +1,1 @@
+alias emacs='emacs-nox'

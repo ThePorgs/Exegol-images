@@ -1,0 +1,1 @@
+echo "http://$TARGET/" | hakrawler -d 10

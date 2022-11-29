@@ -1,0 +1,1 @@
+alias BurpSuiteCommunity='java -jar -Xmx4g /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar'

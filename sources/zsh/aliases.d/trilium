@@ -1,0 +1,2 @@
+alias trilium-start='echo "Starting server on http://$(cat ~/.local/share/trilium-data/config.ini | grep host= | cut -d = -f 2):$(cat ~/.local/share/trilium-data/config.ini | grep port= | cut -d = -f 2)/" && nvm use 16 && nohup node /opt/tools/trilium/src/www &> ~/.trilium.nohup.out &'
+alias trilium-stop='fuser -k $(cat ~/.local/share/trilium-data/config.ini | grep port= | cut -d = -f 2)/tcp'

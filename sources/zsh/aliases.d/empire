@@ -1,0 +1,1 @@
+alias empire='cd /opt/tools/Empire && echo "[*] changed dir : cd /opt/tools/Empire" && python3 /opt/tools/Empire/empire.py'

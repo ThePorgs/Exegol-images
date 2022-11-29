@@ -1,0 +1,35 @@
+name: PR main
+
+on:
+  pull_request:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      - disable
+
+jobs:
+  building_pr_main:
+    name: Preparing
+    strategy:
+      # fail-fast: false
+      matrix:
+        include:
+          - tag: full
+            dockerfile: "Dockerfile"
+          - tag: light
+            dockerfile: "light.dockerfile"
+          - tag: ad
+            dockerfile: "ad.dockerfile"
+          - tag: web
+            dockerfile: "web.dockerfile"
+          - tag: osint
+            dockerfile: "osint.dockerfile"
+    uses: ./.github/workflows/full_build.yml
+    with:
+      DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+      DOCKER_TARGET_REPO: "nwodtuhs/exegol-preprod"
+      IMAGE_BASE_NAME: ${{ matrix.tag }}
+      DOCKERFILE: ${{ matrix.dockerfile }}
+      SUPPORTED_ARCH: '["amd64","arm64"]'
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

@@ -1,0 +1,4 @@
+onesixtyone "$TARGET" manager
+onesixtyone "$TARGET" private
+onesixtyone "$TARGET" public
+onesixtyone -c /usr/share/metasploit-framework/data/wordlists/snmp_default_pass.txt "$TARGET"

@@ -1,0 +1,3 @@
+alias gettgtpkinit.py='python3 /opt/tools/PKINITtools/gettgtpkinit.py'
+alias gets4uticket.py='python3 /opt/tools/PKINITtools/gets4uticket.py'
+alias getnthash.py='python3 /opt/tools/PKINITtools/getnthash.py'
