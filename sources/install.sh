@@ -2512,7 +2512,23 @@ function install_pth-tools(){
   colorecho "Installing pth-tools"
   git -C /opt/tools clone -v https://github.com/byt3bl33d3r/pth-toolkit
   cd /opt/tools/pth-toolkit || exit
-  for bin_name in pth*; do ln -s "/opt/tools/pth-toolkit/$bin_name" "/opt/tools/bin/$bin_name"; done
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_amd64.deb
+    wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_amd64.deb
+  elif [[ $(uname -m) = 'aarch64' ]]
+  then
+    wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armhf.deb
+    wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armhf.deb
+  elif [[ $(uname -m) = 'armv7l' ]]
+  then
+    wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armel.deb
+    wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armel.deb
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+  fi
+  fapt /tmp/libreadline6_6.3-8+b3.deb /tmp/multiarch-support_2.19-18+deb8u10.deb
+  add-aliases pth-tools
   add-history pth-tools
   # TODO add-test-command
   # FIXME probably won't work for ARM platforms
