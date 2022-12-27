@@ -44,4 +44,4 @@ The script is executed on the first startup of each new container with the "my-r
 Any command added in this script is executed.
 
 ## Contribution
-Feel free to contribute, implement new supported customizations, etc. and open a pull-request on [Exegol-images](https://github.com/ShutdownRepo/Exegol-images).
+Feel free to contribute, implement new supported customizations, etc. and open a pull-request on [Exegol-images](https://github.com/ThePorgs/Exegol-images).
