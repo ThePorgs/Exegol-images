@@ -2353,6 +2353,9 @@ function install_goldencopy() {
 function install_crackhound() {
   colorecho "Installing CrackHound"
   git -C /opt/tools/ clone https://github.com/trustedsec/CrackHound
+  cd /opt/tools/CrackHound
+  prs="6"
+  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
   python3 -m pip install -r /opt/tools/CrackHound/requirements.txt
   add-aliases crackhound
   add-history crackhound
