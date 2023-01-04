@@ -3041,6 +3041,12 @@ function install_tshark() {
   add-test-command "tshark --version"
 }
 
+function install_ldeep() {
+  colorecho "Installing ldeep"
+  python3 -m pipx install ldeep
+  add-test-command "ldeep --help"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   update || exit
@@ -3434,6 +3440,7 @@ function package_ad() {
   install_goldencopy
   install_crackhound
   install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
+  install_ldeep
 }
 
 # Package dedicated to mobile apps pentest tools
