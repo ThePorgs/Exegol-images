@@ -3056,7 +3056,7 @@ function install-genusernames() {
   wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
   sed -i 's/genadname/genusernames/g' genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
-  add-test-command "genusernames john doe"
+  add-test-command "genusernames 'john doe'"
 }
 
 # Package dedicated to the basic things the env needs
