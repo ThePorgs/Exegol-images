@@ -3054,7 +3054,7 @@ function install-genusernames() {
   colorecho "Installing genusernames"
   mkdir -p /opt/tools/genusernames
   wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
-  sed -i 's/genusernames/genusernames/g' genusernames.function
+  sed -i 's/genadname/genusernames/g' genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
   add-test-command "genusernames john doe"
 }
