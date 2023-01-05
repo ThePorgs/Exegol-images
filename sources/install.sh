@@ -3050,6 +3050,15 @@ function install_ldeep() {
   add-test-command "ldeep --help"
 }
 
+function install-genadnames() {
+  colorecho "Installing genadnames"
+  mkdir -p /opt/tools/genusernames
+  wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
+  sed -i 's/genadname/genusernames/g' genusernames.function
+  echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
+  add-test-command "genusernames john doe"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   update || exit
@@ -3229,6 +3238,7 @@ function package_wordlists() {
   install_cupp                    # User password profiler
   install_pass_station            # Default credentials database
   install_username-anarchy        # Generate possible usernames based on heuristics
+  install-genadnames
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
