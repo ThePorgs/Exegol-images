@@ -3048,6 +3048,7 @@ function install_ldeep() {
   colorecho "Installing ldeep"
   python3 -m pipx install ldeep
   add-test-command "ldeep --help"
+  add-history ldeep
 }
 
 function install-genusernames() {
