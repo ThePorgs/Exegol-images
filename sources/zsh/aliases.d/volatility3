@@ -1,1 +1,1 @@
-alias volatility3='python3 /opt/tools/volatility3/vol.py'
+alias volatility3='/root/.local/pipx/venvs/volatility3/bin/vol'

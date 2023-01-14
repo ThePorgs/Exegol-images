@@ -1911,12 +1911,7 @@ function install_volatility2() {
 
 function install_volatility3() {
   colorecho "Installing volatility3"
-  #python3 -m pipx install git+https://github.com/volatilityfoundation/volatility3 ## FIXME (Crypto + Yara)
-  # ~/.local/pipx/venvs/volatility3/bin/vol
-  git -C /opt/tools/ clone https://github.com/volatilityfoundation/volatility3.git
-  cd /opt/tools/volatility3
-  python3 setup.py build
-  python3 setup.py install
+  python3 -m pipx install git+https://github.com/volatilityfoundation/volatility3
   add-aliases volatility3
   add-history volatility3
   add-test-command "volatility3 --help"
