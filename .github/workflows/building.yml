@@ -19,13 +19,9 @@ on:
         type: string
     secrets:
       DOCKER_PASSWORD:
-        default: ''
-        type: string
-        required: false
+        required: true
       DOCKER_USERNAME:
-        default: ''
-        type: string
-        required: false
+        required: true
 
 jobs:
   buildx:
@@ -115,7 +111,7 @@ jobs:
       - builder
       - ${{ inputs.ARCH }}
     needs: buildx
-    if: ${{ always() && needs.buildx.result == 'success' && secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
+    if: ${{ always() && needs.buildx.result == 'success' }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2

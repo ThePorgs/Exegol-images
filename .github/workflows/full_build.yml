@@ -23,9 +23,9 @@ on:
         type: string
     secrets:
       DOCKER_PASSWORD:
-        required: false  # Secrets cannot be used when the pipeline is triggered from a PR
+        required: true  # Secrets cannot be used when the pipeline is triggered from a PR : TODO
       DOCKER_USERNAME:
-        required: false
+        required: true
 
 jobs:
   build_tests:
@@ -50,7 +50,7 @@ jobs:
     timeout-minutes: 60
     needs: build_tests
     runs-on: self-hosted
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO != '' && secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO != '' }}
     env:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       DOCKER_TARGET_REPO: ${{ inputs.DOCKER_TARGET_REPO }}
@@ -84,7 +84,7 @@ jobs:
       - build_tests
       - manifest_build
     runs-on: self-hosted
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
     env:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
