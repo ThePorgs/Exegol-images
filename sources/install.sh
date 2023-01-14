@@ -2300,8 +2300,8 @@ function install_shuffledns() {
 function install_tailscale() {
   curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
   curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-  apt-get update -y
-  apt-get install tailscale -y
+  apt update
+  apt install tailscale -y
   bash -c "tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &>/dev/null &"
   add-history tailscale
   add-test-command "tailscale --help"
@@ -2741,7 +2741,9 @@ function install_emacs-nox() {
 
 function install_nmap() {
   colorecho "Installing nmap"
-  fapt nmap
+  echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+  apt update
+  apt install nmap/bullseye-backports -y
   add-aliases nmap
   add-history nmap
   add-test-command "nmap --version"
