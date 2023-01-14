@@ -2298,10 +2298,11 @@ function install_shuffledns() {
 }
 
 function install_tailscale() {
-  # https://github.com/tailscale/tailscale/issues/4338
-  curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
-  chmod o+r /usr/share/keyrings/tailscale-archive-keyring.gpg
-  curl -fsSL https://tailscale.com/install.sh | sh
+  curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
+  curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+  apt-get update -y
+  apt-get install tailscale -y
+  bash -c "tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &>/dev/null &"
   add-history tailscale
   add-test-command "tailscale --help"
 }
