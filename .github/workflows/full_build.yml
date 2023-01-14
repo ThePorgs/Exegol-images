@@ -24,11 +24,9 @@ on:
     secrets:
       DOCKER_PASSWORD:
         default: ''
-        type: string
         required: false  # Secrets cannot be used when the pipeline is triggered from a PR
       DOCKER_USERNAME:
         default: ''
-        type: string
         required: false
 
 jobs:
