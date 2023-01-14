@@ -112,7 +112,7 @@ function install_openvpn() {
 
 function install_exegol-history() {
   colorecho "Installing Exegol-history"
-#  git -C /opt/tools/ clone https://github.com/ShutdownRepo/Exegol-history
+#  git -C /opt/tools/ clone https://github.com/ThePorgs/Exegol-history
 # todo : below is something basic. A nice tool being created for faster and smoother worflow
   mkdir /opt/tools/Exegol-history
   echo "#export INTERFACE='eth0'" >> /opt/tools/Exegol-history/profile.sh
@@ -2423,6 +2423,9 @@ function install_goldencopy() {
 function install_crackhound() {
   colorecho "Installing CrackHound"
   git -C /opt/tools/ clone https://github.com/trustedsec/CrackHound
+  cd /opt/tools/CrackHound
+  prs="6"
+  for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
   python3 -m pip install -r /opt/tools/CrackHound/requirements.txt
   add-aliases crackhound
   add-history crackhound
@@ -2582,7 +2585,23 @@ function install_pth-tools(){
   colorecho "Installing pth-tools"
   git -C /opt/tools clone -v https://github.com/byt3bl33d3r/pth-toolkit
   cd /opt/tools/pth-toolkit || exit
-  for bin_name in pth*; do ln -s "/opt/tools/pth-toolkit/$bin_name" "/opt/tools/bin/$bin_name"; done
+  if [[ $(uname -m) = 'x86_64' ]]
+  then
+    wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_amd64.deb
+    wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_amd64.deb
+  elif [[ $(uname -m) = 'aarch64' ]]
+  then
+    wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armhf.deb
+    wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armhf.deb
+  elif [[ $(uname -m) = 'armv7l' ]]
+  then
+    wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armel.deb
+    wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armel.deb
+  else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+  fi
+  fapt /tmp/libreadline6_6.3-8+b3.deb /tmp/multiarch-support_2.19-18+deb8u10.deb
+  add-aliases pth-tools
   add-history pth-tools
   # TODO add-test-command
   # FIXME probably won't work for ARM platforms
@@ -3095,6 +3114,22 @@ function install_tshark() {
   add-test-command "tshark --version"
 }
 
+function install_ldeep() {
+  colorecho "Installing ldeep"
+  python3 -m pipx install ldeep
+  add-test-command "ldeep --help"
+  add-history ldeep
+}
+
+function install-genusernames() {
+  colorecho "Installing genusernames"
+  mkdir -p /opt/tools/genusernames
+  wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
+  sed -i 's/genadname/genusernames/g' genusernames.function
+  echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
+  add-test-command "genusernames 'john doe'"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   update || exit
@@ -3274,6 +3309,7 @@ function package_wordlists() {
   install_cupp                    # User password profiler
   install_pass_station            # Default credentials database
   install_username-anarchy        # Generate possible usernames based on heuristics
+  install-genusernames
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
@@ -3490,6 +3526,7 @@ function package_ad() {
   install_goldencopy
   install_crackhound
   install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
+  install_ldeep
 }
 
 # Package dedicated to mobile apps pentest tools
