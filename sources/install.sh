@@ -1962,6 +1962,13 @@ function install_exiv2() {
   add-test-command "exiv2 --help"
 }
 
+function install_hexedit() {
+  colorecho "Installing hexedit"
+  fapt hexedit
+  add-history hexedit
+  add-test-command "hexedit --help"
+}
+
 function install_stegolsb() {
   colorecho "Installing stegolsb"
   python3 -m pipx install stego-lsb
@@ -3693,6 +3700,7 @@ function package_steganography() {
   install_stegolsb                # (including wavsteg)
   install_exif                    # Show and change EXIF information in JPEG files
   install_exiv2                   # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
+  install_hexedit                 # View and edit files in hexadecimal or in ASCII 
 }
 
 # Package dedicated to cloud tools
