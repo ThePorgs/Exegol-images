@@ -1,1 +1,6 @@
 subfinder -d freelancer.com
+subfinder -silent -d example.com | dnsx -silent
+subfinder -silent -d example.com | dnsx -silent -a -resp
+subfinder -silent -d example.com | dnsx -silent -a -resp-only
+subfinder -silent -d example.com | dnsx -silent -cname -resp
+subfinder -silent -d example.com | dnsx -silent -rcode noerror,servfail,refused

@@ -232,6 +232,7 @@ function install_sublist3r() {
 }
 
 function install_php_filter_chain_generator() {
+  colorecho "Installing PHP_Filter_Chain_Generator"
   git -C /opt/tools/ clone https://github.com/synacktiv/php_filter_chain_generator.git
   add-aliases php_filter_chain_generator
   add-test-command "php_filter_chain_generator --help"

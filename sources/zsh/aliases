@@ -15,4 +15,3 @@ alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.ar
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 alias sed-empty-line='sed /^$/d'
 alias http-put-server='python3 /opt/resources/linux/http-put-server.py --bind 0.0.0.0'
-alias www='python3 -m http.server'
