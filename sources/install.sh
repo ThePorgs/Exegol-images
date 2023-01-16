@@ -1935,6 +1935,13 @@ function install_jadx() {
   add-test-command "jadx --help"
 }
 
+function install_fdisk() {
+  colorecho "Installing fdisk"
+  fapt fdisk
+  add-history fdisk
+  add-test-command "fdisk --help"
+}
+
 function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
@@ -3661,6 +3668,7 @@ function package_forensic() {
   # install_peepdf                # PDF analysis FIXME
   install_testdisk                # Recover lost partitions
   install_jadx                    # Dex to Java decompiler
+  install_fdisk                   # Creating and manipulating disk partition table
 }
 
 # Package dedicated to steganography tools
