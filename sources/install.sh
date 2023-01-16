@@ -1925,6 +1925,16 @@ function install_testdisk() {
   add-test-command "testdisk --help"
 }
 
+function install_jadx() {
+  colorecho "Installing jadx"
+  git -C /opt/tools/ clone https://github.com/skylot/jadx.git
+  cd /opt/tools/jadx
+  ./gradlew dist
+  add-aliases jadx 
+  add-history jadx
+  add-test-command "jadx --help"
+}
+
 function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
@@ -3650,6 +3660,7 @@ function package_forensic() {
   install_trid                    # filetype detection tool
   # install_peepdf                # PDF analysis FIXME
   install_testdisk                # Recover lost partitions
+  install_jadx                    # Dex to Java decompiler
 }
 
 # Package dedicated to steganography tools
