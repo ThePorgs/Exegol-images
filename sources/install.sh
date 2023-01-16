@@ -1948,6 +1948,20 @@ function install_zsteg() {
   add-test-command "zsteg --help"
 }
 
+function install_exif() {
+  colorecho "Installing exif"
+  fapt exif
+  add-history exif
+  add-test-command "exif --help"
+}
+
+function install_exiv2() {
+  colorecho "Installing exiv2"
+  fapt exiv2
+  add-history exiv2
+  add-test-command "exiv2 --help"
+}
+
 function install_stegolsb() {
   colorecho "Installing stegolsb"
   python3 -m pipx install stego-lsb
@@ -3677,6 +3691,8 @@ function package_steganography() {
   install_stegosuite
   install_steghide
   install_stegolsb                # (including wavsteg)
+  install_exif                    # Show and change EXIF information in JPEG files
+  install_exiv2                   # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
 }
 
 # Package dedicated to cloud tools
