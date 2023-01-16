@@ -1918,6 +1918,13 @@ function install_volatility3() {
   add-test-command "volatility3 --help"
 }
 
+function install_testdisk() {
+  colorecho "Installing testdisk"
+  fapt testdisk
+  add-history testdisk
+  add-test-command "testdisk --help"
+}
+
 function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
@@ -3642,6 +3649,7 @@ function package_forensic() {
   install_volatility3             # Memory analysis tool v2
   install_trid                    # filetype detection tool
   # install_peepdf                # PDF analysis FIXME
+  install_testdisk                # Recover lost partitions
 }
 
 # Package dedicated to steganography tools
