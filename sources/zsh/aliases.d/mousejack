@@ -1,0 +1,4 @@
+alias nrf24-continuous-tone-test.py='/opt/tools/mousejack/nrf-research-firmware/tools/nrf24-continuous-tone-test.py'
+alias nrf24-network-mapper.py='/opt/tools/mousejack/nrf-research-firmware/tools/nrf24-network-mapper.py'
+alias nrf24-scanner.py='/opt/tools/mousejack/nrf-research-firmware/tools/nrf24-scanner.py'
+alias nrf24-sniffer.py='/opt/tools/mousejack/nrf-research-firmware/tools/nrf24-sniffer.py'

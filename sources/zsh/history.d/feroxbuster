@@ -1,0 +1,1 @@
+feroxbuster -w `fzf-wordlists` -u "http://$TARGET/"

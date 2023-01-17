@@ -1,0 +1,1 @@
+httpx -probe -list hosts.txt -tech-detect -status-code -fr

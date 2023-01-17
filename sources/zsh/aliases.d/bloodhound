@@ -1,0 +1,3 @@
+alias bloodhound='/opt/tools/BloodHound4/BloodHound --no-sandbox --disable-dev-shm-usage'
+# alias bloodhound_old_v3='/opt/tools/BloodHound3/BloodHound --no-sandbox --disable-dev-shm-usage'
+# alias bloodhound_old_v2='/opt/tools/BloodHound2/BloodHound --no-sandbox --disable-dev-shm-usage'

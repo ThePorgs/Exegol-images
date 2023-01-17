@@ -3,7 +3,7 @@
 - make sure to start the install function with : `colorecho "[EXEGOL] Installing {name of the tool}"`
 
 # Resources
-- "Exegol resources" (https://github.com/ShutdownRepo/Exegol-resources) are, for instance, tools that won't be used in Exegol but on a target system (e.g. Rubeus, mimikatz and so on)
+- "Exegol resources" (https://github.com/ThePorgs/Exegol-resources) are, for instance, tools that won't be used in Exegol but on a target system (e.g. Rubeus, mimikatz and so on)
 - resources are installed in `/opt/resources`
 
 # Aliases

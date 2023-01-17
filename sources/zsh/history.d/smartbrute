@@ -1,0 +1,1 @@
+smartbrute -v -np 'exegol4thewin' --set-as-owned smart -bp "somepassword" kerberos -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kdc-ip "$DC_IP" kerberos

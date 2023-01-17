@@ -1,0 +1,1 @@
+polenum -u "$USER" -p "$PASSWORD" -d "$DC_HOST"
