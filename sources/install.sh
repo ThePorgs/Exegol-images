@@ -1869,9 +1869,12 @@ function install_finalrecon(){
   pip3 install -r requirements.txt
 }
 
-function install_xsser(){
+function install_xsser() {
   colorecho "Installing xsser"
-  pip3 install pycurl bs4 pygeoip gobject cairocffi selenium
+  git -C /opt/tools clone https://github.com/epsylon/xsser.git
+  cd /opt/tools/xsser
+  python3 setup.py install
+  add-test-command "xsser --help"
 }
 
 function install_joomscan() {
@@ -2712,7 +2715,7 @@ function install_web_tools() {
   install_nosqlmap                # NoSQL scanner
   install_xsstrike                # XSS scanner
   install_xspear                  # XSS scanner
-  # install_xsser                 # XSS scanner FIXME missing install
+  install_xsser                   # XSS scanner
   install_xsrfprobe               # CSRF scanner
   install_bolt                    # CSRF scanner
   install_kadimus                 # LFI scanner
