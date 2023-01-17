@@ -1030,6 +1030,11 @@ function ghunt() {
   git -C /opt/tools/ clone https://github.com/mxrch/GHunt
   cd /opt/tools/GHunt
   python3 -m pip install -r requirements.txt
+  
+  # FIXME: unsupported operand
+  pipx install ghunt
+  add-aliases ghunt
+  # TODO add-test-command
 }
 
 function oaburl_py() {
@@ -2669,11 +2674,7 @@ function install_osint_tools() {
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
   fapt recon-ng                   # External recon tool
-  # TODO : http://apt.vulns.sexy make apt-get update print a warning, and the repo has a weird name, we need to fix this in order to not alarm users
-  # sn0int                        # Semi-automatic OSINT framework and package manager
-  OSRFramework                    # OSRFramework, the Open Sources Research Framework
-  #Dark
-  apt-get update
+  # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
   install_tor					            # Tor proxy
   fapt-noexit torbrowser-launcher        # Tor browser
   onionsearch                     # OnionSearch is a script that scrapes urls on different .onion search engines.
