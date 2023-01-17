@@ -141,7 +141,15 @@ function WikiLeaker() {
 
 function OSRFramework() {
   colorecho "Installing OSRFramework"
-  python3 -m pip install osrframework
+  git -C /opt/tools clone https://github.com/i3visio/osrframework
+  cd /opt/tools/osrframework
+  python3 -m venv venv-pip
+  source venv-pip/bin/activate
+  pip install -U 'pip<21.3' # https://github.com/i3visio/osrframework/issues/382
+  pip install osrframework
+  deactivate
+  add-aliases osrframework
+  add-test-command "osrf --help"
 }
 
 function sn0int() {
@@ -2674,7 +2682,7 @@ function install_osint_tools() {
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
   fapt recon-ng                   # External recon tool
-  # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
+  install_osrframework            # OSRFramework, the Open Sources Research Framework
   install_tor					            # Tor proxy
   fapt-noexit torbrowser-launcher        # Tor browser
   onionsearch                     # OnionSearch is a script that scrapes urls on different .onion search engines.
