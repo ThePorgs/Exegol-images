@@ -1485,6 +1485,8 @@ function install_rsactftool() {
   cd /opt/tools/RsaCtfTool
   apt-get -y install libgmp3-dev libmpc-dev
   python3 -m pip install -r requirements.txt
+  add-aliases rsactftool
+  add-test-command "rsactftool --help"
 }
 
 function install_feroxbuster() {
@@ -1914,7 +1916,7 @@ function install_smbmap(){
   python3 -m pip install pyasn1 pycrypto configparser termcolor
 }
 
-function install_pth-tools(){
+function install_pth-tools() {
   colorecho "Installing pth-tools"
   git -C /opt/tools clone -v https://github.com/byt3bl33d3r/pth-toolkit
   cd /opt/tools/pth-toolkit
@@ -2564,9 +2566,8 @@ function install_reverse_tools() {
 }
 
 # Package dedicated to attack crypto
-function install_crypto_tools() {
-#  install_rsactftool              # attack rsa
-# todo : this function fails and make the whole build stop, temporarily removing
+function package_crypto() {
+  install_rsactftool            # attack rsa
   echo "nothing to install"
 }
 
