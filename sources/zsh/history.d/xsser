@@ -1,0 +1,2 @@
+xsser -u "https://example.com?name=test"
+xsser –De "google" -d "search.php?q="

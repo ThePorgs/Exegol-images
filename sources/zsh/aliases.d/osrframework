@@ -1,1 +1,8 @@
 alias osrf="/opt/tools/osrframework/venv-pip/bin/osrf"
+alias alias_generator="/opt/tools/osrframework/venv-pip/bin/alias_generator"
+alias checkfy="/opt/tools/osrframework/venv-pip/bin/checkfy"
+alias domainfy="/opt/tools/osrframework/venv-pip/bin/domainfy"
+alias mailfy="/opt/tools/osrframework/venv-pip/bin/mailfy"
+alias phonefy="/opt/tools/osrframework/venv-pip/bin/phonefy"
+alias searchfy="/opt/tools/osrframework/venv-pip/bin/searchfy"
+alias usufy="/opt/tools/osrframework/venv-pip/bin/usufy"

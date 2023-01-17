@@ -149,7 +149,15 @@ function OSRFramework() {
   pip install osrframework
   deactivate
   add-aliases osrframework
+  add-history osrframework
   add-test-command "osrf --help"
+  add-test-command "usufy --help"
+  add-test-command "alias_generator --help"
+  add-test-command "checkfy --help"
+  add-test-command "domainfy --help"
+  add-test-command "mailfy --help"
+  add-test-command "phonefy --help"
+  add-test-command "searchfy --help"
 }
 
 function sn0int() {
@@ -1499,6 +1507,7 @@ function install_rsactftool() {
   apt-get -y install libgmp3-dev libmpc-dev
   python3 -m pip install -r requirements.txt
   add-aliases rsactftool
+  add-history rsactftool
   add-test-command "rsactftool --help"
 }
 
@@ -1874,6 +1883,7 @@ function install_xsser() {
   git -C /opt/tools clone https://github.com/epsylon/xsser.git
   cd /opt/tools/xsser
   python3 setup.py install
+  add-history xsser
   add-test-command "xsser --help"
 }
 
@@ -1882,6 +1892,7 @@ function install_joomscan() {
   git -C /opt/tools/ clone https://github.com/rezasp/joomscan.git
   fapt libc6-dev gcc libcrypt-ssleay-perl openssl libssl-dev libz-dev libwww-perl
   add-aliases joomscan
+  add-history joomscan
   add-test-command "joomscan --version"
 }
 

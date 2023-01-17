@@ -1,0 +1,7 @@
+rsactftool --publickey ./key.pub --uncipherfile ./cipher.txt
+rsactftool --publickey ./key.pub --private
+rsactftool --dumpkey --key ./key.pub
+rsactftool --key rsa.key --isconspicuous
+rsactftool --attack partial_q --key key.pem
+rsactftool --convert_idrsa_pub --publickey id_rsa.pub
+rsactftool --isroca --publickey key.pub

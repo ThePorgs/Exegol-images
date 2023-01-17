@@ -1,0 +1,6 @@
+joomscan --url www.example.com
+joomscan --url www.example.com --enumerate-components
+joomscan --url www.example.com --cookie "test=demo;" 
+joomscan --url www.example.com --user-agent "Googlebot/2.1"
+joomscan -u www.example.com --random-agent
+joomscan --url www.example.com --proxy http://127.0.0.1:8080
