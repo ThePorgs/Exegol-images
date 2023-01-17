@@ -1267,12 +1267,12 @@ function hashonymize() {
 
 function install_theHarvester() {
   colorecho "Installing theHarvester"
-  apt-get install -y python3-virtualenv
-  cd /opt/tools/
-  git clone https://github.com/laramies/theHarvester
-  cd theHarvester
-  virtualenv -p /usr/bin/python3 /opt/tools/theHavester-venv
-  python3 -c "import os; os.system('virtualenv -p /usr/bin/python3 theharvenv 2>/dev/null && . theharvenv/bin/activate && python3 -m pip install -r requirements.txt');"
+  git -C /opt/tools/ clone https://github.com/laramies/theHarvester
+  cd /opt/tools/theHarvester
+  python3 -m pip install -r requirements.txt
+  python3 setup.py isntall
+  add-aliases theharvester
+  add-history theharvester
 }
 
 function install_pcsc() {
@@ -1861,9 +1861,12 @@ function install_xsser(){
   pip3 install pycurl bs4 pygeoip gobject cairocffi selenium
 }
 
-function install_joomscan(){
+function install_joomscan() {
   colorecho "Installing joomscan"
   git -C /opt/tools/ clone https://github.com/rezasp/joomscan.git
+  fapt libc6-dev gcc libcrypt-ssleay-perl openssl libssl-dev libz-dev libwww-perl
+  add-aliases joomscan
+  add-test-command "joomscan --version"
 }
 
 function install_wpscan(){
@@ -2118,12 +2121,11 @@ function install_most_used_tools() {
   install_subfinder               # Subdomain bruteforcer
   install_autorecon               # External recon tool
   install_waybackurls             # Website history
-  install_theHarvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
+  # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME: (unsupported operand) 
   install_simplyemail             # Gather emails
   install_ffuf                    # Web fuzzer (little favorites)
-  fapt nikto                      # Web scanner
-  fapt sqlmap                     # SQL injection scanner
-  fapt hydra                      # Login scanner
+  install_sqlmap                  # SQL injection scanner
+  install_hydra                   # Login scanner
   install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
@@ -2266,23 +2268,20 @@ function install_web_tools() {
   fapt dirb                       # Web fuzzer
   fapt wfuzz                      # Web fuzzer (second favorites)
   install_dirsearch               # Web fuzzer
-  fapt nikto                      # Web scanner
-  fapt sqlmap                     # SQL injection scanner
-  SSRFmap                         # SSRF scanner
-  gopherus                        # SSRF helper
-  NoSQLMap                        # NoSQL scanner
-  XSStrike                        # XSS scanner
-  install_XSpear                  # XSS scanner
-  install_xsser                   # XSS scanner
-  xsrfprobe                       # CSRF scanner
-  Bolt                            # CSRF scanner
-  #fapt dotdotpwn                  # LFI scanner -> TODO keep that or not ?
-  kadimus                         # LFI scanner
-  fuxploider                      # File upload scanner
-  Blazy                           # Login scanner
-  fapt patator                    # Login scanner
+  install_sqlmap                  # SQL injection scanner
+  install_ssrfmap                 # SSRF scanner
+  install_gopherus                # SSRF helper
+  install_nosqlmap                # NoSQL scanner
+  install_xsstrike                # XSS scanner
+  install_xspear                  # XSS scanner
+  # install_xsser                 # XSS scanner FIXME missing install
+  install_xsrfprobe               # CSRF scanner
+  install_bolt                    # CSRF scanner
+  install_kadimus                 # LFI scanner
+  install_fuxploider              # File upload scanner
+  # install_patator               # Login scanner # FIXME
   install_joomscan                # Joomla scanner
-  install_wpscan                     # Wordpress scanner
+  install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
   install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
