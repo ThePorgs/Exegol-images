@@ -2249,7 +2249,9 @@ function install_ssh() {
 
 function install_wfuzz() {
   colorecho "Installing wfuzz"
-  fapt wfuzz
+  apt --purge remove python3-pycurl -y
+  fapt libcurl4-openssl-dev libssl-dev
+  pip3 install pycurl wfuzz
   add-history wfuzz
   add-test-command "wfuzz --help"
 }
@@ -2687,15 +2689,11 @@ function install_osint_tools() {
   fapt-noexit torbrowser-launcher        # Tor browser
   onionsearch                     # OnionSearch is a script that scrapes urls on different .onion search engines.
   install_pwndb					          # No need to say more, no ? Be responsible with this tool please !
-  #Github
-  githubemail                     # Retrieve a GitHub user's email even if it's not public
-  #Other
-  apt-get update
+  install_githubemail             # Retrieve a GitHub user's email even if it's not public
   fapt whois                      # See information about a specific domain name or IP address
-  ReconDog                        # Informations gathering tool
-  JSParser                        # Parse JS files
-  install_gron                            # JSON parser
-  #install_ignorant                # holehe but for phone numbers
+  install_recondog                # Informations gathering tool
+  install_gron                    # JSON parser
+  # install_ignorant              # holehe but for phone numbers
 }
 
 # Package dedicated to applicative and active web pentest tools
@@ -2705,8 +2703,8 @@ function install_web_tools() {
   install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
   install_amass                   # Web fuzzer
   install_ffuf                    # Web fuzzer (little favorites)
-  fapt dirb                       # Web fuzzer
-  fapt wfuzz                      # Web fuzzer (second favorites)
+  install_dirb                    # Web fuzzer
+  install_wfuzz                   # Web fuzzer (second favorites)
   install_dirsearch               # Web fuzzer
   install_sqlmap                  # SQL injection scanner
   install_ssrfmap                 # SSRF scanner
