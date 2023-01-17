@@ -1190,16 +1190,15 @@ function phoneinfoga() {
 
 function windapsearch-go() {
   colorecho "Installing Go windapsearch"
-  if [[ $(uname -m) = 'x86_64' ]]
-  then
-    wget -O /opt/tools/bin/windapsearch "$(curl -s https://github.com/ropnop/go-windapsearch/releases/latest/ | grep -o '"[^"]*"' | tr -d '"' | sed 's/tag/download/')/windapsearch-linux-amd64"
-  elif [[ $(uname -m) = 'aarch64' ]]
-  then
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)"
-  else
-    criticalecho "This installation function doesn't support architecture $(uname -m)"
-  fi
-  chmod +x /opt/tools/bin/windapsearch
+  git -C /opt/tools/ clone https://github.com/ropnop/go-windapsearch
+  git -C /opt/tools/ clone https://github.com/magefile/mage
+  cd /opt/tools/mage
+  go run bootstrap.go
+  cd /opt/tools/go-windapsearch
+  mage build
+  add-aliases windapsearch
+  add-history windapsearch
+  add-test-command "windapsearch --help"
 }
 
 function install_trilium() {
