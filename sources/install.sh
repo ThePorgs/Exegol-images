@@ -579,7 +579,7 @@ function install_empire() {
   colorecho "Installing Empire"
 
   # Installing apt requirements
-  DEBIAN_FRONTEND=noninteractive apt-get install -y wget sudo git python3-dev python3-pip xclip apt-transport-https \
+  DEBIAN_FRONTEND=noninteractive fapt wget sudo git python3-dev python3-pip xclip apt-transport-https \
   autoconf g++ git zlib1g-dev libxml2-dev libssl1.1 libssl-dev default-jdk curl git gcc nim
 
   # Installing xar (as per https://github.com/BC-SECURITY/Empire/blob/master/setup/install.sh)
@@ -1380,17 +1380,17 @@ function install_pwnedornot() {
 function install_ghunt() {
   colorecho "Installing ghunt"
   apt-get update
-  apt-get install -y curl unzip gnupg
+  fapt curl unzip gnupg
   curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
   echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
   apt-get update
-  apt-get install -y google-chrome-stable
+  fapt google-chrome-stable
   rm -rf /var/lib/apt/lists/*
   git -C /opt/tools/ clone https://github.com/mxrch/GHunt
   cd /opt/tools/GHunt || exit
   python3 -m pip install -r requirements.txt
   
-  # FIXME: unsupported operand
+  # FIXME: TypeError: unsupported operand type(s) for |: 'type' and 'type'
   pipx install ghunt
   add-aliases ghunt
   # TODO add-test-command
@@ -1437,7 +1437,7 @@ function install_ruler() {
 
 function install_ghidra() {
   colorecho "Installing Ghidra"
-  apt-get install -y openjdk-11-jdk
+  fapt openjdk-11-jdk
   #wget -P /tmp/ "https://ghidra-sre.org/ghidra_9.2.3_PUBLIC_20210325.zip"
   wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
   unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
@@ -1701,11 +1701,12 @@ function install_hashonymize() {
 }
 
 function install_theharvester() {
+  # FIXME: TypeError: unsupported operand type(s) for |: 'type' and '_SpecialForm'
   colorecho "Installing theHarvester"
   git -C /opt/tools/ clone https://github.com/laramies/theHarvester
   cd /opt/tools/theHarvester
   python3 -m pip install -r requirements.txt
-  python3 setup.py isntall
+  python3 setup.py install
   add-aliases theharvester
   add-history theharvester
 }
@@ -1730,14 +1731,14 @@ function install_nfct() {
 
 function install_pcsc() {
   colorecho "Installing tools for PC/SC (smartcard)"
-  apt-get install -y pcsc-tools pcscd libpcsclite-dev libpcsclite1
+  fapt pcsc-tools pcscd libpcsclite-dev libpcsclite1
   add-test-command "pcsc_scan -V"
   add-test-command "pcscd --version"
 }
 
 function install_libnfc() {
   colorecho "Installing libnfc"
-  apt-get install -y libnfc-dev libnfc-bin
+  fapt libnfc-dev libnfc-bin
   # FIXME
   #cd /opt/tools/
   #wget http://dl.bintray.com/nfc-tools/sources/libnfc-1.7.1.tar.bz2 #broken link
@@ -2278,7 +2279,7 @@ function install_anew() {
 
 function install_naabu() {
   colorecho "Installing naabu"
-  apt-get install -y libpcap-dev
+  fapt libpcap-dev
   go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
   add-test-command "naabu --help"
 }
@@ -2390,6 +2391,7 @@ function install_kerbrute() {
   then
     wget https://github.com/ropnop/kerbrute/releases/latest/download/kerbrute_linux_amd64 -O /opt/tools/bin/kerbrute
   elif [[ $(uname -m) = 'aarch64' ]]
+  then
     wget https://github.com/ropnop/kerbrute/releases/latest/download/kerbrute_linux_386 -O /opt/tools/bin/kerbrute
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
@@ -2485,8 +2487,8 @@ function install_joomscan() {
 
 function install_wpscan(){
   colorecho "Installing wpscan"
-  apt-get install -y procps ruby-dev
-  apt-get install -y apt-transport-https ca-certificates gnupg2 curl
+  fapt procps ruby-dev
+  fapt apt-transport-https ca-certificates gnupg2 curl
   curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
   curl -sSL https://get.rvm.io | bash -s stable --ruby
   gem install nokogiri
@@ -2596,7 +2598,7 @@ function install_smali(){
 
 function install_tesseract-ocr(){
   colorecho "Installing tesseract-ocr"
-  apt-get install -y tesseract-ocr
+  fapt tesseract-ocr
 }
 
 function install_dex2jar(){
@@ -2678,7 +2680,7 @@ function install_yarn() {
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
   apt update
-  apt install -y yarn
+  fapt yarn
 }
 
 function install_aircrack-ng() {
@@ -3241,7 +3243,7 @@ function package_most_used() {
   install_subfinder               # Subdomain bruteforcer
   install_autorecon               # External recon tool
   install_waybackurls             # Website history
-  # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME: (unsupported operand) 
+  # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME 
   install_simplyemail             # Gather emails
   install_ffuf                    # Web fuzzer (little favorites)
   install_sqlmap                  # SQL injection scanner
