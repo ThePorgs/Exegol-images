@@ -827,7 +827,7 @@ function install_pykek() {
 
 function install_autorecon() {
   colorecho "Installing autorecon"
-  apt-get -y install wkhtmltopdf python3-venv
+  fapt wkhtmltopdf
   python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
   add-history autorecon
   # test below cannot work because test runner cannot have a valid display
@@ -845,7 +845,9 @@ function install_simplyemail() {
   colorecho "Installing SimplyEmail"
   git -C /opt/tools/ clone https://github.com/SimplySecurity/SimplyEmail.git
   cd /opt/tools/SimplyEmail/ || exit
-  bash setup/setup.sh #TODO update install process ?
+  #bash setup/setup.sh #TODO update install process ?
+  fapt antiword odt2txt python-dev libxml2-dev libxslt1-dev python-virtualenv
+  python2 -m pip install -r setup/requirments.txt
   add-aliases simplyemail
   add-history simplyemail
   add-test-command "SimplyEmail --help"
@@ -1050,7 +1052,8 @@ function install_hakrawler() {
 function install_jwt_tool() {
   colorecho "Installing JWT tool"
   git -C /opt/tools/ clone https://github.com/ticarpi/jwt_tool
-  python3 -m pip install pycryptodomex
+  cd /opt/tools/jwt_tool || exit
+  python3 -m pip install -r requirements.txt
   add-aliases jwt_tool
   add-test-command "jwt_tool --help"
 }
@@ -2482,13 +2485,13 @@ function install_go(){
   cd /tmp/ || exit
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.19.5.linux-amd64.tar.gz
   elif [[ $(uname -m) = 'aarch64' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-arm64.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.19.5.linux-arm64.tar.gz
   elif [[ $(uname -m) = 'armv7l' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-armv6l.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.19.5.linux-armv6l.tar.gz
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
@@ -2995,7 +2998,7 @@ function install-genusernames() {
 }
 
 function install_apt_tool() {
-  colorecho "Installing $1"
+  colorecho "Installing $1 with apt"
   fapt $1
   if [ "$2" ]
   then
