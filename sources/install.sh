@@ -204,12 +204,6 @@ function instalsslyzel_sslyze(){
   add-test-command "sslyze --help"
 }
 
-function install_weevely() {
-  colorecho "Installing weevely"
-  fapt weevely
-  add-test-command "weevely --help"
-}
-
 function install_responder() {
   colorecho "Installing Responder"
   git -C /opt/tools/ clone https://github.com/lgandx/Responder
@@ -282,10 +276,11 @@ function install_osrframework() {
 function install_cloudfail() {
   colorecho "Installing CloudFail"
   git -C /opt/tools/ clone https://github.com/m0rtem/CloudFail
-  python3 -m pip install -r /opt/tools/CloudFail/requirements.txt
+  cd /opt/tools/CloudFail || exit
+  python3 -m pip install -r requirements.txt
   add-aliases cloudfail
   add-history cloudfail
-  add-test-command "cloudfail.py --help"
+  add-test-command "cloudfail --help"
 }
 
 function install_oneforall() {
@@ -299,8 +294,8 @@ function install_oneforall() {
 function install_eyewitness() {
   colorecho "Installing EyeWitness"
   git -C /opt/tools/ clone https://github.com/FortyNorthSecurity/EyeWitness
-  cd /opt/tools/EyeWitness/Python/setup || exit
-  ./setup.sh
+  cd /opt/tools/EyeWitness || exit
+  bash ./Python/setup/setup.sh
   add-aliases eyewitness
   add-test-command "eyewitness --help"
 }
@@ -406,7 +401,7 @@ function install_evilwinrm() {
   colorecho "Installing evil-winrm"
   gem install evil-winrm
   add-history evil-winrm
-  add-test-command "evil-winrm --help"
+  add-test-command "evil-winrm --version"
 }
 
 function install_bolt() {
@@ -419,13 +414,7 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  apt-get -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
-  git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
-  cd /opt/tools/CrackMapExec || exit
-  # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-  source "$HOME/.cargo/env"
-  python3 -m pipx install .
-  ~/.local/bin/crackmapexec
+  python3 -m pipx install CrackMapExec
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
@@ -454,7 +443,7 @@ function install_sprayhound() {
 
 function install_impacket() {
   colorecho "Installing Impacket scripts"
-  apt-get -y install libffi-dev
+  fapt libffi-dev
   git -C /opt/tools/ clone https://github.com/ThePorgs/impacket
 
   # Following PRs are merged in the forked repo
@@ -752,14 +741,14 @@ function install_ffuf() {
   colorecho "Installing ffuf"
   go install -v github.com/ffuf/ffuf@latest
   add-history ffuf
-  add-test-command "ffuf --help"
+  add-test-command "ffuf -V"
 }
 
 function install_waybackurls() {
   colorecho "Installing waybackurls"
   go install -v github.com/tomnomnom/waybackurls@latest
   add-history waybackurls
-  add-test-command "waybackurls -h"
+  add-test-command "waybackurls --help"
 }
 
 function install_gitrob(){
@@ -859,7 +848,7 @@ function install_simplyemail() {
   bash setup/setup.sh #TODO update install process ?
   add-aliases simplyemail
   add-history simplyemail
-  add-test-command "SimplyEmail -l"
+  add-test-command "SimplyEmail --help"
 }
 
 function install_privexchange() {
@@ -982,16 +971,10 @@ function install_kadimus() {
 
 function install_testssl() {
   colorecho "Installing testssl"
-  apt-get -y install bsdmainutils
+  fapt bsdmainutils
   git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
   add-aliases testssl
-  add-test-command "testssl --help"
-}
-
-function install_sslscan() {
-  colorecho "Installing sslscan"
-  fapt sslscan
-  add-test-command "sslscan --version"
+  add-test-command "testssl --version"
 }
 
 function install_tls-scanner() {
@@ -1135,7 +1118,7 @@ function install_gopherus() {
 function install_ysoserial() {
   colorecho "Installing ysoserial"
   mkdir /opt/tools/ysoserial/
-  wget -O /opt/tools/ysoserial/ysoserial.jar "https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar"
+  wget -O /opt/tools/ysoserial/ysoserial.jar "https://github.com/frohoff/ysoserial/releases/latest/download/ysoserial-all.jar"
   add-aliases ysoserial
   add-test-command "ysoserial --help; ysoserial --help |& grep 'spring-core:4.1.4.RELEASE'"
 }
@@ -1175,7 +1158,7 @@ function install_fcrackzip() {
   colorecho "Installing fcrackzip"
   fapt fcrackzip
   add-history fcrackzip
-  add-test-command fcrackzip --help
+  add-test-command "fcrackzip --version"
 }
 
 function install_name-that-hash() {
@@ -1612,10 +1595,7 @@ function install_ntlmv1-multi() {
 
 function install_droopescan() {
   colorecho "Installing droopescan"
-  git -C /opt/tools clone https://github.com/droope/droopescan.git
-  cd /opt/tools/droopescan || exit
-  python3 -m pip install -r requirements.txt
-  python3 setup.py install
+  python3 -m pipx install droopescan
   add-test-command "droopescan --help"
 }
 
@@ -2494,14 +2474,14 @@ function install_joomscan() {
 
 function install_wpscan(){
   colorecho "Installing wpscan"
-  fapt procps ruby-dev
-  fapt apt-transport-https ca-certificates gnupg2 curl
-  curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
-  curl -sSL https://get.rvm.io | bash -s stable --ruby
-  gem install nokogiri
+  # fapt procps ruby-dev
+  # fapt apt-transport-https ca-certificates gnupg2 curl
+  # curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
+  # curl -sSL https://get.rvm.io | bash -s stable --ruby
+  # gem install nokogiri
   gem install wpscan
   add-history wpscan
-  add-test-command "wpscan --help"
+  add-test-command "wpscan --version"
 }
 
 function install_go(){
@@ -2537,11 +2517,15 @@ function install_metasploit(){
 
 function install_smbmap(){
   colorecho "Installing smbmap"
-  git -C /opt/tools/ clone -v https://github.com/ShawnDEvans/smbmap
+  git -C /opt/tools/ clone https://github.com/ShawnDEvans/smbmap
   cd /opt/tools/smbmap || exit
   # installing requirements manually to skip impacket overwrite
   # wish we could install smbmap in virtual environment :'(
+  
+  # VENV Global
+  python3 -m venv venv && source venv/bin/activate
   python3 -m pip install pyasn1 pycrypto configparser termcolor impacket
+  deactivate
   add-aliases smbmap
   add-history smbmap
   add-test-command "smbmap --help"
@@ -2762,7 +2746,7 @@ function install_hashcat() {
   colorecho "Installing hashcat"
   fapt hashcat
   add-history hashcat
-  add-test-command "hashcat --help"
+  add-test-command "hashcat --version"
 }
 
 function install_ldapdomaindump() {
@@ -2831,7 +2815,7 @@ function install_smbclient() {
   colorecho "Installing smbclient"
   fapt smbclient
   add-history smbclient
-  add-test-command "smbclient --help"
+  add-test-command "smbclient --version"
 }
 
 function install_snmp() {
@@ -2886,12 +2870,6 @@ function install_dnsenum() {
   colorecho "Installing dnsenum"
   fapt dnsenum
   add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'"
-}
-
-function install_hydra() {
-  colorecho "Installing hydra"
-  fapt hydra
-  add-test-command "hydra --help; hydra -help |& grep 'more command line options'"
 }
 
 function install_imagemagick() {
@@ -3218,14 +3196,14 @@ function package_most_used() {
   install_simplyemail             # Gather emails
   install_ffuf                    # Web fuzzer (little favorites)
   install_sqlmap                  # SQL injection scanner
-  install_hydra                   # Login scanner
+  install_apt_tool hydra "hydra --help; hydra -help |& grep 'more command line options'"                   # Login scanner
   install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
   install_testssl                 # SSL/TLS scanner
-  install_sslscan                 # SSL/TLS scanner
-  install_weevely                 # Awesome secure and light PHP webshell
+  install_apt_tool sslscan "sslscan --version"                 # SSL/TLS scanner
+  install_apt_tool weevely "weevely --help"                 # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
   install_wafw00f                 # Waf detector
