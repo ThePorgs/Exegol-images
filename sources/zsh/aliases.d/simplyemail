@@ -1,1 +1,1 @@
-alias SimplyEmail='python2 /opt/tools/SimplyEmail/SimplyEmail.py'
+alias SimplyEmail='cd /opt/tools/SimplyEmail/ && echo "[*] changed dir: cd /opt/tools/SimplyEmail/" && python2 SimplyEmail.py'
