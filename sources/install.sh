@@ -1154,13 +1154,6 @@ function install_john() {
   add-test-command "john --help"
 }
 
-function install_fcrackzip() {
-  colorecho "Installing fcrackzip"
-  fapt fcrackzip
-  add-history fcrackzip
-  add-test-command "fcrackzip --version"
-}
-
 function install_name-that-hash() {
   colorecho "Installing Name-That-Hash"
   python3 -m pipx install name-that-hash
@@ -2683,14 +2676,6 @@ function install_aircrack-ng() {
   add-test-command "aircrack-ng --help"
 }
 
-function install_nmap() {
-  colorecho "Installing nmap"
-  fapt nmap
-  add-aliases nmap
-  add-history nmap
-  add-test-command "nmap --version"
-}
-
 function install_libxml2-utils() {
   colorecho "Installing libxml2-utils"
   fapt libxml2-utils
@@ -2740,13 +2725,6 @@ function install_bruteforce-luks() {
   colorecho "Installing bruteforce-luks"
   fapt bruteforce-luks
   add-test-command "bruteforce-luks -h |& grep 'Print progress info'"
-}
-
-function install_hashcat() {
-  colorecho "Installing hashcat"
-  fapt hashcat
-  add-history hashcat
-  add-test-command "hashcat --version"
 }
 
 function install_ldapdomaindump() {
@@ -2811,24 +2789,10 @@ function install_rlwrap() {
   add-test-command "rlwrap --version"
 }
 
-function install_smbclient() {
-  colorecho "Installing smbclient"
-  fapt smbclient
-  add-history smbclient
-  add-test-command "smbclient --version"
-}
-
 function install_snmp() {
   colorecho "Installing snmp"
   fapt snmp
   add-history snmp
-}
-
-function install_sqlmap() {
-  colorecho "Installing sqlmap"
-  fapt sqlmap
-  add-history sqlmap
-  add-test-command "sqlmap --version"
 }
 
 function install_wfuzz() {
@@ -3037,11 +3001,19 @@ function install_apt_tool() {
   then
     add-test-command $2
   fi
+  if [[ "$*" == *"history"* ]]
+  then
+      add-history $1
+  fi
+
+  if [[ "$*" == *"aliases"* ]]
+  then
+      add-aliases $1
+  fi
 }
 
 # Package dedicated to the basic things the env needs
 function package_base() {
-  ## TODO: optimize history + aliases
   update || exit
   deploy_exegol
   install_apt_tool software-properties-common
@@ -3056,18 +3028,15 @@ function package_base() {
   install_apt_tool unzip "unzip -v"
   install_apt_tool kmod "kmod --version"
   install_apt_tool sudo "sudo --version"             # Sudo
-  install_apt_tool curl "curl --version"             # HTTP handler
-  add-history curl
+  install_apt_tool curl "curl --version" history     # HTTP handler
   install_apt_tool wget "wget --version"             # Wget
   install_apt_tool gnupg2                            # gnugpg
   install_apt_tool python3-pyftpdlib                 # FTP server python library
   add-aliases pyftpdlib
   add-history pyftpdlib
-  install_apt_tool php "php --version"               # Php language
-  add-aliases php
+  install_apt_tool php "php --version" aliases       # Php language
   install_apt_tool python2 "python2 --version"       # Python 2 language
-  install_apt_tool python3 "python3 --version"
-  add-aliases python3                                # Python 3 language             
+  install_apt_tool python3 "python3 --version" aliases # Python 3 language            
   install_apt_tool python2-dev                       # Python 2 language (dev version)
   install_apt_tool python3-dev                       # Python 3 language (dev version)
   install_apt_tool python3-venv
@@ -3110,8 +3079,7 @@ function package_base() {
   install_apt_tool vim "vim --version"               # Text editor
   install_ultimate_vimrc                             # Make vim usable OOFB
   install_apt_tool nano "nano --version"             # Text editor (not the best)
-  install_apt_tool emacs-nox "emacs-nox --version"
-  add-aliases emacs-nox
+  install_apt_tool emacs-nox "emacs-nox --version" aliases
   install_apt_tool jq "jq --version"                 # jq is a lightweight and flexible command-line JSON processor
   install_apt_tool iputils-ping                      # Ping binary
   install_apt_tool iproute2                          # Firewall rules
@@ -3120,23 +3088,18 @@ function package_base() {
   install_bat                                        # Beautiful cat
   install_apt_tool tidy "tidy --version"
   install_apt_tool mlocate "mlocate --version"
-  install_apt_tool xsel "xsel --version"
-  add-aliases xsel
+  install_apt_tool xsel "xsel --version" aliases
   install_apt_tool libtool
-  install_apt_tool dnsutils                          # DNS utilities like dig and nslookup
-  add-history dnsutils
+  install_apt_tool dnsutils history                  # DNS utilities like dig and nslookup
   install_apt_tool dos2unix "dos2unix --version"     # Convert encoded dos script
   DEBIAN_FRONTEND=noninteractive fapt macchanger     # Macchanger
-  install_apt_tool samba "samba --version"           # Samba
-  add-history samba
+  install_apt_tool samba "samba --version" history   # Samba
   install_apt_tool ftp "ftp -help"                   # FTP client
-  install_apt_tool ssh "ssh -V"                      # SSH client
-  add-history ssh
+  install_apt_tool ssh "ssh -V" history              # SSH client
   install_apt_tool sshpass "sshpass -V"              # SSHpass (wrapper for using SSH with password on the CLI)
   install_apt_tool telnet                            # Telnet client
   install_apt_tool nfs-common                        # NFS client
-  install_apt_tool snmp
-  add-history snmp
+  install_apt_tool snmp history
   install_apt_tool ncat "ncat --version"             # Socket manager
   install_apt_tool netcat-traditional                # Socket manager
   install_apt_tool socat "socat -V"                  # Socket manager
@@ -3152,8 +3115,7 @@ function package_base() {
   install_apt_tool xsltproc "xsltproc --version"     # apply XSLT stylesheets to XML documents (Nmap reports)
   install_apt_tool parallel "parallel --version"
   install_apt_tool tree "tree --version"
-  install_apt_tool faketime "faketime --version"
-  add-history faketime
+  install_apt_tool faketime "faketime --version" history
   install_apt_tool ruby "ruby --version"
   install_apt_tool ruby-dev
   install_apt_tool libxml2-utils "xmllint --version"
@@ -3187,7 +3149,7 @@ function package_most_used() {
   set_go_env
   install_searchsploit            # Exploitdb local search engine
   install_metasploit              # Offensive framework
-  install_nmap                    # Port scanner
+  install_apt_tool nmap "nmap --version" aliases history # Port scanner
   install_seclists                # Awesome wordlists
   install_subfinder               # Subdomain bruteforcer
   install_autorecon               # External recon tool
@@ -3195,7 +3157,7 @@ function package_most_used() {
   # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME 
   install_simplyemail             # Gather emails
   install_ffuf                    # Web fuzzer (little favorites)
-  install_sqlmap                  # SQL injection scanner
+  install_apt_tool sqlmap "sqlmap --version" history # SQL injection scanner
   install_apt_tool hydra "hydra --help; hydra -help |& grep 'more command line options'"                   # Login scanner
   install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
@@ -3214,13 +3176,13 @@ function package_most_used() {
   install_crackmapexec            # Network scanner
   install_impacket                # Network protocols scripts
   install_enum4linux-ng           # Active Directory enumeration tool, improved Python alternative to enum4linux
-  install_smbclient               # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+  install_apt_tool smbclient "smbclient --version" history # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_nuclei                  # Vulnerability scanner
   install_evilwinrm               # WinRM shell
   install_john                    # Password cracker
-  install_hashcat                 # Password cracker
-  install_fcrackzip               # Zip cracker
+  install_apt_tool hashcat "hashcat --version" history # Password cracker
+  install_apt_tool fcrackzip "fcrackzip --version" history # Zip cracker
 }
 
 # Package dedicated to the installation of wordlists and tools like wl generators
@@ -3323,7 +3285,7 @@ function package_web() {
   install_testssl                 # SSL/TLS scanner
   install_sslscan                 # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
-  install_                  # SSL/TLS scanner
+  #install_                  # SSL/TLS scanner
   install_weevely                 # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
