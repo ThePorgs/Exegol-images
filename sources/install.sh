@@ -96,6 +96,7 @@ function deploy_exegol() {
 }
 
 function install_openvpn() {
+  colorecho "Installing openvpn"
   fapt openvpn                    # Instal OpenVPN
   fapt openresolv                 # Dependency for DNS resolv.conf update with OpenVPN connection (using script)
 
@@ -132,6 +133,7 @@ function install_logrotate() {
   fapt logrotate
   mv /root/sources/logrotate/* /etc/logrotate.d/
   chmod 644 /etc/logrotate.d/*
+  add-test-command "logrotate --version"
 }
 
 ### Tool installation functions
@@ -170,6 +172,8 @@ function install_tmux() {
   fapt tmux
   cp -v /root/sources/tmux/tmux.conf ~/.tmux.conf
   touch ~/.hushlogin
+  # TODO: Add history
+  add-test-command "tmux -V"
 }
 
 function install_gowitness() {
@@ -814,14 +818,16 @@ function install_proxychains() {
 
 function install_grc() {
   colorecho "Installing and configuring grc"
-  apt-get -y install grc
+  fapt grc
   cp -v /root/sources/grc/grc.conf /etc/grc.conf
   add-aliases grc
+  add-test-command "grc --version"
 }
 
 function install_nvm() {
   colorecho "Installing nvm (in zsh context)"
   zsh -c "source ~/.zshrc && nvm install node"
+  add-test-command "nvm --version"
 }
 
 function install_pykek() {
@@ -1223,6 +1229,7 @@ function install_tldr() {
   fapt tldr
   mkdir -p ~/.local/share/tldr
   tldr -u
+  add-test-command "tldr --version"
 }
 
 function install_bloodhound() {
@@ -2681,6 +2688,7 @@ function install_yarn() {
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
   apt update
   fapt yarn
+  add-test-command "yarn --version"
 }
 
 function install_aircrack-ng() {
@@ -2691,12 +2699,6 @@ function install_aircrack-ng() {
   add-test-command "aircrack-ng --help"
 }
 
-function install_emacs-nox() {
-  colorecho "Installing emacs-nox"
-  fapt emacs-nox
-  add-aliases emacs-nox
-}
-
 function install_nmap() {
   colorecho "Installing nmap"
   fapt nmap
@@ -2705,35 +2707,10 @@ function install_nmap() {
   add-test-command "nmap --version"
 }
 
-function install_php() {
-  colorecho "Installing php"
-  fapt php
-  add-aliases php
-}
-
-function install_python3-pyftpdlib() {
-  colorecho "Installing python3-pyftpdlib"
-  fapt python3-pyftpdlib
-  add-aliases pyftpdlib
-  add-history pyftpdlib
-}
-
-function install_python3() {
-  colorecho "Installing python3"
-  fapt python3
-  add-aliases python3
-}
-
 function install_libxml2-utils() {
   colorecho "Installing libxml2-utils"
   fapt libxml2-utils
   add-aliases xmllint
-}
-
-function install_xsel() {
-  colorecho "Installing xsel"
-  fapt xsel
-  add-aliases xsel
 }
 
 function install_cewl() {
@@ -2756,29 +2733,11 @@ function install_cewl() {
   add-test-command "cewl --help"
 }
 
-function install_curl() {
-  colorecho "Installing curl"
-  fapt curl
-  add-history curl
-}
-
 function install_dirb() {
   colorecho "Installing dirb"
   fapt dirb
   add-history dirb
   add-test-command "dirb | grep '<username:password>'"
-}
-
-function install_dnsutils() {
-  colorecho "Installing dnsutils"
-  fapt dnsutils
-  add-history dnsutils
-}
-
-function install_faketime() {
-  colorecho "Installing faketime"
-  fapt faketime
-  add-history faketime
 }
 
 function install_fcrackzip() {
@@ -2868,12 +2827,6 @@ function install_rlwrap() {
   add-test-command "rlwrap --version"
 }
 
-function install_samba() {
-  colorecho "Installing samba"
-  fapt samba
-  add-history samba
-}
-
 function install_smbclient() {
   colorecho "Installing smbclient"
   fapt smbclient
@@ -2892,12 +2845,6 @@ function install_sqlmap() {
   fapt sqlmap
   add-history sqlmap
   add-test-command "sqlmap --version"
-}
-
-function install_ssh() {
-  colorecho "Installing ssh"
-  fapt ssh
-  add-history ssh
 }
 
 function install_wfuzz() {
@@ -3105,115 +3052,139 @@ function install-genusernames() {
   add-test-command "genusernames 'john doe'"
 }
 
+function install_apt_tool() {
+  colorecho "Installing $1"
+  fapt $1
+  if [ "$2" ]
+  then
+    add-test-command $2
+  fi
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
+  ## TODO: optimize history + aliases
   update || exit
   deploy_exegol
-  fapt software-properties-common
+  install_apt_tool software-properties-common
   add-apt-repository contrib
   add-apt-repository non-free
   apt-get update
-  fapt man                        # Most important
-  fapt git                        # Git client
-  fapt lsb-release
-  fapt pciutils
-  fapt zip
-  fapt unzip
-  fapt kmod
-  fapt sudo                       # Sudo
-  install_curl                    # HTTP handler
-  fapt wget                       # Wget
-  fapt gnupg2                     # gnugpg
-  install_python3-pyftpdlib       # FTP server python library
-  install_php                     # Php language
-  fapt python2                    # Python 2 language
-  install_python3                 # Python 3 language
-  fapt python2-dev                # Python 2 language (dev version)
-  fapt python3-dev                # Python 3 language (dev version)
-  fapt python3-venv
-  fapt libffi-dev
+  install_apt_tool man "man --version"               # Most important             
+  install_apt_tool git "git --version"               # Git client
+  install_apt_tool lsb-release "lsb_release --help"
+  install_apt_tool pciutils
+  install_apt_tool zip "zip --version"
+  install_apt_tool unzip "unzip --version"
+  install_apt_tool kmod "kmod --version"
+  install_apt_tool sudo "sudo --version"             # Sudo
+  install_apt_tool curl "curl --version"             # HTTP handler
+  add-history curl
+  install_apt_tool wget "wget --version"             # Wget
+  install_apt_tool gnupg2                            # gnugpg
+  install_apt_tool python3-pyftpdlib                 # FTP server python library
+  add-aliases pyftpdlib
+  add-history pyftpdlib
+  install_apt_tool php "php --version"               # Php language
+  add-aliases php
+  install_apt_tool python2 "python2 --version"       # Python 2 language
+  install_apt_tool python3 "python3 --version"
+  add-aliases python3                                # Python 3 language             
+  install_apt_tool python2-dev                       # Python 2 language (dev version)
+  install_apt_tool python3-dev                       # Python 3 language (dev version)
+  install_apt_tool python3-venv
+  install_apt_tool libffi-dev
   install_rust_cargo
-  ln -s /usr/bin/python2.7 /usr/bin/python  # fix shit
-  install_python-pip              # Pip
-  fapt python3-pip                # Pip
+  ln -s /usr/bin/python2.7 /usr/bin/python           # fix shit
+  install_python-pip                                 # Pip
+  install_apt_tool python3-pip "pip3 --version"      # Pip
   python3 pip install --upgrade pip
   filesystem
-  install_go                      # Golang language
+  install_go                                         # Golang language
   set_go_env
   install_locales
-  install_tmux                    # Tmux
-  fapt zsh                        # Awesome shell
-  fapt asciinema                  # shell recording
-  install_ohmyzsh                 # Awesome shell
-  install_tldr                    # TL;DR man
-  fapt python-setuptools
-  fapt python3-setuptools
+  install_tmux                                       # Tmux
+  install_apt_tool zsh "zsh --version"               # Awesome shell
+  install_apt_tool asciinema "asciinema --version"   # shell recording
+  install_ohmyzsh                                    # Awesome shell
+  install_tldr                                       # TL;DR man
+  install_apt_tool python-setuptools
+  install_apt_tool python3-setuptools
   python3 -m pip install wheel
   python -m pip install wheel
   install_pipx
-  install_fzf                     # File fuzzer
+  install_fzf                                        # File fuzzer
   install_grc
-  fapt npm                        # Node Package Manager
+  install_apt_tool npm "npm --version"               # Node Package Manager
   install_nvm
   install_yarn
-  fapt gem                        # Install ruby packages
-  fapt automake                   # Automake
-  fapt autoconf                   # Autoconf
-  fapt make
-  fapt gcc
-  fapt g++
-  fapt file                       # Detect type of file with magic number
-  fapt lsof                       # Linux utility
-  fapt less                       # Linux utility
-  fapt x11-apps                   # Linux utility
-  fapt net-tools                  # Linux utility
-  fapt vim                        # Text editor
-  install_ultimate_vimrc          # Make vim usable OOFB
-  fapt nano                       # Text editor (not the best)
-  install_emacs-nox
-  fapt jq                         # jq is a lightweight and flexible command-line JSON processor
-  fapt iputils-ping               # Ping binary
-  fapt iproute2                   # Firewall rules
-  install_openvpn                 # install OpenVPN
-  install_mdcat                   # cat markdown files
-  install_bat                     # Beautiful cat
-  fapt tidy
-  fapt mlocate
-  install_xsel
-  fapt libtool
-  install_dnsutils                # DNS utilities like dig and nslookup
-  fapt dos2unix                   # Convert encoded dos script
-  DEBIAN_FRONTEND=noninteractive fapt macchanger  # Macchanger
-  install_samba                   # Samba
-  fapt ftp                        # FTP client
-  install_ssh                     # SSH client
-  fapt sshpass                    # SSHpass (wrapper for using SSH with password on the CLI)
-  fapt telnet                     # Telnet client
-  fapt nfs-common                 # NFS client
-  install_snmp
-  fapt ncat                       # Socket manager
-  fapt netcat-traditional         # Socket manager
-  fapt socat                      # Socket manager
-  install_gf                      # wrapper around grep
-  fapt rdate                      # tool for querying the current time from a network server
-  fapt putty                      # GUI-based SSH, Telnet and Rlogin client
-  fapt screen                     # CLI-based PuTT-like
-  fapt p7zip-full                 # 7zip
-  fapt p7zip-rar                  # 7zip rar module
-  fapt-noexit rar                 # rar
-  fapt unrar                      # unrar
-  fapt xz-utils                   # xz (de)compression
-  fapt xsltproc                   # apply XSLT stylesheets to XML documents (Nmap reports)
-  fapt parallel
-  fapt tree
-  install_faketime
-  fapt ruby ruby-dev
-  install_libxml2-utils
-  fapt nim
-  fapt perl
+  install_apt_tool gem "gem --version"               # Install ruby packages
+  install_apt_tool automake "automake --version"     # Automake
+  install_apt_tool autoconf "autoconf --version"     # Autoconf
+  install_apt_tool make "make --version"
+  install_apt_tool gcc "gcc --version"
+  install_apt_tool g++ "g++ --version"
+  install_apt_tool file "file --version"             # Detect type of file with magic number
+  install_apt_tool lsof "lsof -v"                    # Linux utility
+  install_apt_tool less "less --version"             # Linux utility
+  install_apt_tool x11-apps                          # Linux utility
+  install_apt_tool net-tools                         # Linux utility
+  install_apt_tool vim "vim --version"               # Text editor
+  install_ultimate_vimrc                             # Make vim usable OOFB
+  install_apt_tool nano "nano --version"             # Text editor (not the best)
+  install_apt_tool emacs-nox "emacs-nox --version"
+  add-aliases emacs-nox
+  install_apt_tool jq "jq --version"                 # jq is a lightweight and flexible command-line JSON processor
+  install_apt_tool iputils-ping                      # Ping binary
+  install_apt_tool iproute2                          # Firewall rules
+  install_openvpn                                    # install OpenVPN
+  install_mdcat                                      # cat markdown files
+  install_bat                                        # Beautiful cat
+  install_apt_tool tidy "tidy --version"
+  install_apt_tool mlocate "mlocate --version"
+  install_apt_tool xsel "xsel --version"
+  add-aliases xsel
+  install_apt_tool libtool
+  install_apt_tool dnsutils                          # DNS utilities like dig and nslookup
+  add-history dnsutils
+  install_apt_tool dos2unix "dos2unix --version"     # Convert encoded dos script
+  DEBIAN_FRONTEND=noninteractive fapt macchanger     # Macchanger
+  install_apt_tool samba "samba --version"           # Samba
+  add-history samba
+  install_apt_tool ftp "ftp -help"                   # FTP client
+  install_apt_tool ssh "ssh -V"                      # SSH client
+  add-history ssh
+  install_apt_tool sshpass "sshpass -V"              # SSHpass (wrapper for using SSH with password on the CLI)
+  install_apt_tool telnet                            # Telnet client
+  install_apt_tool nfs-common                        # NFS client
+  install_apt_tool snmp
+  add-history snmp
+  install_apt_tool ncat "ncat --version"             # Socket manager
+  install_apt_tool netcat-traditional                # Socket manager
+  install_apt_tool socat "socat -V"                  # Socket manager
+  install_apt_tool gf "gf --help"                    # wrapper around grep
+  install_apt_tool rdate                             # tool for querying the current time from a network server
+  install_apt_tool putty "putty --version"           # GUI-based SSH, Telnet and Rlogin client
+  install_apt_tool screen "screen --version"         # CLI-based PuTT-like
+  install_apt_tool p7zip-full "p7zip --help"         # 7zip
+  install_apt_tool p7zip-rar                         # 7zip rar module
+  fapt-noexit rar                                    # rar
+  install_apt_tool unrar "unrar -V"                  # unrar
+  install_apt_tool xz-utils "xz --version"           # xz (de)compression
+  install_apt_tool xsltproc "xsltproc --version"     # apply XSLT stylesheets to XML documents (Nmap reports)
+  install_apt_tool parallel "parallel --version"
+  install_apt_tool tree "tree --version"
+  install_apt_tool faketime "faketime --version"
+  add-history faketime
+  install_apt_tool ruby "ruby --version"
+  install_apt_tool ruby-dev
+  install_apt_tool libxml2-utils "xmllint --version"
+  add-aliases xmllint
+  install_apt_tool nim "nim --version"
+  install_apt_tool perl "perl --version"
   install_exegol-history
   install_logrotate
-  fapt openjdk-17-jre
+  install_apt_tool openjdk-17-jre "java --version"
 }
 
 # Package dedicated to offensive miscellaneous tools
