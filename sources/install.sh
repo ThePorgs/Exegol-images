@@ -377,12 +377,6 @@ function install_xspear() {
   add-test-command "XSpear --help"
 }
 
-function install_cupp() {
-  colorecho "Installing cupp"
-  fapt cupp
-  add-test-command "cupp --help"
-}
-
 function install_pass_station() {
   colorecho "Installing Pass Station"
   gem install pass-station
@@ -1568,7 +1562,7 @@ function install_windapsearch-go() {
 
 function install_trilium() {
   colorecho "Installing Trilium (building from sources)"
-  apt-get -y install libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
+  fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
   git -C /opt/tools/ clone -b stable https://github.com/zadam/trilium.git
   cd /opt/tools/trilium || exit
   # the npm install needs to be executed in the zsh context where nvm is used to set the Node version to be used.
@@ -2396,12 +2390,6 @@ function install_searchsploit() {
   add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
 }
 
-function install_crunch() {
-  colorecho "Installing crunch"
-  fapt crunch
-  add-test-command "crunch --help"
-}
-
 function install_seclists(){
   colorecho "Installing Seclists"
   git -C /usr/share/ clone https://github.com/danielmiessler/SecLists.git seclists
@@ -2693,7 +2681,7 @@ function install_cewl() {
   elif [[ $(uname -m) = 'aarch64' ]]
   then
     git -C /opt/tools/ clone https://github.com/digininja/CeWL.git
-    cd /opt/tools/CeWL
+    cd /opt/tools/CeWL || exit
     gem install bundler
     bundle install
     chmod u+x ./cewl.rb
@@ -2710,24 +2698,6 @@ function install_dirb() {
   fapt dirb
   add-history dirb
   add-test-command "dirb | grep '<username:password>'"
-}
-
-function install_fcrackzip() {
-  colorecho "Installing fcrackzip"
-  fapt fcrackzip
-  add-history fcrackzip
-}
-
-function install_pdfcrack() {
-  colorecho "Installing pdfcrack"
-  fapt pdfcrack
-  add-test-command "pdfcrack --version"
-}
-
-function install_bruteforce-luks() {
-  colorecho "Installing bruteforce-luks"
-  fapt bruteforce-luks
-  add-test-command "bruteforce-luks -h |& grep 'Print progress info'"
 }
 
 function install_ldapdomaindump() {
@@ -2785,13 +2755,6 @@ function install_polenum() {
   add-test-command "polenum.py --help"
 }
 
-function install_rlwrap() {
-  colorecho "Installing rlwrap"
-  fapt rlwrap
-  add-history rlwrap
-  add-test-command "rlwrap --version"
-}
-
 function install_snmp() {
   colorecho "Installing snmp"
   fapt snmp
@@ -2821,12 +2784,6 @@ function install_patator() {
   fapt patator # messes up with lib, it installs python3-impacket (0.9.22-2)
 }
 
-function install_exiftool() {
-  colorecho "Installing exiftool"
-  fapt exiftool
-  add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png"
-}
-
 function install_exifprobe() {
   colorecho "Installing exifprobe"
   fapt exifprobe
@@ -2837,18 +2794,6 @@ function install_dnsenum() {
   colorecho "Installing dnsenum"
   fapt dnsenum
   add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'"
-}
-
-function install_imagemagick() {
-  colorecho "Installing imagemagick"
-  fapt imagemagick
-  add-test-command "convert -version"
-}
-
-function install_ascii() {
-  colorecho "Installing ascii"
-  fapt ascii
-  add-test-command "ascii -v"
 }
 
 function install_avrdude() {
@@ -3135,16 +3080,16 @@ function package_misc() {
   set_go_env
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
-  install_rlwrap                  # Reverse shell utility
+  install_apt_tool rlwrap "rlwrap --version" history # Reverse shell utility
   install_shellerator             # Reverse shell generator
   install_uberfile                # file uploader/downloader commands generator
   install_arsenal                 # Cheatsheets tool
   install_trilium                 # notes taking tool
-  install_exiftool                # Meta information reader/writer
-  install_imagemagick             # Copy, modify, and distribute image
+  install_apt_tool exiftool "exiftool" # Meta information reader/writer
+  install_apt_tool imagemagick "convert --version" # Copy, modify, and distribute image
   install_ngrok                   # expose a local development server to the Internet
   install_whatportis              # Search default port number
-  install_ascii                   # The ascii table in the shell
+  install_apt_tool ascii "ascii -v" # The ascii table in the shell
 }
 
 # Package dedicated to most used offensive tools
@@ -3191,11 +3136,11 @@ function package_most_used() {
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
   set_go_env
-  install_crunch                  # Wordlist generator
+  install_apt_tool crunch "crunch -v" # Wordlist generator
   install_seclists                # Awesome wordlists
   install_rockyou                 # Basically installs rockyou (~same as Kali)
   install_cewl                    # Wordlist generator
-  install_cupp                    # User password profiler
+  install_apt_tool cupp "cupp --version" # User password profiler
   install_pass_station            # Default credentials database
   install_username-anarchy        # Generate possible usernames based on heuristics
   install-genusernames
@@ -3204,11 +3149,11 @@ function package_wordlists() {
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
   set_go_env
-  install_hashcat                 # Password cracker
+  install_apt_tool hashcat "hashcat --version" history # Password cracker
   install_john                    # Password cracker
-  install_fcrackzip               # Zip cracker
-  install_pdfcrack                # PDF cracker
-  install_bruteforce-luks         # Find the password of a LUKS encrypted volume
+  install_apt_tool fcrackzip "fcrackzip --version" history # Zip cracker
+  install_apt_tool pdfcrack "pdfcrack --version" # PDF cracker
+  install_apt_tool bruteforce-luks "bruteforce-luks -h |& grep 'Print progress info'" # Find the password of a LUKS encrypted volume
   install_name-that-hash          # Name-That-Hash, the hash identifier tool
 }
 
