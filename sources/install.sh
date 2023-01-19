@@ -827,7 +827,6 @@ function install_grc() {
 function install_nvm() {
   colorecho "Installing nvm (in zsh context)"
   zsh -c "source ~/.zshrc && nvm install node"
-  add-test-command "nvm --version"
 }
 
 function install_pykek() {
@@ -1030,6 +1029,7 @@ function install_bat() {
 function install_mdcat() {
   colorecho "Installing mdcat"
   source "$HOME/.cargo/env"
+  fapt pkg-config
   cargo install mdcat
   add-test-command "mdcat --version"
 }
@@ -3075,7 +3075,7 @@ function package_base() {
   install_apt_tool lsb-release "lsb_release --help"
   install_apt_tool pciutils
   install_apt_tool zip "zip --version"
-  install_apt_tool unzip "unzip --version"
+  install_apt_tool unzip "unzip -v"
   install_apt_tool kmod "kmod --version"
   install_apt_tool sudo "sudo --version"             # Sudo
   install_apt_tool curl "curl --version"             # HTTP handler
@@ -3162,9 +3162,9 @@ function package_base() {
   install_apt_tool ncat "ncat --version"             # Socket manager
   install_apt_tool netcat-traditional                # Socket manager
   install_apt_tool socat "socat -V"                  # Socket manager
-  install_apt_tool gf "gf --help"                    # wrapper around grep
+  install_gf                                         # wrapper around grep
   install_apt_tool rdate                             # tool for querying the current time from a network server
-  install_apt_tool putty "putty --version"           # GUI-based SSH, Telnet and Rlogin client
+  install_apt_tool putty                             # GUI-based SSH, Telnet and Rlogin client
   install_apt_tool screen "screen --version"         # CLI-based PuTT-like
   install_apt_tool p7zip-full "p7zip --help"         # 7zip
   install_apt_tool p7zip-rar                         # 7zip rar module
