@@ -840,7 +840,7 @@ function install_simplyemail() {
   git -C /opt/tools/ clone https://github.com/SimplySecurity/SimplyEmail.git
   cd /opt/tools/SimplyEmail/ || exit
   #bash setup/setup.sh #TODO update install process ?
-  fapt antiword odt2txt python-dev libxml2-dev libxslt1-dev python-virtualenv
+  fapt antiword odt2txt python-dev libxml2-dev libxslt1-dev
   python2 -m pip install -r setup/requirments.txt
   add-aliases simplyemail
   add-history simplyemail
@@ -2939,7 +2939,7 @@ function install-genusernames() {
   wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
   sed -i 's/genadname/genusernames/g' genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
-  add-test-command "genusernames 'john doe'"
+  add-test-command "genadname 'john doe'"
 }
 
 function install_apt_tool() {
