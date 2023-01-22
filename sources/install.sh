@@ -1161,7 +1161,7 @@ function install_proxmark3() {
   colorecho "Installing proxmark3 client"
   colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3OTHER (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
   colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmak3/"
-  apt-get -y install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev
+  fapt git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev
   git -C /opt/tools/ clone https://github.com/RfidResearchGroup/proxmark3.git
   cd /opt/tools/proxmark3 || exit
   make clean
@@ -1745,7 +1745,7 @@ function install_mfdread() {
 
 function install_mousejack() {
   colorecho "Installing mousejack"
-  apt-get -y install sdcc binutils python git
+  fapt sdcc binutils python git
   python-pip
   git -C /opt/tools/ clone https://github.com/BastilleResearch/mousejack
   cd /opt/tools/mousejack || exit
@@ -1775,26 +1775,6 @@ function install_gosecretsdump() {
   go install -v github.com/C-Sto/gosecretsdump@latest
   add-history gosecretsdump
   add-test-command "gosecretsdump -version"
-}
-
-function install_hackrf() {
-  colorecho "Installing HackRF tools"
-  apt-get -y install hackrf
-  add-test-command "hackrf_debug --help"
-}
-
-function install_gqrx() {
-  colorecho "Installing gqrx"
-  apt-get -y install gqrx-sdr
-  # test below cannot work because test runner cannot have a valid display
-  # add-test-command "gqrx --help"
-  add-test-command "which gqrx"
-}
-
-function install_rtl-433() {
-  colorecho "Installing rtl-433"
-  fapt rtl-433
-  add-test-command "dpkg -l rtl-433 | grep 'rtl-433'"
 }
 
 function install_sipvicious() {
@@ -3291,9 +3271,9 @@ function package_iot() {
 function package_sdr() {
   install_mousejack               # tools for mousejacking
   install_jackit                  # tools for mousejacking
-  install_hackrf                  # tools for hackrf
-  install_gqrx                    # spectrum analyzer for SDR
-  install_rtl-433                 # decode radio transmissions from devices on the ISM bands
+  install_apt_tool hackrf "hackrf_debug --help" # tools for hackrf
+  install_apt_tool gqrx-sdr "which gqrx" # spectrum analyzer for SDR
+  install_apt_tool rtl-433 "dpkg -l rtl-433 | grep 'rtl-433'" # decode radio transmissions from devices on the ISM bands
 }
 
 # Package dedicated to network pentest tools
