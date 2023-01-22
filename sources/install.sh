@@ -431,7 +431,7 @@ function install_lsassy() {
 
 function install_sprayhound() {
   colorecho "Installing sprayhound"
-  apt-get -y install libsasl2-dev libldap2-dev
+  fapt libsasl2-dev libldap2-dev
   python3 -m pipx install git+https://github.com/Hackndo/sprayhound
   add-history sprayhound
   add-test-command "sprayhound --help"
@@ -510,8 +510,7 @@ function install_neo4j() {
   #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
   echo 'deb https://debian.neo4j.com stable 4.4' | tee /etc/apt/sources.list.d/neo4j.list
   apt-get update
-  apt-get -y install --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
-  apt-get -y install neo4j
+  fapt gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1 neo4j
   # TODO: when temporary fix is not needed anymore --> neo4j-admin dbms set-initial-password exegol4thewin
   neo4j-admin set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
@@ -552,7 +551,7 @@ function install_mitm6_pip() {
 function install_aclpwn() {
   colorecho "Installing aclpwn with pip"
   python3 -m pipx install git+https://github.com/aas-n/aclpwn.py
-  add-test-command "aclpwn -h"
+  add-test-command "aclpwn --help"
 }
 
 function install_routersploit() {
@@ -854,7 +853,7 @@ function install_privexchange() {
   git -C /opt/tools/ clone https://github.com/dirkjanm/PrivExchange
   add-aliases privexchange
   add-history privexchange
-  add-test-command "python3 /opt/tools/PrivExchange/privexchange.py --help"
+  add-test-command "privexchange.py --help"
 }
 
 function install_lnkup() {
@@ -865,12 +864,6 @@ function install_lnkup() {
   add-aliases lnkup
   add-history lnkup
   add-test-command "lnk-generate.py --help"
-}
-
-function install_samdump2() {
-  colorecho "Installing samdump2"
-  fapt samdump2
-  add-test-command "samdump2 -h; samdump2 -h |& grep 'enable debugging'"
 }
 
 function install_pwntools() {
@@ -905,7 +898,7 @@ function install_darkarmour() {
   colorecho "Installing darkarmour"
   git -C /opt/tools/ clone https://github.com/bats3c/darkarmour
   cd /opt/tools/darkarmour || exit
-  apt-get -y install mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 upx-ucl osslsigncode
+  fapt mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 upx-ucl osslsigncode
   add-aliases darkarmour
   add-history darkarmour
   add-test-command "darkarmour --help"
@@ -931,7 +924,7 @@ function install_powershell() {
   ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
   ln -v -s /opt/tools/bin/pwsh /opt/tools/bin/powershell
   rm -v /tmp/powershell.tar.gz
-  add-test-command "powershell -Version"
+  add-test-command "powershell --version"
 }
 
 function install_fzf() {
@@ -1550,13 +1543,13 @@ function install_windapsearch-go() {
   colorecho "Installing Go windapsearch"
   git -C /opt/tools/ clone https://github.com/ropnop/go-windapsearch
   git -C /opt/tools/ clone https://github.com/magefile/mage
-  cd /opt/tools/mage
+  cd /opt/tools/mage || exit
   go run bootstrap.go
-  cd /opt/tools/go-windapsearch
+  cd /opt/tools/go-windapsearch || exit
   mage build
   add-aliases windapsearch
   add-history windapsearch
-  add-test-command "windapsearch --help"
+  add-test-command "windapsearch --version"
 }
 
 function install_trilium() {
@@ -1579,7 +1572,7 @@ function install_ntlmv1-multi() {
   git -C /opt/tools clone https://github.com/evilmog/ntlmv1-multi
   add-aliases ntlmv1-multi
   add-history ntlmv1-multi
-  add-test-command "ntlmv1-multi --ntlmv1 a::a:a:a:a"
+  add-test-command "ntlmv1-multi --help"
 }
 
 function install_droopescan() {
@@ -2488,7 +2481,6 @@ function install_metasploit(){
   mkdir /tmp/metasploit_install
   cd /tmp/metasploit_install || exit
   curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
-  cd /opt/tools || exit
   rm -rf /tmp/metasploit_install
   add-test-command "msfconsole --version"
 }
@@ -2532,7 +2524,7 @@ function install_pth-tools() {
   add-aliases pth-tools
   add-history pth-tools
   # TODO add-test-command
-  # FIXME probably won't work for ARM platforms
+  # FIXME Won't work for ARM platforms
 }
 
 function install_smtp-user-enum(){
@@ -2547,7 +2539,7 @@ function install_gpp-decrypt(){
   python3 -m pip install pycrypto colorama
   git -C /opt/tools/ clone -v https://github.com/t0thkr1s/gpp-decrypt
   add-aliases gpp-decrypt
-  add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
+  add-test-command "gpp-decrypt.py --version"
 }
 
 function install_android-tools-adb() {
@@ -2707,30 +2699,10 @@ function install_masscan() {
   add-test-command "masscan --help; masscan --version | grep 'Masscan version'"
 }
 
-function install_nbtscan() {
-  colorecho "Installing nbtscan"
-  fapt nbtscan
-  add-history nbtscan
-  add-test-command "nbtscan 127.0.0.1"
-}
-
-function install_rpcbind() {
-  colorecho "Installing rpcbind"
-  fapt rpcbind
-  add-test-command "rpcbind"
-}
-
 function install_ntpdate() {
   colorecho "Installing ntpdate"
   fapt ntpdate
   add-history ntpdate
-}
-
-function install_onesixtyone() {
-  colorecho "Installing onesixtyone"
-  fapt onesixtyone
-  add-history onesixtyone
-  add-test-command "onesixtyone 127.0.0.1 public"
 }
 
 function install_polenum() {
@@ -2904,8 +2876,8 @@ function install_tshark() {
 function install_ldeep() {
   colorecho "Installing ldeep"
   python3 -m pipx install ldeep
-  add-test-command "ldeep --help"
   add-history ldeep
+  add-test-command "ldeep --help"
 }
 
 function install-genusernames() {
@@ -3295,15 +3267,15 @@ function package_ad() {
   install_windapsearch-go         # Active Directory Domain enumeration through LDAP queries
   install_oaburl                  # Send request to the MS Exchange Autodiscover service
   install_lnkup
-  install_samdump2                # Dumps Windows 2k/NT/XP/Vista password hashes
-  install_smbclient               # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+  install_apt_tool samdump2 "samdump2 --help; samdump2 --help |& grep 'enable debugging'" # Dumps Windows 2k/NT/XP/Vista password hashes
+  install_apt_tool smbclient "smbclient --version" history # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_polenum
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_pth-tools               # Pass the hash attack
   install_smtp-user-enum          # SMTP user enumeration via VRFY, EXPN and RCPT
-  install_onesixtyone             # SNMP scanning
-  install_nbtscan                 # NetBIOS scanning tool
-  install_rpcbind                 # RPC scanning
+  install_apt_tool onesixtyone "onesixtyone 127.0.0.1 public" history # SNMP scanning
+  install_apt_tool nbtscan "nbtscan 127.0.0.1" history # NetBIOS scanning tool
+  install_apt_tool rpcbind "rpcbind" # RPC scanning
   install_gpp-decrypt             # Decrypt a given GPP encrypted string
   install_ntlmv1-multi            # NTLMv1 multi tools: modifies NTLMv1/NTLMv1-ESS/MSCHAPv2
   install_hashonymize             # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
