@@ -1334,6 +1334,9 @@ function install_infoga() {
 }
 
 function install_buster() {
+  # FIXME: Install with pipx doesn't works : raise VersionConflict(dist, req).with_context(dependent_req) 
+  # pkg_resources.ContextualVersionConflict: (charset-normalizer 3.0.1 (/tmp/pip-req-build-usbsw50_/.eggs/charset_normalizer-3.0.1-py3.9-linux-aarch64.egg), Requirement.parse('charset-normalizer<3.0,>=2.0'), {'aiohttp'})
+  # error: metadata-generation-failed
   colorecho "Installing buster"
   python3 -m pipx install git+https://github.com/sham00n/buster
   add-history buster
@@ -1642,6 +1645,7 @@ function install_jdwp_shellifier(){
 }
 
 function install_maigret() {
+  # FIXME: Install with pipx doesn't works : packaging.requirements.InvalidRequirement: Expected closing RIGHT_PARENTHESIS - fonttools (>=3.0<4.0) ; (python_version < "3") and extra == 'with-fonttools'
   colorecho "Installing maigret"
   python3 -m pipx install maigret
   add-history maigret
@@ -3141,11 +3145,11 @@ function package_osint() {
   # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
   install_h8mail                  # Email OSINT & Password breach hunting tool
   install_infoga                  # Gathering email accounts informations
-  install_buster                  # An advanced tool for email reconnaissance
+  # install_buster                  # An advanced tool for email reconnaissance # FIXME
   install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
-  # install_ghunt                 # Investigate Google Accounts with emails FIXME
+  # install_ghunt                 # Investigate Google Accounts with emails # FIXME
   install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
-  install_maigret                 # Search pseudos and information about users on many platforms
+  # install_maigret                 # Search pseudos and information about users on many platforms # FIXME
   install_linkedin2username       # Generate username lists for companies on LinkedIn
   install_toutatis                # Toutatis is a tool that allows you to extract information from instagrams accounts
   install_waybackurls             # Website history
@@ -3154,7 +3158,7 @@ function package_osint() {
   install_cloudfail               # Utilize misconfigured DNS and old database records to find hidden IP's behind the CloudFlare network
   install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
   install_constellation           # A graph-focused data visualisation and interactive analysis application.
-  install_maltego                 # Maltego is a software used for open-source intelligence and forensics FIXME
+  install_maltego                 # Maltego is a software used for open-source intelligence and forensics # FIXME
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
   install_apt_tool recon-ng "recon-ng --version" # External recon tool
