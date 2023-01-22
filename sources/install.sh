@@ -317,6 +317,8 @@ function install_linkfinder() {
 }
 
 function install_ssrfmap() {
+  # FIXME : selenium 4.7.2 requires urllib3[socks]~=1.26, but you have urllib3 1.24.3 which is incompatible.
+  # dulwich 0.21.2 requires urllib3>=1.25, but you have urllib3 1.24.3 which is incompatible.
   colorecho "Installing SSRFmap"
   git -C /opt/tools/ clone https://github.com/swisskyrepo/SSRFmap
   cd /opt/tools/SSRFmap || exit
@@ -2431,8 +2433,10 @@ function install_finalrecon(){
 function install_xsser() {
   colorecho "Installing xsser"
   git -C /opt/tools clone https://github.com/epsylon/xsser.git
-  cd /opt/tools/xsser
+  cd /opt/tools/xsser || exit
   python3 setup.py install
+  rm /usr/local/bin/xsser
+  add-aliases xsser
   add-history xsser
   add-test-command "xsser --help"
 }
@@ -3184,7 +3188,7 @@ function package_web() {
   install_wfuzz                   # Web fuzzer (second favorites)
   install_dirsearch               # Web fuzzer
   install_apt_tool sqlmap "sqlmap --version" history # SQL injection scanner
-  install_ssrfmap                 # SSRF scanner
+  # install_ssrfmap                 # SSRF scanner # FIXME
   install_gopherus                # SSRF helper
   install_nosqlmap                # NoSQL scanner
   install_xsstrike                # XSS scanner
