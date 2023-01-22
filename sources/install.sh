@@ -180,7 +180,7 @@ function install_gowitness() {
   colorecho "Installing gowitness"
   go install -v github.com/sensepost/gowitness@latest
   add-history gowitness
-  add-test-command "gowitness --help"
+  add-test-command "gowitness version"
 }
 
 function install_goshs(){
@@ -288,7 +288,7 @@ function install_oneforall() {
   git -C /opt/tools/ clone https://github.com/shmilylty/OneForAll.git
   python3 -m pip install -r /opt/tools/OneForAll/requirements.txt
   add-aliases oneforall
-  add-test-command "(setsid oneforall --help) </dev/null |& cat"
+  add-test-command "oneforall version"
 }
 
 function install_eyewitness() {
@@ -303,7 +303,7 @@ function install_eyewitness() {
 function install_wafw00f() {
   colorecho "Installing wafw00f"
   python3 -m pipx install wafw00F
-  add-test-command "wafw00f --help"
+  add-test-command "wafw00f --version"
 }
 
 function install_linkfinder() {
@@ -374,7 +374,7 @@ function install_xsstrike() {
 function install_xspear() {
   colorecho "Installing XSpear"
   gem install XSpear
-  add-test-command "XSpear --help"
+  add-test-command "XSpear --version"
 }
 
 function install_pass_station() {
@@ -664,7 +664,7 @@ function install_gobuster() {
   colorecho "Installing gobuster"
   go install -v github.com/OJ/gobuster/v3@latest
   add-history gobuster
-  add-test-command "gobuster --help"
+  add-test-command "gobuster version"
 }
 
 function install_kiterunner() {
@@ -676,7 +676,7 @@ function install_kiterunner() {
   make build
   ln -s "$(pwd)/dist/kr" /opt/tools/bin/kr
   add-history kitrunner
-  add-test-command "kr --help"
+  add-test-command "kr version"
 }
 
 function install_dirsearch() {
@@ -700,7 +700,7 @@ function install_tomcatwardeployer() {
   cd /opt/tools/tomcatWarDeployer/ || exit
   python3 -m pip install -r requirements.txt
   add-aliases tomcatwardeployer
-  add-test-command "tomcatWarDeployer --help"
+  add-test-command "tomcatWarDeployer --version"
 }
 
 function install_clusterd() {
@@ -711,7 +711,7 @@ function install_clusterd() {
   echo -e '#!/bin/sh\n(cd /opt/tools/clusterd/ && python clusterd.py $@)' > /usr/local/bin/clusterd
   chmod +x /usr/local/bin/clusterd
   add-history clusterd
-  add-test-command "clusterd --help"
+  add-test-command "clusterd -version"
 }
 
 function install_moodlescan() {
@@ -759,14 +759,14 @@ function install_gron() {
 function install_timing_attack() {
   colorecho "Installing timing_attack"
   gem install timing_attack
-  add-test-command "timing_attack --help"
+  add-test-command "timing_attack --version"
 }
 
 function install_updog() {
   colorecho "Installing updog"
   python3 -m pipx install updog
   add-history updog
-  add-test-command "updog --help"
+  add-test-command "updog --version"
 }
 
 function install_findomain() {
@@ -956,7 +956,7 @@ function install_uberfile() {
 
 function install_kadimus() {
   colorecho "Installing kadimus"
-  apt-get -y install libcurl4-openssl-dev libpcre3-dev libssh-dev
+  fapt libcurl4-openssl-dev libpcre3-dev libssh-dev
   git -C /opt/tools/ clone https://github.com/P0cL4bs/Kadimus
   cd /opt/tools/Kadimus || exit
   make
@@ -1018,7 +1018,7 @@ function install_xsrfprobe() {
   git -C /opt/tools/ clone https://github.com/0xInfection/XSRFProbe
   cd /opt/tools/XSRFProbe || exit
   python3 setup.py install
-  add-test-command "xsrfprobe --help"
+  add-test-command "xsrfprobe --version"
 }
 
 function install_krbrelayx() {
@@ -1054,7 +1054,6 @@ function install_jwt_tool() {
 
 function install_jwt_cracker() {
   colorecho "Installing JWT cracker"
-  apt-get -y install npm
   npm install --global jwt-cracker
   add-test-command "jwt-cracker --help"
 }
@@ -1062,7 +1061,7 @@ function install_jwt_cracker() {
 function install_wuzz() {
   colorecho "Installing wuzz"
   go install -v github.com/asciimoo/wuzz@latest
-  add-test-command "wuzz --help"
+  add-test-command "wuzz --version"
 }
 
 function install_pypykatz() {
@@ -1118,12 +1117,6 @@ function install_ysoserial() {
   wget -O /opt/tools/ysoserial/ysoserial.jar "https://github.com/frohoff/ysoserial/releases/latest/download/ysoserial-all.jar"
   add-aliases ysoserial
   add-test-command "ysoserial --help; ysoserial --help |& grep 'spring-core:4.1.4.RELEASE'"
-}
-
-function install_whatweb() {
-  colorecho "Installing whatweb"
-  fapt whatweb
-  add-test-command "whatweb --version"
 }
 
 function install_phpggc(){
@@ -1450,6 +1443,7 @@ function install_burpsuite() {
   # FIXME: add burp certificate to embedded firefox and chrome?
   # TODO: change Burp config to allow built-in browser to run
   add-aliases burpsuite
+  add-test-command "BurpSuiteCommunity --version"
 }
 
 function install_linkedin2username() {
@@ -1989,7 +1983,7 @@ function install_feroxbuster() {
   ln -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
   add-aliases feroxbuster
   add-history feroxbuster
-  add-test-command "feroxbuster --help"
+  add-test-command "feroxbuster --version"
 }
 
 function install_bloodhound-import() {
@@ -2176,7 +2170,7 @@ function install_donpapi() {
 function install_gau() {
   colorecho "Installing gau"
   GO111MODULE=on go install -v github.com/lc/gau@latest
-  add-test-command "gau --help"
+  add-test-command "gau --version"
 }
 
 function install_webclientservicescanner() {
@@ -2219,14 +2213,6 @@ function install_nuclei() {
   add-test-command "nuclei --version"
 }
 
-function install_prips() {
-  # Print the IP addresses in a given range
-  colorecho "Installing Prips"
-  fapt prips
-  add-history prips
-  add-test-command "prips --help"
-}
-
 function install_hakrevdns() {
   # Reverse DNS lookups
   colorecho "Installing Hakrevdns"
@@ -2245,7 +2231,7 @@ function install_httpx() {
   colorecho "Installing httpx"
   go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
   add-history httpx
-  add-test-command "httpx --help"
+  add-test-command "httpx --version"
 }
 
 function install_anew() {
@@ -2258,7 +2244,7 @@ function install_naabu() {
   colorecho "Installing naabu"
   fapt libpcap-dev
   go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
-  add-test-command "naabu --help"
+  add-test-command "naabu --version"
 }
 
 function install_tor() {
@@ -2693,13 +2679,6 @@ function install_cewl() {
   add-test-command "cewl --help"
 }
 
-function install_dirb() {
-  colorecho "Installing dirb"
-  fapt dirb
-  add-history dirb
-  add-test-command "dirb | grep '<username:password>'"
-}
-
 function install_ldapdomaindump() {
   colorecho "Installing ldapdomaindump"
   python3 -m pipx install git+https://github.com/dirkjanm/ldapdomaindump
@@ -2767,7 +2746,7 @@ function install_wfuzz() {
   fapt libcurl4-openssl-dev libssl-dev
   pip3 install pycurl wfuzz
   add-history wfuzz
-  add-test-command "wfuzz --help"
+  add-test-command "wfuzz --version"
 }
 
 function install_freerdp2-x11() {
@@ -3100,8 +3079,8 @@ function package_most_used() {
   install_droopescan              # Drupal scanner
   install_drupwn                  # Drupal scanner
   install_testssl                 # SSL/TLS scanner
-  install_apt_tool sslscan "sslscan --version"                 # SSL/TLS scanner
-  install_apt_tool weevely "weevely --help"                 # Awesome secure and light PHP webshell
+  install_apt_tool sslscan "sslscan --version" # SSL/TLS scanner
+  install_apt_tool weevely "weevely --help" # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
   install_wafw00f                 # Waf detector
@@ -3197,10 +3176,10 @@ function package_web() {
   install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
   install_amass                   # Web fuzzer
   install_ffuf                    # Web fuzzer (little favorites)
-  install_dirb                    # Web fuzzer
+  install_apt_tool dirb "dirb | grep '<username:password>'" history # Web fuzzer
   install_wfuzz                   # Web fuzzer (second favorites)
   install_dirsearch               # Web fuzzer
-  install_sqlmap                  # SQL injection scanner
+  install_apt_tool sqlmap "sqlmap --version" history # SQL injection scanner
   install_ssrfmap                 # SSRF scanner
   install_gopherus                # SSRF helper
   install_nosqlmap                # NoSQL scanner
@@ -3219,10 +3198,10 @@ function package_web() {
   install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
   install_moodlescan              # Moodle scanner
   install_testssl                 # SSL/TLS scanner
-  install_sslscan                 # SSL/TLS scanner
+  install_apt_tool sslscan "sslscan --version" # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
-  #install_                  # SSL/TLS scanner
-  install_weevely                 # Awesome secure and light PHP webshell
+  #install_                       # SSL/TLS scanner
+  install_apt_tool weevely "weevely --help" # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
   install_oneforall                       
@@ -3239,7 +3218,7 @@ function package_web() {
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
-  install_whatweb                 # Recognises web technologies including content management
+  install_apt_tool whatweb "whatweb --version" # Recognises web technologies including content management
   install_phpggc                  # php deserialization payloads
   install_symfony-exploits        #  symfony secret fragments exploit
   install_jdwp_shellifier         # exploit java debug
@@ -3252,7 +3231,7 @@ function package_web() {
   install_arjun                   # HTTP Parameter Discovery
   install_nuclei                  # Needed for gau install
   install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
-  install_prips                   # Print the IP addresses in a given range
+  install_apt_tool prips "prips --version" history # Print the IP addresses in a given range
   install_hakrevdns               # Reverse DNS lookups
   install_httprobe                # Probe http
   install_httpx                   # Probe http
