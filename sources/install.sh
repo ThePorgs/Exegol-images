@@ -263,14 +263,14 @@ function install_osrframework() {
   deactivate
   add-aliases osrframework
   add-history osrframework
-  add-test-command "osrf --help"
-  add-test-command "usufy --help"
-  add-test-command "alias_generator --help"
-  add-test-command "checkfy --help"
-  add-test-command "domainfy --help"
-  add-test-command "mailfy --help"
-  add-test-command "phonefy --help"
-  add-test-command "searchfy --help"
+  add-test-command "osrf --version"
+  add-test-command "usufy --version"
+  add-test-command "alias_generator --version"
+  add-test-command "checkfy --version"
+  add-test-command "domainfy --version"
+  add-test-command "mailfy --version"
+  add-test-command "phonefy --version"
+  add-test-command "searchfy --version"
 }
 
 function install_cloudfail() {
@@ -753,7 +753,7 @@ function install_gitrob(){
 function install_gron() {
   colorecho "Installing gron"
   go install -v github.com/tomnomnom/gron@latest
-  add-test-command "gron --help"
+  add-test-command "gron --version"
 }
 
 function install_timing_attack() {
@@ -896,7 +896,7 @@ function install_pwndbg() {
   ./setup.sh
   echo 'set disassembly-flavor intel' >> ~/.gdbinit
   add-aliases gdb
-  add-test-command "gdb --help"
+  add-test-command "gdb --version"
 }
 
 function install_darkarmour() {
@@ -1492,7 +1492,7 @@ function install_ipinfo() {
   colorecho "Installing ipinfo"
   sudo npm install ipinfo-cli --global
   add-history ipinfo
-  add-test-command "ipinfo 127.0.0.1"
+  add-test-command "ipinfo --version"
 }
 
 function install_constellation() {
@@ -1544,7 +1544,7 @@ function install_phoneinfoga() {
   tar xfv /tmp/phoneinfoga.tar.gz -C /opt/tools/bin/
   rm /tmp/phoneinfoga.tar.gz
   add-history phoneinfoga
-  add-test-command "phoneinfoga help"
+  add-test-command "phoneinfoga version"
 }
 
 function install_windapsearch-go() {
@@ -1651,7 +1651,7 @@ function install_maigret() {
   colorecho "Installing maigret"
   python3 -m pipx install maigret
   add-history maigret
-  add-test-command "maigret --help"
+  add-test-command "maigret --version"
 }
 
 function install_amber() {
@@ -2425,8 +2425,8 @@ function install_spiderfoot(){
   python3 -m pip install -r /opt/tools/spiderfoot/requirements.txt
   add-aliases spiderfoot
   add-history spiderfoot
-  add-test-command "spiderfoot --help"
-  add-test-command "spiderfoot-cli --help"
+  add-test-command "spiderfoot --version"
+  add-test-command "spiderfoot-cli -v"
 }
 
 function install_finalrecon(){
@@ -2782,18 +2782,6 @@ function install_freerdp2-x11() {
 function install_patator() {
   colorecho "Installing patator"
   fapt patator # messes up with lib, it installs python3-impacket (0.9.22-2)
-}
-
-function install_exifprobe() {
-  colorecho "Installing exifprobe"
-  fapt exifprobe
-  add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"
-}
-
-function install_dnsenum() {
-  colorecho "Installing dnsenum"
-  fapt dnsenum
-  add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'"
 }
 
 function install_avrdude() {
@@ -3161,14 +3149,14 @@ function package_cracking() {
 function package_osint() {
   set_go_env
   install_youtubedl               # Command-line program to download videos from YouTube.com and other video sites
-  install_exiftool                # For read exif information
-  install_exifprobe               # Probe and report structure and metadata content of camera image files
+  install_apt_tool exiftool "exiftool"                # For read exif information
+  install_apt_tool exifprobe "exifprobe -h"               # Probe and report structure and metadata content of camera image files
   install_sublist3r               # Fast subdomains enumeration tool
   install_assetfinder             # Find domains and subdomains potentially related to a given domain
   install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
   install_amass                   # OWASP Amass tool suite is used to build a network map of the target
   install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
-  install_dnsenum                 # DNSEnum is a command-line tool that automatically identifies basic DNS records
+  install_apt_tool dnsenum "dnsenum --help; dnsenum --help |& grep 'Print this help message'" # DNSEnum is a command-line tool that automatically identifies basic DNS records
   install_holehe                  # Check if the mail is used on different sites
   install_simplyemail             # Gather emails
   # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
@@ -3187,16 +3175,16 @@ function package_osint() {
   install_cloudfail               # Utilize misconfigured DNS and old database records to find hidden IP's behind the CloudFlare network
   install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
   install_constellation           # A graph-focused data visualisation and interactive analysis application.
-  install_maltego                 # Maltego is a software used for open-source intelligence and forensics
+  install_maltego                 # Maltego is a software used for open-source intelligence and forensics FIXME
   install_spiderfoot              # SpiderFoot automates OSINT collection
   install_finalrecon              # A fast and simple python script for web reconnaissance
-  fapt recon-ng                   # External recon tool
+  install_apt_tool recon-ng "recon-ng --version" # External recon tool
   install_osrframework            # OSRFramework, the Open Sources Research Framework
   install_tor					            # Tor proxy
   # install_torbrowser            # Tor browser FIXME
   install_pwndb					          # No need to say more, no ? Be responsible with this tool please !
   install_githubemail             # Retrieve a GitHub user's email even if it's not public
-  fapt whois                      # See information about a specific domain name or IP address
+  install_apt_tool whois "whois --version" # See information about a specific domain name or IP address
   install_recondog                # Informations gathering tool
   install_gron                    # JSON parser
   # install_ignorant              # holehe but for phone numbers
