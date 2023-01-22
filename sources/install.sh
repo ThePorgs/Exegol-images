@@ -1681,24 +1681,6 @@ function install_theharvester() {
   add-history theharvester
 }
 
-function install_libusb-dev() {
-  colorecho "Installing libusb-dev"
-  fapt libusb-dev
-  add-test-command "dpkg -l libusb-dev | grep 'libusb-dev'"
-}
-
-function install_autoconf() {
-  colorecho "Installing autoconf"
-  fapt autoconf
-  add-test-command "autoconf --version"
-}
-
-function install_nfct() {
-  colorecho "Installing nfct"
-  fapt nfct
-  add-test-command "nfct --help |& grep 'nfct command'"
-}
-
 function install_pcsc() {
   colorecho "Installing tools for PC/SC (smartcard)"
   fapt pcsc-tools pcscd libpcsclite-dev libpcsclite1
@@ -1734,12 +1716,6 @@ function install_mfoc() {
   make install
   add-history mfoc
   add-test-command "mfoc -h"
-}
-
-function install_mfcuk() {
-  colorecho "Installing mfcuk"
-  fapt mfcuk
-  add-test-command "mfcuk -i whatever"
 }
 
 function install_libnfc-crypto1-crack() {
@@ -2718,18 +2694,6 @@ function install_patator() {
   fapt patator # messes up with lib, it installs python3-impacket (0.9.22-2)
 }
 
-function install_avrdude() {
-  colorecho "Installing avrdude"
-  fapt avrdude
-  add-test-command "avrdude '-?'"
-}
-
-function install_minicom() {
-  colorecho "Installing minicom"
-  fapt minicom
-  add-test-command "minicom --version; minicom --version |& grep 'This program is free software'"
-}
-
 function install_nasm() {
   colorecho "Installing nasm"
   fapt nasm
@@ -3305,13 +3269,13 @@ function package_voip() {
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
   set_go_env
-  install_libusb-dev
-  install_autoconf
-  install_nfct
+  install_apt_tool libusb-dev "dpkg -l libusb-dev | grep 'libusb-dev'"
+  install_apt_tool autoconf "autoconf --version"
+  install_apt_tool nfct "nfct --help |& grep 'nfct command'"
   install_pcsc
   install_libnfc                  # NFC library
   install_mfoc                    # Tool for nested attack on Mifare Classic
-  install_mfcuk                   # Tool for Darkside attack on Mifare Classic
+  install_apt_tool mfcuk "mfcuk -i whatever" # Tool for Darkside attack on Mifare Classic
   install_libnfc-crypto1-crack    # tool for hardnested attack on Mifare Classic
   install_mfdread                 # Tool to pretty print Mifare 1k/4k dumps
   install_proxmark3               # Proxmark3 scripts
@@ -3319,8 +3283,8 @@ function package_rfid() {
 
 # Package dedicated to IoT tools
 function package_iot() {
-  install_avrdude
-  install_minicom
+  install_apt_tool avrdude "avrdude '-?'"
+  install_apt_tool minicom "minicom --version; minicom --version |& grep 'This program is free software'"
 }
 
 # Package dedicated to SDR
