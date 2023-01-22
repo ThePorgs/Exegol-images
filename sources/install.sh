@@ -2542,15 +2542,8 @@ function install_gpp-decrypt(){
   add-test-command "gpp-decrypt.py --version"
 }
 
-function install_android-tools-adb() {
-  colorecho "Installing android-tools-adb"
-  fapt android-tools-adb
-  add-test-command "adb --help"
-}
-
 function install_smali(){
   colorecho "Installing smali"
-  apt-get install default-jre wget
   mkdir /opt/tools/smali/
   wget https://bitbucket.org/JesusFreke/smali/downloads/smali-2.5.2.jar -O /opt/tools/smali/smali-2.5.2.jar
   add-aliases smali
@@ -2569,24 +2562,6 @@ function install_dex2jar(){
   mv /opt/tools/dex-tools-2.1/ /opt/tools/dex2jar
   find /opt/tools/dex2jar -type f -name "*.sh" -exec ln -s '{}' /opt/tools/bin ';'
   add-test-command "d2j-dex2jar.sh --help"
-}
-
-function install_zipalign() {
-  colorecho "Installing zipalign"
-  fapt zipalign
-  add-test-command "zipalign --help |& grep 'verbose output'"
-}
-
-function install_apksigner() {
-  colorecho "Installing apksigner"
-  fapt apksigner
-  add-test-command "apksigner --version"
-}
-
-function install_apktool() {
-  colorecho "Installing apktool"
-  fapt apktool
-  add-test-command "apktool --version"
 }
 
 function install_hostapd-wpe(){
@@ -3311,12 +3286,12 @@ function package_ad() {
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
   set_go_env
-  install_android-tools-adb
+  install_apt_tool android-tools-adb "adb --version"
   install_smali
   install_dex2jar
-  install_zipalign
-  install_apksigner
-  install_apktool
+  install_apt_tool zipalign "zipalign --help |& grep 'verbose output'"
+  install_apt_tool apksigner "apksigner --version"
+  install_apt_tool apktool "apktool --version"
   install_frida
   install_androguard              # Reverse engineering and analysis of Android applications
 }
