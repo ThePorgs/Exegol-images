@@ -1946,35 +1946,8 @@ function install_sleuthkit() {
   colorecho "Installing sleuthkit"
   fapt sleuthkit
   add-test-command "blkcalc --help"
-  add-test-command "blkcat --help"
-  add-test-command "blkls --help"
-  add-test-command "blkstat --help"
-  add-test-command "fcat --help"
-  add-test-command "ffind --help"
-  add-test-command "fiwalk --help"
-  add-test-command "fls --help"
-  add-test-command "fsstat --help"
-  add-test-command "hfind --help"
-  add-test-command "icat --help"
-  add-test-command "ifind --help"
-  add-test-command "ils --help"
-  add-test-command "img_cat --help"
-  add-test-command "img_stat --help"
-  add-test-command "istat --help"
-  add-test-command "jcat --help"
-  add-test-command "jls --help"
-  add-test-command "jpeg_extract --help"
-  add-test-command "mactime --help"
-  add-test-command "mmcat --help"
   add-test-command "mmls --help"
   add-test-command "mmstat --help"
-  add-test-command "sigfind --help"
-  add-test-command "sorter --help"
-  add-test-command "srch_strings --help"
-  add-test-command "tsk_comparedir --help"
-  add-test-command "tsk_gettimes --help"
-  add-test-command "tsk_loaddb --help"
-  add-test-command "tsk_recover --help"
 }
 
 function install_zsteg() {
@@ -2321,7 +2294,7 @@ function install_brakeman() {
 
 function install_semgrep() {
   colorecho "Installing semgrep"
-  pip3 install semgrep
+  python3 -m pip3 install semgrep
   add-history semgrep
   add-test-command "semgrep --help"
 }
