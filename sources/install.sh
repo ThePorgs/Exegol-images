@@ -1365,6 +1365,7 @@ function install_ghunt() {
 
 function install_oaburl() {
   colorecho "Downloading oaburl.py"
+  python3 -m pip install requests
   mkdir /opt/tools/OABUrl
   wget -O /opt/tools/OABUrl/oaburl.py "https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py"
   chmod +x /opt/tools/OABUrl/oaburl.py
@@ -1545,6 +1546,7 @@ function install_windapsearch-go() {
   mage build
   add-aliases windapsearch
   add-history windapsearch
+  add-test-command "mage --version"
   add-test-command "windapsearch --version"
 }
 
@@ -1646,6 +1648,7 @@ function install_maigret() {
 function install_amber() {
   colorecho "Installing amber"
   # Installing keystone requirement
+  fapt time
   git -C /opt/tools/ clone https://github.com/EgeBalci/keystone
   cd /opt/tools/keystone/ || exit
   mkdir build
@@ -2077,6 +2080,8 @@ function install_targetedKerberoast() {
 }
 
 function install_manspider() {
+  # FIXME : packaging.requirements.InvalidRequirement: Expected closing RIGHT_PARENTHESIS
+  # extract-msg (<=0.29.*)
   colorecho "Installing MANSPIDER"
   #git -C /opt/tools/ clone https://github.com/blacklanternsecurity/MANSPIDER
   fapt antiword
@@ -2457,8 +2462,10 @@ function install_pth-tools() {
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_amd64.deb
   elif [[ $(uname -m) = 'aarch64' ]]
   then
-    wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armhf.deb
-    wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armhf.deb
+    # FIXME Won't work for ARM platforms
+    #wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armhf.deb
+    #wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armhf.deb
+    return
   elif [[ $(uname -m) = 'armv7l' ]]
   then
     wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armel.deb
@@ -2742,6 +2749,7 @@ function package_base() {
   install_apt_tool automake "automake --version"     # Automake
   install_apt_tool autoconf "autoconf --version"     # Autoconf
   install_apt_tool make "make --version"
+  install_apt_tool cmake "cmake --version"
   install_apt_tool gcc "gcc --version"
   install_apt_tool g++ "g++ --version"
   install_apt_tool file "file --version"             # Detect type of file with magic number
@@ -3053,7 +3061,7 @@ function package_ad() {
   install_smtp-user-enum          # SMTP user enumeration via VRFY, EXPN and RCPT
   install_apt_tool onesixtyone "onesixtyone 127.0.0.1 public" history # SNMP scanning
   install_apt_tool nbtscan "nbtscan 127.0.0.1" history # NetBIOS scanning tool
-  install_apt_tool rpcbind "rpcbind" # RPC scanning
+  install_apt_tool rpcbind # RPC scanning
   install_gpp-decrypt             # Decrypt a given GPP encrypted string
   install_ntlmv1-multi            # NTLMv1 multi tools: modifies NTLMv1/NTLMv1-ESS/MSCHAPv2
   install_hashonymize             # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
@@ -3068,7 +3076,7 @@ function package_ad() {
   install_coercer                 # Python script to coerce auth through multiple methods
   install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
-  install_manspider               # Snaffler-like in Python
+  # install_manspider             # Snaffler-like in Python # FIXME
   install_targetedKerberoast
   install_pcredz
   install_pywsus
