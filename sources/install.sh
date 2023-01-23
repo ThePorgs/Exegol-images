@@ -826,14 +826,9 @@ function install_autorecon() {
   python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
   add-history autorecon
   # test below cannot work because test runner cannot have a valid display
-  # add-test-command "autorecon --version"
-  add-test-command "which autorecon"
-}
-
-function install_tcpdump() {
-  colorecho "Installing tcpdump"
-  fapt tcpdump
-  add-test-command "tcpdump --version"
+  # 
+  add-test-command "autorecon --version"
+  #add-test-command "which autorecon"
 }
 
 function install_simplyemail() {
@@ -1238,7 +1233,7 @@ function install_bloodhound_old_v2() {
 
 function install_bettercap() {
   colorecho "Installing Bettercap"
-  apt-get -y install libpcap-dev libusb-1.0-0-dev libnetfilter-queue-dev
+  fapt libpcap-dev libusb-1.0-0-dev libnetfilter-queue-dev
   go install -v github.com/bettercap/bettercap@latest
   /root/go/bin/bettercap -eval "caplets.update; ui.update; q"
   sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/http-ui.cap
@@ -1266,7 +1261,7 @@ function install_hcxtools() {
 
 function install_hcxdumptool() {
   colorecho "Installing hcxdumptool"
-  apt-get -y install libcurl4-openssl-dev libssl-dev
+  fapt libcurl4-openssl-dev libssl-dev
   git -C /opt/tools/ clone https://github.com/ZerBea/hcxdumptool
   cd /opt/tools/hcxdumptool || exit
   # Checking out to specific commit is a temporary fix to the project no compiling anymore.
@@ -1304,7 +1299,7 @@ function install_wifite2() {
 
 function install_wireshark_sources() {
   colorecho "Installing tshark, wireshark"
-  apt-get -y install cmake libgcrypt20-dev libglib2.0-dev libpcap-dev qtbase5-dev libssh-dev libsystemd-dev qtmultimedia5-dev libqt5svg5-dev qttools5-dev libc-ares-dev flex bison byacc
+  fapt cmake libgcrypt20-dev libglib2.0-dev libpcap-dev qtbase5-dev libssh-dev libsystemd-dev qtmultimedia5-dev libqt5svg5-dev qttools5-dev libc-ares-dev flex bison byacc
   wget -O /tmp/wireshark.tar.xz https://www.wireshark.org/download/src/wireshark-latest.tar.xz
   cd /tmp/ || exit
   tar -xvf /tmp/wireshark.tar.xz
@@ -1315,6 +1310,7 @@ function install_wireshark_sources() {
   cd /tmp/ || exit
   rm -r "$(find . -maxdepth 1 -type d -name 'wireshark*')"
   wireshark.tar.xz
+  add-test-command "wireshark --version"
 }
 
 function install_infoga() {
@@ -1629,7 +1625,7 @@ function install_awscli(){
 function install_scout() {
   colorecho "Installing ScoutSuite"
   python3 -m pipx install scoutsuite
-  add-test-command "scout --help"
+  add-test-command "scout --version"
 }
 
 function install_jdwp_shellifier(){
@@ -1839,7 +1835,7 @@ function install_peepdf() {
 
 function install_volatility2() {
   colorecho "Installing volatility"
-  apt-get -y install pcregrep libpcre++-dev python2-dev yara
+  fapt pcregrep libpcre++-dev python2-dev yara
   git -C /opt/tools/ clone https://github.com/volatilityfoundation/volatility
   cd /opt/tools/volatility || exit
   python -m pip install pycrypto distorm3 pillow openpyxl ujson
@@ -1899,7 +1895,7 @@ function install_chisel() {
   colorecho "Installing chisel"
   go install -v github.com/jpillora/chisel@latest
   # TODO: add windows pre-compiled binaries in /opt/ressources/windows?
-  add-test-command "chisel --help"
+  add-test-command "chisel --version"
 }
 
 function install_sshuttle() {
@@ -1922,7 +1918,7 @@ function install_rsactftool() {
   colorecho "Installing RsaCtfTool"
   git -C /opt/tools/ clone https://github.com/Ganapati/RsaCtfTool
   cd /opt/tools/RsaCtfTool || exit
-  apt-get -y install libgmp3-dev libmpc-dev
+  fapt libgmp3-dev libmpc-dev
   python3 -m pip install -r requirements.txt
   add-aliases rsactftool
   add-history rsactftool
@@ -1979,12 +1975,6 @@ function install_divideandscan() {
   python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
   add-history divideandscan
   add-test-command "divideandscan --help"
-}
-
-function install_iptables() {
-  colorecho "Installing iptables"
-  fapt iptables
-  add-test-command "iptables --version"
 }
 
 function install_trid() {
@@ -2542,7 +2532,7 @@ function install_radare2(){
   colorecho "Installing radare2"
   git -C /opt/tools/ clone https://github.com/radareorg/radare2
   /opt/tools/radare2/sys/install.sh
-  add-test-command "radare2 -h"
+  add-test-command "radare2 -v"
 }
 
 function install_jd-gui(){
@@ -2574,14 +2564,6 @@ function install_yarn() {
   apt update
   fapt yarn
   add-test-command "yarn --version"
-}
-
-function install_aircrack-ng() {
-  colorecho "Installing aircrack-ng"
-  fapt aircrack-ng
-  add-aliases aircrack-ng
-  add-history aircrack-ng
-  add-test-command "aircrack-ng --help"
 }
 
 function install_libxml2-utils() {
@@ -2617,19 +2599,6 @@ function install_ldapdomaindump() {
   add-test-command "ldapdomaindump --help"
 }
 
-function install_hping3() {
-  colorecho "Installing hping3"
-  fapt hping3
-  add-test-command "hping3 --version"
-}
-
-function install_masscan() {
-  colorecho "Installing masscan"
-  fapt masscan
-  add-history masscan
-  add-test-command "masscan --help; masscan --version | grep 'Masscan version'"
-}
-
 function install_ntpdate() {
   colorecho "Installing ntpdate"
   fapt ntpdate
@@ -2660,29 +2629,9 @@ function install_wfuzz() {
   add-test-command "wfuzz --version"
 }
 
-function install_freerdp2-x11() {
-  colorecho "Installing freerdp2-x11"
-  fapt freerdp2-x11
-  add-history xfreerdp
-  # test below cannot work because test runner cannot have a valid display
-  # add-test-command "xfreerdp /version"
-  add-test-command "which xfreerdp"
-}
-
 function install_patator() {
   colorecho "Installing patator"
   fapt patator # messes up with lib, it installs python3-impacket (0.9.22-2)
-}
-
-function install_nasm() {
-  colorecho "Installing nasm"
-  fapt nasm
-  add-test-command "nasm --version"
-}
-
-function install_wabt() {
-  colorecho "Installing wabt"
-  fapt wabt
 }
 
 function install_ltrace() {
@@ -2690,100 +2639,10 @@ function install_ltrace() {
   fapt-noexit ltrace
 }
 
-function install_strace() {
-  colorecho "Installing strace"
-  fapt strace
-}
-
-function install_stegosuite() {
-  colorecho "Installing stegosuite"
-  fapt stegosuite
-  add-test-command "stegosuite --help"
-}
-
-function install_steghide() {
-  colorecho "Installing steghide"
-  fapt steghide
-  add-test-command "steghide --version"
-}
-
-function install_binwalk() {
-  colorecho "Installing binwalk"
-  fapt binwalk
-  add-test-command "binwalk --help"
-}
-
-function install_foremost() {
-  colorecho "Installing foremost"
-  fapt foremost
-  add-test-command "foremost -V"
-}
-
-function install_pst-utils() {
-  colorecho "Installing pst-utils"
-  fapt pst-utils
-}
-
-function install_reaver() {
-  colorecho "Installing reaver"
-  fapt reaver
-  add-test-command "reaver --help; reaver --help |& grep 'Tactical Network Solutions'"
-}
-
-function install_bully() {
-  colorecho "Installing bully"
-  fapt bully
-  add-test-command "bully --version"
-}
-
-function install_cowpatty() {
-  colorecho "Installing cowpatty"
-  fapt cowpatty
-  add-test-command "cowpatty -V"
-}
-
-function install_redis-tools() {
-  colorecho "Installing redis-tools"
-  fapt redis-tools
-  add-test-command "redis-cli --version"
-}
-
-function install_mariadb-client() {
-  colorecho "Installing mariadb-client"
-  fapt mariadb-client
-  add-test-command "mariadb --version"
-}
-
-function install_ssh-audit() {
-  colorecho "Installing ssh-audit"
-  fapt ssh-audit
-  add-test-command "ssh-audit --help; ssh-audit --help |& grep 'verbose output'"
-}
-
-function install_xtightvncviewer() {
-  colorecho "Installing xtightvncviewer"
-  fapt xtightvncviewer
-}
-
-function install_rdesktop() {
-  colorecho "Installing rdesktop"
-  fapt rdesktop
-}
-
-function install_dns2tcp() {
-  colorecho "Installing dns2tcp"
-  fapt dns2tcp
-}
-
-function install_traceroute() {
-  colorecho "Installing traceroute"
-  fapt traceroute
-}
-
 function install_wireshark() {
   colorecho "Installing Wireshark"
   DEBIAN_FRONTEND=noninteractive fapt wireshark
-  #TODO add-test-command
+  add-test-command "wireshark --version"
 }
 
 function install_tshark() {
@@ -2972,7 +2831,7 @@ function package_most_used() {
   install_simplyemail             # Gather emails
   install_ffuf                    # Web fuzzer (little favorites)
   install_apt_tool sqlmap "sqlmap --version" history # SQL injection scanner
-  install_apt_tool hydra "hydra --help; hydra -help |& grep 'more command line options'"                   # Login scanner
+  install_apt_tool hydra "hydra --help; hydra -help |& grep 'more command line options'" # Login scanner
   install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
   install_droopescan              # Drupal scanner
@@ -3278,32 +3137,32 @@ function package_sdr() {
 
 # Package dedicated to network pentest tools
 function package_network() {
-  export PATH=$PATH:/usr/local/go/bin
+  set_go_env
   install_proxychains             # Network tool
   install_wireshark               # Wireshark packet sniffer
   install_tshark                  # Tshark packet sniffer
   # install_wireshark_sources     # Install Wireshark from sources
-  install_hping3                  # Discovery tool
-  install_masscan                 # Port scanner
-  install_nmap                    # Port scanner
+  install_apt_tool hping3 "hping3 --version" # Discovery tool
+  install_apt_tool masscan "masscan --help; masscan --version | grep 'Masscan version'" history # Port scanner
+  install_apt_tool nmap "nmap --version" aliases history # Port scanner
   install_autorecon               # External recon tool
-  install_tcpdump                 # Capture TCP traffic
+  install_apt_tool tcpdump "tcpdump --version" # Capture TCP traffic
   install_dnschef                 # Python DNS server
   install_divideandscan           # Python project to automate port scanning routine
-  install_iptables                # iptables for the win
-  install_traceroute              # ping ping
+  install_apt_tool iptables "iptables --version" # iptables for the win
+  install_apt_tool traceroute "traceroute --version" # ping ping
   install_chisel                  # Fast TCP/UDP tunnel over HTTP
   install_sshuttle                # Transparent proxy over SSH
-  install_dns2tcp                 # TCP tunnel over DNS
+  install_apt_tool dns2tcp "dns2tcpc |& grep 'DNS server to use'" # TCP tunnel over DNS
   # install_eaphammer             # FIXME
-  install_freerdp2-x11
-  install_rdesktop
-  install_xtightvncviewer
+  install_apt_tool freerdp2-x11 "which xfreerdp" history
+  install_apt_tool rdesktop "rdesktop |& grep 'Smartcard reader name to use'"
+  install_apt_tool xtightvncviewer "which xtightvncviewer"
   install_fierce
-  install_ssh-audit               # SSH server audit
-  install_hydra                   # Login scanner
-  install_mariadb-client          # Mariadb client
-  install_redis-tools             # Redis protocol
+  install_apt_tool ssh-audit "ssh-audit --help; ssh-audit --help |& grep 'verbose output'" # SSH server audit
+  install_apt_tool hydra "hydra --help; hydra -help |& grep 'more command line options'" # Login scanner
+  install_apt_tool mariadb-client "mariadb --version" # Mariadb client
+  install_apt_tool redis-tools "redis-cli --version" # Redis protocol
   # install_odat                  # Oracle Database Attacking Tool, FIXME
 }
 
@@ -3312,11 +3171,11 @@ function package_wifi() {
   set_go_env
   install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
   install_wifite2                 # Retrieving password of a wireless access point (router)
-  install_aircrack-ng             # WiFi security auditing tools suite
+  install_apt_tool aircrack-ng "aircrack-ng --help" history aliases # WiFi security auditing tools suite
   # install_hostapd-wpe           # Modified hostapd to facilitate AP impersonation attacks, FIXME broken install, need official release of hostapd-2.6.tar.gz
-  install_reaver                  # Brute force attack against Wifi Protected Setup
-  install_bully                   # WPS brute force attack
-  install_cowpatty                # WPA2-PSK Cracking
+  install_apt_tool reaver "reaver --help; reaver --help |& grep 'Tactical Network Solutions'" # Brute force attack against Wifi Protected Setup
+  install_apt_tool bully "bully --version" # WPS brute force attack
+  install_apt_tool cowpatty "cowpatty -V" # WPA2-PSK Cracking
   install_bettercap               # MiTM tool
   install_hcxtools                # Tools for PMKID and other wifi attacks
   install_hcxdumptool             # Small tool to capture packets from wlan devices
@@ -3324,9 +3183,9 @@ function package_wifi() {
 
 # Package dedicated to forensic tools
 function package_forensic() {
-  install_pst-utils               # Reads a PST and prints the tree structure to the console
-  install_binwalk                 # Tool to find embedded files
-  install_foremost                # Alternative to binwalk
+  install_apt_tool pst-utils # Reads a PST and prints the tree structure to the console
+  install_apt_tool binwalk "binwalk --help" # Tool to find embedded files
+  install_apt_tool foremost "foremost -V" # Alternative to binwalk
   install_volatility2             # Memory analysis tool
   install_trid                    # filetype detection tool
   # install_peepdf                # PDF analysis FIXME
@@ -3335,8 +3194,8 @@ function package_forensic() {
 # Package dedicated to steganography tools
 function package_steganography() {
   install_zsteg                   # Detect stegano-hidden data in PNG & BMP
-  install_stegosuite
-  install_steghide
+  install_apt_tool stegosuite "stegosuite --help"
+  install_apt_tool steghide "steghide --version"
   install_stegolsb                # (including wavsteg)
 }
 
@@ -3353,11 +3212,11 @@ function package_reverse() {
   install_pwndbg                  # Advanced Gnu Debugger
   install_angr                    # Binary analysis
   install_checksec-py             # Check security on binaries
-  install_nasm                    # Netwide Assembler
+  install_apt_tool nasm "nasm --version" # Netwide Assembler
   install_radare2                 # Awesome debugger
-  install_wabt                    # The WebAssembly Binary Toolkit
+  install_apt_tool wabt                    # The WebAssembly Binary Toolkit
   install_ltrace
-  install_strace
+  install_apt_tool strace "strace --version"
   install_ghidra
   install_ida
   install_jd-gui                  # Java decompiler
