@@ -222,13 +222,6 @@ function install_responder() {
   add-test-command "responder --version"
 }
 
-function install_sublist3r() {
-  colorecho "Installing Sublist3r"
-  python3 -m pipx install git+https://github.com/aboul3la/Sublist3r
-  add-history sublist3r
-  add-test-command "sublist3r --help"
-}
-
 function install_recondog() {
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
@@ -298,12 +291,6 @@ function install_eyewitness() {
   bash ./Python/setup/setup.sh
   add-aliases eyewitness
   add-test-command "eyewitness --help"
-}
-
-function install_wafw00f() {
-  colorecho "Installing wafw00f"
-  python3 -m pipx install wafw00F
-  add-test-command "wafw00f --version"
 }
 
 function install_linkfinder() {
@@ -422,13 +409,6 @@ function install_crackmapexec() {
   add-test-command "crackmapexec --help"
 }
 
-function install_lsassy() {
-  colorecho "Installing lsassy"
-  python3 -m pipx install lsassy
-  add-history lsassy
-  add-test-command "lsassy --version"
-}
-
 function install_sprayhound() {
   colorecho "Installing sprayhound"
   fapt libsasl2-dev libldap2-dev
@@ -533,25 +513,6 @@ function install_mitm6_sources() {
   cd /opt/tools/mitm6/ || exit
   python3 -m pip install -r requirements.txt
   python3 setup.py install
-}
-
-function install_mitm6_pip() {
-  colorecho "Installing mitm6 with pip"
-  # commenting line below as I'm not sure what it's needed for
-  # python3 -m pip install service_identity
-  python3 -m pipx install mitm6
-  # commenting lines below as they probably were temporary fixes to something.
-  # if they need to be enabled again, architecture needs to be taken into account
-  # cd /usr/lib/x86_64-linux-gnu/ || exit
-  # ln -s -f libc.a liblibc.a
-  add-history mitm6
-  add-test-command "mitm6 --help"
-}
-
-function install_aclpwn() {
-  colorecho "Installing aclpwn with pip"
-  python3 -m pipx install git+https://github.com/aas-n/aclpwn.py
-  add-test-command "aclpwn --help"
 }
 
 function install_routersploit() {
@@ -680,13 +641,6 @@ function install_kiterunner() {
   add-test-command "kr version"
 }
 
-function install_dirsearch() {
-  colorecho "Installing dirsearch"
-  python3 -m pipx install git+https://github.com/maurosoria/dirsearch
-  add-history dirsearch
-  add-test-command "dirsearch --help"
-}
-
 function install_cmsmap() {
   colorecho "Installing CMSmap"
   python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
@@ -726,12 +680,6 @@ function install_moodlescan() {
   add-test-command "moodlescan --help"
 }
 
-function install_arjun() {
-  colorecho "Installing arjun"
-  python3 -m pipx install arjun
-  add-test-command "arjun --help"
-}
-
 function install_ffuf() {
   colorecho "Installing ffuf"
   go install -v github.com/ffuf/ffuf@latest
@@ -761,13 +709,6 @@ function install_timing_attack() {
   colorecho "Installing timing_attack"
   gem install timing_attack
   add-test-command "timing_attack --version"
-}
-
-function install_updog() {
-  colorecho "Installing updog"
-  python3 -m pipx install updog
-  add-history updog
-  add-test-command "updog --version"
 }
 
 function install_findomain() {
@@ -932,19 +873,6 @@ function install_fzf() {
   add-test-command "fzf --version"
 }
 
-function install_shellerator() {
-  colorecho "Installing shellerator"
-  python3 -m pipx install git+https://github.com/ShutdownRepo/shellerator
-  add-history shellerator
-  add-test-command "shellerator --help"
-}
-
-function install_uberfile() {
-  colorecho "Installing uberfile"
-  python3 -m pipx install git+https://github.com/ShutdownRepo/uberfile
-  add-test-command "uberfile --help"
-}
-
 function install_kadimus() {
   colorecho "Installing kadimus"
   fapt libcurl4-openssl-dev libpcre3-dev libssh-dev
@@ -1055,26 +983,12 @@ function install_wuzz() {
   add-test-command "wuzz --version"
 }
 
-function install_pypykatz() {
-  colorecho "Installing pypykatz"
-  python3 -m pipx install pypykatz
-  add-history pypykatz
-  add-test-command "pypykatz version"
-}
-
 function install_enyx() {
   colorecho "Installing enyx"
   git -C /opt/tools/ clone https://github.com/trickster0/Enyx
   add-aliases enyx
   add-history enyx
   add-test-command "enyx"
-}
-
-function install_enum4linux-ng() {
-  colorecho "Installing enum4linux-ng"
-  python3 -m pipx install git+https://github.com/cddmp/enum4linux-ng
-  add-history enum4linux-ng
-  add-test-command "enum4linux-ng --help"
 }
 
 function install_git-dumper() {
@@ -1135,13 +1049,6 @@ function install_john() {
   add-test-command "john --help"
 }
 
-function install_name-that-hash() {
-  colorecho "Installing Name-That-Hash"
-  python3 -m pipx install name-that-hash
-  add-history name-that-hash
-  add-test-command "nth --help"
-}
-
 function install_zerologon() {
   colorecho "Pulling CVE-2020-1472 exploit and scan scripts"
   git -C /opt/tools/ clone https://github.com/SecuraBV/CVE-2020-1472
@@ -1166,19 +1073,6 @@ function install_proxmark3() {
   add-aliases proxmark3
   add-history proxmark3
   add-test-command "proxmark3 --version"
-}
-
-function install_checksec-py() {
-  colorecho "Installing checksec.py"
-  python3 -m pipx install checksec.py
-  add-test-command "checksec --help"
-}
-
-function install_arsenal() {
-  echo "Installing Arsenal"
-  python3 -m pipx install git+https://github.com/Orange-Cyberdefense/arsenal
-  add-aliases arsenal
-  add-test-command "arsenal --version"
 }
 
 function install_tldr() {
@@ -1472,12 +1366,6 @@ function install_carbon14() {
   add-test-command "carbon14.py --help"
 }
 
-function install_youtubedl() {
-  colorecho "Installing youtube-dl"
-  python3 -m pipx install youtube-dl
-  add-test-command "youtube-dl --version"
-}
-
 function install_ipinfo() {
   colorecho "Installing ipinfo"
   sudo npm install ipinfo-cli --global
@@ -1498,26 +1386,6 @@ function install_constellation() {
   fi
   # TODO ARM64 install
   # TODO add-test-command
-}
-
-function install_holehe() {
-  colorecho "Installing holehe"
-  python3 -m pipx install holehe
-  add-history holehe
-  add-test-command "holehe --help"
-}
-
-function install_twint() {
-  colorecho "Installing twint"
-  python3 -m pipx install twint
-  add-history twint
-}
-
-function install_h8mail() {
-  colorecho "Installing h8mail"
-  python3 -m pipx install h8mail
-  add-history h8mail
-  add-test-command "h8mail --help"
 }
 
 function install_phoneinfoga() {
@@ -1574,18 +1442,6 @@ function install_ntlmv1-multi() {
   add-test-command "ntlmv1-multi --help"
 }
 
-function install_droopescan() {
-  colorecho "Installing droopescan"
-  python3 -m pipx install droopescan
-  add-test-command "droopescan --help"
-}
-
-function install_drupwn() {
-  colorecho "Installing drupwn"
-  python3 -m pipx install git+https://github.com/immunIT/drupwn
-  add-test-command "drupwn --help"
-}
-
 function install_kubectl(){
   colorecho "Installing kubectl"
   mkdir -p /opt/tools/kubectl
@@ -1625,12 +1481,6 @@ function install_awscli(){
   add-test-command "aws --version"
 }
 
-function install_scout() {
-  colorecho "Installing ScoutSuite"
-  python3 -m pipx install scoutsuite
-  add-test-command "scout --version"
-}
-
 function install_jdwp_shellifier(){
   colorecho "Installing jdwp_shellifier"
   git -C /opt/tools/ clone https://github.com/IOActive/jdwp-shellifier
@@ -1662,12 +1512,6 @@ function install_amber() {
   go install -v github.com/EgeBalci/amber@latest
   add-history amber
   add-test-command "amber --help"
-}
-
-function install_hashonymize() {
-  colorecho "Installing hashonymizer"
-  python3 -m pipx install git+https://github.com/ShutdownRepo/hashonymize
-  add-test-command "hashonymize --help"
 }
 
 function install_theharvester() {
@@ -1794,13 +1638,6 @@ function install_httpmethods() {
   add-test-command "httpmethods --help"
 }
 
-function install_adidnsdump() {
-  colorecho "Installing adidnsdump"
-  python3 -m pipx install git+https://github.com/dirkjanm/adidnsdump
-  add-history adidnsdump
-  add-test-command "adidnsdump --help"
-}
-
 function install_dnschef() {
   colorecho "Installing DNSChef"
   git -C /opt/tools/ clone https://github.com/iphelix/dnschef
@@ -1854,12 +1691,6 @@ function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
   add-test-command "zsteg --help"
-}
-
-function install_stegolsb() {
-  colorecho "Installing stegolsb"
-  python3 -m pipx install stego-lsb
-  add-test-command "stegolsb --version"
 }
 
 function install_whatportis() {
@@ -1941,13 +1772,6 @@ function install_feroxbuster() {
   add-test-command "feroxbuster --version"
 }
 
-function install_bloodhound-import() {
-  colorecho "Installing bloodhound-import"
-  python3 -m pipx install bloodhound-import
-  add-history bloodhound-import
-  add-test-command "bloodhound-import --help"
-}
-
 function install_bloodhound-quickwin() {
   colorecho "Installing bloodhound-quickwin"
   python3 -m pip install py2neo pandas prettytable
@@ -1972,13 +1796,6 @@ function install_rustscan() {
   colorecho "Installing RustScan"
   source "$HOME/.cargo/env"
   cargo install rustscan
-}
-
-function install_divideandscan() {
-  colorecho "Installing DivideAndScan"
-  python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
-  add-history divideandscan
-  add-test-command "divideandscan --help"
 }
 
 function install_trid() {
@@ -2008,25 +1825,6 @@ function install_pcredz() {
   add-test-command "PCredz --help"
 }
 
-function install_smartbrute() {
-  colorecho "Installing smartbrute"
-  python3 -m pipx install git+https://github.com/ShutdownRepo/smartbrute
-  add-history smartbrute
-  add-test-command "smartbrute --help"
-}
-
-function install_frida() {
-  colorecho "Installing frida"
-  python3 -m pipx install frida-tools
-  add-test-command "frida --version"
-}
-
-function install_androguard() {
-  colorecho "Installing androguard"
-  python3 -m pipx install androguard
-  add-test-command "androguard --version"
-}
-
 function install_petitpotam() {
   colorecho "Installing PetitPotam"
   git -C /opt/tools/ clone https://github.com/ly4k/PetitPotam
@@ -2043,13 +1841,6 @@ function install_dfscoerce() {
   add-aliases dfscoerce
   add-history dfscoerce
   add-test-command "dfscoerce.py --help"
-}
-
-function install_coercer() {
-  colorecho "Installing Coercer"
-  python3 -m pipx install git+https://github.com/p0dalirius/Coercer
-  add-history coercer
-  add-test-command "coercer --help"
 }
 
 function install_pkinittools() {
@@ -2122,20 +1913,6 @@ function install_gau() {
   colorecho "Installing gau"
   GO111MODULE=on go install -v github.com/lc/gau@latest
   add-test-command "gau --version"
-}
-
-function install_webclientservicescanner() {
-  colorecho "Installing webclientservicescanner"
-  python3 -m pipx install git+https://github.com/Hackndo/WebclientServiceScanner
-  add-history webclientservicescanner
-  add-test-command "webclientservicescanner --help"
-}
-
-function install_certipy() {
-  colorecho "Installing Certipy"
-  python3 -m pipx install git+https://github.com/ly4k/Certipy
-  add-history certipy
-  add-test-command "certipy --version"
 }
 
 function install_eaphammer() {
@@ -2221,15 +1998,6 @@ function install_pwndb() {
   add-test-command "pwndb --help"
 }
 
-function install_robotstester() {
-  # This Python script can enumerate all URLs present in robots.txt files, and test whether they can be accessed or not.
-  # https://github.com/p0dalirius/robotstester
-  colorecho "Installing Robotstester"
-  python3 -m pipx install git+https://github.com/p0dalirius/robotstester
-  add-history robotstester
-  add-test-command "robotstester --help"
-}
-
 function install_finduncommonshares() {
   colorecho "Installing FindUncommonShares"
   git -C /opt/tools/ clone https://github.com/p0dalirius/FindUncommonShares
@@ -2246,12 +2014,6 @@ function install_shadowcoerce() {
   add-aliases shadowcoerce
   add-history shadowcoerce
   add-test-command "shadowcoerce.py --help"
-}
-
-function install_pwncat() {
-  colorecho "Installing pwncat"
-  python3 -m pipx install pwncat-cs
-  add-test-command "pwncat-cs --version"
 }
 
 function install_gmsadumper() {
@@ -2278,13 +2040,6 @@ function install_ldaprelayscan() {
   add-aliases ldaprelayscan
   add-history ldaprelayscan
   add-test-command "LdapRelayScan.py --help"
-}
-
-function install_goldencopy() {
-  colorecho "Installing GoldenCopy"
-  python3 -m pipx install goldencopy
-  add-history goldencopy
-  add-test-command "goldencopy --help"
 }
 
 function install_crackhound() {
@@ -2481,13 +2236,6 @@ function install_pth-tools() {
   # FIXME Won't work for ARM platforms
 }
 
-function install_smtp-user-enum(){
-  colorecho "Installing smtp-user-enum"
-  python3 -m pipx install smtp-user-enum
-  add-history smtp-user-enum
-  add-test-command "smtp-user-enum --help"
-}
-
 function install_gpp-decrypt(){
   colorecho "Installing gpp-decrypt"
   python3 -m pip install pycrypto colorama
@@ -2558,13 +2306,6 @@ function install_rust_cargo() {
   add-test-command "cargo --version"
 }
 
-function install_fierce() {
-  colorecho "Installing fierce"
-  python3 -m pipx install git+https://github.com/mschwager/fierce
-  add-history fierce
-  add-test-command "fierce --help"
-}
-
 function install_yarn() {
   colorecho "Installing yarn"
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -2598,13 +2339,6 @@ function install_cewl() {
   fi
   add-history cewl
   add-test-command "cewl --help"
-}
-
-function install_ldapdomaindump() {
-  colorecho "Installing ldapdomaindump"
-  python3 -m pipx install git+https://github.com/dirkjanm/ldapdomaindump
-  add-history ldapdomaindump
-  add-test-command "ldapdomaindump --help"
 }
 
 function install_ntpdate() {
@@ -2659,13 +2393,6 @@ function install_tshark() {
   add-test-command "tshark --version"
 }
 
-function install_ldeep() {
-  colorecho "Installing ldeep"
-  python3 -m pipx install ldeep
-  add-history ldeep
-  add-test-command "ldeep --help"
-}
-
 function install-genusernames() {
   colorecho "Installing genusernames"
   mkdir -p /opt/tools/genusernames
@@ -2673,6 +2400,24 @@ function install-genusernames() {
   sed -i 's/genadname/genusernames/g' genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
   add-test-command "genadname 'john doe'"
+}
+
+function install_pipx_tool() {
+  colorecho "Installing $1 with pipx"
+  python3 -m pipx install $1
+  if [ "$2" ]
+  then
+    add-test-command $2
+  fi
+  if [[ "$*" == *"history"* ]]
+  then
+      add-history $1
+  fi
+
+  if [[ "$*" == *"aliases"* ]]
+  then
+      add-aliases $1
+  fi
 }
 
 function install_apt_tool() {
@@ -2815,9 +2560,9 @@ function package_misc() {
   install_goshs                   # Web uploader/downloader page
   install_searchsploit            # Exploitdb local search engine
   install_apt_tool rlwrap "rlwrap --version" history # Reverse shell utility
-  install_shellerator             # Reverse shell generator
-  install_uberfile                # file uploader/downloader commands generator
-  install_arsenal                 # Cheatsheets tool
+  install_pipx_tool shellerator "shellerator --help" history # Reverse shell generator
+  install_pipx_tool uberfile "uberfile --help" # file uploader/downloader commands generator
+  install_pipx_tool arsenal "arsenal --version" aliases # Cheatsheets tool
   install_trilium                 # notes taking tool
   install_apt_tool exiftool "exiftool" # Meta information reader/writer
   install_apt_tool imagemagick "convert --version" # Copy, modify, and distribute image
@@ -2843,21 +2588,21 @@ function package_most_used() {
   install_apt_tool hydra "hydra --help; hydra -help |& grep 'more command line options'" # Login scanner
   install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
-  install_droopescan              # Drupal scanner
-  install_drupwn                  # Drupal scanner
+  install_pipx_tool droopescan "droopescan --help" # Drupal scanner
+  install_pipx_tool drupwn "drupwn --help" # Drupal scanner
   install_testssl                 # SSL/TLS scanner
   install_apt_tool sslscan "sslscan --version" # SSL/TLS scanner
   install_apt_tool weevely "weevely --help" # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
-  install_wafw00f                 # Waf detector
+  install_pipx_tool wafw00F "wafw00f --version" # Waf detector
   install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
   install_responder               # LLMNR, NBT-NS and MDNS poisoner
   install_crackmapexec            # Network scanner
   install_impacket                # Network protocols scripts
-  install_enum4linux-ng           # Active Directory enumeration tool, improved Python alternative to enum4linux
+  install_pipx_tool enum4linux-ng "enum4linux-ng --help" history # Active Directory enumeration tool, improved Python alternative to enum4linux
   install_apt_tool smbclient "smbclient --version" history # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_nuclei                  # Vulnerability scanner
@@ -2888,25 +2633,25 @@ function package_cracking() {
   install_apt_tool fcrackzip "fcrackzip --version" history # Zip cracker
   install_apt_tool pdfcrack "pdfcrack --version" # PDF cracker
   install_apt_tool bruteforce-luks "bruteforce-luks -h |& grep 'Print progress info'" # Find the password of a LUKS encrypted volume
-  install_name-that-hash          # Name-That-Hash, the hash identifier tool
+  install_pipx_tool name-that-hash "nth --help" history # Name-That-Hash, the hash identifier tool
 }
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
   set_go_env
-  install_youtubedl               # Command-line program to download videos from YouTube.com and other video sites
-  install_apt_tool exiftool "exiftool"                # For read exif information
-  install_apt_tool exifprobe "exifprobe -h"               # Probe and report structure and metadata content of camera image files
-  install_sublist3r               # Fast subdomains enumeration tool
+  install_pipx_tool youtubedl "youtube-dl --version" # Command-line program to download videos from YouTube.com and other video sites
+  install_apt_tool exiftool "exiftool" # For read exif information
+  install_apt_tool exifprobe "exifprobe -h" # Probe and report structure and metadata content of camera image files
+  install_pipx_tool Sublist3r "sublist3r --help" history # Fast subdomains enumeration tool
   install_assetfinder             # Find domains and subdomains potentially related to a given domain
   install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
   install_amass                   # OWASP Amass tool suite is used to build a network map of the target
   install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
   install_apt_tool dnsenum "dnsenum --help; dnsenum --help |& grep 'Print this help message'" # DNSEnum is a command-line tool that automatically identifies basic DNS records
-  install_holehe                  # Check if the mail is used on different sites
+  install_pipx_tool holehe "holehe --help" history # Check if the mail is used on different sites
   install_simplyemail             # Gather emails
   # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
-  install_h8mail                  # Email OSINT & Password breach hunting tool
+  install_pipx_tool h8mail "h8mail --help" history # Email OSINT & Password breach hunting tool
   install_infoga                  # Gathering email accounts informations
   # install_buster                  # An advanced tool for email reconnaissance # FIXME
   install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
@@ -2934,6 +2679,7 @@ function package_osint() {
   install_recondog                # Informations gathering tool
   install_gron                    # JSON parser
   # install_ignorant              # holehe but for phone numbers
+  install_pipx_tool twint "twint --help" history
 }
 
 # Package dedicated to applicative and active web pentest tools
@@ -2945,7 +2691,7 @@ function package_web() {
   install_ffuf                    # Web fuzzer (little favorites)
   install_apt_tool dirb "dirb | grep '<username:password>'" history # Web fuzzer
   install_wfuzz                   # Web fuzzer (second favorites)
-  install_dirsearch               # Web fuzzer
+  install_pipx_tool dirsearch "dirsearch --help" history # Web fuzzer
   install_apt_tool sqlmap "sqlmap --version" history # SQL injection scanner
   # install_ssrfmap                 # SSRF scanner # FIXME
   install_gopherus                # SSRF helper
@@ -2960,8 +2706,8 @@ function package_web() {
   # install_patator               # Login scanner # FIXME
   install_joomscan                # Joomla scanner
   install_wpscan                  # Wordpress scanner
-  install_droopescan              # Drupal scanner
-  install_drupwn                  # Drupal scanner
+  install_pipx_tool droopescan "droopescan --help" # Drupal scanner
+  install_pipx_tool drupwn "drupwn --help" # Drupal scanner
   install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
   install_moodlescan              # Moodle scanner
   install_testssl                 # SSL/TLS scanner
@@ -2978,7 +2724,7 @@ function package_web() {
   install_gowitness               # Web screenshot utility
   install_linkfinder              # Discovers endpoint JS files
   install_timing_attack           # Cryptocraphic timing attack
-  install_updog                   # New HTTPServer
+  install_pipx_tool updog "updog --version" history # New HTTPServer
   install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
   install_jwt_cracker             # JWT cracker and bruteforcer
   install_wuzz                    # Burp cli
@@ -2995,7 +2741,7 @@ function package_web() {
   install_feroxbuster             # ffuf but with multithreaded recursion
   install_tomcatwardeployer       # Apache Tomcat auto WAR deployment & pwning tool
   install_clusterd                # Axis2/JBoss/ColdFusion/Glassfish/Weblogic/Railo scanner
-  install_arjun                   # HTTP Parameter Discovery
+  install_pipx_tool arjun "arjun --help" # HTTP Parameter Discovery
   install_nuclei                  # Needed for gau install
   install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
   install_apt_tool prips "prips --version" history # Print the IP addresses in a given range
@@ -3003,7 +2749,7 @@ function package_web() {
   install_httprobe                # Probe http
   install_httpx                   # Probe http
   install_anew                    # A tool for adding new lines to files, skipping duplicates
-  install_robotstester            # Robots.txt scanner
+  install_pipx_tool robotstester "robotstester --help" history # Robots.txt scanner
   install_naabu                   # Fast port scanner
   # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
@@ -3016,17 +2762,17 @@ function package_c2() {
   # install_starkiller            # GUI for Empire, commenting while Empire install is not fixed
   install_metasploit              # Offensive framework
   install_routersploit            # Exploitation Framework for Embedded Devices
-  install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
+  install_pipx_tool pwncat-cs "pwncat-cs --version" # netcat and rlwrap on steroids to handle revshells, automates a few things too
 }
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
   set_go_env
   install_responder               # LLMNR, NBT-NS and MDNS poisoner
-  install_ldapdomaindump
+  install_pipx_tool ldapdomaindump "ldapdomaindump --help" history
   install_crackmapexec            # Network scanner
   install_sprayhound              # Password spraying tool
-  install_smartbrute              # Password spraying tool
+  install_pipx_tool smartbrute "smartbrute --help" history # Password spraying tool
   install_bloodhound-py           # AD cartographer
   install_neo4j                   # Bloodhound dependency
   install_bloodhound
@@ -3034,11 +2780,11 @@ function package_ad() {
   # install_bloodhound_old_v2
   install_cyperoth                # Bloodhound dependency
   # install_mitm6_sources         # Install mitm6 from sources
-  install_mitm6_pip               # DNS server misconfiguration exploiter
-  install_aclpwn                  # ACL exploiter
+  install_pipx_tool mitm6 "mitm6 --help" history # DNS server misconfiguration exploiter
+  install_pipx_tool aclpwn "aclpwn --help" # ACL exploiter
   install_impacket                # Network protocols scripts
   install_pykek                   # AD vulnerability exploiter
-  install_lsassy                  # Credentials extracter
+  install_pipx_tool lsassy "lsassy --version" history # Credentials extracter
   install_privexchange            # Exchange exploiter
   install_ruler                   # Exchange exploiter
   install_darkarmour              # Windows AV evasion
@@ -3046,9 +2792,9 @@ function package_ad() {
   install_powershell              # Windows Powershell for Linux
   install_krbrelayx               # Kerberos unconstrained delegation abuse toolkit
   install_evilwinrm               # WinRM shell
-  install_pypykatz                # Mimikatz implementation in pure Python
+  install_pipx_tool pypykatz "pypykatz version" history # Mimikatz implementation in pure Python
   install_enyx                    # Hosts discovery
-  install_enum4linux-ng           # Hosts enumeration
+  install_pipx_tool enum4linux-ng "enum4linux-ng --help" history # Hosts enumeration
   install_zerologon               # Exploit for zerologon cve-2020-1472
   install_libmspack               # Library for some loosely related Microsoft compression format
   install_windapsearch-go         # Active Directory Domain enumeration through LDAP queries
@@ -3059,22 +2805,22 @@ function package_ad() {
   install_polenum
   install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
   install_pth-tools               # Pass the hash attack
-  install_smtp-user-enum          # SMTP user enumeration via VRFY, EXPN and RCPT
+  install_pipx_tool smtp-user-enum "smtp-user-enum --help" history # SMTP user enumeration via VRFY, EXPN and RCPT
   install_apt_tool onesixtyone "onesixtyone 127.0.0.1 public" history # SNMP scanning
   install_apt_tool nbtscan "nbtscan 127.0.0.1" history # NetBIOS scanning tool
   install_apt_tool rpcbind # RPC scanning
   install_gpp-decrypt             # Decrypt a given GPP encrypted string
   install_ntlmv1-multi            # NTLMv1 multi tools: modifies NTLMv1/NTLMv1-ESS/MSCHAPv2
-  install_hashonymize             # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
+  install_pipx_tool hashonymize "hashonymize --help" # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
   install_gosecretsdump           # secretsdump in Go for heavy files
-  install_adidnsdump              # enumerate DNS records in Domain or Forest DNS zones
+  install_pipx_tool adidnsdump "adidnsdump --help" history # enumerate DNS records in Domain or Forest DNS zones
   install_pygpoabuse
-  install_bloodhound-import       # Python script to import BH data to a neo4j db
+  install_pipx_tool bloodhound-import "bloodhound-import --help" history # Python script to import BH data to a neo4j db
   install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
   install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
   install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
   install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
-  install_coercer                 # Python script to coerce auth through multiple methods
+  install_pipx_tool coercer "coercer --help" history # Python script to coerce auth through multiple methods
   install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
   # install_manspider             # Snaffler-like in Python # FIXME
@@ -3082,17 +2828,17 @@ function package_ad() {
   install_pcredz
   install_pywsus
   install_donpapi
-  install_webclientservicescanner
-  install_certipy
+  install_pipx_tool webclientservicescanner "webclientservicescanner --help" history
+  install_pipx_tool certipy "certipy --version" history
   install_shadowcoerce
   install_gmsadumper
   install_pylaps
   install_finduncommonshares
   install_ldaprelayscan
-  install_goldencopy
+  install_pipx_tool goldencopy "goldencopy --help" history
   install_crackhound
   install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
-  install_ldeep
+  install_pipx_tool ldeep "ldeep --help" history
 }
 
 # Package dedicated to mobile apps pentest tools
@@ -3104,8 +2850,8 @@ function package_mobile() {
   install_apt_tool zipalign "zipalign --help |& grep 'verbose output'"
   install_apt_tool apksigner "apksigner --version"
   install_apt_tool apktool "apktool --version"
-  install_frida
-  install_androguard              # Reverse engineering and analysis of Android applications
+  install_pipx_tool frida-tools "frida --version"
+  install_pipx_tool androguard "androguard --version" # Reverse engineering and analysis of Android applications
 }
 
 # Package dedicated to VOIP/SIP pentest tools
@@ -3157,7 +2903,7 @@ function package_network() {
   install_autorecon               # External recon tool
   install_apt_tool tcpdump "tcpdump --version" # Capture TCP traffic
   install_dnschef                 # Python DNS server
-  install_divideandscan           # Python project to automate port scanning routine
+  install_pipx_tool divideandscan "divideandscan --help" history # Python project to automate port scanning routine
   install_apt_tool iptables "iptables --version" # iptables for the win
   install_apt_tool traceroute "traceroute --version" # ping ping
   install_chisel                  # Fast TCP/UDP tunnel over HTTP
@@ -3167,7 +2913,7 @@ function package_network() {
   install_apt_tool freerdp2-x11 "which xfreerdp" history
   install_apt_tool rdesktop "rdesktop |& grep 'Smartcard reader name to use'"
   install_apt_tool xtightvncviewer "which xtightvncviewer"
-  install_fierce
+  install_pipx_tool fierce "fierce --help" history
   install_apt_tool ssh-audit "ssh-audit --help; ssh-audit --help |& grep 'verbose output'" # SSH server audit
   install_apt_tool hydra "hydra --help; hydra -help |& grep 'more command line options'" # Login scanner
   install_apt_tool mariadb-client "mariadb --version" # Mariadb client
@@ -3205,14 +2951,14 @@ function package_steganography() {
   install_zsteg                   # Detect stegano-hidden data in PNG & BMP
   install_apt_tool stegosuite "stegosuite --help"
   install_apt_tool steghide "steghide --version"
-  install_stegolsb                # (including wavsteg)
+  install_pipx_tool stego-lsb "stegolsb --version" # (including wavsteg)
 }
 
 # Package dedicated to cloud tools
 function package_cloud() {
   install_kubectl
   install_awscli
-  install_scout                   # Multi-Cloud Security Auditing Tool
+  install_pipx_tool scoutsuite "scout --version" # Multi-Cloud Security Auditing Tool
 }
 
 # Package dedicated to reverse engineering tools
@@ -3220,7 +2966,7 @@ function package_reverse() {
   install_pwntools                # CTF framework and exploit development library
   install_pwndbg                  # Advanced Gnu Debugger
   install_angr                    # Binary analysis
-  install_checksec-py             # Check security on binaries
+  install_pipx_tool checksec-py "checksec --help" # Check security on binaries
   install_apt_tool nasm "nasm --version" # Netwide Assembler
   install_radare2                 # Awesome debugger
   install_apt_tool wabt                    # The WebAssembly Binary Toolkit
