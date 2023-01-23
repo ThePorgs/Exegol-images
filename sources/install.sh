@@ -827,8 +827,8 @@ function install_autorecon() {
   add-history autorecon
   # test below cannot work because test runner cannot have a valid display
   # 
-  add-test-command "autorecon --version"
-  #add-test-command "which autorecon"
+  # add-test-command "autorecon --version"
+  add-test-command "which autorecon"
 }
 
 function install_simplyemail() {
@@ -863,6 +863,7 @@ function install_lnkup() {
 
 function install_pwntools() {
   colorecho "Installing pwntools"
+  python -m pip install pathlib2
   python -m pip install pwntools
   python3 -m pip install pwntools
   add-test-command "python -c 'import pwn'"
