@@ -3025,6 +3025,14 @@ function install_tshark() {
   add-test-command "tshark --version"
 }
 
+function install_smuggler() {
+  colorecho "Installing smuggler.py"
+  git -C /opt/tools/ clone https://github.com/defparam/smuggler.git
+  add-aliases smuggler
+  add-history smuggler
+  add-test-command "smuggler.py --help"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   update || exit
@@ -3333,6 +3341,7 @@ function package_web() {
   install_naabu                   # Fast port scanner
   # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
+  install_smuggler                # HTTP Request Smuggling scanner  
 }
 
 # Package dedicated to command & control frameworks

@@ -1,0 +1,2 @@
+alias smuggler='python3 /opt/tools/smuggler/smuggler.py'
+alias smuggler.py='python3 /opt/tools/smuggler/smuggler.py'
