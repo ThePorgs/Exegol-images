@@ -3044,7 +3044,6 @@ function install_tshark() {
   add-test-command "tshark --version"
 }
 
-
 function install_smuggler() {
   colorecho "Installing smuggler.py"
   git -C /opt/tools/ clone https://github.com/defparam/smuggler.git
@@ -3067,7 +3066,6 @@ function install-genusernames() {
   sed -i 's/genadname/genusernames/g' genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
   add-test-command "genusernames 'john doe'"
-
 }
 
 # Package dedicated to the basic things the env needs
