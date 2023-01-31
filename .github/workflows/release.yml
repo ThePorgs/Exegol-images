@@ -22,7 +22,7 @@ jobs:
             dockerfile: "web.dockerfile"
           - tag: osint
             dockerfile: "osint.dockerfile"
-    uses: ./.github/workflows/full_build.yml
+    uses: ./.github/workflows/sub_full_build.yml
     with:
       DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
       DOCKER_TARGET_REPO: "nwodtuhs/exegol-preprod"
