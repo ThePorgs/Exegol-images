@@ -1,4 +1,4 @@
-name: PR dev
+name: PR debug
 
 on:
   pull_request:
