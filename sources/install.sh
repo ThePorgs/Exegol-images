@@ -437,32 +437,7 @@ function install_impacket() {
   apt-get -y install libffi-dev
   git -C /opt/tools/ clone https://github.com/ThePorgs/impacket
 
-  # Following PRs are merged in the forked repo
-  # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
-  # 1154: [ntlmrelayx] Unfiltered SID query when operating ACL attack
-  # 1184: [findDelegation] Added user filter on findDelegation
-  # 1201: [describeTicket] Added describeTicket
-  # 1202: [getST] Added self for getST
-  # 1224: [renameMachine] Added renameMachine.py
-  # 1253: [ntlmrelayx] Added LSA dump on top of SAM dump for ntlmrelayx
-  # 1256: [tgssub] Added tgssub script for service substitution
-  # 1267: [Get-GPPPasswords] Better handling of various XML files in Group Policy Preferences
-  # 1270: [ticketer] Fix ticketer duration to support default 10 hours tickets
-  # 1280: [machineAccountQuota] added machineAccountQuota.py
-  # 1289: [ntlmrelayx] LDAP attack: Add DNS records through LDAP
-  # 1291: [dacledit] New example script for DACL manipulation
-  # 1323: [owneredit.py] New example script to change an object's owner
-  # 1329: [secretsdump.py] Use a custom LDAP filter during a DCSync
-  # 1353: [ntlmrelayx.py] add filter option
-  # 1391: [ticketer.py, pac.py] Ticketer extra-pac implementation
-  # 1393: [rbcd.py] Handled SID not found in LDAP error #1393
-  # 1397: [mssqlclient.py] commands and prompt improvements
-  # and a few other, check https://github.com/ShutdownRepo/impacket/tree/exegol directly for more
-
-  # Following PRs are not merged yet because of conflict or for other reasons, but should be merged soon
-  # to understand first 1288: [ntlmrelayx] LDAP attack: bypass computer creation restrictions with CVE-2021-34470
-  # conflict 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
-  # conflict 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
+  # See https://github.com/ThePorgs/impacket/blob/master/ChangeLog.md
 
   python3 -m pipx install /opt/tools/impacket/
   python3 -m pipx inject impacket chardet
@@ -1048,13 +1023,6 @@ function install_jwt_tool() {
   python3 -m pip install pycryptodomex
   add-aliases jwt_tool
   add-test-command "jwt_tool --help"
-}
-
-function install_jwt_cracker() {
-  colorecho "Installing JWT cracker"
-  apt-get -y install npm
-  npm install --global jwt-cracker
-  add-test-command "jwt-cracker --help"
 }
 
 function install_wuzz() {
@@ -3342,7 +3310,6 @@ function package_web() {
   install_timing_attack           # Cryptocraphic timing attack
   install_updog                   # New HTTPServer
   install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
-  install_jwt_cracker             # JWT cracker and bruteforcer
   install_wuzz                    # Burp cli
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
