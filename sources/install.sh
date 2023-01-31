@@ -3019,13 +3019,23 @@ function install_ldeep() {
   add-history ldeep
 }
 
-function install-genusernames() {
+function install_genusernames() {
   colorecho "Installing genusernames"
   mkdir -p /opt/tools/genusernames
   wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
   sed -i 's/genadname/genusernames/g' genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
   add-test-command "genusernames 'john doe'"
+}
+
+function install_rusthound() {
+  colorecho "Installing RustHound"
+  fapt gcc libclang-dev clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
+  git -C /opt/tools/ clone https://github.com/OPENCYBER-FR/RustHound
+  cd /opt/tools/RustHound
+  cargo build --release
+  ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
+  add-test-command "rusthound --help"
 }
 
 # Package dedicated to the basic things the env needs
@@ -3207,7 +3217,7 @@ function package_wordlists() {
   install_cupp                    # User password profiler
   install_pass_station            # Default credentials database
   install_username-anarchy        # Generate possible usernames based on heuristics
-  install-genusernames
+  install_genusernames
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
