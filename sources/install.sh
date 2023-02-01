@@ -403,7 +403,8 @@ function install_crackmapexec() {
   git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   cd /opt/tools/CrackMapExec || exit
   # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-  source "$HOME/.cargo/env"
+  # Shouldn't be needed anymore
+  # source "$HOME/.cargo/env"
   python3 -m pipx install .
   ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
