@@ -3438,6 +3438,7 @@ function package_ad() {
   install_crackhound
   install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
   install_ldeep
+  install_rusthound
   install_certsync
 }
 
