@@ -3039,6 +3039,11 @@ function install_rusthound() {
   add-test-command "rusthound --help"
 }
 
+function install_certsync() {
+  colorecho "Installing certsync"
+  python3 -m pipx install git+https://github.com/zblurx/certsync
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   update || exit
@@ -3433,6 +3438,7 @@ function package_ad() {
   install_crackhound
   install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
   install_ldeep
+  install_certsync
 }
 
 # Package dedicated to mobile apps pentest tools
