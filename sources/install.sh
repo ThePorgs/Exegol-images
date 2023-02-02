@@ -3044,6 +3044,16 @@ function install_certsync() {
   python3 -m pipx install git+https://github.com/zblurx/certsync
 }
 
+function install_KeePwn() {
+  colorecho "Installing KeePwn"
+  python3 -m pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
+}
+
+function install_pre2k() {
+  colorecho "Installing pre2k"
+  python3 -m pipx install git+python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   update || exit
@@ -3440,6 +3450,8 @@ function package_ad() {
   install_ldeep
   install_rusthound
   install_certsync
+  install_KeePwn
+  install_pre2k
 }
 
 # Package dedicated to mobile apps pentest tools
