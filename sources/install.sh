@@ -3051,7 +3051,12 @@ function install_KeePwn() {
 
 function install_pre2k() {
   colorecho "Installing pre2k"
-  python3 -m pipx install git+python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
+  python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
+}
+
+function install_msprobe() {
+  colorecho "Installing msprobe"
+  python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
 }
 
 # Package dedicated to the basic things the env needs
@@ -3452,6 +3457,7 @@ function package_ad() {
   install_certsync
   install_KeePwn
   install_pre2k
+  install_msprobe
 }
 
 # Package dedicated to mobile apps pentest tools
