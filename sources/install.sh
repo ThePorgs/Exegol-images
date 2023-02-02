@@ -3059,6 +3059,11 @@ function install_msprobe() {
   python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
 }
 
+function install_masky() {
+  colorecho "Installing masky"
+  python3 -m pipx install git+https://github.com/Z4kSec/Masky
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   update || exit
@@ -3458,6 +3463,7 @@ function package_ad() {
   install_KeePwn
   install_pre2k
   install_msprobe
+  install_masky
 }
 
 # Package dedicated to mobile apps pentest tools
