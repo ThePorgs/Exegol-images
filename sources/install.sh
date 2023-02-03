@@ -3042,31 +3042,44 @@ function install_rusthound() {
 function install_certsync() {
   colorecho "Installing certsync"
   python3 -m pipx install git+https://github.com/zblurx/certsync
+  add-test-command ""
 }
 
 function install_KeePwn() {
   colorecho "Installing KeePwn"
   python3 -m pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
+  add-test-command ""
 }
 
 function install_pre2k() {
   colorecho "Installing pre2k"
   python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
+  add-test-command "pre2k --help"
 }
 
 function install_msprobe() {
   colorecho "Installing msprobe"
   python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
+  add-test-command "msprobe --help"
 }
 
 function install_masky() {
   colorecho "Installing masky"
   python3 -m pipx install git+https://github.com/Z4kSec/Masky
+  add-test-command "masky --help"
 }
 
 function install_roastinthemiddle() {
   colorecho "Installing roastinthemiddle"
   python3 -m pipx install git+https://github.com/Tw1sm/RITM
+  add-test-command "roastinthemiddle --help"
+}
+
+function install_PassTheCert() {
+  colorecho "Installing PassTheCert"
+  git -C /opt/tools/ clone https://github.com/AlmondOffSec/PassTheCert
+  add-aliases PassTheCert
+  add-test-command "passthecert.py --help"
 }
 
 # Package dedicated to the basic things the env needs
@@ -3470,6 +3483,7 @@ function package_ad() {
   install_msprobe
   install_masky
   install_roastinthemiddle
+  install_PassTheCert
 }
 
 # Package dedicated to mobile apps pentest tools
