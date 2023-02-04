@@ -8,18 +8,19 @@ on:
 
 jobs:
   build_tests:
-    name: Build
+    name: Workflow
     strategy:
       fail-fast: false
       matrix:
         arch: ["amd64", "arm64"]
     uses: ./.github/workflows/sub_building.yml
     with:
-      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
-#      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
-#      DOCKERFILE: ${{ inputs.DOCKERFILE }}
+#      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+#      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       IMAGE_BASE_NAME: "pr-cicd"
+#      DOCKERFILE: ${{ inputs.DOCKERFILE }}
       DOCKERFILE: "Dockerfile"
       ARCH: ${{ matrix.arch }}
       PR_MODE: true
