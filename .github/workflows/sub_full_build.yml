@@ -34,9 +34,9 @@ jobs:
       fail-fast: false
       matrix:
         # Wait for bug fix for github: https://github.com/orgs/community/discussions/32023
-        #arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
-        arch: ["amd64", "arm64"]
-    uses: ./.github/workflows/building.yml
+        arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
+#        arch: ["amd64", "arm64"]
+    uses: ./.github/workflows/sub_building.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}

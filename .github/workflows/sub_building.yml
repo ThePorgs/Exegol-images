@@ -17,11 +17,15 @@ on:
       ARCH:
         required: true
         type: string
+      PR_MODE:
+        type: boolean
+        default: false
+        required: false
     secrets:
       DOCKER_PASSWORD:
-        required: true
+        required: false
       DOCKER_USERNAME:
-        required: true
+        required: false
 
 jobs:
   buildx:
@@ -111,7 +115,7 @@ jobs:
       - builder
       - ${{ inputs.ARCH }}
     needs: buildx
-    if: ${{ always() && needs.buildx.result == 'success' }}
+    if: ${{ always() && needs.buildx.result == 'success' && !inputs.PR_MODE }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
@@ -130,7 +134,7 @@ jobs:
 #    strategy:
 #      fail-fast: false
 #      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
-#    uses: ./.github/workflows/testing.yml
+#    uses: ./.github/workflows/sub_testing.yml
 #    with:
 #      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
 #      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
