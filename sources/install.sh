@@ -844,6 +844,7 @@ function install_samdump2() {
 function install_pwntools() {
   colorecho "Installing pwntools"
   python -m pip install pwntools
+  python -m pip install pathlib2
   python3 -m pip install pwntools
   add-test-command "python -c 'import pwn'"
   add-test-command "python3 -c 'import pwn'"
