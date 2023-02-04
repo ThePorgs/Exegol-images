@@ -2490,10 +2490,17 @@ function install_pth-tools(){
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_amd64.deb
   elif [[ $(uname -m) = 'aarch64' ]]
   then
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    # FIXME
+    #16 428.9  libreadline6:armhf : Depends: libc6:armhf (>= 2.15) but it is not installable
+    #16 428.9                       Depends: libtinfo5:armhf but it is not installable
+    #16 428.9  multiarch-support:armhf : Depends: libc6:armhf (>= 2.13-5) but it is not installable
     wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armhf.deb
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armhf.deb
   elif [[ $(uname -m) = 'armv7l' ]]
   then
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    # FIXME ?
     wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armel.deb
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armel.deb
   else
@@ -2503,7 +2510,6 @@ function install_pth-tools(){
   add-aliases pth-tools
   add-history pth-tools
   # TODO add-test-command
-  # FIXME probably won't work for ARM platforms
 }
 
 function install_smtp-user-enum(){
