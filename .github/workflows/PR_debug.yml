@@ -21,6 +21,6 @@ jobs:
 #      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       IMAGE_BASE_NAME: "pr-cicd"
 #      DOCKERFILE: ${{ inputs.DOCKERFILE }}
-      DOCKERFILE: "Dockerfile"
+      DOCKERFILE: "debug.dockerfile"
       ARCH: ${{ matrix.arch }}
       PR_MODE: true
