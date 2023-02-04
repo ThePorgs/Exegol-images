@@ -3312,7 +3312,7 @@ function package_osint() {
   install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
   install_constellation           # A graph-focused data visualisation and interactive analysis application.
   install_maltego                 # Maltego is a software used for open-source intelligence and forensics
-  install_spiderfoot              # SpiderFoot automates OSINT collection
+  # install_spiderfoot            # SpiderFoot automates OSINT collection # FIXME, requirements.txt creates dependancies conflicts and there's no setup.py file that would allow for pipx install
   install_finalrecon              # A fast and simple python script for web reconnaissance
   # fapt recon-ng                 # External recon tool FIXME
   # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
