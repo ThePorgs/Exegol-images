@@ -1,4 +1,4 @@
-name: Dev release NIGHTLY
+name: Dev release DEBUG
 
 on:
   push:
