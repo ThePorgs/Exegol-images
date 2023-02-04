@@ -2441,13 +2441,13 @@ function install_go(){
   cd /tmp/ || exit
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-amd64.tar.gz
   elif [[ $(uname -m) = 'aarch64' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-arm64.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-arm64.tar.gz
   elif [[ $(uname -m) = 'armv7l' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-armv6l.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-armv6l.tar.gz
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
