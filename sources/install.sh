@@ -3040,8 +3040,11 @@ function install_rusthound() {
   fapt gcc libclang-dev clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
   git -C /opt/tools/ clone https://github.com/OPENCYBER-FR/RustHound
   cd /opt/tools/RustHound
+  # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+  source "$HOME/.cargo/env"
   cargo build --release
   ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
+  add-history rusthound
   add-test-command "rusthound --help"
 }
 
