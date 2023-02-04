@@ -1841,9 +1841,8 @@ function install_h2csmuggler() {
 
 function install_byp4xx() {
   colorecho "Installing byp4xx"
-  git -C /opt/tools/ clone https://github.com/lobuhi/byp4xx
-  add-aliases byp4xx
-  add-test-command "byp4xx |& grep 'HIGH WORKLOAD! >65k requests!'"
+  go install -v github.com/lobuhi/byp4xx@latest
+  add-test-command "byp4xx"
 }
 
 function install_pipx() {
