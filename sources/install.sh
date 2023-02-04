@@ -3378,7 +3378,7 @@ function package_web() {
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
   install_whatweb                 # Recognises web technologies including content management
-  install_phpggc                  # php deserialization payloads
+  # install_phpggc                  # php deserialization payloads FIXME https://github.com/ambionics/phpggc/issues/142
   install_symfony-exploits        #  symfony secret fragments exploit
   install_jdwp_shellifier         # exploit java debug
   install_httpmethods             # Tool for HTTP methods enum & verb tampering
