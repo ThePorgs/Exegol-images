@@ -164,10 +164,7 @@ jobs:
     needs:
       - buildx
       - push
-      - test1
-      - test2
-      - test3
-      - test4
+      - tests
     if: ${{ always() && needs.buildx.result == 'success' && needs.push.result == 'success' }}
     runs-on:
       - self-hosted
