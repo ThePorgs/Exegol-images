@@ -3,9 +3,9 @@ name: DEBUG release
 on:
   push:
 #    branches:
-#      - '*'
+#      - main
     paths-ignore:
-      - ".github/**"
+#      - ".github/**"
       - "*.md"
 jobs:
   building_debug:
