@@ -124,12 +124,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push docker image
         run: docker push ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+# TODO with fix: https://github.com/orgs/community/discussions/32023
   tests:
     name: Tests ${{ inputs.ARCH }}
     needs:
       - buildx
       - push
-#    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
+    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
@@ -140,11 +141,116 @@ jobs:
       ARCH: ${{ inputs.ARCH }}
       TESTS: ${{ matrix.tests }}
 
+#  test1:
+#    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
+#    needs:
+#      - buildx
+#      - push
+#    if: ${{ needs.buildx.outputs.matrix_p1 != '[]' && needs.buildx.outputs.matrix_p1 != '' }}
+#    runs-on:
+#      - self-hosted
+#      - tester
+#      - ${{ inputs.ARCH }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        command: ${{ fromJson(needs.buildx.outputs.matrix_p1) }}
+#    steps:
+#      - name: Image command testing
+#        run: |
+#          COMMAND=$(cat <<EOF
+#          ${{ matrix.command }}
+#          EOF
+#          )
+#          image_name="${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}"
+#          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+#          echo "$ ${COMMAND}"
+#          docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
+#  test2:
+#    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
+#    needs:
+#      - buildx
+#      - push
+#    if: ${{ needs.buildx.outputs.matrix_p2 != '[]' && needs.buildx.outputs.matrix_p2 != '' }}
+#    runs-on:
+#      - self-hosted
+#      - tester
+#      - ${{ inputs.ARCH }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        command: ${{ fromJson(needs.buildx.outputs.matrix_p2) }}
+#    steps:
+#      - name: Image command testing
+#        run: |
+#          COMMAND=$(cat <<EOF
+#          ${{ matrix.command }}
+#          EOF
+#          )
+#          image_name="${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}"
+#          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+#          echo "$ ${COMMAND}"
+#          docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
+#  test3:
+#    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
+#    needs:
+#      - buildx
+#      - push
+#    if: ${{ needs.buildx.outputs.matrix_p3 != '[]' && needs.buildx.outputs.matrix_p3 != '' }}
+#    runs-on:
+#      - self-hosted
+#      - tester
+#      - ${{ inputs.ARCH }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        command: ${{ fromJson(needs.buildx.outputs.matrix_p3) }}
+#    steps:
+#      - name: Image command testing
+#        run: |
+#          COMMAND=$(cat <<EOF
+#          ${{ matrix.command }}
+#          EOF
+#          )
+#          image_name="${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}"
+#          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+#          echo "$ ${COMMAND}"
+#          docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
+#  test4:
+#    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
+#    needs:
+#      - buildx
+#      - push
+#    if: ${{ needs.buildx.outputs.matrix_p4 != '[]' && needs.buildx.outputs.matrix_p4 != '' }}
+#    runs-on:
+#      - self-hosted
+#      - tester
+#      - ${{ inputs.ARCH }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        command: ${{ fromJson(needs.buildx.outputs.matrix_p4) }}
+#    steps:
+#      - name: Image command testing
+#        run: |
+#          COMMAND=$(cat <<EOF
+#          ${{ matrix.command }}
+#          EOF
+#          )
+#          image_name="${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}"
+#          echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+#          echo "$ ${COMMAND}"
+#          docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
+
   clean:
     name: Cleaning ${{ inputs.ARCH }}
     needs:
       - buildx
       - push
+#      - test1
+#      - test2
+#      - test3
+#      - test4
       - tests
     runs-on:
       - self-hosted
@@ -163,6 +269,10 @@ jobs:
     needs:
       - buildx
       - push
+#      - test1
+#      - test2
+#      - test3
+#      - test4
       - tests
     if: ${{ always() && needs.buildx.result == 'success' && needs.push.result == 'success' }}
     runs-on:
