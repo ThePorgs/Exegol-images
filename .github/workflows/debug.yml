@@ -2,8 +2,8 @@ name: DEBUG release
 
 on:
   push:
-    branches:
-      - '*'
+#    branches:
+#      - '*'
     paths-ignore:
       - ".github/**"
       - "*.md"
