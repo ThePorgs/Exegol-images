@@ -124,6 +124,23 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push docker image
         run: docker push ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+
+  testsdbg:
+    name: Debugging Tests ${{ inputs.ARCH }}
+    needs:
+      - buildx
+      - push
+    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
+    strategy:
+      fail-fast: false
+      matrix:
+        commands: ${{ fromJson(needs.buildx.outputs.matrix_tests) }}
+    steps:
+      - name: Checking vars
+        run: |
+          echo "${{ matrix.commands }}"
+
+
 # TODO with fix: https://github.com/orgs/community/discussions/32023
   tests:
     name: Tests ${{ inputs.ARCH }}
@@ -133,7 +150,8 @@ jobs:
     if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
+      matrix:
+        tests: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
     uses: ./.github/workflows/sub_testing.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
