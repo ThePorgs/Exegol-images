@@ -141,7 +141,7 @@ jobs:
         commands: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
     steps:
       - name: Passing to test
-        uses: ./.github/workflows/sub_testing.yml
+        uses: ./.github/workflows/sub_testing
         with:
           DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
           IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
