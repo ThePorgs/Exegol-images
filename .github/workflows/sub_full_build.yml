@@ -29,7 +29,7 @@ on:
 
 jobs:
   build_tests:
-    name: Build
+    name: Building
     strategy:
       fail-fast: false
       matrix:
@@ -46,7 +46,7 @@ jobs:
     secrets: inherit
 
   manifest_build:
-    name: Publishing image
+    name: Publishing
     timeout-minutes: 60
     needs: build_tests
     runs-on: self-hosted
