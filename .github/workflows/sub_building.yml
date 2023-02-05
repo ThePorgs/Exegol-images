@@ -138,7 +138,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        commands: ${{ fromJson(needs.buildx.outputs.matrix_tests) }}
+        commands: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
     steps:
       - name: Checking vars
         run: |
