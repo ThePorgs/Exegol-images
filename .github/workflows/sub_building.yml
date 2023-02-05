@@ -146,10 +146,7 @@ jobs:
     needs:
       - buildx
       - push
-      - test1
-      - test2
-      - test3
-      - test4
+      - tests
     runs-on:
       - self-hosted
       - builder
