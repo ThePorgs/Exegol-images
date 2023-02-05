@@ -3,7 +3,7 @@ name: Dev release DEBUG
 on:
   push:
     branches:
-      - cicd
+      - *
     paths-ignore:
       - ".github/**"
       - "*.md"
