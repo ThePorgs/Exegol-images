@@ -142,7 +142,7 @@ jobs:
     steps:
       - name: Checking vars
         run: |
-          echo "${{ matrix.commands }}"
+          echo "dbg_matrix_tests=${{ matrix.commands }}" >> $GITHUB_OUTPUT
 
 
 # TODO with fix: https://github.com/orgs/community/discussions/32023
@@ -151,11 +151,29 @@ jobs:
     needs:
       - buildx
       - push
+      - testsdbg
+    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests) }}
+    uses: ./.github/workflows/sub_testing.yml
+    with:
+      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      ARCH: ${{ inputs.ARCH }}
+      TESTS: ${{ matrix.tests }}
+
+  tests2:
+    name: Tests ${{ inputs.ARCH }}
+    needs:
+      - buildx
+      - push
+      - testsdbg
     if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
     strategy:
       fail-fast: false
       matrix:
-        tests: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
+        tests: ${{ fromJson(needs.testsdbg.outputs.dbg_matrix_tests) }}
     uses: ./.github/workflows/sub_testing.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
