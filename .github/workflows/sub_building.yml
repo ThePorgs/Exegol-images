@@ -124,13 +124,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push docker image
         run: docker push ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
-# TODO with fix: https://github.com/orgs/community/discussions/32023
   tests:
     name: Tests ${{ inputs.ARCH }}
     needs:
       - buildx
       - push
-    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
+#    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
@@ -138,7 +137,7 @@ jobs:
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
-      ARCH: ${{ inputs.arch }}
+      ARCH: ${{ inputs.ARCH }}
       TESTS: ${{ matrix.tests }}
 
   clean:
