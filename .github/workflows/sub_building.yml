@@ -130,6 +130,10 @@ jobs:
     needs:
       - buildx
       - push
+    runs-on:
+      - self-hosted
+      - tester
+      - ${{ inputs.ARCH }}
     if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
     strategy:
       fail-fast: false
