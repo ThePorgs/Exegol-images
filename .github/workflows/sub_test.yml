@@ -63,7 +63,7 @@ jobs:
 #    strategy:
 #      fail-fast: false
 #      matrix:
-#        command: ${{ fromJson(needs.prepare.outputs.matrix_tests) }}
+#        command: ${{ fromJson(needs.prepare.outputs.matrix_tests).tests }}
     steps:
       - name: Debug test
         run: |
@@ -81,7 +81,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.prepare.outputs.matrix_tests) }}
+        command: ${{ fromJson(needs.prepare.outputs.matrix_tests).tests }}
     steps:
       - name: Image command testing
         id: test
