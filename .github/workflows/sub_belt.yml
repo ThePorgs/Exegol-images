@@ -131,7 +131,7 @@ jobs:
         run: docker volume prune --force
 
   clean_runners_2:
-    name: Remove built image
+    name: Remove built images
     needs:
       - build
       - push
