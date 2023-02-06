@@ -21,8 +21,9 @@ jobs:
       IMAGE_BASE_NAME: "debug"
       DOCKERFILE: "debug.dockerfile"
       # Setting IMAGE_VERSION for prod images != nightly
-      # IMAGE_VERSION: ${{ github.ref_name }}
-      SUPPORTED_ARCH: '["amd64","arm64"]'
+      #IMAGE_VERSION: ${{ github.ref_name }}
+      #SUPPORTED_ARCH: '["amd64","arm64"]'
+      SUPPORTED_ARCH: '["amd64"]'
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

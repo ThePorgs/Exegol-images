@@ -60,6 +60,7 @@ jobs:
       ARCH: ${{ matrix.arch }}
 
   push:
+    # todo: make sure to remove even if not pushed? or will it be removed with clean_runners_1 ?
     name: Push
     needs:
       - test
@@ -115,6 +116,7 @@ jobs:
       - build
       - push
       - test
+    if: always()
     strategy:
       matrix:
         arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
@@ -123,18 +125,10 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - if: always()
-        name: Clean unused dangling images
+      - name: Clean unused dangling images
         run: docker image prune --filter "label=org.exegol.app=Exegol" --force
-      - if: always()
-        name: Clean unused volume
+      - name: Clean unused volumes
         run: docker volume prune --force
-      - if: ${{ always() && needs.build.result == 'success' && needs.push.result == 'success' }}
-        name: Remove build image ${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
-        run: |
-          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}
-          echo "Removing $image_name"
-          docker image inspect $image_name && docker rmi $image_name
 
   clean_runners_2:
     name: Remove built image
