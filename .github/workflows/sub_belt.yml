@@ -80,8 +80,7 @@ jobs:
     name: Publish
     timeout-minutes: 60
     needs:
-      - build
-      - test
+      - push
     runs-on: self-hosted
     if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO != '' }}
     env:
@@ -114,9 +113,7 @@ jobs:
     name: Cleaning runners
     needs:
       - build
-      - test
       - push
-      - publish
     strategy:
       matrix:
         arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
@@ -142,7 +139,6 @@ jobs:
     name: Cleaning registry
     timeout-minutes: 60
     needs:
-      - build
       - publish
     runs-on: self-hosted
     if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
