@@ -45,6 +45,9 @@ jobs:
 
   test:
     name: Test
+    needs:
+      - build
+    if: ${{ always() && needs.build.result == 'success' }}
     strategy:
       fail-fast: false
       matrix:
@@ -59,9 +62,8 @@ jobs:
   push:
     name: Push
     needs:
-      - build
       - test
-    if: ${{ always() && needs.build.result == 'success' }}
+    if: ${{ always() && needs.test.result == 'success' }}
     strategy:
       fail-fast: false
       matrix:
