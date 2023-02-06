@@ -20,7 +20,7 @@ on:
 
 jobs:
   buildx:
-    name: Building ${{ inputs.ARCH }}
+    name: Build ${{ inputs.ARCH }}
     timeout-minutes: 360
     runs-on:
       - self-hosted
