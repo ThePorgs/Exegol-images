@@ -114,6 +114,7 @@ jobs:
     needs:
       - build
       - push
+      - tests
     strategy:
       matrix:
         arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
