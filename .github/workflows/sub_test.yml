@@ -51,7 +51,7 @@ jobs:
           docker stop $ID
           exit $return_code
     outputs:
-      matrix_test: ${{ steps.prepare.outputs.matrix_tests.tests }}
+      matrix_tests: ${{ steps.prepare.outputs.matrix_tests.tests }}
   dbgtest:
     name: debug
     needs: prepare
@@ -68,7 +68,7 @@ jobs:
       - name: Debug test
         run: |
           echo "${{ needs.prepare.outputs.matrix_tests }}"
-#          echo "${{ fromJson(needs.prepare.outputs.matrix_tests) }}"
+          echo "${{ fromJson(needs.prepare.outputs.matrix_tests) }}"
   test:
     name: Test ${{ inputs.ARCH }}
     needs: prepare
