@@ -42,7 +42,6 @@ jobs:
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
-
   pre_test:
     name: List available tests
     needs: build
@@ -80,7 +79,6 @@ jobs:
     outputs:
       matrix_tests: ${{ steps.prepare.outputs.matrix_tests }}
       # todo : save an output for each arch
-
   test:
     name: Test
     needs:
@@ -98,7 +96,6 @@ jobs:
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       ARCH: ${{ matrix.arch }}
       TESTS: ${{ matrix.batch }}
-
   push:
     # todo: make sure to remove even if not pushed? or will it be removed with clean_runners_1 ?
     name: Push
@@ -116,7 +113,6 @@ jobs:
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
     secrets: inherit
-
   publish:
     name: Publish
     timeout-minutes: 60
@@ -150,6 +146,7 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
+
   clean_runners_1:
     name: Clean runners
     needs:
@@ -169,7 +166,6 @@ jobs:
         run: docker image prune --filter "label=org.exegol.app=Exegol" --force
       - name: Clean unused volumes
         run: docker volume prune --force
-
   clean_runners_2:
     name: Remove built images
     needs:
