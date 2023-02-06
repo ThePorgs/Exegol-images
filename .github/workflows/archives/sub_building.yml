@@ -136,11 +136,11 @@ jobs:
       matrix:
         commands: ${{ fromJson(needs.buildx.outputs.matrix_tests).tests }}
     uses: ./.github/workflows/sub_testing.yml
-    with:
-      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
-      ARCH: ${{ inputs.ARCH }}
-      TESTS: ${{ matrix.commands }}
+      with:
+        DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+        IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+        ARCH: ${{ inputs.ARCH }}
+        TESTS: ${{ matrix.commands }}
 
 
 # TODO with fix: https://github.com/orgs/community/discussions/32023
