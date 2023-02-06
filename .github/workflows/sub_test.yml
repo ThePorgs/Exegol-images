@@ -60,14 +60,14 @@ jobs:
       - self-hosted
       - tester
       - ${{ inputs.ARCH }}
-    strategy:
-      fail-fast: false
-      matrix:
-        command: ${{ fromJson(needs.prepare.outputs.matrix_tests) }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        command: ${{ fromJson(needs.prepare.outputs.matrix_tests) }}
     steps:
       - name: Debug test
         run: |
-          echo "${{ matrix.command }}"
+          echo "${{ fromJson(needs.prepare.outputs.matrix_tests) }}"
   test:
     name: Test ${{ inputs.ARCH }}
     needs: prepare
