@@ -68,7 +68,8 @@ jobs:
       - name: Debug test
         run: |
           echo "${{ needs.prepare.outputs.matrix_tests }}"
-#          echo "${{ fromJson(needs.prepare.outputs.matrix_tests) }}"
+          echo "${{ fromJson(needs.prepare.outputs.matrix_tests) }}"
+          echo "${{ fromJson(needs.prepare.outputs.matrix_tests).tests }}"
   test:
     name: Test ${{ inputs.ARCH }}
     needs: prepare
