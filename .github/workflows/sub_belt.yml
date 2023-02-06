@@ -45,6 +45,7 @@ jobs:
 
   pre_test:
     name: List available tests
+    needs: build
     runs-on:
       - self-hosted
       - builder
