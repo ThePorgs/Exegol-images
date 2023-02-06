@@ -20,22 +20,52 @@ on:
         required: false
 
 jobs:
-  tests:
-    name: Tests ${{ inputs.ARCH }}
-    needs:
-      - buildx
-      - push
-      - testsdbg
-    if: ${{ needs.buildx.outputs.matrix_tests != '[]' && needs.buildx.outputs.matrix_tests != '' }}  # TODO add push success constraint
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.buildx.outputs.matrix_tests) }}
-    uses: ./.github/workflows/sub_testing.yml
-    with:
-      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
-      ARCH: ${{ inputs.ARCH }}
-      TESTS: ${{ matrix.tests }}
+  steps:
+    - name: List available tests
+      id: prepare
+      run: |
+        ID=$(docker run --rm -t -d ${{ steps.prepare_build.outputs.image_full_name }} endless)
+        docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | grep -vE "^\s*$" | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt'
+        line_count=$(docker exec $ID zsh -c 'wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d " " -f 1')
+        echo "$line_count test commands found!"
+        docker exec $ID python3 /.exegol/build_pipeline_tests/ingest_tests.py
+        docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json'
+        echo "matrix_tests=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json')" >> $GITHUB_OUTPUT
+        if [ $line_count -lt 1000 ]; then
+          echo "matrix_p1=$(docker exec $ID zsh -c 'head /.exegol/build_pipeline_tests/all_commands.sorted.txt -n 250' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_p2=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +251 | head -n 250' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_p3=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +501 | head -n 250' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          echo "matrix_p4=$(docker exec $ID zsh -c 'tail /.exegol/build_pipeline_tests/all_commands.sorted.txt -n +751 | head -n 250' | jq -R -s -c 'split("\n")')" >> $GITHUB_OUTPUT
+          return_code=0
+        else
+          echo "Too many command to test! (${line_count}/1000)"
+          echo "Maximum of 250 tests per matrix."
+          return_code=1
+        fi
+        docker stop $ID
+        exit $return_code
+    - name: Test ${{ inputs.ARCH }}
+      id: test
+      runs-on:
+        - self-hosted
+        - tester
+        - ${{ inputs.ARCH }}
+      strategy:
+        fail-fast: false
+        matrix:
+          command: ${{ fromJson(steps.prepare.outputs.matrix_tests).tests }}
+      steps:
+        - name: Image command testing
+          run: |
+            COMMAND=$(cat <<EOF
+            ${{ matrix.command }}
+            EOF
+            )
+            image_name="${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}"
+            echo -e "\nUsing image $image_name in version $(docker image inspect --format='{{index .Config.Labels "org.exegol.version"}} ({{index .Id}})' $image_name)\n"
+            echo "$ ${COMMAND}"
+            docker run --rm --env "DISABLE_AUTO_UPDATE=true" --env CMD="$COMMAND" $image_name cmd zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; eval $CMD'
+
 
 #  test1:
 #    name: Test ${{ inputs.ARCH }} (${{ matrix.command }})
