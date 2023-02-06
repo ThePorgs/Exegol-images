@@ -109,8 +109,8 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
-  clean_runners:
-    name: Cleaning runners
+  clean_runners_1:
+    name: Clean runners
     needs:
       - build
       - push
@@ -135,6 +135,28 @@ jobs:
           image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}
           echo "Removing $image_name"
           docker image inspect $image_name && docker rmi $image_name
+
+  clean_runners_2:
+    name: Remove built image
+    needs:
+      - build
+      - push
+      - test
+    if: ${{ always() && needs.build.result == 'success' && needs.push.result == 'success' }}
+    strategy:
+      matrix:
+        arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ matrix.arch }}
+    steps:
+      - name: Remove build image ${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+        run: |
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}
+          echo "Removing $image_name"
+          docker image inspect $image_name && docker rmi $image_name
+    
 
   clean_registry:
     name: Cleaning registry
