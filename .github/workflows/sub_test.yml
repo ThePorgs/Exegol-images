@@ -63,7 +63,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(steps.prepare.outputs.matrix_tests).tests }}
+        command: ${{ fromJson(needs.prepare.outputs.matrix_tests).tests }}
     steps:
       - name: Image command testing
         id: test
