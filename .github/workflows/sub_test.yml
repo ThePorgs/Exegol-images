@@ -52,6 +52,22 @@ jobs:
           exit $return_code
     outputs:
       matrix_test: ${{ steps.prepare.outputs.matrix_tests.tests }}
+  dbgtest:
+    name: debug
+    needs: prepare
+    if: ${{ always() && needs.prepare.result == 'success' }}
+    runs-on:
+      - self-hosted
+      - tester
+      - ${{ inputs.ARCH }}
+    strategy:
+      fail-fast: false
+      matrix:
+        command: ${{ fromJson(needs.prepare.outputs.matrix_tests) }}
+    steps:
+      - name: Debug test
+        run: |
+          echo "${{ matrix.command }}"
   test:
     name: Test ${{ inputs.ARCH }}
     needs: prepare
