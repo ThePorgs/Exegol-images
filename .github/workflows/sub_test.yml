@@ -51,7 +51,7 @@ jobs:
           docker stop $ID
           exit $return_code
     outputs:
-      matrix_test: ${{ steps.prepare.outputs.matrix_tests }}
+      matrix_test: ${{ steps.prepare.outputs.matrix_tests.tests }}
   test:
     name: Test ${{ inputs.ARCH }}
     needs: prepare
@@ -63,7 +63,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        command: ${{ fromJson(needs.prepare.outputs.matrix_tests).tests }}
+        command: ${{ fromJson(needs.prepare.outputs.matrix_tests) }}
     steps:
       - name: Image command testing
         id: test
