@@ -42,17 +42,53 @@ jobs:
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
-  test:
-    name: Test
+  pre_test:
+    name: Pre-test
     needs: build
     strategy:
       matrix:
         arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
-    uses: ./.github/workflows/sub_pre_test.yml
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ matrix.arch }}
+    steps:
+      - name: Read tests from image
+        id: prepare
+        run: |
+          ID=$(docker run --rm -t -d ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }} endless)
+          docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | grep -vE "^\s*$" | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt'
+          line_count=$(docker exec $ID zsh -c 'wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d " " -f 1')
+          echo "$line_count test commands found!"
+          docker exec $ID python3 /.exegol/build_pipeline_tests/ingest_tests.py
+          docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json'
+          echo "matrix_tests=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json')" >> $GITHUB_OUTPUT
+          docker stop $ID
+    outputs:
+      matrix_tests: ${{ steps.prepare.outputs.matrix_tests }}
+      # todo : save an output for each arch. In it's current state, the matrix_tests is overwritten by the last
+      # execution of "prepare". So for example, if there are amd64 tests, that don't have the arm64 equivalent (because
+      # tool install isn't supported), then the test will not be made for amd64 if arm64 was the last runner to execute,
+      # and arm64 is last in the inputs.SUPPORTED_ARCH order
+  test:
+    name: Test
+    needs:
+      - build
+      - pre_test
+    if: ${{ always() && needs.build.result == 'success' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ${{ fromJson(inputs.SUPPORTED_ARCH) }}
+        # list of lists. Each sublist is made of up to 250 commands (max for one workflow)
+        # each sublist will be iterated into in the sub_test.yml workflow
+        batch_of_250: ${{ fromJson(needs.pre_test.outputs.matrix_tests) }}
+    uses: ./.github/workflows/sub_test_batch.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       ARCH: ${{ matrix.arch }}
+      TESTS: ${{ matrix.batch_of_250 }}
   push:
     # todo: make sure to remove even if not pushed? or will it be removed with clean_runners_1 ?
     name: Push
