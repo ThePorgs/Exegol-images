@@ -30,10 +30,10 @@ jobs:
           docker exec $ID python3 /.exegol/build_pipeline_tests/ingest_tests.py
           docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json'
           echo "matrix_tests='[\"coucou\", \"bob\"]'" >> $GITHUB_OUTPUT
-#          echo "matrix_tests=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json')" >> $GITHUB_OUTPUT
           docker stop $ID
     outputs:
       matrix_tests: ${{ steps.prepare.outputs.matrix_tests }}
+#          echo "matrix_tests=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json')" >> $GITHUB_OUTPUT
 #  debug:
 #    name: Debug
 #    runs-on:
