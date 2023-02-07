@@ -39,7 +39,7 @@ jobs:
       - self-hosted
       - builder
       - ${{ inputs.ARCH }}
-    needs: pre-test
+    needs: pre_test
     if: ${{ always() && needs.pre_test.result == 'success' }}
     steps:
       - name: Read tests
