@@ -54,9 +54,6 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: DBG 1
-        run : |
-          echo ${{ needs.pre_test.outputs.matrix_tests }}
       - name: Read tests from image
         id: prepare
         run: |
