@@ -48,7 +48,6 @@ jobs:
     name: Test
     needs:
       - pre_test
-    if: ${{ always() && needs.build.result == 'success' }}
     strategy:
       fail-fast: false
       matrix:
