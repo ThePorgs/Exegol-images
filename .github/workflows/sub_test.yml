@@ -32,20 +32,20 @@ jobs:
           echo "matrix_tests=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json')" >> $GITHUB_OUTPUT
           docker stop $ID
     outputs:
-      matrix_tests: ${{ fromJson(steps.prepare.outputs.matrix_tests) }}
-  debug:
-    name: Debug
-    runs-on:
-      - self-hosted
-      - builder
-      - ${{ inputs.ARCH }}
-    needs: pre_test
-    if: ${{ always() && needs.pre_test.result == 'success' }}
-    steps:
-      - name: Read tests
-        run: |
-          echo "${{ needs.pre_test.outputs.matrix_tests }}"
-          echo "${{ fromJson(needs.pre_test.outputs.matrix_tests) }}"
+      matrix_tests: ${{ steps.prepare.outputs.matrix_tests }}
+#  debug:
+#    name: Debug
+#    runs-on:
+#      - self-hosted
+#      - builder
+#      - ${{ inputs.ARCH }}
+#    needs: pre_test
+#    if: ${{ always() && needs.pre_test.result == 'success' }}
+#    steps:
+#      - name: Read tests
+#        run: |
+#          echo "${{ needs.pre_test.outputs.matrix_tests }}"
+#          echo "${{ fromJson(needs.pre_test.outputs.matrix_tests) }}"
   test:
     name: Test
     needs: pre_test
