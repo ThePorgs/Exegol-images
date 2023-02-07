@@ -95,7 +95,7 @@ jobs:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       ARCH: ${{ matrix.arch }}
-      TESTS: ${{ matrix.batch }}.${{ matrix.arch }}
+      TESTS: ${{ matrix.batch }}
   push:
     # todo: make sure to remove even if not pushed? or will it be removed with clean_runners_1 ?
     name: Push
