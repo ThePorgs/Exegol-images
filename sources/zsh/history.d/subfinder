@@ -1,6 +1,6 @@
-subfinder -d freelancer.com
-subfinder -silent -d example.com | dnsx -silent
-subfinder -silent -d example.com | dnsx -silent -a -resp
-subfinder -silent -d example.com | dnsx -silent -a -resp-only
-subfinder -silent -d example.com | dnsx -silent -cname -resp
-subfinder -silent -d example.com | dnsx -silent -rcode noerror,servfail,refused
+subfinder -d "$DOMAIN" 
+subfinder -silent -d "$DOMAIN" | dnsx -silent
+subfinder -silent -d "$DOMAIN" | dnsx -silent -a -resp
+subfinder -silent -d "$DOMAIN" | dnsx -silent -a -resp-only
+subfinder -silent -d "$DOMAIN" | dnsx -silent -cname -resp
+subfinder -silent -d "$DOMAIN" | dnsx -silent -rcode noerror,servfail,refused
