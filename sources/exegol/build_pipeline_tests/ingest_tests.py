@@ -1,7 +1,34 @@
 import json
+import platform
 
 MAX_JOBS = 250
 
+def runner_arch():
+    raw_arch = platform.machine().lower()
+    arch = raw_arch
+    if arch == "x86_64" or arch == "x86-64" or arch == "amd64":
+        arch = "amd64"
+    elif arch == "aarch64" or "armv8" in arch:
+        arch = "arm64"
+    elif "arm" in arch:
+        if platform.architecture()[0] == '64bit':
+            arch = "arm64"
+        else:
+            raise (f"Host architecture seems to be 32-bit ARM ({arch}), which is not supported yet. "
+                         f"If possible, please install a 64-bit operating system (Exegol supports ARM64).")
+        """
+        if "v5" in arch:
+            arch = "arm/v5"
+        elif "v6" in arch:
+            arch = "arm/v6"
+        elif "v7" in arch:
+            arch = "arm/v7"
+        elif "v8" in arch:
+            arch = "arm64"
+        """
+    else:
+        raise f"Unknown / unsupported architecture: {arch}."
+    return arch
 
 # Dividing all_tests list into chunks of size n
 def divide_tests(l, n):
@@ -14,7 +41,7 @@ infile_path = "/.exegol/build_pipeline_tests/all_commands.sorted.txt"
 with open(infile_path, 'r') as f:
     all_tests = f.read().splitlines()
     print(f"[+] Read all tests from {infile_path}")
-    d = {'tests': list(divide_tests(all_tests, MAX_JOBS))}
+    d = {runner_arch(): list(divide_tests(all_tests, MAX_JOBS))}
     print(f"[+] Divided into chunks of size {MAX_JOBS}")
     json_tests = json.dumps(d)
     print("[+] Converted to JSON structure")
