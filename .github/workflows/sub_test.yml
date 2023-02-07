@@ -35,6 +35,10 @@ jobs:
       matrix_tests: ${{ steps.prepare.outputs.matrix_tests }}
   debug:
     name: Debug
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
     needs: pre-test
     if: ${{ always() && needs.pre_test.result == 'success' }}
     steps:
