@@ -43,7 +43,7 @@ jobs:
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
   pre_test:
-    name: List available tests
+    name: Pre-test
     needs: build
     strategy:
       matrix:
@@ -183,7 +183,7 @@ jobs:
     steps:
       - name: Remove build image ${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
         run: |
-          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}
+          image_name=${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.ARCH }}
           echo "Removing $image_name"
           docker image inspect $image_name && docker rmi $image_name
     
