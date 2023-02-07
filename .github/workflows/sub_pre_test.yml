@@ -48,6 +48,7 @@ jobs:
     name: Test
     needs:
       - pre_test
+    if: always()
     strategy:
       fail-fast: false
       matrix:
