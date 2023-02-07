@@ -32,7 +32,7 @@ jobs:
           echo "matrix_tests=$(docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json')" >> $GITHUB_OUTPUT
           docker stop $ID
     outputs:
-      matrix_tests: ${{ steps.prepare.outputs.matrix_tests }}
+      matrix_tests: ${{ fromJson(steps.prepare.outputs.matrix_tests) }}
   debug:
     name: Debug
     runs-on:
