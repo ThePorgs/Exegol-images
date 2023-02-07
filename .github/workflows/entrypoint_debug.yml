@@ -23,7 +23,7 @@ jobs:
       # Setting IMAGE_VERSION for prod images != nightly
       #IMAGE_VERSION: ${{ github.ref_name }}
 #      SUPPORTED_ARCH: '["amd64","arm64"]'
-      SUPPORTED_ARCH: '["arm64", "amd64]'
+      SUPPORTED_ARCH: '["arm64", "amd64"]'
 #      SUPPORTED_ARCH: '["amd64"]'
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
