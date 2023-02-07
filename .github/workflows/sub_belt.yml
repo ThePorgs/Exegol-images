@@ -42,8 +42,8 @@ jobs:
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
-  pre_test:
-    name: Pre-test
+  test:
+    name: Test
     needs: build
     strategy:
       matrix:
@@ -53,7 +53,6 @@ jobs:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       ARCH: ${{ matrix.arch }}
-      TESTS: ${{ matrix.batch_of_250 }}
   push:
     # todo: make sure to remove even if not pushed? or will it be removed with clean_runners_1 ?
     name: Push
