@@ -238,7 +238,7 @@ function install_php_filter_chain_generator() {
   add-test-command "php_filter_chain_generator --help"
 }
 
-function install_recondog() 
+function install_recondog() { 
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
   python3 -m pip install -r /opt/tools/ReconDog/requirements.txt
