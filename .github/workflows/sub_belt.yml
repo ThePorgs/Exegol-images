@@ -141,7 +141,8 @@ jobs:
       matrix:
         # list of lists. Each sublist is made of up to 250 commands (max for one workflow)
         # each sublist will be iterated into in the sub_test_batch.yml workflow
-        batch_of_250: ${{ fromJson(needs.pre_test.outputs.matrix_tests_amd64) }}
+        batch_of_250: ${{ fromJson(needs.pre_test_amd64.outputs.matrix_tests_amd64) }}
+#        batch_of_250: ${{ fromJson(needs.pre_test.outputs.matrix_tests_amd64) }}
     uses: ./.github/workflows/sub_test_batch.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
@@ -159,7 +160,8 @@ jobs:
       matrix:
         # list of lists. Each sublist is made of up to 250 commands (max for one workflow)
         # each sublist will be iterated into in the sub_test_batch.yml workflow
-        batch_of_250: ${{ fromJson(needs.pre_test.outputs.matrix_tests_arm64) }}
+        batch_of_250: ${{ fromJson(needs.pre_test_arm64.outputs.matrix_tests_arm64) }}
+#        batch_of_250: ${{ fromJson(needs.pre_test.outputs.matrix_tests_arm64) }}
     uses: ./.github/workflows/sub_test_batch.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
