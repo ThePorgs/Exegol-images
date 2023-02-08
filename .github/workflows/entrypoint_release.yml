@@ -47,7 +47,7 @@ jobs:
       matrix_releases: ${{ steps.prepare.outputs.matrix_releases }}
   belt_conveyor:
     name: Belt
-    needs: prepare_belt
+    needs: pre_belt
     strategy:
 #      fail-fast: false
       matrix:
