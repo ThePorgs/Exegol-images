@@ -1,6 +1,7 @@
-name: Debug release
+name: Release
 
-# entrypoint to an image. This workflow defines the list of architetures and calls sub_belt for
+# This doesn't work because it relies on nested "matrixed" worflows, cf. https://github.com/actions/runner/issues/2424
+# one entrypoint must be created foreach image and its corresponding dockerfile
 
 on:
   push:

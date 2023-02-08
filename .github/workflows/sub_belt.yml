@@ -21,11 +21,14 @@ on:
       SUPPORTED_ARCH:
         required: true
         type: string
+      PR_MODE:
+        required: false
+        type: boolean
     secrets:
       DOCKER_PASSWORD:
-        required: true
+        required: false
       DOCKER_USERNAME:
-        required: true
+        required: false
 
 jobs:
   build:
@@ -190,7 +193,7 @@ jobs:
 #      - test
       - test_amd64
       - test_arm64
-    if: ${{ always() && needs.*.result == 'success' }}
+    if: ${{ always() && needs.test_amd64.result == 'success' && needs.test_arm64.result == 'success' && inputs.PR_MODE == false }}
 #    if: ${{ always() && needs.test.result == 'success' }}
     strategy:
       fail-fast: false
@@ -209,7 +212,7 @@ jobs:
     needs:
       - push
     runs-on: self-hosted
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO != '' }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO != '' && inputs.PR_MODE == false }}
     env:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       DOCKER_TARGET_REPO: ${{ inputs.DOCKER_TARGET_REPO }}
@@ -286,7 +289,7 @@ jobs:
     needs:
       - publish
     runs-on: self-hosted
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.PR_MODE == false }}
     env:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}

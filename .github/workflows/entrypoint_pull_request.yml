@@ -1,6 +1,10 @@
-name: Rightly
+name: PR
 
 on:
+#  pull_request:
+#    # Sequence of patterns matched against refs/heads
+#    branches:
+#      - dev
   push:
     branches:
       - "**"
@@ -22,6 +26,4 @@ jobs:
       # Setting IMAGE_VERSION for prod images != nightly
       #IMAGE_VERSION: ${{ github.ref_name }}
       SUPPORTED_ARCH: '["amd64","arm64"]'
-    secrets:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      PR_MODE: true
