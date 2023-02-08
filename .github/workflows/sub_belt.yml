@@ -137,6 +137,7 @@ jobs:
     # todo: make sure to remove even if not pushed? or will it be removed with clean_runners_1 ?
     name: Push
     needs:
+      # - test
       - test_amd64
       - test_amd64
     if: ${{ always() && needs.*.result == 'success' }}
@@ -190,7 +191,9 @@ jobs:
     needs:
       - build
       - push
-      - test
+      # - test
+      - test_amd64
+      - test_amd64
     if: always()
     strategy:
       matrix:
@@ -209,7 +212,9 @@ jobs:
     needs:
       - build
       - push
-      - test
+      # - test
+      - test_amd64
+      - test_amd64
     if: ${{ always() && needs.build.result == 'success' && needs.push.result == 'success' }}
     strategy:
       matrix:
