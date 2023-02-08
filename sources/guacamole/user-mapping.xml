@@ -4,6 +4,8 @@
     <protocol>rdp</protocol>
     <param name="hostname">127.0.0.1</param>
     <param name="port">3389</param>
+    <param name="username">root</param>
+    <param name="password">exegol4thewin</param>
     </connection>
     </authorize>
 </user-mapping>
