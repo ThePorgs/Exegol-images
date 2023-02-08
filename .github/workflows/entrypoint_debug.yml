@@ -4,8 +4,8 @@ name: Debug nightly
 
 on:
   push:
-#    branches:
-#      - dev
+    branches:
+      - "**"
     paths-ignore:
 #      - ".github/**"
       - "*.md"
