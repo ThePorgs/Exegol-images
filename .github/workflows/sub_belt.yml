@@ -193,7 +193,8 @@ jobs:
 #      - test
       - test_amd64
       - test_arm64
-    if: ${{ always() && needs.test_amd64.result == 'success' && needs.test_arm64.result == 'success' && inputs.PR_MODE == false }}
+    if: ${{ always() && needs.*.result == 'success' && inputs.PR_MODE == false }}
+#    if: ${{ always() && needs.test_amd64.result == 'success' && needs.test_arm64.result == 'success' && inputs.PR_MODE == false }}
 #    if: ${{ always() && needs.test.result == 'success' }}
     strategy:
       fail-fast: false
