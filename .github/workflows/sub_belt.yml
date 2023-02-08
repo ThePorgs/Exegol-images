@@ -188,7 +188,8 @@ jobs:
        - test
 #      - test_amd64
 #      - test_amd64
-    if: ${{ always() && needs.*.result == 'success' }}
+#    if: ${{ always() && needs.*.result == 'success' }}
+    if: ${{ always() && needs.test.result == 'success' }}
     strategy:
       fail-fast: false
       matrix:
