@@ -1,3 +1,0 @@
-apt install xfce4 xfce4-goodies tightvncserver dbus-x11
-
-# vncserver -> need no interactive mode to configure
