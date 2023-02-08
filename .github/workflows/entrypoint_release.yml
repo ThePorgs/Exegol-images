@@ -15,34 +15,17 @@ jobs:
     name: Prepare belt
     runs-on: self-hosted
     steps:
-      - name: TBD
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Load images.json in step context
+        id: package
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./.github/workflows/images.json
+      - name: Load content to job context
         id: prepare
         # the dockerfiles below need to be modified
-        run: |
-          echo 'matrix_releases= 
-          [
-            {
-              "name": "debug_ad",
-              "dockerfile": "debug.dockerfile"
-            },
-            {
-              "name": "debug_web",
-              "dockerfile": "debug.dockerfile"
-            },
-            {
-              "name": "debug_osint",
-              "dockerfile": "debug.dockerfile"
-            },
-            {
-              "name": "debug_light",
-              "dockerfile": "debug.dockerfile"
-            },
-            {
-              "name": "debug_full",
-              "dockerfile": "debug.dockerfile"
-            }
-          ]' >> $GITHUB_OUTPUT
-
+        run: echo "matrix_releases=${{ steps.package.outputs.content }}" >> $GITHUB_OUTPUT
     outputs:
       matrix_releases: ${{ steps.prepare.outputs.matrix_releases }}
   belt_conveyor:
