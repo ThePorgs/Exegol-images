@@ -22,12 +22,8 @@ jobs:
         uses: juliangruber/read-file-action@v1
         with:
           path: ./.github/workflows/images.json
-      - name: Load content to job context
-        id: prepare
-        # the dockerfiles below need to be modified
-        run: echo "matrix_releases=${{ steps.package.outputs.content }}" >> $GITHUB_OUTPUT
     outputs:
-      matrix_releases: ${{ steps.prepare.outputs.matrix_releases }}
+      matrix_releases: ${{ steps.package.outputs.content }}
   belt_conveyor:
     name: Belt
     needs: pre_belt
