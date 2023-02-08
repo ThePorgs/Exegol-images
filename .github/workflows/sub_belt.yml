@@ -88,7 +88,7 @@ jobs:
     name: Test AMD64
     needs:
       - build
-      - pre_test
+      - pre_test_amd64
     if: ${{ always() && needs.build.result == 'success' }}
     strategy:
       fail-fast: false
@@ -106,7 +106,7 @@ jobs:
     name: Test ARM64
     needs:
       - build
-      - pre_test
+      - pre_test_arm64
     if: ${{ always() && needs.build.result == 'success' }}
     strategy:
       fail-fast: false
