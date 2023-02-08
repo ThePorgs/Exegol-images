@@ -1,0 +1,68 @@
+name: Debug release
+
+# entrypoint to an image. This workflow defines the list of architetures and calls sub_belt for
+
+on:
+  push:
+    tags:
+      - '*'
+    paths-ignore:
+#      - ".github/**"
+      - "*.md"
+
+jobs:
+  pre_belt:
+    name: Prepare belt
+    runs-on: self-hosted
+    steps:
+      - name: TBD
+        id: prepare
+        # the dockerfiles below need to be modified
+        run: |
+          echo 'matrix_releases= 
+          [
+            {
+              "name": "debug_ad",
+              "dockerfile": "debug.dockerfile"
+            },
+            {
+              "name": "debug_web",
+              "dockerfile": "debug.dockerfile"
+            },
+            {
+              "name": "debug_osint",
+              "dockerfile": "debug.dockerfile"
+            },
+            {
+              "name": "debug_light",
+              "dockerfile": "debug.dockerfile"
+            },
+            {
+              "name": "debug_full",
+              "dockerfile": "debug.dockerfile"
+            }
+          ]' >> $GITHUB_OUTPUT
+
+    outputs:
+      matrix_releases: ${{ steps.prepare.outputs.matrix_releases }}
+  belt_conveyor:
+    name: Belt
+    needs: prepare_belt
+    strategy:
+#      fail-fast: false
+      matrix:
+        vars: ${{ fromJson(needs.pre_belt.outputs.matrix_releases) }}
+    uses: ./.github/workflows/sub_belt.yml
+    with:
+      # intermediary registry in which architecture-specific images must be pushed
+      DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+      # final registry target, in which arch-specific images must be aggregated
+      DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
+      IMAGE_BASE_NAME: ${{ matrix.vars.name }}
+      DOCKERFILE: ${{ matrix.vars.dockerfile }}
+      # Setting IMAGE_VERSION for prod images != nightly
+      IMAGE_VERSION: ${{ github.ref_name }}
+      SUPPORTED_ARCH: '["amd64","arm64"]'
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

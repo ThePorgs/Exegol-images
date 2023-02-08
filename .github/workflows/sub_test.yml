@@ -11,7 +11,6 @@ on:
         required: true
         type: string
 
-
 jobs:
   pre_test:
     name: Pre-test
@@ -33,19 +32,6 @@ jobs:
           docker stop $ID
     outputs:
       matrix_tests: ${{ steps.prepare.outputs.matrix_tests }}
-#  debug:
-#    name: Debug
-#    runs-on:
-#      - self-hosted
-#      - builder
-#      - ${{ inputs.ARCH }}
-#    needs: pre_test
-#    if: ${{ always() && needs.pre_test.result == 'success' }}
-#    steps:
-#      - name: Read tests
-#        run: |
-#          echo "${{ needs.pre_test.outputs.matrix_tests }}"
-#          echo "${{ fromJson(needs.pre_test.outputs.matrix_tests) }}"
   test:
     name: Test
     needs: pre_test
