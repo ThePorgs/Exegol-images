@@ -1,4 +1,4 @@
-name: Rightly
+name: Nightly
 
 on:
   push:

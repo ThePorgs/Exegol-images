@@ -212,7 +212,7 @@ jobs:
     needs:
       - push
     runs-on: self-hosted
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO != '' && inputs.PR_MODE == false }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'skipped') && !contains(needs.*.result, 'cancelled') && inputs.DOCKER_TARGET_REPO != '' }}
     env:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       DOCKER_TARGET_REPO: ${{ inputs.DOCKER_TARGET_REPO }}
@@ -289,7 +289,7 @@ jobs:
     needs:
       - publish
     runs-on: self-hosted
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && inputs.PR_MODE == false }}
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'skipped') && !contains(needs.*.result, 'cancelled') }}
     env:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}

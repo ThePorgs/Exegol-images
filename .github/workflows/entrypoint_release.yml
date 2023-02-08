@@ -1,4 +1,4 @@
-name: Release
+name: Releases
 
 # This doesn't work because it relies on nested "matrixed" worflows, cf. https://github.com/actions/runner/issues/2424
 # one entrypoint must be created foreach image and its corresponding dockerfile
