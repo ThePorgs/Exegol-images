@@ -104,13 +104,36 @@ rm -rf guacamole-*
 rm -rf mysql-connector-java-*
 rm -rf user-mapping.xml
 rm -rf install.sh 
+
 unset MYSQL_PWD
+unset GUACVERSION="1.4.0"
+unset MCJVER="8.0.26"
+
+# Set variables
+unset mysqlHost
+unset mysqlPort
+unset mysqlRootPwd
+unset guacDb
+unset guacUser
+unset guacPwd
+unset TOMCAT
+unset MYSQL
+unset SERVER
+unset TOMCAT_HOME
+
+# Stop services
+
+service guacd stop 
+service mariadb stop 
+JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-arm64 ${TOMCAT_HOME}/bin/shutdown.sh
+xrdp -k
+pkill xrdp-sesman
 
 # Start services
-service guacd start 
-systemctl enable guacd
-service mariadb restart
-JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-arm64 ${TOMCAT_HOME}/bin/startup.sh
-service xrdp start
+#service guacd start 
+#systemctl enable guacd
+#service mariadb restart
+#JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-arm64 ${TOMCAT_HOME}/bin/startup.sh
+#service xrdp start
 
-echo "http://127.0.0.1:9000/guacamole"
+#echo "http://127.0.0.1:9000/guacamole"
