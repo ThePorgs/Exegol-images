@@ -1,4 +1,4 @@
-name: Release (ad)
+name: Release (light)
 
 on:
   push:
