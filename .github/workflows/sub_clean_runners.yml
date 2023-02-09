@@ -1,0 +1,21 @@
+name: (level 2 sub) Clean runners
+
+on:
+  workflow_call:
+    inputs:
+      ARCH:
+        required: true
+        type: string
+
+jobs:
+  clean:
+    name: Clean runner ${{ inputs.ARCH }}
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    steps:
+      - name: Clean unused dangling images
+        run: docker image prune --filter "label=org.exegol.app=Exegol" --force
+      - name: Clean unused volume
+        run: docker volume prune --force
