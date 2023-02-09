@@ -1930,7 +1930,8 @@ function install_jadx() {
   git -C /opt/tools/ clone https://github.com/skylot/jadx.git
   cd /opt/tools/jadx
   ./gradlew dist
-  add-aliases jadx 
+  ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
+  ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
   add-history jadx
   add-test-command "jadx --help"
 }
@@ -2369,8 +2370,9 @@ function install_ligolo-ng() {
   go build -o proxy cmd/proxy/main.go
   GOOS=windows go build -o agent.exe cmd/agent/main.go
   GOOS=windows go build -o proxy.exe cmd/proxy/main.go
-  add-aliases ligolo-ng
-  add-test-command "/opt/tools/ligolo-ng/agent --help && ligolo-proxy --help"
+  ln -v -s /opt/tools/ligolo-ng/agent /opt/tools/bin/ligolo-agent
+  ln -v -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-proxy  
+  add-test-command "ligolo-agent --help && ligolo-proxy --help"
 }
 
 function install_anew() {
