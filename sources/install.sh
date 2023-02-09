@@ -1906,8 +1906,8 @@ function install_volatility2() {
   python setup.py install
   # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161
   ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
-  add-aliases volatility
-  add-test-command "volatility --help"
+  add-aliases volatility2
+  add-test-command "volatility2 --help"
 }
 
 function install_volatility3() {
