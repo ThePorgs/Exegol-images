@@ -6,9 +6,10 @@ name: Releases
 on:
   push:
     tags:
-      - '*'
+#      - '*'
+      - disabled
     paths-ignore:
-#      - ".github/**"
+      - ".github/**"
       - "*.md"
 
 jobs:

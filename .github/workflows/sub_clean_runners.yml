@@ -1,3 +1,5 @@
+name: (level 2 sub) Clean runners
+
 on:
   workflow_call:
     inputs:
