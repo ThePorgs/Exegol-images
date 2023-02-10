@@ -15,6 +15,4 @@ jobs:
       IMAGE_BASE_NAME: "pr-dev"
       DOCKERFILE: "Dockerfile"
       SUPPORTED_ARCH: '["amd64","arm64"]'
-    secrets:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+

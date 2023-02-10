@@ -1,0 +1,22 @@
+[
+  {
+    "name": "ad",
+    "dockerfile": "ad.dockerfile"
+  },
+  {
+    "name": "web",
+    "dockerfile": "web.dockerfile"
+  },
+  {
+    "name": "osint",
+    "dockerfile": "osint.dockerfile"
+  },
+  {
+    "name": "light",
+    "dockerfile": "light.dockerfile"
+  },
+  {
+    "name": "full",
+    "dockerfile": "Dockerfile"
+  }
+]

@@ -23,7 +23,7 @@ on:
         type: string
     secrets:
       DOCKER_PASSWORD:
-        required: true
+        required: true  # Secrets cannot be used when the pipeline is triggered from a PR : TODO
       DOCKER_USERNAME:
         required: true
 

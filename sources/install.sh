@@ -410,7 +410,8 @@ function install_crackmapexec() {
   git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   cd /opt/tools/CrackMapExec || exit
   # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-  source "$HOME/.cargo/env"
+  # Shouldn't be needed anymore
+  # source "$HOME/.cargo/env"
   python3 -m pipx install .
   ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
@@ -444,32 +445,7 @@ function install_impacket() {
   apt-get -y install libffi-dev
   git -C /opt/tools/ clone https://github.com/ThePorgs/impacket
 
-  # Following PRs are merged in the forked repo
-  # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
-  # 1154: [ntlmrelayx] Unfiltered SID query when operating ACL attack
-  # 1184: [findDelegation] Added user filter on findDelegation
-  # 1201: [describeTicket] Added describeTicket
-  # 1202: [getST] Added self for getST
-  # 1224: [renameMachine] Added renameMachine.py
-  # 1253: [ntlmrelayx] Added LSA dump on top of SAM dump for ntlmrelayx
-  # 1256: [tgssub] Added tgssub script for service substitution
-  # 1267: [Get-GPPPasswords] Better handling of various XML files in Group Policy Preferences
-  # 1270: [ticketer] Fix ticketer duration to support default 10 hours tickets
-  # 1280: [machineAccountQuota] added machineAccountQuota.py
-  # 1289: [ntlmrelayx] LDAP attack: Add DNS records through LDAP
-  # 1291: [dacledit] New example script for DACL manipulation
-  # 1323: [owneredit.py] New example script to change an object's owner
-  # 1329: [secretsdump.py] Use a custom LDAP filter during a DCSync
-  # 1353: [ntlmrelayx.py] add filter option
-  # 1391: [ticketer.py, pac.py] Ticketer extra-pac implementation
-  # 1393: [rbcd.py] Handled SID not found in LDAP error #1393
-  # 1397: [mssqlclient.py] commands and prompt improvements
-  # and a few other, check https://github.com/ShutdownRepo/impacket/tree/exegol directly for more
-
-  # Following PRs are not merged yet because of conflict or for other reasons, but should be merged soon
-  # to understand first 1288: [ntlmrelayx] LDAP attack: bypass computer creation restrictions with CVE-2021-34470
-  # conflict 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
-  # conflict 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
+  # See https://github.com/ThePorgs/impacket/blob/master/ChangeLog.md
 
   python3 -m pipx install /opt/tools/impacket/
   python3 -m pipx inject impacket chardet
@@ -875,6 +851,7 @@ function install_samdump2() {
 function install_pwntools() {
   colorecho "Installing pwntools"
   python -m pip install pwntools
+  python -m pip install pathlib2
   python3 -m pip install pwntools
   add-test-command "python -c 'import pwn'"
   add-test-command "python3 -c 'import pwn'"
@@ -1055,13 +1032,6 @@ function install_jwt_tool() {
   python3 -m pip install pycryptodomex
   add-aliases jwt_tool
   add-test-command "jwt_tool --help"
-}
-
-function install_jwt_cracker() {
-  colorecho "Installing JWT cracker"
-  apt-get -y install npm
-  npm install --global jwt-cracker
-  add-test-command "jwt-cracker --help"
 }
 
 function install_wuzz() {
@@ -1879,9 +1849,8 @@ function install_h2csmuggler() {
 
 function install_byp4xx() {
   colorecho "Installing byp4xx"
-  git -C /opt/tools/ clone https://github.com/lobuhi/byp4xx
-  add-aliases byp4xx
-  add-test-command "byp4xx |& grep 'HIGH WORKLOAD! >65k requests!'"
+  go install -v github.com/lobuhi/byp4xx@latest
+  add-test-command "byp4xx"
 }
 
 function install_pipx() {
@@ -2600,13 +2569,13 @@ function install_go(){
   cd /tmp/ || exit
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-amd64.tar.gz
   elif [[ $(uname -m) = 'aarch64' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-arm64.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-arm64.tar.gz
   elif [[ $(uname -m) = 'armv7l' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-armv6l.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-armv6l.tar.gz
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
@@ -2648,10 +2617,17 @@ function install_pth-tools(){
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_amd64.deb
   elif [[ $(uname -m) = 'aarch64' ]]
   then
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    # FIXME
+    #16 428.9  libreadline6:armhf : Depends: libc6:armhf (>= 2.15) but it is not installable
+    #16 428.9                       Depends: libtinfo5:armhf but it is not installable
+    #16 428.9  multiarch-support:armhf : Depends: libc6:armhf (>= 2.13-5) but it is not installable
     wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armhf.deb
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armhf.deb
   elif [[ $(uname -m) = 'armv7l' ]]
   then
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    # FIXME ?
     wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armel.deb
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armel.deb
   else
@@ -2661,7 +2637,6 @@ function install_pth-tools(){
   add-aliases pth-tools
   add-history pth-tools
   # TODO add-test-command
-  # FIXME probably won't work for ARM platforms
 }
 
 function install_smtp-user-enum(){
@@ -3180,13 +3155,69 @@ function install_ldeep() {
   add-history ldeep
 }
 
-function install-genusernames() {
+function install_genusernames() {
   colorecho "Installing genusernames"
   mkdir -p /opt/tools/genusernames
   wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
-  sed -i 's/genadname/genusernames/g' genusernames.function
+  sed -i 's/genadname/genusernames/g' /opt/tools/genusernames/genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
   add-test-command "genusernames 'john doe'"
+}
+
+function install_rusthound() {
+  colorecho "Installing RustHound"
+  fapt gcc libclang-dev clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
+  git -C /opt/tools/ clone https://github.com/OPENCYBER-FR/RustHound
+  cd /opt/tools/RustHound
+  # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+  source "$HOME/.cargo/env"
+  cargo build --release
+  ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
+  add-history rusthound
+  add-test-command "rusthound --help"
+}
+
+function install_certsync() {
+  colorecho "Installing certsync"
+  python3 -m pipx install git+https://github.com/zblurx/certsync
+  add-test-command ""
+}
+
+function install_KeePwn() {
+  colorecho "Installing KeePwn"
+  python3 -m pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
+  add-test-command ""
+}
+
+function install_pre2k() {
+  colorecho "Installing pre2k"
+  python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
+  add-test-command "pre2k --help"
+}
+
+function install_msprobe() {
+  colorecho "Installing msprobe"
+  python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
+  add-test-command "msprobe --help"
+}
+
+function install_masky() {
+  colorecho "Installing masky"
+  python3 -m pipx install git+https://github.com/Z4kSec/Masky
+  add-test-command "masky --help"
+}
+
+function install_roastinthemiddle() {
+  colorecho "Installing roastinthemiddle"
+  python3 -m pipx install git+https://github.com/Tw1sm/RITM
+  add-test-command "roastinthemiddle --help"
+}
+
+function install_PassTheCert() {
+  colorecho "Installing PassTheCert"
+  git -C /opt/tools/ clone https://github.com/AlmondOffSec/PassTheCert
+  add-aliases PassTheCert
+  add-test-command "passthecert.py --help"
 }
 
 # Package dedicated to the basic things the env needs
@@ -3368,7 +3399,7 @@ function package_wordlists() {
   install_cupp                    # User password profiler
   install_pass_station            # Default credentials database
   install_username-anarchy        # Generate possible usernames based on heuristics
-  install-genusernames
+  install_genusernames
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
@@ -3399,7 +3430,7 @@ function package_osint() {
   # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
   install_h8mail                  # Email OSINT & Password breach hunting tool
   install_infoga                  # Gathering email accounts informations
-  install_buster                  # An advanced tool for email reconnaissance
+  # install_buster                  # An advanced tool for email reconnaissance FIXME /root/.local/pipx/shared/lib/python3.9/site-packages/setuptools/installer.py:27: SetuptoolsDeprecationWarning: setuptools.installer is deprecated. Requirements should be satisfied by a PEP 517 installer.
   install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
   # install_ghunt                 # Investigate Google Accounts with emails FIXME
   install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
@@ -3413,7 +3444,7 @@ function package_osint() {
   install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
   install_constellation           # A graph-focused data visualisation and interactive analysis application.
   install_maltego                 # Maltego is a software used for open-source intelligence and forensics
-  install_spiderfoot              # SpiderFoot automates OSINT collection
+  # install_spiderfoot            # SpiderFoot automates OSINT collection # FIXME, requirements.txt creates dependancies conflicts and there's no setup.py file that would allow for pipx install
   install_finalrecon              # A fast and simple python script for web reconnaissance
   # fapt recon-ng                 # External recon tool FIXME
   # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
@@ -3471,13 +3502,12 @@ function package_web() {
   install_timing_attack           # Cryptocraphic timing attack
   install_updog                   # New HTTPServer
   install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
-  install_jwt_cracker             # JWT cracker and bruteforcer
   install_wuzz                    # Burp cli
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
   install_whatweb                 # Recognises web technologies including content management
-  install_phpggc                  # php deserialization payloads
+  # install_phpggc                  # php deserialization payloads FIXME https://github.com/ambionics/phpggc/issues/142
   install_symfony-exploits        #  symfony secret fragments exploit
   install_jdwp_shellifier         # exploit java debug
   install_httpmethods             # Tool for HTTP methods enum & verb tampering
@@ -3586,6 +3616,14 @@ function package_ad() {
   install_crackhound
   install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
   install_ldeep
+  install_rusthound
+  install_certsync
+  install_KeePwn
+  install_pre2k
+  install_msprobe
+  install_masky
+  install_roastinthemiddle
+  install_PassTheCert
 }
 
 # Package dedicated to mobile apps pentest tools
