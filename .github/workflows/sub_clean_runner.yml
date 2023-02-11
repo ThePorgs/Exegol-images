@@ -1,0 +1,28 @@
+name: (todo) Clean
+
+on:
+  workflow_call:
+    inputs:
+      DOCKER_BUILD_REPO:
+        required: true
+        type: string
+      IMAGE_BASE_NAME:
+        required: true
+        type: string
+      ARCH:
+        required: true
+        type: string
+
+jobs:
+  clean:
+    name: Remove built image ${{ inputs.ARCH }}
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    steps:
+      - name: Remove build image ${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+        run: |
+          image_name=${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+          echo "Removing $image_name"
+          docker image inspect $image_name && docker rmi $image_name
