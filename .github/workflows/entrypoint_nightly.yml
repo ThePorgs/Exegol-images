@@ -3,7 +3,8 @@ name: Nightly
 on:
   push:
     branches:
-      - "**"
+#      - "**"
+      - disabled
     paths-ignore:
       - ".github/**"
       - "*.md"
