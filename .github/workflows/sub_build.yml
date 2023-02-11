@@ -28,12 +28,6 @@ jobs:
       - self-hosted
       - builder
       - ${{ inputs.ARCH }}
-    outputs:
-      matrix_tests: ${{ steps.set-matrix.outputs.matrix_tests }}
-      matrix_p1: ${{ steps.set-matrix.outputs.matrix_p1 }}
-      matrix_p2: ${{ steps.set-matrix.outputs.matrix_p2 }}
-      matrix_p3: ${{ steps.set-matrix.outputs.matrix_p3 }}
-      matrix_p4: ${{ steps.set-matrix.outputs.matrix_p4 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
