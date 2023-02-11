@@ -88,11 +88,24 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
+  cleandbg:
+    name: Clean debug
+    needs: publish
+    if: always()
+    runs-on: self-host
+    steps:
+      - name: Debug
+        run: |
+          echo coucou
+    
+
   clean_runners:
     name: Clean runners
-    needs: publish
+    needs:
+      - publish
+      - build_belt
     # clean runners, if publish was a success, or at least if build succeeded
-    if: needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure')
+    if: ${{ always() && ( needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure')) }}
     strategy:
       fail-fast: false
       matrix:
