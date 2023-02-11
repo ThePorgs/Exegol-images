@@ -32,13 +32,16 @@ on:
       DOCKER_USERNAME:
         required: false
 # todo : outputs below should not be needed
-#    outputs:
-#      push:
-#        description: "Failed push"
-#        value: ${{ jobs.placeholder.outputs.push }}
-#      test:
-#        description: "Failed tests"
-#        value: ${{ jobs.placeholder.outputs.test }}
+    outputs:
+      build:
+        description: "Failed build"
+        value: ${{ jobs.placeholder.outputs.build }}
+      push:
+        description: "Failed push"
+        value: ${{ jobs.placeholder.outputs.push }}
+      test:
+        description: "Failed tests"
+        value: ${{ jobs.placeholder.outputs.test }}
 
 jobs:
   prune:
@@ -89,22 +92,26 @@ jobs:
       ARCH: ${{ inputs.ARCH }}
     secrets: inherit
 
-# todo: job below should not be needed
-#  placeholder:
-#    name: TBD
-#    needs:
-#      - test
-#      - push
-#    runs-on: self-hosted
-#    steps:
-#      - name: Extract tests result
-#        id: test
-#        if: needs.test.result != 'success'
-#        run: echo "result=failure" >> $GITHUB_OUTPUT
-#      - name: Extract push result
-#        id: push
-#        if: needs.push.result != 'success'
-#        run: echo "result=failure" >> $GITHUB_OUTPUT
-#    outputs:
-#      test: ${{ steps.test.outputs.result }}
-#      push: ${{ steps.push.outputs.result }}
+  export_results:
+    name: Exporting test results for higher jobs
+    needs:
+      - build
+      - test
+      - push
+    runs-on: self-hosted
+    steps:
+      - name: Extract build result
+        id: build
+        if: needs.build.result != 'success'
+        run: echo "result=failure" >> $GITHUB_OUTPUT
+      - name: Extract tests result
+        id: test
+        if: needs.test.result != 'success'
+        run: echo "result=failure" >> $GITHUB_OUTPUT
+      - name: Extract push result
+        id: push
+        if: needs.push.result != 'success'
+        run: echo "result=failure" >> $GITHUB_OUTPUT
+    outputs:
+      test: ${{ steps.test.outputs.result }}
+      push: ${{ steps.push.outputs.result }}

@@ -91,6 +91,8 @@ jobs:
   clean_runners:
     name: Clean runners
     needs: publish
+    # clean runners, if publish was a success, or at least if build succeeded
+    if: needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure')
     strategy:
       fail-fast: false
       matrix:
