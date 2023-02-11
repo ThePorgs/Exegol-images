@@ -19,7 +19,7 @@ env:
   DOCKERFILE: "debug.dockerfile"
   # Setting IMAGE_VERSION for prod images != nightly
   # todo : this doesn't work, find a way
-  IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
+#  IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -31,7 +31,8 @@ jobs:
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
-      #IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
+#      IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
+      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
@@ -40,7 +41,7 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "IMAGE_VERSION=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=$(${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
 
   build_belt:
     name: Build belt
@@ -55,7 +56,7 @@ jobs:
       DOCKER_TARGET_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
-      #IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       ARCH: ${{ matrix.arch }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -84,12 +85,12 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
-        if: success() && ${IMAGE_VERSION} != ''
+        if: success() && ${{ needs.varset.outputs.IMAGE_VERSION }} != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
-          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   clean_runners:
     name: Clean runners
