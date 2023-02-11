@@ -34,6 +34,7 @@ jobs:
           docker exec $ID pyazertython3 /.exegol/build_pipeline_tests/ingest_tests.py
           docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json
       - name: Stop the container
+        if: always()
         env:
           ID: ${{ steps.create.outputs.container_id }}
         run: docker stop $ID
