@@ -56,16 +56,16 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${{ env.DOCKER_TARGET_REPO }}:${{ env.IMAGE_BASE_NAME }} ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
-          docker manifest push ${{ env.DOCKER_TARGET_REPO }}:${{ env.IMAGE_BASE_NAME }}
-          docker manifest rm ${{ env.DOCKER_TARGET_REPO }}:${{ env.IMAGE_BASE_NAME }}
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
         if: success() && env.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${{ env.DOCKER_TARGET_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ env.IMAGE_VERSION }} ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-arm64 ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-amd64
-          docker manifest push ${{ env.DOCKER_TARGET_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ env.IMAGE_VERSION }}
-          docker manifest rm ${{ env.DOCKER_TARGET_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ env.IMAGE_VERSION }}
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
   clean_runners:
     name: Clean runners
@@ -81,7 +81,7 @@ jobs:
     steps:
       - name: Remove built image ${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
         run: |
-          image_name=${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
           echo "Removing $image_name"
           docker image inspect $image_name && docker rmi $image_name
 
@@ -95,6 +95,6 @@ jobs:
       - name: Remove arch-specific images on intermediate registry
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.DOCKER_BUILD_REPO }}/tags/${{ env.IMAGE_BASE_NAME }}-arm64/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.DOCKER_BUILD_REPO }}/tags/${{ env.IMAGE_BASE_NAME }}-amd64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
   
