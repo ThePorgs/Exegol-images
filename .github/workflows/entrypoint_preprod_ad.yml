@@ -18,6 +18,7 @@ env:
   IMAGE_BASE_NAME: "debug_release"
   DOCKERFILE: "debug.dockerfile"
   # Setting IMAGE_VERSION for prod images != nightly
+  # todo : this doesn't work, find a way
   IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
 
 jobs:
