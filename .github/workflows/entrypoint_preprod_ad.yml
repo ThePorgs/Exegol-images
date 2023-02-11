@@ -41,7 +41,7 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "IMAGE_VERSION=$(${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
 
   build_belt:
     name: Build belt
