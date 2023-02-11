@@ -1,4 +1,4 @@
-name: (todo) Clean
+name: (level 2 sub) Clean runner
 
 on:
   workflow_call:

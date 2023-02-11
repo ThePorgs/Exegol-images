@@ -21,7 +21,7 @@ env:
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
   varset:
-    name: Set variables
+    name: Initialize variables
     runs-on: self-hosted
     outputs:
       DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}

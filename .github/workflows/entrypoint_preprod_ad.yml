@@ -1,4 +1,4 @@
-name: Release (ad)
+name: Pre-release (ad)
 
 on:
   push:
