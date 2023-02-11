@@ -2,9 +2,8 @@ name: Pre-release (ad)
 
 on:
   pull_request:
-    # Sequence of patterns matched against refs/heads
-    branches:
-      - main
+    title: Release *.*.*
+    branches: main
     paths-ignore:
 #      - ".github/**"
       - "*.md"
@@ -41,6 +40,7 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)"
           echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
 
   build_belt:
