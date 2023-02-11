@@ -27,10 +27,10 @@ jobs:
         arch: [arm64, amd64]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      DOCKER_BUILD_REPO: ${DOCKER_BUILD_REPO}
-      DOCKER_TARGET_REPO: ${DOCKER_TARGET_REPO}
-      IMAGE_BASE_NAME: ${IMAGE_BASE_NAME}
-      DOCKERFILE: ${DOCKERFILE}
+      DOCKER_BUILD_REPO: $DOCKER_BUILD_REPO
+      DOCKER_TARGET_REPO: $DOCKER_TARGET_REPO
+      IMAGE_BASE_NAME: $IMAGE_BASE_NAME
+      DOCKERFILE: $DOCKERFILE
       #IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
       ARCH: ${{ matrix.arch }}
     secrets:
