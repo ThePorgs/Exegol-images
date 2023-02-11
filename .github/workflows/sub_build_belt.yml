@@ -42,7 +42,7 @@ on:
 
 jobs:
   prune:
-    name: Image and volume prune
+    name: Optimize ${{ inputs.ARCH }} runner space (prune)
     runs-on:
       - self-hosted
       - builder
