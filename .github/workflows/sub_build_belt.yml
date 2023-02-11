@@ -35,13 +35,13 @@ on:
     outputs:
       build:
         description: "Failed build"
-        value: ${{ jobs.placeholder.outputs.build }}
+        value: ${{ jobs.export_results.outputs.build }}
       push:
         description: "Failed push"
-        value: ${{ jobs.placeholder.outputs.push }}
+        value: ${{ jobs.export_results.outputs.push }}
       test:
         description: "Failed tests"
-        value: ${{ jobs.placeholder.outputs.test }}
+        value: ${{ jobs.export_results.outputs.test }}
 
 jobs:
   prune:
