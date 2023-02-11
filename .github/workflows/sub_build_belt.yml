@@ -45,7 +45,7 @@ on:
 
 jobs:
   prune:
-    name: Optimize ${{ inputs.ARCH }} runner space (prune)
+    name: Pre-build ${{ inputs.ARCH }} runner clean
     runs-on:
       - self-hosted
       - builder
@@ -96,6 +96,7 @@ jobs:
       - build
       - test
       - push
+    if: always()
     runs-on: self-hosted
     steps:
       - name: Extract build result
