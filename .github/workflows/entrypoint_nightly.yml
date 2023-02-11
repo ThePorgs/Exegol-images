@@ -19,6 +19,26 @@ env:
   #IMAGE_VERSION: ${{ github.ref_name }}
 
 jobs:
+  # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
+  varset:
+    name: Set variables
+    runs-on: self-hosted
+    outputs:
+      DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
+      DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
+      IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+      #IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
+    steps:
+      - name: Passing workflow env vars to reusable workflows
+        id: varset
+        run: |
+          echo "DOCKER_BUILD_REPO=${DOCKER_BUILD_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
+          echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+
   build_belt:
     name: Build belt
     strategy:
@@ -27,11 +47,11 @@ jobs:
         arch: [arm64, amd64]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      DOCKER_BUILD_REPO: $DOCKER_BUILD_REPO
-      DOCKER_TARGET_REPO: $DOCKER_TARGET_REPO
-      IMAGE_BASE_NAME: $IMAGE_BASE_NAME
-      DOCKERFILE: $DOCKERFILE
-      #IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
+      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
+      DOCKER_TARGET_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
+      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      #IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       ARCH: ${{ matrix.arch }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
