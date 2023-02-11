@@ -41,6 +41,7 @@ jobs:
 
   build_belt:
     name: Build belt
+    needs: varset
     strategy:
       fail-fast: false
       matrix:
