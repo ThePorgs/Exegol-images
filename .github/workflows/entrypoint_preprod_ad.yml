@@ -18,7 +18,7 @@ env:
   IMAGE_BASE_NAME: "debug_release"
   DOCKERFILE: "debug.dockerfile"
   # Setting IMAGE_VERSION for prod images != nightly
-  #IMAGE_VERSION: ${{ github.ref_name }}
+  IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -83,7 +83,7 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
-        if: success() && env.IMAGE_VERSION != ''
+        if: success() && ${IMAGE_VERSION} != ''
         run: |
           echo "Create version manifest"
           docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
