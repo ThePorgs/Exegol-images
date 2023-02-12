@@ -11,8 +11,8 @@ on:
 
 jobs:
   belt_conveyor:
-    name: Belt
-    uses: ./.github/workflows/sub_belt.yml
+    name: Build belt
+    uses: ./.github/workflows/sub_build_belt.yml
     with:
       # intermediary registry in which architecture-specific images must be pushed
       DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"

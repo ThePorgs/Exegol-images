@@ -28,8 +28,8 @@ jobs:
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
-#      IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
       IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
+#      IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
@@ -67,8 +67,6 @@ jobs:
     runs-on: self-hosted
     # only publishing if the tests were a success (implied by the success of build_belt).
     if: needs.build_belt.result == 'success'
-    env:
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
@@ -83,6 +81,8 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
+        env:
+          IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
         if: success() && env.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"

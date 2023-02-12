@@ -16,8 +16,6 @@ env:
   DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-prod"
   IMAGE_BASE_NAME: "debug"
   DOCKERFILE: "debug.dockerfile"
-  # Setting IMAGE_VERSION for prod images != nightly
-  #IMAGE_VERSION: ${{ github.ref_name }}
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"

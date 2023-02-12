@@ -80,7 +80,7 @@ jobs:
     name: Push
     needs: test
     # Push image to exegol-builds whatever the outcome of "test" is, as long as the image was built (which is already an implicit requirement of the "test" job)
-    if: always()
+    if: always() && inputs.PR_MODE == false
     uses: ./.github/workflows/sub_push.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
