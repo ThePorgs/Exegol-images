@@ -73,6 +73,8 @@ jobs:
     # todo : commented line is probably useless since a failing test should mark the build_belt as failed
     #if: needs.build_belt.result == 'success' && !contains(needs.build_belt.outputs.*, 'failure')
     if: needs.build_belt.result == 'success'
+    env:
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
@@ -87,12 +89,12 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
-        if: success() && ${{ needs.varset.outputs.IMAGE_VERSION }} != ''
+        if: success() && ${IMAGE_VERSION} != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
-          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
   clean_runners:
     name: Clean runners
