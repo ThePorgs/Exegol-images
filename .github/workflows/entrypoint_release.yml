@@ -3,7 +3,8 @@ name: Release (all tags)
 on:
   push:
     tags:
-      - '*'
+      - "*.*.*"
+      - "*.*.*b*"
 
 env:
   # intermediary registry in which architecture-specific images must be pushed

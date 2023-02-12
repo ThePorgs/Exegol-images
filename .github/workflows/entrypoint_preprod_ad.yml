@@ -2,7 +2,9 @@ name: Pre-release (ad)
 
 on:
   pull_request:
-    title: Release *.*.*
+    title:
+      - "Release *.*.*"
+      - "Release *.*.*b*"
     branches: main
     paths-ignore:
 #      - ".github/**"
