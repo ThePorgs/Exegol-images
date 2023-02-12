@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - "**"
-      - disabled
     paths-ignore:
       - ".github/**"
       - "*.md"
