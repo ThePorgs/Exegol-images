@@ -29,7 +29,6 @@ jobs:
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
       IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
-#      IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
@@ -63,7 +62,9 @@ jobs:
   publish:
     name: Publish
     timeout-minutes: 60
-    needs: build_belt
+    needs:
+      - varset
+      - build_belt
     runs-on: self-hosted
     # only publishing if the tests were a success (implied by the success of build_belt).
     if: needs.build_belt.result == 'success'
