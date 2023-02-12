@@ -31,7 +31,6 @@ on:
         required: false
       DOCKER_USERNAME:
         required: false
-# todo : outputs below should not be needed
     outputs:
       build:
         description: "Failed build"

@@ -25,6 +25,7 @@ jobs:
         id: create
         run: echo "container_id=$(docker run --rm -t -d ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }} endless)" >> $GITHUB_OUTPUT
       - name: Run the tests
+        # TODO : create a unified tests script, and think about how to report the success/fails
         env:
           ID: ${{ steps.create.outputs.container_id }}
         run: |
@@ -38,5 +39,3 @@ jobs:
         env:
           ID: ${{ steps.create.outputs.container_id }}
         run: docker stop $ID
-#    outputs:
-#      matrix_tests: ${{ steps.prepare.outputs.matrix_tests }}

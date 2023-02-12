@@ -22,7 +22,8 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        tag: [ full, light, ad, web, osint ]
+        tag: [ debug_release ]
+#        tag: [ full, light, ad, web, osint ]
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2

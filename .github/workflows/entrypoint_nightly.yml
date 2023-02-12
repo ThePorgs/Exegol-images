@@ -65,8 +65,6 @@ jobs:
     needs: build_belt
     runs-on: self-hosted
     # only publishing if the tests were a success (implied by the success of build_belt).
-    # todo : commented line is probably useless since a failing test should mark the build_belt as failed
-    #if: needs.build_belt.result == 'success' && !contains(needs.build_belt.outputs.*, 'failure')
     if: needs.build_belt.result == 'success'
     steps:
       - name: Login to Dockerhub
