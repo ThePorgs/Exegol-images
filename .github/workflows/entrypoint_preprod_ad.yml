@@ -89,7 +89,7 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
-        if: success() && ${IMAGE_VERSION} != ''
+        if: success() && env.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
           docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
