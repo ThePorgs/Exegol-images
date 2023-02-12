@@ -14,13 +14,9 @@ env:
   # intermediary registry in which architecture-specific images must be pushed
   DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
   # final registry target, in which arch-specific images must be aggregated
-  # todo : change this to preprod
-  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
+  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-preprod"
   IMAGE_BASE_NAME: "debug_release"
   DOCKERFILE: "debug.dockerfile"
-  # Setting IMAGE_VERSION for prod images != nightly
-  # todo : this doesn't work, find a way
-#  IMAGE_VERSION: ${{ github.event.pull_request.title }} | cut -d ' ' -f 2
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -70,8 +66,6 @@ jobs:
     needs: build_belt
     runs-on: self-hosted
     # only publishing if the tests were a success (implied by the success of build_belt).
-    # todo : commented line is probably useless since a failing test should mark the build_belt as failed
-    #if: needs.build_belt.result == 'success' && !contains(needs.build_belt.outputs.*, 'failure')
     if: needs.build_belt.result == 'success'
     env:
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
