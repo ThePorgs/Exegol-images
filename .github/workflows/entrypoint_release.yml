@@ -34,6 +34,6 @@ jobs:
         if: success() && env.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${{ matrix.IMAGE_BASE_NAME }}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${{ matrix.IMAGE_BASE_NAME }}
-          docker manifest push ${DOCKER_TARGET_REPO}:${{ matrix.IMAGE_BASE_NAME }}-${IMAGE_VERSION}
-          docker manifest rm ${DOCKER_TARGET_REPO}:${{ matrix.IMAGE_BASE_NAME }}-${IMAGE_VERSION}
+          docker manifest create ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${{ matrix.tag }}
+          docker manifest push ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
