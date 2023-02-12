@@ -4,7 +4,7 @@ on:
   pull_request:
     title:
       - "Release *.*.*"
-      - "Release *.*.*b*"
+#      - "Release *.*.*b*"
     branches: main
     paths-ignore:
 #      - ".github/**"
