@@ -7,53 +7,36 @@ on:
       - "*.*.*b*"
 
 env:
-  # intermediary registry in which architecture-specific images must be pushed
-  # todo : change this to preprod, and the var name to DOCKER_PREPROD_REPO
-  DOCKER_BUILD_REPO: "nwodtuhs/exegol-dev-preprod"
-  # final registry target, in which arch-specific images must be aggregated
-  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-prod"
-  # Setting IMAGE_VERSION for prod images != nightly
-#  IMAGE_VERSION: ${{ github.ref_name }}
+  # "preprod" registry
+  DOCKER_PREPROD_REPO: "nwodtuhs/exegol-dev-preprod"
+  # final "production" registry target
+  DOCKER_PROD_REPO: "nwodtuhs/exegol-dev-prod"
 
 jobs:
   varset:
     name: Initialize variables
     runs-on: self-hosted
     outputs:
-      DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
-      DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
+      DOCKER_PREPROD_REPO: ${{ steps.varset.outputs.DOCKER_PREPROD_REPO }}
+      DOCKER_PROD_REPO: ${{ steps.varset.outputs.DOCKER_PROD_REPO }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
         run: |
-          echo "DOCKER_BUILD_REPO=${DOCKER_BUILD_REPO}" >> $GITHUB_OUTPUT
-          echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_PREPROD_REPO=${DOCKER_PREPROD_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_PROD_REPO=${DOCKER_PROD_REPO}" >> $GITHUB_OUTPUT
   inspect:
     name: Publish manifests
     needs: varset
     strategy:
       matrix:
-        tag: [ debug_release ]
+        tag: [ full, light, ad, web, osint ]
         version: ['', "-${{ github.ref_name }}"]
-    #        tag: [ full, light, ad, web, osint ]
-    uses: ./.github/workflows/sub_manifest.yml
+    uses: ./.github/workflows/sub_release_manifest.yml
     with:
-      DOCKER_PREPROD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      PREPROD_MANIFEST_LIST: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
-      PROD_MANIFEST_LIST: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}:${{ matrix.tag }}${{ matrix.version }}
+      DOCKER_PREPROD_REPO: ${{ needs.varset.outputs.DOCKER_PREPROD_REPO }}
+      PREPROD_MANIFEST_LIST: ${{ needs.varset.outputs.DOCKER_PREPROD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
+      PROD_MANIFEST_LIST: ${{ needs.varset.outputs.DOCKER_PROD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#  inspect_version:
-#    name: Publish version manifests
-#    strategy:
-#      matrix:
-#        tag: [ debug_release ]
-#    #        tag: [ full, light, ad, web, osint ]
-#    uses: ./.github/workflows/sub_manifest.yml
-#    with:
-#      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
-#      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
-#    secrets:
-#      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-#      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

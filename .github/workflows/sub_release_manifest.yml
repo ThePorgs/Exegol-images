@@ -1,4 +1,4 @@
-name: (level 1 sub) Manifest
+name: (level 1 sub) Release manifest
 
 on:
   workflow_call:
