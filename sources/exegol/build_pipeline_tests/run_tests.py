@@ -31,17 +31,17 @@ def run_command(command):
             # Try to run the command in a zsh context
             zsh_command = f"zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; . {temp.name}'"
             output = subprocess.check_output(zsh_command, shell=True, stderr=subprocess.PIPE)
-            print(f"\033[32m\033[1mSUCCESS\033[0m - Running command: {command}")
+            print(f"\033[1;32mSUCCESS\033[0m - Running command: {command}")
         except subprocess.CalledProcessError as e:
             # If the command fails, store it in the list of failed commands
             failed_commands.append(command)
-            print(f"\033[31m\033[1mFAILURE\033[0m - Running command: {command}")
+            print(f"\033[1;31mFAILURE\033[0m - Running command: {command}")
 
             # Write the output of the failed command to the log file
             with open(log_file, "a") as f:
-                f.write(f"Failed command: {command}\n")
-                f.write(f"Standard output: {e.output.decode()}\n")
-                f.write(f"Standard error: {e.stderr.decode()}\n")
+                f.write(f"\033[1;34mFailed command: {command}\n\033[0m")
+                f.write(f"\033[1;33mStandard output: {e.output.decode()}\n\033[0m")
+                f.write(f"Standard error: {e.stderr.decode()}\n\033[0m")
 
 
 # Create a list of threads
