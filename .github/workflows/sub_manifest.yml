@@ -33,10 +33,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Create and push manifest
+      - name: Create manifest
         if: success()
         run: |
-          docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ inputs.DOCKER_PREPROD_REPO }}@${{ steps.inspect_manifest.outputs.DIGESTS }}
+          docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}
       - name: Push manifest to prod
         if: success()
         run: |
