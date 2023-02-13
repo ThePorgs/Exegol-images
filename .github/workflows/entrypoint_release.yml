@@ -15,26 +15,31 @@ env:
   # Setting IMAGE_VERSION for prod images != nightly
   IMAGE_VERSION: ${{ github.ref_name }}
 
-
-
 jobs:
   inspect:
     name: Publish manifests
     strategy:
       matrix:
         tag: [ debug_release ]
+        version: ['', ${IMAGE_VERSION}]
     #        tag: [ full, light, ad, web, osint ]
     uses: ./.github/workflows/sub_manifest.yml
     with:
-      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}
-      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}
-  inspect_version:
-    name: Publish version manifests
-    strategy:
-      matrix:
-        tag: [ debug_release ]
-    #        tag: [ full, light, ad, web, osint ]
-    uses: ./.github/workflows/sub_manifest.yml
-    with:
-      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
-      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
+      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}${{ matrix.version }}
+      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}${{ matrix.version }}
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#  inspect_version:
+#    name: Publish version manifests
+#    strategy:
+#      matrix:
+#        tag: [ debug_release ]
+#    #        tag: [ full, light, ad, web, osint ]
+#    uses: ./.github/workflows/sub_manifest.yml
+#    with:
+#      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
+#      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
+#    secrets:
+#      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
