@@ -15,6 +15,7 @@ env:
   DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-prod"
   IMAGE_BASE_NAME: "debug"
   DOCKERFILE: "debug.dockerfile"
+  SUPPORTED_ARCHS: [ amd64, arm64 ]
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -43,7 +44,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [arm64, amd64]
+        arch: env.SUPPORTED_ARCHS
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
@@ -94,7 +95,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [ arm64, amd64 ]
+        arch: env.SUPPORTED_ARCHS
     runs-on:
       - self-hosted
       - builder
