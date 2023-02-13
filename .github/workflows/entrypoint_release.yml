@@ -25,8 +25,8 @@ jobs:
     #        tag: [ full, light, ad, web, osint ]
     uses: ./.github/workflows/sub_manifest.yml
     with:
-      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}${{ matrix.version }}
-      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}${{ matrix.version }}
+      PREPROD_MANIFEST_LIST: ${{ env.DOCKER_BUILD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
+      PROD_MANIFEST_LIST: ${{ env.DOCKER_TARGET_REPO }}:${{ matrix.tag }}${{ matrix.version }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
