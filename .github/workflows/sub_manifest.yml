@@ -36,8 +36,12 @@ jobs:
       - name: Create and push manifest
         if: success()
         run: |
-          echo "Create manifest"
-          echo "docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}"
           docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ inputs.DOCKER_PREPROD_REPO }}@${{ steps.inspect_manifest.outputs.DIGESTS }}
+      - name: Push manifest to prod
+        if: success()
+        run: |
           docker manifest push ${{ inputs.PROD_MANIFEST_LIST }}
+      - name: Remove local manifest
+        if: always()
+        run: |
           docker manifest rm ${{ inputs.PROD_MANIFEST_LIST }}
