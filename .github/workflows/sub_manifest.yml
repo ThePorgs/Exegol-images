@@ -3,10 +3,10 @@ name: (level 1,2 sub) Manifest
 on:
   workflow_call:
     inputs:
-      MANIFEST:
+      PREPROD_MANIFEST_LIST:
         required: true
         type: string
-      MANIFEST_LIST:
+      PROD_MANIFEST_LIST:
         required: true
         type: string
     secrets:
@@ -20,6 +20,11 @@ jobs:
     name: Create and push manifest list
     runs-on: self-hosted
     steps:
+      - name: Inspect preprod manifest
+        id: inspect_manifest
+        run: |
+          echo "DIGESTS=$(docker manifest inspect ${{ inputs.PREPROD_MANIFEST_LIST }} | jq -r '.manifests[].digest' | tr '\n' ' ')"
+          echo "DIGESTS=$(docker manifest inspect ${{ inputs.PREPROD_MANIFEST_LIST }} | jq -r '.manifests[].digest' | tr '\n' ' ')" >> $GITHUB_OUTPUT
       - name: Login to Dockerhub
         uses: docker/login-action@v2
         with:
@@ -29,6 +34,6 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${{ inputs.MANIFEST_LIST }} ${{ inputs.MANIFEST }}
-          docker manifest push ${{ inputs.MANIFEST_LIST }}
-          docker manifest rm ${{ inputs.MANIFEST_LIST }}
+          docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}
+          docker manifest push ${{ inputs.PROD_MANIFEST_LIST }}
+          docker manifest rm ${{ inputs.PROD_MANIFEST_LIST }}

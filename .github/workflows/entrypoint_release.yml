@@ -16,31 +16,25 @@ env:
   IMAGE_VERSION: ${{ github.ref_name }}
 
 jobs:
-  publish:
-    name: Push to prod
+  inspect:
+    name: Publish manifests
     runs-on: self-hosted
     strategy:
       matrix:
         tag: [ debug_release ]
     #        tag: [ full, light, ad, web, osint ]
-    steps:
-      - name: Inspect preprod manifest
-        id: inspect_manifest
-        run: |
-          echo "digests=$(docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }} | jq -r '.manifests[].digest' | tr '\n' ' ')"
-          echo "digests=$(docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }} | jq -r '.manifests[].digest' | tr '\n' ' ')" >> $GITHUB_OUTPUT
-      - name: Publish prod manifest
-        uses: ./.github/workflows/sub_manifest.yml
-        with:
-          MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}
-          MANIFEST: ${{ steps.inspect_manifest.outputs.digests }}
-      - name: Inspect preprod version manifest
-        id: inspect_version_manifest
-        run: |
-          echo "digests=$(docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} | jq -r '.manifests[].digest' | tr '\n' ' ')"
-          echo "digests=$(docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} | jq -r '.manifests[].digest' | tr '\n' ' ')" >> $GITHUB_OUTPUT
-      - name: Publish prod manifest
-        uses: ./.github/workflows/sub_manifest.yml
-        with:
-          MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}
-          MANIFEST: ${{ steps.inspect_version_manifest.outputs.digests }}
+    uses: ./.github/workflows/sub_manifest.yml
+    with:
+      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}
+      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}
+  inspect_version:
+    name: Publish version manifests
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        tag: [ debug_release ]
+    #        tag: [ full, light, ad, web, osint ]
+    uses: ./.github/workflows/sub_manifest.yml
+    with:
+      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${{ env.IMAGE_VERSION }}
+      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${{ env.IMAGE_VERSION }}
