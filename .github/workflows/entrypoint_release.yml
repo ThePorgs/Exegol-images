@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         tag: [ debug_release ]
-        version: ['', ${{ github.ref_name }}]
+        version: ['', "${{ github.ref_name }}"]
     #        tag: [ full, light, ad, web, osint ]
     uses: ./.github/workflows/sub_manifest.yml
     with:
