@@ -30,6 +30,7 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
   inspect:
     name: Publish manifests
+    needs: varset
     strategy:
       matrix:
         tag: [ debug_release ]
