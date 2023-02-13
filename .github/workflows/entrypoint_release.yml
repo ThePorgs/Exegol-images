@@ -32,7 +32,8 @@ jobs:
       - name: Inspect preprod manifest
         id: inspect_manifest
         run: |
-          echo "digests=docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }} | jq -r '.manifests[].digest' | tr '\n' ' '" >> $GITHUB_OUTPUT
+          echo "digests=$(docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }} | jq -r '.manifests[].digest' | tr '\n' ' ')"
+          echo "digests=$(docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }} | jq -r '.manifests[].digest' | tr '\n' ' ')" >> $GITHUB_OUTPUT
       - name: Create and push manifest
         run: |
           echo "Create manifest"
@@ -42,7 +43,8 @@ jobs:
       - name: Inspect preprod version manifest
         id: inspect_version_manifest
         run: |
-          echo "digests=docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} | jq -r '.manifests[].digest' | tr '\n' ' '" >> $GITHUB_OUTPUT
+          echo "digests=$(docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} | jq -r '.manifests[].digest' | tr '\n' ' ')"
+          echo "digests=$(docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} | jq -r '.manifests[].digest' | tr '\n' ' ')" >> $GITHUB_OUTPUT
       - name: Create and push version manifest
         run: |
           echo "Create version manifest"
