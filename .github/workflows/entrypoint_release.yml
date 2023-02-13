@@ -36,5 +36,5 @@ jobs:
     #        tag: [ full, light, ad, web, osint ]
     uses: ./.github/workflows/sub_manifest.yml
     with:
-      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${{ env.IMAGE_VERSION }}
-      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${{ env.IMAGE_VERSION }}
+      PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
+      PROD_MANIFEST_LIST: ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
