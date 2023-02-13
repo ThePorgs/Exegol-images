@@ -15,7 +15,6 @@ env:
   DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-prod"
   IMAGE_BASE_NAME: "debug"
   DOCKERFILE: "debug.dockerfile"
-  SUPPORTED_ARCHS: [ amd64, arm64 ]
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -27,7 +26,6 @@ jobs:
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
-      SUPPORTED_ARCHS: ${{ steps.varset.outputs.SUPPORTED_ARCHS }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
@@ -36,7 +34,6 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "SUPPORTED_ARCHS=${SUPPORTED_ARCHS}" >> $GITHUB_OUTPUT
 
   build_belt:
     name: Build belt
@@ -44,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: ${{ needs.varset.outputs.SUPPORTED_ARCHS }}
+        arch: [arm64, amd64]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
@@ -88,7 +85,6 @@ jobs:
   clean_runners:
     name: Clean runners
     needs:
-      - varset
       - publish
       - build_belt
     # clean runners, if publish was a success, or at least if build succeeded
@@ -96,7 +92,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: ${{ needs.varset.outputs.SUPPORTED_ARCHS }}
+        arch: [ arm64, amd64 ]
     runs-on:
       - self-hosted
       - builder
