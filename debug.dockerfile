@@ -27,9 +27,9 @@ RUN /root/sources/install.sh filesystem
 #RUN /root/sources/install.sh install_rust_cargo
 #RUN /root/sources/install.sh install_tmux
 RUN /root/sources/install.sh install_ohmyzsh
-#RUN /root/sources/install.sh install_fzf
-#RUN /root/sources/install.sh install_openvpn
-#RUN /root/sources/install.sh install_pipx
+RUN /root/sources/install.sh install_fzf
+RUN /root/sources/install.sh install_openvpn
+RUN /root/sources/install.sh install_pipx
 RUN /root/sources/install.sh install_python3
 #RUN /root/sources/install.sh install_python-pip
 #RUN /root/sources/install.sh install_exegol-history
