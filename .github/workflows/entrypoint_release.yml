@@ -30,22 +30,22 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Inspect preprod manifest
-        id: get_digests
+        id: inspect_manifest
         run: |
           echo "digests=docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }} | jq -r '.manifests[].digest' | tr '\n' ' '" >> $GITHUB_OUTPUT
       - name: Create and push manifest
         run: |
           echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${{ matrix.tag }} ${{ steps.get_digests.outputs.digests }}
+          docker manifest create ${DOCKER_TARGET_REPO}:${{ matrix.tag }} ${{ steps.inspect_manifest.outputs.digests }}
           docker manifest push ${DOCKER_TARGET_REPO}:${{ matrix.tag }}
           docker manifest rm ${DOCKER_TARGET_REPO}:${{ matrix.tag }}
       - name: Inspect preprod version manifest
-        id: get_digests
+        id: inspect_version_manifest
         run: |
           echo "digests=docker manifest inspect ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} | jq -r '.manifests[].digest' | tr '\n' ' '" >> $GITHUB_OUTPUT
       - name: Create and push version manifest
         run: |
           echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} ${{ steps.get_digests.outputs.digests }}
+          docker manifest create ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION} ${{ steps.inspect_version_manifest.outputs.digests }}
           docker manifest push ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
           docker manifest rm ${DOCKER_TARGET_REPO}:${{ matrix.tag }}-${IMAGE_VERSION}
