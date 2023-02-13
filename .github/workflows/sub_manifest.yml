@@ -3,6 +3,9 @@ name: (level 1 sub) Manifest
 on:
   workflow_call:
     inputs:
+      DOCKER_PREPROD_REPO:
+        required: true
+        type: string
       PREPROD_MANIFEST_LIST:
         required: true
         type: string
@@ -34,7 +37,7 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          echo "docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}"
-          docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}
+          echo "docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ inputs.DOCKER_PREPROD_REPO }}@${{ steps.inspect_manifest.outputs.DIGESTS }}"
+          docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ inputs.DOCKER_PREPROD_REPO }}@${{ steps.inspect_manifest.outputs.DIGESTS }}
           docker manifest push ${{ inputs.PROD_MANIFEST_LIST }}
           docker manifest rm ${{ inputs.PROD_MANIFEST_LIST }}
