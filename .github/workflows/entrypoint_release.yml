@@ -16,17 +16,29 @@ env:
 #  IMAGE_VERSION: ${{ github.ref_name }}
 
 jobs:
+  varset:
+    name: Initialize variables
+    runs-on: self-hosted
+    outputs:
+      DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
+      DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
+    steps:
+      - name: Passing workflow env vars to reusable workflows
+        id: varset
+        run: |
+          echo "DOCKER_BUILD_REPO=${DOCKER_BUILD_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
   inspect:
     name: Publish manifests
     strategy:
       matrix:
         tag: [ debug_release ]
-        version: ['', "${{ github.ref_name }}"]
+        version: ['', "-${{ github.ref_name }}"]
     #        tag: [ full, light, ad, web, osint ]
     uses: ./.github/workflows/sub_manifest.yml
     with:
-      PREPROD_MANIFEST_LIST: ${{ env.DOCKER_BUILD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
-      PROD_MANIFEST_LIST: ${{ env.DOCKER_TARGET_REPO }}:${{ matrix.tag }}${{ matrix.version }}
+      PREPROD_MANIFEST_LIST: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
+      PROD_MANIFEST_LIST: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}:${{ matrix.tag }}${{ matrix.version }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
