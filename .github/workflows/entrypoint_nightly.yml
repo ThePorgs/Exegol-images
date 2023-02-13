@@ -44,7 +44,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: env.SUPPORTED_ARCHS
+        arch: ${{ env.SUPPORTED_ARCHS }}
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
@@ -95,7 +95,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: env.SUPPORTED_ARCHS
+        arch: ${{ env.SUPPORTED_ARCHS }}
     runs-on:
       - self-hosted
       - builder
