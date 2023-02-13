@@ -13,7 +13,7 @@ env:
   # final registry target, in which arch-specific images must be aggregated
   DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-prod"
   # Setting IMAGE_VERSION for prod images != nightly
-  IMAGE_VERSION: ${{ github.ref_name }}
+#  IMAGE_VERSION: ${{ github.ref_name }}
 
 jobs:
   inspect:
@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         tag: [ debug_release ]
-        version: ['', ${IMAGE_VERSION}]
+        version: ['', ${{ github.ref_name }}]
     #        tag: [ full, light, ad, web, osint ]
     uses: ./.github/workflows/sub_manifest.yml
     with:
