@@ -32,7 +32,7 @@ jobs:
         id: inspect_manifest
         run: |
           DIGESTS=$(docker manifest inspect ${{ inputs.PREPROD_MANIFEST_LIST }} | jq -r '.manifests[].digest' | while read digest; do echo ${{ inputs.DOCKER_PREPROD_REPO }}@$digest ; done | tr '\n' ' ')
-          echo "DIGESTS=$(echo $DIGESTS)" >> $GITHUB_OUTPUT
+          echo "DIGESTS=$(echo $DIGESTS) >> $GITHUB_OUTPUT
       - name: Create manifest
         if: success()
         run: |

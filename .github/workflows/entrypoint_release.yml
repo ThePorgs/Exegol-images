@@ -26,7 +26,7 @@ jobs:
           echo "DOCKER_PREPROD_REPO=${DOCKER_PREPROD_REPO}" >> $GITHUB_OUTPUT
           echo "DOCKER_PROD_REPO=${DOCKER_PROD_REPO}" >> $GITHUB_OUTPUT
   release:
-    name: Publish manifests
+    name: Publish manifest
     needs: varset
     strategy:
       matrix:
