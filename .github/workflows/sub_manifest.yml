@@ -1,4 +1,4 @@
-name: (level 1,2 sub) Manifest
+name: (level 1 sub) Manifest
 
 on:
   workflow_call:
@@ -34,6 +34,7 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
+          echo "docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}"
           docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}
           docker manifest push ${{ inputs.PROD_MANIFEST_LIST }}
           docker manifest rm ${{ inputs.PROD_MANIFEST_LIST }}
