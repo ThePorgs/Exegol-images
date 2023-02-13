@@ -15,6 +15,9 @@ env:
   # Setting IMAGE_VERSION for prod images != nightly
   IMAGE_VERSION: ${{ github.ref_name }}
 
+    #        tag: [ full, light, ad, web, osint ]
+
+
 jobs:
   inspect:
     name: Publish manifests
@@ -22,7 +25,6 @@ jobs:
     strategy:
       matrix:
         tag: [ debug_release ]
-    #        tag: [ full, light, ad, web, osint ]
     uses: ./.github/workflows/sub_manifest.yml
     with:
       PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}
@@ -33,7 +35,6 @@ jobs:
     strategy:
       matrix:
         tag: [ debug_release ]
-    #        tag: [ full, light, ad, web, osint ]
     uses: ./.github/workflows/sub_manifest.yml
     with:
       PREPROD_MANIFEST_LIST: ${DOCKER_BUILD_REPO}:${{ matrix.tag }}-${{ env.IMAGE_VERSION }}
