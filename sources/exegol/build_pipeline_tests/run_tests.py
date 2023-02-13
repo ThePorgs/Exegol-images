@@ -41,7 +41,7 @@ def run_command(command):
             with open(log_file, "a") as f:
                 f.write(f"\033[1;34mFailed command: {command}\n\033[0m")
                 f.write(f"\033[1;33mStandard output: {e.output.decode()}\n\033[0m")
-                f.write(f"Standard error: {e.stderr.decode()}\n\033[0m")
+                f.write(f"\033[1;31mStandard error: {e.stderr.decode()}\n\\033[0m")
 
 
 # Create a list of threads
