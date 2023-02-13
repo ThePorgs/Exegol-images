@@ -34,7 +34,13 @@ jobs:
           line_count=$(docker exec $ID zsh -c 'wc -l /.exegol/build_pipeline_tests/all_commands.sorted.txt | cut -d " " -f 1')
           echo "$line_count test commands found!"
           docker exec $ID python3 /.exegol/build_pipeline_tests/run_tests.py
-#          docker exec $ID zsh -c 'cat /.exegol/build_pipeline_tests/tests.json'
+      - name: Print the failed tests if any
+        # TODO : create a unified tests script, and think about how to report the success/fails
+        env:
+          ID: ${{ steps.create.outputs.container_id }}
+        if: failure()
+        run: |
+          docker exec $ID cat /.exegol/build_pipeline_tests/failed_commands.log
       - name: Stop the container
         if: always()
         env:
