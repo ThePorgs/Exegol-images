@@ -1,9 +1,11 @@
-name: Nightly build
+name: Pre-release (osint)
 
 on:
-  push:
-    branches:
-      - "**"
+  pull_request:
+    title:
+      - "Release *.*.*"
+      - "Release *.*.*b*"
+    branches: main
     paths-ignore:
       - ".github/**"
       - "*.md"
@@ -12,9 +14,9 @@ env:
   # intermediary registry in which architecture-specific images must be pushed
   DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
   # final registry target, in which arch-specific images must be aggregated
-  DOCKER_TARGET_REPO: "nwodtuhs/exegol"
-  IMAGE_BASE_NAME: "nightly"
-  DOCKERFILE: "Dockerfile"
+  DOCKER_TARGET_REPO: "nwodtuhs/exegol-preprod"
+  IMAGE_BASE_NAME: "osint"
+  DOCKERFILE: "osint.dockerfile"
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -26,6 +28,7 @@ jobs:
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
@@ -34,6 +37,8 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)"
+          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
 
   build_belt:
     name: Build belt
@@ -48,6 +53,7 @@ jobs:
       DOCKER_TARGET_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       ARCH: ${{ matrix.arch }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -56,7 +62,9 @@ jobs:
   publish:
     name: Publish
     timeout-minutes: 60
-    needs: build_belt
+    needs:
+      - varset
+      - build_belt
     runs-on: self-hosted
     # only publishing if the tests were a success (implicit by the success of build_belt).
     if: needs.build_belt.result == 'success'
@@ -74,6 +82,8 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
+        env:
+          IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
         if: success() && env.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
@@ -83,11 +93,9 @@ jobs:
 
   clean_runners:
     name: Clean runners
-    needs:
-      - publish
-      - build_belt
+    needs: publish
     # clean runners, if publish was a success, or at least if build succeeded
-    if: always() && ( needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure'))
+    if: needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure')
     strategy:
       fail-fast: false
       matrix:
@@ -116,3 +124,4 @@ jobs:
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
   
+
