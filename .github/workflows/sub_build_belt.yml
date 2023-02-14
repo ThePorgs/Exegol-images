@@ -1,0 +1,115 @@
+name: (level 1 sub) Belt
+
+on:
+  workflow_call:
+    inputs:
+      DOCKER_BUILD_REPO:
+        required: true
+        type: string
+      DOCKER_TARGET_REPO:
+        required: false
+        default: ''
+        type: string
+      IMAGE_BASE_NAME:
+        required: true
+        type: string
+      IMAGE_VERSION:
+        required: false
+        default: ''
+        type: string
+      DOCKERFILE:
+        required: true
+        type: string
+      ARCH:
+        required: true
+        type: string
+      PR_MODE:
+        required: false
+        type: boolean
+    secrets:
+      DOCKER_PASSWORD:
+        required: false
+      DOCKER_USERNAME:
+        required: false
+    outputs:
+      build:
+        description: "Failed build"
+        value: ${{ jobs.export_results.outputs.build }}
+      push:
+        description: "Failed push"
+        value: ${{ jobs.export_results.outputs.push }}
+      test:
+        description: "Failed tests"
+        value: ${{ jobs.export_results.outputs.test }}
+
+jobs:
+  prune:
+    name: Pre-build ${{ inputs.ARCH }} runner clean
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    steps:
+      - name: Clean unused dangling images
+        # dangling: images that were replaced with ones with the same name and tag
+        run: docker image prune --filter "label=org.exegol.app=Exegol" --force
+      - name: Clean unused volumes
+        run: docker volume prune --force
+
+  build:
+    name: Build
+    uses: ./.github/workflows/sub_build.yml
+    needs: prune
+    with:
+      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
+      DOCKERFILE: ${{ inputs.DOCKERFILE }}
+      ARCH: ${{ inputs.ARCH }}
+
+  test:
+    name: Test
+    needs: build
+    uses: ./.github/workflows/sub_test.yml
+    with:
+      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      ARCH: ${{ inputs.ARCH }}
+
+  push:
+    name: Push
+    needs: test
+    # Push image to exegol-builds whatever the outcome of "test" is, as long as the image was built (which is already an implicit requirement of the "test" job)
+    if: always() && inputs.PR_MODE == false && ( needs.test.result == 'failure' || needs.test.result == 'success' )
+    uses: ./.github/workflows/sub_push.yml
+    with:
+      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ inputs.DOCKERFILE }}
+      ARCH: ${{ inputs.ARCH }}
+    secrets: inherit
+
+  export_results:
+    name: Exporting test results for higher jobs
+    needs:
+      - build
+      - test
+      - push
+    if: always()
+    runs-on: self-hosted
+    steps:
+      - name: Extract build result
+        id: build
+        if: needs.build.result != 'success'
+        run: echo "result=failure" >> $GITHUB_OUTPUT
+      - name: Extract tests result
+        id: test
+        if: needs.test.result != 'success'
+        run: echo "result=failure" >> $GITHUB_OUTPUT
+      - name: Extract push result
+        id: push
+        if: needs.push.result != 'success'
+        run: echo "result=failure" >> $GITHUB_OUTPUT
+    outputs:
+      test: ${{ steps.test.outputs.result }}
+      push: ${{ steps.push.outputs.result }}
