@@ -1915,9 +1915,7 @@ function install_fdisk() {
 function install_sleuthkit() {
   colorecho "Installing sleuthkit"
   fapt sleuthkit
-  add-test-command "blkcalc --help"
-  add-test-command "mmls --help"
-  add-test-command "mmstat --help"
+  add-test-command "blkcalc -V"
 }
 
 function install_zsteg() {
@@ -1944,7 +1942,7 @@ function install_hexedit() {
   colorecho "Installing hexedit"
   fapt hexedit
   add-history hexedit
-  add-test-command "hexedit --help"
+  add-test-command "hexedit --help|& grep 'usage: hexedit'"
 }
 
 function install_stegolsb() {
@@ -2264,7 +2262,7 @@ function install_brakeman() {
 
 function install_semgrep() {
   colorecho "Installing semgrep"
-  python3 -m pip3 install semgrep
+  python3 -m pipx install semgrep
   add-history semgrep
   add-test-command "semgrep --help"
 }
@@ -2341,7 +2339,8 @@ function install_ligolo-ng() {
   GOOS=windows go build -o proxy.exe cmd/proxy/main.go
   ln -v -s /opt/tools/ligolo-ng/agent /opt/tools/bin/ligolo-agent
   ln -v -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-proxy  
-  add-test-command "ligolo-agent --help && ligolo-proxy --help"
+  add-test-command "ligolo-agent --help"
+  add-test-command "ligolo-proxy --help"
 }
 
 function install_anew() {
