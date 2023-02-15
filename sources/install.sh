@@ -2578,6 +2578,9 @@ function install_go(){
 
 function install_metasploit(){
   colorecho "Installing Metasploit"
+  apt-get clean
+  zsh -c 'rm -rvf /var/lib/apt/lists/*'
+  apt-get update
   mkdir /tmp/metasploit_install
   cd /tmp/metasploit_install || exit
   curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
