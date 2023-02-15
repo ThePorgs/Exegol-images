@@ -44,11 +44,11 @@ jobs:
       - name: Print the successful tests
         env:
           ID: ${{ steps.create.outputs.container_id }}
-        if: ${{ steps.create.outputs.container_id != '' }}
+        if: ${{ always() && steps.create.outputs.container_id != '' }}
         run: |
           docker exec $ID cat /.exegol/build_pipeline_tests/success_commands.log
       - name: Stop the container
-        if: ${{ steps.create.outputs.container_id != '' }}
+        if: ${{ always() && steps.create.outputs.container_id != '' }}
         env:
           ID: ${{ steps.create.outputs.container_id }}
         run: docker stop $ID
