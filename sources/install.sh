@@ -186,7 +186,7 @@ function install_goshs(){
   add-test-command "goshs -v"
 }
 
-function instalsslyzel_sslyze(){
+function install_sslyze(){
   colorecho "Installing sslyze"
   if [[ $(uname -m) = 'x86_64' ]]
   then
