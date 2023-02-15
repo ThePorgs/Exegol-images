@@ -81,4 +81,5 @@ if failed_commands:
     exit(1)
 else:
     print("All commands succeeded.")
+    print(f"\033[33mLogs of success commands are stored in\033[0m {success_log_file}")
     exit(0)

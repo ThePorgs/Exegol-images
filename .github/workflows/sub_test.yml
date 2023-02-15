@@ -38,6 +38,12 @@ jobs:
         if: failure()
         run: |
           docker exec $ID cat /.exegol/build_pipeline_tests/failed_commands.log
+      - name: Print the successful tests
+        env:
+          ID: ${{ steps.create.outputs.container_id }}
+        if: always()
+        run: |
+          docker exec $ID cat /.exegol/build_pipeline_tests/success_commands.log
       - name: Stop the container
         if: always()
         env:
