@@ -406,13 +406,7 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  apt-get -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
-  git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
-  cd /opt/tools/CrackMapExec || exit
-  # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-  # Shouldn't be needed anymore
-  # source "$HOME/.cargo/env"
-  python3 -m pipx install .
+  python3 -m pipx install crackmapexec 
   ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
@@ -991,8 +985,9 @@ function install_bat() {
 
 function install_mdcat() {
   colorecho "Installing mdcat"
-  source "$HOME/.cargo/env"
+  fapt pkg-config
   cargo install mdcat
+  source "$HOME/.cargo/env"
   add-test-command "mdcat --version"
 }
 
@@ -1630,7 +1625,7 @@ function install_jdwp_shellifier(){
 
 function install_maigret() {
   colorecho "Installing maigret"
-  python3 -m pipx install maigret
+  python3 -m pipx install git+https://github.com/soxoj/maigret.git
   add-history maigret
   add-test-command "maigret --help"
 }
@@ -2182,9 +2177,6 @@ function install_targetedKerberoast() {
 
 function install_manspider() {
   colorecho "Installing MANSPIDER"
-  #git -C /opt/tools/ clone https://github.com/blacklanternsecurity/MANSPIDER
-  fapt antiword
-  install_tesseract-ocr
   python3 -m pipx install git+https://github.com/blacklanternsecurity/MANSPIDER
   add-history manspider
   add-test-command "manspider --help"
@@ -2338,7 +2330,7 @@ function install_ligolo-ng() {
   GOOS=windows go build -o agent.exe cmd/agent/main.go
   GOOS=windows go build -o proxy.exe cmd/proxy/main.go
   ln -v -s /opt/tools/ligolo-ng/agent /opt/tools/bin/ligolo-agent
-  ln -v -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-proxy  
+  ln -v -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-proxy
   add-test-command "ligolo-agent --help"
   add-test-command "ligolo-proxy --help"
 }
@@ -3599,7 +3591,7 @@ function package_ad() {
   install_coercer                 # Python script to coerce auth through multiple methods
   install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
-  install_manspider               # Snaffler-like in Python
+  #install_manspider              # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
   install_targetedKerberoast
   install_pcredz
   install_pywsus
@@ -3707,7 +3699,7 @@ function package_network() {
   install_dnsx                    # Fast and multi-purpose DNS toolkit
   install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
   install_tailscale               # Zero config VPN for building secure networks
-  install_ligolo-ng               # Tunneling tool that uses a TUN interface
+  #install_ligolo-ng              # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
 }
 
 # Package dedicated to wifi pentest tools
