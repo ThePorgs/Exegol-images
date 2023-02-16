@@ -1037,7 +1037,8 @@ function install_wuzz() {
 
 function install_pypykatz() {
   colorecho "Installing pypykatz"
-  python3 -m pip install pypykatz
+  python3 -m pipx install pypykatz
+  python3 -m pipx inject pypykatz minikerberos==0.3.5
   add-history pypykatz
   add-test-command "pypykatz version"
 }
