@@ -8,9 +8,9 @@ on:
 
 env:
   # "preprod" registry
-  DOCKER_PREPROD_REPO: "nwodtuhs/exegol-preprod"
+  DOCKER_PREPROD_REPO: "nwodtuhs/exegol-dev-preprod"
   # final "production" registry target
-  DOCKER_PROD_REPO: "nwodtuhs/exegol"
+  DOCKER_PROD_REPO: "nwodtuhs/exegol-dev-prod"
 
 jobs:
   varset:
