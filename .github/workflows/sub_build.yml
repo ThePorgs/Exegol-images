@@ -63,6 +63,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           load: true
+          no-cache: true
           build-args: |
             TAG=${{ inputs.IMAGE_BASE_NAME }}
             VERSION=${{ steps.prepare_build.outputs.image_version }}
