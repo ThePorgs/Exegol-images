@@ -186,7 +186,7 @@ function install_goshs(){
   add-test-command "goshs -v"
 }
 
-function instalsslyzel_sslyze(){
+function install_sslyze(){
   colorecho "Installing sslyze"
   if [[ $(uname -m) = 'x86_64' ]]
   then
@@ -231,7 +231,14 @@ function install_sublist3r() {
   add-test-command "sublist3r --help"
 }
 
-function install_recondog() {
+function install_php_filter_chain_generator() {
+  colorecho "Installing PHP_Filter_Chain_Generator"
+  git -C /opt/tools/ clone https://github.com/synacktiv/php_filter_chain_generator.git
+  add-aliases php_filter_chain_generator
+  add-test-command "php_filter_chain_generator --help"
+}
+
+function install_recondog() { 
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
   python3 -m pip install -r /opt/tools/ReconDog/requirements.txt
@@ -399,13 +406,7 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  apt-get -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
-  git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
-  cd /opt/tools/CrackMapExec || exit
-  # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-  # Shouldn't be needed anymore
-  # source "$HOME/.cargo/env"
-  python3 -m pipx install .
+  python3 -m pipx install crackmapexec 
   ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
@@ -984,8 +985,9 @@ function install_bat() {
 
 function install_mdcat() {
   colorecho "Installing mdcat"
-  source "$HOME/.cargo/env"
+  fapt pkg-config
   cargo install mdcat
+  source "$HOME/.cargo/env"
   add-test-command "mdcat --version"
 }
 
@@ -1036,6 +1038,7 @@ function install_wuzz() {
 function install_pypykatz() {
   colorecho "Installing pypykatz"
   python3 -m pipx install pypykatz
+  python3 -m pipx inject pypykatz minikerberos==0.3.5
   add-history pypykatz
   add-test-command "pypykatz version"
 }
@@ -1543,7 +1546,7 @@ function install_trilium() {
   add-aliases trilium
   # Start the trilium, sleep for 3 sec, attempt to stop it
   # Stop command will fail if trilium isn't running
-  add-test-command "trilium-start; sleep 3; trilium-stop"
+  add-test-command "trilium-start;sleep 20;trilium-stop"
 }
 
 function install_ntlmv1-multi() {
@@ -1623,7 +1626,7 @@ function install_jdwp_shellifier(){
 
 function install_maigret() {
   colorecho "Installing maigret"
-  python3 -m pipx install maigret
+  python3 -m pipx install git+https://github.com/soxoj/maigret.git
   add-history maigret
   add-test-command "maigret --help"
 }
@@ -1868,14 +1871,74 @@ function install_volatility2() {
   python setup.py install
   # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161
   ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
-  add-aliases volatility
-  add-test-command "volatility --help"
+  add-aliases volatility2
+  add-test-command "volatility2 --help"
+}
+
+function install_volatility3() {
+  colorecho "Installing volatility3"
+  python3 -m pipx install git+https://github.com/volatilityfoundation/volatility3
+  add-aliases volatility3
+  add-history volatility3
+  add-test-command "volatility3 --help"
+}
+
+function install_testdisk() {
+  colorecho "Installing testdisk"
+  fapt testdisk
+  add-history testdisk
+  add-test-command "testdisk --help"
+}
+
+function install_jadx() {
+  colorecho "Installing jadx"
+  git -C /opt/tools/ clone https://github.com/skylot/jadx.git
+  cd /opt/tools/jadx
+  ./gradlew dist
+  ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
+  ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
+  add-history jadx
+  add-test-command "jadx --help"
+}
+
+function install_fdisk() {
+  colorecho "Installing fdisk"
+  fapt fdisk
+  add-history fdisk
+  add-test-command "fdisk --help"
+}
+
+function install_sleuthkit() {
+  colorecho "Installing sleuthkit"
+  fapt sleuthkit
+  add-test-command "blkcalc -V"
 }
 
 function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
   add-test-command "zsteg --help"
+}
+
+function install_exif() {
+  colorecho "Installing exif"
+  fapt exif
+  add-history exif
+  add-test-command "exif --help"
+}
+
+function install_exiv2() {
+  colorecho "Installing exiv2"
+  fapt exiv2
+  add-history exiv2
+  add-test-command "exiv2 --help"
+}
+
+function install_hexedit() {
+  colorecho "Installing hexedit"
+  fapt hexedit
+  add-history hexedit
+  add-test-command "hexedit --help|& grep 'usage: hexedit'"
 }
 
 function install_stegolsb() {
@@ -2047,6 +2110,13 @@ function install_frida() {
   add-test-command "frida --version"
 }
 
+function install_objection() {
+  colorecho "Installing objection"
+  python3 -m pipx install git+https://github.com/sensepost/objection
+  add-history objection 
+  add-test-command "objection --help"
+}
+
 function install_androguard() {
   colorecho "Installing androguard"
   python3 -m pipx install androguard
@@ -2108,9 +2178,6 @@ function install_targetedKerberoast() {
 
 function install_manspider() {
   colorecho "Installing MANSPIDER"
-  #git -C /opt/tools/ clone https://github.com/blacklanternsecurity/MANSPIDER
-  fapt antiword
-  install_tesseract-ocr
   python3 -m pipx install git+https://github.com/blacklanternsecurity/MANSPIDER
   add-history manspider
   add-test-command "manspider --help"
@@ -2179,6 +2246,20 @@ function install_vulny-code-static-analysis() {
   add-test-command "vulny-code-static-analysis --help"
 }
 
+function install_brakeman() {
+  colorecho "Installing Brakeman"
+  gem install brakeman
+  add-history brakeman 
+  add-test-command "brakeman --help"
+}
+
+function install_semgrep() {
+  colorecho "Installing semgrep"
+  python3 -m pipx install semgrep
+  add-history semgrep
+  add-test-command "semgrep --help"
+}
+
 function install_nuclei() {
   # Vulnerability scanner
   colorecho "Installing Nuclei"
@@ -2215,6 +2296,44 @@ function install_httpx() {
   go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
   add-history httpx
   add-test-command "httpx --help"
+}
+
+function install_dnsx() {
+  colorecho "Installing dnsx"
+  go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+  add-history dnsx
+  add-test-command "dnsx --help"
+}
+
+function install_shuffledns() {
+  colorecho "Installing shuffledns"
+  go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+  add-history shuffledns 
+  add-test-command "shuffledns --help"
+}
+
+function install_tailscale() {
+  curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
+  curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+  apt-get update
+  fapt tailscale
+  add-aliases tailscale
+  add-history tailscale
+  add-test-command "tailscale --help"
+}
+
+function install_ligolo-ng() {
+  colorecho "Installing ligolo-ng"
+  git -C /opt/tools/ clone https://github.com/nicocha30/ligolo-ng.git
+  cd /opt/tools/ligolo-ng
+  go build -o agent cmd/agent/main.go
+  go build -o proxy cmd/proxy/main.go
+  GOOS=windows go build -o agent.exe cmd/agent/main.go
+  GOOS=windows go build -o proxy.exe cmd/proxy/main.go
+  ln -v -s /opt/tools/ligolo-ng/agent /opt/tools/bin/ligolo-agent
+  ln -v -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-proxy
+  add-test-command "ligolo-agent --help"
+  add-test-command "ligolo-proxy --help"
 }
 
 function install_anew() {
@@ -2460,6 +2579,9 @@ function install_go(){
 
 function install_metasploit(){
   colorecho "Installing Metasploit"
+  #apt-get clean
+  #zsh -c 'rm -rvf /var/lib/apt/lists/*'
+  #apt-get update
   mkdir /tmp/metasploit_install
   cd /tmp/metasploit_install || exit
   curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
@@ -2645,7 +2767,9 @@ function install_emacs-nox() {
 
 function install_nmap() {
   colorecho "Installing nmap"
-  fapt nmap
+  echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+  apt-get update
+  fapt nmap/bullseye-backports
   add-aliases nmap
   add-history nmap
   add-test-command "nmap --version"
@@ -3399,6 +3523,8 @@ function package_web() {
   install_naabu                   # Fast port scanner
   # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
+  fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
+  install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
 }
 
 # Package dedicated to command & control frameworks
@@ -3469,7 +3595,7 @@ function package_ad() {
   install_coercer                 # Python script to coerce auth through multiple methods
   install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
-  install_manspider               # Snaffler-like in Python
+  #install_manspider              # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
   install_targetedKerberoast
   install_pcredz
   install_pywsus
@@ -3505,6 +3631,7 @@ function package_mobile() {
   install_apksigner
   install_apktool
   install_frida
+  install_objection               # Runtime mobile exploration toolkit
   install_androguard              # Reverse engineering and analysis of Android applications
 }
 
@@ -3573,6 +3700,10 @@ function package_network() {
   install_mariadb-client          # Mariadb client
   install_redis-tools             # Redis protocol
   # install_odat                  # Oracle Database Attacking Tool, FIXME
+  install_dnsx                    # Fast and multi-purpose DNS toolkit
+  install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
+  install_tailscale               # Zero config VPN for building secure networks
+  #install_ligolo-ng              # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
 }
 
 # Package dedicated to wifi pentest tools
@@ -3596,8 +3727,13 @@ function package_forensic() {
   install_binwalk                 # Tool to find embedded files
   install_foremost                # Alternative to binwalk
   install_volatility2             # Memory analysis tool
+  install_volatility3             # Memory analysis tool v2
   install_trid                    # filetype detection tool
   # install_peepdf                # PDF analysis FIXME
+  install_testdisk                # Recover lost partitions
+  install_jadx                    # Dex to Java decompiler
+  install_fdisk                   # Creating and manipulating disk partition table
+  install_sleuthkit               # Collection of command line tools that allow you to investigate disk images
 }
 
 # Package dedicated to steganography tools
@@ -3606,6 +3742,9 @@ function package_steganography() {
   install_stegosuite
   install_steghide
   install_stegolsb                # (including wavsteg)
+  install_exif                    # Show and change EXIF information in JPEG files
+  install_exiv2                   # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
+  install_hexedit                 # View and edit files in hexadecimal or in ASCII 
 }
 
 # Package dedicated to cloud tools
@@ -3640,6 +3779,8 @@ function package_crypto() {
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
   install_vulny-code-static-analysis
+  install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
+  install_semgrep                 # Static analysis engine for finding bugs and vulnerabilities
 }
 
 # Entry point for the installation

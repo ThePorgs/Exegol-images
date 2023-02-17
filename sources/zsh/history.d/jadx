@@ -1,0 +1,2 @@
+jadx-gui ./source/
+jadx -d ./output/ exegol.apk
