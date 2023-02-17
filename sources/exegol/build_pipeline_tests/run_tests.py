@@ -34,9 +34,9 @@ def run_command(command):
             output = subprocess.check_output(zsh_command, shell=True, stderr=subprocess.PIPE)
             print(f"\033[1;32mSUCCESS\033[0m - Running command: {command}")
 
-            # Write the output of the failed command to the log file
+            # Write the output of the successful command to the log file
             with open(success_log_file, "a") as f:
-                f.write(f"\033[1;34mFailed command: {command}\n\033[0m")
+                f.write(f"\033[1;34mCommand: {command}\n\033[0m")
                 f.write("\033[33mStandard output:\n")
                 for line in output.decode().split("\n"):
                     f.write(f"    {line}\n")
