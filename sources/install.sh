@@ -2047,7 +2047,6 @@ function install_ldapsearch-ad() {
   python3 -m pip install -r requirements.txt
   add-aliases ldapsearch-ad
   add-history ldapsearch-ad
-  add-history ldapsearch
   add-test-command "ldapsearch-ad --version"
 }
 
