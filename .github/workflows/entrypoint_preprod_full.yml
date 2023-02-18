@@ -92,7 +92,7 @@ jobs:
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
   clean_runners:
-    name: Clean runners
+    name: Clean runner
     needs: publish
     # clean runners, if publish was a success, or at least if build succeeded
     if: needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure')
@@ -105,7 +105,7 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove built image ${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Remove image built for ${{ matrix.arch }}
         run: |
           image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
           echo "Removing $image_name"

@@ -67,6 +67,14 @@ jobs:
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ inputs.ARCH }}
 
+  debug:
+    name: Debug inspect image
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Inspect image
+        run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+
   test:
     name: Test
     needs: build

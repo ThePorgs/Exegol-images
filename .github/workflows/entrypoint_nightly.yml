@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [arm64, amd64]
+        arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
@@ -82,7 +82,7 @@ jobs:
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
   clean_runners:
-    name: Clean runners
+    name: Clean runner
     needs:
       - publish
       - build_belt
@@ -97,7 +97,7 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove built image ${{ inputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Remove local image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
         run: |
           image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
           echo "Removing $image_name"

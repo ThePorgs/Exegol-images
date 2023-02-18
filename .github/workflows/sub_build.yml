@@ -72,3 +72,6 @@ jobs:
           platforms: linux/${{ inputs.ARCH }}
           file: ${{ inputs.DOCKERFILE }}
           context: .
+      - name: Debug inspect image
+        if: always()
+        run: docker inspect ${{ steps.prepare_build.outputs.image_full_name }}
