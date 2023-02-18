@@ -50,9 +50,10 @@ jobs:
       - builder
       - ${{ inputs.ARCH }}
     steps:
-      - name: Clean unused dangling images
-        # dangling: images that were replaced with ones with the same name and tag
-        run: docker image prune --filter "label=org.exegol.app=Exegol" --force
+      # Try to disable the prune to avoid mismatch images
+      # - name: Clean unused dangling images
+      #   # dangling: images that were replaced with ones with the same name and tag
+      #   run: docker image prune --filter "label=org.exegol.app=Exegol" --force
       - name: Clean unused volumes
         run: docker volume prune --force
 
@@ -66,6 +67,21 @@ jobs:
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ inputs.ARCH }}
+
+  debug-images:
+    name: List
+    needs: build
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    steps:
+      # Try to disable the prune to avoid mismatch images
+      # - name: Clean unused dangling images
+      #   # dangling: images that were replaced with ones with the same name and tag
+      #   run: docker image prune --filter "label=org.exegol.app=Exegol" --force
+      - name: List images
+        run: docker ps
 
   test:
     name: Test
