@@ -56,10 +56,25 @@ jobs:
       - name: Clean unused volumes
         run: docker volume prune --force
 
+  debug_pre_build:
+    name: Pre-build debug
+    needs: prune
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    steps:
+      - name: List images
+        run: docker image ls -a
+      - name: List containers
+        run: docker ps
+
   build:
     name: Build
     uses: ./.github/workflows/sub_build.yml
-    needs: prune
+    needs:
+      - prune
+      - debug_pre_build
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
@@ -67,12 +82,19 @@ jobs:
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ inputs.ARCH }}
 
-  debug:
-    name: Debug inspect image
+  debug_post_build:
+    name: Post-build debug
     needs: build
-    runs-on: self-hosted
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
     steps:
-      - name: Inspect image
+      - name: List images
+        run: docker image ls -a
+      - name: List containers
+        run: docker ps
+      - name: Inspect built image
         run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
 
   test:

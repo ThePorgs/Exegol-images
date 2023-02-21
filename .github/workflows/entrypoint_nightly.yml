@@ -3,7 +3,7 @@ name: Nightly build
 on:
   push:
     branches:
-      - "**"
+      - dev
     paths-ignore:
       #- ".github/**"
       - "*.md"

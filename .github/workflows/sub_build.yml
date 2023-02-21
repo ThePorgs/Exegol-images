@@ -29,6 +29,10 @@ jobs:
       - builder
       - ${{ inputs.ARCH }}
     steps:
+      - name: Pre Build list images
+        run: docker image ls -a
+      - name: Pre Build list containers
+        run: docker ps
       - name: Checkout
         uses: actions/checkout@v3
       - name: Prepare build
@@ -72,6 +76,9 @@ jobs:
           platforms: linux/${{ inputs.ARCH }}
           file: ${{ inputs.DOCKERFILE }}
           context: .
-      - name: Debug inspect image
-        if: always()
+      - name: Post Build list images
+        run: docker image ls -a
+      - name: Post Build list containers
+        run: docker ps
+      - name: Post Build inspect built image
         run: docker inspect ${{ steps.prepare_build.outputs.image_full_name }}
