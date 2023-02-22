@@ -1343,6 +1343,7 @@ function install_chromium() {
   add-test-command "chromium --version"
 }
 
+# FIXME
 function install_ghunt() {
   colorecho "Installing ghunt"
   apt-get update
