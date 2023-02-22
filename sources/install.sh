@@ -1337,12 +1337,9 @@ function install_pwnedornot() {
   add-test-command "pwnedornot.py --help"
 }
 
-function install_chrome() {
-  curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-  echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-  apt-get update
-  apt-get install -y google-chrome-stable
-  add-test-command "google-chrome --version"
+function install_chromium() {
+  apt-get install -y chromium
+  add-test-command "chromium --version"
 }
 
 function install_ghunt() {
