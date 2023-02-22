@@ -1338,7 +1338,7 @@ function install_pwnedornot() {
 }
 
 function install_chromium() {
-  apt-get install -y chromium
+  fapt chromium
   add-test-command "chromium --version"
 }
 
@@ -3326,7 +3326,7 @@ function package_base() {
   install_exegol-history
   install_logrotate
   fapt openjdk-17-jre
-  install_chrome
+  install_chromium
 }
 
 # Package dedicated to offensive miscellaneous tools
