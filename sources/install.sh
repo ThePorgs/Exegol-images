@@ -767,10 +767,13 @@ function install_proxychains() {
   ./configure --prefix=/usr --sysconfdir=/etc
   make
   make install
+  # Add proxyresolv to PATH (needed with 'proxy_dns_old' config)
+  ln -s /opt/tools/proxychains-ng/src/proxyresolv /usr/bin/proxyresolv
   make install-config
   cp -v /root/sources/proxychains/proxychains.conf /etc/proxychains.conf
   add-aliases proxychains
   add-test-command "proxychains4 echo test"
+  add-test-command "proxyresolv"
 }
 
 function install_grc() {
