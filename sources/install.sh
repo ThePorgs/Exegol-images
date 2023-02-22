@@ -1337,15 +1337,18 @@ function install_pwnedornot() {
   add-test-command "pwnedornot.py --help"
 }
 
-function install_ghunt() {
-  colorecho "Installing ghunt"
-  apt-get update
-  apt-get install -y curl unzip gnupg
+function install_chrome() {
   curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
   echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
   apt-get update
   apt-get install -y google-chrome-stable
-  rm -rf /var/lib/apt/lists/*
+  add-test-command "google-chrome --version"
+}
+
+function install_ghunt() {
+  colorecho "Installing ghunt"
+  apt-get update
+  apt-get install -y curl unzip gnupg
   git -C /opt/tools/ clone https://github.com/mxrch/GHunt
   cd /opt/tools/GHunt || exit
   python3 -m pip install -r requirements.txt
@@ -3326,6 +3329,7 @@ function package_base() {
   install_exegol-history
   install_logrotate
   fapt openjdk-17-jre
+  install_chrome
 }
 
 # Package dedicated to offensive miscellaneous tools
