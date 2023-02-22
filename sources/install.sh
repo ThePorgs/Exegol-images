@@ -177,6 +177,7 @@ function install_gowitness() {
   go install -v github.com/sensepost/gowitness@latest
   add-history gowitness
   add-test-command "gowitness --help"
+  add-test-command "gowitness single https://exegol.readthedocs.io" # check the chromium dependency
 }
 
 function install_goshs(){
