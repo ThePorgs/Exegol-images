@@ -10,6 +10,9 @@ on:
       - ".github/**"
       - "**.md"
 
+# cf https://github.com/actions/runner/issues/2324, paths-ignore will only be respected at PR creation
+# all new commits then added in the PR will trigger the workflow
+
 env:
   # intermediary registry in which architecture-specific images must be pushed
   DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
