@@ -177,6 +177,7 @@ function install_gowitness() {
   go install -v github.com/sensepost/gowitness@latest
   add-history gowitness
   add-test-command "gowitness --help"
+  add-test-command "gowitness single https://exegol.readthedocs.io" # check the chromium dependency
 }
 
 function install_goshs(){
@@ -1337,15 +1338,16 @@ function install_pwnedornot() {
   add-test-command "pwnedornot.py --help"
 }
 
+function install_chromium() {
+  fapt chromium
+  add-test-command "chromium --version"
+}
+
+# FIXME
 function install_ghunt() {
   colorecho "Installing ghunt"
   apt-get update
   apt-get install -y curl unzip gnupg
-  curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-  echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-  apt-get update
-  apt-get install -y google-chrome-stable
-  rm -rf /var/lib/apt/lists/*
   git -C /opt/tools/ clone https://github.com/mxrch/GHunt
   cd /opt/tools/GHunt || exit
   python3 -m pip install -r requirements.txt
@@ -3326,6 +3328,7 @@ function package_base() {
   install_exegol-history
   install_logrotate
   fapt openjdk-17-jre
+  install_chromium
 }
 
 # Package dedicated to offensive miscellaneous tools
