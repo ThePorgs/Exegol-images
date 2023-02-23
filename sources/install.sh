@@ -3148,6 +3148,14 @@ function install_tshark() {
   add-test-command "tshark --version"
 }
 
+function install_smuggler() {
+  colorecho "Installing smuggler.py"
+  git -C /opt/tools/ clone https://github.com/defparam/smuggler.git
+  add-aliases smuggler
+  add-history smuggler
+  add-test-command "smuggler.py --help"
+}
+
 function install_ldeep() {
   colorecho "Installing ldeep"
   python3 -m pipx install ldeep
@@ -3529,6 +3537,7 @@ function package_web() {
   install_naabu                   # Fast port scanner
   # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
+  install_smuggler                # HTTP Request Smuggling scanner  
   fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
 }
