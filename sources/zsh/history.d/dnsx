@@ -1,0 +1,4 @@
+echo 173.0.84.0/24 | dnsx -silent -resp-only -ptr
+dnsx -silent -d "$DOMAIN" -w dns_worldlist.txt
+dnsx -silent -d domains.txt -w jira,grafana,jenkins
+cat domains.txt | dnsx -silent -w jira,grafana,jenkins -d -

@@ -255,6 +255,14 @@
             }]
         },
         {
+            "name": "Groups that can change user passwords",
+            "category": "A one-man wolf pack",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p=(m:Group)-[r:ForceChangePassword]->(n:User) RETURN DISTINCT m[.]name,  COUNT(m[.]name) ORDER BY COUNT(m[.]name) DESC"
+            }]
+        },
+        {
             "name": "Groups of High Value Targets",
             "category": "A one-man wolf pack",
             "queryList": [{

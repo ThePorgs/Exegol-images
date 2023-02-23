@@ -177,6 +177,7 @@ function install_gowitness() {
   go install -v github.com/sensepost/gowitness@latest
   add-history gowitness
   add-test-command "gowitness --help"
+  add-test-command "gowitness single https://exegol.readthedocs.io" # check the chromium dependency
 }
 
 function install_goshs(){
@@ -186,7 +187,7 @@ function install_goshs(){
   add-test-command "goshs -v"
 }
 
-function instalsslyzel_sslyze(){
+function install_sslyze(){
   colorecho "Installing sslyze"
   if [[ $(uname -m) = 'x86_64' ]]
   then
@@ -231,7 +232,14 @@ function install_sublist3r() {
   add-test-command "sublist3r --help"
 }
 
-function install_recondog() {
+function install_php_filter_chain_generator() {
+  colorecho "Installing PHP_Filter_Chain_Generator"
+  git -C /opt/tools/ clone https://github.com/synacktiv/php_filter_chain_generator.git
+  add-aliases php_filter_chain_generator
+  add-test-command "php_filter_chain_generator --help"
+}
+
+function install_recondog() { 
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
   python3 -m pip install -r /opt/tools/ReconDog/requirements.txt
@@ -399,12 +407,7 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  apt-get -y install libffi-dev libxml2-dev libxslt-dev libssl-dev openssl autoconf g++ python3-dev libkrb5-dev
-  git -C /opt/tools/ clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
-  cd /opt/tools/CrackMapExec || exit
-  # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-  source "$HOME/.cargo/env"
-  python3 -m pipx install .
+  python3 -m pipx install crackmapexec 
   ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
@@ -437,32 +440,7 @@ function install_impacket() {
   apt-get -y install libffi-dev
   git -C /opt/tools/ clone https://github.com/ThePorgs/impacket
 
-  # Following PRs are merged in the forked repo
-  # 1135: [GetUserSPNs] Improved searchFilter for GetUserSPNs
-  # 1154: [ntlmrelayx] Unfiltered SID query when operating ACL attack
-  # 1184: [findDelegation] Added user filter on findDelegation
-  # 1201: [describeTicket] Added describeTicket
-  # 1202: [getST] Added self for getST
-  # 1224: [renameMachine] Added renameMachine.py
-  # 1253: [ntlmrelayx] Added LSA dump on top of SAM dump for ntlmrelayx
-  # 1256: [tgssub] Added tgssub script for service substitution
-  # 1267: [Get-GPPPasswords] Better handling of various XML files in Group Policy Preferences
-  # 1270: [ticketer] Fix ticketer duration to support default 10 hours tickets
-  # 1280: [machineAccountQuota] added machineAccountQuota.py
-  # 1289: [ntlmrelayx] LDAP attack: Add DNS records through LDAP
-  # 1291: [dacledit] New example script for DACL manipulation
-  # 1323: [owneredit.py] New example script to change an object's owner
-  # 1329: [secretsdump.py] Use a custom LDAP filter during a DCSync
-  # 1353: [ntlmrelayx.py] add filter option
-  # 1391: [ticketer.py, pac.py] Ticketer extra-pac implementation
-  # 1393: [rbcd.py] Handled SID not found in LDAP error #1393
-  # 1397: [mssqlclient.py] commands and prompt improvements
-  # and a few other, check https://github.com/ShutdownRepo/impacket/tree/exegol directly for more
-
-  # Following PRs are not merged yet because of conflict or for other reasons, but should be merged soon
-  # to understand first 1288: [ntlmrelayx] LDAP attack: bypass computer creation restrictions with CVE-2021-34470
-  # conflict 1290: [ntlmrelayx] Adds the creation of a new machine account through SMB
-  # conflict 1360: [smbserver.py] Added flag to drop SSP from Net-NTLMv1 auth
+  # See https://github.com/ThePorgs/impacket/blob/master/ChangeLog.md
 
   python3 -m pipx install /opt/tools/impacket/
   python3 -m pipx inject impacket chardet
@@ -790,10 +768,13 @@ function install_proxychains() {
   ./configure --prefix=/usr --sysconfdir=/etc
   make
   make install
+  # Add proxyresolv to PATH (needed with 'proxy_dns_old' config)
+  ln -s /opt/tools/proxychains-ng/src/proxyresolv /usr/bin/proxyresolv
   make install-config
   cp -v /root/sources/proxychains/proxychains.conf /etc/proxychains.conf
   add-aliases proxychains
   add-test-command "proxychains4 echo test"
+  add-test-command "proxyresolv"
 }
 
 function install_grc() {
@@ -868,6 +849,7 @@ function install_samdump2() {
 function install_pwntools() {
   colorecho "Installing pwntools"
   python -m pip install pwntools
+  python -m pip install pathlib2
   python3 -m pip install pwntools
   add-test-command "python -c 'import pwn'"
   add-test-command "python3 -c 'import pwn'"
@@ -1007,8 +989,9 @@ function install_bat() {
 
 function install_mdcat() {
   colorecho "Installing mdcat"
-  source "$HOME/.cargo/env"
+  fapt pkg-config
   cargo install mdcat
+  source "$HOME/.cargo/env"
   add-test-command "mdcat --version"
 }
 
@@ -1050,13 +1033,6 @@ function install_jwt_tool() {
   add-test-command "jwt_tool --help"
 }
 
-function install_jwt_cracker() {
-  colorecho "Installing JWT cracker"
-  apt-get -y install npm
-  npm install --global jwt-cracker
-  add-test-command "jwt-cracker --help"
-}
-
 function install_wuzz() {
   colorecho "Installing wuzz"
   go install -v github.com/asciimoo/wuzz@latest
@@ -1066,6 +1042,7 @@ function install_wuzz() {
 function install_pypykatz() {
   colorecho "Installing pypykatz"
   python3 -m pipx install pypykatz
+  python3 -m pipx inject pypykatz minikerberos==0.3.5
   add-history pypykatz
   add-test-command "pypykatz version"
 }
@@ -1361,15 +1338,16 @@ function install_pwnedornot() {
   add-test-command "pwnedornot.py --help"
 }
 
+function install_chromium() {
+  fapt chromium
+  add-test-command "chromium --version"
+}
+
+# FIXME
 function install_ghunt() {
   colorecho "Installing ghunt"
   apt-get update
   apt-get install -y curl unzip gnupg
-  curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-  echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-  apt-get update
-  apt-get install -y google-chrome-stable
-  rm -rf /var/lib/apt/lists/*
   git -C /opt/tools/ clone https://github.com/mxrch/GHunt
   cd /opt/tools/GHunt || exit
   python3 -m pip install -r requirements.txt
@@ -1573,7 +1551,7 @@ function install_trilium() {
   add-aliases trilium
   # Start the trilium, sleep for 3 sec, attempt to stop it
   # Stop command will fail if trilium isn't running
-  add-test-command "trilium-start; sleep 3; trilium-stop"
+  add-test-command "trilium-start;sleep 20;trilium-stop"
 }
 
 function install_ntlmv1-multi() {
@@ -1653,7 +1631,7 @@ function install_jdwp_shellifier(){
 
 function install_maigret() {
   colorecho "Installing maigret"
-  python3 -m pipx install maigret
+  python3 -m pipx install git+https://github.com/soxoj/maigret.git
   add-history maigret
   add-test-command "maigret --help"
 }
@@ -1872,9 +1850,8 @@ function install_h2csmuggler() {
 
 function install_byp4xx() {
   colorecho "Installing byp4xx"
-  git -C /opt/tools/ clone https://github.com/lobuhi/byp4xx
-  add-aliases byp4xx
-  add-test-command "byp4xx |& grep 'HIGH WORKLOAD! >65k requests!'"
+  go install -v github.com/lobuhi/byp4xx@latest
+  add-test-command "byp4xx"
 }
 
 function install_pipx() {
@@ -1899,14 +1876,74 @@ function install_volatility2() {
   python setup.py install
   # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161
   ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
-  add-aliases volatility
-  add-test-command "volatility --help"
+  add-aliases volatility2
+  add-test-command "volatility2 --help"
+}
+
+function install_volatility3() {
+  colorecho "Installing volatility3"
+  python3 -m pipx install git+https://github.com/volatilityfoundation/volatility3
+  add-aliases volatility3
+  add-history volatility3
+  add-test-command "volatility3 --help"
+}
+
+function install_testdisk() {
+  colorecho "Installing testdisk"
+  fapt testdisk
+  add-history testdisk
+  add-test-command "testdisk --help"
+}
+
+function install_jadx() {
+  colorecho "Installing jadx"
+  git -C /opt/tools/ clone https://github.com/skylot/jadx.git
+  cd /opt/tools/jadx
+  ./gradlew dist
+  ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
+  ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
+  add-history jadx
+  add-test-command "jadx --help"
+}
+
+function install_fdisk() {
+  colorecho "Installing fdisk"
+  fapt fdisk
+  add-history fdisk
+  add-test-command "fdisk --help"
+}
+
+function install_sleuthkit() {
+  colorecho "Installing sleuthkit"
+  fapt sleuthkit
+  add-test-command "blkcalc -V"
 }
 
 function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
   add-test-command "zsteg --help"
+}
+
+function install_exif() {
+  colorecho "Installing exif"
+  fapt exif
+  add-history exif
+  add-test-command "exif --help"
+}
+
+function install_exiv2() {
+  colorecho "Installing exiv2"
+  fapt exiv2
+  add-history exiv2
+  add-test-command "exiv2 --help"
+}
+
+function install_hexedit() {
+  colorecho "Installing hexedit"
+  fapt hexedit
+  add-history hexedit
+  add-test-command "hexedit --help|& grep 'usage: hexedit'"
 }
 
 function install_stegolsb() {
@@ -2015,7 +2052,6 @@ function install_ldapsearch-ad() {
   python3 -m pip install -r requirements.txt
   add-aliases ldapsearch-ad
   add-history ldapsearch-ad
-  add-history ldapsearch
   add-test-command "ldapsearch-ad --version"
 }
 
@@ -2076,6 +2112,13 @@ function install_frida() {
   colorecho "Installing frida"
   python3 -m pipx install frida-tools
   add-test-command "frida --version"
+}
+
+function install_objection() {
+  colorecho "Installing objection"
+  python3 -m pipx install git+https://github.com/sensepost/objection
+  add-history objection 
+  add-test-command "objection --help"
 }
 
 function install_androguard() {
@@ -2139,9 +2182,6 @@ function install_targetedKerberoast() {
 
 function install_manspider() {
   colorecho "Installing MANSPIDER"
-  #git -C /opt/tools/ clone https://github.com/blacklanternsecurity/MANSPIDER
-  fapt antiword
-  install_tesseract-ocr
   python3 -m pipx install git+https://github.com/blacklanternsecurity/MANSPIDER
   add-history manspider
   add-test-command "manspider --help"
@@ -2210,6 +2250,20 @@ function install_vulny-code-static-analysis() {
   add-test-command "vulny-code-static-analysis --help"
 }
 
+function install_brakeman() {
+  colorecho "Installing Brakeman"
+  gem install brakeman
+  add-history brakeman 
+  add-test-command "brakeman --help"
+}
+
+function install_semgrep() {
+  colorecho "Installing semgrep"
+  python3 -m pipx install semgrep
+  add-history semgrep
+  add-test-command "semgrep --help"
+}
+
 function install_nuclei() {
   # Vulnerability scanner
   colorecho "Installing Nuclei"
@@ -2246,6 +2300,44 @@ function install_httpx() {
   go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
   add-history httpx
   add-test-command "httpx --help"
+}
+
+function install_dnsx() {
+  colorecho "Installing dnsx"
+  go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+  add-history dnsx
+  add-test-command "dnsx --help"
+}
+
+function install_shuffledns() {
+  colorecho "Installing shuffledns"
+  go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+  add-history shuffledns 
+  add-test-command "shuffledns --help"
+}
+
+function install_tailscale() {
+  curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
+  curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+  apt-get update
+  fapt tailscale
+  add-aliases tailscale
+  add-history tailscale
+  add-test-command "tailscale --help"
+}
+
+function install_ligolo-ng() {
+  colorecho "Installing ligolo-ng"
+  git -C /opt/tools/ clone https://github.com/nicocha30/ligolo-ng.git
+  cd /opt/tools/ligolo-ng
+  go build -o agent cmd/agent/main.go
+  go build -o proxy cmd/proxy/main.go
+  GOOS=windows go build -o agent.exe cmd/agent/main.go
+  GOOS=windows go build -o proxy.exe cmd/proxy/main.go
+  ln -v -s /opt/tools/ligolo-ng/agent /opt/tools/bin/ligolo-agent
+  ln -v -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-proxy
+  add-test-command "ligolo-agent --help"
+  add-test-command "ligolo-proxy --help"
 }
 
 function install_anew() {
@@ -2462,7 +2554,7 @@ function install_wpscan(){
   apt-get install -y apt-transport-https ca-certificates gnupg2 curl
   curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
   curl -sSL https://get.rvm.io | bash -s stable --ruby
-  gem install nokogiri
+  gem install nokogiri -v 1.11.4 -- --use-system-libraries # use this version to resolve the conflict with cewl 
   gem install wpscan
   add-history wpscan
   add-test-command "wpscan --help"
@@ -2473,13 +2565,13 @@ function install_go(){
   cd /tmp/ || exit
   if [[ $(uname -m) = 'x86_64' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-amd64.tar.gz
   elif [[ $(uname -m) = 'aarch64' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-arm64.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-arm64.tar.gz
   elif [[ $(uname -m) = 'armv7l' ]]
   then
-    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.18.2.linux-armv6l.tar.gz
+    wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-armv6l.tar.gz
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
@@ -2491,6 +2583,9 @@ function install_go(){
 
 function install_metasploit(){
   colorecho "Installing Metasploit"
+  #apt-get clean
+  #zsh -c 'rm -rvf /var/lib/apt/lists/*'
+  #apt-get update
   mkdir /tmp/metasploit_install
   cd /tmp/metasploit_install || exit
   curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
@@ -2521,10 +2616,17 @@ function install_pth-tools(){
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_amd64.deb
   elif [[ $(uname -m) = 'aarch64' ]]
   then
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    # FIXME
+    #16 428.9  libreadline6:armhf : Depends: libc6:armhf (>= 2.15) but it is not installable
+    #16 428.9                       Depends: libtinfo5:armhf but it is not installable
+    #16 428.9  multiarch-support:armhf : Depends: libc6:armhf (>= 2.13-5) but it is not installable
     wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armhf.deb
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armhf.deb
   elif [[ $(uname -m) = 'armv7l' ]]
   then
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    # FIXME ?
     wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armel.deb
     wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armel.deb
   else
@@ -2534,7 +2636,6 @@ function install_pth-tools(){
   add-aliases pth-tools
   add-history pth-tools
   # TODO add-test-command
-  # FIXME probably won't work for ARM platforms
 }
 
 function install_smtp-user-enum(){
@@ -2670,7 +2771,9 @@ function install_emacs-nox() {
 
 function install_nmap() {
   colorecho "Installing nmap"
-  fapt nmap
+  echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+  apt-get update
+  fapt nmap/bullseye-backports
   add-aliases nmap
   add-history nmap
   add-test-command "nmap --version"
@@ -2711,6 +2814,7 @@ function install_cewl() {
   colorecho "Installing cewl"
   fapt cewl
   add-history cewl
+  add-test-command "cewl --help"
 }
 
 function install_curl() {
@@ -3059,13 +3163,69 @@ function install_ldeep() {
   add-history ldeep
 }
 
-function install-genusernames() {
+function install_genusernames() {
   colorecho "Installing genusernames"
   mkdir -p /opt/tools/genusernames
   wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
-  sed -i 's/genadname/genusernames/g' genusernames.function
+  sed -i 's/genadname/genusernames/g' /opt/tools/genusernames/genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
   add-test-command "genusernames 'john doe'"
+}
+
+function install_rusthound() {
+  colorecho "Installing RustHound"
+  fapt gcc libclang-dev clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
+  git -C /opt/tools/ clone https://github.com/OPENCYBER-FR/RustHound
+  cd /opt/tools/RustHound
+  # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+  source "$HOME/.cargo/env"
+  cargo build --release
+  ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
+  add-history rusthound
+  add-test-command "rusthound --help"
+}
+
+function install_certsync() {
+  colorecho "Installing certsync"
+  python3 -m pipx install git+https://github.com/zblurx/certsync
+  add-test-command ""
+}
+
+function install_KeePwn() {
+  colorecho "Installing KeePwn"
+  python3 -m pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
+  add-test-command ""
+}
+
+function install_pre2k() {
+  colorecho "Installing pre2k"
+  python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
+  add-test-command "pre2k --help"
+}
+
+function install_msprobe() {
+  colorecho "Installing msprobe"
+  python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
+  add-test-command "msprobe --help"
+}
+
+function install_masky() {
+  colorecho "Installing masky"
+  python3 -m pipx install git+https://github.com/Z4kSec/Masky
+  add-test-command "masky --help"
+}
+
+function install_roastinthemiddle() {
+  colorecho "Installing roastinthemiddle"
+  python3 -m pipx install git+https://github.com/Tw1sm/RITM
+  add-test-command "roastinthemiddle --help"
+}
+
+function install_PassTheCert() {
+  colorecho "Installing PassTheCert"
+  git -C /opt/tools/ clone https://github.com/AlmondOffSec/PassTheCert
+  add-aliases PassTheCert
+  add-test-command "passthecert.py --help"
 }
 
 # Package dedicated to the basic things the env needs
@@ -3177,6 +3337,7 @@ function package_base() {
   install_exegol-history
   install_logrotate
   fapt openjdk-17-jre
+  install_chromium
 }
 
 # Package dedicated to offensive miscellaneous tools
@@ -3243,11 +3404,11 @@ function package_wordlists() {
   install_crunch                  # Wordlist generator
   install_seclists                # Awesome wordlists
   install_rockyou                 # Basically installs rockyou (~same as Kali)
-  # install_cewl                  # Wordlist generator FIXME
+  install_cewl                    # Wordlist generator
   install_cupp                    # User password profiler
   install_pass_station            # Default credentials database
   install_username-anarchy        # Generate possible usernames based on heuristics
-  install-genusernames
+  install_genusernames
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
@@ -3278,7 +3439,7 @@ function package_osint() {
   # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
   install_h8mail                  # Email OSINT & Password breach hunting tool
   install_infoga                  # Gathering email accounts informations
-  install_buster                  # An advanced tool for email reconnaissance
+  # install_buster                  # An advanced tool for email reconnaissance FIXME /root/.local/pipx/shared/lib/python3.9/site-packages/setuptools/installer.py:27: SetuptoolsDeprecationWarning: setuptools.installer is deprecated. Requirements should be satisfied by a PEP 517 installer.
   install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
   # install_ghunt                 # Investigate Google Accounts with emails FIXME
   install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
@@ -3292,7 +3453,7 @@ function package_osint() {
   install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
   install_constellation           # A graph-focused data visualisation and interactive analysis application.
   install_maltego                 # Maltego is a software used for open-source intelligence and forensics
-  install_spiderfoot              # SpiderFoot automates OSINT collection
+  # install_spiderfoot            # SpiderFoot automates OSINT collection # FIXME, requirements.txt creates dependancies conflicts and there's no setup.py file that would allow for pipx install
   install_finalrecon              # A fast and simple python script for web reconnaissance
   # fapt recon-ng                 # External recon tool FIXME
   # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
@@ -3350,13 +3511,12 @@ function package_web() {
   install_timing_attack           # Cryptocraphic timing attack
   install_updog                   # New HTTPServer
   install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
-  install_jwt_cracker             # JWT cracker and bruteforcer
   install_wuzz                    # Burp cli
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
   install_whatweb                 # Recognises web technologies including content management
-  install_phpggc                  # php deserialization payloads
+  # install_phpggc                  # php deserialization payloads FIXME https://github.com/ambionics/phpggc/issues/142
   install_symfony-exploits        #  symfony secret fragments exploit
   install_jdwp_shellifier         # exploit java debug
   install_httpmethods             # Tool for HTTP methods enum & verb tampering
@@ -3378,6 +3538,8 @@ function package_web() {
   # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
   install_smuggler                # HTTP Request Smuggling scanner  
+  fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
+  install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
 }
 
 # Package dedicated to command & control frameworks
@@ -3448,7 +3610,7 @@ function package_ad() {
   install_coercer                 # Python script to coerce auth through multiple methods
   install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
   install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
-  install_manspider               # Snaffler-like in Python
+  #install_manspider              # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
   install_targetedKerberoast
   install_pcredz
   install_pywsus
@@ -3464,6 +3626,14 @@ function package_ad() {
   install_crackhound
   install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
   install_ldeep
+  install_rusthound
+  install_certsync
+  install_KeePwn
+  install_pre2k
+  install_msprobe
+  install_masky
+  install_roastinthemiddle
+  install_PassTheCert
 }
 
 # Package dedicated to mobile apps pentest tools
@@ -3476,6 +3646,7 @@ function package_mobile() {
   install_apksigner
   install_apktool
   install_frida
+  install_objection               # Runtime mobile exploration toolkit
   install_androguard              # Reverse engineering and analysis of Android applications
 }
 
@@ -3544,6 +3715,10 @@ function package_network() {
   install_mariadb-client          # Mariadb client
   install_redis-tools             # Redis protocol
   # install_odat                  # Oracle Database Attacking Tool, FIXME
+  install_dnsx                    # Fast and multi-purpose DNS toolkit
+  install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
+  install_tailscale               # Zero config VPN for building secure networks
+  #install_ligolo-ng              # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
 }
 
 # Package dedicated to wifi pentest tools
@@ -3567,8 +3742,13 @@ function package_forensic() {
   install_binwalk                 # Tool to find embedded files
   install_foremost                # Alternative to binwalk
   install_volatility2             # Memory analysis tool
+  install_volatility3             # Memory analysis tool v2
   install_trid                    # filetype detection tool
   # install_peepdf                # PDF analysis FIXME
+  install_testdisk                # Recover lost partitions
+  install_jadx                    # Dex to Java decompiler
+  install_fdisk                   # Creating and manipulating disk partition table
+  install_sleuthkit               # Collection of command line tools that allow you to investigate disk images
 }
 
 # Package dedicated to steganography tools
@@ -3577,6 +3757,9 @@ function package_steganography() {
   install_stegosuite
   install_steghide
   install_stegolsb                # (including wavsteg)
+  install_exif                    # Show and change EXIF information in JPEG files
+  install_exiv2                   # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
+  install_hexedit                 # View and edit files in hexadecimal or in ASCII 
 }
 
 # Package dedicated to cloud tools
@@ -3611,6 +3794,8 @@ function package_crypto() {
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
   install_vulny-code-static-analysis
+  install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
+  install_semgrep                 # Static analysis engine for finding bugs and vulnerabilities
 }
 
 # Entry point for the installation

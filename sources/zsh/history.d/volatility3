@@ -1,0 +1,15 @@
+volatility3 -f memory.dmp windows.info
+volatility3 -f memory.dmp windows.pslist
+volatility3 -f memory.dmp windows.psscan
+volatility3 -f memory.dmp windows.pstree
+volatility3 -f memory.dmp windows.handles --pid $PID
+volatility3 -f memory.dmp windows.dlllist --pid $PID
+volatility3 -f memory.dmp windows.cmdline
+volatility3 -f memory.dmp windows.netscan
+volatility3 -f memory.dmp windows.netstat
+volatility3 -f memory.dmp windows.registry.hivescan
+volatility3 -f memory.dmp windows.registry.hivelist
+volatility3 -f memory.dmp windows.registry.printkey
+volatility3 -f memory.dmp windows.registry.printkey ‑‑key "Software\Microsoft\Windows\CurrentVersion"
+volatility3 -f memory.dmp windows.filescan
+volatility3 -f memory.dmp windows.malfind
