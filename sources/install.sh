@@ -2554,7 +2554,7 @@ function install_wpscan(){
   apt-get install -y apt-transport-https ca-certificates gnupg2 curl
   curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
   curl -sSL https://get.rvm.io | bash -s stable --ruby
-  gem install nokogiri -v 1.11.4 -- --use-system-libraries # use this version to resolve the conflict with cewl 
+  gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
   gem install wpscan
   add-history wpscan
   add-test-command "wpscan --help"
