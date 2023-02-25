@@ -1117,10 +1117,10 @@ function install_symfony-exploits(){
 
 function install_john() {
   colorecho "Installing john the ripper"
-  fapt qtbase5-dev
-  git -C /opt/tools/ clone https://github.com/openwall/john
+  #fapt qtbase5-dev
+  git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
   cd /opt/tools/john/src || exit
-  ./configure && make
+  ./configure --disable-native-tests && make
   add-aliases john-the-ripper
   add-history john-the-ripper
   add-test-command "john --help"
