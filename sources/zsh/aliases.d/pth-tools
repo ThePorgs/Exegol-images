@@ -1,0 +1,7 @@
+alias pth-net='/opt/tools/pth-toolkit/pth-net'
+alias pth-rpcclient='/opt/tools/pth-toolkit/pth-rpcclient'
+alias pth-smbclient='/opt/tools/pth-toolkit/pth-smbclient'
+alias pth-smbget='/opt/tools/pth-toolkit/pth-smbget'
+alias pth-winexe='/opt/tools/pth-toolkit/pth-winexe'
+alias pth-wmic='/opt/tools/pth-toolkit/pth-wmic'
+alias pth-wmis='/opt/tools/pth-toolkit/pth-wmis'

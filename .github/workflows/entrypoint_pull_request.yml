@@ -1,0 +1,81 @@
+name: Pull request
+
+on:
+  pull_request:
+    branches: dev
+    paths-ignore:
+      - ".github/**"
+      - "**.md"
+
+# creating a separate concurrency group for each PR
+# so that our "PR checks" are always running for the latest commit in the PR
+# and as PRs are updated we want to make sure "in progress" jobs are killed so we don't waste resources
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # intermediary registry in which architecture-specific images must be pushed
+  DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+  # final registry target, in which arch-specific images must be aggregated
+  DOCKER_TARGET_REPO: "nwodtuhs/exegol"
+  DOCKERFILE: "Dockerfile"
+
+jobs:
+  varset:
+    name: Initialize variables
+    runs-on: self-hosted
+    outputs:
+      DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
+      DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
+      IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+    steps:
+      - name: Passing workflow env vars to reusable workflows
+        id: varset
+        run: |
+          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "DOCKER_BUILD_REPO=${DOCKER_BUILD_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
+          echo "IMAGE_BASE_NAME=PR${PR_NUMBER}"
+          echo "IMAGE_BASE_NAME=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
+
+  build_belt:
+    name: Build belt
+    needs: varset
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
+      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
+      DOCKER_TARGET_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
+      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      ARCH: ${{ matrix.arch }}
+      PR_MODE: true
+
+  clean_runners:
+    name: Clean runners
+    needs:
+      - varset
+      - build_belt
+    if: always() && !contains(needs.build_belt.outputs.build, 'failure')
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ matrix.arch }}
+    steps:
+      - name: Remove built image ${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+        run: |
+          image_name=${DOCKER_BUILD_REPO}:${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+          echo "Removing $image_name"
+          docker image inspect $image_name && docker rmi $image_name
+

@@ -1,4 +1,4 @@
-dig axfr "$DOMAIN" @"$TARGET"`
+dig axfr "$DOMAIN" @"$TARGET"
 nslookup -type=srv _gc._tcp."$DOMAIN"
 nslookup -type=srv _kerberos._tcp."$DOMAIN"
 nslookup -type=srv _kpasswd._tcp."$DOMAIN"
