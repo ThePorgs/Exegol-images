@@ -3233,12 +3233,14 @@ function install_tls-map() {
   gem install tls-map
   add-history tls-map
   add-test-command "tls-map --help"
+}
 
 function install_haiti() {
   colorecho "Installing haiti"
   gem install haiti-hash
   add-history haiti
   add-test-command "haiti --help"
+}
 
 function install_ctf-party() {
   colorecho "Installing ctf-party"
