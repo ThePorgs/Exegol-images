@@ -239,7 +239,7 @@ function install_php_filter_chain_generator() {
   add-test-command "php_filter_chain_generator --help"
 }
 
-function install_recondog() { 
+function install_recondog() {
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
   python3 -m pip install -r /opt/tools/ReconDog/requirements.txt
@@ -407,7 +407,7 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  python3 -m pipx install crackmapexec 
+  python3 -m pipx install crackmapexec
   ~/.local/bin/crackmapexec
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
@@ -1117,10 +1117,10 @@ function install_symfony-exploits(){
 
 function install_john() {
   colorecho "Installing john the ripper"
-  fapt qtbase5-dev
-  git -C /opt/tools/ clone https://github.com/openwall/john
+  #fapt qtbase5-dev
+  git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
   cd /opt/tools/john/src || exit
-  ./configure && make
+  ./configure --disable-native-tests && make
   add-aliases john-the-ripper
   add-history john-the-ripper
   add-test-command "john --help"
@@ -2117,7 +2117,7 @@ function install_frida() {
 function install_objection() {
   colorecho "Installing objection"
   python3 -m pipx install git+https://github.com/sensepost/objection
-  add-history objection 
+  add-history objection
   add-test-command "objection --help"
 }
 
@@ -2253,7 +2253,7 @@ function install_vulny-code-static-analysis() {
 function install_brakeman() {
   colorecho "Installing Brakeman"
   gem install brakeman
-  add-history brakeman 
+  add-history brakeman
   add-test-command "brakeman --help"
 }
 
@@ -2312,7 +2312,7 @@ function install_dnsx() {
 function install_shuffledns() {
   colorecho "Installing shuffledns"
   go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
-  add-history shuffledns 
+  add-history shuffledns
   add-test-command "shuffledns --help"
 }
 
@@ -3233,6 +3233,12 @@ function install_haiti() {
   gem install haiti-hash
   add-history haiti
   add-test-command "haiti --help"
+
+function install_ctf-party() {
+  colorecho "Installing ctf-party"
+  gem install ctf-party
+  add-history ctf-party
+  add-test-command "ctf-party --help"
 }
 
 # Package dedicated to the basic things the env needs
@@ -3362,6 +3368,7 @@ function package_misc() {
   install_ngrok                   # expose a local development server to the Internet
   install_whatportis              # Search default port number
   install_ascii                   # The ascii table in the shell
+  install_ctf-party               # Enhance and speed up script/exploit writing
 }
 
 # Package dedicated to most used offensive tools
@@ -3510,7 +3517,7 @@ function package_web() {
   install_weevely                 # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
-  install_oneforall                       
+  install_oneforall
   install_wafw00f                 # Waf detector
   install_corscanner              # CORS misconfiguration detector
   install_hakrawler               # Web endpoint discovery
@@ -3545,7 +3552,7 @@ function package_web() {
   install_naabu                   # Fast port scanner
   # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
-  install_smuggler                # HTTP Request Smuggling scanner  
+  install_smuggler                # HTTP Request Smuggling scanner
   fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
 }
@@ -3767,7 +3774,7 @@ function package_steganography() {
   install_stegolsb                # (including wavsteg)
   install_exif                    # Show and change EXIF information in JPEG files
   install_exiv2                   # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
-  install_hexedit                 # View and edit files in hexadecimal or in ASCII 
+  install_hexedit                 # View and edit files in hexadecimal or in ASCII
 }
 
 # Package dedicated to cloud tools
