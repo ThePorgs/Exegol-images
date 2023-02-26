@@ -18,3 +18,8 @@
 Any other idea that falls outside this scope?
 Any question that is left unanswered?
 Feel free to reach out, I'll be happy to help and improve things, Exegol is a community-driven toolkit :rocket:
+
+## Pull request
+
+- Target the `dev` branch
+- Try to submit only one tool per PR
