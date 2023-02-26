@@ -1,4 +1,4 @@
-name: Pull request
+name: External PR tests
 
 on:
   pull_request:
