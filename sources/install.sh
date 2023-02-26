@@ -3228,6 +3228,12 @@ function install_PassTheCert() {
   add-test-command "passthecert.py --help"
 }
 
+function install_haiti() {
+  colorecho "Installing haiti"
+  gem install haiti-hash
+  add-history haiti
+  add-test-command "haiti --help"
+
 function install_ctf-party() {
   colorecho "Installing ctf-party"
   gem install ctf-party
@@ -3427,7 +3433,8 @@ function package_cracking() {
   install_fcrackzip               # Zip cracker
   install_pdfcrack                # PDF cracker
   install_bruteforce-luks         # Find the password of a LUKS encrypted volume
-  install_name-that-hash          # Name-That-Hash, the hash identifier tool
+  install_name-that-hash          # Name-That-Hash, hash identifier tool
+  install_haiti                   # haiti, hash type identifier
 }
 
 # Package dedicated to osint, recon and passive tools
