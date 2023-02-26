@@ -3228,6 +3228,12 @@ function install_PassTheCert() {
   add-test-command "passthecert.py --help"
 }
 
+function install_tls-map() {
+  colorecho "Installing TLS map"
+  gem install tls-map
+  add-history tls-map
+  add-test-command "tls-map --help"
+
 function install_haiti() {
   colorecho "Installing haiti"
   gem install haiti-hash
@@ -3803,7 +3809,7 @@ function package_reverse() {
 # Package dedicated to attack crypto
 function package_crypto() {
   # install_rsactftool            # attack rsa FIXME
-  echo "nothing to install"
+  install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
 }
 
 # Package dedicated to SAST and DAST tools
