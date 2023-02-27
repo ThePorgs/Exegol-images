@@ -3249,6 +3249,15 @@ function install_ctf-party() {
   add-test-command "ctf-party --help"
 }
 
+function install_firefox() {
+  colorecho "Installing firefox"
+  mkdir /opt/tools/firefox
+  mv /root/sources/firefox/* /opt/tools/firefox/
+  python3 -m pip install -r /opt/tools/firefox/requirements.txt
+  python3 /opt/tools/firefox/setup.py
+  add-test-command "firefox --version"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
   update || exit
@@ -3359,6 +3368,7 @@ function package_base() {
   install_logrotate
   fapt openjdk-17-jre
   install_chromium
+  install_firefox
 }
 
 # Package dedicated to offensive miscellaneous tools
