@@ -1,0 +1,4 @@
+haiti $HASH
+haiti --extended $HASH
+haiti --no-color --short $HASH
+haiti samples $REF

@@ -1,0 +1,6 @@
+ctf-party $STRING to_hex
+ctf-party $STRING dec2hex hex2bin
+ctf-party $STRING md5
+ctf-party $FILE str2hex --row --file
+ctf-party $STRING from_b64
+ctf-party_console
