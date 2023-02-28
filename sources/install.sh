@@ -2456,16 +2456,9 @@ function install_crackhound() {
 
 function install_kerbrute() {
   colorecho "Installing Kerbrute"
-  if [[ $(uname -m) = 'x86_64' ]]
-  then
-    wget https://github.com/ropnop/kerbrute/releases/latest/download/kerbrute_linux_amd64 -O /opt/tools/bin/kerbrute
-  else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-  fi
-  chmod +x /opt/tools/bin/kerbrute
+  go install github.com/ropnop/kerbrute@latest  
   add-history kerbrute
   add-test-command "kerbrute --help"
-  # FIXME ARM platforms install ?
 }
 
 function install_searchsploit() {
