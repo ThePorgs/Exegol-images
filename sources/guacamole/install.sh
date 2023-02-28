@@ -21,7 +21,6 @@ ${TOMCAT}
 # Download requirements
 wget -q --show-progress -O guacamole-server-${GUACVERSION}.tar.gz ${SERVER}/source/guacamole-server-${GUACVERSION}.tar.gz
 tar -xzf guacamole-server-${GUACVERSION}.tar.gz
-wget -q --show-progress -O guacamole-${GUACVERSION}.war ${SERVER}/binary/guacamole-${GUACVERSION}.war
 
 mkdir -p /etc/guacamole/{extensions,lib}
 
@@ -35,7 +34,8 @@ ldconfig
 
 # Configure guacamole
 cd ../
-mv -f guacamole-${GUACVERSION}.war /etc/guacamole/guacamole.war
+mv -f guacamole.war /etc/guacamole/guacamole.war
+
 rm -f /etc/guacamole/guacamole.properties
 
 # Create a new tomcat instance
@@ -60,6 +60,10 @@ sed -i "s/EnableSyslog=1/EnableSyslog=0/g" /etc/xrdp/sesman.ini
 
 # Edit root password
 echo -e "exegol4thewin\nexegol4thewin" | passwd root
+
+# Set default wallpaper
+
+#kwriteconfig5 --file "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" --group 'Containments' --group '1' --group 'Wallpaper' --group 'org.kde.image' --group 'General' --key 'Image' "/workspace/wallpaper.png"
 
 # Cleanup
 rm -rf guacamole-*
