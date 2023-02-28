@@ -1,1 +1,1 @@
-docker run -p 9900:8080 --cap-add=NET_ADMIN -it guacamole-exegol-pr zsh
+docker run -p 9903:8080 --name=desktop4 --cap-add=NET_ADMIN -it base-test zsh

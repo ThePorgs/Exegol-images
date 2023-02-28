@@ -1,5 +1,5 @@
 <user-mapping>
-    <authorize username="guacadmin" password="guacadmin">
+    <authorize username="root" password="exegol4thewin">
     <connection name="Exegol">
     <protocol>rdp</protocol>
     <param name="hostname">127.0.0.1</param>
