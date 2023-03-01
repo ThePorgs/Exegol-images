@@ -247,7 +247,7 @@ function install_kraken() {
   ./venv/bin/python3 -m pip install -r requirements.txt
   add-aliases kraken
   add-history kraken
-  add-test-command "kraken -h"
+  add-test-command "kraken.py -h"
 }
 
 function install_recondog() {
