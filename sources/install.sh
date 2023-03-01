@@ -239,6 +239,17 @@ function install_php_filter_chain_generator() {
   add-test-command "php_filter_chain_generator --help"
 }
 
+function install_kraken() {
+  colorecho "Installing Kraken"
+  git -C /opt/tools clone --recurse-submodules https://github.com/kraken-ng/Kraken.git
+  cd /opt/tools/Kraken || exit
+  python3 -m venv ./venv
+  ./venv/bin/python3 -m pip install -r requirements.txt
+  add-aliases kraken
+  add-history kraken
+  add-test-command "kraken -h"
+}
+
 function install_recondog() {
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
@@ -3566,6 +3577,7 @@ function package_web() {
   install_smuggler                # HTTP Request Smuggling scanner
   fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
+  install_kraken                  # Kraken is a modular multi-language webshell.
 }
 
 # Package dedicated to command & control frameworks
