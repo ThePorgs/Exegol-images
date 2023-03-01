@@ -35,11 +35,11 @@ ldconfig
 # Configure guacamole
 cd ../
 mv -f guacamole.war /etc/guacamole/guacamole.war
-
 rm -f /etc/guacamole/guacamole.properties
 
-# Create a new tomcat instance
-tomcat9-instance-create ${TOMCAT_HOME} 
+# Create a new tomcat instance on port 1337
+tomcat9-instance-create ${TOMCAT_HOME}
+sed -i 's/8080/1337/g' ${TOMCAT_HOME}/conf/server.xml
 ln -sf /etc/guacamole/guacamole.war ${TOMCAT_HOME}/webapps/ROOT.war
 
 cat >> /etc/guacamole/guacd.conf <<- "EOF"
@@ -51,12 +51,17 @@ EOF
 # Add login mapping
 cp user-mapping.xml /etc/guacamole/
 
-# Install xrdp + kde
+# Install kde plasma desktop
 apt install -y kde-plasma-desktop dbus-x11
 update-alternatives --set x-session-manager /usr/bin/startplasma-x11
+
+# Install RDP server
 apt install -y xrdp
 
 sed -i "s/EnableSyslog=1/EnableSyslog=0/g" /etc/xrdp/sesman.ini
+
+
+apt-get remove -y bluedevil bluez && apt autoremove -y # https://github.com/jriddell/kdeneon-docker/issues/1
 
 # Edit root password
 echo -e "exegol4thewin\nexegol4thewin" | passwd root
@@ -66,9 +71,9 @@ echo -e "exegol4thewin\nexegol4thewin" | passwd root
 #kwriteconfig5 --file "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" --group 'Containments' --group '1' --group 'Wallpaper' --group 'org.kde.image' --group 'General' --key 'Image' "/workspace/wallpaper.png"
 
 # Cleanup
-rm -rf guacamole-*
-rm -rf user-mapping.xml
-rm -rf install.sh 
+#rm -rf guacamole-*
+#rm -rf user-mapping.xml
+#rm -rf install.sh
 
 # Stop services
 service guacd stop
