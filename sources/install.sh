@@ -2409,6 +2409,16 @@ function install_pwncat() {
   add-test-command "pwncat-cs --version"
 }
 
+function install_sliver() {
+  colorecho "Installing Sliver"
+  git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
+  cd /opt/tools/sliver || exit
+  make
+  cp sliver-* /opt/tools/bin
+  add-test-command "sliver-server help"
+  add-test-command "sliver-client help" 
+}
+
 function install_gmsadumper() {
   colorecho "Installing gMSADumper"
   git -C /opt/tools/ clone https://github.com/micahvandeusen/gMSADumper
@@ -3576,6 +3586,7 @@ function package_c2() {
   install_metasploit              # Offensive framework
   install_routersploit            # Exploitation Framework for Embedded Devices
   install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
+  install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework 
 }
 
 # Package dedicated to internal Active Directory tools
