@@ -407,8 +407,8 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  python3 -m pipx install crackmapexec 
-  ~/.local/bin/crackmapexec
+  git -C /opt/tools/ clone https://github.com/Porchetta-Industries/CrackMapExec.git
+  python3 -m pip install /opt/tools/CrackMapExec/
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
