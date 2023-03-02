@@ -16,6 +16,14 @@ env:
   IMAGE_BASE_NAME: "nightly"
   DOCKERFILE: "Dockerfile"
 
+# creating a concurrency group for nightly builds
+# so that when pushing multiple things in dev, build is always running for the latest push
+# this is to save resources, by killing "in progress" jobs when another build starts for the last push
+concurrency:
+  group: nightly_build
+  cancel-in-progress: true
+
+
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
   varset:
