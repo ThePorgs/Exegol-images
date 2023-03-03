@@ -250,6 +250,15 @@ function install_kraken() {
   add-test-command "kraken.py -h"
 }
 
+function install_soapui() {
+  colorecho "Installing SoapUI"
+  mkdir -p /opt/tools/SoapUI/
+  wget https://dl.eviware.com/soapuios/5.7.0/SoapUI-5.7.0-linux-bin.tar.gz -O /tmp/SoapUI.tar.gz
+  tar xvf /tmp/SoapUI.tar.gz -C /opt/tools/SoapUI/ --strip=1
+  add-aliases soapui
+  add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
+}
+
 function install_recondog() {
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
@@ -3577,6 +3586,7 @@ function package_web() {
   fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
   install_kraken                  # Kraken is a modular multi-language webshell.
+  install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
 }
 
 # Package dedicated to command & control frameworks
