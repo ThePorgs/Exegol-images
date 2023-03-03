@@ -2791,6 +2791,13 @@ function install_nmap() {
   add-test-command "nmap --version"
 }
 
+function install_netdiscover() {
+  colorecho "Installing netdiscover"
+  fapt netdiscover
+  add-history netdiscover
+  add-test-command "netdiscover -h |& grep 'Usage: netdiscover'"
+}
+
 function install_php() {
   colorecho "Installing php"
   fapt php
@@ -3743,6 +3750,7 @@ function package_network() {
   install_hping3                  # Discovery tool
   install_masscan                 # Port scanner
   install_nmap                    # Port scanner
+  install_netdiscover             # Active/passive address reconnaissance tool
   install_autorecon               # External recon tool
   install_tcpdump                 # Capture TCP traffic
   install_dnschef                 # Python DNS server
