@@ -984,7 +984,7 @@ function install_tls-scanner() {
   mvn clean package -DskipTests=true
   add-aliases tls-scanner
   add-history tls-scanner
-  add-test-command "tls-scanner --help"
+  add-test-command "tls-scanner -help"
 }
 
 function install_bat() {
