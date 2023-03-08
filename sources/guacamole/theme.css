@@ -1,0 +1,227 @@
+/*
+ * Guacamole Dark Theme (2019).
+ *
+ * CC BY - Creative Commons Attribution
+ * https://github.com/madmath03/dark-guacamole/blob/master/dark.css
+ * Modified for Exegol
+ */
+html,
+body {
+    color: #ececec;
+    background-color: #181a1b;
+}
+pre {
+    color: #ececec;
+    background-color: #222;
+    border: 1px solid #555;
+}
+
+a[href]:visited {
+    color: #884;
+}
+a[href] {
+    color: #080;
+}
+
+div.location,
+input[type=text],
+input[type=email],
+input[type=number],
+input[type=password],
+textarea {
+    background-color: #2c2c2c;
+    color: #bbb;
+}
+
+/* Version */
+
+.login-ui .login-dialog .version .version-number {
+    display: none;
+}
+
+/* Login */
+div.login-ui {
+    color: #ececec;
+    background-color: #181a1b;
+}
+.login-ui .login-fields .labeled-field input:focus {
+    background-color: #181a1b;
+    color: #eee;
+}
+
+.login-ui.error p.login-error {
+  background-color: rgb(34, 23, 23);
+  background-image: none;
+  border-color: rgb(134, 57, 57);
+  color: rgb(184, 84, 80);
+  border-width: 2px;
+}
+
+a.button, button, input[type="submit"] {
+  text-decoration-color: currentcolor;
+  background-color: rgb(63, 96, 60);
+  border-color: rgba(140, 130, 115, 0.4);
+  color: rgb(232, 230, 227);
+  text-shadow: rgba(0, 0, 0, 0.3) -1px -1px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 2px;
+  border-radius: 10px;
+  border-width: 0px;
+}
+
+a.button, button, input[type="submit"]:hover {
+  background-color: #2e4f2b;
+  color: #d7d6d4;
+}
+
+.login-ui .login-fields .labeled-field.empty input {
+  background-color: #0000;
+  background-image: none;
+  border-width: 1px;
+  border-color: #3e4044;
+  border-radius: 7px;
+}
+
+/* Home */
+.recent-connections .connection:hover {
+    background-color: #607830;
+}
+
+.menu-dropdown .menu-contents {
+    background-color: #181a1b;
+}
+.menu-dropdown .menu-contents li a {
+    color: #eee;
+}
+.menu-dropdown .menu-contents li a:hover {
+    background-color: #607830;
+}
+
+.list-item.selected {
+    background: #84af2c
+}
+.list-item:not(.selected) .caption:hover {
+    background-color: #607830;
+}
+.list-item .name {
+    color: #ddd;
+}
+
+/* Menu */
+.menu {
+    color: #ececec;
+    background-color: #181a1b;
+}
+
+.clipboard,
+.clipboard-service-target {
+    background-color: #2c2c2c;
+    color: #bbb;
+}
+
+/* Connection */
+.notification {
+  border-radius: 15px;
+  border-color: rgb(184, 84, 80);
+  background-color: rgb(24, 26, 27);
+  background-image: none;
+  color: rgb(215, 215, 215);
+  box-shadow: rgb(183, 83, 79) 0px 0px 0px;
+  border-width: 0px;
+}
+
+#connection-warning {
+    background-color: #a8a800;
+}
+
+.transfer-manager {
+    background-color: #2c2c2c;
+}
+.transfer.error {
+    background-color: #a80000;
+}
+
+/* Settings */
+.page-tabs .page-list li a[href],
+.section-tabs li a {
+    color: #ddd;
+}
+.page-tabs .page-list li a[href]:hover,
+.section-tabs li a:hover {
+    background-color: #607830;
+}
+.page-tabs .page-list li a[href]:visited {
+    color: #fff;
+}
+
+.settings table.session-list tr.session:hover {
+    background-color: #84af2c;
+}
+
+.location-chooser .dropdown {
+    background-color: #181a1b;
+}
+
+
+.user a,
+.user-group a,
+.connection a,
+.connection-group a {
+    color: #ddd;
+}
+.user a:hover,
+.user-group a:hover,
+.connection a:hover,
+.connection-group a:hover {
+    color: #ddd;
+}
+.user a:visited,
+.user-group a:visited,
+.connection a:visited,
+.connection-group a:visited {
+    color: #fff;
+}
+
+.manage-user .notice.read-only {
+    background-color: #291800;
+}
+
+#filesystem-menu .header.breadcrumbs .breadcrumb:hover {
+    background-color: #607830;
+}
+
+#guac-menu #zoom-out:hover,
+#guac-menu #zoom-in:hover {
+    background-color: #607830;
+}
+
+/* Official Apache Guacamole org website */
+.chapter div.toc,
+.appendix div.toc {
+    background-color: #2c2c2c;
+    border-color: #555;
+}
+
+div.important {
+    background-color: #2a2a00;
+}
+
+.replaceable {
+    color: #a8a8ff;
+}
+
+.table-contents td,
+.table-contents th,
+.informaltable td,
+.informaltable th {
+    border-color: #555;
+}
+
+.table-contents th,
+.informaltable th {
+    background-color: #2c2c2c;
+}
+
+div#footer {
+    background-color: #181a1b;
+}
+}

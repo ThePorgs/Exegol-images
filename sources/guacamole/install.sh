@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# Set versions
-GUACVERSION="1.4.0"
-MCJVER="8.0.26"
-
 # Set variables
+GUACVERSION="1.5.0"
+MCJVER="8.0.26"
 TOMCAT="tomcat9 tomcat9-admin tomcat9-common tomcat9-user"
 SERVER="http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${GUACVERSION}"
 TOMCAT_HOME="/root/.tomcat"
@@ -22,6 +20,20 @@ ${TOMCAT}
 wget -q --show-progress -O guacamole-server-${GUACVERSION}.tar.gz ${SERVER}/source/guacamole-server-${GUACVERSION}.tar.gz
 tar -xzf guacamole-server-${GUACVERSION}.tar.gz
 
+# Custom style
+mkdir custom-war
+cd custom-war
+wget -q --show-progress -O guacamole-${GUACVERSION}.war ${SERVER}/binary/guacamole-${GUACVERSION}.war
+unzip guacamole-${GUACVERSION}.war
+rm guacamole-${GUACVERSION}.war
+echo '<link rel="stylesheet" href="theme.css">' >> index.html
+mv ../theme.css ./
+zip -r /etc/guacamole/guacamole.war *
+cd ..
+rm -rf custom-war
+
+# TODO: /etc/guacamole/guacamole.war disapear at the end of install - Weird
+
 mkdir -p /etc/guacamole/{extensions,lib}
 
 # Install guacamole-server
@@ -34,17 +46,16 @@ ldconfig
 
 # Configure guacamole
 cd ../
-mv -f guacamole.war /etc/guacamole/guacamole.war
 rm -f /etc/guacamole/guacamole.properties
 
 # Create a new tomcat instance on port 1337
 tomcat9-instance-create ${TOMCAT_HOME}
-sed -i 's/8080/1337/g' ${TOMCAT_HOME}/conf/server.xml
+sed -i 's#8080#6336##' ${TOMCAT_HOME}/conf/server.xml
 ln -sf /etc/guacamole/guacamole.war ${TOMCAT_HOME}/webapps/ROOT.war
 
 cat >> /etc/guacamole/guacd.conf <<- "EOF"
 [server]
-bind_host = 0.0.0.0
+bind_host = 127.0.0.1
 bind_port = 4822
 EOF
 
@@ -57,9 +68,10 @@ update-alternatives --set x-session-manager /usr/bin/startplasma-x11
 
 # Install RDP server
 apt install -y xrdp
+pkill xrdp
 
 sed -i "s/EnableSyslog=1/EnableSyslog=0/g" /etc/xrdp/sesman.ini
-
+sed -i "s#port=3389#port=tcp://127.0.0.1:3389##" /etc/xrdp/xrdp.ini # RDP localhost
 
 apt-get remove -y bluedevil bluez && apt autoremove -y # https://github.com/jriddell/kdeneon-docker/issues/1
 
@@ -67,8 +79,14 @@ apt-get remove -y bluedevil bluez && apt autoremove -y # https://github.com/jrid
 echo -e "exegol4thewin\nexegol4thewin" | passwd root
 
 # Set default wallpaper
+kwriteconfig5 --file "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" --group 'Containments' --group '1' --group 'Wallpaper' --group 'org.kde.image' --group 'General' --key 'Image' "/workspace/wallpaper.png"
 
-#kwriteconfig5 --file "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" --group 'Containments' --group '1' --group 'Wallpaper' --group 'org.kde.image' --group 'General' --key 'Image' "/workspace/wallpaper.png"
+# Dark mode
+## TODO : FIX
+kwriteconfig5 --file kdeglobals --group "General" --key "ColorScheme" "BreezeDark"
+kwriteconfig5 --file kdeglobals --group "General" --key "Name" "BreezeDark"
+kwriteconfig5 --file kdeglobals --group "General" --key "Style" "BreezeDark"
+kwriteconfig5 --file kdeglobals --group "Icons" --key "Theme" "BreezeDark"
 
 # Cleanup
 #rm -rf guacamole-*
@@ -82,8 +100,8 @@ xrdp -k
 pkill xrdp-sesman
 
 # Unset variables
-unset GUACVERSION="1.4.0"
-unset MCJVER="8.0.26"
+unset GUACVERSION
+unset MCJVER
 unset TOMCAT
 unset SERVER
 unset TOMCAT_HOME
