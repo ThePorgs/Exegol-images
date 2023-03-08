@@ -427,6 +427,8 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
+  # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
+  source /root/.zshrc
   git -C /opt/tools/ clone https://github.com/Porchetta-Industries/CrackMapExec.git
   python3 -m pipx install /opt/tools/CrackMapExec/
   mkdir -p ~/.cme
