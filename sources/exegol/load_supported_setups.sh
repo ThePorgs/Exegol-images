@@ -107,14 +107,19 @@ function run_user_setup() {
 }
 
 function deploy_firefox_addons() {
+  ##### firefox custom addons deployment
   if [ -d "$MY_Setup_PATH/firefox/" ]; then
     if [ -d "$MY_Setup_PATH/firefox/addons" ]; then
       ADDON_FOLDER="-D $MY_Setup_PATH/firefox/addons"
+    else
+      mkdir "$MY_Setup_PATH/firefox/addons" && chmod 770 "$MY_Setup_PATH/firefox/addons"
     fi
     if [ -f "$MY_Setup_PATH/firefox/addons.txt" ]; then
       ADDON_LIST="-L $MY_Setup_PATH/firefox/addons.txt"
     fi
     python3 /opt/tools/firefox/user-setup.py $ADDON_LIST $ADDON_FOLDER
+  else
+    mkdir --parents "$MY_Setup_PATH/firefox/addons" && chmod 770 -R "$MY_Setup_PATH/firefox/addons"
   fi
 }
 
