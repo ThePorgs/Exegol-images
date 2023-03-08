@@ -1,0 +1,4 @@
+notify -data output.txt
+notify -data output.txt -bulk
+notify -data output.txt -bulk -provider discord,slack
+notify -bulk -data output.txt

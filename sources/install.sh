@@ -3266,6 +3266,13 @@ function install_ctf-party() {
   add-test-command "ctf-party --help"
 }
 
+function install_notify() {
+  colorecho "Installing Notify"
+  go install -v github.com/projectdiscovery/notify/cmd/notify@latest
+  add-history notify
+  add-test-command "notify -h"
+}
+
 function install_firefox() {
   colorecho "Installing firefox"
   mkdir /opt/tools/firefox
@@ -3408,6 +3415,7 @@ function package_misc() {
   install_whatportis              # Search default port number
   install_ascii                   # The ascii table in the shell
   install_ctf-party               # Enhance and speed up script/exploit writing
+  install_notify                  # Notify is a Go-based assistance package that enables you to stream the output of several tools
 }
 
 # Package dedicated to most used offensive tools
