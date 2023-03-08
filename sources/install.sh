@@ -497,10 +497,6 @@ function install_bloodhound-py() {
 
 function install_neo4j() {
   colorecho "Installing neo4j"
-  fapt openjdk-11-jre
-  # TODO: when temporary fix is not needed anymore --> fapt openjdk-17-jre
-  update-java-alternatives --jre --set "$(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.11.0-openjdk*' -printf '%P')"
-  # TODO: when temporary fix is not needed anymore --> update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.17.0-openjdk*' -printf '%P')
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   # TODO: temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
   #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
@@ -512,6 +508,7 @@ function install_neo4j() {
   neo4j-admin set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
   touch /usr/share/neo4j/logs/neo4j.log
+  add-aliases neo4j
   add-history neo4j
   add-test-command "neo4j version"
 }
@@ -1418,8 +1415,6 @@ function install_ruler() {
 
 function install_ghidra() {
   colorecho "Installing Ghidra"
-  apt-get install -y openjdk-11-jdk
-  #wget -P /tmp/ "https://ghidra-sre.org/ghidra_9.2.3_PUBLIC_20210325.zip"
   wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
   unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
   rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
@@ -3388,7 +3383,11 @@ function package_base() {
   fapt perl
   install_exegol-history
   install_logrotate
+  fapt openjdk-11-jre
   fapt openjdk-17-jre
+  ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
+  ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+  update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
   install_chromium
   install_firefox
 }

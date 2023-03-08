@@ -1,0 +1,3 @@
+alias neo4j="JAVA_HOME=/usr/lib/jvm/java-11-openjdk neo4j"
+alias neo4j-admin="JAVA_HOME=/usr/lib/jvm/java-11-openjdk neo4j-admin"
+alias neo4j-import="JAVA_HOME=/usr/lib/jvm/java-11-openjdk neo4j-import"
