@@ -3276,6 +3276,7 @@ function install_firefox() {
   python3 -m pip install -r /opt/tools/firefox/requirements.txt
   python3 /opt/tools/firefox/setup.py
   add-test-command "file /root/.mozilla/firefox/*.Exegol"
+  add-test-command "firefox --version"
 }
 
 # Package dedicated to the basic things the env needs
