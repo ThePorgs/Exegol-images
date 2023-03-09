@@ -116,6 +116,8 @@ function deploy_firefox_addons() {
     fi
     if [ -f "$MY_Setup_PATH/firefox/addons.txt" ]; then
       ADDON_LIST="-L $MY_Setup_PATH/firefox/addons.txt"
+    else
+      cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_Setup_PATH/firefox/addons.txt"
     fi
     python3 /opt/tools/firefox/user-setup.py $ADDON_LIST $ADDON_FOLDER
   else
@@ -146,5 +148,3 @@ deploy_firefox_addons
 run_user_setup
 
 exit 0
-
-}

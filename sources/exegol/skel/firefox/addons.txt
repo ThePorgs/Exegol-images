@@ -1,0 +1,3 @@
+# This file can be used to install addons on the Firefox instance of Exegol.
+# The download links of the addons to be installed can be listed in this file (ie: https://addons.mozilla.org/fr/firefox/addon/foxyproxy-standard/).
+# All addons listed below will be downloaded and installed automatically when creating a new Exegol container.
