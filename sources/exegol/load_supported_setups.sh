@@ -122,6 +122,7 @@ function deploy_firefox_addons() {
     python3 /opt/tools/firefox/user-setup.py $ADDON_LIST $ADDON_FOLDER
   else
     mkdir --parents "$MY_Setup_PATH/firefox/addons" && chmod 770 -R "$MY_Setup_PATH/firefox/addons"
+    cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_Setup_PATH/firefox/addons.txt"
   fi
 }
 
