@@ -15,7 +15,7 @@ import subprocess
 import argparse
 
 PATHNAME = "/root/.mozilla/firefox/**.Exegol/"
-re_links = r'^https://addons\.mozilla\.org/fr/firefox/addon/[^/]+'
+re_links = r'^https://addons\.mozilla\.org/fr/firefox/addon/[^/]+/?$'
 
 def parse_args():
     arg_parser = argparse.ArgumentParser(description="Automatically installs addons from a list or folder containing .xpi files.")
