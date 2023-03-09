@@ -1442,6 +1442,7 @@ function install_ida() {
 function install_burpsuite() {
   colorecho "Installing Burp"
   mkdir /opt/tools/BurpSuiteCommunity
+  mv /root/sources/burp/conf.json /opt/tools/BurpSuiteCommunity/
   burp_version=$(curl -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
   wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
   # FIXME: set up the dark theme right away?
@@ -3390,6 +3391,7 @@ function package_base() {
   fapt openjdk-17-jre
   install_chromium
   install_firefox
+  fapt libnss3-tools
 }
 
 # Package dedicated to offensive miscellaneous tools

@@ -126,6 +126,36 @@ function deploy_firefox_addons() {
   fi
 }
 
+function trust_ca_burp() {
+  ##### Burp CA trust
+  if ! [ -d "$MY_Setup_PATH/burp/" ]; then
+    mkdir "$MY_Setup_PATH/burp" && chmod 770 "$MY_Setup_PATH/burp"
+  fi
+  if [ -f "$MY_Setup_PATH/burp/cacert.der" ]; then
+    BURP_CA_PATH="$MY_Setup_PATH/burp/cacert.der"
+    certutil -A -n "PortSwigger CA" -t "TC" -i $BURP_CA_PATH -d ~/.mozilla/firefox/*.Exegol
+  else
+    if [ -d "/opt/tools/BurpSuiteCommunity/" ]; then
+      BURP_PORT=8080
+      LISTENING_PORTS=$(netstat -lnt|grep -Eo '(127.0.0.1|0.0.0.0):[0-9]{1,5}'|cut -d ':' -f 2)
+      while [[ $LISTENING_PORTS =~ .*$BURP_PORT.* ]]
+      do
+        BURP_PORT=$((BURP_PORT+1))
+      done
+      sed -i "s/\"listener_port\":[0-9]\+/\"listener_port\":$BURP_PORT/g" /opt/tools/BurpSuiteCommunity/conf.json
+      echo y|java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json 1>/tmp/burp_logs &
+      while ! [[ $(tail /tmp/burp_logs) =~ .*y/n.* ]]
+      do
+          sleep 0.5
+      done
+      BURP_PID=$! && sleep 10 && wget "http://127.0.0.1:$BURP_PORT/cert" -O /tmp/cacert.der && kill $BURP_PID
+      BURP_CA_PATH="/tmp/cacert.der"
+      certutil -A -n "PortSwigger CA" -t "TC" -i $BURP_CA_PATH -d ~/.mozilla/firefox/*.Exegol
+      rm -r /tmp/burp*
+    fi
+  fi
+}
+
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
@@ -145,6 +175,7 @@ deploy_vim
 deploy_apt
 deploy_python3
 deploy_firefox_addons
+trust_ca_burp
 
 run_user_setup
 
