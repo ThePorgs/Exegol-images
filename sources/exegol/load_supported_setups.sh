@@ -143,12 +143,13 @@ function trust_ca_burp() {
         BURP_PORT=$((BURP_PORT+1))
       done
       sed -i "s/\"listener_port\":[0-9]\+/\"listener_port\":$BURP_PORT/g" /opt/tools/BurpSuiteCommunity/conf.json
-      echo y|java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json 1>/tmp/burp_logs &
+      echo y|java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json &>/tmp/burp_logs &
+      BURP_PID=$!
       while ! [[ $(tail /tmp/burp_logs) =~ .*y/n.* ]]
       do
           sleep 0.5
       done
-      BURP_PID=$! && sleep 10 && wget "http://127.0.0.1:$BURP_PORT/cert" -O /tmp/cacert.der && kill $BURP_PID
+      wget "http://127.0.0.1:$BURP_PORT/cert" -O /tmp/cacert.der && kill $BURP_PID
       BURP_CA_PATH="/tmp/cacert.der"
       certutil -A -n "PortSwigger CA" -t "TC" -i $BURP_CA_PATH -d ~/.mozilla/firefox/*.Exegol
       rm -r /tmp/burp*
