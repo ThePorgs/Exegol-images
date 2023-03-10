@@ -43,7 +43,7 @@ The `.xpi` files in `/opt/my-resources/setup/firefox/addons/` folder will be ins
 
 ### burp
 
-If a ``/opt/my-resources/setup/burp/cacert.der`` certificate exists, it will be trusted in firefox.
+If a `/opt/my-resources/setup/burp/cacert.der` certificate exists, it will be trusted in firefox.
 
 ## Advanced customizations
 
