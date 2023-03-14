@@ -5,23 +5,21 @@
 # Date created       : 27 February 2023
 # Python Version     : 3.*
 
-import glob
 import json
 import os
 import re
 import shutil
 import subprocess
-import time
 import zipfile
 import sqlite3
-from pathlib import Path
-
 import requests
+from pathlib import Path
+from time import sleep
 from R2Log import logger
+from glob import glob
 
 PATHNAME = "/root/.mozilla/firefox/**.Exegol/"
 
-# pip3 install R2Log
 # Define addons urls
 urls = [
     "https://addons.mozilla.org/fr/firefox/addon/foxyproxy-standard/",
@@ -51,30 +49,30 @@ def download_addon(link, addon_name):
     logger.info(f"Downloading addon {addon_name}")
     addon_dl = requests.get(link)
     # Save xpi addon on filesystem
-    with open(addon_name, 'wb') as addon_file:
+    with open("/tmp/" + addon_name, 'wb') as addon_file:
         addon_file.write(addon_dl.content)
 
 
-def read_manifest(addon_name):
-    archive = zipfile.ZipFile(addon_name, 'r')
+def read_manifest(addon_path):
+    archive = zipfile.ZipFile(addon_path, 'r')
     manifest = archive.read('manifest.json').decode()
     # Read the id in the manifest
     addon_id = re.search(reid, manifest).group(1)
     return addon_id
 
 
-def install_addons(addon_name, addon_id):
+def install_addons(addon_name, addon_id, addon_path):
     logger.info(f"Installing addon {addon_name} with id {addon_id}")
     # Get the path of the Exegol profile
     try:
-        dest = glob.glob("%s" % PATHNAME)[0]
+        dest = glob("%s" % PATHNAME)[0]
     except:
         logger.error("Firefox profile Exegol does not exist")
         raise
     # Create the extensions folder
     Path(dest + "/extensions").mkdir(parents=True, exist_ok=True)
     # Move the addon to the extensions folder
-    shutil.move(addon_name, dest + "/extensions/" + addon_id + ".xpi")
+    shutil.move(addon_path + "/" + addon_name, dest + "/extensions/" + addon_id + ".xpi")
 
 
 def activate_addons(addon_list):
@@ -85,7 +83,7 @@ def activate_addons(addon_list):
         else:
             logger.info(f"Enabling {addon_name}")
         try:
-            with open(Path(glob.glob("%s" % PATHNAME)[0] + "/extensions.json"), 'r+') as extensions_file:
+            with open(Path(glob("%s" % PATHNAME)[0] + "/extensions.json"), 'r+') as extensions_file:
                 extensions_config = json.load(extensions_file)
                 for addon in extensions_config["addons"]:
                     if addon["id"] == addon_id:
@@ -107,7 +105,7 @@ def activate_addons(addon_list):
             pass
 
 def adjust_ui():
-    with open(Path(glob.glob("%s" % PATHNAME)[0] + "/prefs.js"), 'r+') as pref_js:
+    with open(Path(glob("%s" % PATHNAME)[0] + "/prefs.js"), 'r+') as pref_js:
         new_pref = re.sub(r'\\"import-button\\",', '', pref_js.read())
         new_pref = re.sub(r'\\"save-to-pocket-button\\",', '', new_pref)
         new_pref = re.sub('"extensions.activeThemeID", "default-theme@mozilla.org"', '"extensions.activeThemeID", "firefox-compact-dark@mozilla.org"', new_pref)
@@ -119,7 +117,7 @@ def import_bookmarks():
     dirname = os.path.dirname(__file__)
     filename = os.path.join(dirname, './places.sqlite')
     src = sqlite3.connect(filename)
-    dst = sqlite3.connect(glob.glob("%s" % PATHNAME)[0] + "places.sqlite")
+    dst = sqlite3.connect(glob("%s" % PATHNAME)[0] + "places.sqlite")
     with dst:
         src.backup(dst)
     dst.close()
@@ -131,7 +129,7 @@ if __name__ == "__main__":
     logger.info("Creating Firefox profile")
     try:
         subprocess.run(["firefox", "-CreateProfile", "Exegol", "-headless"], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-        assert(Path(glob.glob("%s" % PATHNAME)[0]).is_dir())
+        assert(Path(glob("%s" % PATHNAME)[0]).is_dir())
         logger.success("Firefox profile Exegol created\n")
     except:
         logger.error("Could not create Firefox profile Exegol")
@@ -147,8 +145,8 @@ if __name__ == "__main__":
         # Download the addon
         download_addon(link, addon_name)
         # Read manifest.json in the archive
-        addon_id = read_manifest(addon_name)
-        install_addons(addon_name, addon_id)
+        addon_id = read_manifest("/tmp/" + addon_name)
+        install_addons(addon_name, addon_id, "/tmp/")
         logger.success(f"{addon_name} installed sucessfully\n")
         addon_list.append((addon_id, addon_name[0:-4], False))
 
@@ -158,9 +156,11 @@ if __name__ == "__main__":
     logger.info("Initialising Firefox profile")
     try:
         p_firefox = subprocess.Popen(["firefox", "-P", "Exegol", "-headless"], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-        time.sleep(5)
+        # Wait for firefox to be initialised
+        while not b'sessionstore-backups' in subprocess.check_output(["ls", glob("%s" % PATHNAME)[0]]):
+            sleep(0.5)
         p_firefox.kill()
-        assert(Path(glob.glob("%s" % PATHNAME)[0] + "/extensions.json").is_file())
+        assert(Path(glob("%s" % PATHNAME)[0] + "/extensions.json").is_file())
         logger.success("Firefox profile initialised sucessfully\n")
     except:
         logger.error("Could not initialise Firefox profile")
@@ -178,10 +178,11 @@ if __name__ == "__main__":
     try:
         adjust_ui()
         # Remove existing sessions
-        shutil.rmtree(glob.glob("%s" % PATHNAME)[0] + "sessionstore-backups")
+        shutil.rmtree(glob("%s" % PATHNAME)[0] + "sessionstore-backups")
         logger.success("User interface successfully updated\n")
     except:
         logger.error("An error has occurred while trying to update user interface\n")
+        raise
 
     # Restore bookmarks
     logger.info("Setting up profile's bookmarks")
@@ -195,7 +196,7 @@ if __name__ == "__main__":
     # Remove backup file interfering with addons activation
     logger.info("Removing backup file interfering with addons activation")
     try:
-        Path(glob.glob("%s" % PATHNAME)[0] + "/addonStartup.json.lz4").unlink()
+        Path(glob("%s" % PATHNAME)[0] + "/addonStartup.json.lz4").unlink()
         logger.success("Backup file successfully removed\n")
     except:
         logger.error("Could not remove the backup file")
@@ -205,8 +206,11 @@ if __name__ == "__main__":
     logger.info("Restarting firefox to apply modifications")
     try:
         p_firefox = subprocess.Popen(["firefox", "-headless"], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-        time.sleep(5)
+        # Wait for modifications to be applied
+        while not b'addonStartup.json.lz4' in subprocess.check_output(["ls", glob("%s" % PATHNAME)[0]]):
+            sleep(0.5)
         p_firefox.kill()
         logger.success("Modifications successfully applied")
     except:
         logger.error("Could not restart firefox")
+        raise

@@ -239,6 +239,26 @@ function install_php_filter_chain_generator() {
   add-test-command "php_filter_chain_generator --help"
 }
 
+function install_kraken() {
+  colorecho "Installing Kraken"
+  git -C /opt/tools clone --recurse-submodules https://github.com/kraken-ng/Kraken.git
+  cd /opt/tools/Kraken || exit
+  python3 -m venv ./venv
+  ./venv/bin/python3 -m pip install -r requirements.txt
+  add-aliases kraken
+  add-history kraken
+  add-test-command "kraken.py -h"
+}
+
+function install_soapui() {
+  colorecho "Installing SoapUI"
+  mkdir -p /opt/tools/SoapUI/
+  wget https://dl.eviware.com/soapuios/5.7.0/SoapUI-5.7.0-linux-bin.tar.gz -O /tmp/SoapUI.tar.gz
+  tar xvf /tmp/SoapUI.tar.gz -C /opt/tools/SoapUI/ --strip=1
+  add-aliases soapui
+  add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
+}
+
 function install_recondog() {
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
@@ -407,8 +427,11 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  python3 -m pipx install crackmapexec
-  ~/.local/bin/crackmapexec
+  # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
+  # TODO: Optimize so that the PATH is always up to date
+  source /root/.zshrc
+  git -C /opt/tools/ clone https://github.com/Porchetta-Industries/CrackMapExec.git
+  python3 -m pipx install /opt/tools/CrackMapExec/
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
@@ -474,10 +497,6 @@ function install_bloodhound-py() {
 
 function install_neo4j() {
   colorecho "Installing neo4j"
-  fapt openjdk-11-jre
-  # TODO: when temporary fix is not needed anymore --> fapt openjdk-17-jre
-  update-java-alternatives --jre --set "$(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.11.0-openjdk*' -printf '%P')"
-  # TODO: when temporary fix is not needed anymore --> update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.17.0-openjdk*' -printf '%P')
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   # TODO: temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
   #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
@@ -489,6 +508,7 @@ function install_neo4j() {
   neo4j-admin set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
   touch /usr/share/neo4j/logs/neo4j.log
+  add-aliases neo4j
   add-history neo4j
   add-test-command "neo4j version"
 }
@@ -964,7 +984,7 @@ function install_tls-scanner() {
   mvn clean package -DskipTests=true
   add-aliases tls-scanner
   add-history tls-scanner
-  add-test-command "tls-scanner --help"
+  add-test-command "tls-scanner -help"
 }
 
 function install_bat() {
@@ -1042,7 +1062,6 @@ function install_wuzz() {
 function install_pypykatz() {
   colorecho "Installing pypykatz"
   python3 -m pipx install pypykatz
-  python3 -m pipx inject pypykatz minikerberos==0.3.5
   add-history pypykatz
   add-test-command "pypykatz version"
 }
@@ -1396,8 +1415,6 @@ function install_ruler() {
 
 function install_ghidra() {
   colorecho "Installing Ghidra"
-  apt-get install -y openjdk-11-jdk
-  #wget -P /tmp/ "https://ghidra-sre.org/ghidra_9.2.3_PUBLIC_20210325.zip"
   wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
   unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
   rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
@@ -2782,6 +2799,13 @@ function install_nmap() {
   add-test-command "nmap --version"
 }
 
+function install_netdiscover() {
+  colorecho "Installing netdiscover"
+  fapt netdiscover
+  add-history netdiscover
+  add-test-command "netdiscover -h |& grep 'Usage: netdiscover'"
+}
+
 function install_php() {
   colorecho "Installing php"
   fapt php
@@ -3252,12 +3276,21 @@ function install_ctf-party() {
   add-test-command "ctf-party --help"
 }
 
+function install_notify() {
+  colorecho "Installing Notify"
+  go install -v github.com/projectdiscovery/notify/cmd/notify@latest
+  add-history notify
+  add-test-command "notify -h"
+}
+
 function install_firefox() {
   colorecho "Installing firefox"
+  fapt firefox-esr
   mkdir /opt/tools/firefox
   mv /root/sources/firefox/* /opt/tools/firefox/
   python3 -m pip install -r /opt/tools/firefox/requirements.txt
   python3 /opt/tools/firefox/setup.py
+  add-test-command "file /root/.mozilla/firefox/*.Exegol"
   add-test-command "firefox --version"
 }
 
@@ -3369,7 +3402,11 @@ function package_base() {
   fapt perl
   install_exegol-history
   install_logrotate
+  fapt openjdk-11-jre
   fapt openjdk-17-jre
+  ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
+  ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+  update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
   install_chromium
   install_firefox
 }
@@ -3390,6 +3427,7 @@ function package_misc() {
   install_whatportis              # Search default port number
   install_ascii                   # The ascii table in the shell
   install_ctf-party               # Enhance and speed up script/exploit writing
+  install_notify                  # Notify is a Go-based assistance package that enables you to stream the output of several tools
 }
 
 # Package dedicated to most used offensive tools
@@ -3576,6 +3614,8 @@ function package_web() {
   install_smuggler                # HTTP Request Smuggling scanner
   fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
+  install_kraken                  # Kraken is a modular multi-language webshell.
+  install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
 }
 
 # Package dedicated to command & control frameworks
@@ -3733,6 +3773,7 @@ function package_network() {
   install_hping3                  # Discovery tool
   install_masscan                 # Port scanner
   install_nmap                    # Port scanner
+  install_netdiscover             # Active/passive address reconnaissance tool
   install_autorecon               # External recon tool
   install_tcpdump                 # Capture TCP traffic
   install_dnschef                 # Python DNS server
