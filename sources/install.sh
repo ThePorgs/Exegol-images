@@ -2062,6 +2062,13 @@ function install_bloodhound-quickwin() {
   add-test-command "bloodhound-quickwin --help"
 }
 
+function install_ldapsearch() {
+  colorecho "Installing ldapsearch"
+  fapt ldap-utils
+  add-history ldapsearch
+  add-test-command "ldapsearch --help; ldapsearch --help |& grep 'Search options'"
+}
+
 function install_ldapsearch-ad() {
   colorecho "Installing ldapsearch-ad"
   git -C /opt/tools/ clone https://github.com/yaap7/ldapsearch-ad
@@ -3670,6 +3677,7 @@ function package_ad() {
   install_pygpoabuse
   install_bloodhound-import       # Python script to import BH data to a neo4j db
   install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
+  install_ldapsearch              # LDAP enumeration utils
   install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
   install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
   install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
