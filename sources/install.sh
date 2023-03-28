@@ -2591,7 +2591,7 @@ function install_ligolo-ng() {
   ln -v -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-proxy
   add-test-command "ligolo-agent --help"
   add-test-command "ligolo-proxy --help"
-  add-to-list "ligolo-ng,https://github.com/sysdream/ligolo-ng,An advanced subdomain scanner that supports multiple sources and can detect a wide range of issues, including expired domains and misconfigured servers."
+  add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced subdomain scanner that supports multiple sources and can detect a wide range of issues, including expired domains and misconfigured servers."
 }
 
 function install_anew() {
@@ -2621,7 +2621,7 @@ function install_torbrowser() {
   colorecho "Installing torbrowser"
   # TODO : also need to find out how to install for ARM
   # TODO add-test-command
-  add-to-list "torbrowser,https://github.com/TheTorProject/tor-browser,Web browser that is designed to work with the Tor network and provide anonymous browsing."
+  # add-to-list "torbrowser,https://github.com/torproject/torbrowser-releases/releases,Web browser that is designed to work with the Tor network and provide anonymous browsing."
 }
 
 function install_pwndb() {
@@ -2642,7 +2642,7 @@ function install_robotstester() {
   python3 -m pipx install git+https://github.com/p0dalirius/robotstester
   add-history robotstester
   add-test-command "robotstester --help"
-  add-to-list "robotstester,https://github.com/danielmiessler/robotstester,Utility for testing whether a website's robots.txt file is correctly configured."
+  add-to-list "robotstester,https://github.com/p0dalirius/robotstester,Utility for testing whether a website's robots.txt file is correctly configured."
 }
 
 function install_finduncommonshares() {
@@ -2653,7 +2653,7 @@ function install_finduncommonshares() {
   add-aliases finduncommonshares
   add-history finduncommonshares
   add-test-command "FindUncommonShares.py --help"
-  add-to-list "finduncommonshares,https://github.com/decoder-it/find-uncommon-shares,Script that can help identify shares that are not commonly found on a Windows system."
+  add-to-list "finduncommonshares,https://github.com/p0dalirius/FindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
 }
 
 function install_shadowcoerce() {
@@ -2662,14 +2662,14 @@ function install_shadowcoerce() {
   add-aliases shadowcoerce
   add-history shadowcoerce
   add-test-command "shadowcoerce.py --help"
-  add-to-list "shadowcoerce,https://github.com/ShutdownRepo/shadow-coerce,Utility for bypassing the Windows Defender antivirus by hiding a process within a legitimate process."
+  add-to-list "shadowcoerce,https://github.com/ShutdownRepo/shadowcoerce,Utility for bypassing the Windows Defender antivirus by hiding a process within a legitimate process."
 }
 
 function install_pwncat() {
   colorecho "Installing pwncat"
   python3 -m pipx install pwncat-cs
   add-test-command "pwncat-cs --version"
-  add-to-list "pwncat,https://github.com/cytopia/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
+  add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
 }
 
 function install_gmsadumper() {
