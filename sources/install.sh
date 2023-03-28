@@ -251,7 +251,27 @@ function install_php_filter_chain_generator() {
   add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,TODO"
 }
 
-function install_recondog() { 
+function install_kraken() {
+  colorecho "Installing Kraken"
+  git -C /opt/tools clone --recurse-submodules https://github.com/kraken-ng/Kraken.git
+  cd /opt/tools/Kraken || exit
+  python3 -m venv ./venv
+  ./venv/bin/python3 -m pip install -r requirements.txt
+  add-aliases kraken
+  add-history kraken
+  add-test-command "kraken.py -h"
+}
+
+function install_soapui() {
+  colorecho "Installing SoapUI"
+  mkdir -p /opt/tools/SoapUI/
+  wget https://dl.eviware.com/soapuios/5.7.0/SoapUI-5.7.0-linux-bin.tar.gz -O /tmp/SoapUI.tar.gz
+  tar xvf /tmp/SoapUI.tar.gz -C /opt/tools/SoapUI/ --strip=1
+  add-aliases soapui
+  add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
+}
+
+function install_recondog() {
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
   python3 -m pip install -r /opt/tools/ReconDog/requirements.txt
@@ -440,8 +460,11 @@ function install_bolt() {
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  python3 -m pipx install crackmapexec 
-  ~/.local/bin/crackmapexec
+  # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
+  # TODO: Optimize so that the PATH is always up to date
+  source /root/.zshrc
+  git -C /opt/tools/ clone https://github.com/Porchetta-Industries/CrackMapExec.git
+  python3 -m pipx install /opt/tools/CrackMapExec/
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
@@ -512,10 +535,6 @@ function install_bloodhound-py() {
 
 function install_neo4j() {
   colorecho "Installing neo4j"
-  fapt openjdk-11-jre
-  # TODO: when temporary fix is not needed anymore --> fapt openjdk-17-jre
-  update-java-alternatives --jre --set "$(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.11.0-openjdk*' -printf '%P')"
-  # TODO: when temporary fix is not needed anymore --> update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.17.0-openjdk*' -printf '%P')
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   # TODO: temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
   #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
@@ -527,6 +546,7 @@ function install_neo4j() {
   neo4j-admin set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
   touch /usr/share/neo4j/logs/neo4j.log
+  add-aliases neo4j
   add-history neo4j
   add-test-command "neo4j version"
   add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
@@ -1134,7 +1154,6 @@ function install_wuzz() {
 function install_pypykatz() {
   colorecho "Installing pypykatz"
   python3 -m pipx install pypykatz
-  python3 -m pipx inject pypykatz minikerberos==0.3.5
   add-history pypykatz
   add-test-command "pypykatz version"
   add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
@@ -1219,10 +1238,10 @@ function install_symfony-exploits(){
 
 function install_john() {
   colorecho "Installing john the ripper"
-  fapt qtbase5-dev
-  git -C /opt/tools/ clone https://github.com/openwall/john
+  #fapt qtbase5-dev
+  git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
   cd /opt/tools/john/src || exit
-  ./configure && make
+  ./configure --disable-native-tests && make
   add-aliases john-the-ripper
   add-history john-the-ripper
   add-test-command "john --help"
@@ -1520,8 +1539,6 @@ function install_ruler() {
 
 function install_ghidra() {
   colorecho "Installing Ghidra"
-  apt-get install -y openjdk-11-jdk
-  #wget -P /tmp/ "https://ghidra-sre.org/ghidra_9.2.3_PUBLIC_20210325.zip"
   wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
   unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
   rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
@@ -2239,6 +2256,13 @@ function install_bloodhound-quickwin() {
   add-to-list "bloodhound-quickwin,https://github.com/SadProcessor/bloodhound-quickwin,A tool for BloodHounding on Windows machines without .NET or Powershell installed"
 }
 
+function install_ldapsearch() {
+  colorecho "Installing ldapsearch"
+  fapt ldap-utils
+  add-history ldapsearch
+  add-test-command "ldapsearch --help; ldapsearch --help |& grep 'Search options'"
+}
+
 function install_ldapsearch-ad() {
   colorecho "Installing ldapsearch-ad"
   git -C /opt/tools/ clone https://github.com/yaap7/ldapsearch-ad
@@ -2319,7 +2343,7 @@ function install_frida() {
 function install_objection() {
   colorecho "Installing objection"
   python3 -m pipx install git+https://github.com/sensepost/objection
-  add-history objection 
+  add-history objection
   add-test-command "objection --help"
   add-to-list "objection,https://github.com/sensepost/objection,Runtime mobile exploration"
 }
@@ -2472,7 +2496,7 @@ function install_vulny-code-static-analysis() {
 function install_brakeman() {
   colorecho "Installing Brakeman"
   gem install brakeman
-  add-history brakeman 
+  add-history brakeman
   add-test-command "brakeman --help"
   add-to-list "brakeman,https://github.com/presidentbeef/brakeman,Static analysis tool for Ruby on Rails applications"
 }
@@ -2539,7 +2563,7 @@ function install_dnsx() {
 function install_shuffledns() {
   colorecho "Installing shuffledns"
   go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
-  add-history shuffledns 
+  add-history shuffledns
   add-test-command "shuffledns --help"
   add-to-list "shuffledns,https://github.com/projectdiscovery/shuffledns,A fast and customizable DNS resolver that can be used for subdomain enumeration and other tasks."
 }
@@ -2700,13 +2724,7 @@ function install_crackhound() {
 
 function install_kerbrute() {
   colorecho "Installing Kerbrute"
-  if [[ $(uname -m) = 'x86_64' ]]
-  then
-    wget https://github.com/ropnop/kerbrute/releases/latest/download/kerbrute_linux_amd64 -O /opt/tools/bin/kerbrute
-  else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-  fi
-  chmod +x /opt/tools/bin/kerbrute
+  go install github.com/ropnop/kerbrute@latest  
   add-history kerbrute
   add-test-command "kerbrute --help"
   # FIXME ARM platforms install ?
@@ -3055,6 +3073,13 @@ function install_nmap() {
   add-history nmap
   add-test-command "nmap --version"
   add-to-list "nmap,https://nmap.org,The Network Mapper - a powerful network discovery and security auditing tool"
+}
+
+function install_netdiscover() {
+  colorecho "Installing netdiscover"
+  fapt netdiscover
+  add-history netdiscover
+  add-test-command "netdiscover -h |& grep 'Usage: netdiscover'"
 }
 
 function install_php() {
@@ -3570,6 +3595,44 @@ function install_PassTheCert() {
   add-to-list "PassTheCert,https://github.com/Kevin-Robertson/PassTheCert,PassTheCert is a tool to extract Active Directory user password hashes from a domain controller's local certificate store."
 }
 
+function install_tls-map() {
+  colorecho "Installing TLS map"
+  gem install tls-map
+  add-history tls-map
+  add-test-command "tls-map --help"
+}
+
+function install_haiti() {
+  colorecho "Installing haiti"
+  gem install haiti-hash
+  add-history haiti
+  add-test-command "haiti --help"
+}
+
+function install_ctf-party() {
+  colorecho "Installing ctf-party"
+  gem install ctf-party
+  add-history ctf-party
+  add-test-command "ctf-party --help"
+}
+
+function install_notify() {
+  colorecho "Installing Notify"
+  go install -v github.com/projectdiscovery/notify/cmd/notify@latest
+  add-history notify
+  add-test-command "notify -h"
+}
+
+function install_firefox() {
+  colorecho "Installing firefox"
+  fapt firefox-esr
+  mkdir /opt/tools/firefox
+  mv /root/sources/firefox/* /opt/tools/firefox/
+  python3 -m pip install -r /opt/tools/firefox/requirements.txt
+  python3 /opt/tools/firefox/setup.py
+  add-test-command "file /root/.mozilla/firefox/*.Exegol"
+  add-test-command "firefox --version"
+}
 
 # Package dedicated to the basic things the env needs
 function package_base() {
@@ -3679,8 +3742,13 @@ function package_base() {
   fapt perl
   install_exegol-history
   install_logrotate
+  fapt openjdk-11-jre
   fapt openjdk-17-jre
+  ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
+  ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+  update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
   install_chromium
+  install_firefox
 }
 
 # Package dedicated to offensive miscellaneous tools
@@ -3698,6 +3766,8 @@ function package_misc() {
   install_ngrok                   # expose a local development server to the Internet
   install_whatportis              # Search default port number
   install_ascii                   # The ascii table in the shell
+  install_ctf-party               # Enhance and speed up script/exploit writing
+  install_notify                  # Notify is a Go-based assistance package that enables you to stream the output of several tools
 }
 
 # Package dedicated to most used offensive tools
@@ -3762,7 +3832,8 @@ function package_cracking() {
   install_fcrackzip               # Zip cracker
   install_pdfcrack                # PDF cracker
   install_bruteforce-luks         # Find the password of a LUKS encrypted volume
-  install_name-that-hash          # Name-That-Hash, the hash identifier tool
+  install_name-that-hash          # Name-That-Hash, hash identifier tool
+  install_haiti                   # haiti, hash type identifier
 }
 
 # Package dedicated to osint, recon and passive tools
@@ -3845,7 +3916,7 @@ function package_web() {
   install_weevely                 # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
-  install_oneforall                       
+  install_oneforall
   install_wafw00f                 # Waf detector
   install_corscanner              # CORS misconfiguration detector
   install_hakrawler               # Web endpoint discovery
@@ -3880,9 +3951,11 @@ function package_web() {
   install_naabu                   # Fast port scanner
   # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
-  install_smuggler                # HTTP Request Smuggling scanner  
+  install_smuggler                # HTTP Request Smuggling scanner
   fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
+  install_kraken                  # Kraken is a modular multi-language webshell.
+  install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
 }
 
 # Package dedicated to command & control frameworks
@@ -3947,6 +4020,7 @@ function package_ad() {
   install_pygpoabuse
   install_bloodhound-import       # Python script to import BH data to a neo4j db
   install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
+  install_ldapsearch              # LDAP enumeration utils
   install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
   install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
   install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
@@ -4039,6 +4113,7 @@ function package_network() {
   install_hping3                  # Discovery tool
   install_masscan                 # Port scanner
   install_nmap                    # Port scanner
+  install_netdiscover             # Active/passive address reconnaissance tool
   install_autorecon               # External recon tool
   install_tcpdump                 # Capture TCP traffic
   install_dnschef                 # Python DNS server
@@ -4102,7 +4177,7 @@ function package_steganography() {
   install_stegolsb                # (including wavsteg)
   install_exif                    # Show and change EXIF information in JPEG files
   install_exiv2                   # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
-  install_hexedit                 # View and edit files in hexadecimal or in ASCII 
+  install_hexedit                 # View and edit files in hexadecimal or in ASCII
 }
 
 # Package dedicated to cloud tools
@@ -4131,7 +4206,7 @@ function package_reverse() {
 # Package dedicated to attack crypto
 function package_crypto() {
   # install_rsactftool            # attack rsa FIXME
-  echo "nothing to install"
+  install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
 }
 
 # Package dedicated to SAST and DAST tools
