@@ -3252,6 +3252,13 @@ function install_PassTheCert() {
   add-test-command "passthecert.py --help"
 }
 
+function install_bqm() {
+  colorecho "Installing BQM"
+  gem install bqm --no-wrapper
+  add-history bqm
+  add-test-command "bqm --help"
+}
+
 function install_tls-map() {
   colorecho "Installing TLS map"
   gem install tls-map
@@ -3708,6 +3715,7 @@ function package_ad() {
   install_masky
   install_roastinthemiddle
   install_PassTheCert
+  install_bqm                     # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
 }
 
 # Package dedicated to mobile apps pentest tools
