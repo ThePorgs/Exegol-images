@@ -559,7 +559,7 @@ function install_cyperoth() {
   add-aliases cypheroth
   add-history cypheroth
   add-test-command "cypheroth --help; cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
-  add-to-list "cyperoth,https://github.com/seajaysec/Cyperoth,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
+  add-to-list "cyperoth,https://github.com/seajaysec/cyperoth,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
 }
 
 function install_mitm6_sources() {
@@ -722,7 +722,7 @@ function install_kiterunner() {
   ln -s "$(pwd)/dist/kr" /opt/tools/bin/kr
   add-history kitrunner
   add-test-command "kr --help"
-  add-to-list "kiterunner,https://github.com/SecureAuthCorp/KitRunner,Tool for operating Active Directory environments."
+  add-to-list "kiterunner,https://github.com/assetnote/KitRunner,Tool for operating Active Directory environments."
 }
 
 function install_dirsearch() {
@@ -816,7 +816,7 @@ function install_timing_attack() {
   colorecho "Installing timing_attack"
   gem install timing_attack
   add-test-command "timing_attack --help"
-  add-to-list "timing,https://github.com/lcamery/timing,Tool to generate a timing profile for a given command."
+  add-to-list "timing,https://github.com/ffleming/timing_attack,Tool to generate a timing profile for a given command."
 }
 
 function install_updog() {
@@ -1297,7 +1297,7 @@ function install_checksec-py() {
   colorecho "Installing checksec.py"
   python3 -m pipx install checksec.py
   add-test-command "checksec --help"
-  add-to-list "checksec-py,https://github.com/slimm609/checksec.py,Python wrapper script for checksec.sh from paX."
+  add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
 
 function install_arsenal() {
@@ -1692,7 +1692,7 @@ function install_windapsearch-go() {
   chmod +x /opt/tools/bin/windapsearch
   add-history windapsearch
   add-test-command "windapsearch --help"
-  add-to-list "windapsearch-go,https://github.com/ropnop/windapsearch-go,Active Directory enumeration tool."
+  add-to-list "windapsearch-go,https://github.com/ropnop/go-windapsearch/,Active Directory enumeration tool."
 }
 
 function install_trilium() {
@@ -1854,7 +1854,7 @@ function install_nfct() {
   colorecho "Installing nfct"
   fapt nfct
   add-test-command "nfct --help |& grep 'nfct command'"
-  add-to-list "nfct,https://github.com/nfc-tools/nfct,Tool for Near Field Communication (NFC) devices"
+  add-to-list "nfct,https://github.com/grundid/nfctools,Tool for Near Field Communication (NFC) devices"
 }
 
 function install_pcsc() {
@@ -1881,7 +1881,7 @@ function install_libnfc() {
   #rm libnfc-1.7.1.tar.bz2
   add-history libnfc
   add-test-command "nfc-scan-device -h"
-  add-to-list "libnfc,https://github.com/nfc-tools/libnfc,Library for Near Field Communication (NFC) devices"
+  add-to-list "libnfc,https://github.com/grundid/nfctools,Library for Near Field Communication (NFC) devices"
 }
 
 function install_mfoc() {
@@ -2449,7 +2449,7 @@ function install_donpapi() {
   add-aliases donpapi
   add-history donpapi
   add-test-command "DonPAPI.py --help"
-  add-to-list "donpapi,https://github.com/securisec/donpapi,Python network and web application scanner"
+  add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Python network and web application scanner"
 }
 
 function install_gau() {
@@ -2526,7 +2526,7 @@ function install_prips() {
   fapt prips
   add-history prips
   add-test-command "prips --help"
-  add-to-list "prips,https://github.com/dmyers/prips,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
+  add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
 }
 
 function install_hakrevdns() {
@@ -2741,7 +2741,7 @@ function install_searchsploit() {
   sed -i 's/opt\/exploitdb/opt\/tools\/exploitdb/' ~/.searchsploit_rc
   searchsploit -u
   add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
-  add-to-list "searchsploit,https://github.com/offensive-security/searchsploit,A command line search tool for Exploit-DB"
+  add-to-list "searchsploit,https://github.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
 }
 
 function install_crunch() {
@@ -2938,7 +2938,7 @@ function install_android-tools-adb() {
   colorecho "Installing android-tools-adb"
   fapt android-tools-adb
   add-test-command "adb --help"
-  add-to-list "android-tools-adb,https://developer.android.com/studio/releases/platform-tools,A collection of tools for debugging Android applications"
+  add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications"
 }
 
 function install_smali(){
@@ -3146,7 +3146,7 @@ function install_dnsutils() {
   colorecho "Installing dnsutils"
   fapt dnsutils
   add-history dnsutils
-  add-to-list "dnsutils,https://wiki.debian.org/dnsutils,Provides various tools for querying DNS servers"
+  add-to-list "dnsutils,https://manpages.debian.org/jessie/dnsutils/dig.1.en.html,Provides various tools for querying DNS servers"
 }
 
 function install_faketime() {
@@ -3213,7 +3213,7 @@ function install_rpcbind() {
   colorecho "Installing rpcbind"
   fapt rpcbind
   add-test-command "rpcbind"
-  add-to-list "rpcbind,https://github.com/thkukuk/rpcbind,RPCbind is a server that converts RPC program numbers into universal addresses."
+  add-to-list "rpcbind,https://github.com/teg/rpcbind,RPCbind is a server that converts RPC program numbers into universal addresses."
 }
 
 function install_ntpdate() {
@@ -3268,7 +3268,7 @@ function install_snmp() {
   colorecho "Installing snmp"
   fapt snmp
   add-history snmp
-  add-to-list "snmp,https://github.com/etingof/snmp,SNMP is a protocol for network management"
+  add-to-list "snmp,FIXME,SNMP is a protocol for network management"
 }
 
 function install_sqlmap() {
@@ -3321,7 +3321,7 @@ function install_exifprobe() {
   colorecho "Installing exifprobe"
   fapt exifprobe
   add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"
-  add-to-list "exifprobe,https://github.com/oftedal/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."
+  add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."
 }
 
 function install_dnsenum() {
@@ -3356,14 +3356,14 @@ function install_avrdude() {
   colorecho "Installing avrdude"
   fapt avrdude
   add-test-command "avrdude '-?'"
-  add-to-list "avrdude,https://github.com/nickgammon/avrdude,AVRDUDE is a command-line program that allows you to download/upload/manipulate the ROM and EEPROM contents of AVR microcontrollers using the in-system programming technique (ISP)."
+  add-to-list "avrdude,https://github.com/avrdudes/avrdude,AVRDUDE is a command-line program that allows you to download/upload/manipulate the ROM and EEPROM contents of AVR microcontrollers using the in-system programming technique (ISP)."
 }
 
 function install_minicom() {
   colorecho "Installing minicom"
   fapt minicom
   add-test-command "minicom --version; minicom --version |& grep 'This program is free software'"
-  add-to-list "minicom,https://github.com/acassis/minicom,Minicom is a text-based serial communication program for Unix-like operating systems."
+  add-to-list "minicom,https://doc.ubuntu-fr.org/minicom,Minicom is a text-based serial communication program for Unix-like operating systems."
 }
 
 function install_nasm() {
@@ -3395,7 +3395,7 @@ function install_stegosuite() {
   colorecho "Installing stegosuite"
   fapt stegosuite
   add-test-command "stegosuite --help"
-  add-to-list "stegosuite,https://github.com/tigerjack/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files."
+  add-to-list "stegosuite,https://github.com/osde8info/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files."
 }
 
 function install_steghide() {
@@ -3416,13 +3416,13 @@ function install_foremost() {
   colorecho "Installing foremost"
   fapt foremost
   add-test-command "foremost -V"
-  add-to-list "foremost,https://github.com/forensicmike/foremost,Foremost is a forensic tool for recovering files based on their headers, footers, and internal data structures."
+  add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers, footers, and internal data structures."
 }
 
 function install_pst-utils() {
   colorecho "Installing pst-utils"
   fapt pst-utils
-  add-to-list "pst-utils,https://github.com/mstange/pst-utils,pst-utils is a set of tools for working with Outlook PST files."
+  add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
 }
 
 function install_reaver() {
@@ -3470,7 +3470,7 @@ function install_ssh-audit() {
 function install_xtightvncviewer() {
   colorecho "Installing xtightvncviewer"
   fapt xtightvncviewer
-  add-to-list "xtightvncviewer,https://github.com/LibVNC/x11vnc/tree/master/vncviewer,xtightvncviewer is an open source VNC client software."
+  add-to-list "xtightvncviewer,https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software."
 }
 
 function install_rdesktop() {
@@ -3482,7 +3482,7 @@ function install_rdesktop() {
 function install_dns2tcp() {
   colorecho "Installing dns2tcp"
   fapt dns2tcp
-  add-to-list "dns2tcp,https://github.com/robertdavidgraham/dns2tcp,dns2tcp is a tool for relaying TCP connections over DNS."
+  add-to-list "dns2tcp,https://github.com/alex-sector/dns2tcp,dns2tcp is a tool for relaying TCP connections over DNS."
 }
 
 function install_traceroute() {
@@ -3519,7 +3519,7 @@ function install_ldeep() {
   python3 -m pipx install ldeep
   add-test-command "ldeep --help"
   add-history ldeep
-  add-to-list "ldeep,https://github.com/robertdavidgraham/ldeep,ldeep is a tool to discover hidden paths on Web servers."
+  add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
 }
 
 function install_genusernames() {
