@@ -559,7 +559,7 @@ function install_cyperoth() {
   add-aliases cypheroth
   add-history cypheroth
   add-test-command "cypheroth --help; cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
-  add-to-list "cyperoth,https://github.com/seajaysec/cyperoth,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
+  add-to-list "cyperoth,https://github.com/seajaysec/cypheroth/,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
 }
 
 function install_mitm6_sources() {
@@ -722,7 +722,7 @@ function install_kiterunner() {
   ln -s "$(pwd)/dist/kr" /opt/tools/bin/kr
   add-history kitrunner
   add-test-command "kr --help"
-  add-to-list "kiterunner,https://github.com/assetnote/KitRunner,Tool for operating Active Directory environments."
+  add-to-list "kiterunner,https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments."
 }
 
 function install_dirsearch() {
@@ -1918,7 +1918,7 @@ function install_libnfc-crypto1-crack() {
   add-aliases libnfc-crypto1-crack
   add-history libnfc-crypto1-crack
   add-test-command "libnfc_crypto1_crack --help |& grep 'libnfc.buses'"
-  add-to-list "libnfc-crypto1-crack,https://github.com/nfc-tools/libnfc-crypto1-crack,Implementation of cryptographic attack on Mifare Classic RFID cards"
+  add-to-list "libnfc-crypto1-crack,https://github.com/droidnewbie2/acr122uNFC,Implementation of cryptographic attack on Mifare Classic RFID cards"
 }
 
 function install_mfdread() {
@@ -2294,7 +2294,7 @@ function install_iptables() {
   colorecho "Installing iptables"
   fapt iptables
   add-test-command "iptables --version"
-  add-to-list "iptables,https://github.com/netfilter/iptables,Userspace command line tool for configuring kernel firewall"
+  add-to-list "iptables,https://linux.die.net/man/8/iptables,Userspace command line tool for configuring kernel firewall"
 }
 
 function install_trid() {
@@ -2741,7 +2741,7 @@ function install_searchsploit() {
   sed -i 's/opt\/exploitdb/opt\/tools\/exploitdb/' ~/.searchsploit_rc
   searchsploit -u
   add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
-  add-to-list "searchsploit,https://github.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
+  add-to-list "searchsploit,https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
 }
 
 function install_crunch() {
