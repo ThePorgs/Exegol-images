@@ -3268,7 +3268,7 @@ function install_snmp() {
   colorecho "Installing snmp"
   fapt snmp
   add-history snmp
-  add-to-list "snmp,FIXME,SNMP is a protocol for network management"
+  add-to-list "snmp,https://doc.ubuntu-fr.org/snmp,SNMP is a protocol for network management"
 }
 
 function install_sqlmap() {
