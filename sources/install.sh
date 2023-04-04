@@ -2520,7 +2520,9 @@ function install_rockyou(){
 
 function install_amass(){
   colorecho "Installing Amass"
-  GO111MODULE=on go install -v github.com/OWASP/Amass/v3/...@master
+  export GO111MODULE=on
+  go install -v github.com/OWASP/Amass/v3/...@master
+  unset GO111MODULE
   add-test-command "amass -version"
 }
 
