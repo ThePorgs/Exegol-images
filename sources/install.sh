@@ -1861,7 +1861,6 @@ function install_pcsc() {
   colorecho "Installing tools for PC/SC (smartcard)"
   apt-get install -y pcsc-tools pcscd libpcsclite-dev libpcsclite1
   add-test-command "pcsc_scan -V"
-  add-test-command "pcscd --version"
   add-to-list "pcsc,https://pcsclite.apdu.fr/,Middleware for smart card readers"
 }
 
@@ -2725,7 +2724,7 @@ function install_crackhound() {
 
 function install_kerbrute() {
   colorecho "Installing Kerbrute"
-  go install github.com/ropnop/kerbrute@latest  
+  go install github.com/ropnop/kerbrute@latest
   add-history kerbrute
   add-test-command "kerbrute --help"
   # FIXME ARM platforms install ?
@@ -2771,6 +2770,7 @@ function install_rockyou(){
 
 function install_amass(){
   colorecho "Installing Amass"
+  set_go_env
   go install -v github.com/OWASP/Amass/v3/...@master
   add-test-command "amass -version"
   add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration, attack surface mapping & external assets discovery tool"
@@ -3596,6 +3596,13 @@ function install_PassTheCert() {
   add-to-list "PassTheCert,https://github.com/AlmondOffSec/PassTheCert,PassTheCert is a tool to extract Active Directory user password hashes from a domain controller's local certificate store."
 }
 
+function install_bqm() {
+  colorecho "Installing BQM"
+  gem install bqm --no-wrapper
+  add-history bqm
+  add-test-command "bqm --help"
+}
+
 function install_tls-map() {
   colorecho "Installing TLS map"
   gem install tls-map
@@ -3743,8 +3750,8 @@ function package_base() {
   fapt perl
   install_exegol-history
   install_logrotate
-  fapt openjdk-11-jre
-  fapt openjdk-17-jre
+  fapt openjdk-11-jre openjdk-11-jdk-headless
+  fapt openjdk-17-jre openjdk-17-jdk-headless
   ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
   ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
   update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
@@ -3913,7 +3920,7 @@ function package_web() {
   install_testssl                 # SSL/TLS scanner
   install_sslscan                 # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
-  install_                  # SSL/TLS scanner
+  # install_sslyze                  # SSL/TLS scanner FIXME
   install_weevely                 # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
@@ -4052,6 +4059,7 @@ function package_ad() {
   install_masky
   install_roastinthemiddle
   install_PassTheCert
+  install_bqm                     # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
 }
 
 # Package dedicated to mobile apps pentest tools
