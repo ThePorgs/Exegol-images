@@ -1114,6 +1114,12 @@ function install_ysoserial() {
   add-test-command "ysoserial --help; ysoserial --help |& grep 'spring-core:4.1.4.RELEASE'"
 }
 
+function install_slipit() {
+  # Utility for creating ZipSlip archives
+  colorecho "Installing slipit"
+  pip3 install slipit
+}
+
 function install_whatweb() {
   colorecho "Installing whatweb"
   fapt whatweb
@@ -3594,6 +3600,7 @@ function package_web() {
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
+  install_slipit                  # Utility for creating ZipSlip archives
   install_whatweb                 # Recognises web technologies including content management
   # install_phpggc                  # php deserialization payloads FIXME https://github.com/ambionics/phpggc/issues/142
   install_symfony-exploits        #  symfony secret fragments exploit
