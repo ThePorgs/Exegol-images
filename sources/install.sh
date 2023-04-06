@@ -2297,6 +2297,14 @@ function install_nuclei() {
   add-test-command "nuclei --version"
 }
 
+function install_katana() {
+  # Crawling and Spidering
+  colorecho "Installing Katana"
+  go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+  add-history katana
+  add-test-command "katana --version"
+}
+
 function install_prips() {
   # Print the IP addresses in a given range
   colorecho "Installing Prips"
@@ -3607,6 +3615,7 @@ function package_web() {
   install_arjun                   # HTTP Parameter Discovery
   install_nuclei                  # Needed for gau install
   install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
+  install_katana                  # Crawling and Spidering by projectdiscovery.io
   install_prips                   # Print the IP addresses in a given range
   install_hakrevdns               # Reverse DNS lookups
   install_httprobe                # Probe http
