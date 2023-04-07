@@ -2340,6 +2340,20 @@ function install_ligolo-ng() {
   add-test-command "ligolo-proxy --help"
 }
 
+function install_nfspy() {
+  colorecho "Installing nfspy"
+  git -C /opt/tools/ clone https://github.com/bonsaiviking/NfSpy.git
+  cd /opt/tools/NfSpy
+  apt install -y libfuse-dev
+  python2 -m pip install fuse-python
+  python2 setup.py install
+  chmod +x scripts/*
+  ln -v -s /opt/tools/NfSpy/scripts/nfspy /opt/tools/bin/nfspy
+  ln -v -s /opt/tools/NfSpy/scripts/nfspysh /opt/tools/bin/nfspysh
+  add-test-command "nfspy --help"
+  add-test-command "nfspysh --help"
+}
+
 function install_anew() {
   colorecho "Installing anew"
   go install -v github.com/tomnomnom/anew@latest
@@ -3719,6 +3733,7 @@ function package_network() {
   install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
   install_tailscale               # Zero config VPN for building secure networks
   #install_ligolo-ng              # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
+  install_nfspy                   # UID/GID spoofer for NFSv3 abuse
 }
 
 # Package dedicated to wifi pentest tools
