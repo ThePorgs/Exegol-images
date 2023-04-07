@@ -239,6 +239,18 @@ function install_php_filter_chain_generator() {
   add-test-command "php_filter_chain_generator --help"
 }
 
+function install_badsecrets() {
+  colorecho "Installing badsecrets"
+  git -C /opt/tools/ clone https://github.com/blacklanternsecurity/badsecrets.git
+  cd /opt/tools/badsecrets
+  python3 -m venv venv && . venv/bin/activate      # Using a venv to avoid conflicts with current versions of pycrypto installed 
+  pip install --no-cache-dir -r requirements.txt
+  pip install badsecrets
+  deactivate
+  add-aliases badsecrets
+  add-test-command "badsecrets --help"
+}
+
 function install_recondog() { 
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
@@ -3540,6 +3552,7 @@ function package_web() {
   install_smuggler                # HTTP Request Smuggling scanner  
   fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
+  install_badsecrets              # A tool for identifying weak secrets used in common frameworks
 }
 
 # Package dedicated to command & control frameworks
