@@ -3260,6 +3260,16 @@ function install_bqm() {
   add-test-command "bqm --help"
 }
 
+function install_microsoft-rpc-fuzzing-tools() {
+  # Fuzzing tools for Microsoft RPC
+  colorecho "Installing microsoft-rpc-fuzzing-tools"
+  apt-get install -y build-essential libffi-dev openssl rustc libssl-dev
+  python3 -m pip install rich requests
+  git -C /opt/tools/ clone https://github.com/p0dalirius/microsoft-rpc-fuzzing-tools.git
+  add-aliases microsoft-rpc-fuzzing-tools
+  add-history microsoft-rpc-fuzzing-tools
+}
+
 function install_tls-map() {
   colorecho "Installing TLS map"
   gem install tls-map
@@ -3717,6 +3727,7 @@ function package_ad() {
   install_roastinthemiddle
   install_PassTheCert
   install_bqm                     # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
+  install_microsoft-rpc-fuzzing-tools # Fuzzing tools for Microsoft RPC by p0dalirius
 }
 
 # Package dedicated to mobile apps pentest tools

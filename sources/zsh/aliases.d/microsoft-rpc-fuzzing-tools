@@ -1,0 +1,2 @@
+alias ListAvailablePipesOnRemoteMachine.py='/opt/tools/microsoft-rpc-fuzzing-tools/ListAvailablePipesOnRemoteMachine/ListAvailablePipesOnRemoteMachine.py'
+alias ListRPCEndpointsOnRemoteMachine.py='/opt/tools/microsoft-rpc-fuzzing-tools/ListRPCEndpointsOnRemoteMachine/ListRPCEndpointsOnRemoteMachine.py'
