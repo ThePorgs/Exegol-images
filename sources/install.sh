@@ -1639,6 +1639,12 @@ function install_scout() {
   add-test-command "scout --help"
 }
 
+function install_azurecli(){
+  colorecho "Installing Azure cli"
+  fapt azure-cli
+  add-test-command "az --help"
+}
+
 function install_jdwp_shellifier(){
   colorecho "Installing jdwp_shellifier"
   git -C /opt/tools/ clone https://github.com/IOActive/jdwp-shellifier
@@ -3851,6 +3857,7 @@ function package_cloud() {
   install_kubectl
   install_awscli
   install_scout                   # Multi-Cloud Security Auditing Tool
+  install_azurecli                # Tool made by Microsoft to use Azure API 
 }
 
 # Package dedicated to reverse engineering tools
