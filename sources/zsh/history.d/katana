@@ -1,1 +1,1 @@
-katana -u https://example.com
+katana -u "https://$TARGET"
