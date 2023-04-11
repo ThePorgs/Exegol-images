@@ -1117,7 +1117,7 @@ function install_ysoserial() {
 function install_slipit() {
   # Utility for creating ZipSlip archives
   colorecho "Installing slipit"
-  python3 -m pip install slipit
+  python3 -m pipx install slipit
   add-test-command "slipit -h"
   add-history slipit
 }
