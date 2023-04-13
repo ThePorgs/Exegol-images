@@ -2521,7 +2521,7 @@ function install_rockyou(){
 function install_amass(){
   colorecho "Installing Amass"
   set_go_env
-  go install -v github.com/OWASP/Amass/v3/...@master
+  go install -v github.com/owasp-amass/amass/v3/...@master
   add-test-command "amass -version"
 }
 
