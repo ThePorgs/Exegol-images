@@ -568,7 +568,7 @@ function install_mitm6_sources() {
   cd /opt/tools/mitm6/ || exit
   python3 -m pip install -r requirements.txt
   python3 setup.py install
-}#
+} #
 
 function install_mitm6_pip() {
   colorecho "Installing mitm6 with pip"
@@ -1350,7 +1350,7 @@ function install_bloodhound_old_v3() {
   unzip /tmp/BloodHound-linux-x64.zip -d /opt/tools/
   mv /opt/tools/BloodHound-linux-x64 /opt/tools/BloodHound3
   rm /tmp/BloodHound-linux-x64.zip
-}#
+} #
 
 function install_bloodhound_old_v2() {
   colorecho "Installing BloodHound v2 (for older databases/collections)"
@@ -1358,7 +1358,7 @@ function install_bloodhound_old_v2() {
   unzip /tmp/BloodHound-linux-x64.zip -d /opt/tools/
   mv /opt/tools/BloodHound-linux-x64 /opt/tools/BloodHound2
   rm /tmp/BloodHound-linux-x64.zip
-}#
+} #
 
 function install_bettercap() {
   colorecho "Installing Bettercap"
@@ -1444,7 +1444,7 @@ function install_wireshark_sources() {
   cd /tmp/ || exit
   rm -r "$(find . -maxdepth 1 -type d -name 'wireshark*')"
   wireshark.tar.xz
-}#
+} #
 
 function install_infoga() {
   colorecho "Installing infoga"
