@@ -2910,7 +2910,9 @@ function install_pth-tools(){
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
-  fapt /tmp/libreadline6_6.3-8+b3.deb /tmp/multiarch-support_2.19-18+deb8u10.deb
+  dpkg -i /tmp/libreadline6_6.3-8+b3.deb
+  dpkg -i /tmp/multiarch-support_2.19-18+deb8u10.deb
+  apt-get --fix-broken install
   add-aliases pth-tools
   add-history pth-tools
   # TODO add-test-command
