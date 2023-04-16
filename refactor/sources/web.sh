@@ -73,6 +73,13 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
 }
 
+function package_web_configure() {
+    set_go_env
+    configure_nuclei
+    configure_moodlescan
+    configure_clusterd
+}
+
 function install_web_apt_tools() {
     fapt dirb wfuzz sqlmap sslscan weevely whatweb prips swaks
   
@@ -285,12 +292,14 @@ function install_moodlescan() {
     cd /opt/tools/moodlescan
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
-    # TODO: config ?
-    ./venv/bin/python3 moodlescan.py -a
     add-aliases moodlescan
     add-history moodlescan
     add-test-command "moodlescan --help"
     add-to-list "moodlescan,https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities."
+}
+
+function configure_moodlescan() {
+    /opt/tools/moodlescan/venv/bin/python3 moodlescan.py -a
 }
 
 function install_testssl() {
@@ -483,7 +492,7 @@ function install_httpmethods() {
     cd /opt/tools/httpmethods
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
-    add-alias httpmethods
+    add-aliases httpmethods
     add-history httpmethods
     add-test-command "httpmethods --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT, DELETE, etc.)"
@@ -537,12 +546,14 @@ function install_clusterd() {
     cd /opt/tools/clusterd
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r requirements.txt
-    # TODO: config
-    echo -e '#!/bin/sh\n(cd /opt/tools/clusterd/ && python clusterd.py $@)' > /usr/local/bin/clusterd
-    chmod +x /usr/local/bin/clusterd
     add-history clusterd
     add-test-command "clusterd --help"
     add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents."
+}
+
+function configure_clusterd() {
+    echo -e '#!/bin/sh\n(cd /opt/tools/clusterd/ && ./venv/bin/python2 clusterd.py $@)' > /usr/local/bin/clusterd
+    chmod +x /usr/local/bin/clusterd
 }
 
 function install_arjun() {
@@ -555,10 +566,13 @@ function install_arjun() {
 function install_nuclei() {
     colorecho "Installing Nuclei"
     go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
-    nuclei -update-templates
     add-history nuclei
     add-test-command "nuclei --version"
     add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues, including XSS, SQL injection, and misconfigured servers."
+}
+
+function configure_nuclei() {
+    nuclei -update-templates
 }
 
 function install_gau() {
