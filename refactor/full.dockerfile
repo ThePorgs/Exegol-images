@@ -19,7 +19,6 @@ ADD . sources /root/sources
 WORKDIR /root/sources/
 
 RUN chmod +x entrypoint.sh
-RUN chmod +x base.sh
 
 RUN ./entrypoint.sh package_base
 
@@ -38,6 +37,9 @@ RUN ./entrypoint.sh package_wordlists_configure
 
 RUN ./entrypoint.sh package_cracking
 RUN ./entrypoint.sh package_cracking_configure
+
+RUN ./entrypoint.sh package_osint
+RUN ./entrypoint.sh package_osint_configure
 
 RUN ./entrypoint.sh post_install_clean
 

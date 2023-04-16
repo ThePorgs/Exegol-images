@@ -4,7 +4,7 @@ set -e
 
 source base.sh
 source misc.sh
-# source code_analysis.sh
+source osint.sh
 # source ad.sh
 source wordlists.sh
 source cracking.sh
