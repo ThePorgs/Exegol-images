@@ -22,6 +22,10 @@ function criticalecho-noexit () {
     echo -e "${RED}[EXEGOL ERROR] $*${NOCOLOR}" 2>&1
 }
 
+function add-to-list() {
+  echo $1 >> "/.exegol/installed_tools"
+}
+
 function add-aliases() {
     colorecho "Adding aliases for: $*"
     # Removing add empty lines and the last trailing newline if any, and adding a trailing newline.
