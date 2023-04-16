@@ -72,7 +72,8 @@ function install_arsenal() {
 function install_whatportis() {
     colorecho "Installing whatportis"
     python3 -m pipx install whatportis
-    echo y | whatportis --update
+    # TODO : FIX : "port": port[1] if port[1] else "---",list index out of range - cli.py
+    # echo y | whatportis --update
     add-history whatportis
     add-test-command "whatportis --version"
     add-to-list "whatportis,https://github.com/ncrocfer/whatportis,Command-line tool to lookup port information"

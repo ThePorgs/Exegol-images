@@ -36,6 +36,9 @@ RUN ./entrypoint.sh package_c2_configure
 RUN ./entrypoint.sh package_wordlists
 RUN ./entrypoint.sh package_wordlists_configure
 
+RUN ./entrypoint.sh package_cracking
+RUN ./entrypoint.sh package_cracking_configure
+
 RUN ./entrypoint.sh post_install_clean
 
 RUN rm -rf /root/sources
