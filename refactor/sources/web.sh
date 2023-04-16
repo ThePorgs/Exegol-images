@@ -117,7 +117,7 @@ function install_kiterunner() {
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-small.kite.tar.gz
     make build
     ln -s "$(pwd)/dist/kr" /opt/tools/bin/kr
-    add-history kitrunner
+    add-history kiterunner
     add-test-command "kr --help"
     add-to-list "kiterunner,https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments."
 }
@@ -272,7 +272,8 @@ function install_cmsmap() {
     colorecho "Installing CMSmap"
     python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
     # TODO: Config ?
-    cmsmap -U PC
+    # exploit-db path is required (misc package -> searchsploit)
+    # cmsmap -U PC
     add-history cmsmap
     add-test-command "cmsmap --help; cmsmap --help |& grep 'Post Exploitation'"
     add-to-list "cmsmap,https://github.com/Dionach/CMSmap,Tool for security audit of web content management systems."

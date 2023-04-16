@@ -28,13 +28,17 @@ function package_base() {
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev bundler \
-    nim perl openjdk-17-jre openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
-    virtualenv
+    nim perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
+    virtualenv chromium
     
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel fzf
 
     install_rust_cargo
+
+    ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
+    ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+    update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
     ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
     install_python-pip              # Pip. Should we set pip2 to default?
@@ -56,6 +60,7 @@ function package_base() {
     DEBIAN_FRONTEND=noninteractive fapt macchanger  # Macchanger
     install_gf                      # wrapper around grep
     fapt-noexit rar                 # rar (Only AMD)
+    install_firefox
 
     cp -v /root/sources/grc/grc.conf /etc/grc.conf # grc
 
@@ -179,6 +184,17 @@ function install_python-pip() {
     python get-pip.py
     rm get-pip.py
     add-test-command "pip --version"
+}
+
+function install_firefox() {
+    colorecho "Installing firefox"
+    fapt firefox-esr
+    mkdir /opt/tools/firefox
+    mv /root/sources/firefox/* /opt/tools/firefox/
+    python3 -m pip install -r /opt/tools/firefox/requirements.txt
+    python3 /opt/tools/firefox/setup.py
+    add-test-command "file /root/.mozilla/firefox/*.Exegol"
+    add-test-command "firefox --version"
 }
 
 function install_ohmyzsh() {
