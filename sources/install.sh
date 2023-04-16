@@ -1642,7 +1642,8 @@ function install_scout() {
 function install_azurecli(){
   colorecho "Installing Azure cli"
   fapt azure-cli
-  add-test-command "az --help"
+  add-history azurecli 
+  add-test-command "az version"
 }
 
 function install_jdwp_shellifier(){
