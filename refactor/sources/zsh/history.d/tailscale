@@ -1,0 +1,2 @@
+tailscale up --advertise-routes=10.10.11.0/24
+tailscaled --tun=userspace-networking --socks5-server=localhost:1055 &>/dev/null &

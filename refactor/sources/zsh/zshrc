@@ -1,0 +1,75 @@
+# Basic system config / hardening
+umask 0007
+
+# Automatically exit the shell when receiving SIGTERM (when the container is stopping)
+trap exit TERM
+
+# ZSH setup
+export ZSH="/root/.oh-my-zsh"
+ZSH_THEME="gentoo"
+
+export FZF_BASE=/opt/tools/fzf
+
+plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm)
+
+source $ZSH/oh-my-zsh.sh
+
+function prompt_char {
+  if [ $UID -eq 0 ]; then echo "#"; else echo $; fi
+}
+LOGGING=""
+parent_command="$(ps -ocommand= $(ps -oppid= $PPID 2>/dev/null | awk '{print $1}') 2>/dev/null)"
+if [[ $(echo $parent_command | awk '{print $1}') = 'script' || $(echo $parent_command | awk '{print $2}') = *'asciinema' ]]; then
+    LOGGING="[🔴]"
+fi
+TIME_="%{$fg[white]%}[%{$fg[red]%}%D{%b %d, %Y - %T (%Z)}%{$fg[white]%}]%{$reset_color%}"
+PROMPT="$LOGGING$TIME_%{$FX[bold]$FG[013]%} %m %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_char)%{$reset_color%} "
+
+export GO111MODULE=on
+
+# zsh history config
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000000
+setopt INC_APPEND_HISTORY
+export HISTTIMEFORMAT="[%F %T] "
+setopt EXTENDED_HISTORY
+setopt HIST_FIND_NO_DUPS
+
+# Adding exegol bins to PATH
+export PATH=/opt/tools/bin:$PATH
+
+# Adding john to PATH
+export JOHN=/opt/tools/john/run
+export PATH=$JOHN:$PATH
+
+# Adding GO to PATH
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
+
+source /opt/.exegol_aliases
+source /opt/tools/Exegol-history/profile.sh
+source $HOME/.cargo/env
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Color correction for zsh-syntax-highlighting
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
+
+# In case pipx ensurepath didn't work, and positionning pipx in priority
+export PATH="/root/.local/bin:$PATH"
+
+# Add my-resources custom tools to PATH if my-resources is activated
+[ -d /opt/my-resources/bin ] && export PATH="$PATH:/opt/my-resources/bin"
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US:en
+
+# At the end, loads user-defined zshrc post-routines if the file exists otherwise creates a default file if my-resources is enabled in the container
+if [ -f /opt/my-resources/setup/zsh/zshrc ]
+then
+  source /opt/my-resources/setup/zsh/zshrc
+else
+  [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
+  cp /.exegol/skel/zsh/zshrc /opt/my-resources/setup/zsh/zshrc
+fi

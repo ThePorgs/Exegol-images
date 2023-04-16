@@ -1,0 +1,17 @@
+# Loads user-defined aliases if the file exists otherwise creates a default file if my-resources is enabled in the container
+if [ -f /opt/my-resources/setup/zsh/aliases ]
+then
+  source /opt/my-resources/setup/zsh/aliases
+else
+  [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
+  cp /.exegol/skel/zsh/aliases /opt/my-resources/setup/zsh/aliases
+fi
+
+alias rickroll='curl tiredand.gay/rick'
+alias l='ls -alh'
+alias ipa='ip --brief --color a'
+alias ipr='ip --brief --color r'
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
+alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
+alias sed-empty-line='sed /^$/d'
+alias http-put-server='python3 /opt/resources/linux/http-put-server.py --bind 0.0.0.0'

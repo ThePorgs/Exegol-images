@@ -1,0 +1,2 @@
+mount -o domain="$DOMAIN" -o username="$USER" -o password="$PASSWORD" -t cifs "//$DC_HOST/SYSVOL" /tmp/mnttarget/
+screen /dev/ttyACM0 115200

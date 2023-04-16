@@ -1,0 +1,1 @@
+sqlmap --forms --batch -u "http://somewebsite/"

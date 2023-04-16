@@ -1,0 +1,4 @@
+shuffledns -d "$DOMAIN" -list example-subdomains.txt -r resolvers.txt
+subfinder -d "$DOMAIN" | shuffledns -d "$DOMAIN" -r resolvers.txt
+shuffledns -d "$DOMAIN" -w wordlist.txt -r resolvers.txt
+echo "$DOMAIN" | shuffledns -w wordlist.txt -r resolvers.txt

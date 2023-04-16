@@ -1,0 +1,4 @@
+prips 192.168.56.0/24|hakrevdns -d|httpx -probe -tech-detect -status-code -fr
+prips 192.168.0.0 192.168.0.255
+prips -i4 192.168.0.10 192.168.0.250
+prips 173.0.84.0/24 | hakrevdns

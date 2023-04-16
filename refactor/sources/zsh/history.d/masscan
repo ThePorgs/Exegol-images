@@ -1,0 +1,2 @@
+masscan -v -p 1-65535 --rate=10000 -e "$INTERFACE" 192.168.56.0/24
+masscan -v -p 1-65535,U:1-65535 --rate=10000 -e "$INTERFACE" 192.168.56.0/24

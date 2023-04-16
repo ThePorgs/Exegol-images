@@ -1,0 +1,2 @@
+alias gpp-decrypt='python3 /opt/tools/gpp-decrypt/gpp-decrypt.py -c'
+alias gpp-decrypt.py='python3 /opt/tools/gpp-decrypt/gpp-decrypt.py'
