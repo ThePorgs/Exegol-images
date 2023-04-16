@@ -1,1 +1,1 @@
-alias moodlescan='python3 /opt/tools/moodlescan/moodlescan.py'
+alias moodlescan='/opt/tools/moodlescan/venv/bin/python3 /opt/tools/moodlescan/moodlescan.py'

@@ -36,7 +36,6 @@ function package_osint() {
     install_finalrecon              # A fast and simple python script for web reconnaissance
     # fapt recon-ng                 # External recon tool FIXME
     # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
-    install_tor					    # Tor proxy
     # install_torbrowser            # Tor browser FIXME
     install_pwndb					# No need to say more, no ? Be responsible with this tool please !
     install_githubemail             # Retrieve a GitHub user's email even if it's not public
@@ -60,7 +59,7 @@ function install_osint_apt_tools() {
     add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png" # For read exif information
     add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'" # Probe and report structure and metadata content of camera image files
     add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'" # DNSEnum is a command-line tool that automatically identifies basic DNS records
-    add-test-command "service tor start"
+    add-test-command "service tor start" # Tor proxy
 
     add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading, writing and editing meta information in image, audio and video files."
     add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."

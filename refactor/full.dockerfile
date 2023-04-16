@@ -41,6 +41,9 @@ RUN ./entrypoint.sh package_cracking_configure
 RUN ./entrypoint.sh package_osint
 RUN ./entrypoint.sh package_osint_configure
 
+RUN ./entrypoint.sh package_web
+RUN ./entrypoint.sh package_web_configure
+
 RUN ./entrypoint.sh post_install_clean
 
 RUN rm -rf /root/sources

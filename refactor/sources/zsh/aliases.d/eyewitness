@@ -1,1 +1,1 @@
-alias eyewitness='python3 /opt/tools/EyeWitness/Python/EyeWitness.py'
+alias eyewitness='/opt/tools/EyeWitness/venv/bin/python3 /opt/tools/EyeWitness/Python/EyeWitness.py'

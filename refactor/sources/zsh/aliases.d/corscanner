@@ -1,1 +1,1 @@
-alias corscanner='python3 /opt/tools/CORScanner/cors_scan.py'
+alias corscanner='/opt/tools/CORScanner/venv/bin/python3 /opt/tools/CORScanner/cors_scan.py'
