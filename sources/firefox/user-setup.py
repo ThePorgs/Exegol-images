@@ -15,7 +15,7 @@ import subprocess
 import argparse
 
 PATHNAME = "/root/.mozilla/firefox/**.Exegol/"
-re_links = r'https://addons\.mozilla\.org/fr/firefox/addon/[^/]+'
+re_links = r'^https://addons\.mozilla\.org/fr/firefox/addon/[^/]+/?$'
 
 def parse_args():
     arg_parser = argparse.ArgumentParser(description="Automatically installs addons from a list or folder containing .xpi files.")
@@ -52,7 +52,10 @@ if __name__ == "__main__":
                 logger.success(f"{addon_name} installed sucessfully\n")
                 addon_list.append((addon_id, addon_name[0:-4], False))
                 install_ok = True
+        if install_ok:
             logger.success("All addons from the list were installed sucessfully\n")
+        else:
+            logger.error("No addons were found in the list %s.\n" % addon_links)
 
     if addon_folder is not None:
         if glob(addon_folder + "/*.xpi"):
@@ -65,7 +68,7 @@ if __name__ == "__main__":
                 install_ok = True
             logger.success("All addons from the folder %s were installed sucessfully\n" % addon_folder)
         else:
-            logger.error("No addons were found in the folder %s." % addon_folder)
+            logger.error("No addons were found in the folder %s.\n" % addon_folder)
 
     if install_ok:
         # Run firefox to initialise profile
