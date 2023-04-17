@@ -1,1 +1,1 @@
-alias privexchange.py='python3 /opt/tools/PrivExchange/privexchange.py'
+alias privexchange.py='/opt/tools/PrivExchange/venv/bin/python3 /opt/tools/PrivExchange/privexchange.py'

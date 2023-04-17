@@ -1,1 +1,1 @@
-alias pywhisker.py='python3 /opt/tools/pywhisker/pywhisker.py'
+alias pywhisker.py='/opt/tools/pywhisker/venv/bin/python3 /opt/tools/pywhisker/pywhisker.py'

@@ -28,7 +28,6 @@ function package_osint() {
     install_waybackurls             # Website history
     install_carbon14                # OSINT tool for estimating when a web page was written
     install_photon                  # Incredibly fast crawler designed for OSINT.
-    install_cloudfail               # Utilize misconfigured DNS and old database records to find hidden IP's behind the CloudFlare network
     install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
     install_constellation           # A graph-focused data visualisation and interactive analysis application.
     install_maltego                 # Maltego is a software used for open-source intelligence and forensics
@@ -254,18 +253,6 @@ function install_photon() {
     add-aliases photon
     add-test-command "photon.py --help"
     add-to-list "photon,https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs, files, intel & endpoints from a target."
-}
-
-function install_cloudfail() {
-    colorecho "Installing CloudFail"
-    git -C /opt/tools/ clone --depth=1 https://github.com/m0rtem/CloudFail
-    cd /opt/tools/CloudFail
-    python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
-    add-aliases cloudfail
-    add-history cloudfail
-    add-test-command "cloudfail.py --help"
-    add-to-list "cloudfail,https://github.com/m0rtem/CloudFail,a reconnaissance tool for identifying misconfigured CloudFront domains."
 }
 
 function install_ipinfo() {

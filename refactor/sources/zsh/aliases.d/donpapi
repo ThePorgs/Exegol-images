@@ -1,1 +1,1 @@
-alias DonPAPI.py='python3 /opt/tools/DonPAPI/DonPAPI.py'
+alias DonPAPI.py='/opt/tools/DonPAPI/venv/bin/python3 /opt/tools/DonPAPI/DonPAPI.py'
