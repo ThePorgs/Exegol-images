@@ -13,6 +13,7 @@ source iot.sh
 source rfid.sh
 source voip.sh
 source sdr.sh
+source network.sh
 source cracking.sh
 source c2.sh
 
