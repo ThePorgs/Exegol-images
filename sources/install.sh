@@ -1214,6 +1214,14 @@ function install_ysoserial() {
   add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
 }
 
+function install_slipit() {
+  # Utility for creating ZipSlip archives
+  colorecho "Installing slipit"
+  python3 -m pipx install slipit
+  add-test-command "slipit -h"
+  add-history slipit
+}
+
 function install_whatweb() {
   colorecho "Installing whatweb"
   fapt whatweb
@@ -3939,6 +3947,7 @@ function package_web() {
   install_git-dumper              # Dump a git repository from a website
   install_gittools                # Dump a git repository from a website
   install_ysoserial               # Deserialization payloads
+  install_slipit                  # Utility for creating ZipSlip archives
   install_whatweb                 # Recognises web technologies including content management
   # install_phpggc                  # php deserialization payloads FIXME https://github.com/ambionics/phpggc/issues/142
   install_symfony-exploits        #  symfony secret fragments exploit
