@@ -49,6 +49,8 @@ RUN ./entrypoint.sh package_ad_configure
 
 RUN ./entrypoint.sh package_mobile
 
+RUN ./entrypoint.sh package_iot
+
 RUN ./entrypoint.sh post_install_clean
 
 RUN rm -rf /root/sources
