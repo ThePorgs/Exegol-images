@@ -106,6 +106,26 @@ function run_user_setup() {
   echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== End of custom setups loading ===="
 }
 
+function deploy_firefox_addons() {
+  ##### firefox custom addons deployment
+  if [ -d "$MY_Setup_PATH/firefox/" ]; then
+    if [ -d "$MY_Setup_PATH/firefox/addons" ]; then
+      ADDON_FOLDER="-D $MY_Setup_PATH/firefox/addons"
+    else
+      mkdir "$MY_Setup_PATH/firefox/addons" && chmod 770 "$MY_Setup_PATH/firefox/addons"
+    fi
+    if [ -f "$MY_Setup_PATH/firefox/addons.txt" ]; then
+      ADDON_LIST="-L $MY_Setup_PATH/firefox/addons.txt"
+    else
+      cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_Setup_PATH/firefox/addons.txt"
+    fi
+    python3 /opt/tools/firefox/user-setup.py $ADDON_LIST $ADDON_FOLDER
+  else
+    mkdir --parents "$MY_Setup_PATH/firefox/addons" && chmod 770 -R "$MY_Setup_PATH/firefox/addons"
+    cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_Setup_PATH/firefox/addons.txt"
+  fi
+}
+
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
@@ -124,6 +144,7 @@ deploy_tmux
 deploy_vim
 deploy_apt
 deploy_python3
+deploy_firefox_addons
 
 run_user_setup
 

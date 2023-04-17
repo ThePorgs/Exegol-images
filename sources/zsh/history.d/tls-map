@@ -1,0 +1,11 @@
+tls-map search gnutls RSA_ARCFOUR_128_SHA1 --output iana
+tls-map search openssl AES128-SHA --output iana
+tls-map search iana TLS_DH_RSA_WITH_AES_256_CBC_SHA --output codepoint
+tls-map search codepoint 1303
+tls-map search nss TLS_AES_256_GCM_SHA384
+tls-map search --extended codepoint 0037
+tls-map search --extended codepoint 0013 --acronym
+tls-map export /tmp/map.min.json json_compact
+tls-map extract newwebsite.json ssllabs-scan
+tls-map extract test/file_sample/testssl.json testssl --hide-weak
+tls-map extract test/file_sample/sslyze.json sslyze --only-weak
