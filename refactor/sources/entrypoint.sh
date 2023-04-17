@@ -10,6 +10,7 @@ source ad.sh
 source wordlists.sh
 source mobile.sh
 source iot.sh
+source rfid.sh
 source cracking.sh
 source c2.sh
 
