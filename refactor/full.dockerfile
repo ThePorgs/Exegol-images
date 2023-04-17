@@ -47,6 +47,8 @@ RUN ./entrypoint.sh package_web_configure
 RUN ./entrypoint.sh package_ad
 RUN ./entrypoint.sh package_ad_configure
 
+RUN ./entrypoint.sh package_mobile
+
 RUN ./entrypoint.sh post_install_clean
 
 RUN rm -rf /root/sources
