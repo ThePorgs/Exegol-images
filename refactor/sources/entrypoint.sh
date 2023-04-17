@@ -6,7 +6,7 @@ source base.sh
 source misc.sh
 source osint.sh
 source web.sh
-# source ad.sh
+source ad.sh
 source wordlists.sh
 source cracking.sh
 source c2.sh

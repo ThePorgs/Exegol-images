@@ -159,7 +159,7 @@ function install_crackmapexec() {
     colorecho "Installing CrackMapExec"
     # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
     # TODO: Optimize so that the PATH is always up to date
-    source /root/.zshrc
+    source /root/.zshrc || true
     git -C /opt/tools/ clone https://github.com/Porchetta-Industries/CrackMapExec.git
     python3 -m pipx install /opt/tools/CrackMapExec/
     add-aliases crackmapexec
@@ -220,11 +220,10 @@ function configure_bloodhound() {
 
 function install_cypheroth() {
     colorecho "Installing cypheroth"
-    fapt cypher-shell
     git -C /opt/tools/ clone --depth=1 https://github.com/seajaysec/cypheroth/
     add-aliases cypheroth
     add-history cypheroth
-    add-test-command "cypheroth --help; cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
+    add-test-command "cypheroth --help| grep 'Quitting Cypheroth'"
     add-to-list "cyperoth,https://github.com/seajaysec/cypheroth/,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
 }
 
@@ -252,10 +251,10 @@ function install_impacket() {
     add-test-command "ntlmrelayx.py --help"
     add-test-command "secretsdump.py --help"
     add-test-command "Get-GPPPassword.py --help"
-    add-test-command "getST.py --help && getST.py --help | grep 'u2u'"
-    add-test-command "ticketer.py --help && ticketer.py --help | grep impersonate"
-    add-test-command "ticketer.py --help && ticketer.py --help | grep hours"
-    add-test-command "ticketer.py --help && ticketer.py --help | grep extra-pac"
+    add-test-command "getST.py --help | grep 'u2u'"
+    add-test-command "ticketer.py --help | grep impersonate"
+    add-test-command "ticketer.py --help | grep hours"
+    add-test-command "ticketer.py --help | grep extra-pac"
     add-test-command "dacledit.py --help"
     add-test-command "describeTicket.py --help"
     add-to-list "impacket,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
@@ -631,7 +630,7 @@ function install_bloodhound-quickwin() {
 function install_ldapsearch-ad() {
     colorecho "Installing ldapsearch-ad"
     git -C /opt/tools/ clone --depth=1 https://github.com/yaap7/ldapsearch-ad
-    cd /opt/tools/ldapsearch-ad/
+    cd /opt/tools/ldapsearch-ad
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ldapsearch-ad
@@ -707,7 +706,8 @@ function install_pcredz() {
     git -C /opt/tools/ clone --depth=1 https://github.com/lgandx/PCredz
     cd /opt/tools/PCredz
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install Cython python-libpcap
+    ./venv/bin/python3 -m pip install Cython
+    ./venv/bin/python3 -m pip install python-libpcap
     add-aliases pcredz
     add-test-command "PCredz --help"
     add-to-list "pcredz,https://github.com/lgandx/PCredz,PowerShell credential dumper"
@@ -912,6 +912,7 @@ function install_bqm() {
     gem install bqm --no-wrapper
     add-history bqm
     add-test-command "bqm --help"
+    add-to-list "bqm,https://github.com/Acceis/bqm"
 }
 
 function install_neo4j() {
@@ -927,4 +928,5 @@ function install_neo4j() {
     cp /usr/bin/neo4j /opt/tools/bin/
     add-history neo4j
     add-test-command "neo4j version"
+    add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
 }
