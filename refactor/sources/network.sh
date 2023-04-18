@@ -5,6 +5,7 @@ source common.sh
 
 # Package dedicated to network pentest tools
 function package_network() {
+    set_go_env
     install_network_apt_tools
     install_proxychains             # Network tool
     # install_wireshark_sources     # Install Wireshark from sources
@@ -110,6 +111,7 @@ function install_dnschef() {
     colorecho "Installing DNSChef"
     git -C /opt/tools/ clone --depth=1 https://github.com/iphelix/dnschef
     cd /opt/tools/dnschef
+    python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases dnschef
     add-test-command "dnschef --help"

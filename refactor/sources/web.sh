@@ -299,7 +299,8 @@ function install_moodlescan() {
 }
 
 function configure_moodlescan() {
-    /opt/tools/moodlescan/venv/bin/python3 moodlescan.py -a
+    cd /opt/tools/moodlescan
+    ./venv/bin/python3 moodlescan.py -a
 }
 
 function install_testssl() {
@@ -572,7 +573,7 @@ function install_nuclei() {
 }
 
 function configure_nuclei() {
-    nuclei -update-templates
+    /root/go/bin/nuclei -update-templates
 }
 
 function install_gau() {
