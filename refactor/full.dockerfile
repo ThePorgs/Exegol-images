@@ -65,6 +65,8 @@ RUN ./entrypoint.sh package_forensic
 
 RUN ./entrypoint.sh package_cloud
 
+RUN ./entrypoint.sh package_steganography
+
 RUN ./entrypoint.sh post_install_clean
 
 RUN rm -rf /root/sources
