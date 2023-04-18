@@ -59,6 +59,8 @@ RUN ./entrypoint.sh package_sdr
 
 RUN ./entrypoint.sh package_network
 
+RUN ./entrypoint.sh package_wifi
+
 RUN ./entrypoint.sh post_install_clean
 
 RUN rm -rf /root/sources

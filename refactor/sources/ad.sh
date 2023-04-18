@@ -504,45 +504,25 @@ function install_smbmap() {
 }
 
 function install_pth-tools() {
-    # TODO : FIX THIS INSTALL -_-
     colorecho "Installing pth-tools"
-    git -C /opt/tools clone -v https://github.com/byt3bl33d3r/pth-toolkit
-    cd /opt/tools/pth-toolkit || exit
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_amd64.deb
-        wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_amd64.deb
+        fapt libreadline8 && ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /usr/lib/x86_64-linux-gnu/libreadline.so.6
+        git -C /opt/tools clone --depth=1 https://github.com/byt3bl33d3r/pth-toolkit
+        add-aliases pth-tools
+        add-history pth-tools
+        add-test-command "pth-net --version"
+        add-test-command "pth-rpcclient --version"
+        add-test-command "pth-smbclient --version"
+        add-test-command "pth-smbget --version"
+        add-test-command "pth-winexe --help"
+        add-test-command "pth-wmic --help"
+        add-test-command "pth-wmis --help"
+        add-to-list "pth-tools,https://github.com/byt3bl33d3r/pth-toolkit,A toolkit to perform pass-the-hash attacks"
     elif [[ $(uname -m) = 'aarch64' ]]
     then
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-        # FIXME
-        #16 428.9  libreadline6:armhf : Depends: libc6:armhf (>= 2.15) but it is not installable
-        #16 428.9                       Depends: libtinfo5:armhf but it is not installable
-        #16 428.9  multiarch-support:armhf : Depends: libc6:armhf (>= 2.13-5) but it is not installable
-        wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armhf.deb
-        wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armhf.deb
-    elif [[ $(uname -m) = 'armv7l' ]]
-    then
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-        # FIXME ?
-        wget -O /tmp/libreadline6_6.3-8+b3.deb http://ftp.debian.org/debian/pool/main/r/readline6/libreadline6_6.3-8+b3_armel.deb
-        wget -O /tmp/multiarch-support_2.19-18+deb8u10.deb http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.19-18+deb8u10_armel.deb
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    dpkg -i /tmp/libreadline6_6.3-8+b3.deb
-    dpkg -i /tmp/multiarch-support_2.19-18+deb8u10.deb
-    apt-get --fix-broken install
-    add-aliases pth-tools
-    add-history pth-tools
-    add-test-command "pth-wmis -V"
-    add-test-command "pth-wmic -V"
-    add-test-command "pth-winexe --help"
-    add-test-command "pth-smbget --help"
-    add-test-command "pth-smbclient --help"
-    add-test-command "pth-rpcclient --help"
-    add-test-command "pth-net --help"
-    add-to-list "pth-tools,https://github.com/byt3bl33d3r/pth-toolkit,A toolkit to perform pass-the-hash attacks"
 }
 
 function install_smtp-user-enum() {
