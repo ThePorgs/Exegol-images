@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author: The Exegol Project
 
-source "common.sh"
+source common.sh
 
 function update() {
     colorecho "Updating, upgrading, cleaning"
@@ -62,7 +62,7 @@ function package_base() {
     fapt-noexit rar                 # rar (Only AMD)
     install_firefox
 
-    cp -v /root/sources/grc/grc.conf /etc/grc.conf # grc
+    cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
     # openvpn
     # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
@@ -76,11 +76,11 @@ function package_base() {
     add-test-command "openvpn --version"
 
     # logrotate
-    mv /root/sources/logrotate/* /etc/logrotate.d/
+    mv /root/sources/assets/logrotate/* /etc/logrotate.d/
     chmod 644 /etc/logrotate.d/*
 
     # tmux
-    cp -v /root/sources/tmux/tmux.conf ~/.tmux.conf
+    cp -v /root/sources/assets/tmux/tmux.conf ~/.tmux.conf
     touch ~/.hushlogin
 
     # TLDR
@@ -161,7 +161,7 @@ function deploy_exegol() {
     mkdir -p /opt/packages
     chown -Rv _apt:root /opt/packages
     rm -rf /.exegol || true
-    cp -r /root/sources/exegol /.exegol
+    cp -r /root/sources/assets/exegol /.exegol
     # Moving supported custom configurations in /opt
     mv /.exegol/skel/supported_setups.md /opt/
     mkdir -p /var/log/exegol
@@ -190,7 +190,7 @@ function install_firefox() {
     colorecho "Installing firefox"
     fapt firefox-esr
     mkdir /opt/tools/firefox
-    mv /root/sources/firefox/* /opt/tools/firefox/
+    mv /root/sources/assets/firefox/* /opt/tools/firefox/
     python3 -m pip install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/setup.py
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
@@ -203,9 +203,9 @@ function install_ohmyzsh() {
     fi
     colorecho "Installing oh-my-zsh, config, history, aliases"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    cp -v /root/sources/zsh/history ~/.zsh_history
-    cp -v /root/sources/zsh/aliases /opt/.exegol_aliases
-    cp -v /root/sources/zsh/zshrc ~/.zshrc
+    cp -v /root/sources/assets/zsh/history ~/.zsh_history
+    cp -v /root/sources/assets/zsh/aliases /opt/.exegol_aliases
+    cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
     git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-autosuggestions
     git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-syntax-highlighting
     git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-completions

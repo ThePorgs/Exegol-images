@@ -172,10 +172,10 @@ function configure_crackmapexec() {
     colorecho "Configure crackmapexec"
     mkdir -p ~/.cme
     [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
-    cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
+    cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
     # git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
-    cp -v /root/sources/grc/conf.cme /usr/share/grc/conf.cme
+    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
 }
 
 function install_bloodhound-py() {
@@ -214,8 +214,8 @@ function configure_bloodhound() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     mkdir -p ~/.config/bloodhound
-    cp -v /root/sources/bloodhound/config.json ~/.config/bloodhound/config.json
-    cp -v /root/sources/bloodhound/customqueries.json ~/.config/bloodhound/customqueries.json
+    cp -v /root/sources/assets/bloodhound/config.json ~/.config/bloodhound/config.json
+    cp -v /root/sources/assets/bloodhound/customqueries.json ~/.config/bloodhound/customqueries.json
 }
 
 function install_cypheroth() {
@@ -262,11 +262,11 @@ function install_impacket() {
 
 function configure_impacket() {
     colorecho "Configure impacket"
-    cp -v /root/sources/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
-    cp -v /root/sources/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
-    cp -v /root/sources/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
-    cp -v /root/sources/grc/conf.rbcd /usr/share/grc/conf.rbcd
-    cp -v /root/sources/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
+    cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
+    cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
+    cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
+    cp -v /root/sources/assets/grc/conf.rbcd /usr/share/grc/conf.rbcd
+    cp -v /root/sources/assets/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
 }
 
 function install_pykek() {
@@ -377,7 +377,7 @@ function install_krbrelayx() {
 
 function configure_krbrelayx() {
     colorecho "Configure krbrelayx"
-    cp -v /root/sources/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
+    cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
 }
 
 function install_evilwinrm() {
