@@ -16,6 +16,7 @@ source sdr.sh
 source network.sh
 source wifi.sh
 source forensic.sh
+source cloud.sh
 source cracking.sh
 source c2.sh
 
