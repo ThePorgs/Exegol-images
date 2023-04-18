@@ -19,6 +19,7 @@ source forensic.sh
 source cloud.sh
 source steganography.sh
 source reverse.sh
+source crypto.sh
 source cracking.sh
 source c2.sh
 
