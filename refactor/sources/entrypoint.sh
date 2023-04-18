@@ -20,6 +20,7 @@ source cloud.sh
 source steganography.sh
 source reverse.sh
 source crypto.sh
+source code_analysis.sh
 source cracking.sh
 source c2.sh
 

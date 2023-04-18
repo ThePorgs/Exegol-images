@@ -71,6 +71,8 @@ RUN ./entrypoint.sh package_reverse
 
 RUN ./entrypoint.sh package_crypto
 
+RUN ./entrypoint.sh package_code_analysis
+
 RUN ./entrypoint.sh post_install_clean
 
 RUN rm -rf /root/sources
