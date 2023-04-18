@@ -1,1 +1,0 @@
-semgrep -e '$X == $X' --lang=py path/to/src

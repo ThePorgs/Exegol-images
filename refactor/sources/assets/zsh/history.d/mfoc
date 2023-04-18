@@ -1,3 +1,0 @@
-mfoc -O original.dmp -k keys.txt
-mfoc -O original.dmp
-mfoc -O magic-gen1.dmp

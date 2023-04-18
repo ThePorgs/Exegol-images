@@ -1,4 +1,0 @@
-smbmap -H "$TARGET"
-smbmap -H "$TARGET" -R
-smbmap -H "$TARGET" -R test
-smbmap -u guest -H "$TARGET"

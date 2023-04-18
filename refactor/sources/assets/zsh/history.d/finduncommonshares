@@ -1,1 +1,0 @@
-FindUncommonShares.py -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --dc-ip "$DC_IP"

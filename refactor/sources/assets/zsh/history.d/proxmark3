@@ -1,2 +1,0 @@
-proxmark3 -p /dev/ttyACM0
-pm3 -p /dev/ttyACM0

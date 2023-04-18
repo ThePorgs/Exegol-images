@@ -1,2 +1,0 @@
-snmpwalk -c public -v 1 "$TARGET"
-snmpwalk -c public -v 2c "$TARGET"

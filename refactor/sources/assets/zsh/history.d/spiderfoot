@@ -1,2 +1,0 @@
-spiderfoot -l 127.0.0.1:5001
-spiderfoot-cli -s http://127.0.0.1:5002

@@ -1,1 +1,0 @@
-oaburl.py "$DOMAIN"/"$USER":"$PASSWORD"@"mx.example.com" -e "existent.email@example.com"

@@ -1,9 +1,0 @@
-/var/log/exegol/vpn.log {
-    daily
-    rotate 12
-    compress
-    copytruncate
-    delaycompress
-    missingok
-    notifempty
-}

@@ -1,2 +1,0 @@
-bloodhound.py --zip -c All -d "$DOMAIN" -u "$USER" --hashes 'ffffffffffffffffffffffffffffffff':"$NT_HASH" -dc "$DC_HOST"
-bloodhound.py --zip -c All -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -dc "$DC_HOST"

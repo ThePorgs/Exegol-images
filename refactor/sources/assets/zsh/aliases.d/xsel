@@ -1,3 +1,0 @@
-alias xcopy='xsel --clipboard <'
-alias xpaste='xsel --clipboard >'
-alias xshow='xsel --clipboard'

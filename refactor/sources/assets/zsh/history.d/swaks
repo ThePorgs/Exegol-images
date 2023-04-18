@@ -1,1 +1,0 @@
-swaks --to admin@example.com --from user@example.com --header "Subject: Exploit" --body "Hey, this is a mail" --server $IP

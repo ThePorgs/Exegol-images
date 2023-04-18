@@ -1,3 +1,0 @@
-alias scan-range='nmap -T5 -n -sn'
-alias nse='ls /usr/share/nmap/scripts | grep '
-

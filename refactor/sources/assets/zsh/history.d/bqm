@@ -1,2 +1,0 @@
-bqm --output-path ~/.config/bloodhound/customqueries.json
-bqm --list
