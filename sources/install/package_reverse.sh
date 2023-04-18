@@ -60,9 +60,7 @@ function install_pwndbg() {
 
 function install_angr() {
     colorecho "Installing angr"
-    fapt libffi-dev virtualenvwrapper
-    python3 -m pip install virtualenv virtualenvwrapper
-    mkvirtualenv --python="$(which python3)" angr
+    fapt libffi-dev
     python3 -m pip install angr
     add-test-command "python3 -c 'import angr'"
     add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework"
