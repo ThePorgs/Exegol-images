@@ -2325,6 +2325,15 @@ function install_pcredz() {
   add-to-list "pcredz,https://github.com/lgandx/PCredz,PowerShell credential dumper"
 }
 
+function install_spray() {
+  # Password Spraying tool for Active Directory Credentials.
+  colorecho "Installing Spray"
+  git -C /opt/tools/ clone https://github.com/Greenwolf/Spray.git
+  add-aliases spray
+  add-history spray
+  add-test-command "spray -h"
+}
+
 function install_smartbrute() {
   colorecho "Installing smartbrute"
   python3 -m pipx install git+https://github.com/ShutdownRepo/smartbrute
@@ -3948,6 +3957,7 @@ function package_web() {
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
   install_kraken                  # Kraken is a modular multi-language webshell.
   install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
+  install_spray                   # Password Spraying tool for Active Directory Credentials.
 }
 
 # Package dedicated to command & control frameworks
@@ -4044,6 +4054,7 @@ function package_ad() {
   install_roastinthemiddle
   install_PassTheCert
   install_bqm                     # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
+  install_spray                   # Password Spraying tool for Active Directory Credentials.
 }
 
 # Package dedicated to mobile apps pentest tools
