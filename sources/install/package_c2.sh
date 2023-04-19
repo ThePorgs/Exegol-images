@@ -22,6 +22,7 @@ function install_c2_apt_tools() {
 }
 
 function package_c2_configure() {
+    echo "hello"
     # configure_metasploit
 }
 
