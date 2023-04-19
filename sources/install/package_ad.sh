@@ -691,7 +691,6 @@ function install_manspider() {
     add-history manspider
     add-aliases manspider
     add-test-command "manspider --help"
-
 }
 
 function install_targetedKerberoast() {

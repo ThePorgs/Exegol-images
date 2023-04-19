@@ -47,6 +47,7 @@ function install_pyrit() {
     python2 setup.py build
     python2 setup.py install
     deactivate
+    add-aliases pyrit
     add-test-command "pyrit help"
     add-to-list "pyrit,https://github.com/JPaulMora/Pyrit,Python-based WPA/WPA2-PSK attack tool."
 }

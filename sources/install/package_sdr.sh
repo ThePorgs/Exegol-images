@@ -31,6 +31,7 @@ function install_mousejack() {
     git submodule update
     cd nrf-research-firmware
     make
+    python2 -m pip install libusb pyusb
     add-aliases mousejack
     add-history mousejack
     add-test-command "nrf24-scanner.py --help"

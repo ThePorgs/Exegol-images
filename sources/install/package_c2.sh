@@ -27,15 +27,16 @@ function install_metasploit() {
     colorecho "Installing Metasploit"
     mkdir /opt/tools/metasploit
     cd /opt/tools/metasploit
-    curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall
+    curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall
+    chmod 755 msfinstall
+    ./msfinstall
     add-test-command "msfconsole --version"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 
 function configure_metasploit() {
     colorecho "Configuring Metasploit"
-    cd /opt/tools/metasploit
-    ./msfinstall
+    # cd /opt/tools/metasploit
 }
 
 function install_routersploit() {

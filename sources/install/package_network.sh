@@ -21,7 +21,7 @@ function package_network() {
     install_dnsx                    # Fast and multi-purpose DNS toolkit
     install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
     install_tailscale               # Zero config VPN for building secure networks
-    # install_ligolo-ng              # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
+    # install_ligolo-ng             # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
 }
 
 function install_network_apt_tools() {
@@ -33,22 +33,22 @@ function install_network_apt_tools() {
     add-history netdiscover
     add-history xfreerdp
 
-    add-test-command "wireshark --help" # Wireshark packet sniffer
-    add-test-command "tshark --version" # Tshark packet sniffer
-    add-test-command "hping3 --version" # Discovery tool
-    add-test-command "masscan --help|& grep 'Masscan version'" # Port scanner
-    add-test-command "netdiscover -h |& grep 'Usage: netdiscover'" # Active/passive address reconnaissance tool
-    add-test-command "tcpdump --version" # Capture TCP traffic
-    add-test-command "iptables --version" # iptables for the win
-    add-test-command "traceroute --help" # ping ping
-    add-test-command "dns2tcpc|& grep 'Usage : dns2tcpc'" # TCP tunnel over DNS
+    add-test-command "wireshark --help"                             # Wireshark packet sniffer
+    add-test-command "tshark --version"                             # Tshark packet sniffer
+    add-test-command "hping3 --version"                             # Discovery tool
+    add-test-command "masscan --version|& grep 'Masscan version'"   # Port scanner
+    add-test-command "netdiscover -h |& grep 'Usage: netdiscover'"  # Active/passive address reconnaissance tool
+    add-test-command "tcpdump --version"                            # Capture TCP traffic
+    add-test-command "iptables --version"                           # iptables for the win
+    add-test-command "traceroute --help"                            # ping ping
+    add-test-command "dns2tcpc|& grep 'Usage : dns2tcpc'"           # TCP tunnel over DNS
     add-test-command "which xfreerdp"
     add-test-command "rdesktop|& grep 'Usage: rdesktop'"
     add-test-command "which xtightvncviewer"
-    add-test-command "ssh-audit --help |& grep 'verbose output'" # SSH server audit
+    add-test-command "ssh-audit --help |& grep 'verbose output'"    # SSH server audit
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
-    add-test-command "mariadb --version" # Mariadb client
-    add-test-command "redis-cli --version" # Redis protocol
+    add-test-command "mariadb --version"                            # Mariadb client
+    add-test-command "redis-cli --version"                          # Redis protocol
 
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
