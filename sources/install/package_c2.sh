@@ -31,7 +31,7 @@ function install_metasploit() {
     curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb -o msfinstall
     chmod +x msfinstall
     ./msfinstall
-    cd /opt/tools
+    cd /tmp
     rm -rf /tmp/metasploit_install
     add-test-command "msfconsole --help"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
