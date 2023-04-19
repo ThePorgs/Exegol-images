@@ -14,7 +14,7 @@ function package_c2() {
 }
 
 function install_c2_apt_tools() {
-    fapt metasploit-framework
+    curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb -o msfinstall && chmod +x msfinstall && ./msfinstall    #fapt metasploit-framework
 
     add-test-command "msfconsole --version" # Offensive framework
     
