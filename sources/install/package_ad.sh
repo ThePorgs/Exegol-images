@@ -54,7 +54,7 @@ function package_ad() {
     install_coercer                 # Python script to coerce auth through multiple methods
     install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
     install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
-    # install_pipx_git_tool "git+https://github.com/blacklanternsecurity/MANSPIDER" manspider "manspider --help" history # # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
+    install_manspider               # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
     install_targetedKerberoast
     install_pcredz
     install_pywsus
@@ -678,6 +678,20 @@ function install_pywhisker() {
     add-history pywhisker
     add-test-command "pywhisker.py --help"
     add-to-list "pywhisker,https://github.com/ShutdownRepo/pywhisker,PyWhisker is a Python equivalent of the original Whisker made by Elad Shamir and written in C#. This tool allows users to manipulate the msDS-KeyCredentialLink attribute of a target user/computer to obtain full control over that object. It's based on Impacket and on a Python equivalent of Michael Grafnetter's DSInternals called PyDSInternals made by podalirius."
+}
+
+function install_manspider() {
+    colorecho "Installing Manspider"
+    git -C /opt/tools clone --depth=1 https://github.com/blacklanternsecurity/MANSPIDER.git
+    cd /opt/tools/MANSPIDER
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install .
+    touch ./man_spider/lib/init.py
+    sed -i "s#from .lib import#from lib import##" man_spider/manspider.py
+    add-history manspider
+    add-aliases manspider
+    add-test-command "manspider --help"
+
 }
 
 function install_targetedKerberoast() {
