@@ -38,7 +38,6 @@ function install_volatility2() {
     colorecho "Installing volatility"
     fapt pcregrep libpcre++-dev yara libjpeg-dev zlib1g-dev
     # Debug here because volatility folder already exists
-    ls -la /opt/tools/volatility
     rm -rf /opt/tools/volatility
     git -C /opt/tools/ clone --depth=1 https://github.com/volatilityfoundation/volatility
     cd /opt/tools/volatility
