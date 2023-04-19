@@ -33,6 +33,7 @@ function install_metasploit() {
 }
 
 function configure_metasploit() {
+    colorecho "Configuring Metasploit"
     cd /opt/tools/metasploit
     ./msfinstall
 }
@@ -40,7 +41,8 @@ function configure_metasploit() {
 function install_routersploit() {
     colorecho "Installing RouterSploit"
     python3 -m pipx install routersploit
+    python3 -m pipx inject routersploit colorama
     add-aliases routersploit
-    add-test-command "rsf --help"
+    add-test-command "which rsf.py"
     add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
 }

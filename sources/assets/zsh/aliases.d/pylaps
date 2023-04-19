@@ -1,1 +1,1 @@
-alias pyLAPS.py='python3 /opt/tools/pyLAPS/pyLAPS.py'
+alias pyLAPS.py='/opt/tools/pyLAPS/venv/bin/python3 /opt/tools/pyLAPS/pyLAPS.py'

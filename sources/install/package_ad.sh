@@ -220,10 +220,10 @@ function configure_bloodhound() {
 
 function install_cypheroth() {
     colorecho "Installing cypheroth"
-    git -C /opt/tools/ clone --depth=1 https://github.com/seajaysec/cypheroth/
+    git -C /opt/tools/ clone --depth=1 https://github.com/seajaysec/cypheroth
     add-aliases cypheroth
     add-history cypheroth
-    add-test-command "cypheroth --help| grep 'Quitting Cypheroth'"
+    add-test-command "cypheroth --help|& grep 'Example with Defaults:'"
     add-to-list "cyperoth,https://github.com/seajaysec/cypheroth/,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
 }
 
@@ -622,8 +622,14 @@ function install_ldapsearch-ad() {
 function install_petitpotam() {
     colorecho "Installing PetitPotam"
     git -C /opt/tools/ clone --depth=1 https://github.com/ly4k/PetitPotam
+    cd /opt/tools/PetitPotam
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install impacket
     mv /opt/tools/PetitPotam /opt/tools/PetitPotam_alt
     git -C /opt/tools/ clone --depth=1 https://github.com/topotam/PetitPotam
+    cd /opt/tools/PetitPotam
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install impacket
     add-aliases petitpotam
     add-history petitpotam
     add-test-command "petitpotam.py --help"
@@ -632,7 +638,10 @@ function install_petitpotam() {
 
 function install_dfscoerce() {
     colorecho "Installing DfsCoerce"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Wh04m1001/DFSCoerce.git
+    git -C /opt/tools/ clone --depth=1 https://github.com/Wh04m1001/DFSCoerce
+    cd /opt/tools/DFSCoerce
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install impacket
     add-aliases dfscoerce
     add-history dfscoerce
     add-test-command "dfscoerce.py --help"
@@ -650,6 +659,9 @@ function install_coercer() {
 function install_pkinittools() {
     colorecho "Installing PKINITtools"
     git -C /opt/tools/ clone --depth=1 https://github.com/dirkjanm/PKINITtools
+    cd /opt/tools/PKINITtools
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pkinittools
     add-history pkinittools
     add-test-command "gettgtpkinit.py --help"
@@ -736,6 +748,9 @@ function install_certipy() {
 function install_shadowcoerce() {
     colorecho "Installing ShadowCoerce PoC"
     git -C /opt/tools/ clone --depth=1 https://github.com/ShutdownRepo/ShadowCoerce
+    cd /opt/tools/ShadowCoerce
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install impacket
     add-aliases shadowcoerce
     add-history shadowcoerce
     add-test-command "shadowcoerce.py --help"
@@ -745,6 +760,9 @@ function install_shadowcoerce() {
 function install_gmsadumper() {
     colorecho "Installing gMSADumper"
     git -C /opt/tools/ clone --depth=1 https://github.com/micahvandeusen/gMSADumper
+    cd /opt/tools/gMSADumper
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases gmsadumper
     add-history gmsadumper
     add-test-command "gMSADumper.py --help"
@@ -754,6 +772,9 @@ function install_gmsadumper() {
 function install_pylaps() {
     colorecho "Installing pyLAPS"
     git -C /opt/tools/ clone --depth=1 https://github.com/p0dalirius/pyLAPS
+    cd /opt/tools/pyLAPS
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install impacket
     add-aliases pylaps
     add-history pylaps
     add-test-command "pyLAPS.py --help"
@@ -881,6 +902,9 @@ function install_roastinthemiddle() {
 function install_PassTheCert() {
     colorecho "Installing PassTheCert"
     git -C /opt/tools/ clone --depth=1 https://github.com/AlmondOffSec/PassTheCert
+    cd /opt/tools/PassTheCert/Python/
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install impacket
     add-aliases PassTheCert
     add-test-command "passthecert.py --help"
     add-to-list "PassTheCert,https://github.com/AlmondOffSec/PassTheCert,PassTheCert is a tool to extract Active Directory user password hashes from a domain controller's local certificate store."

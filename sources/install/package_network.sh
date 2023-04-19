@@ -36,7 +36,7 @@ function install_network_apt_tools() {
     add-test-command "wireshark --help" # Wireshark packet sniffer
     add-test-command "tshark --version" # Tshark packet sniffer
     add-test-command "hping3 --version" # Discovery tool
-    add-test-command "masscan --help| grep 'Masscan version'" # Port scanner
+    add-test-command "masscan --help|& grep 'Masscan version'" # Port scanner
     add-test-command "netdiscover -h |& grep 'Usage: netdiscover'" # Active/passive address reconnaissance tool
     add-test-command "tcpdump --version" # Capture TCP traffic
     add-test-command "iptables --version" # iptables for the win
@@ -46,7 +46,7 @@ function install_network_apt_tools() {
     add-test-command "rdesktop|& grep 'Usage: rdesktop'"
     add-test-command "which xtightvncviewer"
     add-test-command "ssh-audit --help |& grep 'verbose output'" # SSH server audit
-    add-test-command "hydra --help |& grep 'more command line options'" # Login scanner
+    add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version" # Mariadb client
     add-test-command "redis-cli --version" # Redis protocol
 
