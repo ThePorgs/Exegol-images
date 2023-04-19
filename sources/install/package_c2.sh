@@ -14,10 +14,10 @@ function package_c2() {
 }
 
 function install_c2_apt_tools() {
-    gem install rake
     curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb -o msfinstall && chmod +x msfinstall && ./msfinstall    #fapt metasploit-framework
 
-    add-test-command "msfconsole --version" # Offensive framework
+    #add-test-command "msfconsole --version" # Offensive framework
+    add-test-command "/opt/metasploit-framework/bin/msfconsole --version" # Offensive framework
     
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
