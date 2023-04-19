@@ -26,7 +26,6 @@ RUN ./entrypoint.sh package_base
 # RUN ./entrypoint.sh package_most_used
 
 # WARNING: the following installs (except: package_base, post_install_clean) can't be used with package_most_used
-RUN ./entrypoint.sh package_forensic
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_misc_configure
 RUN ./entrypoint.sh package_c2
