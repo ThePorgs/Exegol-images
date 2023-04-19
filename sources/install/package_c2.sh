@@ -5,15 +5,24 @@ source common.sh
 
 # Package dedicated to command & control frameworks
 function package_c2() {
+    install_c2_apt_tools
     # install_empire                # Exploit framework FIXME
     # install_starkiller            # GUI for Empire, commenting while Empire install is not fixed
     install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
-    install_metasploit              # Offensive framework
+    # install_metasploit            # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
 }
 
+function install_c2_apt_tools() {
+    fapt metasploit-framework
+
+    add-test-command "msfconsole --version" # Offensive framework
+    
+    add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
+}
+
 function package_c2_configure() {
-    configure_metasploit
+    # configure_metasploit
 }
 
 function install_pwncat() {
@@ -23,21 +32,21 @@ function install_pwncat() {
     add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
 }
 
-function install_metasploit() {
-    colorecho "Installing Metasploit"
-    mkdir /opt/tools/metasploit
-    cd /opt/tools/metasploit
-    curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall
-    chmod 755 msfinstall
-    ./msfinstall
-    add-test-command "msfconsole --version"
-    add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
-}
+# function install_metasploit() {
+#     colorecho "Installing Metasploit"
+#     mkdir /opt/tools/metasploit
+#     cd /opt/tools/metasploit
+#     curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall
+#     chmod 755 msfinstall
+#     ./msfinstall
+#     add-test-command "msfconsole --version"
+#     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
+# }
 
-function configure_metasploit() {
-    colorecho "Configuring Metasploit"
-    # cd /opt/tools/metasploit
-}
+# function configure_metasploit() {
+#     colorecho "Configuring Metasploit"
+#     # cd /opt/tools/metasploit
+# }
 
 function install_routersploit() {
     colorecho "Installing RouterSploit"
