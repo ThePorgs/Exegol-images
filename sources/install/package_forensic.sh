@@ -40,7 +40,8 @@ function install_volatility2() {
     git -C /opt/tools/ clone --depth=1 https://github.com/volatilityfoundation/volatility
     cd /opt/tools/volatility
     virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install pycrypto distorm3 pillow openpyxl ujson
+    ./venv/bin/python2 -m pip install pycrypto distorm3 pillow openpyxl
+    ./venv/bin/python2 -m pip install ujson --no-use-pep517
     source ./venv/bin/activate
     python2 setup.py install
     deactivate
