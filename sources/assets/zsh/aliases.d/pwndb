@@ -1,0 +1,1 @@
+alias pwndb='/opt/tools/pwndb/venv/bin/python3 /opt/tools/pwndb/pwndb.py'

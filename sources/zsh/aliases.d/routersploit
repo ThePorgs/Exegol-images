@@ -1,2 +1,0 @@
-alias rsf='python3 /opt/tools/routersploit/rsf.py'
-alias routersploit='python3 /opt/tools/routersploit/rsf.py'

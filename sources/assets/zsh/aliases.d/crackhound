@@ -1,0 +1,1 @@
+alias crackhound.py='/opt/tools/CrackHound/venv/bin/python3 /opt/tools/CrackHound/crackhound.py'

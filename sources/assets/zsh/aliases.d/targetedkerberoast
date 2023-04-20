@@ -1,0 +1,1 @@
+alias targetedKerberoast.py='/opt/tools/targetedKerberoast/venv/bin/python3 /opt/tools/targetedKerberoast/targetedKerberoast.py'
