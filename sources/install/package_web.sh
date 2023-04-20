@@ -270,8 +270,10 @@ function install_droopescan() {
 
 function install_drupwn() {
     colorecho "Installing drupwn"
+    git -C /opt/tools/ clone https://github.com/immunIT/drupwn
     python3 -m pipx install git+https://github.com/immunIT/drupwn
     add-test-command "drupwn --help"
+    add-aliases drupwn
     add-to-list "drupwn,https://github.com/immunIT/drupwn,Drupal security scanner."
 }
 
