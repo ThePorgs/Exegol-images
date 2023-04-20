@@ -33,7 +33,7 @@ function install_metasploit() {
     ./msfinstall
     cd /tmp
     rm -rf /tmp/metasploit_install
-    add-test-command "msfconsole --help"
+    add-test-command "ruby /opt/metasploit-framework/embedded/framework/msfconsole --help"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 
