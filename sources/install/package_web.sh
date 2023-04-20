@@ -90,13 +90,13 @@ function install_web_apt_tools() {
     add-history swaks
   
     add-test-command "dirb | grep '<username:password>'" # Web fuzzer
-    add-test-command "wfuzz --help" # Web fuzzer (second favorites) FIXME Pycurl is not compiled against Openssl
-    add-test-command "sqlmap --version" # SQL injection scanner
-    add-test-command "sslscan --version" # SSL/TLS scanner
-    add-test-command "weevely --help" # Awesome secure and light PHP webshell
-    add-test-command "whatweb --version" # Recognises web technologies including content management
-    add-test-command "prips --help" # Print the IP addresses in a given range
-    add-test-command "swaks --version" # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
+    add-test-command "wfuzz --help"                      # Web fuzzer (second favorites) FIXME Pycurl is not compiled against Openssl
+    add-test-command "sqlmap --version"                  # SQL injection scanner
+    add-test-command "sslscan --version"                 # SSL/TLS scanner
+    add-test-command "weevely --help"                    # Awesome secure and light PHP webshell
+    add-test-command "whatweb --version"                 # Recognises web technologies including content management
+    add-test-command "prips --help"                      # Print the IP addresses in a given range
+    add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 
     add-to-list "dirb,https://github.com/v0re/dirb,Web Content Scanner"
     add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"

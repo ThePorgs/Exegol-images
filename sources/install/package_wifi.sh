@@ -21,10 +21,10 @@ function install_wifi_apt_tools() {
     add-aliases aircrack-ng
     add-history aircrack-ng
   
-    add-test-command "aircrack-ng --help" # WiFi security auditing tools suite
+    add-test-command "aircrack-ng --help"                                                # WiFi security auditing tools suite
     add-test-command "reaver --help; reaver --help |& grep 'Tactical Network Solutions'" # Brute force attack against Wifi Protected Setup
-    add-test-command "bully --version" # WPS brute force attack
-    add-test-command "cowpatty -V" # WPA2-PSK Cracking
+    add-test-command "bully --version"                                                   # WPS brute force attack
+    add-test-command "cowpatty -V"                                                       # WPA2-PSK Cracking
   
     add-to-list "aircrack-ng,https://www.aircrack-ng.org,A suite of tools for wireless penetration testing"
     add-to-list "reaver,https://github.com/t6x/reaver-wps-fork-t6x,reaver is a tool for brute-forcing WPS (Wireless Protected Setup) PINs."

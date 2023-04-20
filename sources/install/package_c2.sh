@@ -8,7 +8,7 @@ function package_c2() {
     # install_empire                # Exploit framework FIXME
     # install_starkiller            # GUI for Empire, commenting while Empire install is not fixed
     install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
-    install_metasploit            # Offensive framework
+    install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
 }
 
@@ -33,7 +33,8 @@ function install_metasploit() {
     ./msfinstall
     cd /tmp
     rm -rf /tmp/metasploit_install
-    add-test-command "ruby /opt/metasploit-framework/embedded/framework/msfconsole --help"
+    add-aliases msfconsole
+    add-test-command "msfconsole --help"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 

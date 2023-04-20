@@ -18,7 +18,7 @@ function package_osint() {
     # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
     install_h8mail                  # Email OSINT & Password breach hunting tool
     install_infoga                  # Gathering email accounts informations
-    # install_buster                  # An advanced tool for email reconnaissance FIXME /root/.local/pipx/shared/lib/python3.9/site-packages/setuptools/installer.py:27: SetuptoolsDeprecationWarning: setuptools.installer is deprecated. Requirements should be satisfied by a PEP 517 installer.
+    # install_buster                # An advanced tool for email reconnaissance FIXME /root/.local/pipx/shared/lib/python3.9/site-packages/setuptools/installer.py:27: SetuptoolsDeprecationWarning: setuptools.installer is deprecated. Requirements should be satisfied by a PEP 517 installer.
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     # install_ghunt                 # Investigate Google Accounts with emails FIXME
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
@@ -56,9 +56,9 @@ function install_osint_apt_tools() {
     fapt exiftool exifprobe dnsenum tor
     
     add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png" # For read exif information
-    add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'" # Probe and report structure and metadata content of camera image files
+    add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"             # Probe and report structure and metadata content of camera image files
     add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'" # DNSEnum is a command-line tool that automatically identifies basic DNS records
-    add-test-command "service tor start" # Tor proxy
+    add-test-command "service tor start"                                                # Tor proxy
 
     add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading, writing and editing meta information in image, audio and video files."
     add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."

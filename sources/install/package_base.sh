@@ -41,25 +41,25 @@ function package_base() {
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
     ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
-    install_python-pip              # Pip. Should we set pip2 to default?
+    install_python-pip                                  # Pip. Should we set pip2 to default?
     python3 -m pip install --upgrade pip
     filesystem
-    install_go                      # Golang language
+    install_go                                          # Golang language
     set_go_env
     install_locales
-    install_ohmyzsh                 # Awesome shell
+    install_ohmyzsh                                     # Awesome shell
     python3 -m pip install wheel
     python -m pip install wheel
     install_pipx
     add-test-command "fzf --version"
     add-history curl
     install_yarn
-    install_ultimate_vimrc          # Make vim usable OOFB
-    install_mdcat                   # cat markdown files
+    install_ultimate_vimrc                              # Make vim usable OOFB
+    install_mdcat                                       # cat markdown files
     add-test-command "batcat --version"
-    DEBIAN_FRONTEND=noninteractive fapt macchanger  # Macchanger
-    install_gf                      # wrapper around grep
-    fapt-noexit rar                 # rar (Only AMD)
+    DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
+    install_gf                                          # wrapper around grep
+    fapt-noexit rar                                     # rar (Only AMD)
     install_firefox
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
