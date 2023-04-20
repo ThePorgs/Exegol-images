@@ -1,0 +1,7 @@
+alias pth-net='LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/tools/pth-toolkit/lib/:/opt/tools/pth-toolkit/lib/private/" /opt/tools/pth-toolkit/bin/net'
+alias pth-rpcclient='LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/tools/pth-toolkit/lib/:/opt/tools/pth-toolkit/lib/private/" /opt/tools/pth-toolkit/bin/rpcclient'
+alias pth-smbclient='LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/tools/pth-toolkit/lib/:/opt/tools/pth-toolkit/lib/private/" /opt/tools/pth-toolkit/bin/smbclient'
+alias pth-smbget='LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/tools/pth-toolkit/lib/:/opt/tools/pth-toolkit/lib/private/" /opt/tools/pth-toolkit/bin/smbget'
+alias pth-winexe='LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/tools/pth-toolkit/lib/:/opt/tools/pth-toolkit/lib/private/" /opt/tools/pth-toolkit/bin/winexe'
+alias pth-wmic='LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/tools/pth-toolkit/lib/:/opt/tools/pth-toolkit/lib/private/" /opt/tools/pth-toolkit/bin/wmic'
+alias pth-wmis='LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/tools/pth-toolkit/lib/:/opt/tools/pth-toolkit/lib/private/" /opt/tools/pth-toolkit/bin/wmis'

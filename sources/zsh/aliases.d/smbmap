@@ -1,1 +1,0 @@
-alias smbmap='python3 /opt/tools/smbmap/smbmap.py'

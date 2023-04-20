@@ -114,7 +114,7 @@ jobs:
         run: |
           image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
           echo "Removing $image_name"
-          docker image inspect $image_name && docker rmi $image_name
+          docker image inspect $image_name || exit 0 && docker rmi $image_name
 
   clean_registry:
     name: Clean intermediate registry
