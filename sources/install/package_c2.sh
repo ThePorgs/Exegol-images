@@ -10,6 +10,7 @@ function package_c2() {
     install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
     install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
+    install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
 }
 
 function package_c2_configure() {
@@ -51,4 +52,14 @@ function install_routersploit() {
     add-aliases routersploit
     add-test-command "which rsf.py"
     add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
+}
+
+function install_sliver() {
+    colorecho "Installing Sliver"
+    git -C /opt/tools/ clone --depth=1 https://github.com/BishopFox/sliver.git
+    cd /opt/tools/sliver
+    make
+    cp sliver-* /opt/tools/bin
+    add-test-command "sliver-server help"
+    add-test-command "sliver-client help"
 }
