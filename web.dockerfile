@@ -14,35 +14,28 @@ LABEL org.exegol.src_repository="https://github.com/ThePorgs/Exegol-images"
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 
-ADD sources /root/sources
-RUN chmod +x /root/sources/install.sh
+ADD . sources /root/sources
 
-RUN /root/sources/install.sh package_base
+WORKDIR /root/sources/install
 
-# WARNING: package_most_used can't be used with other functions other than: package_base, post_install_clean
-# RUN /root/sources/install.sh package_most_used
+RUN chmod +x entrypoint.sh
+
+RUN ./entrypoint.sh package_base
 
 # WARNING: the following installs (except: package_base, post_install_clean) can't be used with package_most_used
-RUN /root/sources/install.sh package_misc
-RUN /root/sources/install.sh package_wordlists
-RUN /root/sources/install.sh package_cracking
-RUN /root/sources/install.sh package_osint
-RUN /root/sources/install.sh package_web
-# RUN /root/sources/install.sh package_c2
-# RUN /root/sources/install.sh package_ad
-# RUN /root/sources/install.sh package_mobile
-# RUN /root/sources/install.sh package_iot
-# RUN /root/sources/install.sh package_rfid
-# RUN /root/sources/install.sh package_sdr
-# RUN /root/sources/install.sh package_network
-# RUN /root/sources/install.sh package_wifi
-# RUN /root/sources/install.sh package_forensic
-# RUN /root/sources/install.sh package_cloud
-# RUN /root/sources/install.sh package_steganography
-# RUN /root/sources/install.sh package_reverse
-RUN /root/sources/install.sh package_code_analysis
+RUN ./entrypoint.sh package_misc
+RUN ./entrypoint.sh package_misc_configure
+RUN ./entrypoint.sh package_wordlists
+RUN ./entrypoint.sh package_wordlists_configure
+RUN ./entrypoint.sh package_cracking
+RUN ./entrypoint.sh package_cracking_configure
+RUN ./entrypoint.sh package_osint
+RUN ./entrypoint.sh package_osint_configure
+RUN ./entrypoint.sh package_web
+RUN ./entrypoint.sh package_web_configure
+RUN ./entrypoint.sh package_code_analysis
 
-RUN /root/sources/install.sh post_install_clean
+RUN ./entrypoint.sh post_install_clean
 
 RUN rm -rf /root/sources
 

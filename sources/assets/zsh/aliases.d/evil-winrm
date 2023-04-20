@@ -1,0 +1,1 @@
+alias evil-winrm='BUNDLE_GEMFILE=/opt/tools/evil-winrm/Gemfile bundle exec evil-winrm'
