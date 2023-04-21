@@ -1,0 +1,10 @@
+rsactftool --publickey $PUBLIC_KEY --uncipherfile ./ciphered\_file
+rsactftool --publickey $PUBLIC_KEY --private
+rsactftool --createpub -n 7828374823761928712873129873981723...12837182 -e 65537
+rsactftool --dumpkey --key $PUBLIC_KEY
+rsactftool --key examples/conspicuous.priv --isconspicuous
+rsactftool --publickey $PUBLIC_KEY --ecmdigits 25 --verbose --private
+rsactftool --attack partial_q --key $PEM_KEY
+rsactftool --attack partial_d --key $PEM_KEY
+rsactftool --convert_idrsa_pub --publickey $HOME/.ssh/id_rsa.pub
+rsactftool --isroca --publickey $PUBLIC_KEY
