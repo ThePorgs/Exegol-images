@@ -1,0 +1,1 @@
+alias lnk-generate.py='/opt/tools/LNKUp/venv/bin/python2 /opt/tools/LNKUp/generate.py'

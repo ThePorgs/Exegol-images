@@ -1,0 +1,1 @@
+alias linkedin2username.py='/opt/tools/linkedin2username/venv/bin/python3 /opt/tools/linkedin2username/linkedin2username.py'

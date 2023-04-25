@@ -1,2 +1,0 @@
-alias ldapsearch='python3 /opt/tools/ldapsearch-ad/ldapsearch-ad.py'
-alias ldapsearch-ad='python3 /opt/tools/ldapsearch-ad/ldapsearch-ad.py'

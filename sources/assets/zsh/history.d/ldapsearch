@@ -1,0 +1,4 @@
+ldapsearch -h "$DC_IP" -x -s "base" "namingcontexts"
+ldapsearch -h "$TARGET" -x -b "DC=DOMAIN,DC=LOCAL"
+ldapsearch -H ldap://$TARGET -x -b "DC=DOMAIN,DC=LOCAL"
+

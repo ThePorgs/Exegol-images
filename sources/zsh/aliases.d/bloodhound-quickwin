@@ -1,2 +1,0 @@
-alias bhqc.py='python3 /opt/tools/bloodhound-quickwin/bhqc.py'
-alias bloodhound-quickwin='python3 /opt/tools/bloodhound-quickwin/bhqc.py'

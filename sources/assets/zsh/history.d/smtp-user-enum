@@ -1,0 +1,3 @@
+smtp-user-enum -M EXPN -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t "$TARGET" "$PORT"
+smtp-user-enum -M RCPT -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t "$TARGET" "$PORT"
+smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t "$TARGET" "$PORT"

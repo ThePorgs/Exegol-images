@@ -1,0 +1,1 @@
+alias pywsus.py='/opt/tools/pywsus/venv/bin/python3 /opt/tools/pywsus/pywsus.py'

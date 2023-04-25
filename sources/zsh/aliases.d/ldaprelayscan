@@ -1,1 +1,0 @@
-alias LdapRelayScan.py='python3 /opt/tools/LdapRelayScan/LdapRelayScan.py'

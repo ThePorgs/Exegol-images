@@ -1,0 +1,1 @@
+alias photon.py='/opt/tools/photon/venv/bin/python3 /opt/tools/photon/photon.py'

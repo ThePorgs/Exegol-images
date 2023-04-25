@@ -14,28 +14,33 @@ LABEL org.exegol.src_repository="https://github.com/ThePorgs/Exegol-images"
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 
-ADD sources /root/sources
-RUN chmod +x /root/sources/install.sh
+ADD . sources /root/sources
 
-RUN /root/sources/install.sh deploy_exegol
-RUN /root/sources/install.sh update
+WORKDIR /root/sources/install
+
+RUN chmod +x entrypoint.sh
+
+RUN ./entrypoint.sh deploy_exegol
+RUN ./entrypoint.sh update
 RUN apt-get update && apt-get install -y sudo git curl zsh asciinema zip wget ncat dnsutils python2 python3 python3-setuptools python3-pip vim nano procps automake autoconf make
 RUN ln -s /usr/bin/python2.7 /usr/bin/python
-RUN /root/sources/install.sh filesystem
-RUN /root/sources/install.sh set_go_env
-RUN /root/sources/install.sh install_locales
-RUN /root/sources/install.sh install_rust_cargo
-RUN /root/sources/install.sh install_tmux
-RUN /root/sources/install.sh install_ohmyzsh
-RUN /root/sources/install.sh install_fzf
-RUN /root/sources/install.sh install_openvpn
-RUN /root/sources/install.sh install_pipx
-RUN /root/sources/install.sh install_python3
-RUN /root/sources/install.sh install_python-pip
-RUN /root/sources/install.sh install_exegol-history
-#RUN /root/sources/install.sh add-test-command "fail_command"
+RUN ./entrypoint.sh filesystem
+#RUN ./entrypoint.sh set_go_env
+#RUN ./entrypoint.sh install_locales
+#RUN ./entrypoint.sh install_rust_cargo
+#RUN ./entrypoint.sh install_tmux
+RUN ./entrypoint.sh install_ohmyzsh
+RUN ./entrypoint.sh install_fzf
+RUN ./entrypoint.sh install_openvpn
+RUN ./entrypoint.sh install_pipx
+RUN ./entrypoint.sh install_python3
+#RUN ./entrypoint.sh install_python-pip
+#RUN ./entrypoint.sh install_exegol-history
+#RUN ./entrypoint.sh install_kerbrute
+RUN ./entrypoint.sh add-test-command "whoami --version"
+RUN ./entrypoint.sh add-test-command "fail_command"
 
-RUN /root/sources/install.sh post_install_clean
+RUN ./entrypoint.sh post_install_clean
 
 WORKDIR /workspace
 

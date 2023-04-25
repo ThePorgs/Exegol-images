@@ -1,0 +1,2 @@
+alias volatility2='/opt/tools/volatility/venv/bin/python2 /opt/tools/volatility/vol.py'
+alias vol2='volatility2'
