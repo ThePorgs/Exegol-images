@@ -58,7 +58,7 @@ function fapt-noexit() {
 function fapt-history() {
     fapt "$@"
     for i in "$@"; do
-        add-history $i
+        add-history "$i"
     done
 }
 
