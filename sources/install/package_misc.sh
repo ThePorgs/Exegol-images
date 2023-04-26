@@ -64,7 +64,6 @@ function install_uberfile() {
 function install_arsenal() {
     colorecho "Installing arsenal"
     python3 -m pipx install git+https://github.com/Orange-Cyberdefense/arsenal
-    add-aliases arsenal
     add-test-command "arsenal --version"
     add-to-list "arsenal,https://github.com/Orange-Cyberdefense/arsenal,Powerful weapons for penetration testing."
 }

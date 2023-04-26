@@ -102,6 +102,6 @@ unset GUACVERSION
 unset SERVER
 unset TOMCAT_HOME
 
-add-test-command "ls desktop-start"
-add-test-command "ls desktop-stop"
-add-test-command "ls desktop-restart"
+add-test-command "ls /opt/tools/bin/desktop-start"
+add-test-command "ls /opt/tools/bin/desktop-stop"
+add-test-command "ls /opt/tools/bin/desktop-restart"
