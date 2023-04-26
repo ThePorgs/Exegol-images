@@ -3,3 +3,4 @@
 service guacd start
 service xrdp restart
 JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-arm64 /root/.tomcat/bin/startup.sh
+echo "The server is available on : http://127.0.0.1:6336 - Don't forget to map the port to access it with your host (only in brige)"
