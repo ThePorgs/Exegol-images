@@ -3,6 +3,8 @@
 
 source common.sh
 
+set -e
+
 # Set variables
 GUACVERSION="1.5.1"
 SERVER="http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${GUACVERSION}"
@@ -86,6 +88,7 @@ cp /root/sources/assets/guacamole/desktop-restart /opt/tools/bin
 chmod +x /opt/tools/bin/desktop-*
 
 cp /root/sources/assets/guacamole/wallpaper.png /usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+mkdir -p /root/.config/
 cp /root/sources/assets/guacamole/kdeglobals /root/.config/
 
 desktop-stop
@@ -98,3 +101,7 @@ rm -rf /tmp/guacamole
 unset GUACVERSION
 unset SERVER
 unset TOMCAT_HOME
+
+add-test-command "which desktop-start"
+add-test-command "which desktop-stop"
+add-test-command "which desktop-restart"
