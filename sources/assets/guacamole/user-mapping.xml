@@ -1,5 +1,5 @@
 <user-mapping>
-    <authorize username="root" password="exegol4thewin">
+    <authorize username="root" password="CHANGEME" encoding="md5">
     <connection name="Exegol">
     <protocol>rdp</protocol>
     <param name="hostname">127.0.0.1</param>

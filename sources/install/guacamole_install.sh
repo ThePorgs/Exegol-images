@@ -11,16 +11,10 @@ TOMCAT_HOME="/root/.tomcat"
 export DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
-fapt libcairo2-dev libjpeg62-turbo-dev libpng-dev libossp-uuid-dev libavcodec-dev libavformat-dev libavutil-dev \
+apt install -y libcairo2-dev libjpeg62-turbo-dev libpng-dev libossp-uuid-dev libavcodec-dev libavformat-dev libavutil-dev \
 libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libtelnet-dev libvncserver-dev libpulse-dev libssl-dev \
 libvorbis-dev libwebp-dev libwebsockets-dev freerdp2-x11 libtool-bin ghostscript dpkg-dev wget crudini libc-bin \
 tomcat9 tomcat9-admin tomcat9-common tomcat9-user kde-plasma-desktop xrdp xorgxrdp dbus-x11
-#systemsettings qml-module-org-kde-newstuff
-
-# Set default wallpaper
-kwriteconfig5 --file "/root/.config/plasma-org.kde.plasma.desktop-appletsrc" --group 'Containments' --group '1' --group 'Wallpaper' --group 'org.kde.image' --group 'General' --key 'Image' "/root/sources/assets/guacamole/wallpaper.png"
-#kwriteconfig5 --file kdeglobals --group General --key ColorScheme "Breeze"
-#kwriteconfig5 --file ~/.config/plasmarc --group Theme --key name breeze-dark
 
 # Setup workspace
 mkdir /tmp/guacamole
@@ -41,7 +35,10 @@ rm guacamole-${GUACVERSION}.war
 echo '<link rel="stylesheet" href="theme.css">' >> index.html
 cp /root/sources/assets/guacamole/theme.css ./
 cp /root/sources/assets/guacamole/logo.png ./images/logo.png
+cp /root/sources/assets/guacamole/logo.png ./images/logo-144.png
+cp /root/sources/assets/guacamole/logo.png ./images/logo-64.png
 sed -i "s#guac-tricolor.svg#logo.png#" ./1.guacamole.8c18237a4a94ee9845d9.css
+sed -i "s#Apache Guacamole#Exegol#" ./translations/en.json
 zip -r /etc/guacamole/guacamole.war *
 cd ..
 rm -rf custom-war
@@ -55,7 +52,7 @@ make install
 ldconfig
 cd ../
 
-# Create a new tomcat instance on port 1337
+# Create a new tomcat instance
 tomcat9-instance-create ${TOMCAT_HOME}
 sed -i 's#8080#6336##' ${TOMCAT_HOME}/conf/server.xml
 ln -sf /etc/guacamole/guacamole.war ${TOMCAT_HOME}/webapps/ROOT.war
@@ -66,16 +63,17 @@ bind_host = 127.0.0.1
 bind_port = 5665
 EOF
 
-# Configure guacamole
 rm -f /etc/guacamole/guacamole.properties
 
 # Add login mapping
 cp /root/sources/assets/guacamole/user-mapping.xml /etc/guacamole/
+hashpass=$(echo -n "exegol4thewin"|md5sum|cut -d ' ' -f1)
+sed -i "s/CHANGEME/$hashpass/" /etc/guacamole/user-mapping.xml
 cp /root/sources/assets/guacamole/guacamole.properties /etc/guacamole/
 
 update-alternatives --set x-session-manager /usr/bin/startplasma-x11
 
-# Install RDP server
+# Configure xrdp
 sed -i "s#port=3389#port=tcp://127.0.0.1:5225##" /etc/xrdp/xrdp.ini
 
 # Edit root password
@@ -87,10 +85,14 @@ cp /root/sources/assets/guacamole/desktop-restart /opt/tools/bin
 
 chmod +x /opt/tools/bin/desktop-*
 
+cp /root/sources/assets/guacamole/wallpaper.png /usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+cp /root/sources/assets/guacamole/kdeglobals /root/.config/
+
 desktop-stop
 
 # Remove tmp
-# rm -rf /tmp/guacamole
+cd /root/sources/install
+rm -rf /tmp/guacamole
 
 # Unset variables
 unset GUACVERSION
