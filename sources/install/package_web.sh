@@ -47,7 +47,7 @@ function package_web() {
     install_git-dumper              # Dump a git repository from a website
     install_gittools                # Dump a git repository from a website
     install_ysoserial               # Deserialization payloads
-    # install_phpggc                # php deserialization payloads FIXME https://github.com/ambionics/phpggc/issues/142
+    install_phpggc                  # php deserialization payloads
     install_symfony-exploits        # symfony secret fragments exploit
     install_jdwp_shellifier         # exploit java debug
     install_httpmethods             # Tool for HTTP methods enum & verb tampering
@@ -471,6 +471,14 @@ function install_ysoserial() {
     add-aliases ysoserial
     add-test-command "ysoserial --help|& grep 'spring-core:4.1.4.RELEASE'"
     add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
+}
+
+function install_phpggc() {
+    colorecho "Installing phpggc"
+    git -C /opt/tools clone --depth=1 https://github.com/ambionics/phpggc.git
+    add-aliases phpggc
+    add-test-command "phpggc --help"
+    add-to-list "phpggc,https://github.com/ambionics/phpggc,Exploit generation tool for the PHP platform."
 }
 
 function install_symfony-exploits(){
