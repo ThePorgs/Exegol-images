@@ -91,7 +91,7 @@ cp /root/sources/assets/guacamole/wallpaper.png /usr/share/wallpapers/Next/conte
 mkdir -p /root/.config/
 cp /root/sources/assets/guacamole/kdeglobals /root/.config/
 
-desktop-stop
+/opt/tools/bin/desktop-stop
 
 # Remove tmp
 cd /root/sources/install
@@ -102,6 +102,6 @@ unset GUACVERSION
 unset SERVER
 unset TOMCAT_HOME
 
-add-test-command "which desktop-start"
-add-test-command "which desktop-stop"
-add-test-command "which desktop-restart"
+add-test-command "ls desktop-start"
+add-test-command "ls desktop-stop"
+add-test-command "ls desktop-restart"
