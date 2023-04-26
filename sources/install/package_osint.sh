@@ -42,6 +42,7 @@ function package_osint() {
     install_recondog                # Informations gathering tool
     install_gron                    # JSON parser
     # install_ignorant              # holehe but for phone numbers
+    install_trevorspray             # modular password sprayer with threading, SSH proxying, loot modules, and more!
 }
 
 function package_osint_configure() {
@@ -336,4 +337,15 @@ function install_gron() {
     go install -v github.com/tomnomnom/gron@latest
     add-test-command "gron --help"
     add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!"
+}
+
+function install_trevorspray() {
+    git -C /opt/tools/ clone --depth=1 https://github.com/blacklanternsecurity/TREVORspray
+    cd /opt/tools/TREVORspray
+    # https://github.com/blacklanternsecurity/TREVORspray/pull/27
+    sed -i "s/1.0.5/1.0.4/" pyproject.toml
+    python3 -m pipx install .
+    add-history trevorspray
+    add-test-command "trevorspray --help"
+    add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules, and more"
 }
