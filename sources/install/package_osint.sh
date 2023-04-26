@@ -150,6 +150,8 @@ function install_theharvester() {
     cd /opt/tools/theHarvester
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
+    # The tool needs access to the proxies.yaml file in the folder.
+    ln -s /opt/tools/theHarvester /usr/local/etc/
     add-aliases theharvester
     add-history theharvester
     add-test-command "theHarvester.py --help"
