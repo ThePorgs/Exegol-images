@@ -59,6 +59,7 @@ function package_web() {
     install_arjun                   # HTTP Parameter Discovery
     install_nuclei                  # Vulnerability scanner - Needed for gau install
     install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
+    install_katana                  # Crawling and Spidering by projectdiscovery.io
     install_hakrevdns               # Reverse DNS lookups
     install_httprobe                # Probe http
     install_httpx                   # Probe http
@@ -576,6 +577,15 @@ function install_nuclei() {
 
 function configure_nuclei() {
     /root/go/bin/nuclei -update-templates
+}
+
+function install_katana() {
+  # Crawling and Spidering
+  colorecho "Installing Katana"
+  go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+  add-history katana
+  add-test-command "katana --version"
+  add-to-list "katana,https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
 }
 
 function install_gau() {
