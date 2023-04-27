@@ -726,6 +726,7 @@ function install_spray() {
   add-aliases spray
   add-history spray
   add-test-command "spray -h"
+  add-to-list "spray,https://github.com/Greenwolf/Spray,Password Spraying tool for Active Directory Credentials"
 }
 
 function install_pywsus() {
