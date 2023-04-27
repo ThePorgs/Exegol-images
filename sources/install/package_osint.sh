@@ -31,7 +31,7 @@ function package_osint() {
     install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
     install_constellation           # A graph-focused data visualisation and interactive analysis application.
     install_maltego                 # Maltego is a software used for open-source intelligence and forensics
-    # install_spiderfoot            # SpiderFoot automates OSINT collection # FIXME, requirements.txt creates dependancies conflicts and there's no setup.py file that would allow for pipx install
+    install_spiderfoot              # SpiderFoot automates OSINT collection
     install_finalrecon              # A fast and simple python script for web reconnaissance
     # fapt recon-ng                 # External recon tool FIXME
     # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
@@ -284,8 +284,21 @@ function install_maltego(){
     colorecho "Installing Maltego"
     wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
     dpkg -i /tmp/maltegov4.3_package.deb
-    # TODO add-test-command
+    add-test-command "file /usr/share/maltego/bin/maltego"
     add-to-list "maltego,https://www.paterva.com/web7/downloads.php,A tool used for open-source intelligence and forensics"
+}
+
+function install_spiderfoot(){
+    colorecho "Installing Spiderfoot"
+    git -C /opt/tools/ clone --depth=1 https://github.com/smicallef/spiderfoot
+    cd /opt/tools/spiderfoot
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases spiderfoot
+    add-history spiderfoot
+    add-test-command "spiderfoot --help"
+    add-test-command "spiderfoot-cli --help"
+    add-to-list "spiderfoot,https://github.com/smicallef/spiderfoot,A reconnaissance tool that automatically queries over 100 public data sources"
 }
 
 function install_finalrecon(){
