@@ -57,6 +57,7 @@ function package_ad() {
     install_manspider               # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
     install_targetedKerberoast
     install_pcredz
+    install_spray                   # Password Spraying tool for Active Directory Credentials.
     install_pywsus
     install_donpapi
     install_webclientservicescanner
@@ -79,7 +80,6 @@ function package_ad() {
     install_roastinthemiddle
     install_PassTheCert
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
-    install_spray                  # Password Spraying tool for Active Directory Credentials.
     install_neo4j                  # Bloodhound dependency
 }
 
@@ -720,9 +720,8 @@ function install_pcredz() {
 }
 
 function install_spray() {
-  # Password Spraying tool for Active Directory Credentials.
   colorecho "Installing Spray"
-  git -C /opt/tools/ clone https://github.com/Greenwolf/Spray.git
+  git -C /opt/tools/ clone --depth=1 https://github.com/Greenwolf/Spray.git
   add-aliases spray
   add-history spray
   add-test-command "spray -h"
