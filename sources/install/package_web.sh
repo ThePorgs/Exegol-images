@@ -250,9 +250,9 @@ function install_fuxploider() {
 function install_wpscan(){
     colorecho "Installing wpscan"
     # TODO : Check if deps are already installed
-    fapt procps ruby-dev apt-transport-https ca-certificates gnupg2
-    curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
-    curl -sSL https://get.rvm.io | bash -s stable --ruby
+    # fapt procps ruby-dev apt-transport-https ca-certificates gnupg2
+    # curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
+    # curl -sSL https://get.rvm.io | bash -s stable --ruby
     # TODO : gem venv
     gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
     gem install wpscan

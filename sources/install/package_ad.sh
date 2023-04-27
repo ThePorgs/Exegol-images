@@ -382,10 +382,11 @@ function configure_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Hackplayers/evil-winrm
-    cd /opt/tools/evil-winrm
-    bundle install
-    add-aliases evil-winrm
+    # Todo gem env
+    gem install evil-winrm
+    # git -C /opt/tools/ clone --depth=1 https://github.com/Hackplayers/evil-winrm
+    # cd /opt/tools/evil-winrm
+    # bundle install
     add-history evil-winrm
     add-test-command "evil-winrm --help"
     add-to-list "evilwinrm,https://github.com/Hackplayers/evil-winrm,Tool to connect to a remote Windows system with WinRM."
