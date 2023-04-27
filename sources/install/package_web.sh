@@ -47,6 +47,7 @@ function package_web() {
     install_git-dumper              # Dump a git repository from a website
     install_gittools                # Dump a git repository from a website
     install_ysoserial               # Deserialization payloads
+    install_slipit                  # Utility for creating ZipSlip archives
     # install_phpggc                # php deserialization payloads FIXME https://github.com/ambionics/phpggc/issues/142
     install_symfony-exploits        # symfony secret fragments exploit
     install_jdwp_shellifier         # exploit java debug
@@ -471,6 +472,15 @@ function install_ysoserial() {
     add-aliases ysoserial
     add-test-command "ysoserial --help|& grep 'spring-core:4.1.4.RELEASE'"
     add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
+}
+
+function install_slipit() {
+    # Utility for creating ZipSlip archives
+    colorecho "Installing slipit"
+    python3 -m pipx install slipit
+    add-test-command "slipit -h"
+    add-history slipit
+    add-to-list "slipit,https://github.com/usdAG/slipit,Slipit is a command line utility for creating archives with path traversal elements."
 }
 
 function install_symfony-exploits(){

@@ -1,0 +1,3 @@
+slipit archive.tar.gz file1.txt file2.txt
+slipit archive.tar.gz file1.txt --depth 3 --increment 
+slipit example.zip test.txt --static content --multi
