@@ -18,7 +18,7 @@ function package_osint() {
     # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
     install_h8mail                  # Email OSINT & Password breach hunting tool
     install_infoga                  # Gathering email accounts informations
-    # install_buster                # An advanced tool for email reconnaissance FIXME /root/.local/pipx/shared/lib/python3.9/site-packages/setuptools/installer.py:27: SetuptoolsDeprecationWarning: setuptools.installer is deprecated. Requirements should be satisfied by a PEP 517 installer.
+    install_buster                  # An advanced tool for email reconnaissance
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     # install_ghunt                 # Investigate Google Accounts with emails FIXME
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
@@ -163,6 +163,14 @@ function install_infoga() {
     add-history infoga
     add-test-command "infoga.py --help"
     add-to-list "infoga,https://github.com/m4ll0k/Infoga,Information gathering tool for hacking."
+}
+
+function install_buster() {
+    colorecho "Installing buster"
+    python3 -m pipx install git+https://github.com/sham00n/buster
+    add-history buster
+    add-test-command "buster --help"
+    add-to-list "buster,https://github.com/sham00n/Buster,Advanced OSINT tool"
 }
 
 function install_pwnedornot() {
