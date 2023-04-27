@@ -79,6 +79,7 @@ function package_ad() {
     install_roastinthemiddle
     install_PassTheCert
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
+    install_spray                  # Password Spraying tool for Active Directory Credentials.
     install_neo4j                  # Bloodhound dependency
 }
 
@@ -716,6 +717,15 @@ function install_pcredz() {
     add-aliases pcredz
     add-test-command "PCredz --help"
     add-to-list "pcredz,https://github.com/lgandx/PCredz,PowerShell credential dumper"
+}
+
+function install_spray() {
+  # Password Spraying tool for Active Directory Credentials.
+  colorecho "Installing Spray"
+  git -C /opt/tools/ clone https://github.com/Greenwolf/Spray.git
+  add-aliases spray
+  add-history spray
+  add-test-command "spray -h"
 }
 
 function install_pywsus() {

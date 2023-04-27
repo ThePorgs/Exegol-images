@@ -71,6 +71,7 @@ function package_web() {
     install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
     install_kraken                  # Kraken is a modular multi-language webshell.
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
+    install_spray                   # Password Spraying tool for Active Directory Credentials.
 }
 
 function package_web_configure() {

