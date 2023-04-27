@@ -58,8 +58,8 @@ function package_web() {
     install_clusterd                # Axis2/JBoss/ColdFusion/Glassfish/Weblogic/Railo scanner
     install_arjun                   # HTTP Parameter Discovery
     install_nuclei                  # Vulnerability scanner - Needed for gau install
-    install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
     install_katana                  # Crawling and Spidering by projectdiscovery.io
+    install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
     install_hakrevdns               # Reverse DNS lookups
     install_httprobe                # Probe http
     install_httpx                   # Probe http
@@ -580,7 +580,6 @@ function configure_nuclei() {
 }
 
 function install_katana() {
-  # Crawling and Spidering
   colorecho "Installing Katana"
   go install -v github.com/projectdiscovery/katana/cmd/katana@latest
   add-history katana
