@@ -23,7 +23,7 @@ function package_web() {
     install_kadimus                 # LFI scanner
     install_fuxploider              # File upload scanner
     # install_patator               # Login scanner # FIXME
-    # install_joomscan              # Joomla scanner FIXME (https://github.com/ThePorgs/Exegol-images/actions/runs/3557732633/jobs/5977150292)
+    install_joomscan                # Joomla scanner
     install_wpscan                  # Wordpress scanner
     install_droopescan              # Drupal scanner
     install_drupwn                  # Drupal scanner
@@ -245,6 +245,15 @@ function install_fuxploider() {
     add-aliases fuxploider
     add-test-command "fuxploider --help"
     add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
+}
+
+function install_joomscan(){
+    colorecho "Installing joomscan"
+    git -C /opt/tools/ clone --depth=1 https://github.com/rezasp/joomscan
+    add-aliases joomscan
+    add-history joomscan
+    add-test-command "joomscan --version"
+    add-to-list "joomscan,https://github.com/rezasp/joomscan,A tool to enumerate Joomla-based websites"
 }
 
 function install_wpscan(){
