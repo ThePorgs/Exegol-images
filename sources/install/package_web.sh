@@ -687,7 +687,7 @@ function install_soapui() {
 
 function install_badsecrets() {
   colorecho "Installing badsecrets"
-  git -C /opt/tools/ clone https://github.com/blacklanternsecurity/badsecrets.git
+  git -C /opt/tools/ --depth 1 clone https://github.com/blacklanternsecurity/badsecrets.git
   cd /opt/tools/badsecrets
   python3 -m venv venv
   # Using a venv to avoid conflicts with current versions of pycrypto installed 
@@ -696,4 +696,5 @@ function install_badsecrets() {
   add-aliases badsecrets
   add-history badsecrets
   add-test-command "badsecrets --help"
+  add-to-list "badsecrets,https://github.com/blacklanternsecurity/badsecrets,A tool for identifying the use of known or very weak cryptographic secrets across a variety of platforms"
 }
