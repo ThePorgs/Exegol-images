@@ -38,6 +38,10 @@ function add-test-command() {
   echo "$*" >> "/.exegol/build_pipeline_tests/all_commands.txt"
 }
 
+function add-to-list() {
+  echo $1 >> "/.exegol/installed_tools"
+}
+
 function fapt() {
   colorecho "Installing apt package(s): $*"
   apt-get install -y --no-install-recommends "$@" || exit
@@ -170,6 +174,7 @@ function install_tmux() {
   fapt tmux
   cp -v /root/sources/tmux/tmux.conf ~/.tmux.conf
   touch ~/.hushlogin
+  add-to-list "tmux,https://github.com/tmux/tmux,a terminal multiplexer for Unix-like operating systems."
 }
 
 function install_gowitness() {
@@ -178,6 +183,7 @@ function install_gowitness() {
   add-history gowitness
   add-test-command "gowitness --help"
   add-test-command "gowitness single https://exegol.readthedocs.io" # check the chromium dependency
+  add-to-list "gowitness,https://github.com/sensepost/gowitness,A website screenshot utility written in Golang."
 }
 
 function install_goshs(){
@@ -185,6 +191,7 @@ function install_goshs(){
   go install -v github.com/patrickhener/goshs@latest
   add-history goshs
   add-test-command "goshs -v"
+  add-to-list "goshs,https://github.com/patrickhener/goshs,Goshs is a replacement for Python's SimpleHTTPServer. It allows uploading and downloading via HTTP/S with either self-signed certificate or user provided certificate and you can use HTTP basic auth."
 }
 
 function install_sslyze(){
@@ -199,12 +206,14 @@ function install_sslyze(){
   fi
   add-history sslyze
   add-test-command "sslyze --help"
+  add-to-list "sslyze,https://github.com/nabla-c0d3/sslyze,a Python tool for analyzing SSL/TLS configurations of servers."
 }
 
 function install_weevely() {
   colorecho "Installing weevely"
   fapt weevely
   add-test-command "weevely --help"
+  add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
 }
 
 function install_responder() {
@@ -223,6 +232,7 @@ function install_responder() {
   add-aliases responder
   add-history responder
   add-test-command "responder --version"
+  add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR, NBT-NS and MDNS poisoner."
 }
 
 function install_sublist3r() {
@@ -230,6 +240,7 @@ function install_sublist3r() {
   python3 -m pipx install git+https://github.com/aboul3la/Sublist3r
   add-history sublist3r
   add-test-command "sublist3r --help"
+  add-to-list "sublist3r,https://github.com/aboul3la/Sublist3r,a Python tool designed to enumerate subdomains of websites."
 }
 
 function install_php_filter_chain_generator() {
@@ -237,14 +248,37 @@ function install_php_filter_chain_generator() {
   git -C /opt/tools/ clone https://github.com/synacktiv/php_filter_chain_generator.git
   add-aliases php_filter_chain_generator
   add-test-command "php_filter_chain_generator --help"
+  add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,TODO"
 }
 
-function install_recondog() { 
+function install_kraken() {
+  colorecho "Installing Kraken"
+  git -C /opt/tools clone --recurse-submodules https://github.com/kraken-ng/Kraken.git
+  cd /opt/tools/Kraken || exit
+  python3 -m venv ./venv
+  ./venv/bin/python3 -m pip install -r requirements.txt
+  add-aliases kraken
+  add-history kraken
+  add-test-command "kraken.py -h"
+  add-to-list "Modular multi-language webshell,https://github.com/kraken-ng/Kraken.git,Kraken is a modular multi-language webshell focused on web post-exploitation and defense evasion. It supports three technologies (PHP, JSP and ASPX) and is core is developed in Python."
+}
+
+function install_soapui() {
+  colorecho "Installing SoapUI"
+  mkdir -p /opt/tools/SoapUI/
+  wget https://dl.eviware.com/soapuios/5.7.0/SoapUI-5.7.0-linux-bin.tar.gz -O /tmp/SoapUI.tar.gz
+  tar xvf /tmp/SoapUI.tar.gz -C /opt/tools/SoapUI/ --strip=1
+  add-aliases soapui
+  add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
+}
+
+function install_recondog() {
   colorecho "Installing ReconDog"
   git -C /opt/tools/ clone https://github.com/s0md3v/ReconDog
   python3 -m pip install -r /opt/tools/ReconDog/requirements.txt
   add-aliases recondog
   add-test-command "recondog --help"
+  add-to-list "recondog,https://github.com/s0md3v/ReconDog,a reconnaissance tool for performing information gathering on a target."
 }
 
 function install_githubemail() {
@@ -252,6 +286,7 @@ function install_githubemail() {
   npm install --global github-email
   add-history github-email
   add-test-command "github-email whatever"
+  add-to-list "githubemail,https://github.com/paulirish/github-email,a command-line tool to retrieve a user's email from Github."
 }
 
 function install_photon() {
@@ -260,11 +295,13 @@ function install_photon() {
   python3 -m pip install -r /opt/tools/photon/requirements.txt
   add-aliases photon
   add-test-command "photon.py --help"
+  add-to-list "photon,https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs, files, intel & endpoints from a target."
 }
 
 function install_osrframework() {
   colorecho "Installing OSRFramework"
 #  python3 -m pipx install # https://github.com/i3visio/osrframework/issues/382
+  add-to-list "osrframework,https://github.com/i3visio/osrframework,a modular exploitation framework designed for reconnaissance and penetration testing."
 }
 
 function install_cloudfail() {
@@ -274,6 +311,7 @@ function install_cloudfail() {
   add-aliases cloudfail
   add-history cloudfail
   add-test-command "cloudfail.py --help"
+  add-to-list "cloudfail,https://github.com/m0rtem/CloudFail,a reconnaissance tool for identifying misconfigured CloudFront domains."
 }
 
 function install_oneforall() {
@@ -282,6 +320,7 @@ function install_oneforall() {
   python3 -m pip install -r /opt/tools/OneForAll/requirements.txt
   add-aliases oneforall
   add-test-command "(setsid oneforall --help) </dev/null |& cat"
+  add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
 }
 
 function install_eyewitness() {
@@ -291,12 +330,14 @@ function install_eyewitness() {
   ./setup.sh
   add-aliases eyewitness
   add-test-command "eyewitness --help"
+  add-to-list "eyewitness,https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites, provide some server header info, and identify default credentials if possible."
 }
 
 function install_wafw00f() {
   colorecho "Installing wafw00f"
   python3 -m pipx install wafw00F
   add-test-command "wafw00f --help"
+  add-to-list "wafw00f,https://github.com/EnableSecurity/wafw00f,a Python tool that helps to identify and fingerprint web application firewall (WAF) products."
 }
 
 function install_linkfinder() {
@@ -307,6 +348,7 @@ function install_linkfinder() {
   python3 setup.py install
   add-aliases linkfinder
   add-test-command "linkfinder --help"
+  add-to-list "linkfinder,https://github.com/GerbenJavado/LinkFinder,a Python script that finds endpoints and their parameters in JavaScript files."
 }
 
 function install_ssrfmap() {
@@ -316,6 +358,7 @@ function install_ssrfmap() {
   python3 -m pip install -r requirements.txt
   add-aliases ssrfmap
   add-test-command "ssrfmap --help"
+  add-to-list "ssrfmap,https://github.com/swisskyrepo/SSRFmap,a tool for testing SSRF vulnerabilities."
 }
 
 function install_nosqlmap() {
@@ -325,6 +368,7 @@ function install_nosqlmap() {
   python setup.py install
   add-aliases nosqlmap
   add-test-command "nosqlmap --help"
+  add-to-list "nosqlmap,https://github.com/codingo/NoSQLMap,a Python tool for testing NoSQL databases for security vulnerabilities."
 }
 
 function install_odat() {
@@ -336,6 +380,7 @@ function install_odat() {
   mv /opt/tools/odat/odat* /opt/tools/odat/odat
   echo -e '#!/bin/sh\n(cd /opt/tools/odat/ && ./odat $@)' > /usr/local/bin/odat
   chmod +x /usr/local/bin/odat
+  add-to-list "odat,https://github.com/quentinhardy/odat,a tool to perform Oracle Database enumeration and exploitation."
 }
 
 function install_fuxploider() {
@@ -345,6 +390,7 @@ function install_fuxploider() {
   python3 -m pip install -r requirements.txt
   add-aliases fuxploider
   add-test-command "fuxploider --help"
+  add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
 }
 
 function install_corscanner() {
@@ -354,6 +400,7 @@ function install_corscanner() {
   python3 -m pip install -r requirements.txt
   add-aliases corscanner
   add-test-command "corscanner --help"
+  add-to-list "corscanner,https://github.com/chenjj/CORScanner,a Python script for finding CORS misconfigurations."
 }
 
 function install_xsstrike() {
@@ -362,18 +409,21 @@ function install_xsstrike() {
   python3 -m pipx install fuzzywuzzy
   add-aliases xsstrike
   add-test-command "XSStrike --help"
+  add-to-list "xsstrike,https://github.com/s0md3v/XSStrike,a Python tool for detecting and exploiting XSS vulnerabilities."
 }
 
 function install_xspear() {
   colorecho "Installing XSpear"
   gem install XSpear
   add-test-command "XSpear --help"
+  add-to-list "xspear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
 }
 
 function install_cupp() {
   colorecho "Installing cupp"
   fapt cupp
   add-test-command "cupp --help"
+  add-to-list "cupp,https://github.com/Mebus/cupp,TODO"
 }
 
 function install_pass_station() {
@@ -381,6 +431,7 @@ function install_pass_station() {
   gem install pass-station
   add-history pass-station
   add-test-command "pass-station --help"
+  add-to-list "pass,https://github.com/hashcat/hashcat,TODO"
 }
 
 function install_username-anarchy() {
@@ -388,6 +439,7 @@ function install_username-anarchy() {
   git -C /opt/tools/ clone https://github.com/urbanadventurer/username-anarchy
   add-aliases username-anarchy
   add-test-command "username-anarchy --help"
+  add-to-list "username-anarchy,https://github.com/urbanadventurer/username-anarchy,TODO"
 }
 
 function install_evilwinrm() {
@@ -395,6 +447,7 @@ function install_evilwinrm() {
   gem install evil-winrm
   add-history evil-winrm
   add-test-command "evil-winrm --help"
+  add-to-list "evilwinrm,https://github.com/Hackplayers/evil-winrm,Tool to connect to a remote Windows system with WinRM."
 }
 
 function install_bolt() {
@@ -403,12 +456,16 @@ function install_bolt() {
   python3 -m pip install -r /opt/tools/Bolt/requirements.txt
   add-aliases bolt
   add-test-command "bolt --help"
+  add-to-list "bolt,https://github.com/s0md3v/bolt,TODO"
 }
 
 function install_crackmapexec() {
   colorecho "Installing CrackMapExec"
-  python3 -m pipx install crackmapexec 
-  ~/.local/bin/crackmapexec
+  # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
+  # TODO: Optimize so that the PATH is always up to date
+  source /root/.zshrc
+  git -C /opt/tools/ clone https://github.com/Porchetta-Industries/CrackMapExec.git
+  python3 -m pipx install /opt/tools/CrackMapExec/
   mkdir -p ~/.cme
   [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
   cp -v /root/sources/crackmapexec/cme.conf ~/.cme/cme.conf
@@ -418,6 +475,7 @@ function install_crackmapexec() {
   add-aliases crackmapexec
   add-history crackmapexec
   add-test-command "crackmapexec --help"
+  add-to-list "crackmapexec,https://github.com/byt3bl33d3r/CrackMapExec,Network scanner."
 }
 
 function install_lsassy() {
@@ -425,6 +483,7 @@ function install_lsassy() {
   python3 -m pipx install lsassy
   add-history lsassy
   add-test-command "lsassy --version"
+  add-to-list "lsassy,https://github.com/Hackndo/lsassy,Windows secrets and passwords extraction tool."
 }
 
 function install_sprayhound() {
@@ -433,6 +492,7 @@ function install_sprayhound() {
   python3 -m pipx install git+https://github.com/Hackndo/sprayhound
   add-history sprayhound
   add-test-command "sprayhound --help"
+  add-to-list "sprayhound,https://github.com/Hackndo/Sprayhound,Active Directory password audit tool."
 }
 
 function install_impacket() {
@@ -462,6 +522,7 @@ function install_impacket() {
   add-test-command "ticketer.py --help && ticketer.py --help | grep extra-pac"
   add-test-command "dacledit.py --help"
   add-test-command "describeTicket.py --help"
+  add-to-list "impacket,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
 }
 
 function install_bloodhound-py() {
@@ -470,14 +531,11 @@ function install_bloodhound-py() {
   add-aliases bloodhound-py
   add-history bloodhound-py
   add-test-command "bloodhound.py --help"
+  add-to-list "bloodhound-py,https://github.com/fox-it/BloodHound.py,Trust relationship analysis tool for Active Directory environments."
 }
 
 function install_neo4j() {
   colorecho "Installing neo4j"
-  fapt openjdk-11-jre
-  # TODO: when temporary fix is not needed anymore --> fapt openjdk-17-jre
-  update-java-alternatives --jre --set "$(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.11.0-openjdk*' -printf '%P')"
-  # TODO: when temporary fix is not needed anymore --> update-java-alternatives --jre --set $(find /usr/lib/jvm/ -maxdepth 1 -type l -name 'java-1.17.0-openjdk*' -printf '%P')
   wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
   # TODO: temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
   #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
@@ -489,8 +547,10 @@ function install_neo4j() {
   neo4j-admin set-initial-password exegol4thewin
   mkdir -p /usr/share/neo4j/logs/
   touch /usr/share/neo4j/logs/neo4j.log
+  add-aliases neo4j
   add-history neo4j
   add-test-command "neo4j version"
+  add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
 }
 
 function install_cyperoth() {
@@ -499,6 +559,7 @@ function install_cyperoth() {
   add-aliases cypheroth
   add-history cypheroth
   add-test-command "cypheroth --help; cypheroth -u neo4j -p exegol4thewin | grep 'Quitting Cypheroth'"
+  add-to-list "cyperoth,https://github.com/seajaysec/cypheroth/,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
 }
 
 function install_mitm6_sources() {
@@ -507,7 +568,7 @@ function install_mitm6_sources() {
   cd /opt/tools/mitm6/ || exit
   python3 -m pip install -r requirements.txt
   python3 setup.py install
-}
+} #
 
 function install_mitm6_pip() {
   colorecho "Installing mitm6 with pip"
@@ -520,12 +581,14 @@ function install_mitm6_pip() {
   # ln -s -f libc.a liblibc.a
   add-history mitm6
   add-test-command "mitm6 --help"
+  add-to-list "mitm6,https://github.com/fox-it/mitm6,Tool to conduct a man-in-the-middle attack against IPv6 protocols."
 }
 
 function install_aclpwn() {
   colorecho "Installing aclpwn with pip"
   python3 -m pipx install git+https://github.com/aas-n/aclpwn.py
   add-test-command "aclpwn -h"
+  add-to-list "aclpwn,https://github.com/aas-n/aclpwn.py,Tool for testing the security of Active Directory access controls."
 }
 
 function install_routersploit() {
@@ -535,6 +598,7 @@ function install_routersploit() {
   python3 -m pip install -r requirements.txt
   add-aliases routersploit
   add-test-command "rsf --help"
+  add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
 }
 
 function install_empire() {
@@ -594,6 +658,7 @@ function install_empire() {
   sed -i 's/password123/exegol4thewin/' /opt/tools/Empire/empire/server/config.yaml
   add-aliases empire
   # TODO add-test-command
+  add-to-list "empire,https://github.com/BC-SECURITY/Empire,Tool for Windows post-exploitation."
 }
 
 function install_starkiller() {
@@ -604,6 +669,7 @@ function install_starkiller() {
   wget -O /opt/tools/starkiller/starkiller.AppImage "https://github.com/BC-SECURITY/Starkiller/releases/download/v$version/starkiller-$version.AppImage"
   chmod +x /opt/tools/starkiller/starkiller.AppImage
   add-aliases starkiller
+  add-to-list "starkiller,https://github.com/BC-SECURITY/Starkiller,Tool for Windows post-exploitation."
 }
 
 function install_assetfinder() {
@@ -611,6 +677,7 @@ function install_assetfinder() {
   go install -v github.com/tomnomnom/assetfinder@latest
   add-history assetfinder
   add-test-command "assetfinder thehacker.recipes"
+  add-to-list "assetfinder,https://github.com/tomnomnom/assetfinder,Tool to find subdomains and IP addresses associated with a domain."
 }
 
 function install_subfinder() {
@@ -618,6 +685,7 @@ function install_subfinder() {
   go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
   add-history subfinder
   add-test-command "subfinder -version"
+  add-to-list "subfinder,https://github.com/projectdiscovery/subfinder,Tool to find subdomains associated with a domain."
 }
 
 function install_gf() {
@@ -633,6 +701,7 @@ function install_gf() {
   rm -r /opt/tools/Gf-Patterns
   add-test-command "gf --list"
   add-test-command "ls ~/.gf | grep 'redirect.json'"
+  add-to-list "gf,https://github.com/tomnomnom/gf,Tool to find code injection points."
 }
 
 function install_gobuster() {
@@ -640,6 +709,7 @@ function install_gobuster() {
   go install -v github.com/OJ/gobuster/v3@latest
   add-history gobuster
   add-test-command "gobuster --help"
+  add-to-list "gobuster,https://github.com/OJ/gobuster,Tool to discover hidden files and directories."
 }
 
 function install_kiterunner() {
@@ -652,6 +722,7 @@ function install_kiterunner() {
   ln -s "$(pwd)/dist/kr" /opt/tools/bin/kr
   add-history kitrunner
   add-test-command "kr --help"
+  add-to-list "kiterunner,https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments."
 }
 
 function install_dirsearch() {
@@ -659,6 +730,7 @@ function install_dirsearch() {
   python3 -m pipx install git+https://github.com/maurosoria/dirsearch
   add-history dirsearch
   add-test-command "dirsearch --help"
+  add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
 }
 
 function install_cmsmap() {
@@ -667,6 +739,7 @@ function install_cmsmap() {
   cmsmap -U PC
   add-history cmsmap
   add-test-command "cmsmap --help; cmsmap --help |& grep 'Post Exploitation'"
+  add-to-list "cmsmap,https://github.com/Dionach/CMSmap,Tool for security audit of web content management systems."
 }
 
 function install_tomcatwardeployer() {
@@ -676,6 +749,7 @@ function install_tomcatwardeployer() {
   python3 -m pip install -r requirements.txt
   add-aliases tomcatwardeployer
   add-test-command "tomcatWarDeployer --help"
+  add-to-list "tomcatwardeployer,https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat."
 }
 
 function install_clusterd() {
@@ -687,6 +761,7 @@ function install_clusterd() {
   chmod +x /usr/local/bin/clusterd
   add-history clusterd
   add-test-command "clusterd --help"
+  add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents."
 }
 
 function install_moodlescan() {
@@ -698,12 +773,14 @@ function install_moodlescan() {
   add-aliases moodlescan
   add-history moodlescan
   add-test-command "moodlescan --help"
+  add-to-list "moodlescan,https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities."
 }
 
 function install_arjun() {
   colorecho "Installing arjun"
   python3 -m pipx install arjun
   add-test-command "arjun --help"
+  add-to-list "arjun,https://github.com/s0md3v/Arjun,HTTP parameter discovery suite."
 }
 
 function install_ffuf() {
@@ -711,6 +788,7 @@ function install_ffuf() {
   go install -v github.com/ffuf/ffuf@latest
   add-history ffuf
   add-test-command "ffuf --help"
+  add-to-list "ffuf,https://github.com/ffuf/ffuf,Fast web fuzzer written in Go."
 }
 
 function install_waybackurls() {
@@ -718,23 +796,27 @@ function install_waybackurls() {
   go install -v github.com/tomnomnom/waybackurls@latest
   add-history waybackurls
   add-test-command "waybackurls -h"
+  add-to-list "waybackurls,https://github.com/tomnomnom/waybackurls,Fetch all the URLs that the Wayback Machine knows about for a domain."
 }
 
 function install_gitrob(){
   colorecho "Installing gitrob"
   go install -v github.com/michenriksen/gitrob@latest
+  add-to-list "gitrob,https://github.com/michenriksen/gitrob,Reconnaissance tool for GitHub organizations."
 }
 
 function install_gron() {
   colorecho "Installing gron"
   go install -v github.com/tomnomnom/gron@latest
   add-test-command "gron --help"
+  add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!"
 }
 
 function install_timing_attack() {
   colorecho "Installing timing_attack"
   gem install timing_attack
   add-test-command "timing_attack --help"
+  add-to-list "timing,https://github.com/ffleming/timing_attack,Tool to generate a timing profile for a given command."
 }
 
 function install_updog() {
@@ -742,6 +824,7 @@ function install_updog() {
   python3 -m pipx install updog
   add-history updog
   add-test-command "updog --help"
+  add-to-list "updog,https://github.com/sc0tfree/updog,Simple replacement for Python's SimpleHTTPServer."
 }
 
 function install_findomain() {
@@ -759,6 +842,7 @@ function install_findomain() {
   chmod +x /opt/tools/bin/findomain
   rm /tmp/findomain.zip
   add-test-command "findomain --version"
+  add-to-list "findomain,https://github.com/findomain/findomain,The fastest and cross-platform subdomain enumerator."
 }
 
 function install_proxychains() {
@@ -775,6 +859,7 @@ function install_proxychains() {
   add-aliases proxychains
   add-test-command "proxychains4 echo test"
   add-test-command "proxyresolv"
+  add-to-list "proxychains,https://github.com/rofl0r/proxychains,Proxy chains - redirect connections through proxy servers."
 }
 
 function install_grc() {
@@ -782,11 +867,13 @@ function install_grc() {
   apt-get -y install grc
   cp -v /root/sources/grc/grc.conf /etc/grc.conf
   add-aliases grc
+  add-to-list "grc,https://github.com/garabik/grc,Colorize logfiles and command output."
 }
 
 function install_nvm() {
   colorecho "Installing nvm (in zsh context)"
   zsh -c "source ~/.zshrc && nvm install node"
+  add-to-list "nvm,https://github.com/nvm-sh/nvm,Node Version Manager - Simple bash script to manage multiple active node.js versions."
 }
 
 function install_pykek() {
@@ -794,6 +881,7 @@ function install_pykek() {
   git -C /opt/tools/ clone https://github.com/preempt/pykek
   add-aliases pykek
   add-test-command "ms14-068.py |& grep '<clearPassword>'"
+  add-to-list "pykek,https://github.com/preempt/pykek,PyKEK (Python Kerberos Exploitation Kit), a python library to manipulate KRB5-related data."
 }
 
 function install_autorecon() {
@@ -804,12 +892,14 @@ function install_autorecon() {
   # test below cannot work because test runner cannot have a valid display
   # add-test-command "autorecon --version"
   add-test-command "which autorecon"
+  add-to-list "autorecon,https://github.com/Tib3rius/AutoRecon,Multi-threaded network reconnaissance tool which performs automated enumeration of services."
 }
 
 function install_tcpdump() {
   colorecho "Installing tcpdump"
   fapt tcpdump
   add-test-command "tcpdump --version"
+  add-to-list "tcpdump,https://github.com/the-tcpdump-group/tcpdump,a powerful command-line packet analyzer for Unix-like systems"
 }
 
 function install_simplyemail() {
@@ -820,6 +910,7 @@ function install_simplyemail() {
   add-aliases simplyemail
   add-history simplyemail
   add-test-command "SimplyEmail -l"
+  add-to-list "simplyemail,https://github.com/SimplySecurity/SimplyEmail,a scriptable command line tool for sending emails"
 }
 
 function install_privexchange() {
@@ -828,6 +919,7 @@ function install_privexchange() {
   add-aliases privexchange
   add-history privexchange
   add-test-command "python3 /opt/tools/PrivExchange/privexchange.py --help"
+  add-to-list "privexchange,https://github.com/dirkjanm/PrivExchange,a tool to perform attacks against Microsoft Exchange server using NTLM relay techniques"
 }
 
 function install_lnkup() {
@@ -838,12 +930,14 @@ function install_lnkup() {
   add-aliases lnkup
   add-history lnkup
   add-test-command "lnk-generate.py --help"
+  add-to-list "lnkup,https://github.com/Plazmaz/lnkUp,This tool will allow you to generate LNK payloads. Upon rendering or being run, they will exfiltrate data."
 }
 
 function install_samdump2() {
   colorecho "Installing samdump2"
   fapt samdump2
   add-test-command "samdump2 -h; samdump2 -h |& grep 'enable debugging'"
+  add-to-list "samdump2,https://github.com/azan121468/SAMdump2,A tool to dump Windows NT/2k/XP/Vista password hashes from SAM files"
 }
 
 function install_pwntools() {
@@ -853,6 +947,7 @@ function install_pwntools() {
   python3 -m pip install pwntools
   add-test-command "python -c 'import pwn'"
   add-test-command "python3 -c 'import pwn'"
+  add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
 }
 
 function install_angr() {
@@ -862,6 +957,7 @@ function install_angr() {
   mkvirtualenv --python="$(which python3)" angr
   python3 -m pip install angr
   add-test-command "python3 -c 'import angr'"
+  add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework"
 }
 
 function install_pwndbg() {
@@ -873,6 +969,7 @@ function install_pwndbg() {
   echo 'set disassembly-flavor intel' >> ~/.gdbinit
   add-aliases gdb
   add-test-command "gdb --help"
+  add-to-list "pwndbg,https://github.com/pwndbg/pwndbg,a GDB plugin that makes debugging with GDB suck less"
 }
 
 function install_darkarmour() {
@@ -883,6 +980,7 @@ function install_darkarmour() {
   add-aliases darkarmour
   add-history darkarmour
   add-test-command "darkarmour --help"
+  add-to-list "darkarmour,https://github.com/bats3c/darkarmour,a tool to detect and evade common antivirus products"
 }
 
 function install_powershell() {
@@ -906,6 +1004,7 @@ function install_powershell() {
   ln -v -s /opt/tools/bin/pwsh /opt/tools/bin/powershell
   rm -v /tmp/powershell.tar.gz
   add-test-command "powershell -Version"
+  add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
 }
 
 function install_fzf() {
@@ -915,6 +1014,7 @@ function install_fzf() {
   ./install --all
   add-aliases fzf
   add-test-command "fzf --version"
+  add-to-list "fzf,https://github.com/junegunn/fzf,a command-line fuzzy finder"
 }
 
 function install_shellerator() {
@@ -922,12 +1022,14 @@ function install_shellerator() {
   python3 -m pipx install git+https://github.com/ShutdownRepo/shellerator
   add-history shellerator
   add-test-command "shellerator --help"
+  add-to-list "shellerator,https://github.com/ShutdownRepo/Shellerator,a simple command-line tool for generating shellcode"
 }
 
 function install_uberfile() {
   colorecho "Installing uberfile"
   python3 -m pipx install git+https://github.com/ShutdownRepo/uberfile
   add-test-command "uberfile --help"
+  add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget, curl, powershell, certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
 }
 
 function install_kadimus() {
@@ -939,6 +1041,7 @@ function install_kadimus() {
   add-aliases kadimus
   add-history kadimus
   add-test-command "kadimus --help"
+  add-to-list "kadimus,https://github.com/P0cL4bs/Kadimus,a tool for detecting and exploiting file upload vulnerabilities"
 }
 
 function install_testssl() {
@@ -947,12 +1050,14 @@ function install_testssl() {
   git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
   add-aliases testssl
   add-test-command "testssl --help"
+  add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
 }
 
 function install_sslscan() {
   colorecho "Installing sslscan"
   fapt sslscan
   add-test-command "sslscan --version"
+  add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
 }
 
 function install_tls-scanner() {
@@ -965,6 +1070,7 @@ function install_tls-scanner() {
   add-aliases tls-scanner
   add-history tls-scanner
   add-test-command "tls-scanner --help"
+  add-to-list "tls-scanner,https://github.com/tls-attacker/tls-scanner,a simple script to check the security of a remote TLS/SSL web server"
 }
 
 function install_bat() {
@@ -985,6 +1091,7 @@ function install_bat() {
   apt-get install -f /tmp/bat.deb
   rm /tmp/bat.deb
   add-test-command "bat --version"
+  add-to-list "bat,https://github.com/sharkdp/bat,a command-line tool for displaying file contents with syntax highlighting"
 }
 
 function install_mdcat() {
@@ -993,6 +1100,7 @@ function install_mdcat() {
   cargo install mdcat
   source "$HOME/.cargo/env"
   add-test-command "mdcat --version"
+  add-to-list "mdcat,https://github.com/lunaryorn/mdcat,a command-line tool for rendering markdown documents"
 }
 
 function install_xsrfprobe() {
@@ -1001,6 +1109,7 @@ function install_xsrfprobe() {
   cd /opt/tools/XSRFProbe || exit
   python3 setup.py install
   add-test-command "xsrfprobe --help"
+  add-to-list "xsrfprobe,https://github.com/0xInfection/XSRFProbe,a tool for detecting and exploiting Cross-Site Request Forgery (CSRF) vulnerabilities"
 }
 
 function install_krbrelayx() {
@@ -1016,6 +1125,7 @@ function install_krbrelayx() {
   add-test-command "addspn.py --help"
   add-test-command "addspn.py --help"
   add-test-command "printerbug.py --help"
+  add-to-list "krbrelayx,https://github.com/dirkjanm/krbrelayx,a tool for performing Kerberos relay attacks"
 }
 
 function install_hakrawler() {
@@ -1023,6 +1133,7 @@ function install_hakrawler() {
   go install -v github.com/hakluke/hakrawler@latest
   add-history hakrawler
   add-test-command "hakrawler --help"
+  add-to-list "hakrawler,https://github.com/hakluke/hakrawler,a fast web crawler for gathering URLs and other information from websites"
 }
 
 function install_jwt_tool() {
@@ -1031,20 +1142,22 @@ function install_jwt_tool() {
   python3 -m pip install pycryptodomex
   add-aliases jwt_tool
   add-test-command "jwt_tool --help"
+  add-to-list "jwt,https://github.com/ticarpi/jwt_tool,a command-line tool for working with JSON Web Tokens (JWTs)"
 }
 
 function install_wuzz() {
   colorecho "Installing wuzz"
   go install -v github.com/asciimoo/wuzz@latest
   add-test-command "wuzz --help"
+  add-to-list "wuzz,https://github.com/asciimoo/wuzz,a command-line tool for interacting with HTTP(S) web services"
 }
 
 function install_pypykatz() {
   colorecho "Installing pypykatz"
   python3 -m pipx install pypykatz
-  python3 -m pipx inject pypykatz minikerberos==0.3.5
   add-history pypykatz
   add-test-command "pypykatz version"
+  add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
 }
 
 function install_enyx() {
@@ -1053,6 +1166,7 @@ function install_enyx() {
   add-aliases enyx
   add-history enyx
   add-test-command "enyx"
+  add-to-list "enyx,https://github.com/trickster0/enyx,Framework for building offensive security tools."
 }
 
 function install_enum4linux-ng() {
@@ -1060,6 +1174,7 @@ function install_enum4linux-ng() {
   python3 -m pipx install git+https://github.com/cddmp/enum4linux-ng
   add-history enum4linux-ng
   add-test-command "enum4linux-ng --help"
+  add-to-list "enum4linux-ng,https://github.com/cddmp/enum4linux-ng,Tool for enumerating information from Windows and Samba systems."
 }
 
 function install_git-dumper() {
@@ -1069,6 +1184,7 @@ function install_git-dumper() {
   python3 -m pip install -r requirements.txt
   add-aliases git-dumper
   add-test-command "git-dumper --help"
+  add-to-list "git-dumper,https://github.com/arthaud/git-dumper,Small script to dump a Git repository from a website."
 }
 
 function install_gittools() {
@@ -1076,6 +1192,7 @@ function install_gittools() {
   git -C /opt/tools/ clone https://github.com/internetwache/GitTools.git
   add-aliases gittools
   add-test-command "gitdumper --help; gitdumper --help |& grep 'USAGE: http://target.tld/.git/'"
+  add-to-list "gittools,https://github.com/internetwache/GitTools,A collection of Git tools including a powerful Dumper for dumping Git repositories."
 }
 
 function install_gopherus() {
@@ -1085,6 +1202,7 @@ function install_gopherus() {
   ./install.sh
   add-aliases install_gopherus
   add-test-command "gopherus --help"
+  add-to-list "gopherus,https://github.com/tarunkant/Gopherus,Gopherus is a simple command line tool for exploiting vulnerable Gopher servers."
 }
 
 function install_ysoserial() {
@@ -1093,12 +1211,14 @@ function install_ysoserial() {
   wget -O /opt/tools/ysoserial/ysoserial.jar "https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar"
   add-aliases ysoserial
   add-test-command "ysoserial --help; ysoserial --help |& grep 'spring-core:4.1.4.RELEASE'"
+  add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
 }
 
 function install_whatweb() {
   colorecho "Installing whatweb"
   fapt whatweb
   add-test-command "whatweb --version"
+  add-to-list "whatweb,https://github.com/urbanadventurer/WhatWeb,Next generation web scanner that identifies what websites are running."
 }
 
 function install_phpggc(){
@@ -1106,6 +1226,7 @@ function install_phpggc(){
   git -C /opt/tools clone https://github.com/ambionics/phpggc.git
   add-aliases phpggc
   add-test-command "phpggc --help"
+  add-to-list "phpggc,https://github.com/ambionics/phpggc,Exploit generation tool for the PHP platform."
 }
 
 function install_symfony-exploits(){
@@ -1113,17 +1234,19 @@ function install_symfony-exploits(){
   git -C /opt/tools clone https://github.com/ambionics/symfony-exploits
   add-aliases symfony-exploits
   add-test-command "secret_fragment_exploit.py --help"
+  add-to-list "symfony-exploits,https://github.com/ambionics/symfony-exploits,Collection of Symfony exploits and PoCs."
 }
 
 function install_john() {
   colorecho "Installing john the ripper"
-  fapt qtbase5-dev
-  git -C /opt/tools/ clone https://github.com/openwall/john
+  #fapt qtbase5-dev
+  git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
   cd /opt/tools/john/src || exit
-  ./configure && make
+  ./configure --disable-native-tests && make
   add-aliases john-the-ripper
   add-history john-the-ripper
   add-test-command "john --help"
+  add-to-list "john,https://github.com/openwall/john,John the Ripper password cracker."
 }
 
 function install_fcrackzip() {
@@ -1131,6 +1254,7 @@ function install_fcrackzip() {
   fapt fcrackzip
   add-history fcrackzip
   add-test-command fcrackzip --help
+  add-to-list "fcrackzip,https://github.com/hyc/fcrackzip,Password cracker for zip archives."
 }
 
 function install_name-that-hash() {
@@ -1138,6 +1262,7 @@ function install_name-that-hash() {
   python3 -m pipx install name-that-hash
   add-history name-that-hash
   add-test-command "nth --help"
+  add-to-list "name-that-hash,https://github.com/HashPals/Name-That-Hash,Online tool for identifying hashes."
 }
 
 function install_zerologon() {
@@ -1149,6 +1274,7 @@ function install_zerologon() {
   add-aliases zerologon
   add-history zerologon
   add-test-command "zerologon-scan; zerologon-scan | grep Usage"
+  add-to-list "zerologon,https://github.com/SecuraBV/CVE-2020-1472,Exploit for the Zerologon vulnerability (CVE-2020-1472)."
 }
 
 function install_proxmark3() {
@@ -1164,12 +1290,14 @@ function install_proxmark3() {
   add-aliases proxmark3
   add-history proxmark3
   add-test-command "proxmark3 --version"
+  add-to-list "proxmark3,https://github.com/Proxmark/proxmark3,Open source RFID research toolkit."
 }
 
 function install_checksec-py() {
   colorecho "Installing checksec.py"
   python3 -m pipx install checksec.py
   add-test-command "checksec --help"
+  add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
 
 function install_arsenal() {
@@ -1177,6 +1305,7 @@ function install_arsenal() {
   python3 -m pipx install git+https://github.com/Orange-Cyberdefense/arsenal
   add-aliases arsenal
   add-test-command "arsenal --version"
+  add-to-list "arsenal,https://github.com/Orange-Cyberdefense/arsenal,Powerful weapons for penetration testing."
 }
 
 function install_tldr() {
@@ -1184,6 +1313,7 @@ function install_tldr() {
   fapt tldr
   mkdir -p ~/.local/share/tldr
   tldr -u
+  add-to-list "tldr,https://github.com/tldr-pages/tldr,Collection of simplified and community-driven man pages."
 }
 
 function install_bloodhound() {
@@ -1210,6 +1340,7 @@ function install_bloodhound() {
   cp -v /root/sources/bloodhound/customqueries.json ~/.config/bloodhound/customqueries.json
   add-aliases bloodhound
   # TODO add-test-command
+  add-to-list "bloodhound,https://github.com/BloodHoundAD/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments."
 }
 
 function install_bloodhound_old_v3() {
@@ -1219,7 +1350,7 @@ function install_bloodhound_old_v3() {
   unzip /tmp/BloodHound-linux-x64.zip -d /opt/tools/
   mv /opt/tools/BloodHound-linux-x64 /opt/tools/BloodHound3
   rm /tmp/BloodHound-linux-x64.zip
-}
+} #
 
 function install_bloodhound_old_v2() {
   colorecho "Installing BloodHound v2 (for older databases/collections)"
@@ -1227,7 +1358,7 @@ function install_bloodhound_old_v2() {
   unzip /tmp/BloodHound-linux-x64.zip -d /opt/tools/
   mv /opt/tools/BloodHound-linux-x64 /opt/tools/BloodHound2
   rm /tmp/BloodHound-linux-x64.zip
-}
+} #
 
 function install_bettercap() {
   colorecho "Installing Bettercap"
@@ -1240,6 +1371,7 @@ function install_bettercap() {
   sed -i 's/set api.rest.password pass/set api.rest.password exegol4thewin/g' /usr/local/share/bettercap/caplets/https-ui.cap
   add-aliases bettercap
   add-test-command "bettercap --version"
+  add-to-list "bettercap,https://github.com/bettercap/bettercap,The Swiss Army knife for 802.11, BLE, and Ethernet networks reconnaissance and MITM attacks."
 }
 
 function install_hcxtools() {
@@ -1255,6 +1387,7 @@ function install_hcxtools() {
   add-history hcxtools
   add-test-command "hcxpcapngtool --version"
   add-test-command "hcxhashtool --version"
+  add-to-list "hcxtools,https://github.com/ZerBea/hcxtools,Tools for capturing and analyzing packets from WLAN devices."
 }
 
 function install_hcxdumptool() {
@@ -1270,6 +1403,7 @@ function install_hcxdumptool() {
   ln -s /usr/local/bin/hcxpcapngtool /usr/local/bin/hcxpcaptool
   add-history hcxdumptool
   add-test-command "hcxdumptool --version"
+  add-to-list "hcxdumptool,https://github.com/ZerBea/hcxdumptool,Small tool to capture packets from wlan devices."
 }
 
 function install_pyrit() {
@@ -1285,6 +1419,7 @@ function install_pyrit() {
   python2.7 setup.py build
   python2.7 setup.py install
   add-test-command "pyrit help"
+  add-to-list "pyrit,https://github.com/JPaulMora/Pyrit,Python-based WPA/WPA2-PSK attack tool."
 }
 
 function install_wifite2() {
@@ -1293,6 +1428,7 @@ function install_wifite2() {
   cd /opt/tools/wifite2/ || exit
   python3 setup.py install
   add-test-command "wifite --help"
+  add-to-list "wifite2,https://github.com/derv82/wifite2,Script for auditing wireless networks."
 }
 
 function install_wireshark_sources() {
@@ -1308,7 +1444,7 @@ function install_wireshark_sources() {
   cd /tmp/ || exit
   rm -r "$(find . -maxdepth 1 -type d -name 'wireshark*')"
   wireshark.tar.xz
-}
+} #
 
 function install_infoga() {
   colorecho "Installing infoga"
@@ -1319,6 +1455,7 @@ function install_infoga() {
   add-aliases infoga
   add-history infoga
   add-test-command "infoga.py --help"
+  add-to-list "infoga,https://github.com/m4ll0k/Infoga,Information gathering tool for hacking."
 }
 
 function install_buster() {
@@ -1326,6 +1463,7 @@ function install_buster() {
   python3 -m pipx install git+https://github.com/sham00n/buster
   add-history buster
   add-test-command "buster --help"
+  add-to-list "buster,https://github.com/sham00n/Buster,Advanced OSINT tool"
 }
 
 function install_pwnedornot() {
@@ -1336,11 +1474,13 @@ function install_pwnedornot() {
   cp config.json "$HOME/.config/pwnedornot/config.json"
   add-aliases pwnedornot
   add-test-command "pwnedornot.py --help"
+  add-to-list "pwnedornot,https://github.com/thewhiteh4t/pwnedOrNot,Check if a password has been leaked in a data breach."
 }
 
 function install_chromium() {
   fapt chromium
   add-test-command "chromium --version"
+  add-to-list "chromium,https://github.com/chromium/chromium,Open-source web browser project from Google."
 }
 
 # FIXME
@@ -1353,6 +1493,7 @@ function install_ghunt() {
   python3 -m pip install -r requirements.txt
   add-aliases ghunt
   # TODO add-test-command
+  add-to-list "ghunt,https://github.com/mxrch/ghunt,Hunt down GitHub users and repositories leakage."
 }
 
 function install_oaburl() {
@@ -1363,6 +1504,7 @@ function install_oaburl() {
   add-aliases oaburl
   add-history oaburl
   add-test-command "oaburl.py --help"
+  add-to-list "oaburl,https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py,Find Open redirects and other vulnerabilities."
 }
 
 function install_libmspack() {
@@ -1374,6 +1516,7 @@ function install_libmspack() {
   make
   add-aliases libmspack
   add-test-command "oabextract"
+  add-to-list "libmspack,https://github.com/kyz/libmspack,C library for Microsoft compression formats."
 }
 
 function install_ruler() {
@@ -1392,17 +1535,17 @@ function install_ruler() {
   ln -s /opt/tools/ruler/ruler /opt/tools/bin/ruler
   add-history ruler
   add-test-command "ruler --version"
+  add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
 }
 
 function install_ghidra() {
   colorecho "Installing Ghidra"
-  apt-get install -y openjdk-11-jdk
-  #wget -P /tmp/ "https://ghidra-sre.org/ghidra_9.2.3_PUBLIC_20210325.zip"
   wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
   unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
   rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
   add-aliases ghidra
   # TODO add-test-command GUI app
+  add-to-list "ghidra,https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools."
 }
 
 function install_ida() {
@@ -1418,6 +1561,7 @@ function install_ida() {
   fi
   add-aliases ida
   # TODO add-test-command GUI app
+  add-to-list "ida,https://www.hex-rays.com/products/ida/,Interactive disassembler for software analysis."
 }
 
 function install_burpsuite() {
@@ -1429,6 +1573,7 @@ function install_burpsuite() {
   # FIXME: add burp certificate to embedded firefox and chrome?
   # TODO: change Burp config to allow built-in browser to run
   add-aliases burpsuite
+  add-to-list "burpsuite,https://portswigger.net/burp,Web application security testing tool."
 }
 
 function install_linkedin2username() {
@@ -1439,6 +1584,7 @@ function install_linkedin2username() {
   add-aliases linkedin2username
   add-history linkedin2username
   add-test-command "linkedin2username.py --help"
+  add-to-list "linkedin2username,https://github.com/initstring/linkedin2username,Generate a list of LinkedIn usernames from a company name."
 }
 
 function install_toutatis() {
@@ -1449,6 +1595,7 @@ function install_toutatis() {
   add-aliases toutatis
   add-history toutatis
   add-test-command "toutatis --help"
+  add-to-list "toutatis,https://github.com/megadose/Toutatis,Toutatis is a tool that allows you to extract information from instagrams accounts such as e-mails, phone numbers and more."
 }
 
 function install_carbon14() {
@@ -1459,12 +1606,14 @@ function install_carbon14() {
   add-aliases carbon14
   add-history carbon14
   add-test-command "carbon14.py --help"
+  add-to-list "carbon14,https://github.com/Lazza/carbon14,OSINT tool for estimating when a web page was written."
 }
 
 function install_youtubedl() {
   colorecho "Installing youtube-dl"
   python3 -m pipx install youtube-dl
   add-test-command "youtube-dl --version"
+  add-to-list "youtubedl,https://github.com/ytdl-org/youtube-dl,Download videos from YouTube and other sites."
 }
 
 function install_ipinfo() {
@@ -1472,6 +1621,7 @@ function install_ipinfo() {
   sudo npm install ipinfo-cli --global
   add-history ipinfo
   add-test-command "ipinfo 127.0.0.1"
+  add-to-list "ipinfo,https://github.com/ipinfo/cli,Get information about an IP address or hostname."
 }
 
 function install_constellation() {
@@ -1487,6 +1637,7 @@ function install_constellation() {
   fi
   # TODO ARM64 install
   # TODO add-test-command
+  add-to-list "constellation,https://github.com/constellation-app/Constellation,Find and exploit vulnerabilities in mobile applications."
 }
 
 function install_holehe() {
@@ -1494,12 +1645,14 @@ function install_holehe() {
   python3 -m pipx install holehe
   add-history holehe
   add-test-command "holehe --help"
+  add-to-list "holehe,https://github.com/megadose/holehe,Exploit a vulnerable Samba service to gain root access."
 }
 
 function install_twint() {
   colorecho "Installing twint"
   python3 -m pipx install twint
   add-history twint
+  add-to-list "twint,https://github.com/twintproject/twint,Twitter intelligence tool."
 }
 
 function install_h8mail() {
@@ -1507,6 +1660,7 @@ function install_h8mail() {
   python3 -m pipx install h8mail
   add-history h8mail
   add-test-command "h8mail --help"
+  add-to-list "h8mail,https://github.com/khast3x/h8mail,Email OSINT and breach hunting."
 }
 
 function install_phoneinfoga() {
@@ -1524,6 +1678,7 @@ function install_phoneinfoga() {
   rm /tmp/phoneinfoga.tar.gz
   add-history phoneinfoga
   add-test-command "phoneinfoga help"
+  add-to-list "phoneinfoga,https://github.com/sundowndev/PhoneInfoga,Information gathering & OSINT framework for phone numbers."
 }
 
 function install_windapsearch-go() {
@@ -1537,6 +1692,7 @@ function install_windapsearch-go() {
   chmod +x /opt/tools/bin/windapsearch
   add-history windapsearch
   add-test-command "windapsearch --help"
+  add-to-list "windapsearch-go,https://github.com/ropnop/go-windapsearch/,Active Directory enumeration tool."
 }
 
 function install_trilium() {
@@ -1552,6 +1708,7 @@ function install_trilium() {
   # Start the trilium, sleep for 3 sec, attempt to stop it
   # Stop command will fail if trilium isn't running
   add-test-command "trilium-start;sleep 20;trilium-stop"
+  add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
 }
 
 function install_ntlmv1-multi() {
@@ -1560,6 +1717,7 @@ function install_ntlmv1-multi() {
   add-aliases ntlmv1-multi
   add-history ntlmv1-multi
   add-test-command "ntlmv1-multi --ntlmv1 a::a:a:a:a"
+  add-to-list "ntlmv1-multi,https://github.com/evilmog/ntlmv1-multi,Exploit a vulnerability in Microsoft Windows to gain system-level access."
 }
 
 function install_droopescan() {
@@ -1569,12 +1727,14 @@ function install_droopescan() {
   python3 -m pip install -r requirements.txt
   python3 setup.py install
   add-test-command "droopescan --help"
+  add-to-list "droopescan,https://github.com/droope/droopescan,Scan Drupal websites for vulnerabilities."
 }
 
 function install_drupwn() {
   colorecho "Installing drupwn"
   python3 -m pipx install git+https://github.com/immunIT/drupwn
   add-test-command "drupwn --help"
+  add-to-list "drupwn,https://github.com/immunIT/drupwn,Drupal security scanner."
 }
 
 function install_kubectl(){
@@ -1595,6 +1755,7 @@ function install_kubectl(){
   fi
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
   add-test-command "kubectl --help"
+  add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
 }
 
 function install_awscli(){
@@ -1614,12 +1775,14 @@ function install_awscli(){
   rm -rf aws
   rm awscliv2.zip
   add-test-command "aws --version"
+  add-to-list "awscli,https://aws.amazon.com/cli/,Command-line interface for Amazon Web Services."
 }
 
 function install_scout() {
   colorecho "Installing ScoutSuite"
   python3 -m pipx install scoutsuite
   add-test-command "scout --help"
+  add-to-list "scout,TODO,TODO"
 }
 
 function install_jdwp_shellifier(){
@@ -1627,6 +1790,7 @@ function install_jdwp_shellifier(){
   git -C /opt/tools/ clone https://github.com/IOActive/jdwp-shellifier
   add-aliases jdwp-shellifier
   add-test-command "jdwp-shellifier.py --help"
+  add-to-list "jdwp,https://github.com/IOActive/jdwp-shellifier,This exploitation script is meant to be used by pentesters against active JDWP service, in order to gain Remote Code Execution."
 }
 
 function install_maigret() {
@@ -1634,6 +1798,7 @@ function install_maigret() {
   python3 -m pipx install git+https://github.com/soxoj/maigret.git
   add-history maigret
   add-test-command "maigret --help"
+  add-to-list "maigret,https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results"
 }
 
 function install_amber() {
@@ -1651,12 +1816,14 @@ function install_amber() {
   go install -v github.com/EgeBalci/amber@latest
   add-history amber
   add-test-command "amber --help"
+  add-to-list "amber,https://github.com/EgeBalci/amber,Forensic tool to recover browser history, cookies, and credentials"
 }
 
 function install_hashonymize() {
   colorecho "Installing hashonymizer"
   python3 -m pipx install git+https://github.com/ShutdownRepo/hashonymize
   add-test-command "hashonymize --help"
+  add-to-list "hashonymize,https://github.com/ShutdownRepo/hashonymize,This small tool is aimed at anonymizing hashes files for offline but online cracking like Google Collab for instance (see https://github.com/ShutdownRepo/google-colab-hashcat)."
 }
 
 function install_theharvester() {
@@ -1665,6 +1832,7 @@ function install_theharvester() {
   python3 -m pip install -r theHarvester/requirements.txt
   add-aliases theharvester
   add-history theharvester
+  add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts, subdomain names, virtual hosts, open ports/ banners, and employee names from different public sources"
 }
 
 function install_libusb-dev() {
@@ -1672,25 +1840,28 @@ function install_libusb-dev() {
   fapt libusb-dev
   add-test-command "dpkg -l libusb-dev | grep 'libusb-dev'"
 
+  add-to-list "libusb-dev,https://github.com/libusb/libusb,Library for USB device access"
 }
 
 function install_autoconf() {
   colorecho "Installing autoconf"
   fapt autoconf
   add-test-command "autoconf --version"
+  add-to-list "autoconf,https://www.gnu.org/software/autoconf/autoconf.html,Tool for producing shell scripts to configure source code packages"
 }
 
 function install_nfct() {
   colorecho "Installing nfct"
   fapt nfct
   add-test-command "nfct --help |& grep 'nfct command'"
+  add-to-list "nfct,https://github.com/grundid/nfctools,Tool for Near Field Communication (NFC) devices"
 }
 
 function install_pcsc() {
   colorecho "Installing tools for PC/SC (smartcard)"
   apt-get install -y pcsc-tools pcscd libpcsclite-dev libpcsclite1
   add-test-command "pcsc_scan -V"
-  add-test-command "pcscd --version"
+  add-to-list "pcsc,https://pcsclite.apdu.fr/,Middleware for smart card readers"
 }
 
 function install_libnfc() {
@@ -1709,6 +1880,7 @@ function install_libnfc() {
   #rm libnfc-1.7.1.tar.bz2
   add-history libnfc
   add-test-command "nfc-scan-device -h"
+  add-to-list "libnfc,https://github.com/grundid/nfctools,Library for Near Field Communication (NFC) devices"
 }
 
 function install_mfoc() {
@@ -1721,12 +1893,14 @@ function install_mfoc() {
   make install
   add-history mfoc
   add-test-command "mfoc -h"
+  add-to-list "mfoc,https://github.com/nfc-tools/mfoc,Implementation of 'offline nested' attack by Nethemba"
 }
 
 function install_mfcuk() {
   colorecho "Installing mfcuk"
   fapt mfcuk
   add-test-command "mfcuk -i whatever"
+  add-to-list "mfcuk,https://github.com/nfc-tools/mfcuk,Implementation of an attack on Mifare Classic and Plus RFID cards"
 }
 
 function install_libnfc-crypto1-crack() {
@@ -1743,6 +1917,7 @@ function install_libnfc-crypto1-crack() {
   add-aliases libnfc-crypto1-crack
   add-history libnfc-crypto1-crack
   add-test-command "libnfc_crypto1_crack --help |& grep 'libnfc.buses'"
+  add-to-list "libnfc-crypto1-crack,https://github.com/droidnewbie2/acr122uNFC,Implementation of cryptographic attack on Mifare Classic RFID cards"
 }
 
 function install_mfdread() {
@@ -1752,6 +1927,7 @@ function install_mfdread() {
   add-aliases mfdread
   add-history mfdread
   add-test-command "mfdread /opt/tools/mfdread/dump.mfd"
+  add-to-list "mfdread,https://github.com/zhovner/mfdread,Tool for reading/writing Mifare RFID tags"
 }
 
 function install_mousejack() {
@@ -1769,6 +1945,7 @@ function install_mousejack() {
   add-test-command "nrf24-scanner.py --help"
   add-test-command "nrf24-sniffer.py --help"
   add-test-command "nrf24-network-mapper.py --help"
+  add-to-list "mousejack,https://github.com/BastilleResearch/mousejack,Exploit to take over a wireless mouse and keyboard"
 }
 
 function install_jackit() {
@@ -1778,6 +1955,7 @@ function install_jackit() {
   python -m pip install .
   add-history jackit
   add-test-command "jackit --help"
+  add-to-list "jackit,https://github.com/insecurityofthings/jackit,Exploit to take over a wireless mouse and keyboard"
 }
 
 function install_gosecretsdump() {
@@ -1786,12 +1964,14 @@ function install_gosecretsdump() {
   go install -v github.com/C-Sto/gosecretsdump@latest
   add-history gosecretsdump
   add-test-command "gosecretsdump -version"
+  add-to-list "gosecretsdump,https://github.com/c-sto/gosecretsdump,Implements NTLMSSP network authentication protocol in Go"
 }
 
 function install_hackrf() {
   colorecho "Installing HackRF tools"
   apt-get -y install hackrf
   add-test-command "hackrf_debug --help"
+  add-to-list "hackrf,https://github.com/mossmann/hackrf,Low cost software defined radio platform"
 }
 
 function install_gqrx() {
@@ -1800,12 +1980,14 @@ function install_gqrx() {
   # test below cannot work because test runner cannot have a valid display
   # add-test-command "gqrx --help"
   add-test-command "which gqrx"
+  add-to-list "gqrx,https://github.com/csete/gqrx,Software defined radio receiver powered by GNU Radio and Qt"
 }
 
 function install_rtl-433() {
   colorecho "Installing rtl-433"
   fapt rtl-433
   add-test-command "dpkg -l rtl-433 | grep 'rtl-433'"
+  add-to-list "rtl-433,https://github.com/merbanan/rtl_433,Tool for decoding various wireless protocols/ signals such as those used by weather stations"
 }
 
 function install_sipvicious() {
@@ -1814,6 +1996,7 @@ function install_sipvicious() {
   cd /opt/tools/sipvicious/ || exit
   python3 setup.py install
   add-test-command "sipvicious_svcrack --version"
+  add-to-list "sipvicious,https://github.com/enablesecurity/sipvicious,Enumeration and MITM tool for SIP devices"
 }
 
 function install_httpmethods() {
@@ -1823,6 +2006,7 @@ function install_httpmethods() {
   python3 setup.py install
   add-history httpmethods
   add-test-command "httpmethods --help"
+  add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT, DELETE, etc.)"
 }
 
 function install_adidnsdump() {
@@ -1830,6 +2014,7 @@ function install_adidnsdump() {
   python3 -m pipx install git+https://github.com/dirkjanm/adidnsdump
   add-history adidnsdump
   add-test-command "adidnsdump --help"
+  add-to-list "adidnsdump,https://github.com/dirkjanm/adidnsdump,Active Directory Integrated DNS dump utility"
 }
 
 function install_dnschef() {
@@ -1838,6 +2023,7 @@ function install_dnschef() {
   python3 -m pip install -r /opt/tools/dnschef/requirements.txt
   add-aliases dnschef
   add-test-command "dnschef --help"
+  add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
 }
 
 function install_h2csmuggler() {
@@ -1846,12 +2032,14 @@ function install_h2csmuggler() {
   python3 -m pip install h2
   add-aliases h2csmuggler
   add-test-command "h2csmuggler --help"
+  add-to-list "h2csmuggler,https://github.com/BishopFox/h2csmuggler,HTTP Request Smuggling tool using H2C upgrade"
 }
 
 function install_byp4xx() {
   colorecho "Installing byp4xx"
   go install -v github.com/lobuhi/byp4xx@latest
   add-test-command "byp4xx"
+  add-to-list "byp4xx,https://github.com/lobuhi/byp4xx,A Swiss Army knife for bypassing web application firewalls and filters."
 }
 
 function install_pipx() {
@@ -1859,12 +2047,14 @@ function install_pipx() {
   python3 -m pip install pipx
   pipx ensurepath
   add-test-command "pipx --version"
+  add-to-list "pipx,https://github.com/pipxproject/pipx,Execute binaries from Python packages in isolated environments"
 }
 
 function install_peepdf() {
   colorecho "Installing peepdf"
   fapt libjpeg-dev
   python2.7 -m pip install peepdf
+  add-to-list "peepdf,https://github.com/jesparza/peepdf,Powerful Python tool to analyze and investigate PDF files"
 }
 
 function install_volatility2() {
@@ -1878,6 +2068,7 @@ function install_volatility2() {
   ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
   add-aliases volatility2
   add-test-command "volatility2 --help"
+  add-to-list "volatility2,https://github.com/volatilityfoundation/volatility,Volatile memory extraction utility framework"
 }
 
 function install_volatility3() {
@@ -1886,6 +2077,7 @@ function install_volatility3() {
   add-aliases volatility3
   add-history volatility3
   add-test-command "volatility3 --help"
+  add-to-list "volatility3,https://github.com/volatilityfoundation/volatility3,Advanced memory forensics framework"
 }
 
 function install_testdisk() {
@@ -1893,6 +2085,7 @@ function install_testdisk() {
   fapt testdisk
   add-history testdisk
   add-test-command "testdisk --help"
+  add-to-list "testdisk,https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
 }
 
 function install_jadx() {
@@ -1904,6 +2097,7 @@ function install_jadx() {
   ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
   add-history jadx
   add-test-command "jadx --help"
+  add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler"
 }
 
 function install_fdisk() {
@@ -1911,18 +2105,21 @@ function install_fdisk() {
   fapt fdisk
   add-history fdisk
   add-test-command "fdisk --help"
+  add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities, including fdisk partitioning tool"
 }
 
 function install_sleuthkit() {
   colorecho "Installing sleuthkit"
   fapt sleuthkit
   add-test-command "blkcalc -V"
+  add-to-list "sleuthkit,https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
 }
 
 function install_zsteg() {
   colorecho "Installing zsteg"
   gem install zsteg
   add-test-command "zsteg --help"
+  add-to-list "zsteg,https://github.com/zed-0xff/zsteg,Detect steganography hidden in PNG and BMP images"
 }
 
 function install_exif() {
@@ -1930,6 +2127,7 @@ function install_exif() {
   fapt exif
   add-history exif
   add-test-command "exif --help"
+  add-to-list "exif,https://exiftool.org/,Utility to read, write and edit metadata in image, audio and video files"
 }
 
 function install_exiv2() {
@@ -1937,6 +2135,7 @@ function install_exiv2() {
   fapt exiv2
   add-history exiv2
   add-test-command "exiv2 --help"
+  add-to-list "exiv2,https://github.com/Exiv2/exiv2,Image metadata library and toolset"
 }
 
 function install_hexedit() {
@@ -1944,12 +2143,14 @@ function install_hexedit() {
   fapt hexedit
   add-history hexedit
   add-test-command "hexedit --help|& grep 'usage: hexedit'"
+  add-to-list "hexedit,https://github.com/pixel/hexedit,View and edit binary files"
 }
 
 function install_stegolsb() {
   colorecho "Installing stegolsb"
   python3 -m pipx install stego-lsb
   add-test-command "stegolsb --version"
+  add-to-list "stegolsb,https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm"
 }
 
 function install_whatportis() {
@@ -1958,12 +2159,14 @@ function install_whatportis() {
   echo y | whatportis --update
   add-history whatportis
   add-test-command "whatportis --version"
+  add-to-list "whatportis,https://github.com/ncrocfer/whatportis,Command-line tool to lookup port information"
 }
 
 function install_ultimate_vimrc() {
   colorecho "Installing The Ultimate vimrc"
   git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
   sh ~/.vim_runtime/install_awesome_vimrc.sh
+  add-to-list "ultimate,https://github.com/amix/vimrc.git,Vim in steroids."
 }
 
 function install_ngrok() {
@@ -1983,6 +2186,7 @@ function install_ngrok() {
   unzip -d /opt/tools/bin/ /tmp/ngrok.zip
   add-history ngrok
   add-test-command "ngrok version"
+  add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet"
 }
 
 function install_chisel() {
@@ -1990,6 +2194,7 @@ function install_chisel() {
   go install -v github.com/jpillora/chisel@latest
   # TODO: add windows pre-compiled binaries in /opt/ressources/windows?
   add-test-command "chisel --help"
+  add-to-list "chisel,https://github.com/jpillora/chisel,Go based TCP tunnel, with authentication and encryption support"
 }
 
 function install_sshuttle() {
@@ -1998,6 +2203,7 @@ function install_sshuttle() {
   cd /opt/tools/sshuttle || exit
   python3 setup.py install
   add-test-command "sshuttle --version"
+  add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
 }
 
 function install_pygpoabuse() {
@@ -2006,6 +2212,7 @@ function install_pygpoabuse() {
   python3 -m pip install -r /opt/tools/pyGPOAbuse/requirements.txt
   add-aliases pygpoabuse
   add-test-command "pygpoabuse --help"
+  add-to-list "pygpoabuse,https://github.com/Hackndo/pyGPOAbuse,A tool for abusing GPO permissions to escalate privileges"
 }
 
 function install_rsactftool() {
@@ -2015,6 +2222,7 @@ function install_rsactftool() {
   apt-get -y install libgmp3-dev libmpc-dev
   python3 -m pip install -r requirements.txt
   add-aliases rsactftool
+  add-to-list "rsactftool,https://github.com/Ganapati/RsaCtfTool,Tool for performing RSA attack and decrypting encrypted RSA message"
 }
 
 function install_feroxbuster() {
@@ -2027,6 +2235,7 @@ function install_feroxbuster() {
   add-aliases feroxbuster
   add-history feroxbuster
   add-test-command "feroxbuster --help"
+  add-to-list "feroxbuster,https://github.com/epi052/feroxbuster,Simple, fast and recursive content discovery tool"
 }
 
 function install_bloodhound-import() {
@@ -2034,6 +2243,7 @@ function install_bloodhound-import() {
   python3 -m pipx install bloodhound-import
   add-history bloodhound-import
   add-test-command "bloodhound-import --help"
+  add-to-list "bloodhound-import,https://github.com/fox-it/BloodHound.py,Import data into BloodHound for analyzing active directory trust relationships"
 }
 
 function install_bloodhound-quickwin() {
@@ -2043,6 +2253,14 @@ function install_bloodhound-quickwin() {
   add-aliases bloodhound-quickwin
   add-history bloodhound-quickwin
   add-test-command "bloodhound-quickwin --help"
+  add-to-list "bloodhound-quickwin,https://github.com/kaluche/bloodhound-quickwin,A tool for BloodHounding on Windows machines without .NET or Powershell installed"
+}
+
+function install_ldapsearch() {
+  colorecho "Installing ldapsearch"
+  fapt ldap-utils
+  add-history ldapsearch
+  add-test-command "ldapsearch --help; ldapsearch --help |& grep 'Search options'"
 }
 
 function install_ldapsearch-ad() {
@@ -2053,12 +2271,14 @@ function install_ldapsearch-ad() {
   add-aliases ldapsearch-ad
   add-history ldapsearch-ad
   add-test-command "ldapsearch-ad --version"
+  add-to-list "ldapsearch-ad,https://github.com/yaap7/ldapsearch-ad,LDAP search utility with AD support"
 }
 
 function install_rustscan() {
   colorecho "Installing RustScan"
   source "$HOME/.cargo/env"
   cargo install rustscan
+  add-to-list "rustscan,https://github.com/RustScan/RustScan,Fast port scanner"
 }
 
 function install_divideandscan() {
@@ -2066,12 +2286,14 @@ function install_divideandscan() {
   python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
   add-history divideandscan
   add-test-command "divideandscan --help"
+  add-to-list "divideandscan,https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
 }
 
 function install_iptables() {
   colorecho "Installing iptables"
   fapt iptables
   add-test-command "iptables --version"
+  add-to-list "iptables,https://linux.die.net/man/8/iptables,Userspace command line tool for configuring kernel firewall"
 }
 
 function install_trid() {
@@ -2089,6 +2311,7 @@ function install_trid() {
   python3 tridupdate.py
   add-aliases trid
   add-test-command "trid '-?'; trid | grep 'This help'"
+  add-to-list "trid,https://mark0.net/soft-trid-e.html,File identifier"
 }
 
 function install_pcredz() {
@@ -2099,6 +2322,7 @@ function install_pcredz() {
   git -C /opt/tools/ clone https://github.com/lgandx/PCredz
   add-aliases pcredz
   add-test-command "PCredz --help"
+  add-to-list "pcredz,https://github.com/lgandx/PCredz,PowerShell credential dumper"
 }
 
 function install_smartbrute() {
@@ -2106,25 +2330,29 @@ function install_smartbrute() {
   python3 -m pipx install git+https://github.com/ShutdownRepo/smartbrute
   add-history smartbrute
   add-test-command "smartbrute --help"
+  add-to-list "smartbrute,https://github.com/ShutdownRepo/SmartBrute,The smart password spraying and bruteforcing tool for Active Directory Domain Services."
 }
 
 function install_frida() {
   colorecho "Installing frida"
   python3 -m pipx install frida-tools
   add-test-command "frida --version"
+  add-to-list "frida,https://github.com/frida/frida,Dynamic instrumentation toolkit"
 }
 
 function install_objection() {
   colorecho "Installing objection"
   python3 -m pipx install git+https://github.com/sensepost/objection
-  add-history objection 
+  add-history objection
   add-test-command "objection --help"
+  add-to-list "objection,https://github.com/sensepost/objection,Runtime mobile exploration"
 }
 
 function install_androguard() {
   colorecho "Installing androguard"
   python3 -m pipx install androguard
   add-test-command "androguard --version"
+  add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications"
 }
 
 function install_petitpotam() {
@@ -2135,6 +2363,7 @@ function install_petitpotam() {
   add-aliases petitpotam
   add-history petitpotam
   add-test-command "petitpotam.py --help"
+  add-to-list "petitpotam,https://github.com/topotam/PetitPotam,Windows machine account manipulation"
 }
 
 function install_dfscoerce() {
@@ -2143,6 +2372,7 @@ function install_dfscoerce() {
   add-aliases dfscoerce
   add-history dfscoerce
   add-test-command "dfscoerce.py --help"
+  add-to-list "dfscoerce,https://github.com/Wh04m1001/dfscoerce,DFS-R target coercion tool"
 }
 
 function install_coercer() {
@@ -2150,6 +2380,7 @@ function install_coercer() {
   python3 -m pipx install git+https://github.com/p0dalirius/Coercer
   add-history coercer
   add-test-command "coercer --help"
+  add-to-list "coercer,https://github.com/p0dalirius/coercer,DFS-R target coercion tool"
 }
 
 function install_pkinittools() {
@@ -2158,6 +2389,7 @@ function install_pkinittools() {
   add-aliases pkinittools
   add-history pkinittools
   add-test-command "gettgtpkinit.py --help"
+  add-to-list "pkinittools,https://github.com/dirkjanm/PKINITtools,Pkinit support tools"
 }
 
 function install_pywhisker() {
@@ -2168,6 +2400,7 @@ function install_pywhisker() {
   add-aliases pywhisker
   add-history pywhisker
   add-test-command "pywhisker.py --help"
+  add-to-list "pywhisker,https://github.com/ShutdownRepo/pywhisker,PyWhisker is a Python equivalent of the original Whisker made by Elad Shamir and written in C#. This tool allows users to manipulate the msDS-KeyCredentialLink attribute of a target user/computer to obtain full control over that object. It's based on Impacket and on a Python equivalent of Michael Grafnetter's DSInternals called PyDSInternals made by podalirius."
 }
 
 function install_targetedKerberoast() {
@@ -2178,6 +2411,7 @@ function install_targetedKerberoast() {
   add-aliases targetedkerberoast
   add-history targetedkerberoast
   add-test-command "targetedKerberoast.py --help"
+  add-to-list "targetedKerberoast,https://github.com/ShutdownRepo/targetedKerberoast,Kerberoasting against specific accounts"
 }
 
 function install_manspider() {
@@ -2185,6 +2419,7 @@ function install_manspider() {
   python3 -m pipx install git+https://github.com/blacklanternsecurity/MANSPIDER
   add-history manspider
   add-test-command "manspider --help"
+  add-to-list "manspider,https://github.com/blacklanternsecurity/manspider,Crawl SMB shares for juicy information. File content searching."
 }
 
 function install_pywsus() {
@@ -2197,11 +2432,13 @@ function install_pywsus() {
   add-aliases pywsus
   add-history pywsus
   add-test-command "pywsus.py --help"
+  add-to-list "pywsus,https://github.com/GoSecure/pywsus,Python implementation of a WSUS client"
 }
 
 function install_ignorant() {
   colorecho "Installing ignorant"
   python3 -m pipx install git+https://github.com/megadose/ignorant
+  add-to-list "ignorant,https://github.com/megadose/ignorant,Ignorant allows you to check if a phone number is used on different sites like snapchat, instagram."
 }
 
 function install_donpapi() {
@@ -2211,12 +2448,14 @@ function install_donpapi() {
   add-aliases donpapi
   add-history donpapi
   add-test-command "DonPAPI.py --help"
+  add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Python network and web application scanner"
 }
 
 function install_gau() {
   colorecho "Installing gau"
   GO111MODULE=on go install -v github.com/lc/gau@latest
   add-test-command "gau --help"
+  add-to-list "gau,https://github.com/lc/gau,Fast tool for fetching URLs"
 }
 
 function install_webclientservicescanner() {
@@ -2224,6 +2463,7 @@ function install_webclientservicescanner() {
   python3 -m pipx install git+https://github.com/Hackndo/WebclientServiceScanner
   add-history webclientservicescanner
   add-test-command "webclientservicescanner --help"
+  add-to-list "webclientservicescanner,https://github.com/Hackndo/webclientservicescanner,Scans for web service endpoints"
 }
 
 function install_certipy() {
@@ -2231,6 +2471,7 @@ function install_certipy() {
   python3 -m pipx install git+https://github.com/ly4k/Certipy
   add-history certipy
   add-test-command "certipy --version"
+  add-to-list "certipy,https://github.com/ly4k/Certipy,Python tool to create and sign certificates"
 }
 
 function install_eaphammer() {
@@ -2241,6 +2482,7 @@ function install_eaphammer() {
   echo y | ./kali-setup
   add-aliases eaphammer
   add-test-command "eaphammer --help"
+  add-to-list "eaphammer,https://github.com/s0lst1c3/eaphammer,Targeted evil twin attacks against WPA2-Enterprise networks"
 }
 
 function install_vulny-code-static-analysis() {
@@ -2248,13 +2490,15 @@ function install_vulny-code-static-analysis() {
   git -C /opt/tools/ clone https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
   add-aliases vulny-code-static-analysis
   add-test-command "vulny-code-static-analysis --help"
+  add-to-list "vulny-code-static-analysis,https://github.com/swisskyrepo/Vulny-Code-Static-Analysis,Static analysis tool for C code"
 }
 
 function install_brakeman() {
   colorecho "Installing Brakeman"
   gem install brakeman
-  add-history brakeman 
+  add-history brakeman
   add-test-command "brakeman --help"
+  add-to-list "brakeman,https://github.com/presidentbeef/brakeman,Static analysis tool for Ruby on Rails applications"
 }
 
 function install_semgrep() {
@@ -2262,6 +2506,7 @@ function install_semgrep() {
   python3 -m pipx install semgrep
   add-history semgrep
   add-test-command "semgrep --help"
+  add-to-list "semgrep,https://github.com/returntocorp/semgrep/,Static analysis tool that supports multiple languages and can find a variety of vulnerabilities and coding errors."
 }
 
 function install_nuclei() {
@@ -2271,6 +2516,7 @@ function install_nuclei() {
   nuclei -update-templates
   add-history nuclei
   add-test-command "nuclei --version"
+  add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues, including XSS, SQL injection, and misconfigured servers."
 }
 
 function install_prips() {
@@ -2279,6 +2525,7 @@ function install_prips() {
   fapt prips
   add-history prips
   add-test-command "prips --help"
+  add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
 }
 
 function install_hakrevdns() {
@@ -2287,12 +2534,14 @@ function install_hakrevdns() {
   go install -v github.com/hakluke/hakrevdns@latest
   add-history hakrevdns
   add-test-command "hakrevdns --help; hakrevdns --help |& grep 'Protocol to use for lookups'"
+  add-to-list "hakrevdns,https://github.com/hakluke/hakrevdns,Reverse DNS lookup utility that can help with discovering subdomains and other information."
 }
 
 function install_httprobe() {
   colorecho "Installing httprobe"
   go install -v github.com/tomnomnom/httprobe@latest
   add-test-command "httprobe --help"
+  add-to-list "httprobe,https://github.com/tomnomnom/httprobe,A simple utility for enumerating HTTP and HTTPS servers."
 }
 
 function install_httpx() {
@@ -2300,6 +2549,7 @@ function install_httpx() {
   go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
   add-history httpx
   add-test-command "httpx --help"
+  add-to-list "httpx,https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities, including outdated software versions and weak encryption protocols."
 }
 
 function install_dnsx() {
@@ -2307,13 +2557,15 @@ function install_dnsx() {
   go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
   add-history dnsx
   add-test-command "dnsx --help"
+  add-to-list "dnsx,https://github.com/projectdiscovery/dnsx,A tool for DNS reconnaissance that can help identify subdomains and other related domains."
 }
 
 function install_shuffledns() {
   colorecho "Installing shuffledns"
   go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
-  add-history shuffledns 
+  add-history shuffledns
   add-test-command "shuffledns --help"
+  add-to-list "shuffledns,https://github.com/projectdiscovery/shuffledns,A fast and customizable DNS resolver that can be used for subdomain enumeration and other tasks."
 }
 
 function install_tailscale() {
@@ -2324,6 +2576,7 @@ function install_tailscale() {
   add-aliases tailscale
   add-history tailscale
   add-test-command "tailscale --help"
+  add-to-list "tailscale,https://github.com/tailscale/tailscale,A secure and easy-to-use VPN alternative that is designed for teams and businesses."
 }
 
 function install_ligolo-ng() {
@@ -2338,6 +2591,7 @@ function install_ligolo-ng() {
   ln -v -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-proxy
   add-test-command "ligolo-agent --help"
   add-test-command "ligolo-proxy --help"
+  add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced subdomain scanner that supports multiple sources and can detect a wide range of issues, including expired domains and misconfigured servers."
 }
 
 function install_nfspy() {
@@ -2358,6 +2612,7 @@ function install_anew() {
   colorecho "Installing anew"
   go install -v github.com/tomnomnom/anew@latest
   add-test-command "anew --help"
+  add-to-list "anew,https://github.com/tomnomnom/anew,A simple tool for filtering and manipulating text data, such as log files and other outputs."
 }
 
 function install_naabu() {
@@ -2365,6 +2620,7 @@ function install_naabu() {
   apt-get install -y libpcap-dev
   go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
   add-test-command "naabu --help"
+  add-to-list "naabu,https://github.com/projectdiscovery/naabu,A fast and reliable port scanner that can detect open ports and services."
 }
 
 function install_tor() {
@@ -2372,12 +2628,14 @@ function install_tor() {
   fapt tor
   echo 'SOCKSPort 127.0.0.1:9050' >> /etc/tor/torrc
   add-test-command "service tor start"
+  add-to-list "tor,https://github.com/torproject/tor,Anonymity tool that can help protect your privacy and online identity by routing your traffic through a network of servers."
 }
 
 function install_torbrowser() {
   colorecho "Installing torbrowser"
   # TODO : also need to find out how to install for ARM
   # TODO add-test-command
+  # add-to-list "torbrowser,https://github.com/torproject/torbrowser-releases/releases,Web browser that is designed to work with the Tor network and provide anonymous browsing."
 }
 
 function install_pwndb() {
@@ -2388,6 +2646,7 @@ function install_pwndb() {
   add-aliases pwndb
   add-history pwndb
   add-test-command "pwndb --help"
+  add-to-list "pwndb,https://github.com/davidtavarez/pwndb,A command-line tool for searching the pwndb database of compromised credentials."
 }
 
 function install_robotstester() {
@@ -2397,6 +2656,7 @@ function install_robotstester() {
   python3 -m pipx install git+https://github.com/p0dalirius/robotstester
   add-history robotstester
   add-test-command "robotstester --help"
+  add-to-list "robotstester,https://github.com/p0dalirius/robotstester,Utility for testing whether a website's robots.txt file is correctly configured."
 }
 
 function install_finduncommonshares() {
@@ -2407,6 +2667,7 @@ function install_finduncommonshares() {
   add-aliases finduncommonshares
   add-history finduncommonshares
   add-test-command "FindUncommonShares.py --help"
+  add-to-list "finduncommonshares,https://github.com/p0dalirius/FindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
 }
 
 function install_shadowcoerce() {
@@ -2415,12 +2676,14 @@ function install_shadowcoerce() {
   add-aliases shadowcoerce
   add-history shadowcoerce
   add-test-command "shadowcoerce.py --help"
+  add-to-list "shadowcoerce,https://github.com/ShutdownRepo/shadowcoerce,Utility for bypassing the Windows Defender antivirus by hiding a process within a legitimate process."
 }
 
 function install_pwncat() {
   colorecho "Installing pwncat"
   python3 -m pipx install pwncat-cs
   add-test-command "pwncat-cs --version"
+  add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
 }
 
 function install_gmsadumper() {
@@ -2429,6 +2692,7 @@ function install_gmsadumper() {
   add-aliases gmsadumper
   add-history gmsadumper
   add-test-command "gMSADumper.py --help"
+  add-to-list "gmsadumper,https://github.com/micahvandeusen/gMSADumper,A tool for extracting credentials and other information from a Microsoft Active Directory domain."
 }
 
 function install_pylaps() {
@@ -2437,6 +2701,7 @@ function install_pylaps() {
   add-aliases pylaps
   add-history pylaps
   add-test-command "pyLAPS.py --help"
+  add-to-list "pylaps,https://github.com/p0dalirius/pylaps,Utility for enumerating and querying LDAP servers."
 }
 
 function install_ldaprelayscan() {
@@ -2447,6 +2712,7 @@ function install_ldaprelayscan() {
   add-aliases ldaprelayscan
   add-history ldaprelayscan
   add-test-command "LdapRelayScan.py --help"
+  add-to-list "ldaprelayscan,TODO,TODO"
 }
 
 function install_goldencopy() {
@@ -2454,6 +2720,7 @@ function install_goldencopy() {
   python3 -m pipx install goldencopy
   add-history goldencopy
   add-test-command "goldencopy --help"
+  add-to-list "goldencopy,https://github.com/0x09AL/golden_copy.git,A tool to copy data from Golden Ticket and Silver Ticket"
 }
 
 function install_crackhound() {
@@ -2466,20 +2733,16 @@ function install_crackhound() {
   add-aliases crackhound
   add-history crackhound
   add-test-command "crackhound.py --help"
+  add-to-list "crackhound,https://github.com/trustedsec/crackhound.git,A fast WPA/WPA2/WPA3 WiFi Handshake capture, password recovery and analysis tool"
 }
 
 function install_kerbrute() {
   colorecho "Installing Kerbrute"
-  if [[ $(uname -m) = 'x86_64' ]]
-  then
-    wget https://github.com/ropnop/kerbrute/releases/latest/download/kerbrute_linux_amd64 -O /opt/tools/bin/kerbrute
-  else
-    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-  fi
-  chmod +x /opt/tools/bin/kerbrute
+  go install github.com/ropnop/kerbrute@latest
   add-history kerbrute
   add-test-command "kerbrute --help"
   # FIXME ARM platforms install ?
+  add-to-list "kerbrute,https://github.com/ropnop/kerbrute,A tool to perform Kerberos pre-auth bruteforcing"
 }
 
 function install_searchsploit() {
@@ -2491,12 +2754,14 @@ function install_searchsploit() {
   sed -i 's/opt\/exploitdb/opt\/tools\/exploitdb/' ~/.searchsploit_rc
   searchsploit -u
   add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
+  add-to-list "searchsploit,https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
 }
 
 function install_crunch() {
   colorecho "Installing crunch"
   fapt crunch
   add-test-command "crunch --help"
+  add-to-list "crunch,https://github.com/crunchsec/crunch,A wordlist generator where you can specify a standard character set or a character set you specify."
 }
 
 function install_seclists(){
@@ -2505,6 +2770,7 @@ function install_seclists(){
   cd /usr/share/seclists || exit
   rm -r LICENSE .git* CONTRIBUT* .bin
   add-test-command "[ -d '/usr/share/seclists/Discovery/' ]"
+  add-to-list "seclists,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
 }
 
 function install_rockyou(){
@@ -2513,12 +2779,15 @@ function install_rockyou(){
   tar -xvf /usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /usr/share/wordlists/
   ln -s /usr/share/seclists/ /usr/share/wordlists/seclists
   add-test-command "[ -f '/usr/share/wordlists/rockyou.txt' ]"
+  add-to-list "rockyou,https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt,A password dictionary used by most hackers"
 }
 
 function install_amass(){
   colorecho "Installing Amass"
-  go install -v github.com/OWASP/Amass/v3/...@master
+  set_go_env
+  go install -v github.com/owasp-amass/amass/v3/...@master
   add-test-command "amass -version"
+  add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration, attack surface mapping & external assets discovery tool"
 }
 
 function install_maltego(){
@@ -2526,6 +2795,7 @@ function install_maltego(){
   wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
   dpkg -i /tmp/maltegov4.3_package.deb
   # TODO add-test-command
+  add-to-list "maltego,https://www.paterva.com/web7/downloads.php,A tool used for open-source intelligence and forensics"
 }
 
 function install_spiderfoot(){
@@ -2536,6 +2806,7 @@ function install_spiderfoot(){
   add-history spiderfoot
   add-test-command "spiderfoot --help"
   add-test-command "spiderfoot-cli --help"
+  add-to-list "spiderfoot,https://github.com/smicallef/spiderfoot,A reconnaissance tool that automatically queries over 100 public data sources"
 }
 
 function install_finalrecon(){
@@ -2545,11 +2816,13 @@ function install_finalrecon(){
   python3 -m pip install -r requirements.txt
   add-aliases finalrecon
   add-test-command "finalrecon.py --help"
+  add-to-list "finalrecon,https://github.com/thewhiteh4t/FinalRecon,A web reconnaissance tool that gathers information about web pages"
 }
 
 function install_xsser(){
   colorecho "Installing xsser"
   pip3 install pycurl bs4 pygeoip gobject cairocffi selenium
+  add-to-list "xsser,https://github.com/epsylon/xsser,A tool to test for XSS vulnerability"
 }
 
 function install_joomscan(){
@@ -2560,6 +2833,7 @@ function install_joomscan(){
   cpanm LWP::Protocol::https
   add-aliases joomscan
   add-test-command "joomscan --version"
+  add-to-list "joomscan,https://github.com/rezasp/joomscan,A tool to enumerate Joomla-based websites"
 }
 
 function install_wpscan(){
@@ -2572,6 +2846,7 @@ function install_wpscan(){
   gem install wpscan
   add-history wpscan
   add-test-command "wpscan --help"
+  add-to-list "wpscan,https://github.com/wpscanteam/wpscan,A tool to enumerate WordPress-based websites"
 }
 
 function install_go(){
@@ -2593,6 +2868,7 @@ function install_go(){
   tar -C /usr/local -xzf /tmp/go.tar.gz
   export PATH=$PATH:/usr/local/go/bin
   add-test-command "go version"
+  add-to-list "go,https://golang.org/doc/install,A programming language often used to create command line tools"
 }
 
 function install_metasploit(){
@@ -2606,6 +2882,7 @@ function install_metasploit(){
   cd /opt/tools || exit
   rm -rf /tmp/metasploit_install
   add-test-command "msfconsole --version"
+  add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 
 function install_smbmap(){
@@ -2618,6 +2895,7 @@ function install_smbmap(){
   add-aliases smbmap
   add-history smbmap
   add-test-command "smbmap --help"
+  add-to-list "smbmap,https://github.com/ShawnDEvans/smbmap,A tool to enumerate SMB shares and check for null sessions"
 }
 
 function install_pth-tools(){
@@ -2646,10 +2924,13 @@ function install_pth-tools(){
   else
     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
   fi
-  fapt /tmp/libreadline6_6.3-8+b3.deb /tmp/multiarch-support_2.19-18+deb8u10.deb
+  dpkg -i /tmp/libreadline6_6.3-8+b3.deb
+  dpkg -i /tmp/multiarch-support_2.19-18+deb8u10.deb
+  apt-get --fix-broken install
   add-aliases pth-tools
   add-history pth-tools
   # TODO add-test-command
+  add-to-list "pth-tools,https://github.com/byt3bl33d3r/pth-toolkit,A toolkit to perform pass-the-hash attacks"
 }
 
 function install_smtp-user-enum(){
@@ -2657,6 +2938,7 @@ function install_smtp-user-enum(){
   python3 -m pipx install smtp-user-enum
   add-history smtp-user-enum
   add-test-command "smtp-user-enum --help"
+  add-to-list "smtp-user-enum,https://github.com/pentestmonkey/smtp-user-enum,A tool to enumerate email addresses via SMTP"
 }
 
 function install_gpp-decrypt(){
@@ -2665,12 +2947,14 @@ function install_gpp-decrypt(){
   git -C /opt/tools/ clone -v https://github.com/t0thkr1s/gpp-decrypt
   add-aliases gpp-decrypt
   add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
+  add-to-list "gpp-decrypt,https://github.com/t0thkr1s/gpp-decrypt,A tool to decrypt Group Policy Preferences passwords"
 }
 
 function install_android-tools-adb() {
   colorecho "Installing android-tools-adb"
   fapt android-tools-adb
   add-test-command "adb --help"
+  add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications"
 }
 
 function install_smali(){
@@ -2680,11 +2964,13 @@ function install_smali(){
   wget https://bitbucket.org/JesusFreke/smali/downloads/smali-2.5.2.jar -O /opt/tools/smali/smali-2.5.2.jar
   add-aliases smali
   add-test-command "smali --version"
+  add-to-list "smali,https://github.com/JesusFreke/smali,A tool to disassemble and assemble Android's dex files"
 }
 
 function install_tesseract-ocr(){
   colorecho "Installing tesseract-ocr"
   apt-get install -y tesseract-ocr
+  add-to-list "tesseract-ocr,https://github.com/tesseract-ocr/tesseract,A text recognition engine that can be used for OCR tasks"
 }
 
 function install_dex2jar(){
@@ -2694,24 +2980,28 @@ function install_dex2jar(){
   mv /opt/tools/dex-tools-2.1/ /opt/tools/dex2jar
   find /opt/tools/dex2jar -type f -name "*.sh" -exec ln -s '{}' /opt/tools/bin ';'
   add-test-command "d2j-dex2jar.sh --help"
+  add-to-list "dex2jar,https://github.com/pxb1988/dex2jar,A tool to convert Android's dex files to Java's jar files"
 }
 
 function install_zipalign() {
   colorecho "Installing zipalign"
   fapt zipalign
   add-test-command "zipalign --help |& grep 'verbose output'"
+  add-to-list "zipalign,https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file"
 }
 
 function install_apksigner() {
   colorecho "Installing apksigner"
   fapt apksigner
   add-test-command "apksigner --version"
+  add-to-list "apksigner,https://source.android.com/security/apksigning,arguably the most important step to optimize your APK file"
 }
 
 function install_apktool() {
   colorecho "Installing apktool"
   fapt apktool
   add-test-command "apktool --version"
+  add-to-list "apktools,TODO,TODO"
 }
 
 function install_hostapd-wpe(){
@@ -2730,6 +3020,7 @@ function install_hostapd-wpe(){
   ./bootstrap
   cd ../../hostapd-2.6/hostapd || exit
   ./hostapd-wpe hostapd-wpe.conf
+  add-to-list "hostapd-wpe,https://github.com/OpenSecurityResearch/hostapd-wpe,A version of hostapd with added support for wireless injection attacks"
 }
 
 function install_radare2(){
@@ -2737,6 +3028,7 @@ function install_radare2(){
   git -C /opt/tools/ clone https://github.com/radareorg/radare2
   /opt/tools/radare2/sys/install.sh
   add-test-command "radare2 -h"
+  add-to-list "radare2,https://github.com/radareorg/radare2,A complete framework for reverse-engineering and analyzing binaries"
 }
 
 function install_jd-gui(){
@@ -2745,6 +3037,7 @@ function install_jd-gui(){
   wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
   add-aliases jd-gui
   # TODO add-test-command GUI app
+  add-to-list "jd-gui,https://github.com/java-decompiler/jd-gui,A standalone Java Decompiler GUI"
 }
 
 function install_rust_cargo() {
@@ -2752,6 +3045,7 @@ function install_rust_cargo() {
   curl https://sh.rustup.rs -sSf | sh -s -- -y
   source "$HOME/.cargo/env"
   add-test-command "cargo --version"
+  add-to-list "rust,https://www.rust-lang.org,A systems programming language focused on safety, speed, and concurrency"
 }
 
 function install_fierce() {
@@ -2759,6 +3053,7 @@ function install_fierce() {
   python3 -m pipx install git+https://github.com/mschwager/fierce
   add-history fierce
   add-test-command "fierce --help"
+  add-to-list "fierce,https://github.com/mschwager/fierce,A DNS reconnaissance tool for locating non-contiguous IP space"
 }
 
 function install_yarn() {
@@ -2767,6 +3062,7 @@ function install_yarn() {
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
   apt update
   apt install -y yarn
+  add-to-list "yarn,https://yarnpkg.com,A package manager for JavaScript"
 }
 
 function install_aircrack-ng() {
@@ -2775,12 +3071,14 @@ function install_aircrack-ng() {
   add-aliases aircrack-ng
   add-history aircrack-ng
   add-test-command "aircrack-ng --help"
+  add-to-list "aircrack-ng,https://www.aircrack-ng.org,A suite of tools for wireless penetration testing"
 }
 
 function install_emacs-nox() {
   colorecho "Installing emacs-nox"
   fapt emacs-nox
   add-aliases emacs-nox
+  add-to-list "emacs-nox,https://www.gnu.org/software/emacs/,An extensible, customizable, free/libre text editor"
 }
 
 function install_nmap() {
@@ -2791,12 +3089,21 @@ function install_nmap() {
   add-aliases nmap
   add-history nmap
   add-test-command "nmap --version"
+  add-to-list "nmap,https://nmap.org,The Network Mapper - a powerful network discovery and security auditing tool"
+}
+
+function install_netdiscover() {
+  colorecho "Installing netdiscover"
+  fapt netdiscover
+  add-history netdiscover
+  add-test-command "netdiscover -h |& grep 'Usage: netdiscover'"
 }
 
 function install_php() {
   colorecho "Installing php"
   fapt php
   add-aliases php
+  add-to-list "php,https://www.php.net,A popular general-purpose scripting language"
 }
 
 function install_python3-pyftpdlib() {
@@ -2804,24 +3111,28 @@ function install_python3-pyftpdlib() {
   fapt python3-pyftpdlib
   add-aliases pyftpdlib
   add-history pyftpdlib
+  add-to-list "python3-pyftpdlib,https://github.com/giampaolo/pyftpdlib,A Python FTP server library"
 }
 
 function install_python3() {
   colorecho "Installing python3"
   fapt python3
   add-aliases python3
+  add-to-list "python3,https://www.python.org,A popular general-purpose programming language"
 }
 
 function install_libxml2-utils() {
   colorecho "Installing libxml2-utils"
   fapt libxml2-utils
   add-aliases xmllint
+  add-to-list "libxml2-utils,http://xmlsoft.org/,A set of utilities for manipulating XML and HTML files"
 }
 
 function install_xsel() {
   colorecho "Installing xsel"
   fapt xsel
   add-aliases xsel
+  add-to-list "xsel,http://www.kfish.org/software/xsel/,A command-line program for getting and setting the contents of the X selection"
 }
 
 function install_cewl() {
@@ -2829,12 +3140,14 @@ function install_cewl() {
   fapt cewl
   add-history cewl
   add-test-command "cewl --help"
+  add-to-list "cewl,https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results"
 }
 
 function install_curl() {
   colorecho "Installing curl"
   fapt curl
   add-history curl
+  add-to-list "curl,https://curl.se/,A command-line tool for transferring data using various protocols"
 }
 
 function install_dirb() {
@@ -2842,36 +3155,35 @@ function install_dirb() {
   fapt dirb
   add-history dirb
   add-test-command "dirb | grep '<username:password>'"
+  add-to-list "dirb,https://github.com/v0re/dirb,Web Content Scanner"
 }
 
 function install_dnsutils() {
   colorecho "Installing dnsutils"
   fapt dnsutils
   add-history dnsutils
+  add-to-list "dnsutils,https://manpages.debian.org/jessie/dnsutils/dig.1.en.html,Provides various tools for querying DNS servers"
 }
 
 function install_faketime() {
   colorecho "Installing faketime"
   fapt faketime
   add-history faketime
-}
-
-function install_fcrackzip() {
-  colorecho "Installing fcrackzip"
-  fapt fcrackzip
-  add-history fcrackzip
+  add-to-list "faketime,https://github.com/wolfcw/libfaketime,Report a fake time to programs"
 }
 
 function install_pdfcrack() {
   colorecho "Installing pdfcrack"
   fapt pdfcrack
   add-test-command "pdfcrack --version"
+  add-to-list "pdfcrack,https://github.com/robins/pdfcrack,A tool for cracking password-protected PDF files"
 }
 
 function install_bruteforce-luks() {
   colorecho "Installing bruteforce-luks"
   fapt bruteforce-luks
   add-test-command "bruteforce-luks -h |& grep 'Print progress info'"
+  add-to-list "bruteforce-luks,https://github.com/glv2/bruteforce-luks,A tool to help recover encrypted LUKS2 containers"
 }
 
 function install_hashcat() {
@@ -2879,6 +3191,7 @@ function install_hashcat() {
   fapt hashcat
   add-history hashcat
   add-test-command "hashcat --help"
+  add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery"
 }
 
 function install_ldapdomaindump() {
@@ -2886,12 +3199,14 @@ function install_ldapdomaindump() {
   python3 -m pipx install git+https://github.com/dirkjanm/ldapdomaindump
   add-history ldapdomaindump
   add-test-command "ldapdomaindump --help"
+  add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service"
 }
 
 function install_hping3() {
   colorecho "Installing hping3"
   fapt hping3
   add-test-command "hping3 --version"
+  add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
 }
 
 function install_masscan() {
@@ -2899,6 +3214,7 @@ function install_masscan() {
   fapt masscan
   add-history masscan
   add-test-command "masscan --help; masscan --version | grep 'Masscan version'"
+  add-to-list "masscan,https://github.com/robertdavidgraham/masscan,Masscan is an Internet-scale port scanner"
 }
 
 function install_nbtscan() {
@@ -2906,18 +3222,21 @@ function install_nbtscan() {
   fapt nbtscan
   add-history nbtscan
   add-test-command "nbtscan 127.0.0.1"
+  add-to-list "nbtscan,https://github.com/charlesroelli/nbtscan,NBTscan is a program for scanning IP networks for NetBIOS name information."
 }
 
 function install_rpcbind() {
   colorecho "Installing rpcbind"
   fapt rpcbind
   add-test-command "rpcbind"
+  add-to-list "rpcbind,https://github.com/teg/rpcbind,RPCbind is a server that converts RPC program numbers into universal addresses."
 }
 
 function install_ntpdate() {
   colorecho "Installing ntpdate"
   fapt ntpdate
   add-history ntpdate
+  add-to-list "ntpdate,https://github.com/ntpsec/ntpsec,ntpdate is a command that sets the local date and time to the value received from a remote NTP server"
 }
 
 function install_onesixtyone() {
@@ -2925,6 +3244,7 @@ function install_onesixtyone() {
   fapt onesixtyone
   add-history onesixtyone
   add-test-command "onesixtyone 127.0.0.1 public"
+  add-to-list "onesixtyone,https://github.com/trailofbits/onesixtyone,onesixtyone is an SNMP scanner which utilizes a sweep technique to achieve very high performance."
 }
 
 function install_polenum() {
@@ -2934,6 +3254,7 @@ function install_polenum() {
   add-aliases polenum
   add-history polenum
   add-test-command "polenum.py --help"
+  add-to-list "polenum,https://github.com/Wh1t3Fox/polenum,Polenum is a Python script which uses the Impacket library to extract user information through the SMB protocol."
 }
 
 function install_rlwrap() {
@@ -2941,12 +3262,14 @@ function install_rlwrap() {
   fapt rlwrap
   add-history rlwrap
   add-test-command "rlwrap --version"
+  add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables, making it possible to edit and re-run input history"
 }
 
 function install_samba() {
   colorecho "Installing samba"
   fapt samba
   add-history samba
+  add-to-list "samba,https://github.com/samba-team/samba,Samba is an open-source implementation of the SMB/CIFS networking protocol"
 }
 
 function install_smbclient() {
@@ -2954,12 +3277,14 @@ function install_smbclient() {
   fapt smbclient
   add-history smbclient
   add-test-command "smbclient --help"
+  add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
 }
 
 function install_snmp() {
   colorecho "Installing snmp"
   fapt snmp
   add-history snmp
+  add-to-list "snmp,https://doc.ubuntu-fr.org/snmp,SNMP is a protocol for network management"
 }
 
 function install_sqlmap() {
@@ -2967,12 +3292,14 @@ function install_sqlmap() {
   fapt sqlmap
   add-history sqlmap
   add-test-command "sqlmap --version"
+  add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
 }
 
 function install_ssh() {
   colorecho "Installing ssh"
   fapt ssh
   add-history ssh
+  add-to-list "ssh,https://github.com/openssh/openssh-portable,SSH (Secure Shell) is a cryptographic network protocol for secure data communication"
 }
 
 function install_wfuzz() {
@@ -2980,6 +3307,7 @@ function install_wfuzz() {
   fapt wfuzz
   add-history wfuzz
   add-test-command "wfuzz --help"
+  add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
 }
 
 function install_freerdp2-x11() {
@@ -2989,177 +3317,208 @@ function install_freerdp2-x11() {
   # test below cannot work because test runner cannot have a valid display
   # add-test-command "xfreerdp /version"
   add-test-command "which xfreerdp"
+  add-to-list "freerdp2-x11,https://github.com/FreeRDP/FreeRDP,FreeRDP is a free implementation of the Remote Desktop Protocol (RDP), released under the Apache license."
 }
 
 function install_patator() {
   colorecho "Installing patator"
   fapt patator # messes up with lib, it installs python3-impacket (0.9.22-2)
+  add-to-list "patator,https://github.com/lanjelot/patator,Patator is a multi-purpose brute-forcer, with a modular design and a flexible usage."
 }
 
 function install_exiftool() {
   colorecho "Installing exiftool"
   fapt exiftool
   add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png"
+  add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading, writing and editing meta information in image, audio and video files."
 }
 
 function install_exifprobe() {
   colorecho "Installing exifprobe"
   fapt exifprobe
   add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"
+  add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."
 }
 
 function install_dnsenum() {
   colorecho "Installing dnsenum"
   fapt dnsenum
   add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'"
+  add-to-list "dnsenum,https://github.com/fwaeytens/dnsenum,dnsenum is a tool for enumerating DNS information about a domain."
 }
 
 function install_hydra() {
   colorecho "Installing hydra"
   fapt hydra
   add-test-command "hydra --help; hydra -help |& grep 'more command line options'"
+  add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
 }
 
 function install_imagemagick() {
   colorecho "Installing imagemagick"
   fapt imagemagick
   add-test-command "convert -version"
+  add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create, edit, compose, or convert bitmap images."
 }
 
 function install_ascii() {
   colorecho "Installing ascii"
   fapt ascii
   add-test-command "ascii -v"
+  add-to-list "ascii,https://github.com/moul/ascii,ASCII command-line tool to replace images with color-coded ASCII art."
 }
 
 function install_avrdude() {
   colorecho "Installing avrdude"
   fapt avrdude
   add-test-command "avrdude '-?'"
+  add-to-list "avrdude,https://github.com/avrdudes/avrdude,AVRDUDE is a command-line program that allows you to download/upload/manipulate the ROM and EEPROM contents of AVR microcontrollers using the in-system programming technique (ISP)."
 }
 
 function install_minicom() {
   colorecho "Installing minicom"
   fapt minicom
   add-test-command "minicom --version; minicom --version |& grep 'This program is free software'"
+  add-to-list "minicom,https://doc.ubuntu-fr.org/minicom,Minicom is a text-based serial communication program for Unix-like operating systems."
 }
 
 function install_nasm() {
   colorecho "Installing nasm"
   fapt nasm
   add-test-command "nasm --version"
+  add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity."
 }
 
 function install_wabt() {
   colorecho "Installing wabt"
   fapt wabt
+  add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm), including assembler and disassembler, a syntax checker, and a binary format validator."
 }
 
 function install_ltrace() {
   colorecho "Installing ltrace"
   fapt-noexit ltrace
+  add-to-list "ltrace,https://github.com/dkogan/ltrace,ltrace is a debugging program for Linux and Unix that intercepts and records dynamic library calls that are called by an executed process."
 }
 
 function install_strace() {
   colorecho "Installing strace"
   fapt strace
+  add-to-list "strace,https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process."
 }
 
 function install_stegosuite() {
   colorecho "Installing stegosuite"
   fapt stegosuite
   add-test-command "stegosuite --help"
+  add-to-list "stegosuite,https://github.com/osde8info/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files."
 }
 
 function install_steghide() {
   colorecho "Installing steghide"
   fapt steghide
   add-test-command "steghide --version"
+  add-to-list "steghide,https://github.com/StefanoDeVuono/steghide,steghide is a steganography program that is able to hide data in various kinds of image and audio files."
 }
 
 function install_binwalk() {
   colorecho "Installing binwalk"
   fapt binwalk
   add-test-command "binwalk --help"
+  add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing, reverse engineering, and extracting firmware images."
 }
 
 function install_foremost() {
   colorecho "Installing foremost"
   fapt foremost
   add-test-command "foremost -V"
+  add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers, footers, and internal data structures."
 }
 
 function install_pst-utils() {
   colorecho "Installing pst-utils"
   fapt pst-utils
+  add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
 }
 
 function install_reaver() {
   colorecho "Installing reaver"
   fapt reaver
   add-test-command "reaver --help; reaver --help |& grep 'Tactical Network Solutions'"
+  add-to-list "reaver,https://github.com/t6x/reaver-wps-fork-t6x,reaver is a tool for brute-forcing WPS (Wireless Protected Setup) PINs."
 }
 
 function install_bully() {
   colorecho "Installing bully"
   fapt bully
   add-test-command "bully --version"
+  add-to-list "bully,https://github.com/aanarchyy/bully,bully is a tool for brute-forcing WPS (Wireless Protected Setup) PINs."
 }
 
 function install_cowpatty() {
   colorecho "Installing cowpatty"
   fapt cowpatty
   add-test-command "cowpatty -V"
+  add-to-list "cowpatty,https://github.com/joswr1ght/cowpatty,cowpatty is a tool for offline dictionary attacks against WPA-PSK (Pre-Shared Key) networks."
 }
 
 function install_redis-tools() {
   colorecho "Installing redis-tools"
   fapt redis-tools
   add-test-command "redis-cli --version"
+  add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities, including redis-cli and redis-benchmark."
 }
 
 function install_mariadb-client() {
   colorecho "Installing mariadb-client"
   fapt mariadb-client
   add-test-command "mariadb --version"
+  add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
 }
 
 function install_ssh-audit() {
   colorecho "Installing ssh-audit"
   fapt ssh-audit
   add-test-command "ssh-audit --help; ssh-audit --help |& grep 'verbose output'"
+  add-to-list "ssh-audit,https://github.com/arthepsy/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
 }
 
 function install_xtightvncviewer() {
   colorecho "Installing xtightvncviewer"
   fapt xtightvncviewer
+  add-to-list "xtightvncviewer,https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software."
 }
 
 function install_rdesktop() {
   colorecho "Installing rdesktop"
   fapt rdesktop
+  add-to-list "rdesktop,https://github.com/rdesktop/rdesktop,rdesktop is a client for Remote Desktop Protocol (RDP), used in a number of Microsoft products including Windows NT Terminal Server, Windows 2000 Server, Windows XP and Windows 2003 Server."
 }
 
 function install_dns2tcp() {
   colorecho "Installing dns2tcp"
   fapt dns2tcp
+  add-to-list "dns2tcp,https://github.com/alex-sector/dns2tcp,dns2tcp is a tool for relaying TCP connections over DNS."
 }
 
 function install_traceroute() {
   colorecho "Installing traceroute"
   fapt traceroute
+  add-to-list "traceroute,https://github.com/iputils/iputils,Traceroute is a command which can show you the path a packet of information takes from your computer to one you specify."
 }
 
 function install_wireshark() {
   colorecho "Installing Wireshark"
   DEBIAN_FRONTEND=noninteractive fapt wireshark
   #TODO add-test-command
+  add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
 }
 
 function install_tshark() {
   colorecho "Installing tshark"
   DEBIAN_FRONTEND=noninteractive fapt tshark
   add-test-command "tshark --version"
+  add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
 }
 
 function install_smuggler() {
@@ -3168,6 +3527,7 @@ function install_smuggler() {
   add-aliases smuggler
   add-history smuggler
   add-test-command "smuggler.py --help"
+  add-to-list "smuggler,https://github.com/defparam/smuggler,Smuggler is a tool that helps pentesters and red teamers to smuggle data into and out of the network even when there are multiple layers of security in place."
 }
 
 function install_ldeep() {
@@ -3175,6 +3535,7 @@ function install_ldeep() {
   python3 -m pipx install ldeep
   add-test-command "ldeep --help"
   add-history ldeep
+  add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
 }
 
 function install_genusernames() {
@@ -3184,6 +3545,7 @@ function install_genusernames() {
   sed -i 's/genadname/genusernames/g' /opt/tools/genusernames/genusernames.function
   echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
   add-test-command "genusernames 'john doe'"
+  add-to-list "genusernames,https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."
 }
 
 function install_rusthound() {
@@ -3197,42 +3559,49 @@ function install_rusthound() {
   ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
   add-history rusthound
   add-test-command "rusthound --help"
+  add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,Rusthound is a tool for searching through git repositories for secrets and sensitive information."
 }
 
 function install_certsync() {
   colorecho "Installing certsync"
   python3 -m pipx install git+https://github.com/zblurx/certsync
   add-test-command ""
+  add-to-list "certsync,https://github.com/zblurx/certsync,certsync is a tool that helps you synchronize certificates between two directories."
 }
 
 function install_KeePwn() {
   colorecho "Installing KeePwn"
   python3 -m pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
   add-test-command ""
+  add-to-list "KeePwn,https://github.com/Orange-Cyberdefense/KeePwn,KeePwn is a tool that extracts passwords from KeePass 1.x and 2.x databases."
 }
 
 function install_pre2k() {
   colorecho "Installing pre2k"
   python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
   add-test-command "pre2k --help"
+  add-to-list "pre2k,https://github.com/garrettfoster13/pre2k,pre2k is a tool to check if a Windows domain has any pre-2000 Windows 2000 logon names still in use."
 }
 
 function install_msprobe() {
   colorecho "Installing msprobe"
   python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
   add-test-command "msprobe --help"
+  add-to-list "msprobe,https://github.com/puzzlepeaches/msprobe,msprobe is a tool to identify Microsoft Windows hosts and servers that are running certain services."
 }
 
 function install_masky() {
   colorecho "Installing masky"
   python3 -m pipx install git+https://github.com/Z4kSec/Masky
   add-test-command "masky --help"
+  add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data, such as credit card numbers, in logs and other files."
 }
 
 function install_roastinthemiddle() {
   colorecho "Installing roastinthemiddle"
   python3 -m pipx install git+https://github.com/Tw1sm/RITM
   add-test-command "roastinthemiddle --help"
+  add-to-list "roastinthemiddle,https://github.com/Tw1sm/RITM,RoastInTheMiddle is a tool to intercept and relay NTLM authentication requests."
 }
 
 function install_PassTheCert() {
@@ -3240,6 +3609,53 @@ function install_PassTheCert() {
   git -C /opt/tools/ clone https://github.com/AlmondOffSec/PassTheCert
   add-aliases PassTheCert
   add-test-command "passthecert.py --help"
+  add-to-list "PassTheCert,https://github.com/AlmondOffSec/PassTheCert,PassTheCert is a tool to extract Active Directory user password hashes from a domain controller's local certificate store."
+}
+
+function install_bqm() {
+  colorecho "Installing BQM"
+  gem install bqm --no-wrapper
+  add-history bqm
+  add-test-command "bqm --help"
+}
+
+function install_tls-map() {
+  colorecho "Installing TLS map"
+  gem install tls-map
+  add-history tls-map
+  add-test-command "tls-map --help"
+}
+
+function install_haiti() {
+  colorecho "Installing haiti"
+  gem install haiti-hash
+  add-history haiti
+  add-test-command "haiti --help"
+}
+
+function install_ctf-party() {
+  colorecho "Installing ctf-party"
+  gem install ctf-party
+  add-history ctf-party
+  add-test-command "ctf-party --help"
+}
+
+function install_notify() {
+  colorecho "Installing Notify"
+  go install -v github.com/projectdiscovery/notify/cmd/notify@latest
+  add-history notify
+  add-test-command "notify -h"
+}
+
+function install_firefox() {
+  colorecho "Installing firefox"
+  fapt firefox-esr
+  mkdir /opt/tools/firefox
+  mv /root/sources/firefox/* /opt/tools/firefox/
+  python3 -m pip install -r /opt/tools/firefox/requirements.txt
+  python3 /opt/tools/firefox/setup.py
+  add-test-command "file /root/.mozilla/firefox/*.Exegol"
+  add-test-command "firefox --version"
 }
 
 # Package dedicated to the basic things the env needs
@@ -3350,8 +3766,13 @@ function package_base() {
   fapt perl
   install_exegol-history
   install_logrotate
-  fapt openjdk-17-jre
+  fapt openjdk-11-jre openjdk-11-jdk-headless
+  fapt openjdk-17-jre openjdk-17-jdk-headless
+  ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
+  ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+  update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
   install_chromium
+  install_firefox
 }
 
 # Package dedicated to offensive miscellaneous tools
@@ -3369,6 +3790,8 @@ function package_misc() {
   install_ngrok                   # expose a local development server to the Internet
   install_whatportis              # Search default port number
   install_ascii                   # The ascii table in the shell
+  install_ctf-party               # Enhance and speed up script/exploit writing
+  install_notify                  # Notify is a Go-based assistance package that enables you to stream the output of several tools
 }
 
 # Package dedicated to most used offensive tools
@@ -3433,7 +3856,8 @@ function package_cracking() {
   install_fcrackzip               # Zip cracker
   install_pdfcrack                # PDF cracker
   install_bruteforce-luks         # Find the password of a LUKS encrypted volume
-  install_name-that-hash          # Name-That-Hash, the hash identifier tool
+  install_name-that-hash          # Name-That-Hash, hash identifier tool
+  install_haiti                   # haiti, hash type identifier
 }
 
 # Package dedicated to osint, recon and passive tools
@@ -3512,11 +3936,11 @@ function package_web() {
   install_testssl                 # SSL/TLS scanner
   install_sslscan                 # SSL/TLS scanner
   install_tls-scanner             # SSL/TLS scanner
-  install_                  # SSL/TLS scanner
+  # install_sslyze                  # SSL/TLS scanner FIXME
   install_weevely                 # Awesome secure and light PHP webshell
   install_cloudfail               # Cloudflare misconfiguration detector
   install_eyewitness              # Website screenshoter
-  install_oneforall                       
+  install_oneforall
   install_wafw00f                 # Waf detector
   install_corscanner              # CORS misconfiguration detector
   install_hakrawler               # Web endpoint discovery
@@ -3551,9 +3975,11 @@ function package_web() {
   install_naabu                   # Fast port scanner
   # install_gitrob                # Senstive files reconnaissance in github
   install_burpsuite
-  install_smuggler                # HTTP Request Smuggling scanner  
+  install_smuggler                # HTTP Request Smuggling scanner
   fapt swaks                      # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
   install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
+  install_kraken                  # Kraken is a modular multi-language webshell.
+  install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
 }
 
 # Package dedicated to command & control frameworks
@@ -3618,6 +4044,7 @@ function package_ad() {
   install_pygpoabuse
   install_bloodhound-import       # Python script to import BH data to a neo4j db
   install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
+  install_ldapsearch              # LDAP enumeration utils
   install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
   install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
   install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
@@ -3648,6 +4075,7 @@ function package_ad() {
   install_masky
   install_roastinthemiddle
   install_PassTheCert
+  install_bqm                     # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
 }
 
 # Package dedicated to mobile apps pentest tools
@@ -3710,6 +4138,7 @@ function package_network() {
   install_hping3                  # Discovery tool
   install_masscan                 # Port scanner
   install_nmap                    # Port scanner
+  install_netdiscover             # Active/passive address reconnaissance tool
   install_autorecon               # External recon tool
   install_tcpdump                 # Capture TCP traffic
   install_dnschef                 # Python DNS server
@@ -3774,7 +4203,7 @@ function package_steganography() {
   install_stegolsb                # (including wavsteg)
   install_exif                    # Show and change EXIF information in JPEG files
   install_exiv2                   # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
-  install_hexedit                 # View and edit files in hexadecimal or in ASCII 
+  install_hexedit                 # View and edit files in hexadecimal or in ASCII
 }
 
 # Package dedicated to cloud tools
@@ -3803,7 +4232,7 @@ function package_reverse() {
 # Package dedicated to attack crypto
 function package_crypto() {
   # install_rsactftool            # attack rsa FIXME
-  echo "nothing to install"
+  install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
 }
 
 # Package dedicated to SAST and DAST tools
