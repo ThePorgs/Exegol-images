@@ -57,11 +57,11 @@ jobs:
           echo "image_version=${IMAGE_VERSION}"
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
           echo "build_date=${BUILD_DATE}" >> $GITHUB_OUTPUT
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
       - name: Build and load the image
         if: success()
         uses: docker/build-push-action@v4

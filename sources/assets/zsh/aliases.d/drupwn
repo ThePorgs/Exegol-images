@@ -1,0 +1,1 @@
+alias drupwn='cd /opt/tools/drupwn/ && echo "[*] changed dir : cd /opt/tools/drupwn/" && drupwn'
