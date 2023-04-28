@@ -179,7 +179,7 @@ function install_tailscale() {
 
 function install_nfspy(){
     colorecho "Installing nfspy"
-    git -C /opt/tools/ clone https://github.com/bonsaiviking/NfSpy.git
+    git -C /opt/tools/ --depth 1 clone https://github.com/bonsaiviking/NfSpy.git
     cd /opt/tools/NfSpy
     fapt libfuse-dev
     virtualenv -p /usr/bin/python2 ./venv
