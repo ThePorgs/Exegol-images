@@ -5,6 +5,7 @@ source common.sh
 
 # Package dedicated to command & control frameworks
 function package_c2() {
+    set_go_env
     # install_empire                # Exploit framework FIXME
     # install_starkiller            # GUI for Empire, commenting while Empire install is not fixed
     install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
