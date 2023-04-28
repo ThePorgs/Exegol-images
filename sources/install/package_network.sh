@@ -193,4 +193,5 @@ function install_nfspy(){
     add-test-command "nfspy --help"
     add-test-command "nfspysh --help"
     add-history nfspy
+    add-to-list "nfspy,https://github.com/bonsaiviking/NfSpy,A UID/GID spoofing tool useful for testing unsecure NFSv3 shares"
 }
