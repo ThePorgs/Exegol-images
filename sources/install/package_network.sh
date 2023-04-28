@@ -22,6 +22,7 @@ function package_network() {
     install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
     install_tailscale               # Zero config VPN for building secure networks
     # install_ligolo-ng             # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
+    install_nfspy                   # UID/GID spoofer for NFSv3 abuse
 }
 
 function install_network_apt_tools() {
@@ -174,4 +175,22 @@ function install_tailscale() {
     add-history tailscale
     add-test-command "tailscale --help"
     add-to-list "tailscale,https://github.com/tailscale/tailscale,A secure and easy-to-use VPN alternative that is designed for teams and businesses."
+}
+
+function install_nfspy(){
+    colorecho "Installing nfspy"
+    git -C /opt/tools/ clone https://github.com/bonsaiviking/NfSpy.git
+    cd /opt/tools/NfSpy
+    fapt libfuse-dev
+    virtualenv -p /usr/bin/python2 ./venv
+    ./venv/bin/python2 -m pip install fuse-python
+    ./venv/bin/python2 setup.py install
+    chmod +x scripts/*
+    sed -i "s#/usr/bin/env python#/opt/tools/NfSpy/venv/bin/python2#" /opt/tools/NfSpy/scripts/nfspy
+    sed -i "s#/usr/bin/env python#/opt/tools/NfSpy/venv/bin/python2#" /opt/tools/NfSpy/scripts/nfspysh
+    ln -v -s /opt/tools/NfSpy/scripts/nfspy /opt/tools/bin/nfspy
+    ln -v -s /opt/tools/NfSpy/scripts/nfspysh /opt/tools/bin/nfspysh
+    add-test-command "nfspy --help"
+    add-test-command "nfspysh --help"
+    add-history nfspy
 }

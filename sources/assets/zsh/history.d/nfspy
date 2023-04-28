@@ -1,0 +1,2 @@
+nfspy -o server=192.168.1.124:/home,hide,allow_other,ro,intr /mnt
+nfspysh -o server=127.0.0.1:/home/miller/nfs
