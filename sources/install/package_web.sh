@@ -71,6 +71,7 @@ function package_web() {
     install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
     install_kraken                  # Kraken is a modular multi-language webshell.
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
+    install_badsecrets              # A tool for identifying weak secrets used in common frameworks
 }
 
 function package_web_configure() {
@@ -682,4 +683,17 @@ function install_soapui() {
     tar xvf /tmp/SoapUI.tar.gz -C /opt/tools/SoapUI/ --strip=1
     add-aliases soapui
     add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
+}
+
+function install_badsecrets() {
+  colorecho "Installing badsecrets"
+  git -C /opt/tools/ clone https://github.com/blacklanternsecurity/badsecrets.git
+  cd /opt/tools/badsecrets
+  python3 -m venv venv
+  # Using a venv to avoid conflicts with current versions of pycrypto installed 
+  ./venv/bin/python3 -m pip install --no-cache-dir -r requirements.txt
+  ./venv/bin/python3 -m pip install badsecrets
+  add-aliases badsecrets
+  add-history badsecrets
+  add-test-command "badsecrets --help"
 }
