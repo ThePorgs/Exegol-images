@@ -98,7 +98,11 @@ function install_nmap() {
 
 function install_autorecon() {
     colorecho "Installing autorecon"
-    fapt wkhtmltopdf
+    git -C /opt/tools/ clone --depth=1 https://gitlab.com/kalilinux/packages/oscanner.git
+    ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
+    git -C /opt/tools clone --depth=1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
+    ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
+    fapt dnsrecon wkhtmltopdf
     python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
     add-history autorecon
     # test below cannot work because test runner cannot have a valid display
