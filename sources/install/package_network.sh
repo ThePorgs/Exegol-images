@@ -21,7 +21,7 @@ function package_network() {
     install_dnsx                    # Fast and multi-purpose DNS toolkit
     install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
     install_tailscale               # Zero config VPN for building secure networks
-    # install_ligolo-ng             # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
+    install_ligolo-ng               # Tunneling tool that uses a TUN interface
 }
 
 function install_network_apt_tools() {
@@ -170,6 +170,7 @@ function install_shuffledns() {
 }
 
 function install_tailscale() {
+    colorecho "Installing tailscale"
     curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
     curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
     apt-get update
@@ -178,4 +179,26 @@ function install_tailscale() {
     add-history tailscale
     add-test-command "tailscale --help"
     add-to-list "tailscale,https://github.com/tailscale/tailscale,A secure and easy-to-use VPN alternative that is designed for teams and businesses."
+}
+
+function install_ligolo-ng() {
+    colorecho "Installing ligolo-ng"
+    # Waiting for the issue to be resolved
+    # https://github.com/nicocha30/ligolo-ng/issues/32
+    mkdir /tmp/ligolo
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/latest/download/ligolo-ng_proxy_0.4.3_Linux_64bit.tar.gz"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/latest/download/ligolo-ng_proxy_0.4.3_Linux_ARM64.tar.gz"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    tar -xvf /tmp/ligolo/proxy.tar.gz -C /tmp/ligolo
+    mv /tmp/ligolo/proxy /opt/tools/bin/ligolo-ng
+    rm -rf /tmp/ligolo
+    add-history ligolo-ng
+    add-test-command "ligolo-ng --help"
+    add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."
 }
