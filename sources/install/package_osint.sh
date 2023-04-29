@@ -15,7 +15,7 @@ function package_osint() {
     install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
     install_holehe                  # Check if the mail is used on different sites
     install_simplyemail             # Gather emails
-    # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
+    install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
     install_h8mail                  # Email OSINT & Password breach hunting tool
     install_infoga                  # Gathering email accounts informations
     install_buster                  # An advanced tool for email reconnaissance
@@ -143,6 +143,20 @@ function install_simplyemail() {
     add-history simplyemail
     add-test-command "SimplyEmail -l"
     add-to-list "simplyemail,https://github.com/SimplySecurity/SimplyEmail,a scriptable command line tool for sending emails"
+}
+
+function install_theharvester() {
+    colorecho "Installing theHarvester"
+    git -C /opt/tools/ clone --depth=1 https://github.com/laramies/theHarvester
+    cd /opt/tools/theHarvester
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    # The tool needs access to the proxies.yaml file in the folder.
+    ln -s /opt/tools/theHarvester /usr/local/etc/
+    add-aliases theharvester
+    add-history theharvester
+    add-test-command "theHarvester.py --help"
+    add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts, subdomain names, virtual hosts, open ports/ banners, and employee names from different public sources"
 }
 
 function install_h8mail() {
