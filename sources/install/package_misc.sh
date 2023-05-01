@@ -3,20 +3,6 @@
 
 source common.sh
 
-# Package dedicated to offensive miscellaneous tools
-function package_misc() {
-    set_go_env
-    install_misc_apt_tools
-    install_goshs           # Web uploader/downloader page
-    install_searchsploit    # Exploitdb local search engine
-    install_shellerator     # Reverse shell generator
-    install_uberfile        # file uploader/downloader commands generator
-    install_arsenal         # Cheatsheets tool
-    install_trilium         # notes taking tool
-    install_ngrok           # expose a local development server to the Internet
-    install_whatportis      # Search default port number
-}
-
 function package_misc_configure() {
     configure_searchsploit
     configure_trilium
@@ -130,4 +116,18 @@ function install_ngrok() {
     add-history ngrok
     add-test-command "ngrok version"
     add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet"
+}
+
+# Package dedicated to offensive miscellaneous tools
+function package_misc() {
+    set_go_env
+    install_misc_apt_tools
+    install_goshs           # Web uploader/downloader page
+    install_searchsploit    # Exploitdb local search engine
+    install_shellerator     # Reverse shell generator
+    install_uberfile        # file uploader/downloader commands generator
+    install_arsenal         # Cheatsheets tool
+    install_trilium         # notes taking tool
+    install_ngrok           # expose a local development server to the Internet
+    install_whatportis      # Search default port number
 }

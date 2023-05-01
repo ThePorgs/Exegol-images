@@ -9,95 +9,6 @@ function update() {
     apt-get -y update && apt-get -y install apt-utils dialog && apt-get -y upgrade && apt-get -y autoremove && apt-get clean
 }
 
-# Package dedicated to the basic things the env needs
-function package_base() {
-    update
-    colorecho "Installing apt-fast for faster dep installs"
-    apt-get install -y curl sudo wget
-    /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
-    deploy_exegol
-    install_exegol-history
-    fapt software-properties-common
-    add-apt-repository contrib
-    add-apt-repository non-free
-    apt-get update
-    colorecho "Starting main programs install"
-    fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 python2 wget \
-    gnupg2 python2-dev python3-dev python3-venv libffi-dev python3-pip zsh asciinema \
-    python-setuptools python3-setuptools npm gem automake autoconf make cmake time gcc g++ file lsof \
-    less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
-    dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
-    screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev bundler \
-    nim perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
-    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev
-    
-    fapt-history dnsutils samba ssh snmp faketime
-    fapt-aliases php python3 grc emacs-nox xsel fzf
-
-    install_rust_cargo
-
-    ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
-    ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
-    update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
-
-    ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
-    install_python-pip                                  # Pip. Should we set pip2 to default?
-    python3 -m pip install --upgrade pip
-    filesystem
-    install_go                                          # Golang language
-    set_go_env
-    install_locales
-    install_ohmyzsh                                     # Awesome shell
-    python3 -m pip install wheel
-    python -m pip install wheel
-    install_pipx
-    add-test-command "fzf --version"
-    add-history curl
-    install_yarn
-    install_ultimate_vimrc                              # Make vim usable OOFB
-    install_mdcat                                       # cat markdown files
-    add-test-command "batcat --version"
-    DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
-    install_gf                                          # wrapper around grep
-    fapt-noexit rar                                     # rar (Only AMD)
-    install_firefox
-
-    cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
-
-    # openvpn
-    # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
-    line=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i ${line}'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
-
-    line=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i ${line}'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
-    line=$(($line + 1))
-    sed -i ${line}'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
-    add-test-command "openvpn --version"
-
-    # logrotate
-    mv /root/sources/assets/logrotate/* /etc/logrotate.d/
-    chmod 644 /etc/logrotate.d/*
-
-    # tmux
-    cp -v /root/sources/assets/tmux/tmux.conf ~/.tmux.conf
-    touch ~/.hushlogin
-
-    # TLDR
-    mkdir -p ~/.local/share/tldr
-    tldr -u
-
-    # NVM (install in conctext)
-    zsh -c "source ~/.zshrc && nvm install node"
-
-    # FZF
-    touch /usr/share/doc/fzf/examples/key-bindings.zsh
-
-    # Set Global config path to vendor
-    # All programs using bundle will store their deps in vendor/
-    bundle config path vendor/
-}
-
 function install_exegol-history() {
     colorecho "Installing Exegol-history"
     #  git -C /opt/tools/ clone https://github.com/ThePorgs/Exegol-history
@@ -269,4 +180,93 @@ function post_install_clean() {
     updatedb
     rm -rfv /tmp/*
     echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
+}
+
+# Package dedicated to the basic things the env needs
+function package_base() {
+    update
+    colorecho "Installing apt-fast for faster dep installs"
+    apt-get install -y curl sudo wget
+    /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
+    deploy_exegol
+    install_exegol-history
+    fapt software-properties-common
+    add-apt-repository contrib
+    add-apt-repository non-free
+    apt-get update
+    colorecho "Starting main programs install"
+    fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 python2 wget \
+    gnupg2 python2-dev python3-dev python3-venv libffi-dev python3-pip zsh asciinema \
+    python-setuptools python3-setuptools npm gem automake autoconf make cmake time gcc g++ file lsof \
+    less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
+    dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
+    screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev bundler \
+    nim perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
+    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev
+
+    fapt-history dnsutils samba ssh snmp faketime
+    fapt-aliases php python3 grc emacs-nox xsel fzf
+
+    install_rust_cargo
+
+    ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
+    ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+    update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
+
+    ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
+    install_python-pip                                  # Pip. Should we set pip2 to default?
+    python3 -m pip install --upgrade pip
+    filesystem
+    install_go                                          # Golang language
+    set_go_env
+    install_locales
+    install_ohmyzsh                                     # Awesome shell
+    python3 -m pip install wheel
+    python -m pip install wheel
+    install_pipx
+    add-test-command "fzf --version"
+    add-history curl
+    install_yarn
+    install_ultimate_vimrc                              # Make vim usable OOFB
+    install_mdcat                                       # cat markdown files
+    add-test-command "batcat --version"
+    DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
+    install_gf                                          # wrapper around grep
+    fapt-noexit rar                                     # rar (Only AMD)
+    install_firefox
+
+    cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
+
+    # openvpn
+    # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
+    line=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+    sed -i ${line}'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+    line=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+    sed -i ${line}'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+    line=$(($line + 1))
+    sed -i ${line}'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+    add-test-command "openvpn --version"
+
+    # logrotate
+    mv /root/sources/assets/logrotate/* /etc/logrotate.d/
+    chmod 644 /etc/logrotate.d/*
+
+    # tmux
+    cp -v /root/sources/assets/tmux/tmux.conf ~/.tmux.conf
+    touch ~/.hushlogin
+
+    # TLDR
+    mkdir -p ~/.local/share/tldr
+    tldr -u
+
+    # NVM (install in conctext)
+    zsh -c "source ~/.zshrc && nvm install node"
+
+    # FZF
+    touch /usr/share/doc/fzf/examples/key-bindings.zsh
+
+    # Set Global config path to vendor
+    # All programs using bundle will store their deps in vendor/
+    bundle config path vendor/
 }

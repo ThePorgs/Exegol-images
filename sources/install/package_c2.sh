@@ -3,17 +3,6 @@
 
 source common.sh
 
-# Package dedicated to command & control frameworks
-function package_c2() {
-    set_go_env
-    # install_empire                # Exploit framework FIXME
-    # install_starkiller            # GUI for Empire, commenting while Empire install is not fixed
-    install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
-    install_metasploit              # Offensive framework
-    install_routersploit            # Exploitation Framework for Embedded Devices
-    install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
-}
-
 function package_c2_configure() {
     configure_metasploit
 }
@@ -63,4 +52,15 @@ function install_sliver() {
     cp sliver-* /opt/tools/bin
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
+}
+
+# Package dedicated to command & control frameworks
+function package_c2() {
+    set_go_env
+    # install_empire                # Exploit framework FIXME
+    # install_starkiller            # GUI for Empire, commenting while Empire install is not fixed
+    install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
+    install_metasploit              # Offensive framework
+    install_routersploit            # Exploitation Framework for Embedded Devices
+    install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
 }

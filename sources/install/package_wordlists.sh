@@ -3,15 +3,6 @@
 
 source common.sh
 
-# Package dedicated to the installation of wordlists and tools like wl generators
-function package_wordlists() {
-    install_wordlists_apt_tools
-    install_seclists                # Awesome wordlists
-    install_pass_station            # Default credentials database
-    install_username-anarchy        # Generate possible usernames based on heuristics
-    install_genusernames
-}
-
 function install_wordlists_apt_tools() {
     fapt crunch cupp cewl
 
@@ -86,4 +77,13 @@ function install_genusernames() {
 function configure_genusernames() {
     colorecho "Configuring genusernames"
     echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
+}
+
+# Package dedicated to the installation of wordlists and tools like wl generators
+function package_wordlists() {
+    install_wordlists_apt_tools
+    install_seclists                # Awesome wordlists
+    install_pass_station            # Default credentials database
+    install_username-anarchy        # Generate possible usernames based on heuristics
+    install_genusernames
 }

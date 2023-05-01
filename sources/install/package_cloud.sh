@@ -3,13 +3,6 @@
 
 source common.sh
 
-# Package dedicated to cloud tools
-function package_cloud() {
-    install_kubectl
-    install_awscli
-    install_scout       # Multi-Cloud Security Auditing Tool
-}
-
 function install_kubectl(){
     colorecho "Installing kubectl"
     mkdir -p /opt/tools/kubectl
@@ -56,4 +49,11 @@ function install_scout() {
     python3 -m pipx install scoutsuite
     add-test-command "scout --help"
     add-to-list "scout,TODO,TODO"
+}
+
+# Package dedicated to cloud tools
+function package_cloud() {
+    install_kubectl
+    install_awscli
+    install_scout       # Multi-Cloud Security Auditing Tool
 }

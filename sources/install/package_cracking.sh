@@ -3,14 +3,6 @@
 
 source common.sh
 
-# Package dedicated to offline cracking/bruteforcing tools
-function package_cracking() {
-    install_cracking_apt_tools
-    install_john                    # Password cracker
-    install_name-that-hash          # Name-That-Hash, the hash identifier tool
-    install_haiti                   # haiti, hash type identifier
-}
-
 function install_cracking_apt_tools() {
     fapt hashcat fcrackzip pdfcrack bruteforce-luks
     
@@ -61,4 +53,12 @@ function install_haiti() {
     add-history haiti
     add-test-command "haiti --help"
     add-to-list "haiti,https://github.com/noraj/haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
+}
+
+# Package dedicated to offline cracking/bruteforcing tools
+function package_cracking() {
+    install_cracking_apt_tools
+    install_john                    # Password cracker
+    install_name-that-hash          # Name-That-Hash, the hash identifier tool
+    install_haiti                   # haiti, hash type identifier
 }
