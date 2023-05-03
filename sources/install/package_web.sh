@@ -687,7 +687,7 @@ function install_soapui() {
 
 function install_badsecrets() {
   colorecho "Installing badsecrets"
-  git -C /opt/tools/ --depth 1 clone https://github.com/blacklanternsecurity/badsecrets.git
+  git -C /opt/tools/ clone --depth=1 https://github.com/blacklanternsecurity/badsecrets.git
   cd /opt/tools/badsecrets
   python3 -m venv venv
   # Using a venv to avoid conflicts with current versions of pycrypto installed 
