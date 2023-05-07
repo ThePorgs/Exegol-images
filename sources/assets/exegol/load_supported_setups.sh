@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function init() {
-    # Deploying the /opt/my-resources/ folder if not already there
+  # Deploying the /opt/my-resources/ folder if not already there
   if [ -d "$MY_Root_PATH" ]; then
     # Setup basic structure
     [ -d "$MY_Setup_PATH" ] || (mkdir "$MY_Setup_PATH" && chmod 770 "$MY_Setup_PATH")
@@ -19,7 +19,7 @@ function deploy_zsh() {
   ##### ZSH deployment
   if [ -d "$MY_Setup_PATH/zsh" ]; then
     # TODO remove fallback 'cp' command
-    grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/zsh/history" >> /root/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_Setup_PATH/zsh/history"
+    grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/zsh/history" >>/root/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_Setup_PATH/zsh/history"
   else
     mkdir -p /opt/my-resources/setup/zsh
     cp --preserve=mode /.exegol/skel/zsh/* "$MY_Setup_PATH/zsh/"
@@ -43,7 +43,7 @@ function deploy_vim() {
     [ -f "$MY_Setup_PATH/vim/vimrc" ] && cp "$MY_Setup_PATH/vim/vimrc" ~/.vimrc
     # Copy every subdir configs to ~/.vim directory
     for path in "$MY_Setup_PATH/vim/autoload" "$MY_Setup_PATH/vim/backup" "$MY_Setup_PATH/vim/colors" "$MY_Setup_PATH/vim/plugged" "$MY_Setup_PATH/vim/bundle"; do
-      [ "$(ls -A $path)" ] && mkdir -p ~/.vim && cp -rf $path ~/.vim
+      [ "$(ls -A "$path")" ] && mkdir -p ~/.vim && cp -rf "$path" ~/.vim
     done
   else
     # Create supported directories struct
@@ -59,20 +59,24 @@ function deploy_apt() {
     cp "$MY_Setup_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
     # Register custom repo's GPG keys
     mkdir /tmp/aptkeys
-    grep -vE "^(\s*|#.*)$" <$MY_Setup_PATH/apt/keys.list | while IFS= read -r key_url; do
+    grep -vE "^(\s*|#.*)$" <"$MY_Setup_PATH/apt/keys.list" | while IFS= read -r key_url; do
       wget -nv "$key_url" -O "/tmp/aptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
     if [ "$(ls /tmp/aptkeys/*.key 2>/dev/null)" ]; then
-      gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key && \
-      gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes && \
-      chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
+      gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key &&
+        gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
+        chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
     fi
     rm -r /tmp/aptkeys
-    # Update package list from repos
-    apt-get update
-    # Install every packages listed in the file
-    # shellcheck disable=SC2046
-    apt-get install -y $(grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/apt/packages.list" | tr "\n" " ")
+    install_list=$(grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/apt/packages.list" | tr "\n" " ")
+    # Test if there is some package to install
+    if [ -n "$install_list" ]; then
+      # Update package list from repos (only if there is some package to install
+      apt-get update
+      # Install every packages listed in the file
+      # shellcheck disable=SC2086
+      apt-get install -y $install_list
+    fi
   else
     # Import file template
     mkdir "$MY_Setup_PATH/apt" && chmod 770 "$MY_Setup_PATH/apt"
@@ -96,7 +100,7 @@ function run_user_setup() {
   # Executing user setup (or create the file)
   if [ -f "$MY_Setup_PATH/load_user_setup.sh" ]; then
     echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading user setup ($MY_Setup_PATH/load_user_setup.sh) ===="
-    $MY_Setup_PATH/load_user_setup.sh
+    "$MY_Setup_PATH"/load_user_setup.sh
   else
     echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== User setup loader missing, deploying it ($MY_Setup_PATH/load_user_setup.sh) ===="
     cp /.exegol/skel/load_user_setup.sh "$MY_Setup_PATH/load_user_setup.sh"
@@ -119,6 +123,7 @@ function deploy_firefox_addons() {
     else
       cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_Setup_PATH/firefox/addons.txt"
     fi
+    # shellcheck disable=SC2086
     python3 /opt/tools/firefox/user-setup.py $ADDON_LIST $ADDON_FOLDER
   else
     mkdir --parents "$MY_Setup_PATH/firefox/addons" && chmod 770 -R "$MY_Setup_PATH/firefox/addons"
