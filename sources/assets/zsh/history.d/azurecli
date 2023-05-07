@@ -1,0 +1,1 @@
+az ad sp show --id $TENANT_ID

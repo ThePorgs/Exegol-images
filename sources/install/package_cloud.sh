@@ -51,9 +51,18 @@ function install_scout() {
     add-to-list "scout,TODO,TODO"
 }
 
+function install_azurecli(){
+  colorecho "Installing Azure cli"
+  fapt azure-cli
+  add-history azurecli 
+  add-test-command "az version"
+  add-to-list "azurecli,https://learn.microsoft.com/en-us/cli/azure/,Command-line interface for Azure."
+}
+
 # Package dedicated to cloud tools
 function package_cloud() {
     install_kubectl
     install_awscli
     install_scout       # Multi-Cloud Security Auditing Tool
+    install_azurecli                # Tool made by Microsoft to use Azure API 
 }
