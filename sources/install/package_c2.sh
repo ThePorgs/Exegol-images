@@ -3,10 +3,6 @@
 
 source common.sh
 
-function package_c2_configure() {
-    configure_metasploit
-}
-
 function install_pwncat() {
     colorecho "Installing pwncat"
     python3 -m pipx install pwncat-cs
@@ -63,4 +59,8 @@ function package_c2() {
     install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
+}
+
+function package_c2_configure() {
+    configure_metasploit
 }

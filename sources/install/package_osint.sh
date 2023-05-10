@@ -3,10 +3,6 @@
 
 source common.sh
 
-function package_osint_configure() {
-    configure_tor
-}
-
 function configure_tor() {
     echo 'SOCKSPort 127.0.0.1:9050' >> /etc/tor/torrc
 }
@@ -383,4 +379,8 @@ function package_osint() {
     install_gron                    # JSON parser
     # install_ignorant              # holehe but for phone numbers
     install_trevorspray             # modular password sprayer with threading, SSH proxying, loot modules, and more!
+}
+
+function package_osint_configure() {
+    configure_tor
 }

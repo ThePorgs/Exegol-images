@@ -20,15 +20,6 @@ function install_ad_apt_tools() {
     add-to-list "nbtscan,https://github.com/charlesroelli/nbtscan,NBTscan is a program for scanning IP networks for NetBIOS name information."
 }
 
-function package_ad_configure() {
-    configure_responder
-    configure_crackmapexec
-    configure_bloodhound
-    configure_impacket
-    configure_krbrelayx
-    configure_powershell
-}
-
 function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth=1 https://github.com/lgandx/Responder
@@ -946,4 +937,13 @@ function package_ad() {
     install_PassTheCert
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
+}
+
+function package_ad_configure() {
+    configure_responder
+    configure_crackmapexec
+    configure_bloodhound
+    configure_impacket
+    configure_krbrelayx
+    configure_powershell
 }

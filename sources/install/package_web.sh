@@ -3,13 +3,6 @@
 
 source common.sh
 
-function package_web_configure() {
-    set_go_env
-    configure_nuclei
-    configure_moodlescan
-    configure_clusterd
-}
-
 function install_web_apt_tools() {
     fapt dirb wfuzz sqlmap sslscan weevely whatweb prips swaks
   
@@ -699,4 +692,11 @@ function package_web() {
     install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
     install_kraken                  # Kraken is a modular multi-language webshell.
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
+}
+
+function package_web_configure() {
+    set_go_env
+    configure_nuclei
+    configure_moodlescan
+    configure_clusterd
 }
