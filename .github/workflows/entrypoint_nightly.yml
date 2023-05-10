@@ -7,7 +7,6 @@ on:
     paths-ignore:
       - ".github/**"
       - "**.md"
-  workflow_dispatch:
 
 env:
   # intermediary registry in which architecture-specific images must be pushed
