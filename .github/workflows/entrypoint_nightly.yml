@@ -5,8 +5,10 @@ on:
     branches:
       - dev
     paths-ignore:
-#      - ".github/**"
+      - ".github/**"
       - "**.md"
+  # enabling manual trigger
+  workflow_dispatch:
 
 env:
   # intermediary registry in which architecture-specific images must be pushed
