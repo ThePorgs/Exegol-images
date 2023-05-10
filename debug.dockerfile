@@ -39,7 +39,6 @@ RUN ./entrypoint.sh install_python3
 #RUN ./entrypoint.sh install_kerbrute
 RUN ./entrypoint.sh add-test-command "whoami --version"
 RUN ./entrypoint.sh add-test-command "fail_command"
-
 RUN ./entrypoint.sh post_install_clean
 
 WORKDIR /workspace
