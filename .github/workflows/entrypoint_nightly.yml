@@ -7,7 +7,6 @@ on:
     paths-ignore:
       - ".github/**"
       - "**.md"
-  # enabling manual trigger
   workflow_dispatch:
 
 env:
