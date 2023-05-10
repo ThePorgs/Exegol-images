@@ -14,7 +14,7 @@ LABEL org.exegol.src_repository="https://github.com/ThePorgs/Exegol-images"
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 
-ADD . sources /root/sources
+ADD . sources /root/sources/
 
 WORKDIR /root/sources/install
 
