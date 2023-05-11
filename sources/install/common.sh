@@ -122,7 +122,6 @@ function install_pipx_tool() {
     fi
  }
 
-
 function install_apt_tool() {
     colorecho "Installing $1 with apt"
     fapt $1
