@@ -106,6 +106,7 @@ function install_firefox() {
     mv /root/sources/assets/firefox/* /opt/tools/firefox/
     python3 -m pip install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/setup.py
+    add-history firefox
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
     add-test-command "firefox --version"
 }
