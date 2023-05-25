@@ -5,13 +5,13 @@ source common.sh
 
 function install_web_apt_tools() {
     fapt dirb wfuzz sqlmap sslscan weevely whatweb prips swaks
-  
+
     add-history dirb
     add-history wfuzz
     add-history sqlmap
     add-history prips
     add-history swaks
-  
+
     add-test-command "dirb | grep '<username:password>'" # Web fuzzer
     add-test-command "wfuzz --help"                      # Web fuzzer (second favorites) FIXME Pycurl is not compiled against Openssl
     add-test-command "sqlmap --version"                  # SQL injection scanner
@@ -41,7 +41,8 @@ function install_gobuster() {
 
 function install_kiterunner() {
     colorecho "Installing kiterunner (kr)"
-    git -C /opt/tools/ clone --depth=1 https://github.com/assetnote/kiterunner.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/assetnote/kiterunner.git
+    rm -rf /opt/tools/kiterunner/.git
     cd /opt/tools/kiterunner
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-large.kite.tar.gz
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-small.kite.tar.gz
@@ -77,7 +78,8 @@ function install_dirsearch() {
 
 function install_ssrfmap() {
     colorecho "Installing SSRFmap"
-    git -C /opt/tools/ clone --depth=1 https://github.com/swisskyrepo/SSRFmap
+    git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
+    rm -rf /opt/tools/SSRFmap/.git
     cd /opt/tools/SSRFmap
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -88,7 +90,8 @@ function install_ssrfmap() {
 
 function install_gopherus() {
     colorecho "Installing gopherus"
-    git -C /opt/tools/ clone --depth=1 https://github.com/tarunkant/Gopherus
+    git -C /opt/tools/ clone --depth 1 https://github.com/tarunkant/Gopherus
+    rm -rf /opt/tools/Gopherus/.git
     cd /opt/tools/Gopherus
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install argparse requests
@@ -100,7 +103,8 @@ function install_gopherus() {
 function install_nosqlmap() {
     # TODO : Fix this tool - Python2 or python3 ?
     colorecho "Installing NoSQLMap"
-    git -C /opt/tools clone --depth=1 https://github.com/codingo/NoSQLMap.git
+    git -C /opt/tools clone --depth 1 https://github.com/codingo/NoSQLMap.git
+    rm -rf /opt/tools/NoSQLMap/.git
     cd /opt/tools/NoSQLMap
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 setup.py install
@@ -111,7 +115,8 @@ function install_nosqlmap() {
 
 function install_xsstrike() {
     colorecho "Installing XSStrike"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/XSStrike.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/XSStrike.git
+    rm -rf /opt/tools/XSStrike/.git
     cd /opt/tools/XSStrike
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -137,7 +142,8 @@ function install_xsrfprobe() {
 
 function install_bolt() {
     colorecho "Installing Bolt"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/Bolt.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/Bolt.git
+    rm -rf /opt/tools/Bolt/.git
     cd /opt/tools/Bolt
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -150,7 +156,8 @@ function install_kadimus() {
     colorecho "Installing kadimus"
     # TODO : Check if deps are already installed
     fapt libcurl4-openssl-dev libpcre3-dev libssh-dev
-    git -C /opt/tools/ clone --depth=1 https://github.com/P0cL4bs/Kadimus
+    git -C /opt/tools/ clone --depth 1 https://github.com/P0cL4bs/Kadimus
+    rm -rf /opt/tools/Kadimus/.git
     cd /opt/tools/Kadimus
     make
     add-aliases kadimus
@@ -161,7 +168,8 @@ function install_kadimus() {
 
 function install_fuxploider() {
     colorecho "Installing fuxploider"
-    git -C /opt/tools/ clone --depth=1 https://github.com/almandin/fuxploider.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
+    rm -rf /opt/tools/fuxploider/.git
     cd /opt/tools/fuxploider
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -172,7 +180,8 @@ function install_fuxploider() {
 
 function install_joomscan(){
     colorecho "Installing joomscan"
-    git -C /opt/tools/ clone --depth=1 https://github.com/rezasp/joomscan
+    git -C /opt/tools/ clone --depth 1 https://github.com/rezasp/joomscan
+    rm -rf /opt/tools/joomscan/.git
     add-aliases joomscan
     add-history joomscan
     add-test-command "joomscan --version"
@@ -203,6 +212,7 @@ function install_droopescan() {
 function install_drupwn() {
     colorecho "Installing drupwn"
     git -C /opt/tools/ clone https://github.com/immunIT/drupwn
+    rm -rf /opt/tools/drupwn/.git
     python3 -m pipx install git+https://github.com/immunIT/drupwn
     add-test-command "drupwn --help"
     add-aliases drupwn
@@ -222,7 +232,8 @@ function install_cmsmap() {
 
 function install_moodlescan() {
     colorecho "Installing moodlescan"
-    git -C /opt/tools/ clone --depth=1 https://github.com/inc0d3/moodlescan.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/inc0d3/moodlescan.git
+    rm -rf /opt/tools/moodlescan/.git
     cd /opt/tools/moodlescan
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -241,7 +252,8 @@ function install_testssl() {
     colorecho "Installing testssl"
     # TODO : Check if deps are already installed
     fapt bsdmainutils
-    git -C /opt/tools/ clone --depth=1 https://github.com/drwetter/testssl.sh.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
+    rm -rf /opt/tools/testssl.sh/.git
     add-aliases testssl
     add-test-command "testssl --help"
     add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
@@ -251,6 +263,7 @@ function install_tls-scanner() {
     colorecho "Installing TLS-Scanner"
     fapt maven
     git -C /opt/tools/ clone https://github.com/tls-attacker/TLS-Scanner
+    rm -rf /opt/tools/TLS-Scanner/.git
     cd /opt/tools/TLS-Scanner
     git submodule update --init --recursive
     mvn clean package -DskipTests=true
@@ -262,7 +275,8 @@ function install_tls-scanner() {
 
 function install_cloudfail() {
     colorecho "Installing CloudFail"
-    git -C /opt/tools/ clone --depth=1 https://github.com/m0rtem/CloudFail
+    git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
+    rm -rf /opt/tools/CloudFail/.git
     cd /opt/tools/CloudFail
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -274,7 +288,8 @@ function install_cloudfail() {
 
 function install_eyewitness() {
     colorecho "Installing EyeWitness"
-    git -C /opt/tools/ clone --depth=1 https://github.com/FortyNorthSecurity/EyeWitness
+    git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
+    rm -rf /opt/tools/EyeWitness/.git
     cd /opt/tools/EyeWitness
     python3 -m venv ./venv
     source ./venv/bin/activate
@@ -287,7 +302,8 @@ function install_eyewitness() {
 
 function install_oneforall() {
     colorecho "Installing OneForAll"
-    git -C /opt/tools/ clone --depth=1 https://github.com/shmilylty/OneForAll.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
+    rm -rf /opt/tools/OneForAll/.git
     cd /opt/tools/OneForAll
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -305,7 +321,8 @@ function install_wafw00f() {
 
 function install_corscanner() {
     colorecho "Installing CORScanner"
-    git -C /opt/tools/ clone --depth=1 https://github.com/chenjj/CORScanner.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/chenjj/CORScanner.git
+    rm -rf /opt/tools/CORScanner/.git
     cd /opt/tools/CORScanner
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -333,7 +350,8 @@ function install_gowitness() {
 
 function install_linkfinder() {
     colorecho "Installing LinkFinder"
-    git -C /opt/tools/ clone --depth=1 https://github.com/GerbenJavado/LinkFinder.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/GerbenJavado/LinkFinder.git
+    rm -rf /opt/tools/LinkFinder/.git
     cd /opt/tools/LinkFinder
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -360,7 +378,8 @@ function install_updog() {
 
 function install_jwt_tool() {
     colorecho "Installing JWT tool"
-    git -C /opt/tools/ clone --depth=1 https://github.com/ticarpi/jwt_tool
+    git -C /opt/tools/ clone --depth 1 https://github.com/ticarpi/jwt_tool
+    rm -rf /opt/tools/jwt_tool/.git
     cd /opt/tools/jwt_tool
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -385,7 +404,8 @@ function install_git-dumper() {
 
 function install_gittools() {
     colorecho "Installing GitTools"
-    git -C /opt/tools/ clone --depth=1 https://github.com/internetwache/GitTools.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/internetwache/GitTools.git
+    rm -rf /opt/tools/GitTools/.git
     cd /opt/tools/GitTools/Finder
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -407,7 +427,8 @@ function install_ysoserial() {
 
 function install_phpggc() {
     colorecho "Installing phpggc"
-    git -C /opt/tools clone --depth=1 https://github.com/ambionics/phpggc.git
+    git -C /opt/tools clone --depth 1 https://github.com/ambionics/phpggc.git
+    rm -rf /opt/tools/phpggc/.git
     add-aliases phpggc
     add-test-command "phpggc --help"
     add-to-list "phpggc,https://github.com/ambionics/phpggc,Exploit generation tool for the PHP platform."
@@ -415,7 +436,8 @@ function install_phpggc() {
 
 function install_symfony-exploits(){
     colorecho "Installing symfony-exploits"
-    git -C /opt/tools clone --depth=1 https://github.com/ambionics/symfony-exploits
+    git -C /opt/tools clone --depth 1 https://github.com/ambionics/symfony-exploits
+    rm -rf /opt/tools/symfony-exploits/.git
     add-aliases symfony-exploits
     add-test-command "secret_fragment_exploit.py --help"
     add-to-list "symfony-exploits,https://github.com/ambionics/symfony-exploits,Collection of Symfony exploits and PoCs."
@@ -423,7 +445,8 @@ function install_symfony-exploits(){
 
 function install_jdwp_shellifier(){
     colorecho "Installing jdwp_shellifier"
-    git -C /opt/tools/ clone --depth=1 https://github.com/IOActive/jdwp-shellifier
+    git -C /opt/tools/ clone --depth 1 https://github.com/IOActive/jdwp-shellifier
+    rm -rf /opt/tools/jdwp-shellifier/.git
     add-aliases jdwp-shellifier
     add-test-command "jdwp-shellifier.py --help"
     add-to-list "jdwp,https://github.com/IOActive/jdwp-shellifier,This exploitation script is meant to be used by pentesters against active JDWP service, in order to gain Remote Code Execution."
@@ -431,7 +454,8 @@ function install_jdwp_shellifier(){
 
 function install_httpmethods() {
     colorecho "Installing httpmethods"
-    git -C /opt/tools/ clone --depth=1 https://github.com/ShutdownRepo/httpmethods
+    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
+    rm -rf /opt/tools/httpmethods/.git
     cd /opt/tools/httpmethods
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -443,7 +467,8 @@ function install_httpmethods() {
 
 function install_h2csmuggler() {
     colorecho "Installing h2csmuggler"
-    git -C /opt/tools/ clone --depth=1 https://github.com/BishopFox/h2csmuggler
+    git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/h2csmuggler
+    rm -rf /opt/tools/h2csmuggler/.git
     cd /opt/tools/h2csmuggler
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install h2
@@ -474,7 +499,8 @@ function install_feroxbuster() {
 
 function install_tomcatwardeployer() {
     colorecho "Installing tomcatWarDeployer"
-    git -C /opt/tools/ clone --depth=1 https://github.com/mgeeky/tomcatWarDeployer.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/mgeeky/tomcatWarDeployer.git
+    rm -rf /opt/tools/tomcatWarDeployer/.git
     cd /opt/tools/tomcatWarDeployer
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -485,7 +511,8 @@ function install_tomcatwardeployer() {
 
 function install_clusterd() {
     colorecho "Installing clusterd"
-    git -C /opt/tools/ clone --depth=1 https://github.com/hatRiot/clusterd.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/hatRiot/clusterd.git
+    rm -rf /opt/tools/clusterd/.git
     cd /opt/tools/clusterd
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r requirements.txt
@@ -586,7 +613,8 @@ function install_burpsuite() {
 
 function install_smuggler() {
     colorecho "Installing smuggler.py"
-    git -C /opt/tools/ clone --depth=1 https://github.com/defparam/smuggler.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/defparam/smuggler.git
+    rm -rf /opt/tools/smuggler/.git
     cd /opt/tools/smuggler
     python3 -m venv ./venv
     add-aliases smuggler
@@ -597,7 +625,8 @@ function install_smuggler() {
 
 function install_php_filter_chain_generator() {
     colorecho "Installing PHP_Filter_Chain_Generator"
-    git -C /opt/tools/ clone --depth=1 https://github.com/synacktiv/php_filter_chain_generator.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/php_filter_chain_generator.git
+    rm -rf /opt/tools/php_filter_chain_generator/.git
     add-aliases php_filter_chain_generator
     add-test-command "php_filter_chain_generator --help"
     add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,TODO"
@@ -606,6 +635,7 @@ function install_php_filter_chain_generator() {
 function install_kraken() {
     colorecho "Installing Kraken"
     git -C /opt/tools clone --recurse-submodules https://github.com/kraken-ng/Kraken.git
+    rm -rf /opt/tools/Kraken/.git
     cd /opt/tools/Kraken
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt

@@ -49,7 +49,8 @@ function install_network_apt_tools() {
 
 function install_proxychains() {
     colorecho "Installing proxychains"
-    git -C /opt/tools/ clone --depth=1 https://github.com/rofl0r/proxychains-ng
+    git -C /opt/tools/ clone --depth 1 https://github.com/rofl0r/proxychains-ng
+    rm -rf /opt/tools/proxychains-ng/.git
     cd /opt/tools/proxychains-ng
     ./configure --prefix=/usr --sysconfdir=/etc
     make
@@ -77,9 +78,11 @@ function install_nmap() {
 
 function install_autorecon() {
     colorecho "Installing autorecon"
-    git -C /opt/tools/ clone --depth=1 https://gitlab.com/kalilinux/packages/oscanner.git
+    git -C /opt/tools/ clone --depth 1 https://gitlab.com/kalilinux/packages/oscanner.git
+    rm -rf /opt/tools/oscanner/.git
     ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
-    git -C /opt/tools clone --depth=1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
+    git -C /opt/tools clone --depth 1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
+    rm -rf /opt/tools/tnscmd10g/.git
     ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
     fapt dnsrecon wkhtmltopdf
     python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
@@ -92,7 +95,8 @@ function install_autorecon() {
 
 function install_dnschef() {
     colorecho "Installing DNSChef"
-    git -C /opt/tools/ clone --depth=1 https://github.com/iphelix/dnschef
+    git -C /opt/tools/ clone --depth 1 https://github.com/iphelix/dnschef
+    rm -rf /opt/tools/dnschef/.git
     cd /opt/tools/dnschef
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt

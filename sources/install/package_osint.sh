@@ -9,7 +9,7 @@ function configure_tor() {
 
 function install_osint_apt_tools() {
     fapt exiftool exifprobe dnsenum tor
-    
+
     add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png" # For read exif information
     add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"             # Probe and report structure and metadata content of camera image files
     add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'" # DNSEnum is a command-line tool that automatically identifies basic DNS records
@@ -87,12 +87,13 @@ function install_holehe() {
 
 function install_simplyemail() {
     colorecho "Installing SimplyEmail"
-    git -C /opt/tools/ clone --branch master --depth=1 https://github.com/killswitch-GUI/SimplyEmail.git
+    git -C /opt/tools/ clone --branch master --depth 1 https://github.com/killswitch-GUI/SimplyEmail.git
+    rm -rf /opt/tools/SimplyEmail/.git
     cd /opt/tools/SimplyEmail/
     fapt antiword odt2txt python-dev libxml2-dev libxslt1-dev
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
-    
+
     add-aliases simplyemail
     add-history simplyemail
     add-test-command "SimplyEmail -l"
@@ -101,7 +102,8 @@ function install_simplyemail() {
 
 function install_theharvester() {
     colorecho "Installing theHarvester"
-    git -C /opt/tools/ clone --depth=1 https://github.com/laramies/theHarvester
+    git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
+    rm -rf /opt/tools/theHarvester/.git
     cd /opt/tools/theHarvester
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -123,7 +125,8 @@ function install_h8mail() {
 
 function install_infoga() {
     colorecho "Installing infoga"
-    git -C /opt/tools/ clone --depth=1 https://github.com/m4ll0k/Infoga
+    git -C /opt/tools/ clone --depth 1 https://github.com/m4ll0k/Infoga
+    rm -rf /opt/tools/Infoga/.git
     find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
     cd /opt/tools/Infoga
     python3 -m venv ./venv
@@ -144,7 +147,8 @@ function install_buster() {
 
 function install_pwnedornot() {
     colorecho "Installing pwnedornot"
-    git -C /opt/tools/ clone --depth=1 https://github.com/thewhiteh4t/pwnedOrNot
+    git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
+    rm -rf /opt/tools/pwnedOrNot/.git
     cd /opt/tools/pwnedOrNot
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install requests html2text
@@ -183,7 +187,8 @@ function install_maigret() {
 
 function install_linkedin2username() {
     colorecho "Installing linkedin2username"
-    git -C /opt/tools/ clone --depth=1 https://github.com/initstring/linkedin2username
+    git -C /opt/tools/ clone --depth 1 https://github.com/initstring/linkedin2username
+    rm -rf /opt/tools/linkedin2username/.git
     cd /opt/tools/linkedin2username
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -211,7 +216,8 @@ function install_waybackurls() {
 
 function install_carbon14() {
     colorecho "Installing Carbon14"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Lazza/Carbon14
+    git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
+    rm -rf /opt/tools/Carbon14/.git
     cd /opt/tools/Carbon14
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -223,7 +229,8 @@ function install_carbon14() {
 
 function install_photon() {
     colorecho "Installing photon"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/photon
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/photon
+    rm -rf /opt/tools/photon/.git
     cd /opt/tools/photon
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -267,7 +274,8 @@ function install_maltego(){
 
 function install_spiderfoot(){
     colorecho "Installing Spiderfoot"
-    git -C /opt/tools/ clone --depth=1 https://github.com/smicallef/spiderfoot
+    git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
+    rm -rf /opt/tools/spiderfoot/.git
     cd /opt/tools/spiderfoot
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -280,7 +288,8 @@ function install_spiderfoot(){
 
 function install_finalrecon(){
     colorecho "Installing FinalRecon"
-    git -C /opt/tools/ clone --depth=1 https://github.com/thewhiteh4t/FinalRecon
+    git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
+    rm -rf /opt/tools/FinalRecon/.git
     cd /opt/tools/FinalRecon
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -291,7 +300,8 @@ function install_finalrecon(){
 
 function install_pwndb() {
     colorecho "Installing pwndb"
-    git -C /opt/tools/ clone --depth=1 https://github.com/davidtavarez/pwndb.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/davidtavarez/pwndb.git
+    rm -rf /opt/tools/pwndb/.git
     cd /opt/tools/pwndb
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -312,7 +322,8 @@ function install_githubemail() {
 
 function install_recondog() {
     colorecho "Installing ReconDog"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/ReconDog
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/ReconDog
+    rm -rf /opt/tools/ReconDog/.git
     cd /opt/tools/ReconDog/
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -329,7 +340,8 @@ function install_gron() {
 }
 
 function install_trevorspray() {
-    git -C /opt/tools/ clone --depth=1 https://github.com/blacklanternsecurity/TREVORspray
+    git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/TREVORspray
+    rm -rf /opt/tools/TREVORspray/.git
     cd /opt/tools/TREVORspray
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27
     sed -i "s/1.0.5/1.0.4/" pyproject.toml

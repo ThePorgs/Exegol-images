@@ -20,6 +20,7 @@ function install_wordlists_apt_tools() {
 function install_seclists() {
     colorecho "Installing seclists"
     git -C /opt clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
+    rm -rf /opt/seclists/.git
     cd /opt/seclists
     rm -r LICENSE .git* CONTRIBUT* .bin
     add-test-command "[ -d '/opt/seclists/Discovery/' ]"
@@ -53,7 +54,8 @@ function install_pass_station() {
 
 function install_username-anarchy() {
     colorecho "Installing Username-Anarchy"
-    git -C /opt/tools/ clone --depth=1 https://github.com/urbanadventurer/username-anarchy
+    git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
+    rm -rf /opt/tools/username-anarchy/.git
     add-aliases username-anarchy
     add-test-command "username-anarchy --help"
     add-to-list "username-anarchy,https://github.com/urbanadventurer/username-anarchy,TODO"

@@ -22,7 +22,8 @@ function install_ad_apt_tools() {
 
 function install_responder() {
     colorecho "Installing Responder"
-    git -C /opt/tools/ clone --depth=1 https://github.com/lgandx/Responder
+    git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
+    rm -rf /opt/tools/Responder/.git
     add-aliases responder
     add-history responder
     add-test-command "responder --version"
@@ -72,7 +73,8 @@ function install_crackmapexec() {
     # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
     # TODO: Optimize so that the PATH is always up to date
     source /root/.zshrc || true
-    git -C /opt/tools/ clone https://github.com/Porchetta-Industries/CrackMapExec.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec.git
+    rm -rf /opt/tools/CrackMapExec/.git
     python3 -m pipx install /opt/tools/CrackMapExec/
     add-aliases crackmapexec
     add-history crackmapexec
@@ -86,7 +88,8 @@ function configure_crackmapexec() {
     [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
-    # git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
+    # git -C /opt/tools/ clone --depth 1 https://github.com/byt3bl33d3r/CrackMapExec
+    # rm -rf /opt/tools/CrackMapExec/.git
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
 }
 
@@ -101,7 +104,8 @@ function install_bloodhound-py() {
 
 function install_bloodhound() {
     colorecho "Installing BloodHound from sources"
-    git -C /opt/tools/ clone --depth=1 https://github.com/BloodHoundAD/BloodHound/
+    git -C /opt/tools/ clone --depth 1 https://github.com/BloodHoundAD/BloodHound/
+    rm -rf /opt/tools/BloodHound/.git
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
     zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
     add-history bloodhound
@@ -133,7 +137,8 @@ function configure_bloodhound() {
 
 function install_cypheroth() {
     colorecho "Installing cypheroth"
-    git -C /opt/tools/ clone --depth=1 https://github.com/seajaysec/cypheroth
+    git -C /opt/tools/ clone --depth 1 https://github.com/seajaysec/cypheroth
+    rm -rf /opt/tools/cypheroth/.git
     add-aliases cypheroth
     add-history cypheroth
     add-test-command "cypheroth --help|& grep 'Example with Defaults:'"
@@ -184,7 +189,8 @@ function configure_impacket() {
 
 function install_pykek() {
     colorecho "Installing Python Kernel Exploit Kit (pykek) for MS14-068"
-    git -C /opt/tools/ clone --depth=1 https://github.com/preempt/pykek
+    git -C /opt/tools/ clone --depth 1 https://github.com/preempt/pykek
+    rm -rf /opt/tools/pykek/.git
     add-aliases pykek
     add-test-command "ms14-068.py |& grep '<clearPassword>'"
     add-to-list "pykek,https://github.com/preempt/pykek,PyKEK (Python Kerberos Exploitation Kit), a python library to manipulate KRB5-related data."
@@ -200,7 +206,8 @@ function install_lsassy() {
 
 function install_privexchange() {
     colorecho "Installing privexchange"
-    git -C /opt/tools/ clone --depth=1 https://github.com/dirkjanm/PrivExchange
+    git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PrivExchange
+    rm -rf /opt/tools/PrivExchange/.git
     cd /opt/tools/PrivExchange
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket
@@ -221,7 +228,8 @@ function install_ruler() {
 function install_darkarmour() {
     colorecho "Installing darkarmour"
     fapt mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 upx-ucl osslsigncode
-    git -C /opt/tools/ clone --depth=1 https://github.com/bats3c/darkarmour
+    git -C /opt/tools/ clone --depth 1 https://github.com/bats3c/darkarmour
+    rm -rf /opt/tools/darkarmour/.git
     add-aliases darkarmour
     add-history darkarmour
     add-test-command "darkarmour --help"
@@ -231,7 +239,8 @@ function install_darkarmour() {
 function install_amber() {
     colorecho "Installing amber"
     # Installing keystone requirement
-    git -C /opt/tools/ clone --depth=1 https://github.com/EgeBalci/keystone
+    git -C /opt/tools/ clone --depth 1 https://github.com/EgeBalci/keystone
+    rm -rf /opt/tools/keystone/.git
     cd /opt/tools/keystone
     mkdir build && cd build
     ../make-lib.sh
@@ -275,7 +284,8 @@ function configure_powershell() {
 
 function install_krbrelayx() {
     colorecho "Installing krbrelayx"
-    git -C /opt/tools/ clone --depth=1 https://github.com/dirkjanm/krbrelayx
+    git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/krbrelayx
+    rm -rf /opt/tools/krbrelayx/.git
     cd /opt/tools/krbrelayx
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install dnspython ldap3 impacket dsinternals
@@ -295,7 +305,8 @@ function configure_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Hackplayers/evil-winrm
+    git -C /opt/tools/ clone --depth 1 https://github.com/Hackplayers/evil-winrm
+    rm -rf /opt/tools/evil-winrm/.git
     cd /opt/tools/evil-winrm
     bundle install
     add-aliases evil-winrm
@@ -314,7 +325,8 @@ function install_pypykatz() {
 
 function install_enyx() {
     colorecho "Installing enyx"
-    git -C /opt/tools/ clone --depth=1 https://github.com/trickster0/Enyx
+    git -C /opt/tools/ clone --depth 1 https://github.com/trickster0/Enyx
+    rm -rf /opt/tools/Enyx/.git
     add-aliases enyx
     add-history enyx
     add-test-command "enyx"
@@ -335,8 +347,10 @@ function install_zerologon() {
     cd /opt/tools/zerologon
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket
-    git -C /opt/tools/zerologon clone --depth=1 https://github.com/SecuraBV/CVE-2020-1472 zerologon-scan
-    git -C /opt/tools/zerologon clone --depth=1 https://github.com/dirkjanm/CVE-2020-1472 zerologon-exploit
+    git -C /opt/tools/zerologon clone --depth 1 https://github.com/SecuraBV/CVE-2020-1472 zerologon-scan
+    git -C /opt/tools/zerologon clone --depth 1 https://github.com/dirkjanm/CVE-2020-1472 zerologon-exploit
+    rm -rf /opt/tools/zerologon/zerologon-scan/.git
+    rm -rf /opt/tools/zerologon/zerologon-exploit/.git
     add-aliases zerologon
     add-history zerologon
     add-test-command "zerologon-scan| grep Usage"
@@ -345,7 +359,8 @@ function install_zerologon() {
 
 function install_libmspack() {
     colorecho "Installing libmspack"
-    git -C /opt/tools/ clone --depth=1 https://github.com/kyz/libmspack.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/kyz/libmspack.git
+    rm -rf /opt/tools/libmspack/.git
     cd /opt/tools/libmspack/libmspack
     ./rebuild.sh
     ./configure
@@ -358,11 +373,13 @@ function install_libmspack() {
 function install_windapsearch-go() {
     colorecho "Installing Go windapsearch"
     # Install mage dependency
-    git -C /opt/tools/ clone https://github.com/magefile/mage
+    git -C /opt/tools/ clone --depth 1 https://github.com/magefile/mage
+    rm -rf /opt/tools/mage/.git
     cd /opt/tools/mage
     go run bootstrap.go
     # Install windapsearch tool
-    git -C /opt/tools/ clone --depth=1 https://github.com/ropnop/go-windapsearch
+    git -C /opt/tools/ clone --depth 1 https://github.com/ropnop/go-windapsearch
+    rm -rf /opt/tools/go-windapsearch/.git
     cd /opt/tools/go-windapsearch
     /root/go/bin/mage build
     add-aliases windapsearch
@@ -386,7 +403,8 @@ function install_oaburl() {
 
 function install_lnkup() {
     colorecho "Installing LNKUp"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Plazmaz/LNKUp
+    git -C /opt/tools/ clone --depth 1 https://github.com/Plazmaz/LNKUp
+    rm -rf /opt/tools/LNKUp/.git
     cd /opt/tools/LNKUp
     virtualenv --python=/usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r requirements.txt
@@ -398,7 +416,8 @@ function install_lnkup() {
 
 function install_polenum() {
     colorecho "Installing polenum"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Wh1t3Fox/polenum
+    git -C /opt/tools/ clone --depth 1 https://github.com/Wh1t3Fox/polenum
+    rm -rf /opt/tools/polenum/.git
     cd /opt/tools/polenum
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install impacket
@@ -421,7 +440,8 @@ function install_pth-tools() {
     if [[ $(uname -m) = 'x86_64' ]]
     then
         fapt libreadline8 && ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /usr/lib/x86_64-linux-gnu/libreadline.so.6
-        git -C /opt/tools clone --depth=1 https://github.com/byt3bl33d3r/pth-toolkit
+        git -C /opt/tools clone --depth 1 https://github.com/byt3bl33d3r/pth-toolkit
+        rm -rf /opt/tools/pth-toolkit/.git
         add-aliases pth-tools
         add-history pth-tools
         add-test-command "pth-net --version"
@@ -448,7 +468,8 @@ function install_smtp-user-enum() {
 
 function install_gpp-decrypt() {
     colorecho "Installing gpp-decrypt"
-    git -C /opt/tools/ clone --depth=1 https://github.com/t0thkr1s/gpp-decrypt
+    git -C /opt/tools/ clone --depth 1 https://github.com/t0thkr1s/gpp-decrypt
+    rm -rf /opt/tools/gpp-decrypt/.git
     cd /opt/tools/gpp-decrypt
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install pycrypto colorama
@@ -459,7 +480,8 @@ function install_gpp-decrypt() {
 
 function install_ntlmv1-multi() {
     colorecho "Installing ntlmv1 multi tool"
-    git -C /opt/tools clone --depth=1 https://github.com/evilmog/ntlmv1-multi
+    git -C /opt/tools clone --depth 1 https://github.com/evilmog/ntlmv1-multi
+    rm -rf /opt/tools/ntlmv1-multi/.git
     add-aliases ntlmv1-multi
     add-history ntlmv1-multi
     add-test-command "ntlmv1-multi --ntlmv1 a::a:a:a:a"
@@ -491,7 +513,8 @@ function install_adidnsdump() {
 
 function install_pygpoabuse() {
     colorecho "Installing pyGPOabuse"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Hackndo/pyGPOAbuse
+    git -C /opt/tools/ clone --depth 1 https://github.com/Hackndo/pyGPOAbuse
+    rm -rf /opt/tools/pyGPOAbuse/.git
     cd /opt/tools/pyGPOAbuse
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -510,7 +533,8 @@ function install_bloodhound-import() {
 
 function install_bloodhound-quickwin() {
     colorecho "Installing bloodhound-quickwin"
-    git -C /opt/tools/ clone --depth=1 https://github.com/kaluche/bloodhound-quickwin
+    git -C /opt/tools/ clone --depth 1 https://github.com/kaluche/bloodhound-quickwin
+    rm -rf /opt/tools/bloodhound-quickwin/.git
     cd /opt/tools/bloodhound-quickwin
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install py2neo pandas prettytable
@@ -522,7 +546,8 @@ function install_bloodhound-quickwin() {
 
 function install_ldapsearch-ad() {
     colorecho "Installing ldapsearch-ad"
-    git -C /opt/tools/ clone --depth=1 https://github.com/yaap7/ldapsearch-ad
+    git -C /opt/tools/ clone --depth 1 https://github.com/yaap7/ldapsearch-ad
+    rm -rf /opt/tools/ldapsearch-ad/.git
     cd /opt/tools/ldapsearch-ad
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -534,12 +559,14 @@ function install_ldapsearch-ad() {
 
 function install_petitpotam() {
     colorecho "Installing PetitPotam"
-    git -C /opt/tools/ clone --depth=1 https://github.com/ly4k/PetitPotam
+    git -C /opt/tools/ clone --depth 1 https://github.com/ly4k/PetitPotam
+    rm -rf /opt/tools/PetitPotam/.git
     cd /opt/tools/PetitPotam
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket
     mv /opt/tools/PetitPotam /opt/tools/PetitPotam_alt
-    git -C /opt/tools/ clone --depth=1 https://github.com/topotam/PetitPotam
+    git -C /opt/tools/ clone --depth 1 https://github.com/topotam/PetitPotam
+    rm -rf /opt/tools/PetitPotam/.git
     cd /opt/tools/PetitPotam
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket
@@ -551,7 +578,8 @@ function install_petitpotam() {
 
 function install_dfscoerce() {
     colorecho "Installing DfsCoerce"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Wh04m1001/DFSCoerce
+    git -C /opt/tools/ clone --depth 1 https://github.com/Wh04m1001/DFSCoerce
+    rm -rf /opt/tools/DFSCoerce/.git
     cd /opt/tools/DFSCoerce
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket
@@ -571,7 +599,8 @@ function install_coercer() {
 
 function install_pkinittools() {
     colorecho "Installing PKINITtools"
-    git -C /opt/tools/ clone --depth=1 https://github.com/dirkjanm/PKINITtools
+    git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PKINITtools
+    rm -rf /opt/tools/PKINITtools/.git
     cd /opt/tools/PKINITtools
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -583,7 +612,8 @@ function install_pkinittools() {
 
 function install_pywhisker() {
     colorecho "Installing pyWhisker"
-    git -C /opt/tools/ clone --depth=1 https://github.com/ShutdownRepo/pywhisker
+    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
+    rm -rf /opt/tools/pywhisker/.git
     cd /opt/tools/pywhisker
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -595,7 +625,8 @@ function install_pywhisker() {
 
 function install_manspider() {
     colorecho "Installing Manspider"
-    git -C /opt/tools clone --depth=1 https://github.com/blacklanternsecurity/MANSPIDER.git
+    git -C /opt/tools clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER.git
+    rm -rf /opt/tools/MANSPIDER/.git
     cd /opt/tools/MANSPIDER
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install .
@@ -608,7 +639,8 @@ function install_manspider() {
 
 function install_targetedKerberoast() {
     colorecho "Installing targetedKerberoast"
-    git -C /opt/tools/ clone https://github.com/ShutdownRepo/targetedKerberoast
+    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
+    rm -rf /opt/tools/targetedKerberoast/.git
     cd /opt/tools/targetedKerberoast
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -621,7 +653,8 @@ function install_targetedKerberoast() {
 function install_pcredz() {
     colorecho "Installing PCredz"
     fapt libpcap-dev
-    git -C /opt/tools/ clone --depth=1 https://github.com/lgandx/PCredz
+    git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/PCredz
+    rm -rf /opt/tools/PCredz/.git
     cd /opt/tools/PCredz
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install Cython
@@ -633,7 +666,8 @@ function install_pcredz() {
 
 function install_pywsus() {
     colorecho "Installing pywsus"
-    git -C /opt/tools/ clone --depth=1 https://github.com/GoSecure/pywsus
+    git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
+    rm -rf /opt/tools/pywsus/.git
     cd /opt/tools/pywsus
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r ./requirements.txt
@@ -645,7 +679,8 @@ function install_pywsus() {
 
 function install_donpapi() {
     colorecho "Installing DonPAPI"
-    git -C /opt/tools/ clone --depth=1 https://github.com/login-securite/DonPAPI.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/login-securite/DonPAPI.git
+    rm -rf /opt/tools/DonPAPI/.git
     cd /opt/tools/DonPAPI
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r ./requirements.txt
@@ -673,7 +708,8 @@ function install_certipy() {
 
 function install_shadowcoerce() {
     colorecho "Installing ShadowCoerce PoC"
-    git -C /opt/tools/ clone --depth=1 https://github.com/ShutdownRepo/ShadowCoerce
+    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/ShadowCoerce
+    rm -rf /opt/tools/ShadowCoerce/.git
     cd /opt/tools/ShadowCoerce
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket
@@ -685,7 +721,8 @@ function install_shadowcoerce() {
 
 function install_gmsadumper() {
     colorecho "Installing gMSADumper"
-    git -C /opt/tools/ clone --depth=1 https://github.com/micahvandeusen/gMSADumper
+    git -C /opt/tools/ clone --depth 1 https://github.com/micahvandeusen/gMSADumper
+    rm -rf /opt/tools/gMSADumper/.git
     cd /opt/tools/gMSADumper
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -697,7 +734,8 @@ function install_gmsadumper() {
 
 function install_pylaps() {
     colorecho "Installing pyLAPS"
-    git -C /opt/tools/ clone --depth=1 https://github.com/p0dalirius/pyLAPS
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLAPS
+    rm -rf /opt/tools/pyLAPS/.git
     cd /opt/tools/pyLAPS
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket
@@ -709,7 +747,8 @@ function install_pylaps() {
 
 function install_finduncommonshares() {
     colorecho "Installing FindUncommonShares"
-    git -C /opt/tools/ clone --depth=1 https://github.com/p0dalirius/FindUncommonShares
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/FindUncommonShares
+    rm -rf /opt/tools/FindUncommonShares/.git
     cd /opt/tools/FindUncommonShares/
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -721,7 +760,8 @@ function install_finduncommonshares() {
 
 function install_ldaprelayscan() {
     colorecho "Installing LdapRelayScan"
-    git -C /opt/tools/ clone --depth=1 https://github.com/zyn3rgy/LdapRelayScan
+    git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/LdapRelayScan
+    rm -rf /opt/tools/LdapRelayScan/.git
     cd /opt/tools/LdapRelayScan
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -741,7 +781,8 @@ function install_goldencopy() {
 
 function install_crackhound() {
     colorecho "Installing CrackHound"
-    git -C /opt/tools/ clone --depth=1 https://github.com/trustedsec/CrackHound
+    git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
+    rm -rf /opt/tools/CrackHound/.git
     cd /opt/tools/CrackHound
     prs="6"
     for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
@@ -772,7 +813,8 @@ function install_ldeep() {
 function install_rusthound() {
     colorecho "Installing RustHound"
     fapt gcc libclang-dev clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone https://github.com/OPENCYBER-FR/RustHound
+    git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
+    rm -rf /opt/tools/RustHound/.git
     cd /opt/tools/RustHound
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
@@ -827,7 +869,8 @@ function install_roastinthemiddle() {
 
 function install_PassTheCert() {
     colorecho "Installing PassTheCert"
-    git -C /opt/tools/ clone --depth=1 https://github.com/AlmondOffSec/PassTheCert
+    git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
+    rm -rf /opt/tools/PassTheCert/.git
     cd /opt/tools/PassTheCert/Python/
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket

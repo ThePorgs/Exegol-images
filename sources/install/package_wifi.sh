@@ -5,15 +5,15 @@ source common.sh
 
 function install_wifi_apt_tools() {
     fapt aircrack-ng reaver bully cowpatty
-  
+
     add-aliases aircrack-ng
     add-history aircrack-ng
-  
+
     add-test-command "aircrack-ng --help"                                                # WiFi security auditing tools suite
     add-test-command "reaver --help; reaver --help |& grep 'Tactical Network Solutions'" # Brute force attack against Wifi Protected Setup
     add-test-command "bully --version"                                                   # WPS brute force attack
     add-test-command "cowpatty -V"                                                       # WPA2-PSK Cracking
-  
+
     add-to-list "aircrack-ng,https://www.aircrack-ng.org,A suite of tools for wireless penetration testing"
     add-to-list "reaver,https://github.com/t6x/reaver-wps-fork-t6x,reaver is a tool for brute-forcing WPS (Wireless Protected Setup) PINs."
     add-to-list "bully,https://github.com/aanarchyy/bully,bully is a tool for brute-forcing WPS (Wireless Protected Setup) PINs."
@@ -22,7 +22,8 @@ function install_wifi_apt_tools() {
 
 function install_pyrit() {
     colorecho "Installing pyrit"
-    git -C /opt/tools clone --depth=1 https://github.com/JPaulMora/Pyrit
+    git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
+    rm -rf /opt/tools/Pyrit/.git
     cd /opt/tools/Pyrit
     fapt libpq-dev
     virtualenv -p /usr/bin/python2 ./venv
@@ -42,7 +43,8 @@ function install_pyrit() {
 
 function install_wifite2() {
     colorecho "Installing wifite2"
-    git -C /opt/tools/ clone --depth=1 https://github.com/derv82/wifite2.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
+    rm -rf /opt/tools/wifite2/.git
     cd /opt/tools/wifite2
     python3 -m venv ./venv
     ./venv/bin/python3 setup.py install
@@ -69,6 +71,7 @@ function install_hcxtools() {
     colorecho "Installing hcxtools"
     fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
     git -C /opt/tools/ clone https://github.com/ZerBea/hcxtools
+    rm -rf /opt/tools/hcxtools/.git
     cd /opt/tools/hcxtools
     # Checking out to specific commit is a temporary fix to the project no compiling anymore.
     # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxtools/issues/233)
@@ -85,6 +88,7 @@ function install_hcxdumptool() {
     colorecho "Installing hcxdumptool"
     fapt libcurl4-openssl-dev libssl-dev
     git -C /opt/tools/ clone https://github.com/ZerBea/hcxdumptool
+    rm -rf /opt/tools/hcxdumptool/.git
     cd /opt/tools/hcxdumptool
     # Checking out to specific commit is a temporary fix to the project no compiling anymore.
     # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232)

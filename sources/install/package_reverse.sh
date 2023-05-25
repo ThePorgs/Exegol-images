@@ -5,7 +5,7 @@ source common.sh
 
 function install_reverse_apt_tools() {
     fapt nasm wabt strace
-    
+
     if [[ $(uname -m) = 'x86_64' ]]
     then
         fapt ltrace
@@ -35,7 +35,8 @@ function install_pwntools() {
 
 function install_pwndbg() {
     colorecho "Installing pwndbg"
-    git -C /opt/tools/ clone --depth=1 https://github.com/pwndbg/pwndbg
+    git -C /opt/tools/ clone --depth 1 https://github.com/pwndbg/pwndbg
+    rm -rf /opt/tools/pwndbg/.git
     cd /opt/tools/pwndbg
     ./setup.sh
     echo 'set disassembly-flavor intel' >> ~/.gdbinit
@@ -62,6 +63,7 @@ function install_checksec-py() {
 function install_radare2(){
     colorecho "Installing radare2"
     git -C /opt/tools/ clone https://github.com/radareorg/radare2
+    rm -rf /opt/tools/radare2/.git
     /opt/tools/radare2/sys/install.sh
     add-test-command "radare2 -h"
     add-to-list "radare2,https://github.com/radareorg/radare2,A complete framework for reverse-engineering and analyzing binaries"

@@ -5,10 +5,10 @@ source common.sh
 
 function install_forensic_apt_tools() {
     fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
-    
+
     add-history testdisk
     add-history fdisk
-    
+
     add-test-command "pst2ldif -V"      # Reads a PST and prints the tree structure to the console
     add-test-command "binwalk --help"   # Tool to find embedded files
     add-test-command "foremost -V"      # Alternative to binwalk
@@ -27,7 +27,8 @@ function install_forensic_apt_tools() {
 function install_volatility2() {
     colorecho "Installing volatility"
     fapt pcregrep libpcre++-dev yara libjpeg-dev zlib1g-dev
-    git -C /opt/tools/ clone --depth=1 https://github.com/volatilityfoundation/volatility
+    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
+    rm -rf /opt/tools/volatility/.git
     cd /opt/tools/volatility
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install pycrypto distorm3 pillow openpyxl
@@ -71,15 +72,17 @@ function install_trid() {
 
 function install_peepdf() {
     colorecho "Installing peepdf"
-    git -C /opt/tools clone --depth=1 https://github.com/jesparza/peepdf
+    git -C /opt/tools clone --depth 1 https://github.com/jesparza/peepdf
+    rm -rf /opt/tools/peepdf/.git
     add-aliases peepdf
     add-test-command "peepdf --help"
     add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
-} 
+}
 
 function install_jadx() {
     colorecho "Installing jadx"
-    git -C /opt/tools/ clone --depth=1 https://github.com/skylot/jadx.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/skylot/jadx.git
+    rm -rf /opt/tools/jadx/.git
     cd /opt/tools/jadx
     ./gradlew dist
     ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx

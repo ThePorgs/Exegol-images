@@ -11,7 +11,8 @@ function update() {
 
 function install_exegol-history() {
     colorecho "Installing Exegol-history"
-    #  git -C /opt/tools/ clone https://github.com/ThePorgs/Exegol-history
+    #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
+    #  rm -rf /opt/tools/Exegol-history/.git
     # todo : below is something basic. A nice tool being created for faster and smoother worflow
     mkdir -p /opt/tools/Exegol-history
     rm -rf /opt/tools/Exegol-history/profile.sh
@@ -118,11 +119,17 @@ function install_ohmyzsh() {
     colorecho "Installing oh-my-zsh, config, history, aliases"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-autosuggestions
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-syntax-highlighting
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-completions
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/agkozak/zsh-z
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/lukechilds/zsh-nvm
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-completions
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/agkozak/zsh-z
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
+    rm -rf ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/.git
+    rm -rf ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/.git
+    rm -rf ~/.oh-my-zsh/custom/plugins/zsh-completions/.git
+    rm -rf ~/.oh-my-zsh/custom/plugins/zsh-z/.git
+    rm -rf ~/.oh-my-zsh/custom/plugins/zsh-nvm/.git
+
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
     add-aliases fzf
     add-test-command "fzf-wordlists --help"
@@ -149,7 +156,8 @@ function install_ultimate_vimrc() {
         return
     fi
     colorecho "Installing The Ultimate vimrc"
-    git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
+    git clone --depth 1 https://github.com/amix/vimrc.git ~/.vim_runtime
+    rm -rf ~/.vim_runtime/.git
     sh ~/.vim_runtime/install_awesome_vimrc.sh
 }
 
@@ -167,10 +175,10 @@ function install_gf() {
     echo 'source $GOPATH/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh' >> ~/.zshrc
     cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
     # Add patterns from 1ndianl33t
-    git -C /opt/tools/ clone --depth=1 https://github.com/1ndianl33t/Gf-Patterns
+    git -C /opt/tools/ clone --depth 1 https://github.com/1ndianl33t/Gf-Patterns
     cp -r /opt/tools/Gf-Patterns/*.json ~/.gf
     # Remove repo to save space
-    rm -r /opt/tools/Gf-Patterns
+    rm -rf /opt/tools/Gf-Patterns
     add-test-command "gf --list"
     add-test-command "ls ~/.gf | grep 'redirect.json'"
 }

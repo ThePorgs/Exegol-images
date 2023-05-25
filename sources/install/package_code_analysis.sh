@@ -5,7 +5,8 @@ source common.sh
 
 function install_vulny-code-static-analysis() {
     colorecho "Installing Vulny Code Static Analysis"
-    git -C /opt/tools/ clone --depth=1 https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
+    git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
+    rm -rf /opt/tools/Vulny-Code-Static-Analysis/.git
     add-aliases vulny-code-static-analysis
     add-test-command "vulny-code-static-analysis --help"
     add-to-list "vulny-code-static-analysis,https://github.com/swisskyrepo/Vulny-Code-Static-Analysis,Static analysis tool for C code"
