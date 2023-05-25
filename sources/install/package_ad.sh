@@ -812,7 +812,7 @@ function install_ldeep() {
 
 function install_rusthound() {
     colorecho "Installing RustHound"
-    fapt gcc libclang-dev clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
+    fapt gcc libclang-dev clang libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
     git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
     rm -rf /opt/tools/RustHound/.git
     cd /opt/tools/RustHound
