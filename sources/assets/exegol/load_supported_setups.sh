@@ -131,6 +131,16 @@ function deploy_firefox_addons() {
   fi
 }
 
+function deploy_bloodhound() {
+  ##### BloodHound customqueries.json file deployment
+  if [ -d "$MY_Setup_PATH/bloodhound" ]; then
+    # there is already a customqueries.json file in the image, replacing it with the user's from my-resource if the filesize > 0
+    if [ -f "$MY_Setup_PATH/bloodhound/customqueries.json" ]; then
+      [ -s "$MY_Setup_PATH/bloodhound/customqueries.json" ] && cp "$MY_Setup_PATH/bloodhound/customqueries.json" ~/.config/bloodhound/customqueries.json
+    fi
+  fi
+}
+
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
@@ -150,6 +160,7 @@ deploy_vim
 deploy_apt
 deploy_python3
 deploy_firefox_addons
+deploy_bloodhound
 
 run_user_setup
 
