@@ -423,8 +423,9 @@ function install_pth-tools() {
     colorecho "Installing pth-tools"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        fapt libreadline8 && ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /usr/lib/x86_64-linux-gnu/libreadline.so.6
+        fapt libreadline8 libreadline-dev
         git -C /opt/tools clone --depth=1 https://github.com/byt3bl33d3r/pth-toolkit
+        ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /opt/tools/pth-toolkit/lib/libreadline.so.6
         add-aliases pth-tools
         add-history pth-tools
         add-test-command "pth-net --version"
