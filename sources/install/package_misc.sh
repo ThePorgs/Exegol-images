@@ -3,26 +3,6 @@
 
 source common.sh
 
-# Package dedicated to offensive miscellaneous tools
-function package_misc() {
-    set_go_env
-    install_misc_apt_tools
-    install_goshs           # Web uploader/downloader page
-    install_searchsploit    # Exploitdb local search engine
-    install_shellerator     # Reverse shell generator
-    install_uberfile        # file uploader/downloader commands generator
-    install_arsenal         # Cheatsheets tool
-    install_trilium         # notes taking tool
-    install_ngrok           # expose a local development server to the Internet
-    install_whatportis      # Search default port number
-    install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory 
-}
-
-function package_misc_configure() {
-    configure_searchsploit
-    configure_trilium
-}
-
 function install_misc_apt_tools() {
     fapt rlwrap exiftool imagemagick ascii
 
@@ -139,4 +119,24 @@ function install_objectwalker() {
     add-history objectwalker
     add-test-command "objectwalker --help"
     add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
+}
+
+# Package dedicated to offensive miscellaneous tools
+function package_misc() {
+    set_go_env
+    install_misc_apt_tools
+    install_goshs           # Web uploader/downloader page
+    install_searchsploit    # Exploitdb local search engine
+    install_shellerator     # Reverse shell generator
+    install_uberfile        # file uploader/downloader commands generator
+    install_arsenal         # Cheatsheets tool
+    install_trilium         # notes taking tool
+    install_ngrok           # expose a local development server to the Internet
+    install_whatportis      # Search default port number
+    install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory
+}
+
+function package_misc_configure() {
+    configure_searchsploit
+    configure_trilium
 }
