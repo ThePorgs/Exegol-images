@@ -131,6 +131,33 @@ function deploy_firefox_addons() {
   fi
 }
 
+function deploy_bloodhound_customqueries_replacement() {
+  # Merge all the *.json files in customqueries format from my-resources/.../replacement to replace the Exegol provided one
+  if \
+    [[ -d "$MY_Setup_PATH/bloodhound_customqueries/replacement" ]] && \
+    [[ -n $(find "$MY_Setup_PATH/bloodhound_customqueries/replacement" -type f -name "*.json") ]]; then
+      bqm --verbose --ignore-default --output-path /root/.config/bloodhound/customqueries.json.bqm -i "$MY_Setup_PATH/bloodhound_customqueries/replacement"
+      [[ -f "/root/.config/bloodhound/customqueries.json.bqm" ]] && mv "/root/.config/bloodhound/customqueries.json.bqm" "/root/.config/bloodhound/customqueries.json"
+  fi
+}
+
+function deploy_bloodhound_customqueries_merge() {
+  # Merge all the *.json files in customqueries format from my-resources/.../merge with the Exegol provided one
+  if \
+    [[ -d "$MY_Setup_PATH/bloodhound_customqueries/merge" ]] && \
+    [[ -n $(find "$MY_Setup_PATH/bloodhound_customqueries/merge" -type f -name "*.json") ]]; then
+      bqm --verbose --ignore-default --output-path /root/.config/bloodhound/customqueries.json.bqm -i "$MY_Setup_PATH/bloodhound_customqueries/merge,/root/.config/bloodhound/customqueries.json"
+      [[ -f "/root/.config/bloodhound/customqueries.json.bqm" ]] && mv "/root/.config/bloodhound/customqueries.json.bqm" "/root/.config/bloodhound/customqueries.json"
+  fi
+}
+
+function deploy_bloodhound_customqueries() {
+  # If a user places Bloodhound json files in both folders my-resources/.../merge and my-resources/.../replacement,
+  # replacement must be executed last to only keep the output of replacement.
+  deploy_bloodhound_customqueries_merge
+  deploy_bloodhound_customqueries_replacement
+}
+
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
@@ -150,6 +177,7 @@ deploy_vim
 deploy_apt
 deploy_python3
 deploy_firefox_addons
+deploy_bloodhound_customqueries
 
 run_user_setup
 
