@@ -401,7 +401,7 @@ function install_gittools() {
 function install_ysoserial() {
     colorecho "Installing ysoserial"
     mkdir /opt/tools/ysoserial/
-    wget -O /opt/tools/ysoserial/ysoserial.jar "https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar"
+    wget -O /opt/tools/ysoserial/ysoserial.jar "https://github.com/frohoff/ysoserial/releases/latest/download/ysoserial-all.jar"
     add-aliases ysoserial
     add-test-command "ysoserial --help|& grep 'spring-core:4.1.4.RELEASE'"
     add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
