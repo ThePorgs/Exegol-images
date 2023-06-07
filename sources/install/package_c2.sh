@@ -42,10 +42,11 @@ function install_routersploit() {
 
 function install_sliver() {
     colorecho "Installing Sliver"
-    git -C /opt/tools/ clone --depth=1 https://github.com/BishopFox/sliver.git
+    git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
     cd /opt/tools/sliver
     make
     cp sliver-* /opt/tools/bin
+    add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
 }
