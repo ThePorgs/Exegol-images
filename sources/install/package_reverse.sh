@@ -111,6 +111,8 @@ function install_jd-gui() {
 function install_pwninit() {
     colorecho "Installing pwninit"
     fapt liblzma-dev
+    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+    source "$HOME/.cargo/env"
     cargo install pwninit
     add-test-command "pwninit --help"
     add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
