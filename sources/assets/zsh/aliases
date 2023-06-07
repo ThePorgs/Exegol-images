@@ -1,12 +1,3 @@
-# Loads user-defined aliases if the file exists otherwise creates a default file if my-resources is enabled in the container
-if [ -f /opt/my-resources/setup/zsh/aliases ]
-then
-  source /opt/my-resources/setup/zsh/aliases
-else
-  [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
-  cp /.exegol/skel/zsh/aliases /opt/my-resources/setup/zsh/aliases
-fi
-
 alias rickroll='curl tiredand.gay/rick'
 alias l='ls -alh'
 alias ipa='ip --brief --color a'

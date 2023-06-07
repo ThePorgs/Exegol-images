@@ -3,16 +3,6 @@
 
 source common.sh
 
-# Package dedicated to mobile apps pentest tools
-function package_mobile() {
-    install_mobile_apt_tools
-    install_smali
-    install_dex2jar
-    install_frida
-    install_objection               # Runtime mobile exploration toolkit
-    install_androguard              # Reverse engineering and analysis of Android applications
-}
-
 function install_mobile_apt_tools() {
     fapt android-tools-adb zipalign apksigner apktool
 
@@ -66,4 +56,14 @@ function install_androguard() {
     python3 -m pipx install androguard
     add-test-command "androguard --version"
     add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications"
+}
+
+# Package dedicated to mobile apps pentest tools
+function package_mobile() {
+    install_mobile_apt_tools
+    install_smali
+    install_dex2jar
+    install_frida
+    install_objection               # Runtime mobile exploration toolkit
+    install_androguard              # Reverse engineering and analysis of Android applications
 }

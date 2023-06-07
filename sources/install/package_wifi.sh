@@ -3,18 +3,6 @@
 
 source common.sh
 
-# Package dedicated to wifi pentest tools
-function package_wifi() {
-    set_go_env
-    install_wifi_apt_tools
-    install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
-    install_wifite2                 # Retrieving password of a wireless access point (router)
-    # install_hostapd-wpe           # Modified hostapd to facilitate AP impersonation attacks, FIXME broken install, need official release of hostapd-2.6.tar.gz
-    install_bettercap               # MiTM tool
-    install_hcxtools                # Tools for PMKID and other wifi attacks
-    install_hcxdumptool             # Small tool to capture packets from wlan devices
-}
-
 function install_wifi_apt_tools() {
     fapt aircrack-ng reaver bully cowpatty
   
@@ -107,4 +95,16 @@ function install_hcxdumptool() {
     add-history hcxdumptool
     add-test-command "hcxdumptool --version"
     add-to-list "hcxdumptool,https://github.com/ZerBea/hcxdumptool,Small tool to capture packets from wlan devices."
+}
+
+# Package dedicated to wifi pentest tools
+function package_wifi() {
+    set_go_env
+    install_wifi_apt_tools
+    install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
+    install_wifite2                 # Retrieving password of a wireless access point (router)
+    # install_hostapd-wpe           # Modified hostapd to facilitate AP impersonation attacks, FIXME broken install, need official release of hostapd-2.6.tar.gz
+    install_bettercap               # MiTM tool
+    install_hcxtools                # Tools for PMKID and other wifi attacks
+    install_hcxdumptool             # Small tool to capture packets from wlan devices
 }

@@ -3,109 +3,24 @@
 
 source common.sh
 
-# Package dedicated to internal Active Directory tools
-function package_ad() {
-    install_ad_apt_tools
-    set_go_env
-    install_responder               # LLMNR, NBT-NS and MDNS poisoner
-    install_ldapdomaindump
-    install_crackmapexec            # Network scanner
-    install_sprayhound              # Password spraying tool
-    install_smartbrute              # Password spraying tool
-    install_bloodhound-py           # AD cartographer  
-    install_bloodhound
-    install_cypheroth               # Bloodhound dependency
-    # install_mitm6_sources         # Install mitm6 from sources
-    install_mitm6_pip               # DNS server misconfiguration exploiter
-    install_aclpwn                  # ACL exploiter
-    install_impacket                # Network protocols scripts
-    install_pykek                   # AD vulnerability exploiter
-    install_lsassy                  # Credentials extracter
-    install_privexchange            # Exchange exploiter
-    install_ruler                   # Exchange exploiter
-    install_darkarmour              # Windows AV evasion
-    install_amber                   # AV evasion
-    install_powershell              # Windows Powershell for Linux
-    install_krbrelayx               # Kerberos unconstrained delegation abuse toolkit
-    install_evilwinrm               # WinRM shell
-    install_pypykatz                # Mimikatz implementation in pure Python
-    install_enyx                    # Hosts discovery
-    install_enum4linux-ng           # Hosts enumeration
-    install_zerologon               # Exploit for zerologon cve-2020-1472
-    install_libmspack               # Library for some loosely related Microsoft compression format
-    install_windapsearch-go         # Active Directory Domain enumeration through LDAP queries
-    install_oaburl                  # Send request to the MS Exchange Autodiscover service
-    install_lnkup
-    install_polenum
-    install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
-    install_pth-tools               # Pass the hash attack
-    install_smtp-user-enum          # SMTP user enumeration via VRFY, EXPN and RCPT
-    install_gpp-decrypt             # Decrypt a given GPP encrypted string
-    install_ntlmv1-multi            # NTLMv1 multi tools: modifies NTLMv1/NTLMv1-ESS/MSCHAPv2
-    install_hashonymize             # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
-    install_gosecretsdump           # secretsdump in Go for heavy files
-    install_adidnsdump              # enumerate DNS records in Domain or Forest DNS zones
-    install_pygpoabuse
-    install_bloodhound-import
-    install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
-    install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
-    install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
-    install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
-    install_coercer                 # Python script to coerce auth through multiple methods
-    install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
-    install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
-    install_manspider               # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
-    install_targetedKerberoast
-    install_pcredz
-    install_pywsus
-    install_donpapi
-    install_webclientservicescanner
-    install_certipy
-    install_shadowcoerce
-    install_gmsadumper
-    install_pylaps
-    install_finduncommonshares
-    install_ldaprelayscan
-    install_goldencopy
-    install_crackhound
-    install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
-    install_ldeep
-    install_rusthound
-    install_certsync
-    install_keepwn
-    install_pre2k
-    install_msprobe
-    install_masky
-    install_roastinthemiddle
-    install_PassTheCert
-    install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
-    install_neo4j                  # Bloodhound dependency
-}
-
 function install_ad_apt_tools() {
-    fapt samdump2 smbclient onesixtyone nbtscan
+    fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
 
     add-history smbclient
     add-history onesixtyone
+    add-history ldapsearch
 
-    add-test-command "samdump2 -h|& grep 'enable debugging'" # Dumps Windows 2k/NT/XP/Vista password hashes
-    add-test-command "smbclient --help"                      # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
-    add-test-command "onesixtyone 127.0.0.1 public"          # SNMP scanning
-    add-test-command "nbtscan 127.0.0.1"                     # NetBIOS scanning tool
+    add-test-command "samdump2 -h|& grep 'enable debugging'"        # Dumps Windows 2k/NT/XP/Vista password hashes
+    add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+    add-test-command "onesixtyone 127.0.0.1 public"                 # SNMP scanning
+    add-test-command "nbtscan 127.0.0.1"                            # NetBIOS scanning tool
+    add-test-command "ldapsearch --help|& grep 'Search options'"    # Perform queries on a LDAP server
 
     add-to-list "samdump2,https://github.com/azan121468/SAMdump2,A tool to dump Windows NT/2k/XP/Vista password hashes from SAM files"
     add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
     add-to-list "onesixtyone,https://github.com/trailofbits/onesixtyone,onesixtyone is an SNMP scanner which utilizes a sweep technique to achieve very high performance."
     add-to-list "nbtscan,https://github.com/charlesroelli/nbtscan,NBTscan is a program for scanning IP networks for NetBIOS name information."
-}
-
-function package_ad_configure() {
-    configure_responder
-    configure_crackmapexec
-    configure_bloodhound
-    configure_impacket
-    configure_krbrelayx
-    configure_powershell
+    add-to-list "ldapsearch,https://wiki.debian.org/LDAP/LDAPUtils,Search for and display entries (ldap)"
 }
 
 function install_responder() {
@@ -192,6 +107,7 @@ function install_bloodhound() {
     git -C /opt/tools/ clone --depth=1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
     zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
+    add-history bloodhound
     add-aliases bloodhound
     add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
     add-to-list "bloodhound,https://github.com/BloodHoundAD/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments."
@@ -507,8 +423,9 @@ function install_pth-tools() {
     colorecho "Installing pth-tools"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        fapt libreadline8 && ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /usr/lib/x86_64-linux-gnu/libreadline.so.6
+        fapt libreadline8 libreadline-dev
         git -C /opt/tools clone --depth=1 https://github.com/byt3bl33d3r/pth-toolkit
+        ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /opt/tools/pth-toolkit/lib/libreadline.so.6
         add-aliases pth-tools
         add-history pth-tools
         add-test-command "pth-net --version"
@@ -946,4 +863,92 @@ function install_neo4j() {
     add-history neo4j
     add-test-command "neo4j version"
     add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
+}
+
+# Package dedicated to internal Active Directory tools
+function package_ad() {
+    install_ad_apt_tools
+    set_go_env
+    install_responder               # LLMNR, NBT-NS and MDNS poisoner
+    install_ldapdomaindump
+    install_crackmapexec            # Network scanner
+    install_sprayhound              # Password spraying tool
+    install_smartbrute              # Password spraying tool
+    install_bloodhound-py           # AD cartographer
+    install_bloodhound
+    install_cypheroth               # Bloodhound dependency
+    # install_mitm6_sources         # Install mitm6 from sources
+    install_mitm6_pip               # DNS server misconfiguration exploiter
+    install_aclpwn                  # ACL exploiter
+    install_impacket                # Network protocols scripts
+    install_pykek                   # AD vulnerability exploiter
+    install_lsassy                  # Credentials extracter
+    install_privexchange            # Exchange exploiter
+    install_ruler                   # Exchange exploiter
+    install_darkarmour              # Windows AV evasion
+    install_amber                   # AV evasion
+    install_powershell              # Windows Powershell for Linux
+    install_krbrelayx               # Kerberos unconstrained delegation abuse toolkit
+    install_evilwinrm               # WinRM shell
+    install_pypykatz                # Mimikatz implementation in pure Python
+    install_enyx                    # Hosts discovery
+    install_enum4linux-ng           # Hosts enumeration
+    install_zerologon               # Exploit for zerologon cve-2020-1472
+    install_libmspack               # Library for some loosely related Microsoft compression format
+    install_windapsearch-go         # Active Directory Domain enumeration through LDAP queries
+    install_oaburl                  # Send request to the MS Exchange Autodiscover service
+    install_lnkup
+    install_polenum
+    install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
+    install_pth-tools               # Pass the hash attack
+    install_smtp-user-enum          # SMTP user enumeration via VRFY, EXPN and RCPT
+    install_gpp-decrypt             # Decrypt a given GPP encrypted string
+    install_ntlmv1-multi            # NTLMv1 multi tools: modifies NTLMv1/NTLMv1-ESS/MSCHAPv2
+    install_hashonymize             # Anonymize NTDS, ASREProast, Kerberoast hashes for remote cracking
+    install_gosecretsdump           # secretsdump in Go for heavy files
+    install_adidnsdump              # enumerate DNS records in Domain or Forest DNS zones
+    install_pygpoabuse
+    install_bloodhound-import
+    install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
+    install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
+    install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
+    install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
+    install_coercer                 # Python script to coerce auth through multiple methods
+    install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
+    install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
+    install_manspider               # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
+    install_targetedKerberoast
+    install_pcredz
+    install_pywsus
+    install_donpapi
+    install_webclientservicescanner
+    install_certipy
+    install_shadowcoerce
+    install_gmsadumper
+    install_pylaps
+    install_finduncommonshares
+    install_ldaprelayscan
+    install_goldencopy
+    install_crackhound
+    install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
+    install_ldeep
+    install_rusthound
+    install_certsync
+    install_keepwn
+    install_pre2k
+    install_msprobe
+    install_masky
+    install_roastinthemiddle
+    install_PassTheCert
+    install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
+    install_neo4j                  # Bloodhound dependency
+}
+
+function package_ad_configure() {
+    configure_responder
+    configure_crackmapexec
+    configure_bloodhound
+    configure_impacket
+    configure_krbrelayx
+    configure_powershell
 }

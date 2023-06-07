@@ -3,27 +3,6 @@
 
 source common.sh
 
-# Package dedicated to network pentest tools
-function package_network() {
-    set_go_env
-    install_network_apt_tools
-    install_proxychains             # Network tool
-    # install_wireshark_sources     # Install Wireshark from sources
-    install_nmap                    # Port scanner
-    install_autorecon               # External recon tool
-    install_dnschef                 # Python DNS server
-    install_divideandscan           # Python project to automate port scanning routine
-    install_chisel                  # Fast TCP/UDP tunnel over HTTP
-    install_sshuttle                # Transparent proxy over SSH
-    # install_eaphammer             # FIXME
-    install_fierce
-    # install_odat                  # Oracle Database Attacking Tool, FIXME
-    install_dnsx                    # Fast and multi-purpose DNS toolkit
-    install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
-    install_tailscale               # Zero config VPN for building secure networks
-    install_ligolo-ng               # Tunneling tool that uses a TUN interface
-}
-
 function install_network_apt_tools() {
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
@@ -201,4 +180,25 @@ function install_ligolo-ng() {
     add-history ligolo-ng
     add-test-command "ligolo-ng --help"
     add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."
+}
+
+# Package dedicated to network pentest tools
+function package_network() {
+    set_go_env
+    install_network_apt_tools
+    install_proxychains             # Network tool
+    # install_wireshark_sources     # Install Wireshark from sources
+    install_nmap                    # Port scanner
+    install_autorecon               # External recon tool
+    install_dnschef                 # Python DNS server
+    install_divideandscan           # Python project to automate port scanning routine
+    install_chisel                  # Fast TCP/UDP tunnel over HTTP
+    install_sshuttle                # Transparent proxy over SSH
+    # install_eaphammer             # FIXME
+    install_fierce
+    # install_odat                  # Oracle Database Attacking Tool, FIXME
+    install_dnsx                    # Fast and multi-purpose DNS toolkit
+    install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
+    install_tailscale               # Zero config VPN for building secure networks
+    install_ligolo-ng               # Tunneling tool that uses a TUN interface
 }

@@ -3,13 +3,6 @@
 
 source common.sh
 
-# Package dedicated to SDR
-function package_sdr() {
-    install_sdr_apt_tools
-    install_mousejack               # tools for mousejacking
-    install_jackit                  # tools for mousejacking
-}
-
 function install_sdr_apt_tools() {
     fapt hackrf gqrx-sdr rtl-433
     
@@ -46,4 +39,11 @@ function install_jackit() {
     add-history jackit
     add-test-command "jackit --help"
     add-to-list "jackit,https://github.com/insecurityofthings/jackit,Exploit to take over a wireless mouse and keyboard"
+}
+
+# Package dedicated to SDR
+function package_sdr() {
+    install_sdr_apt_tools
+    install_mousejack               # tools for mousejacking
+    install_jackit                  # tools for mousejacking
 }

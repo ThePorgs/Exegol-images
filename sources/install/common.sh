@@ -29,13 +29,13 @@ function add-to-list() {
 function add-aliases() {
     colorecho "Adding aliases for: $*"
     # Removing add empty lines and the last trailing newline if any, and adding a trailing newline.
-    grep -vE "^\s*$" "/root/sources/assets/zsh/aliases.d/$*" >> /opt/.exegol_aliases
+    grep -vE "^\s*$" "/root/sources/assets/zsh/aliases.d/$*" | tee -a /opt/.exegol_aliases
 }
 
 function add-history() {
     colorecho "Adding history commands for: $*"
     # Removing add empty lines and the last trailing newline if any, and adding a trailing newline.
-    grep -vE "^\s*$" "/root/sources/assets/zsh/history.d/$*" >> ~/.zsh_history
+    grep -vE "^\s*$" "/root/sources/assets/zsh/history.d/$*" | tee -a ~/.zsh_history
 }
 
 function add-test-command() {
@@ -121,7 +121,6 @@ function install_pipx_tool() {
         add-history $1
     fi
  }
-
 
 function install_apt_tool() {
     colorecho "Installing $1 with apt"

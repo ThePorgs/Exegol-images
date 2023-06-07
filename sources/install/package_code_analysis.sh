@@ -3,13 +3,6 @@
 
 source common.sh
 
-# Package dedicated to SAST and DAST tools
-function package_code_analysis() {
-    install_vulny-code-static-analysis
-    install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
-    install_semgrep                     # Static analysis engine for finding bugs and vulnerabilities
-}
-
 function install_vulny-code-static-analysis() {
     colorecho "Installing Vulny Code Static Analysis"
     git -C /opt/tools/ clone --depth=1 https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
@@ -33,4 +26,11 @@ function install_semgrep() {
     add-history semgrep
     add-test-command "semgrep --help"
     add-to-list "semgrep,https://github.com/returntocorp/semgrep/,Static analysis tool that supports multiple languages and can find a variety of vulnerabilities and coding errors."
+}
+
+# Package dedicated to SAST and DAST tools
+function package_code_analysis() {
+    install_vulny-code-static-analysis
+    install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
+    install_semgrep                     # Static analysis engine for finding bugs and vulnerabilities
 }
