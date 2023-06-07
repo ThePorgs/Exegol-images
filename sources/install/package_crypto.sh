@@ -3,12 +3,6 @@
 
 source common.sh
 
-# Package dedicated to attack crypto
-function package_crypto() {
-    install_rsactftool              # Attack rsa
-    install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
-}
-
 function install_tls-map() {
     colorecho "Installing TLS map"
     # TODO: gem venv
@@ -30,4 +24,10 @@ function install_rsactftool() {
     add-history rsactftool
     add-test-command "rsactftool --help"
     add-to-list "rsactftool,https://github.com/RsaCtfTool/RsaCtfTool,The rsactftool tool is used for RSA cryptographic operations and analysis."
+}
+
+# Package dedicated to attack crypto
+function package_crypto() {
+    install_rsactftool              # attack rsa
+    install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
 }

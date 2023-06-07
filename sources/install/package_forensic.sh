@@ -3,16 +3,6 @@
 
 source common.sh
 
-# Package dedicated to forensic tools
-function package_forensic() {
-    install_forensic_apt_tools
-    install_volatility2             # Memory analysis tool
-    install_volatility3             # Memory analysis tool v2
-    install_trid                    # filetype detection tool
-    # install_peepdf                # PDF analysis FIXME
-    install_jadx                    # Dex to Java decompiler
-}
-
 function install_forensic_apt_tools() {
     fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
     
@@ -79,6 +69,14 @@ function install_trid() {
     add-to-list "trid,https://mark0.net/soft-trid-e.html,File identifier"
 }
 
+function install_peepdf() {
+    colorecho "Installing peepdf"
+    git -C /opt/tools clone --depth=1 https://github.com/jesparza/peepdf
+    add-aliases peepdf
+    add-test-command "peepdf --help"
+    add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
+} 
+
 function install_jadx() {
     colorecho "Installing jadx"
     git -C /opt/tools/ clone --depth=1 https://github.com/skylot/jadx.git
@@ -89,4 +87,14 @@ function install_jadx() {
     add-history jadx
     add-test-command "jadx --help"
     add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler"
+}
+
+# Package dedicated to forensic tools
+function package_forensic() {
+    install_forensic_apt_tools
+    install_volatility2             # Memory analysis tool
+    install_volatility3             # Memory analysis tool v2
+    install_trid                    # filetype detection tool
+    install_peepdf                  # PDF analysis
+    install_jadx                    # Dex to Java decompiler
 }

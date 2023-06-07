@@ -3,19 +3,6 @@
 
 source common.sh
 
-# Package dedicated to reverse engineering tools
-function package_reverse() {
-    install_reverse_apt_tools
-    install_pwntools                # CTF framework and exploit development library
-    install_pwndbg                  # Advanced Gnu Debugger
-    install_angr                    # Binary analysis
-    install_checksec-py             # Check security on binaries
-    install_radare2                 # Awesome debugger
-    install_ghidra
-    install_ida
-    install_jd-gui                  # Java decompiler
-}
-
 function install_reverse_apt_tools() {
     fapt nasm wabt strace
     
@@ -34,7 +21,6 @@ function install_reverse_apt_tools() {
     add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity."
     add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm), including assembler and disassembler, a syntax checker, and a binary format validator."
     add-to-list "strace,https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process."
-
 }
 
 function install_pwntools() {
@@ -114,4 +100,17 @@ function install_jd-gui(){
     add-aliases jd-gui
     # TODO add-test-command GUI app
     add-to-list "jd-gui,https://github.com/java-decompiler/jd-gui,A standalone Java Decompiler GUI"
+}
+
+# Package dedicated to reverse engineering tools
+function package_reverse() {
+    install_reverse_apt_tools
+    install_pwntools                # CTF framework and exploit development library
+    install_pwndbg                  # Advanced Gnu Debugger
+    install_angr                    # Binary analysis
+    install_checksec-py             # Check security on binaries
+    install_radare2                 # Awesome debugger
+    install_ghidra
+    install_ida
+    install_jd-gui                  # Java decompiler
 }

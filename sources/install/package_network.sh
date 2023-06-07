@@ -3,27 +3,6 @@
 
 source common.sh
 
-# Package dedicated to network pentest tools
-function package_network() {
-    set_go_env
-    install_network_apt_tools
-    install_proxychains             # Network tool
-    # install_wireshark_sources     # Install Wireshark from sources
-    install_nmap                    # Port scanner
-    install_autorecon               # External recon tool
-    install_dnschef                 # Python DNS server
-    install_divideandscan           # Python project to automate port scanning routine
-    install_chisel                  # Fast TCP/UDP tunnel over HTTP
-    install_sshuttle                # Transparent proxy over SSH
-    # install_eaphammer             # FIXME
-    install_fierce
-    # install_odat                  # Oracle Database Attacking Tool, FIXME
-    install_dnsx                    # Fast and multi-purpose DNS toolkit
-    install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
-    install_tailscale               # Zero config VPN for building secure networks
-    # install_ligolo-ng             # Tunneling tool that uses a TUN interface, FIXME: https://github.com/nicocha30/ligolo-ng/issues/32
-}
-
 function install_network_apt_tools() {
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
@@ -98,7 +77,11 @@ function install_nmap() {
 
 function install_autorecon() {
     colorecho "Installing autorecon"
-    fapt wkhtmltopdf
+    git -C /opt/tools/ clone --depth=1 https://gitlab.com/kalilinux/packages/oscanner.git
+    ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
+    git -C /opt/tools clone --depth=1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
+    ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
+    fapt dnsrecon wkhtmltopdf
     python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
     add-history autorecon
     # test below cannot work because test runner cannot have a valid display
@@ -166,6 +149,7 @@ function install_shuffledns() {
 }
 
 function install_tailscale() {
+    colorecho "Installing tailscale"
     curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
     curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
     apt-get update
@@ -174,4 +158,47 @@ function install_tailscale() {
     add-history tailscale
     add-test-command "tailscale --help"
     add-to-list "tailscale,https://github.com/tailscale/tailscale,A secure and easy-to-use VPN alternative that is designed for teams and businesses."
+}
+
+function install_ligolo-ng() {
+    colorecho "Installing ligolo-ng"
+    # Waiting for the issue to be resolved
+    # https://github.com/nicocha30/ligolo-ng/issues/32
+    mkdir /tmp/ligolo
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/latest/download/ligolo-ng_proxy_0.4.3_Linux_64bit.tar.gz"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/latest/download/ligolo-ng_proxy_0.4.3_Linux_ARM64.tar.gz"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    tar -xvf /tmp/ligolo/proxy.tar.gz -C /tmp/ligolo
+    mv /tmp/ligolo/proxy /opt/tools/bin/ligolo-ng
+    rm -rf /tmp/ligolo
+    add-history ligolo-ng
+    add-test-command "ligolo-ng --help"
+    add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."
+}
+
+# Package dedicated to network pentest tools
+function package_network() {
+    set_go_env
+    install_network_apt_tools
+    install_proxychains             # Network tool
+    # install_wireshark_sources     # Install Wireshark from sources
+    install_nmap                    # Port scanner
+    install_autorecon               # External recon tool
+    install_dnschef                 # Python DNS server
+    install_divideandscan           # Python project to automate port scanning routine
+    install_chisel                  # Fast TCP/UDP tunnel over HTTP
+    install_sshuttle                # Transparent proxy over SSH
+    # install_eaphammer             # FIXME
+    install_fierce
+    # install_odat                  # Oracle Database Attacking Tool, FIXME
+    install_dnsx                    # Fast and multi-purpose DNS toolkit
+    install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
+    install_tailscale               # Zero config VPN for building secure networks
+    install_ligolo-ng               # Tunneling tool that uses a TUN interface
 }

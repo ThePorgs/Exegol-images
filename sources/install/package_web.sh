@@ -3,83 +3,6 @@
 
 source common.sh
 
-# Package dedicated to applicative and active web pentest tools
-function package_web() {
-    install_web_apt_tools
-    set_go_env
-    install_gobuster                # Web fuzzer (pretty good for several extensions)
-    install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
-    install_amass                   # Web fuzzer
-    install_ffuf                    # Web fuzzer (little favorites)
-    install_dirsearch               # Web fuzzer
-    install_ssrfmap                 # SSRF scanner
-    install_gopherus                # SSRF helper
-    # install_nosqlmap              # NoSQL scanner - FIXME
-    install_xsstrike                # XSS scanner
-    install_xspear                  # XSS scanner
-    # install_xsser                 # XSS scanner FIXME missing install
-    install_xsrfprobe               # CSRF scanner
-    install_bolt                    # CSRF scanner
-    install_kadimus                 # LFI scanner
-    install_fuxploider              # File upload scanner
-    # install_patator               # Login scanner # FIXME
-    # install_joomscan              # Joomla scanner FIXME (https://github.com/ThePorgs/Exegol-images/actions/runs/3557732633/jobs/5977150292)
-    install_wpscan                  # Wordpress scanner
-    install_droopescan              # Drupal scanner
-    install_drupwn                  # Drupal scanner
-    install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
-    install_moodlescan              # Moodle scanner
-    install_testssl                 # SSL/TLS scanner
-    install_tls-scanner             # SSL/TLS scanner
-    # install_sslyze                # SSL/TLS scanner FIXME
-    install_cloudfail               # Cloudflare misconfiguration detector
-    install_eyewitness              # Website screenshoter
-    install_oneforall               # OneForAll is a powerful subdomain integration tool
-    install_wafw00f                 # Waf detector
-    install_corscanner              # CORS misconfiguration detector
-    install_hakrawler               # Web endpoint discovery
-    install_gowitness               # Web screenshot utility
-    install_linkfinder              # Discovers endpoint JS files
-    install_timing_attack           # Cryptocraphic timing attack
-    install_updog                   # New HTTPServer
-    install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
-    install_wuzz                    # Burp cli
-    install_git-dumper              # Dump a git repository from a website
-    install_gittools                # Dump a git repository from a website
-    install_ysoserial               # Deserialization payloads
-    # install_phpggc                # php deserialization payloads FIXME https://github.com/ambionics/phpggc/issues/142
-    install_symfony-exploits        # symfony secret fragments exploit
-    install_jdwp_shellifier         # exploit java debug
-    install_httpmethods             # Tool for HTTP methods enum & verb tampering
-    install_h2csmuggler             # Tool for HTTP2 smuggling
-    install_byp4xx                  # Tool to automate 40x errors bypass attempts
-    install_feroxbuster             # ffuf but with multithreaded recursion
-    install_tomcatwardeployer       # Apache Tomcat auto WAR deployment & pwning tool
-    install_clusterd                # Axis2/JBoss/ColdFusion/Glassfish/Weblogic/Railo scanner
-    install_arjun                   # HTTP Parameter Discovery
-    install_nuclei                  # Vulnerability scanner - Needed for gau install
-    install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
-    install_hakrevdns               # Reverse DNS lookups
-    install_httprobe                # Probe http
-    install_httpx                   # Probe http
-    install_anew                    # A tool for adding new lines to files, skipping duplicates
-    install_robotstester            # Robots.txt scanner
-    install_naabu                   # Fast port scanner
-    # install_gitrob                # Senstive files reconnaissance in github
-    install_burpsuite
-    install_smuggler                # HTTP Request Smuggling scanner
-    install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
-    install_kraken                  # Kraken is a modular multi-language webshell.
-    install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
-}
-
-function package_web_configure() {
-    set_go_env
-    configure_nuclei
-    configure_moodlescan
-    configure_clusterd
-}
-
 function install_web_apt_tools() {
     fapt dirb wfuzz sqlmap sslscan weevely whatweb prips swaks
   
@@ -245,6 +168,15 @@ function install_fuxploider() {
     add-aliases fuxploider
     add-test-command "fuxploider --help"
     add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
+}
+
+function install_joomscan(){
+    colorecho "Installing joomscan"
+    git -C /opt/tools/ clone --depth=1 https://github.com/rezasp/joomscan
+    add-aliases joomscan
+    add-history joomscan
+    add-test-command "joomscan --version"
+    add-to-list "joomscan,https://github.com/rezasp/joomscan,A tool to enumerate Joomla-based websites"
 }
 
 function install_wpscan(){
@@ -473,6 +405,14 @@ function install_ysoserial() {
     add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
 }
 
+function install_phpggc() {
+    colorecho "Installing phpggc"
+    git -C /opt/tools clone --depth=1 https://github.com/ambionics/phpggc.git
+    add-aliases phpggc
+    add-test-command "phpggc --help"
+    add-to-list "phpggc,https://github.com/ambionics/phpggc,Exploit generation tool for the PHP platform."
+}
+
 function install_symfony-exploits(){
     colorecho "Installing symfony-exploits"
     git -C /opt/tools clone --depth=1 https://github.com/ambionics/symfony-exploits
@@ -682,4 +622,81 @@ function install_soapui() {
     tar xvf /tmp/SoapUI.tar.gz -C /opt/tools/SoapUI/ --strip=1
     add-aliases soapui
     add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
+}
+
+# Package dedicated to applicative and active web pentest tools
+function package_web() {
+    install_web_apt_tools
+    set_go_env
+    install_gobuster                # Web fuzzer (pretty good for several extensions)
+    install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
+    install_amass                   # Web fuzzer
+    install_ffuf                    # Web fuzzer (little favorites)
+    install_dirsearch               # Web fuzzer
+    install_ssrfmap                 # SSRF scanner
+    install_gopherus                # SSRF helper
+    # install_nosqlmap              # NoSQL scanner - FIXME
+    install_xsstrike                # XSS scanner
+    install_xspear                  # XSS scanner
+    # install_xsser                 # XSS scanner FIXME missing install
+    install_xsrfprobe               # CSRF scanner
+    install_bolt                    # CSRF scanner
+    install_kadimus                 # LFI scanner
+    install_fuxploider              # File upload scanner
+    # install_patator               # Login scanner # FIXME
+    install_joomscan                # Joomla scanner
+    install_wpscan                  # Wordpress scanner
+    install_droopescan              # Drupal scanner
+    install_drupwn                  # Drupal scanner
+    install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
+    install_moodlescan              # Moodle scanner
+    install_testssl                 # SSL/TLS scanner
+    install_tls-scanner             # SSL/TLS scanner
+    # install_sslyze                # SSL/TLS scanner FIXME
+    install_cloudfail               # Cloudflare misconfiguration detector
+    install_eyewitness              # Website screenshoter
+    install_oneforall               # OneForAll is a powerful subdomain integration tool
+    install_wafw00f                 # Waf detector
+    install_corscanner              # CORS misconfiguration detector
+    install_hakrawler               # Web endpoint discovery
+    install_gowitness               # Web screenshot utility
+    install_linkfinder              # Discovers endpoint JS files
+    install_timing_attack           # Cryptocraphic timing attack
+    install_updog                   # New HTTPServer
+    install_jwt_tool                # Toolkit for validating, forging, scanning and tampering JWTs
+    install_wuzz                    # Burp cli
+    install_git-dumper              # Dump a git repository from a website
+    install_gittools                # Dump a git repository from a website
+    install_ysoserial               # Deserialization payloads
+    install_phpggc                  # php deserialization payloads
+    install_symfony-exploits        # symfony secret fragments exploit
+    install_jdwp_shellifier         # exploit java debug
+    install_httpmethods             # Tool for HTTP methods enum & verb tampering
+    install_h2csmuggler             # Tool for HTTP2 smuggling
+    install_byp4xx                  # Tool to automate 40x errors bypass attempts
+    install_feroxbuster             # ffuf but with multithreaded recursion
+    install_tomcatwardeployer       # Apache Tomcat auto WAR deployment & pwning tool
+    install_clusterd                # Axis2/JBoss/ColdFusion/Glassfish/Weblogic/Railo scanner
+    install_arjun                   # HTTP Parameter Discovery
+    install_nuclei                  # Vulnerability scanner - Needed for gau install
+    install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan
+    install_hakrevdns               # Reverse DNS lookups
+    install_httprobe                # Probe http
+    install_httpx                   # Probe http
+    install_anew                    # A tool for adding new lines to files, skipping duplicates
+    install_robotstester            # Robots.txt scanner
+    install_naabu                   # Fast port scanner
+    # install_gitrob                # Senstive files reconnaissance in github
+    install_burpsuite
+    install_smuggler                # HTTP Request Smuggling scanner
+    install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE
+    install_kraken                  # Kraken is a modular multi-language webshell.
+    install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
+}
+
+function package_web_configure() {
+    set_go_env
+    configure_nuclei
+    configure_moodlescan
+    configure_clusterd
 }

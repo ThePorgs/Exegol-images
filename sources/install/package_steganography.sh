@@ -3,13 +3,6 @@
 
 source common.sh
 
-# Package dedicated to steganography tools
-function package_steganography() {
-    install_steganography_apt_tools
-    install_zsteg                   # Detect stegano-hidden data in PNG & BMP
-    install_stegolsb                # (including wavsteg)
-}
-
 function install_steganography_apt_tools() {
     fapt stegosuite steghide exif exiv2 hexedit
 
@@ -44,4 +37,11 @@ function install_stegolsb() {
     python3 -m pipx install stego-lsb
     add-test-command "stegolsb --version"
     add-to-list "stegolsb,https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm"
+}
+
+# Package dedicated to steganography tools
+function package_steganography() {
+    install_steganography_apt_tools
+    install_zsteg                   # Detect stegano-hidden data in PNG & BMP
+    install_stegolsb                # (including wavsteg)
 }

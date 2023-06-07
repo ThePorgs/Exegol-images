@@ -33,7 +33,7 @@ function package_most_used() {
     install_subfinder               # Subdomain bruteforcer
     install_autorecon               # External recon tool
     install_waybackurls             # Website history
-    # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
+    install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
     install_simplyemail             # Gather emails
     install_ffuf                    # Web fuzzer (little favorites)
     install_sqlmap                  # SQL injection scanner

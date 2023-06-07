@@ -3,51 +3,6 @@
 
 source common.sh
 
-# Package dedicated to osint, recon and passive tools
-function package_osint() {
-    set_go_env
-    install_osint_apt_tools
-    install_youtubedl               # Command-line program to download videos from YouTube.com and other video sites
-    install_sublist3r               # Fast subdomains enumeration tool
-    install_assetfinder             # Find domains and subdomains potentially related to a given domain
-    install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
-    install_amass                   # OWASP Amass tool suite is used to build a network map of the target
-    install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
-    install_holehe                  # Check if the mail is used on different sites
-    install_simplyemail             # Gather emails
-    # install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
-    install_h8mail                  # Email OSINT & Password breach hunting tool
-    install_infoga                  # Gathering email accounts informations
-    # install_buster                # An advanced tool for email reconnaissance FIXME /root/.local/pipx/shared/lib/python3.9/site-packages/setuptools/installer.py:27: SetuptoolsDeprecationWarning: setuptools.installer is deprecated. Requirements should be satisfied by a PEP 517 installer.
-    install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
-    # install_ghunt                 # Investigate Google Accounts with emails FIXME
-    install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
-    install_maigret                 # Search pseudos and information about users on many platforms
-    install_linkedin2username       # Generate username lists for companies on LinkedIn
-    install_toutatis                # Toutatis is a tool that allows you to extract information from instagrams accounts
-    install_waybackurls             # Website history
-    install_carbon14                # OSINT tool for estimating when a web page was written
-    install_photon                  # Incredibly fast crawler designed for OSINT.
-    install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
-    install_constellation           # A graph-focused data visualisation and interactive analysis application.
-    install_maltego                 # Maltego is a software used for open-source intelligence and forensics
-    # install_spiderfoot            # SpiderFoot automates OSINT collection # FIXME, requirements.txt creates dependancies conflicts and there's no setup.py file that would allow for pipx install
-    install_finalrecon              # A fast and simple python script for web reconnaissance
-    # fapt recon-ng                 # External recon tool FIXME
-    # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
-    # install_torbrowser            # Tor browser FIXME
-    install_pwndb					# No need to say more, no ? Be responsible with this tool please !
-    install_githubemail             # Retrieve a GitHub user's email even if it's not public
-    # fapt whois                    # See information about a specific domain name or IP address FIXME
-    install_recondog                # Informations gathering tool
-    install_gron                    # JSON parser
-    # install_ignorant              # holehe but for phone numbers
-}
-
-function package_osint_configure() {
-    configure_tor
-}
-
 function configure_tor() {
     echo 'SOCKSPort 127.0.0.1:9050' >> /etc/tor/torrc
 }
@@ -144,6 +99,20 @@ function install_simplyemail() {
     add-to-list "simplyemail,https://github.com/SimplySecurity/SimplyEmail,a scriptable command line tool for sending emails"
 }
 
+function install_theharvester() {
+    colorecho "Installing theHarvester"
+    git -C /opt/tools/ clone --depth=1 https://github.com/laramies/theHarvester
+    cd /opt/tools/theHarvester
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    # The tool needs access to the proxies.yaml file in the folder.
+    ln -s /opt/tools/theHarvester /usr/local/etc/
+    add-aliases theharvester
+    add-history theharvester
+    add-test-command "theHarvester.py --help"
+    add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts, subdomain names, virtual hosts, open ports/ banners, and employee names from different public sources"
+}
+
 function install_h8mail() {
     colorecho "Installing h8mail"
     python3 -m pipx install h8mail
@@ -163,6 +132,14 @@ function install_infoga() {
     add-history infoga
     add-test-command "infoga.py --help"
     add-to-list "infoga,https://github.com/m4ll0k/Infoga,Information gathering tool for hacking."
+}
+
+function install_buster() {
+    colorecho "Installing buster"
+    python3 -m pipx install git+https://github.com/sham00n/buster
+    add-history buster
+    add-test-command "buster --help"
+    add-to-list "buster,https://github.com/sham00n/Buster,Advanced OSINT tool"
 }
 
 function install_pwnedornot() {
@@ -284,8 +261,21 @@ function install_maltego(){
     colorecho "Installing Maltego"
     wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
     dpkg -i /tmp/maltegov4.3_package.deb
-    # TODO add-test-command
+    add-test-command "file /usr/share/maltego/bin/maltego"
     add-to-list "maltego,https://www.paterva.com/web7/downloads.php,A tool used for open-source intelligence and forensics"
+}
+
+function install_spiderfoot(){
+    colorecho "Installing Spiderfoot"
+    git -C /opt/tools/ clone --depth=1 https://github.com/smicallef/spiderfoot
+    cd /opt/tools/spiderfoot
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases spiderfoot
+    add-history spiderfoot
+    add-test-command "spiderfoot --help"
+    add-test-command "spiderfoot-cli --help"
+    add-to-list "spiderfoot,https://github.com/smicallef/spiderfoot,A reconnaissance tool that automatically queries over 100 public data sources"
 }
 
 function install_finalrecon(){
@@ -336,4 +326,61 @@ function install_gron() {
     go install -v github.com/tomnomnom/gron@latest
     add-test-command "gron --help"
     add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!"
+}
+
+function install_trevorspray() {
+    git -C /opt/tools/ clone --depth=1 https://github.com/blacklanternsecurity/TREVORspray
+    cd /opt/tools/TREVORspray
+    # https://github.com/blacklanternsecurity/TREVORspray/pull/27
+    sed -i "s/1.0.5/1.0.4/" pyproject.toml
+    python3 -m pipx install .
+    add-history trevorspray
+    add-test-command "trevorspray --help"
+    add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules, and more"
+}
+
+# Package dedicated to osint, recon and passive tools
+function package_osint() {
+    set_go_env
+    install_osint_apt_tools
+    install_youtubedl               # Command-line program to download videos from YouTube.com and other video sites
+    install_sublist3r               # Fast subdomains enumeration tool
+    install_assetfinder             # Find domains and subdomains potentially related to a given domain
+    install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
+    install_amass                   # OWASP Amass tool suite is used to build a network map of the target
+    install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
+    install_holehe                  # Check if the mail is used on different sites
+    install_simplyemail             # Gather emails
+    install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
+    install_h8mail                  # Email OSINT & Password breach hunting tool
+    install_infoga                  # Gathering email accounts informations
+    # install_buster                  # An advanced tool for email reconnaissance FIXME
+    install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
+    # install_ghunt                 # Investigate Google Accounts with emails FIXME
+    install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
+    install_maigret                 # Search pseudos and information about users on many platforms
+    install_linkedin2username       # Generate username lists for companies on LinkedIn
+    install_toutatis                # Toutatis is a tool that allows you to extract information from instagrams accounts
+    install_waybackurls             # Website history
+    install_carbon14                # OSINT tool for estimating when a web page was written
+    install_photon                  # Incredibly fast crawler designed for OSINT.
+    install_ipinfo                  # Get information about an IP address using command line with ipinfo.io
+    install_constellation           # A graph-focused data visualisation and interactive analysis application.
+    install_maltego                 # Maltego is a software used for open-source intelligence and forensics
+    install_spiderfoot              # SpiderFoot automates OSINT collection
+    install_finalrecon              # A fast and simple python script for web reconnaissance
+    # fapt recon-ng                 # External recon tool FIXME
+    # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
+    # install_torbrowser            # Tor browser FIXME
+    install_pwndb					# No need to say more, no ? Be responsible with this tool please !
+    install_githubemail             # Retrieve a GitHub user's email even if it's not public
+    # fapt whois                    # See information about a specific domain name or IP address FIXME
+    install_recondog                # Informations gathering tool
+    install_gron                    # JSON parser
+    # install_ignorant              # holehe but for phone numbers
+    install_trevorspray             # modular password sprayer with threading, SSH proxying, loot modules, and more!
+}
+
+function package_osint_configure() {
+    configure_tor
 }
