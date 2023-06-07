@@ -3,15 +3,6 @@
 
 source common.sh
 
-# Package dedicated to RFID/NCF pentest tools
-function package_rfid() {
-    install_rfid_apt_tools
-    install_mfoc                    # Tool for nested attack on Mifare Classic
-    install_libnfc-crypto1-crack    # tool for hardnested attack on Mifare Classic
-    install_mfdread                 # Tool to pretty print Mifare 1k/4k dumps
-    install_proxmark3               # Proxmark3 scripts
-}
-
 function install_rfid_apt_tools() {
     fapt libusb-dev autoconf nfct pcsc-tools pcscd libpcsclite-dev libpcsclite1 libnfc-dev libnfc-bin mfcuk
     
@@ -88,4 +79,13 @@ function install_proxmark3() {
     add-history proxmark3
     add-test-command "proxmark3 --version"
     add-to-list "proxmark3,https://github.com/Proxmark/proxmark3,Open source RFID research toolkit."
+}
+
+# Package dedicated to RFID/NCF pentest tools
+function package_rfid() {
+    install_rfid_apt_tools
+    install_mfoc                    # Tool for nested attack on Mifare Classic
+    install_libnfc-crypto1-crack    # tool for hardnested attack on Mifare Classic
+    install_mfdread                 # Tool to pretty print Mifare 1k/4k dumps
+    install_proxmark3               # Proxmark3 scripts
 }

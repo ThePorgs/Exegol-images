@@ -5,7 +5,7 @@ on:
     branches:
       - dev
     paths-ignore:
-#      - ".github/**"
+      - ".github/**"
       - "**.md"
 
 env:
