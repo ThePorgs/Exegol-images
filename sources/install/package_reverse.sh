@@ -54,7 +54,13 @@ function install_angr() {
 
 function install_checksec-py() {
     colorecho "Installing checksec.py"
-    python3 -m pipx install checksec.py
+    git -C /opt/tools/ clone --depth=1 https://github.com/Wenzel/checksec.py.git
+    cd /opt/tools/checksec.py
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install .
+    ./venv/bin/python3 -m pip install --upgrade lief
+    add-aliases checksec
+    add-history checksec
     add-test-command "checksec --help"
     add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
