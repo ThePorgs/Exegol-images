@@ -54,7 +54,13 @@ function install_angr() {
 
 function install_checksec-py() {
     colorecho "Installing checksec.py"
-    python3 -m pipx install checksec.py
+    git -C /opt/tools/ clone --depth=1 https://github.com/Wenzel/checksec.py.git
+    cd /opt/tools/checksec.py
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install .
+    ./venv/bin/python3 -m pip install --upgrade lief
+    add-aliases checksec
+    add-history checksec
     add-test-command "checksec --help"
     add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
@@ -93,13 +99,23 @@ function install_ida() {
     add-to-list "ida,https://www.hex-rays.com/products/ida/,Interactive disassembler for software analysis."
 }
 
-function install_jd-gui(){
+function install_jd-gui() {
     colorecho "Installing jd-gui"
     mkdir -p /opt/tools/jd-gui && cd /opt/tools/jd-gui || exit
     wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
     add-aliases jd-gui
     # TODO add-test-command GUI app
     add-to-list "jd-gui,https://github.com/java-decompiler/jd-gui,A standalone Java Decompiler GUI"
+}
+
+function install_pwninit() {
+    colorecho "Installing pwninit"
+    fapt liblzma-dev
+    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+    source "$HOME/.cargo/env"
+    cargo install pwninit
+    add-test-command "pwninit --help"
+    add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
 }
 
 # Package dedicated to reverse engineering tools
@@ -113,4 +129,5 @@ function package_reverse() {
     install_ghidra
     install_ida
     install_jd-gui                  # Java decompiler
+    install_pwninit                 # Tool for automating starting binary exploit
 }
