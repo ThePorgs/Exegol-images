@@ -865,6 +865,17 @@ function install_neo4j() {
     add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
 }
 
+function install_noPac() {
+    colorecho "Installing noPac"
+    git -C /opt/tools/ clone --depth 1 https://github.com/Ridter/noPac
+    cd /opt/tools/noPac
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases noPac
+    add-history noPac
+    add-test-command "noPac --help"
+    add-to-list "noPac,https://github.com/Ridter/noPac,Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user."
+}
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -942,6 +953,7 @@ function package_ad() {
     install_PassTheCert
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
+    install_noPac
 }
 
 function package_ad_configure() {
