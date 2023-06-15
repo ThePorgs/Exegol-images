@@ -6,6 +6,9 @@ source common.sh
 function install_iot_apt_tools() {
     fapt avrdude minicom
 
+    add-history avrdude
+    add-history minicom
+
     add-test-command "avrdude '-?'"
     add-test-command "minicom --version; minicom --version |& grep 'This program is free software'"
   
