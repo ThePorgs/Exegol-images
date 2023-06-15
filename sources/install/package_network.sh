@@ -124,6 +124,19 @@ function install_sshuttle() {
     add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
 }
 
+function install_eaphammer() {
+    colorecho "Installing eaphammer"
+    git -C /opt/tools clone --depth 1 https://github.com/s0lst1c3/eaphammer.git
+    cd /opt/tools/eaphammer
+    xargs apt install -y < kali-dependencies.txt
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r pip.req
+    add-aliases eaphammer
+    add-history eaphammer
+    add-test-command "eaphammer -h"
+    add-to-list "eaphammer,https://github.com/s0lst1c3/eaphammer,EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks."
+}
+
 function install_fierce() {
     colorecho "Installing fierce"
     python3 -m pipx install git+https://github.com/mschwager/fierce
@@ -187,14 +200,13 @@ function package_network() {
     set_go_env
     install_network_apt_tools
     install_proxychains             # Network tool
-    # install_wireshark_sources     # Install Wireshark from sources
     install_nmap                    # Port scanner
     install_autorecon               # External recon tool
     install_dnschef                 # Python DNS server
     install_divideandscan           # Python project to automate port scanning routine
     install_chisel                  # Fast TCP/UDP tunnel over HTTP
     install_sshuttle                # Transparent proxy over SSH
-    # install_eaphammer             # FIXME
+    install_eaphammer               # EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks.
     install_fierce
     # install_odat                  # Oracle Database Attacking Tool, FIXME
     install_dnsx                    # Fast and multi-purpose DNS toolkit

@@ -1,1 +1,1 @@
-alias eaphammer='python3 /opt/tools/eaphammer/eaphammer'
+alias eaphammer='/opt/tools/eaphammer/venv/bin/python3 /opt/tools/eaphammer/eaphammer'

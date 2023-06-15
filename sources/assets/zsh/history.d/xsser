@@ -1,0 +1,1 @@
+xsser -u $TARGET -g '/login?password=XSS' --Coo
