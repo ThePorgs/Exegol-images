@@ -4,29 +4,23 @@
 source common.sh
 
 function install_ad_apt_tools() {
-    fapt samdump2 smbclient onesixtyone nbtscan
+    fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
 
     add-history smbclient
     add-history onesixtyone
+    add-history ldapsearch
 
-    add-test-command "samdump2 -h|& grep 'enable debugging'" # Dumps Windows 2k/NT/XP/Vista password hashes
-    add-test-command "smbclient --help"                      # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
-    add-test-command "onesixtyone 127.0.0.1 public"          # SNMP scanning
-    add-test-command "nbtscan 127.0.0.1"                     # NetBIOS scanning tool
+    add-test-command "samdump2 -h|& grep 'enable debugging'"        # Dumps Windows 2k/NT/XP/Vista password hashes
+    add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+    add-test-command "onesixtyone 127.0.0.1 public"                 # SNMP scanning
+    add-test-command "nbtscan 127.0.0.1"                            # NetBIOS scanning tool
+    add-test-command "ldapsearch --help|& grep 'Search options'"    # Perform queries on a LDAP server
 
     add-to-list "samdump2,https://github.com/azan121468/SAMdump2,A tool to dump Windows NT/2k/XP/Vista password hashes from SAM files"
     add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
     add-to-list "onesixtyone,https://github.com/trailofbits/onesixtyone,onesixtyone is an SNMP scanner which utilizes a sweep technique to achieve very high performance."
     add-to-list "nbtscan,https://github.com/charlesroelli/nbtscan,NBTscan is a program for scanning IP networks for NetBIOS name information."
-}
-
-function package_ad_configure() {
-    configure_responder
-    configure_crackmapexec
-    configure_bloodhound
-    configure_impacket
-    configure_krbrelayx
-    configure_powershell
+    add-to-list "ldapsearch,https://wiki.debian.org/LDAP/LDAPUtils,Search for and display entries (ldap)"
 }
 
 function install_responder() {
@@ -113,6 +107,7 @@ function install_bloodhound() {
     git -C /opt/tools/ clone --depth=1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
     zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
+    add-history bloodhound
     add-aliases bloodhound
     add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
     add-to-list "bloodhound,https://github.com/BloodHoundAD/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments."
@@ -428,8 +423,9 @@ function install_pth-tools() {
     colorecho "Installing pth-tools"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        fapt libreadline8 && ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /usr/lib/x86_64-linux-gnu/libreadline.so.6
+        fapt libreadline8 libreadline-dev
         git -C /opt/tools clone --depth=1 https://github.com/byt3bl33d3r/pth-toolkit
+        ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /opt/tools/pth-toolkit/lib/libreadline.so.6
         add-aliases pth-tools
         add-history pth-tools
         add-test-command "pth-net --version"
@@ -869,6 +865,17 @@ function install_neo4j() {
     add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
 }
 
+function install_noPac() {
+    colorecho "Installing noPac"
+    git -C /opt/tools/ clone --depth 1 https://github.com/Ridter/noPac
+    cd /opt/tools/noPac
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases noPac
+    add-history noPac
+    add-test-command "noPac --help"
+    add-to-list "noPac,https://github.com/Ridter/noPac,Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user."
+}
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -946,4 +953,14 @@ function package_ad() {
     install_PassTheCert
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
+    install_noPac
+}
+
+function package_ad_configure() {
+    configure_responder
+    configure_crackmapexec
+    configure_bloodhound
+    configure_impacket
+    configure_krbrelayx
+    configure_powershell
 }

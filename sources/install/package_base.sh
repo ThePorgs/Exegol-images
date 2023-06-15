@@ -73,6 +73,8 @@ function deploy_exegol() {
     chown -Rv _apt:root /opt/packages
     rm -rf /.exegol || true
     cp -r /root/sources/assets/exegol /.exegol
+    cp -v /root/sources/assets/zsh/history ~/.zsh_history
+    cp -v /root/sources/assets/zsh/aliases /opt/.exegol_aliases
     # Moving supported custom configurations in /opt
     mv /.exegol/skel/supported_setups.md /opt/
     mkdir -p /var/log/exegol
@@ -104,6 +106,7 @@ function install_firefox() {
     mv /root/sources/assets/firefox/* /opt/tools/firefox/
     python3 -m pip install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/setup.py
+    add-history firefox
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
     add-test-command "firefox --version"
 }
@@ -114,8 +117,6 @@ function install_ohmyzsh() {
     fi
     colorecho "Installing oh-my-zsh, config, history, aliases"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    cp -v /root/sources/assets/zsh/history ~/.zsh_history
-    cp -v /root/sources/assets/zsh/aliases /opt/.exegol_aliases
     cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
     git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-autosuggestions
     git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-syntax-highlighting
@@ -201,8 +202,8 @@ function package_base() {
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev bundler \
-    nim perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
-    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev
+    nim perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-11-jdk openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
+    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel fzf
@@ -262,6 +263,41 @@ function package_base() {
 
     # NVM (install in conctext)
     zsh -c "source ~/.zshrc && nvm install node"
+
+    # FZF
+    touch /usr/share/doc/fzf/examples/key-bindings.zsh
+
+    # Set Global config path to vendor
+    # All programs using bundle will store their deps in vendor/
+    bundle config path vendor/
+}
+
+# FOR DEBUGGING, FAST MINIMAL INSTALL
+function package_base_debug() {
+    update
+    colorecho "Installing apt-fast for faster dep installs"
+    apt-get install -y curl sudo wget
+    /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
+    deploy_exegol
+    install_exegol-history
+    fapt software-properties-common
+    add-apt-repository contrib
+    add-apt-repository non-free
+    apt-get update
+    colorecho "Starting main programs install"
+    fapt sudo git curl zsh asciinema zip wget ncat dnsutils python2 python3 python3-setuptools python3-pip vim nano procps automake autoconf make bundler mlocate
+
+    fapt-history dnsutils samba ssh snmp faketime
+    fapt-aliases php python3 grc emacs-nox xsel fzf
+
+    ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
+#    python3 -m pip install --upgrade pip
+    filesystem
+    install_locales
+    install_ohmyzsh                                     # Awesome shell
+    install_pipx
+    add-test-command "fzf --version"
+    add-history curl
 
     # FZF
     touch /usr/share/doc/fzf/examples/key-bindings.zsh

@@ -5,7 +5,7 @@ source common.sh
 
 function install_cracking_apt_tools() {
     fapt hashcat fcrackzip pdfcrack bruteforce-luks
-    
+
     add-history hashcat
     add-history fcrackzip
 
@@ -13,15 +13,11 @@ function install_cracking_apt_tools() {
     add-test-command "fcrackzip --help"                                 # Zip cracker
     add-test-command "pdfcrack --version"                               # PDF cracker
     add-test-command "bruteforce-luks -h |& grep 'Print progress info'" # Find the password of a LUKS encrypted volume
-    
+
     add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery"
     add-to-list "fcrackzip,https://github.com/hyc/fcrackzip,Password cracker for zip archives."
     add-to-list "pdfcrack,https://github.com/robins/pdfcrack,A tool for cracking password-protected PDF files"
     add-to-list "bruteforce-luks,https://github.com/glv2/bruteforce-luks,A tool to help recover encrypted LUKS2 containers"
-}
-
-function package_cracking_configure() {
-    configure_john
 }
 
 function install_john() {
@@ -61,4 +57,8 @@ function package_cracking() {
     install_john                    # Password cracker
     install_name-that-hash          # Name-That-Hash, the hash identifier tool
     install_haiti                   # haiti, hash type identifier
+}
+
+function package_cracking_configure() {
+    configure_john
 }

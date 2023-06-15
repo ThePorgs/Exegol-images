@@ -17,12 +17,6 @@ function install_wordlists_apt_tools() {
     add-to-list "cewl,https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results"
 }
 
-function package_wordlists_configure() {
-    configure_seclists
-    configure_rockyou
-    configure_genusernames
-}
-
 function install_seclists() {
     colorecho "Installing seclists"
     git -C /opt clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
@@ -86,4 +80,10 @@ function package_wordlists() {
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
+}
+
+function package_wordlists_configure() {
+    configure_seclists
+    configure_rockyou
+    configure_genusernames
 }

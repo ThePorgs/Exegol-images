@@ -3,25 +3,22 @@
 
 source common.sh
 
-function package_misc_configure() {
-    configure_searchsploit
-    configure_trilium
-}
-
 function install_misc_apt_tools() {
-    fapt rlwrap exiftool imagemagick ascii
-    
+    fapt rlwrap exiftool imagemagick ascii rsync
+
     add-history rlwrap
-    
+
     add-test-command "rlwrap --version"                            # Reverse shell utility
     add-test-command "exiftool /usr/share/pixmaps/debian-logo.png" # Meta information reader/writer
     add-test-command "convert -version"                            # Copy, modify, and distribute image
     add-test-command "ascii -v"                                    # The ascii table in the shell
-    
+    add-test-command "rsync -h"                                    # File synchronization tool for efficiently copying and updating data between local or remote locations.
+
     add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables, making it possible to edit and re-run input history"
     add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading, writing and editing meta information in image, audio and video files."
     add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create, edit, compose, or convert bitmap images."
     add-to-list "ascii,https://github.com/moul/ascii,ASCII command-line tool to replace images with color-coded ASCII art."
+    add-to-list "rsync,https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations"
 }
 
 function install_goshs() {
@@ -118,6 +115,14 @@ function install_ngrok() {
     add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet"
 }
 
+function install_objectwalker() {
+    colorecho "Installing objectwalker"
+    python3 -m pipx install git+https://github.com/p0dalirius/objectwalker
+    add-history objectwalker
+    add-test-command "objectwalker --help"
+    add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_go_env
@@ -130,4 +135,10 @@ function package_misc() {
     install_trilium         # notes taking tool
     install_ngrok           # expose a local development server to the Internet
     install_whatportis      # Search default port number
+    install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory
+}
+
+function package_misc_configure() {
+    configure_searchsploit
+    configure_trilium
 }

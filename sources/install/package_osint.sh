@@ -3,10 +3,6 @@
 
 source common.sh
 
-function package_osint_configure() {
-    configure_tor
-}
-
 function configure_tor() {
     echo 'SOCKSPort 127.0.0.1:9050' >> /etc/tor/torrc
 }
@@ -358,7 +354,7 @@ function package_osint() {
     install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
     install_h8mail                  # Email OSINT & Password breach hunting tool
     install_infoga                  # Gathering email accounts informations
-    install_buster                  # An advanced tool for email reconnaissance
+    # install_buster                  # An advanced tool for email reconnaissance FIXME
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     # install_ghunt                 # Investigate Google Accounts with emails FIXME
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
@@ -383,4 +379,8 @@ function package_osint() {
     install_gron                    # JSON parser
     # install_ignorant              # holehe but for phone numbers
     install_trevorspray             # modular password sprayer with threading, SSH proxying, loot modules, and more!
+}
+
+function package_osint_configure() {
+    configure_tor
 }

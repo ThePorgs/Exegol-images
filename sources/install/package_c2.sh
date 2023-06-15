@@ -3,10 +3,6 @@
 
 source common.sh
 
-function package_c2_configure() {
-    configure_metasploit
-}
-
 function install_pwncat() {
     colorecho "Installing pwncat"
     python3 -m pipx install pwncat-cs
@@ -46,10 +42,11 @@ function install_routersploit() {
 
 function install_sliver() {
     colorecho "Installing Sliver"
-    git -C /opt/tools/ clone --depth=1 https://github.com/BishopFox/sliver.git
+    git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
     cd /opt/tools/sliver
     make
     cp sliver-* /opt/tools/bin
+    add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
 }
@@ -63,4 +60,8 @@ function package_c2() {
     install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
+}
+
+function package_c2_configure() {
+    configure_metasploit
 }

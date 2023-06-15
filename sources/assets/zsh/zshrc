@@ -47,6 +47,14 @@ export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
 
 source /opt/.exegol_aliases
+# Loads user-defined aliases if the file exists otherwise creates a default file if my-resources is enabled in the container
+if [ -f /opt/my-resources/setup/zsh/aliases ]
+then
+  source /opt/my-resources/setup/zsh/aliases
+else
+  [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
+  cp /.exegol/skel/zsh/aliases /opt/my-resources/setup/zsh/aliases
+fi
 source /opt/tools/Exegol-history/profile.sh
 source $HOME/.cargo/env
 
