@@ -270,6 +270,9 @@ function package_base() {
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/
     bundle config path vendor/
+
+    # Remote Graphical Desktop installation
+    /root/sources/install/guacamole_install.sh
 }
 
 # FOR DEBUGGING, FAST MINIMAL INSTALL

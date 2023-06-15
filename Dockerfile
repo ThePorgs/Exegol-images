@@ -20,11 +20,8 @@ WORKDIR /root/sources/install
 
 RUN chmod +x entrypoint.sh
 
-RUN chmod +x guacamole_install.sh
-
 RUN ./entrypoint.sh package_base
 
-RUN ./guacamole_install.sh
 # WARNING: package_most_used can't be used with other functions other than: package_base, post_install_clean
 # RUN ./entrypoint.sh package_most_used
 
