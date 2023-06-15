@@ -2,6 +2,5 @@
 
 service guacd stop
 service xrdp stop
-pkill xrdp
 pkill kdeconnectd
 /root/.tomcat/bin/shutdown.sh
