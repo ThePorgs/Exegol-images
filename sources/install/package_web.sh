@@ -9,6 +9,9 @@ function install_web_apt_tools() {
     add-history dirb
     add-history wfuzz
     add-history sqlmap
+    add-history sslscan
+    add-history weevely
+    add-history whatweb
     add-history prips
     add-history swaks
   
@@ -55,6 +58,7 @@ function install_kiterunner() {
 function install_amass(){
     colorecho "Installing Amass"
     go install -v github.com/owasp-amass/amass/v3/...@master
+    add-history amass
     add-test-command "amass -version"
     add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration, attack surface mapping & external assets discovery tool"
 }
@@ -82,6 +86,7 @@ function install_ssrfmap() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ssrfmap
+    add-history ssrfmap
     add-test-command "ssrfmap --help"
     add-to-list "ssrfmap,https://github.com/swisskyrepo/SSRFmap,a tool for testing SSRF vulnerabilities."
 }
@@ -93,6 +98,7 @@ function install_gopherus() {
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install argparse requests
     add-aliases gopherus
+    add-history gopherus
     add-test-command "gopherus --help"
     add-to-list "gopherus,https://github.com/tarunkant/Gopherus,Gopherus is a simple command line tool for exploiting vulnerable Gopher servers."
 }
@@ -105,6 +111,7 @@ function install_nosqlmap() {
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 setup.py install
     add-aliases nosqlmap
+    add-history nosqlmap
     add-test-command "nosqlmap --help"
     add-to-list "nosqlmap,https://github.com/codingo/NoSQLMap,a Python tool for testing NoSQL databases for security vulnerabilities."
 }
@@ -116,6 +123,7 @@ function install_xsstrike() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases xsstrike
+    add-history xsstrike
     add-test-command "XSStrike --help"
     add-to-list "xsstrike,https://github.com/s0md3v/XSStrike,a Python tool for detecting and exploiting XSS vulnerabilities."
 }
@@ -124,6 +132,7 @@ function install_xspear() {
     colorecho "Installing XSpear"
     # TODO : gem venv
     gem install XSpear
+    add-history XSpear
     add-test-command "XSpear --help"
     add-to-list "xspear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
 }
@@ -131,6 +140,7 @@ function install_xspear() {
 function install_xsrfprobe() {
     colorecho "Installing XSRFProbe"
     python3 -m pipx install git+https://github.com/0xInfection/XSRFProbe
+    add-history xsrfprobe
     add-test-command "xsrfprobe --help"
     add-to-list "xsrfprobe,https://github.com/0xInfection/XSRFProbe,a tool for detecting and exploiting Cross-Site Request Forgery (CSRF) vulnerabilities"
 }
@@ -142,6 +152,7 @@ function install_bolt() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases bolt
+    add-history bolt
     add-test-command "bolt --help"
     add-to-list "bolt,https://github.com/s0md3v/bolt,TODO"
 }
@@ -166,6 +177,7 @@ function install_fuxploider() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases fuxploider
+    add-history fuxploider
     add-test-command "fuxploider --help"
     add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
 }
@@ -198,6 +210,7 @@ function install_wpscan(){
 function install_droopescan() {
     colorecho "Installing droopescan"
     python3 -m pipx install git+https://github.com/droope/droopescan.git
+    add-history droopescan
     add-test-command "droopescan --help"
     add-to-list "droopescan,https://github.com/droope/droopescan,Scan Drupal websites for vulnerabilities."
 }
@@ -206,8 +219,9 @@ function install_drupwn() {
     colorecho "Installing drupwn"
     git -C /opt/tools/ clone https://github.com/immunIT/drupwn
     python3 -m pipx install git+https://github.com/immunIT/drupwn
-    add-test-command "drupwn --help"
     add-aliases drupwn
+    add-history drupwn
+    add-test-command "drupwn --help"
     add-to-list "drupwn,https://github.com/immunIT/drupwn,Drupal security scanner."
 }
 
@@ -245,6 +259,7 @@ function install_testssl() {
     fapt bsdmainutils
     git -C /opt/tools/ clone --depth=1 https://github.com/drwetter/testssl.sh.git
     add-aliases testssl
+    add-history testssl
     add-test-command "testssl --help"
     add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
 }
@@ -283,6 +298,7 @@ function install_eyewitness() {
     ./Python/setup/setup.sh
     deactivate
     add-aliases eyewitness
+    add-history eyewitness
     add-test-command "eyewitness --help"
     add-to-list "eyewitness,https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites, provide some server header info, and identify default credentials if possible."
 }
@@ -294,6 +310,7 @@ function install_oneforall() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases oneforall
+    add-history oneforall
     add-test-command "oneforall version"
     add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
 }
@@ -301,6 +318,7 @@ function install_oneforall() {
 function install_wafw00f() {
     colorecho "Installing wafw00f"
     python3 -m pipx install wafw00F
+    add-history wafw00f
     add-test-command "wafw00f --help"
     add-to-list "wafw00f,https://github.com/EnableSecurity/wafw00f,a Python tool that helps to identify and fingerprint web application firewall (WAF) products."
 }
@@ -312,6 +330,7 @@ function install_corscanner() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases corscanner
+    add-history corscanner
     add-test-command "corscanner --help"
     add-to-list "corscanner,https://github.com/chenjj/CORScanner,a Python script for finding CORS misconfigurations."
 }
@@ -340,6 +359,7 @@ function install_linkfinder() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases linkfinder
+    add-history linkfinder
     add-test-command "linkfinder --help"
     add-to-list "linkfinder,https://github.com/GerbenJavado/LinkFinder,a Python script that finds endpoints and their parameters in JavaScript files."
 }
@@ -348,6 +368,7 @@ function install_timing_attack() {
     colorecho "Installing timing_attack"
     # TODO: gem venv
     gem install timing_attack
+    add-history timing_attack
     add-test-command "timing_attack --help"
     add-to-list "timing,https://github.com/ffleming/timing_attack,Tool to generate a timing profile for a given command."
 }
@@ -367,6 +388,7 @@ function install_jwt_tool() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases jwt_tool
+    add-history jwt_tool
     add-test-command "jwt_tool --help"
     add-to-list "jwt,https://github.com/ticarpi/jwt_tool,a command-line tool for working with JSON Web Tokens (JWTs)"
 }
@@ -374,6 +396,7 @@ function install_jwt_tool() {
 function install_wuzz() {
     colorecho "Installing wuzz"
     go install -v github.com/asciimoo/wuzz@latest
+    add-history wuzz
     add-test-command "wuzz --help"
     add-to-list "wuzz,https://github.com/asciimoo/wuzz,a command-line tool for interacting with HTTP(S) web services"
 }
@@ -381,6 +404,7 @@ function install_wuzz() {
 function install_git-dumper() {
     colorecho "Installing git-dumper"
     python3 -m pipx install git-dumper
+    add-history git-dumper
     add-test-command "git-dumper --help"
     add-to-list "git-dumper,https://github.com/arthaud/git-dumper,Small script to dump a Git repository from a website."
 }
@@ -392,6 +416,7 @@ function install_gittools() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases gittools
+    add-history gittools
     add-test-command "extractor --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
     add-test-command "gitdumper --help|& grep 'USAGE: http://target.tld/.git/'"
     add-test-command "gitfinder -h"
@@ -403,6 +428,7 @@ function install_ysoserial() {
     mkdir /opt/tools/ysoserial/
     wget -O /opt/tools/ysoserial/ysoserial.jar "https://github.com/frohoff/ysoserial/releases/latest/download/ysoserial-all.jar"
     add-aliases ysoserial
+    add-history ysoserial
     add-test-command "ysoserial --help|& grep 'spring-core:4.1.4.RELEASE'"
     add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
 }
@@ -411,6 +437,7 @@ function install_phpggc() {
     colorecho "Installing phpggc"
     git -C /opt/tools clone --depth=1 https://github.com/ambionics/phpggc.git
     add-aliases phpggc
+    add-history phpggc
     add-test-command "phpggc --help"
     add-to-list "phpggc,https://github.com/ambionics/phpggc,Exploit generation tool for the PHP platform."
 }
@@ -419,6 +446,7 @@ function install_symfony-exploits(){
     colorecho "Installing symfony-exploits"
     git -C /opt/tools clone --depth=1 https://github.com/ambionics/symfony-exploits
     add-aliases symfony-exploits
+    add-history symfony-exploits
     add-test-command "secret_fragment_exploit.py --help"
     add-to-list "symfony-exploits,https://github.com/ambionics/symfony-exploits,Collection of Symfony exploits and PoCs."
 }
@@ -427,6 +455,7 @@ function install_jdwp_shellifier(){
     colorecho "Installing jdwp_shellifier"
     git -C /opt/tools/ clone --depth=1 https://github.com/IOActive/jdwp-shellifier
     add-aliases jdwp-shellifier
+    add-history jdwp-shellifier
     add-test-command "jdwp-shellifier.py --help"
     add-to-list "jdwp,https://github.com/IOActive/jdwp-shellifier,This exploitation script is meant to be used by pentesters against active JDWP service, in order to gain Remote Code Execution."
 }
@@ -450,6 +479,7 @@ function install_h2csmuggler() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install h2
     add-aliases h2csmuggler
+    add-history h2csmuggler
     add-test-command "h2csmuggler --help"
     add-to-list "h2csmuggler,https://github.com/BishopFox/h2csmuggler,HTTP Request Smuggling tool using H2C upgrade"
 }
@@ -457,7 +487,8 @@ function install_h2csmuggler() {
 function install_byp4xx() {
     colorecho "Installing byp4xx"
     go install -v github.com/lobuhi/byp4xx@latest
-    add-test-command "byp4xx"
+    add-history byp4xx
+    add-test-command byp4xx
     add-to-list "byp4xx,https://github.com/lobuhi/byp4xx,A Swiss Army knife for bypassing web application firewalls and filters."
 }
 
@@ -481,6 +512,7 @@ function install_tomcatwardeployer() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases tomcatwardeployer
+    add-history tomcatwardeployer
     add-test-command "tomcatWarDeployer --help"
     add-to-list "tomcatwardeployer,https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat."
 }
@@ -504,6 +536,7 @@ function configure_clusterd() {
 function install_arjun() {
     colorecho "Installing arjun"
     python3 -m pipx install arjun
+    add-history arjun
     add-test-command "arjun --help"
     add-to-list "arjun,https://github.com/s0md3v/Arjun,HTTP parameter discovery suite."
 }
@@ -523,6 +556,7 @@ function configure_nuclei() {
 function install_gau() {
     colorecho "Installing gau"
     GO111MODULE=on go install -v github.com/lc/gau@latest
+    add-history gau
     add-test-command "gau --help"
     add-to-list "gau,https://github.com/lc/gau,Fast tool for fetching URLs"
 }
@@ -538,6 +572,7 @@ function install_hakrevdns() {
 function install_httprobe() {
     colorecho "Installing httprobe"
     go install -v github.com/tomnomnom/httprobe@latest
+    add-history httprobe
     add-test-command "httprobe --help"
     add-to-list "httprobe,https://github.com/tomnomnom/httprobe,A simple utility for enumerating HTTP and HTTPS servers."
 }
@@ -553,6 +588,7 @@ function install_httpx() {
 function install_anew() {
     colorecho "Installing anew"
     go install -v github.com/tomnomnom/anew@latest
+    add-history anew
     add-test-command "anew --help"
     add-to-list "anew,https://github.com/tomnomnom/anew,A simple tool for filtering and manipulating text data, such as log files and other outputs."
 }
@@ -570,6 +606,7 @@ function install_naabu() {
     # TODO: Check if deps is already installed
     fapt libpcap-dev
     go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
+    add-history naabu
     add-test-command "naabu --help"
     add-to-list "naabu,https://github.com/projectdiscovery/naabu,A fast and reliable port scanner that can detect open ports and services."
 }
@@ -582,7 +619,9 @@ function install_burpsuite() {
     # FIXME: set up the dark theme right away?
     # FIXME: add burp certificate to embedded firefox and chrome?
     # TODO: change Burp config to allow built-in browser to run
+    # TODO: Add test command
     add-aliases burpsuite
+    add-history burpsuite
     add-to-list "burpsuite,https://portswigger.net/burp,Web application security testing tool."
 }
 
@@ -601,6 +640,7 @@ function install_php_filter_chain_generator() {
     colorecho "Installing PHP_Filter_Chain_Generator"
     git -C /opt/tools/ clone --depth=1 https://github.com/synacktiv/php_filter_chain_generator.git
     add-aliases php_filter_chain_generator
+    add-history php_filter_chain_generator
     add-test-command "php_filter_chain_generator --help"
     add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,TODO"
 }
@@ -623,7 +663,9 @@ function install_soapui() {
     wget https://dl.eviware.com/soapuios/5.7.0/SoapUI-5.7.0-linux-bin.tar.gz -O /tmp/SoapUI.tar.gz
     tar xvf /tmp/SoapUI.tar.gz -C /opt/tools/SoapUI/ --strip=1
     add-aliases soapui
+    add-history soapui
     add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
+    add-to-list "SoapUI,https://github.com/SmartBear/soapui,SoapUI is the world's leading testing tool for API testing."
 }
 
 # Package dedicated to applicative and active web pentest tools
