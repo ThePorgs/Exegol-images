@@ -105,7 +105,7 @@
             "category": "They hate cinnamon",
             "queryList": [{
                 "final": true,
-                "query": "OPTIONAL MATCH (u1:User) WHERE u1.hasspn=true OPTIONAL MATCH (u1)-[r:AdminTo]->(c:Computer) RETURN u"
+                "query": "OPTIONAL MATCH (u:User) WHERE u.hasspn=true OPTIONAL MATCH (u)-[r:AdminTo]->(c:Computer) RETURN u"
             }]
         },
         {
