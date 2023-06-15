@@ -6,6 +6,7 @@ source common.sh
 function install_sipvicious() {
     colorecho "Installing SIPVicious"
     python3 -m pipx install git+https://github.com/enablesecurity/sipvicious.git
+    add-history sipvicious_svcrack
     add-test-command "sipvicious_svcrack --version"
     add-to-list "sipvicious,https://github.com/enablesecurity/sipvicious,Enumeration and MITM tool for SIP devices"
 }
