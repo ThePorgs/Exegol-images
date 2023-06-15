@@ -8,8 +8,16 @@ function install_network_apt_tools() {
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
 
+    add-history wireshark
+    add-history tshark
+    add-history hping3
     add-history masscan
     add-history netdiscover
+    add-history tcpdump
+    add-history iptables
+    add-history traceroute
+    add-history rdesktop
+    add-history hydra
     add-history xfreerdp
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
@@ -59,6 +67,7 @@ function install_proxychains() {
     make install-config
     cp -v /root/sources/assets/proxychains/proxychains.conf /etc/proxychains.conf
     add-aliases proxychains
+    add-history proxychains
     add-test-command "proxychains4 echo test"
     add-test-command "proxyresolv"
     add-to-list "proxychains,https://github.com/rofl0r/proxychains,Proxy chains - redirect connections through proxy servers."
@@ -97,6 +106,7 @@ function install_dnschef() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases dnschef
+    add-history dnschef
     add-test-command "dnschef --help"
     add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
 }
@@ -113,6 +123,7 @@ function install_chisel() {
     colorecho "Installing chisel"
     go install -v github.com/jpillora/chisel@latest
     # TODO: add windows pre-compiled binaries in /opt/ressources/windows ?
+    add-history chisel
     add-test-command "chisel --help"
     add-to-list "chisel,https://github.com/jpillora/chisel,Go based TCP tunnel, with authentication and encryption support"
 }
@@ -120,6 +131,7 @@ function install_chisel() {
 function install_sshuttle() {
     colorecho "Installing sshtuttle"
     python3 -m pipx install git+https://github.com/sshuttle/sshuttle.git
+    add-history sshuttle
     add-test-command "sshuttle --version"
     add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
 }
