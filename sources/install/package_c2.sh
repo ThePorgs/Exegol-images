@@ -6,6 +6,7 @@ source common.sh
 function install_pwncat() {
     colorecho "Installing pwncat"
     python3 -m pipx install pwncat-cs
+    add-history pwncat
     add-test-command "pwncat-cs --version"
     add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
 }
@@ -21,6 +22,7 @@ function install_metasploit() {
     cd /tmp
     rm -rf /tmp/metasploit_install
     add-aliases msfconsole
+    add-history msfconsole
     add-test-command "msfconsole --help"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
@@ -36,6 +38,7 @@ function install_routersploit() {
     python3 -m pipx install routersploit
     python3 -m pipx inject routersploit colorama
     add-aliases routersploit
+    add-history routersploit
     add-test-command "which rsf.py"
     add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
 }
