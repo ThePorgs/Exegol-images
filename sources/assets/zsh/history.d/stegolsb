@@ -1,0 +1,1 @@
+stegolsb -v extract image.png --column-step 2 --rows 1 --columns 128
