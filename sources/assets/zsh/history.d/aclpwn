@@ -1,0 +1,1 @@
+aclpwn -f $COMPUTER -ft computer -t $DOMAIN -tt domain -d $DOMAIN -dry

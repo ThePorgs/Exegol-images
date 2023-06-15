@@ -1,0 +1,1 @@
+passthecert.py -action add_computer -crt user.crt -key user.key -domain $DOMAIN -dc-ip $DC_HOST

@@ -1,0 +1,2 @@
+KeePwn plugin check -u $USER -p $PASSWORD -d $DOMAIN -t $TARGET
+KeePwn plugin add -u $USER -p $PASSWORD -d $DOMAIN -t $TARGET --plugin KeeFarceRebornPlugin.dll

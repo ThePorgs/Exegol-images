@@ -1,0 +1,3 @@
+msprobe adfs $DOMAIN
+msprobe rdp $DOMAIN
+msprobe full $DOMAIN
