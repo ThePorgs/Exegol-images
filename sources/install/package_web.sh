@@ -31,6 +31,7 @@ function install_web_apt_tools() {
 function install_wfuzz() {
     colorecho "Installing wfuzz"
     apt --purge remove python3-pycurl -y
+    fapt libcurl4-openssl-dev libssl-dev
     python3 -m pip install pycurl wfuzz
     add-history wfuzz
     add-test-command "wfuzz --help"
