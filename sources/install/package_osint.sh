@@ -9,6 +9,11 @@ function configure_tor() {
 
 function install_osint_apt_tools() {
     fapt exiftool exifprobe dnsenum tor
+
+    add-history exiftool
+    add-history exifprobe
+    add-history dnsenum
+    add-history tor
     
     add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png" # For read exif information
     add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"             # Probe and report structure and metadata content of camera image files
@@ -24,6 +29,7 @@ function install_osint_apt_tools() {
 function install_youtubedl() {
     colorecho "Installing youtube-dl"
     python3 -m pipx install youtube-dl
+    add-history youtube-dl
     add-test-command "youtube-dl --version"
     add-to-list "youtubedl,https://github.com/ytdl-org/youtube-dl,Download videos from YouTube and other sites."
 }
@@ -52,13 +58,6 @@ function install_subfinder() {
     add-to-list "subfinder,https://github.com/projectdiscovery/subfinder,Tool to find subdomains associated with a domain."
 }
 
-function install_amass(){
-    colorecho "Installing Amass"
-    go install -v github.com/owasp-amass/amass/v3/...@master
-    add-test-command "amass -version"
-    add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration, attack surface mapping & external assets discovery tool"
-}
-
 function install_findomain() {
     colorecho "Installing findomain"
     if [[ $(uname -m) = 'x86_64' ]]
@@ -73,6 +72,7 @@ function install_findomain() {
     unzip -d /opt/tools/bin/ /tmp/findomain.zip
     chmod +x /opt/tools/bin/findomain
     rm /tmp/findomain.zip
+    add-history findomain
     add-test-command "findomain --version"
     add-to-list "findomain,https://github.com/findomain/findomain,The fastest and cross-platform subdomain enumerator."
 }
@@ -92,7 +92,6 @@ function install_simplyemail() {
     fapt antiword odt2txt python-dev libxml2-dev libxslt1-dev
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
-    
     add-aliases simplyemail
     add-history simplyemail
     add-test-command "SimplyEmail -l"
@@ -151,6 +150,7 @@ function install_pwnedornot() {
     mkdir -p "$HOME/.config/pwnedornot"
     cp config.json "$HOME/.config/pwnedornot/config.json"
     add-aliases pwnedornot
+    add-history pwnedornot
     add-test-command "pwnedornot.py --help"
     add-to-list "pwnedornot,https://github.com/thewhiteh4t/pwnedOrNot,Check if a password has been leaked in a data breach."
 }
@@ -228,6 +228,7 @@ function install_photon() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases photon
+    add-history photon
     add-test-command "photon.py --help"
     add-to-list "photon,https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs, files, intel & endpoints from a target."
 }
@@ -254,18 +255,20 @@ function install_constellation() {
     fi
     # TODO ARM64 install
     # TODO add-test-command
+    add-history constellation
     add-to-list "constellation,https://github.com/constellation-app/Constellation,Find and exploit vulnerabilities in mobile applications."
 }
 
-function install_maltego(){
+function install_maltego() {
     colorecho "Installing Maltego"
     wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
     dpkg -i /tmp/maltegov4.3_package.deb
+    add-history maltego
     add-test-command "file /usr/share/maltego/bin/maltego"
     add-to-list "maltego,https://www.paterva.com/web7/downloads.php,A tool used for open-source intelligence and forensics"
 }
 
-function install_spiderfoot(){
+function install_spiderfoot() {
     colorecho "Installing Spiderfoot"
     git -C /opt/tools/ clone --depth=1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot
@@ -278,13 +281,14 @@ function install_spiderfoot(){
     add-to-list "spiderfoot,https://github.com/smicallef/spiderfoot,A reconnaissance tool that automatically queries over 100 public data sources"
 }
 
-function install_finalrecon(){
+function install_finalrecon() {
     colorecho "Installing FinalRecon"
     git -C /opt/tools/ clone --depth=1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases finalrecon
+    add-history finalrecon
     add-test-command "finalrecon.py --help"
     add-to-list "finalrecon,https://github.com/thewhiteh4t/FinalRecon,A web reconnaissance tool that gathers information about web pages"
 }
@@ -317,6 +321,7 @@ function install_recondog() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases recondog
+    add-history recondog
     add-test-command "recondog --help"
     add-to-list "recondog,https://github.com/s0md3v/ReconDog,a reconnaissance tool for performing information gathering on a target."
 }
@@ -324,6 +329,7 @@ function install_recondog() {
 function install_gron() {
     colorecho "Installing gron"
     go install -v github.com/tomnomnom/gron@latest
+    add-history gron
     add-test-command "gron --help"
     add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!"
 }
@@ -347,7 +353,6 @@ function package_osint() {
     install_sublist3r               # Fast subdomains enumeration tool
     install_assetfinder             # Find domains and subdomains potentially related to a given domain
     install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
-    install_amass                   # OWASP Amass tool suite is used to build a network map of the target
     install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
     install_holehe                  # Check if the mail is used on different sites
     install_simplyemail             # Gather emails
