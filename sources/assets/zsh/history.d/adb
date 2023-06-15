@@ -1,0 +1,4 @@
+adb devices
+adb root
+adb shell
+adb push app.apk
