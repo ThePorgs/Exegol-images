@@ -6,6 +6,8 @@ source common.sh
 function install_forensic_apt_tools() {
     fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
     
+    add-history binwalk
+    add-history foremost
     add-history testdisk
     add-history fdisk
     
@@ -38,6 +40,8 @@ function install_volatility2() {
     # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161
     ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
     add-aliases volatility2
+    # TODO: Improve volatility2 history
+    add-history volatility2
     add-test-command "volatility2 --help"
     add-to-list "volatility2,https://github.com/volatilityfoundation/volatility,Volatile memory extraction utility framework"
 }
@@ -65,6 +69,7 @@ function install_trid() {
     chmod +x trid
     python3 tridupdate.py
     add-aliases trid
+    add-history trid
     add-test-command "trid '-?'; trid | grep 'This help'"
     add-to-list "trid,https://mark0.net/soft-trid-e.html,File identifier"
 }
@@ -73,6 +78,7 @@ function install_peepdf() {
     colorecho "Installing peepdf"
     git -C /opt/tools clone --depth=1 https://github.com/jesparza/peepdf
     add-aliases peepdf
+    add-history peepdf
     add-test-command "peepdf --help"
     add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
 } 

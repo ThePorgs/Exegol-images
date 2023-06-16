@@ -3,7 +3,7 @@
 
 source common.sh
 
-function install_kubectl(){
+function install_kubectl() {
     colorecho "Installing kubectl"
     mkdir -p /opt/tools/kubectl
     cd /opt/tools/kubectl
@@ -20,11 +20,12 @@ function install_kubectl(){
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    add-history kubectl
     add-test-command "kubectl --help"
     add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
 }
 
-function install_awscli(){
+function install_awscli() {
     colorecho "Installing aws cli"
     cd /tmp
     if [[ $(uname -m) = 'x86_64' ]]
@@ -40,6 +41,8 @@ function install_awscli(){
     ./aws/install -i /opt/tools/aws-cli -b /usr/local/bin
     rm -rf aws
     rm awscliv2.zip
+    # TODO: improve history : https://www.bluematador.com/learn/aws-cli-cheatsheet
+    add-history aws
     add-test-command "aws --version"
     add-to-list "awscli,https://aws.amazon.com/cli/,Command-line interface for Amazon Web Services."
 }
@@ -47,8 +50,9 @@ function install_awscli(){
 function install_scout() {
     colorecho "Installing ScoutSuite"
     python3 -m pipx install scoutsuite
+    add-history scout
     add-test-command "scout --help"
-    add-to-list "scout,TODO,TODO"
+    add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud environments."
 }
 
 # Package dedicated to cloud tools

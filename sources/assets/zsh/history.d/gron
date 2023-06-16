@@ -1,0 +1,3 @@
+gron test.json
+gron $TARGET
+curl $TARGET/test.json | gron

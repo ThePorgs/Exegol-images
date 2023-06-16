@@ -1,0 +1,1 @@
+masky -d $DOMAIN -u $USER -dc-ip $DC_HOST -t 5 -o results.txt -ca "srv-01\srv-01-CA"

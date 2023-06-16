@@ -1,0 +1,2 @@
+frida-ps -U
+frida -l disableRoot.js -f owasp.mstg.uncrackable1
