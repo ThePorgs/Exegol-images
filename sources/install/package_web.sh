@@ -227,9 +227,9 @@ function install_joomscan() {
 
 function install_wpscan() {
     colorecho "Installing wpscan"
-    gem uninstall nokogiri -v `gem list |grep nokogiri|cut -d "(" -f2|cut -d " " -f1`
-    gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
     gem install wpscan
+    gem uninstall nokogiri -v `gem list |grep nokogiri|cut -d "(" -f2|cut -d " " -f1` -I
+    gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
     add-history wpscan
     add-test-command "wpscan --help"
     add-to-list "wpscan,https://github.com/wpscanteam/wpscan,A tool to enumerate WordPress-based websites"
