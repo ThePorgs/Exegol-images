@@ -131,14 +131,27 @@ function deploy_firefox_addons() {
   fi
 }
 
-function deploy_bloodhound() {
-  ##### BloodHound customqueries.json file deployment
-  if [ -d "$MY_Setup_PATH/bloodhound" ]; then
-    # there is already a customqueries.json file in the image, replacing it with the user's from my-resource if the filesize > 0
-    if [ -f "$MY_Setup_PATH/bloodhound/customqueries.json" ]; then
-      [ -s "$MY_Setup_PATH/bloodhound/customqueries.json" ] && cp "$MY_Setup_PATH/bloodhound/customqueries.json" ~/.config/bloodhound/customqueries.json
-    fi
+function deploy_bloodhound_customqueries_replacement() {
+  # there is already a customqueries.json file in the image, replacing it with the user's from my-resources/.../replacement/ if the filesize > 0
+  if \
+    [ -d "$MY_Setup_PATH/bloodhound_customqueries/replacement" ] && \
+    [ -f "$MY_Setup_PATH/bloodhound_customqueries/replacement/customqueries.json" ] && \
+    [ -s "$MY_Setup_PATH/bloodhound_customqueries/replacement/customqueries.json" ]; then
+      cp "$MY_Setup_PATH/bloodhound_customqueries/replacement/customqueries.json" ~/.config/bloodhound/customqueries.json
   fi
+}
+
+function deploy_bloodhound_customqueries_merge() {
+  # Merge all the *.json files in customqueries format from my-resources/.../merge with the Exegol provided one
+  if [ -d "$MY_Setup_PATH/bloodhound_customqueries/merge" ]; then
+    python3 /opt/tools/bloodhound_customqueries/bloodhound_customqueries_merge.py "$MY_Setup_PATH/bloodhound_customqueries/merge"
+  fi
+}
+
+function deploy_bloodhound_customqueries() {
+  # Merge must be before replacement as replacement will not overwrite if the file my-resources/.../replacement/customqueries.json remains empty
+  deploy_bloodhound_customqueries_merge
+  deploy_bloodhound_customqueries_replacement
 }
 
 # Starting
@@ -160,7 +173,7 @@ deploy_vim
 deploy_apt
 deploy_python3
 deploy_firefox_addons
-deploy_bloodhound
+deploy_bloodhound_customqueries
 
 run_user_setup
 

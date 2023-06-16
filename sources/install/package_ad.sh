@@ -129,6 +129,8 @@ function configure_bloodhound() {
     mkdir -p ~/.config/bloodhound
     cp -v /root/sources/assets/bloodhound/config.json ~/.config/bloodhound/config.json
     cp -v /root/sources/assets/bloodhound/customqueries.json ~/.config/bloodhound/customqueries.json
+    mkdir -p /opt/tools/bloodhound_customqueries
+    cp -v /root/sources/assets/bloodhound/bloodhound_customqueries_merge.py /opt/tools/bloodhound_customqueries/bloodhound_customqueries_merge.py
 }
 
 function install_cypheroth() {
