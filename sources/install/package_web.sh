@@ -213,17 +213,11 @@ function install_joomscan() {
     add-to-list "joomscan,https://github.com/rezasp/joomscan,A tool to enumerate Joomla-based websites"
 }
 
-function install_wpscan(){
+function install_wpscan() {
     colorecho "Installing wpscan"
-    # TODO : Check if deps are already installed
-    # fapt procps ruby-dev apt-transport-https ca-certificates gnupg2
-    # RVM conflits with default ruby env
-
-    #curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
-    #curl -sSL https://get.rvm.io | bash -s stable --ruby
-    # TODO : gem venv
-    # gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
-    # gem install wpscan
+    gem uninstall nokogiri -v `gem list |grep nokogiri|cut -d "(" -f2|cut -d " " -f1`
+    gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
+    gem install wpscan
     add-history wpscan
     add-test-command "wpscan --help"
     add-to-list "wpscan,https://github.com/wpscanteam/wpscan,A tool to enumerate WordPress-based websites"
@@ -682,7 +676,7 @@ function package_web() {
     install_fuxploider              # File upload scanner
     install_patator                 # Login scanner
     install_joomscan                # Joomla scanner
-    # install_wpscan                # Wordpress scanner # FIXME
+    install_wpscan                  # Wordpress scanner
     install_droopescan              # Drupal scanner
     install_drupwn                  # Drupal scanner
     install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
