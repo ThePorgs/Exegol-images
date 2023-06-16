@@ -1,0 +1,6 @@
+#!/bin/bash
+
+service guacd stop
+service xrdp stop
+pkill kdeconnectd
+/root/.tomcat/bin/shutdown.sh
