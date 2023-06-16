@@ -272,6 +272,7 @@ function package_base() {
     bundle config path vendor/
 
     # Remote Graphical Desktop installation
+    chmod +x /root/sources/install/guacamole_install.sh
     /root/sources/install/guacamole_install.sh
 }
 
