@@ -7,6 +7,7 @@ function install_rfid_apt_tools() {
     fapt libusb-dev autoconf nfct pcsc-tools pcscd libpcsclite-dev libpcsclite1 libnfc-dev libnfc-bin mfcuk
     
     add-history libnfc
+    add-history mfcuk
 
     add-test-command "dpkg -l libusb-dev | grep 'libusb-dev'"
     add-test-command "autoconf --version"

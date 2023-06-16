@@ -6,6 +6,8 @@ source common.sh
 function install_steganography_apt_tools() {
     fapt stegosuite steghide exif exiv2 hexedit
 
+    add-history stegosuite
+    add-history steghide
     add-history exif
     add-history exiv2
     add-history hexedit
@@ -28,6 +30,7 @@ function install_zsteg() {
     colorecho "Installing zsteg"
     # TODO: gem venv
     gem install zsteg
+    add-history zsteg
     add-test-command "zsteg --help"
     add-to-list "zsteg,https://github.com/zed-0xff/zsteg,Detect steganography hidden in PNG and BMP images"
 }
@@ -35,6 +38,7 @@ function install_zsteg() {
 function install_stegolsb() {
     colorecho "Installing stegolsb"
     python3 -m pipx install stego-lsb
+    add-history stegolsb
     add-test-command "stegolsb --version"
     add-to-list "stegolsb,https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm"
 }

@@ -6,8 +6,10 @@ source common.sh
 function install_ad_apt_tools() {
     fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
 
+    add-history samdump2
     add-history smbclient
     add-history onesixtyone
+    add-history nbtscan
     add-history ldapsearch
 
     add-test-command "samdump2 -h|& grep 'enable debugging'"        # Dumps Windows 2k/NT/XP/Vista password hashes
@@ -107,8 +109,8 @@ function install_bloodhound() {
     git -C /opt/tools/ clone --depth=1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
     zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
-    add-history bloodhound
     add-aliases bloodhound
+    add-history bloodhound
     add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
     add-to-list "bloodhound,https://github.com/BloodHoundAD/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments."
 }
@@ -154,6 +156,7 @@ function install_mitm6_pip() {
 function install_aclpwn() {
     colorecho "Installing aclpwn with pip"
     python3 -m pipx install git+https://github.com/aas-n/aclpwn.py
+    add-history aclpwn
     add-test-command "aclpwn -h"
     add-to-list "aclpwn,https://github.com/aas-n/aclpwn.py,Tool for testing the security of Active Directory access controls."
 }
@@ -189,6 +192,7 @@ function install_pykek() {
     colorecho "Installing Python Kernel Exploit Kit (pykek) for MS14-068"
     git -C /opt/tools/ clone --depth=1 https://github.com/preempt/pykek
     add-aliases pykek
+    add-history pykek
     add-test-command "ms14-068.py |& grep '<clearPassword>'"
     add-to-list "pykek,https://github.com/preempt/pykek,PyKEK (Python Kerberos Exploitation Kit), a python library to manipulate KRB5-related data."
 }
@@ -266,6 +270,7 @@ function install_powershell() {
     tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
     chmod -v +x /opt/tools/powershell/7/pwsh
     rm -v /tmp/powershell.tar.gz
+    add-history powershell
     add-test-command "powershell -Version"
     add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
 }
@@ -354,6 +359,7 @@ function install_libmspack() {
     ./configure
     make
     add-aliases libmspack
+    add-history libmspack
     add-test-command "oabextract"
     add-to-list "libmspack,https://github.com/kyz/libmspack,C library for Microsoft compression formats."
 }
@@ -457,6 +463,7 @@ function install_gpp-decrypt() {
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install pycrypto colorama
     add-aliases gpp-decrypt
+    add-history gpp-decrypt
     add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
     add-to-list "gpp-decrypt,https://github.com/t0thkr1s/gpp-decrypt,A tool to decrypt Group Policy Preferences passwords"
 }
@@ -473,6 +480,7 @@ function install_ntlmv1-multi() {
 function install_hashonymize() {
     colorecho "Installing hashonymizer"
     python3 -m pipx install git+https://github.com/ShutdownRepo/hashonymize
+    add-history hashonymize
     add-test-command "hashonymize --help"
     add-to-list "hashonymize,https://github.com/ShutdownRepo/hashonymize,This small tool is aimed at anonymizing hashes files for offline but online cracking like Google Collab for instance (see https://github.com/ShutdownRepo/google-colab-hashcat)."
 }
@@ -500,6 +508,7 @@ function install_pygpoabuse() {
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pygpoabuse
+    add-history pygpoabuse
     add-test-command "pygpoabuse --help"
     add-to-list "pygpoabuse,https://github.com/Hackndo/pyGPOAbuse,A tool for abusing GPO permissions to escalate privileges"
 }
@@ -605,9 +614,10 @@ function install_manspider() {
     ./venv/bin/python3 -m pip install .
     touch ./man_spider/lib/init.py
     sed -i "s#from .lib import#from lib import##" man_spider/manspider.py
-    add-history manspider
     add-aliases manspider
+    add-history manspider
     add-test-command "manspider --help"
+    add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work, it will fall back to "guest", then to a null session."
 }
 
 function install_targetedKerberoast() {
@@ -631,6 +641,7 @@ function install_pcredz() {
     ./venv/bin/python3 -m pip install Cython
     ./venv/bin/python3 -m pip install python-libpcap
     add-aliases pcredz
+    add-history pcredz
     add-test-command "PCredz --help"
     add-to-list "pcredz,https://github.com/lgandx/PCredz,PowerShell credential dumper"
 }
@@ -732,7 +743,7 @@ function install_ldaprelayscan() {
     add-aliases ldaprelayscan
     add-history ldaprelayscan
     add-test-command "LdapRelayScan.py --help"
-    add-to-list "ldaprelayscan,TODO,TODO"
+    add-to-list "ldaprelayscan,https://github.com/zyn3rgy/LdapRelayScan,Check Domain Controllers for LDAP server protections regarding the relay of NTLM authentication."
 }
 
 function install_goldencopy() {
@@ -768,8 +779,8 @@ function install_kerbrute() {
 function install_ldeep() {
     colorecho "Installing ldeep"
     python3 -m pipx install ldeep
-    add-test-command "ldeep --help"
     add-history ldeep
+    add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
 }
 
@@ -790,6 +801,7 @@ function install_rusthound() {
 function install_certsync() {
     colorecho "Installing certsync"
     python3 -m pipx install git+https://github.com/zblurx/certsync
+    add-history certsync
     add-test-command "certsync --help"
     add-to-list "certsync,https://github.com/zblurx/certsync,certsync is a tool that helps you synchronize certificates between two directories."
 }
@@ -797,6 +809,7 @@ function install_certsync() {
 function install_keepwn() {
     colorecho "Installing KeePwn"
     python3 -m pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
+    add-history keepwn
     add-test-command "KeePwn --help"
     add-to-list "KeePwn,https://github.com/Orange-Cyberdefense/KeePwn,KeePwn is a tool that extracts passwords from KeePass 1.x and 2.x databases."
 }
@@ -804,6 +817,7 @@ function install_keepwn() {
 function install_pre2k() {
     colorecho "Installing pre2k"
     python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
+    add-history pre2k
     add-test-command "pre2k --help"
     add-to-list "pre2k,https://github.com/garrettfoster13/pre2k,pre2k is a tool to check if a Windows domain has any pre-2000 Windows 2000 logon names still in use."
 }
@@ -811,6 +825,7 @@ function install_pre2k() {
 function install_msprobe() {
     colorecho "Installing msprobe"
     python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
+    add-history msprobe
     add-test-command "msprobe --help"
     add-to-list "msprobe,https://github.com/puzzlepeaches/msprobe,msprobe is a tool to identify Microsoft Windows hosts and servers that are running certain services."
 }
@@ -818,6 +833,7 @@ function install_msprobe() {
 function install_masky() {
     colorecho "Installing masky"
     python3 -m pipx install git+https://github.com/Z4kSec/Masky
+    add-history masky
     add-test-command "masky --help"
     add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data, such as credit card numbers, in logs and other files."
 }
@@ -825,6 +841,7 @@ function install_masky() {
 function install_roastinthemiddle() {
     colorecho "Installing roastinthemiddle"
     python3 -m pipx install git+https://github.com/Tw1sm/RITM
+    add-history roastinthemiddle
     add-test-command "roastinthemiddle --help"
     add-to-list "roastinthemiddle,https://github.com/Tw1sm/RITM,RoastInTheMiddle is a tool to intercept and relay NTLM authentication requests."
 }
@@ -836,6 +853,7 @@ function install_PassTheCert() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install impacket
     add-aliases PassTheCert
+    add-history PassTheCert
     add-test-command "passthecert.py --help"
     add-to-list "PassTheCert,https://github.com/AlmondOffSec/PassTheCert,PassTheCert is a tool to extract Active Directory user password hashes from a domain controller's local certificate store."
 }

@@ -1,0 +1,5 @@
+finalrecon.py --headers $TARGET
+finalrecon.py --sslinfo $TARGET
+finalrecon.py --whois $TARGET
+finalrecon.py --crawl $TARGET
+finalrecon.py --full $TARGET

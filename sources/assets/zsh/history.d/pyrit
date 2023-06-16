@@ -1,0 +1,5 @@
+pyrit -r capture.pcap -b $BSSID -i wordlist.txt attack_passthrough
+pyrit -i wordlist.txt import_passwords
+pyrit -e $ESSID create_essid
+pyrit batch
+pyrit -r capture.pcap attack_db

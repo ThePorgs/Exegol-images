@@ -4,18 +4,19 @@
 source common.sh
 
 function install_misc_apt_tools() {
-    fapt rlwrap exiftool imagemagick ascii rsync
+    fapt rlwrap imagemagick ascii rsync
 
     add-history rlwrap
+    add-history imagemagick
+    add-history ascii
+    add-history rsync
 
     add-test-command "rlwrap --version"                            # Reverse shell utility
-    add-test-command "exiftool /usr/share/pixmaps/debian-logo.png" # Meta information reader/writer
     add-test-command "convert -version"                            # Copy, modify, and distribute image
     add-test-command "ascii -v"                                    # The ascii table in the shell
     add-test-command "rsync -h"                                    # File synchronization tool for efficiently copying and updating data between local or remote locations.
 
     add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables, making it possible to edit and re-run input history"
-    add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading, writing and editing meta information in image, audio and video files."
     add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create, edit, compose, or convert bitmap images."
     add-to-list "ascii,https://github.com/moul/ascii,ASCII command-line tool to replace images with color-coded ASCII art."
     add-to-list "rsync,https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations"
@@ -40,6 +41,7 @@ function install_shellerator() {
 function install_uberfile() {
     colorecho "Installing uberfile"
     python3 -m pipx install git+https://github.com/ShutdownRepo/uberfile
+    add-history uberfile
     add-test-command "uberfile --help"
     add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget, curl, powershell, certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
 }
@@ -48,6 +50,7 @@ function install_arsenal() {
     colorecho "Installing arsenal"
     python3 -m pipx install git+https://github.com/Orange-Cyberdefense/arsenal
     add-aliases arsenal
+    add-history arsenal
     add-test-command "arsenal --version"
     add-to-list "arsenal,https://github.com/Orange-Cyberdefense/arsenal,Powerful weapons for penetration testing."
 }
@@ -65,6 +68,7 @@ function install_whatportis() {
 function install_searchsploit() {
     colorecho "Installing searchsploit"
     git -C /opt/tools/ clone --depth 1 https://gitlab.com/exploit-database/exploitdb
+    add-history searchsploit
     add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
     add-to-list "searchsploit,https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
 }
@@ -84,6 +88,7 @@ function install_trilium() {
     git -C /opt/tools/ clone -b stable https://github.com/zadam/trilium.git
     cd /opt/tools/trilium
     add-aliases trilium
+    add-history trilium
     add-test-command "trilium-start;sleep 20;trilium-stop"
     add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
 }

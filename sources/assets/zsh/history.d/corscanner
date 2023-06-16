@@ -1,0 +1,1 @@
+corscanner -i urls.txt -t 100

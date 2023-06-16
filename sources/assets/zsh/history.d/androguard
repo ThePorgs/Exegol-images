@@ -1,0 +1,2 @@
+androguard axml res/xml/network_security_config.xml
+androguard arsc resources.arsc
