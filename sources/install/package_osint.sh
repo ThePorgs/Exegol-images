@@ -309,7 +309,7 @@ function install_osrframework() {
     python3 -m pipx inject osrframework 'urllib3<2'
     python3 -m pipx inject osrframework 'pip==21.2'
     add-history osrframework
-    add-test-command "osrframework --help"
+    add-test-command "osrframework-cli --help"
     add-to-list "osrframework,https://github.com/i3visio/osrframework,Include references to a bunch of different applications related to username checking, DNS lookups, information leaks research, deep web search, regular expressions extraction and many others."
 }
 
