@@ -1,6 +1,6 @@
 #!/bin/bash
 
 service guacd start
-service xrdp restart
+service xrdp start
 /root/.tomcat/bin/startup.sh
 echo "The server is available on : http://127.0.0.1:6336 - Don't forget to map the port to access it with your host (only in bridge mode, needs to be done at container creation)"
