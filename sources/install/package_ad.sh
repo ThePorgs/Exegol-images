@@ -945,7 +945,7 @@ function package_ad() {
     install_coercer                 # Python script to coerce auth through multiple methods
     install_pkinittools             # Python scripts to use kerberos PKINIT to obtain TGT
     install_pywhisker               # Python script to manipulate msDS-KeyCredentialLink
-    install_manspider               # Snaffler-like in Python # FIXME : https://github.com/blacklanternsecurity/MANSPIDER/issues/18
+    install_manspider               # Snaffler-like in Python
     install_targetedKerberoast
     install_pcredz
     install_pywsus

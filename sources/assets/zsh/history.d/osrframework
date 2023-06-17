@@ -1,0 +1,3 @@
+searchfy -q $USER
+mailfy -n $USER
+usufy -n $USER -p all

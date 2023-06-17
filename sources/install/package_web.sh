@@ -4,10 +4,9 @@
 source common.sh
 
 function install_web_apt_tools() {
-    fapt dirb wfuzz sqlmap sslscan weevely whatweb prips swaks
+    fapt dirb sqlmap sslscan weevely whatweb prips swaks
   
     add-history dirb
-    add-history wfuzz
     add-history sqlmap
     add-history sslscan
     add-history weevely
@@ -16,7 +15,6 @@ function install_web_apt_tools() {
     add-history swaks
   
     add-test-command "dirb | grep '<username:password>'" # Web fuzzer
-    add-test-command "wfuzz --help"                      # Web fuzzer (second favorites) FIXME Pycurl is not compiled against Openssl
     add-test-command "sqlmap --version"                  # SQL injection scanner
     add-test-command "sslscan --version"                 # SSL/TLS scanner
     add-test-command "weevely --help"                    # Awesome secure and light PHP webshell
@@ -25,13 +23,22 @@ function install_web_apt_tools() {
     add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 
     add-to-list "dirb,https://github.com/v0re/dirb,Web Content Scanner"
-    add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
     add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
     add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
     add-to-list "whatweb,https://github.com/urbanadventurer/WhatWeb,Next generation web scanner that identifies what websites are running."
     add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
     add-to-list "swaks,https://github.com/jetmore/swaks,Swaks is a featureful flexible scriptable transaction-oriented SMTP test tool."
+}
+
+function install_wfuzz() {
+    colorecho "Installing wfuzz"
+    apt --purge remove python3-pycurl -y
+    fapt libcurl4-openssl-dev libssl-dev
+    python3 -m pip install pycurl wfuzz
+    add-history wfuzz
+    add-test-command "wfuzz --help"
+    add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
 }
 
 function install_gobuster() {
@@ -104,12 +111,14 @@ function install_gopherus() {
 }
 
 function install_nosqlmap() {
-    # TODO : Fix this tool - Python2 or python3 ?
     colorecho "Installing NoSQLMap"
-    git -C /opt/tools clone --depth=1 https://github.com/codingo/NoSQLMap.git
+    git -C /opt/tools clone --depth 1 https://github.com/codingo/NoSQLMap.git
     cd /opt/tools/NoSQLMap
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 setup.py install
+    # https://github.com/codingo/NoSQLMap/issues/126
+    rm -rf venv/lib/python2.7/site-packages/certifi-2023.5.7-py2.7.egg
+    ./venv/bin/python2 -m pip install certifi==2018.10.15
     add-aliases nosqlmap
     add-history nosqlmap
     add-test-command "nosqlmap --help"
@@ -135,6 +144,18 @@ function install_xspear() {
     add-history XSpear
     add-test-command "XSpear --help"
     add-to-list "xspear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
+}
+
+function install_xsser() {
+    colorecho "Installing xsser"
+    git -C /opt/tools clone --depth 1 https://github.com/epsylon/xsser.git
+    cd /opt/tools/xsser
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install pycurl bs4 pygeoip gobject cairocffi selenium
+    add-aliases xsser
+    add-history xsser
+    add-test-command "xsser --help"
+    add-to-list "xsser,https://github.com/epsylon/xsser,XSS scanner."
 }
 
 function install_xsrfprobe() {
@@ -182,7 +203,20 @@ function install_fuxploider() {
     add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
 }
 
-function install_joomscan(){
+function install_patator() {
+    colorecho "Installing patator"
+    fapt libmariadb-dev
+    git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
+    cd /opt/tools/patator
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases patator
+    add-history patator
+    add-test-command "patator ftp_login --help"
+    add-to-list "patator,https://github.com/lanjelot/patator,Login scanner."
+}
+
+function install_joomscan() {
     colorecho "Installing joomscan"
     git -C /opt/tools/ clone --depth=1 https://github.com/rezasp/joomscan
     add-aliases joomscan
@@ -191,17 +225,11 @@ function install_joomscan(){
     add-to-list "joomscan,https://github.com/rezasp/joomscan,A tool to enumerate Joomla-based websites"
 }
 
-function install_wpscan(){
+function install_wpscan() {
     colorecho "Installing wpscan"
-    # TODO : Check if deps are already installed
-    # fapt procps ruby-dev apt-transport-https ca-certificates gnupg2
-    # RVM conflits with default ruby env
-
-    #curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
-    #curl -sSL https://get.rvm.io | bash -s stable --ruby
-    # TODO : gem venv
-    # gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
-    # gem install wpscan
+    gem install wpscan
+    gem uninstall nokogiri -v `gem list |grep nokogiri|cut -d "(" -f2|cut -d " " -f1` -I
+    gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
     add-history wpscan
     add-test-command "wpscan --help"
     add-to-list "wpscan,https://github.com/wpscanteam/wpscan,A tool to enumerate WordPress-based websites"
@@ -672,6 +700,7 @@ function install_soapui() {
 function package_web() {
     install_web_apt_tools
     set_go_env
+    install_wfuzz                   # Web fuzzer (second favorites)
     install_gobuster                # Web fuzzer (pretty good for several extensions)
     install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
     install_amass                   # Web fuzzer
@@ -679,24 +708,24 @@ function package_web() {
     install_dirsearch               # Web fuzzer
     install_ssrfmap                 # SSRF scanner
     install_gopherus                # SSRF helper
-    # install_nosqlmap              # NoSQL scanner - FIXME
+    install_nosqlmap                # NoSQL scanner
     install_xsstrike                # XSS scanner
     install_xspear                  # XSS scanner
-    # install_xsser                 # XSS scanner FIXME missing install
+    install_xsser                   # XSS scanner
     install_xsrfprobe               # CSRF scanner
     install_bolt                    # CSRF scanner
     install_kadimus                 # LFI scanner
     install_fuxploider              # File upload scanner
-    # install_patator               # Login scanner # FIXME
+    install_patator                 # Login scanner
     install_joomscan                # Joomla scanner
-    #install_wpscan                 # Wordpress scanner # FIXME
+    install_wpscan                  # Wordpress scanner
     install_droopescan              # Drupal scanner
     install_drupwn                  # Drupal scanner
     install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
     install_moodlescan              # Moodle scanner
     install_testssl                 # SSL/TLS scanner
     install_tls-scanner             # SSL/TLS scanner
-    # install_sslyze                # SSL/TLS scanner FIXME
+    # install_sslyze                # SSL/TLS scanner FIXME: Only AMD ?
     install_cloudfail               # Cloudflare misconfiguration detector
     install_eyewitness              # Website screenshoter
     install_oneforall               # OneForAll is a powerful subdomain integration tool
@@ -730,7 +759,7 @@ function package_web() {
     install_anew                    # A tool for adding new lines to files, skipping duplicates
     install_robotstester            # Robots.txt scanner
     install_naabu                   # Fast port scanner
-    # install_gitrob                # Senstive files reconnaissance in github
+    # install_gitrob                # Senstive files reconnaissance in github #FIXME: Go version too old ?
     install_burpsuite
     install_smuggler                # HTTP Request Smuggling scanner
     install_php_filter_chain_generator # A CLI to generate PHP filters chain and get your RCE

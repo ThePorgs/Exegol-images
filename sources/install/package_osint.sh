@@ -8,22 +8,28 @@ function configure_tor() {
 }
 
 function install_osint_apt_tools() {
-    fapt exiftool exifprobe dnsenum tor
+    fapt exiftool exifprobe dnsenum tor whois recon-ng
 
     add-history exiftool
     add-history exifprobe
     add-history dnsenum
     add-history tor
+    add-history whois
+    add-history recon-ng
     
     add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png" # For read exif information
     add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"             # Probe and report structure and metadata content of camera image files
     add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'" # DNSEnum is a command-line tool that automatically identifies basic DNS records
     add-test-command "service tor start"                                                # Tor proxy
+    add-test-command "whois --help"                                                     # See information about a specific domain name or IP address
+    add-test-command "recon-ng --help"                                                  # External recon tool
 
     add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading, writing and editing meta information in image, audio and video files."
     add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."
     add-to-list "dnsenum,https://github.com/fwaeytens/dnsenum,dnsenum is a tool for enumerating DNS information about a domain."
     add-to-list "tor,https://github.com/torproject/tor,Anonymity tool that can help protect your privacy and online identity by routing your traffic through a network of servers."
+    add-to-list "whois,https://packages.debian.org/sid/whois,See information about a specific domain name or IP address."
+    add-to-list "recon-ng,https://github.com/lanmaster53/recon-ng,External recon tool."
 }
 
 function install_youtubedl() {
@@ -135,7 +141,14 @@ function install_infoga() {
 
 function install_buster() {
     colorecho "Installing buster"
-    python3 -m pipx install git+https://github.com/sham00n/buster
+    git -C /opt/tools clone --depth 1 https://github.com/sham00n/buster
+    cd /opt/tools/buster
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip install cython requests beautifulsoup4 PyYaml lxml grequests gevent twint
+    python3 setup.py install
+    deactivate
+    ln -s /opt/tools/buster/venv/bin/buster /opt/tools/bin
     add-history buster
     add-test-command "buster --help"
     add-to-list "buster,https://github.com/sham00n/Buster,Advanced OSINT tool"
@@ -293,6 +306,16 @@ function install_finalrecon() {
     add-to-list "finalrecon,https://github.com/thewhiteh4t/FinalRecon,A web reconnaissance tool that gathers information about web pages"
 }
 
+function install_osrframework() {
+    colorecho "Installing osrframework"
+    python3 -m pipx install osrframework
+    python3 -m pipx inject osrframework 'urllib3<2'
+    python3 -m pipx inject osrframework 'pip==21.2'
+    add-history osrframework
+    add-test-command "osrframework-cli --help"
+    add-to-list "osrframework,https://github.com/i3visio/osrframework,Include references to a bunch of different applications related to username checking, DNS lookups, information leaks research, deep web search, regular expressions extraction and many others."
+}
+
 function install_pwndb() {
     colorecho "Installing pwndb"
     git -C /opt/tools/ clone --depth=1 https://github.com/davidtavarez/pwndb.git
@@ -334,6 +357,14 @@ function install_gron() {
     add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!"
 }
 
+function install_ignorant() {
+    colorecho "Installing ignorant"
+    python3 -m pipx install git+https://github.com/megadose/ignorant
+    add-history ignorant
+    add-test-command "ignorant --help"
+    add-to-list "ignorant,https://github.com/megadose/ignorant,holehe but for phone numbers."
+}
+
 function install_trevorspray() {
     git -C /opt/tools/ clone --depth=1 https://github.com/blacklanternsecurity/TREVORspray
     cd /opt/tools/TREVORspray
@@ -356,12 +387,12 @@ function package_osint() {
     install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
     install_holehe                  # Check if the mail is used on different sites
     install_simplyemail             # Gather emails
-    install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
+    install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
     install_infoga                  # Gathering email accounts informations
-    # install_buster                  # An advanced tool for email reconnaissance FIXME
+    install_buster                  # An advanced tool for email reconnaissance
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
-    # install_ghunt                 # Investigate Google Accounts with emails FIXME
+    # install_ghunt                 # Investigate Google Accounts with emails FIXME: Need python3.10 -> https://github.com/mxrch/GHunt/issues/398
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
     install_maigret                 # Search pseudos and information about users on many platforms
     install_linkedin2username       # Generate username lists for companies on LinkedIn
@@ -374,15 +405,13 @@ function package_osint() {
     install_maltego                 # Maltego is a software used for open-source intelligence and forensics
     install_spiderfoot              # SpiderFoot automates OSINT collection
     install_finalrecon              # A fast and simple python script for web reconnaissance
-    # fapt recon-ng                 # External recon tool FIXME
-    # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
-    # install_torbrowser            # Tor browser FIXME
+    install_osrframework            # OSRFramework, the Open Sources Research Framework
+    # install_torbrowser            # Tor browser FIXME: Github project ?
     install_pwndb					# No need to say more, no ? Be responsible with this tool please !
     install_githubemail             # Retrieve a GitHub user's email even if it's not public
-    # fapt whois                    # See information about a specific domain name or IP address FIXME
     install_recondog                # Informations gathering tool
     install_gron                    # JSON parser
-    # install_ignorant              # holehe but for phone numbers
+    install_ignorant                # holehe but for phone numbers
     install_trevorspray             # modular password sprayer with threading, SSH proxying, loot modules, and more!
 }
 
