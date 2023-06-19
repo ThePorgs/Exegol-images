@@ -786,7 +786,7 @@ function install_ldeep() {
 
 function install_rusthound() {
     colorecho "Installing RustHound"
-    fapt gcc libclang-dev clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
+    fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
     git -C /opt/tools/ clone https://github.com/OPENCYBER-FR/RustHound
     cd /opt/tools/RustHound
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
