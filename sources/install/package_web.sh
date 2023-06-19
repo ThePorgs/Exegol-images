@@ -51,7 +51,7 @@ function install_gobuster() {
 
 function install_kiterunner() {
     colorecho "Installing kiterunner (kr)"
-    git -C /opt/tools/ clone --depth=1 https://github.com/assetnote/kiterunner.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/assetnote/kiterunner.git
     cd /opt/tools/kiterunner
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-large.kite.tar.gz
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-small.kite.tar.gz
@@ -88,7 +88,7 @@ function install_dirsearch() {
 
 function install_ssrfmap() {
     colorecho "Installing SSRFmap"
-    git -C /opt/tools/ clone --depth=1 https://github.com/swisskyrepo/SSRFmap
+    git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -100,7 +100,7 @@ function install_ssrfmap() {
 
 function install_gopherus() {
     colorecho "Installing gopherus"
-    git -C /opt/tools/ clone --depth=1 https://github.com/tarunkant/Gopherus
+    git -C /opt/tools/ clone --depth 1 https://github.com/tarunkant/Gopherus
     cd /opt/tools/Gopherus
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install argparse requests
@@ -127,7 +127,7 @@ function install_nosqlmap() {
 
 function install_xsstrike() {
     colorecho "Installing XSStrike"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/XSStrike.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/XSStrike.git
     cd /opt/tools/XSStrike
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -168,7 +168,7 @@ function install_xsrfprobe() {
 
 function install_bolt() {
     colorecho "Installing Bolt"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/Bolt.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/Bolt.git
     cd /opt/tools/Bolt
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -182,7 +182,7 @@ function install_kadimus() {
     colorecho "Installing kadimus"
     # TODO : Check if deps are already installed
     fapt libcurl4-openssl-dev libpcre3-dev libssh-dev
-    git -C /opt/tools/ clone --depth=1 https://github.com/P0cL4bs/Kadimus
+    git -C /opt/tools/ clone --depth 1 https://github.com/P0cL4bs/Kadimus
     cd /opt/tools/Kadimus
     make
     add-aliases kadimus
@@ -193,7 +193,7 @@ function install_kadimus() {
 
 function install_fuxploider() {
     colorecho "Installing fuxploider"
-    git -C /opt/tools/ clone --depth=1 https://github.com/almandin/fuxploider.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
     cd /opt/tools/fuxploider
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -218,7 +218,7 @@ function install_patator() {
 
 function install_joomscan() {
     colorecho "Installing joomscan"
-    git -C /opt/tools/ clone --depth=1 https://github.com/rezasp/joomscan
+    git -C /opt/tools/ clone --depth 1 https://github.com/rezasp/joomscan
     add-aliases joomscan
     add-history joomscan
     add-test-command "joomscan --version"
@@ -266,7 +266,7 @@ function install_cmsmap() {
 
 function install_moodlescan() {
     colorecho "Installing moodlescan"
-    git -C /opt/tools/ clone --depth=1 https://github.com/inc0d3/moodlescan.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/inc0d3/moodlescan.git
     cd /opt/tools/moodlescan
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -285,7 +285,7 @@ function install_testssl() {
     colorecho "Installing testssl"
     # TODO : Check if deps are already installed
     fapt bsdmainutils
-    git -C /opt/tools/ clone --depth=1 https://github.com/drwetter/testssl.sh.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
     add-aliases testssl
     add-history testssl
     add-test-command "testssl --help"
@@ -307,7 +307,7 @@ function install_tls-scanner() {
 
 function install_cloudfail() {
     colorecho "Installing CloudFail"
-    git -C /opt/tools/ clone --depth=1 https://github.com/m0rtem/CloudFail
+    git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
     cd /opt/tools/CloudFail
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -319,7 +319,7 @@ function install_cloudfail() {
 
 function install_eyewitness() {
     colorecho "Installing EyeWitness"
-    git -C /opt/tools/ clone --depth=1 https://github.com/FortyNorthSecurity/EyeWitness
+    git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
     cd /opt/tools/EyeWitness
     python3 -m venv ./venv
     source ./venv/bin/activate
@@ -333,7 +333,7 @@ function install_eyewitness() {
 
 function install_oneforall() {
     colorecho "Installing OneForAll"
-    git -C /opt/tools/ clone --depth=1 https://github.com/shmilylty/OneForAll.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -353,7 +353,7 @@ function install_wafw00f() {
 
 function install_corscanner() {
     colorecho "Installing CORScanner"
-    git -C /opt/tools/ clone --depth=1 https://github.com/chenjj/CORScanner.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/chenjj/CORScanner.git
     cd /opt/tools/CORScanner
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -382,7 +382,7 @@ function install_gowitness() {
 
 function install_linkfinder() {
     colorecho "Installing LinkFinder"
-    git -C /opt/tools/ clone --depth=1 https://github.com/GerbenJavado/LinkFinder.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/GerbenJavado/LinkFinder.git
     cd /opt/tools/LinkFinder
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -411,7 +411,7 @@ function install_updog() {
 
 function install_jwt_tool() {
     colorecho "Installing JWT tool"
-    git -C /opt/tools/ clone --depth=1 https://github.com/ticarpi/jwt_tool
+    git -C /opt/tools/ clone --depth 1 https://github.com/ticarpi/jwt_tool
     cd /opt/tools/jwt_tool
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -439,7 +439,7 @@ function install_git-dumper() {
 
 function install_gittools() {
     colorecho "Installing GitTools"
-    git -C /opt/tools/ clone --depth=1 https://github.com/internetwache/GitTools.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/internetwache/GitTools.git
     cd /opt/tools/GitTools/Finder
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -463,7 +463,7 @@ function install_ysoserial() {
 
 function install_phpggc() {
     colorecho "Installing phpggc"
-    git -C /opt/tools clone --depth=1 https://github.com/ambionics/phpggc.git
+    git -C /opt/tools clone --depth 1 https://github.com/ambionics/phpggc.git
     add-aliases phpggc
     add-history phpggc
     add-test-command "phpggc --help"
@@ -472,7 +472,7 @@ function install_phpggc() {
 
 function install_symfony-exploits(){
     colorecho "Installing symfony-exploits"
-    git -C /opt/tools clone --depth=1 https://github.com/ambionics/symfony-exploits
+    git -C /opt/tools clone --depth 1 https://github.com/ambionics/symfony-exploits
     add-aliases symfony-exploits
     add-history symfony-exploits
     add-test-command "secret_fragment_exploit.py --help"
@@ -481,7 +481,7 @@ function install_symfony-exploits(){
 
 function install_jdwp_shellifier(){
     colorecho "Installing jdwp_shellifier"
-    git -C /opt/tools/ clone --depth=1 https://github.com/IOActive/jdwp-shellifier
+    git -C /opt/tools/ clone --depth 1 https://github.com/IOActive/jdwp-shellifier
     add-aliases jdwp-shellifier
     add-history jdwp-shellifier
     add-test-command "jdwp-shellifier.py --help"
@@ -490,7 +490,7 @@ function install_jdwp_shellifier(){
 
 function install_httpmethods() {
     colorecho "Installing httpmethods"
-    git -C /opt/tools/ clone --depth=1 https://github.com/ShutdownRepo/httpmethods
+    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
     cd /opt/tools/httpmethods
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -502,7 +502,7 @@ function install_httpmethods() {
 
 function install_h2csmuggler() {
     colorecho "Installing h2csmuggler"
-    git -C /opt/tools/ clone --depth=1 https://github.com/BishopFox/h2csmuggler
+    git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/h2csmuggler
     cd /opt/tools/h2csmuggler
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install h2
@@ -535,7 +535,7 @@ function install_feroxbuster() {
 
 function install_tomcatwardeployer() {
     colorecho "Installing tomcatWarDeployer"
-    git -C /opt/tools/ clone --depth=1 https://github.com/mgeeky/tomcatWarDeployer.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/mgeeky/tomcatWarDeployer.git
     cd /opt/tools/tomcatWarDeployer
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -547,7 +547,7 @@ function install_tomcatwardeployer() {
 
 function install_clusterd() {
     colorecho "Installing clusterd"
-    git -C /opt/tools/ clone --depth=1 https://github.com/hatRiot/clusterd.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/hatRiot/clusterd.git
     cd /opt/tools/clusterd
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r requirements.txt
@@ -655,7 +655,7 @@ function install_burpsuite() {
 
 function install_smuggler() {
     colorecho "Installing smuggler.py"
-    git -C /opt/tools/ clone --depth=1 https://github.com/defparam/smuggler.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/defparam/smuggler.git
     cd /opt/tools/smuggler
     python3 -m venv ./venv
     add-aliases smuggler
@@ -666,7 +666,7 @@ function install_smuggler() {
 
 function install_php_filter_chain_generator() {
     colorecho "Installing PHP_Filter_Chain_Generator"
-    git -C /opt/tools/ clone --depth=1 https://github.com/synacktiv/php_filter_chain_generator.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/php_filter_chain_generator.git
     add-aliases php_filter_chain_generator
     add-history php_filter_chain_generator
     add-test-command "php_filter_chain_generator --help"

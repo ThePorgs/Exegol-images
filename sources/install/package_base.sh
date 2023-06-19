@@ -149,7 +149,7 @@ function install_ultimate_vimrc() {
         return
     fi
     colorecho "Installing The Ultimate vimrc"
-    git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
+    git clone --depth 1 https://github.com/amix/vimrc.git ~/.vim_runtime
     sh ~/.vim_runtime/install_awesome_vimrc.sh
 }
 
@@ -167,7 +167,7 @@ function install_gf() {
     echo 'source $GOPATH/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh' >> ~/.zshrc
     cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
     # Add patterns from 1ndianl33t
-    git -C /opt/tools/ clone --depth=1 https://github.com/1ndianl33t/Gf-Patterns
+    git -C /opt/tools/ clone --depth 1 https://github.com/1ndianl33t/Gf-Patterns
     cp -r /opt/tools/Gf-Patterns/*.json ~/.gf
     # Remove repo to save space
     rm -r /opt/tools/Gf-Patterns

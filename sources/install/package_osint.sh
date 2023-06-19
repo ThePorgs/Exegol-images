@@ -93,7 +93,7 @@ function install_holehe() {
 
 function install_simplyemail() {
     colorecho "Installing SimplyEmail"
-    git -C /opt/tools/ clone --branch master --depth=1 https://github.com/killswitch-GUI/SimplyEmail.git
+    git -C /opt/tools/ clone --branch master --depth 1 https://github.com/killswitch-GUI/SimplyEmail.git
     cd /opt/tools/SimplyEmail/
     fapt antiword odt2txt python-dev libxml2-dev libxslt1-dev
     virtualenv -p /usr/bin/python2 ./venv
@@ -106,7 +106,7 @@ function install_simplyemail() {
 
 function install_theharvester() {
     colorecho "Installing theHarvester"
-    git -C /opt/tools/ clone --depth=1 https://github.com/laramies/theHarvester
+    git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -128,7 +128,7 @@ function install_h8mail() {
 
 function install_infoga() {
     colorecho "Installing infoga"
-    git -C /opt/tools/ clone --depth=1 https://github.com/m4ll0k/Infoga
+    git -C /opt/tools/ clone --depth 1 https://github.com/m4ll0k/Infoga
     find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
     cd /opt/tools/Infoga
     python3 -m venv ./venv
@@ -156,7 +156,7 @@ function install_buster() {
 
 function install_pwnedornot() {
     colorecho "Installing pwnedornot"
-    git -C /opt/tools/ clone --depth=1 https://github.com/thewhiteh4t/pwnedOrNot
+    git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
     cd /opt/tools/pwnedOrNot
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install requests html2text
@@ -196,7 +196,7 @@ function install_maigret() {
 
 function install_linkedin2username() {
     colorecho "Installing linkedin2username"
-    git -C /opt/tools/ clone --depth=1 https://github.com/initstring/linkedin2username
+    git -C /opt/tools/ clone --depth 1 https://github.com/initstring/linkedin2username
     cd /opt/tools/linkedin2username
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -224,7 +224,7 @@ function install_waybackurls() {
 
 function install_carbon14() {
     colorecho "Installing Carbon14"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Lazza/Carbon14
+    git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
     cd /opt/tools/Carbon14
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -236,7 +236,7 @@ function install_carbon14() {
 
 function install_photon() {
     colorecho "Installing photon"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/photon
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/photon
     cd /opt/tools/photon
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -283,7 +283,7 @@ function install_maltego() {
 
 function install_spiderfoot() {
     colorecho "Installing Spiderfoot"
-    git -C /opt/tools/ clone --depth=1 https://github.com/smicallef/spiderfoot
+    git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -296,7 +296,7 @@ function install_spiderfoot() {
 
 function install_finalrecon() {
     colorecho "Installing FinalRecon"
-    git -C /opt/tools/ clone --depth=1 https://github.com/thewhiteh4t/FinalRecon
+    git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -318,7 +318,7 @@ function install_osrframework() {
 
 function install_pwndb() {
     colorecho "Installing pwndb"
-    git -C /opt/tools/ clone --depth=1 https://github.com/davidtavarez/pwndb.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/davidtavarez/pwndb.git
     cd /opt/tools/pwndb
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -339,7 +339,7 @@ function install_githubemail() {
 
 function install_recondog() {
     colorecho "Installing ReconDog"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/ReconDog
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/ReconDog
     cd /opt/tools/ReconDog/
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -366,7 +366,7 @@ function install_ignorant() {
 }
 
 function install_trevorspray() {
-    git -C /opt/tools/ clone --depth=1 https://github.com/blacklanternsecurity/TREVORspray
+    git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/TREVORspray
     cd /opt/tools/TREVORspray
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27
     sed -i "s/1.0.5/1.0.4/" pyproject.toml
