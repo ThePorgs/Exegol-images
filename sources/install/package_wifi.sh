@@ -26,7 +26,7 @@ function install_wifi_apt_tools() {
 
 function install_pyrit() {
     colorecho "Installing pyrit"
-    git -C /opt/tools clone --depth=1 https://github.com/JPaulMora/Pyrit
+    git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
     cd /opt/tools/Pyrit
     fapt libpq-dev
     virtualenv -p /usr/bin/python2 ./venv
@@ -47,7 +47,7 @@ function install_pyrit() {
 
 function install_wifite2() {
     colorecho "Installing wifite2"
-    git -C /opt/tools/ clone --depth=1 https://github.com/derv82/wifite2.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
     cd /opt/tools/wifite2
     python3 -m venv ./venv
     ./venv/bin/python3 setup.py install

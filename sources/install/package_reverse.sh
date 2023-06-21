@@ -38,7 +38,7 @@ function install_pwntools() {
 
 function install_pwndbg() {
     colorecho "Installing pwndbg"
-    git -C /opt/tools/ clone --depth=1 https://github.com/pwndbg/pwndbg
+    git -C /opt/tools/ clone --depth 1 https://github.com/pwndbg/pwndbg
     cd /opt/tools/pwndbg
     ./setup.sh
     echo 'set disassembly-flavor intel' >> ~/.gdbinit
@@ -58,7 +58,7 @@ function install_angr() {
 
 function install_checksec-py() {
     colorecho "Installing checksec.py"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Wenzel/checksec.py.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
     cd /opt/tools/checksec.py
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install .

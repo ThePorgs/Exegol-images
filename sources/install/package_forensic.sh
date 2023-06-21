@@ -29,7 +29,7 @@ function install_forensic_apt_tools() {
 function install_volatility2() {
     colorecho "Installing volatility"
     fapt pcregrep libpcre++-dev yara libjpeg-dev zlib1g-dev
-    git -C /opt/tools/ clone --depth=1 https://github.com/volatilityfoundation/volatility
+    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
     cd /opt/tools/volatility
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install pycrypto distorm3 pillow openpyxl
@@ -76,7 +76,7 @@ function install_trid() {
 
 function install_peepdf() {
     colorecho "Installing peepdf"
-    git -C /opt/tools clone --depth=1 https://github.com/jesparza/peepdf
+    git -C /opt/tools clone --depth 1 https://github.com/jesparza/peepdf
     add-aliases peepdf
     add-history peepdf
     add-test-command "peepdf --help"
@@ -85,7 +85,7 @@ function install_peepdf() {
 
 function install_jadx() {
     colorecho "Installing jadx"
-    git -C /opt/tools/ clone --depth=1 https://github.com/skylot/jadx.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/skylot/jadx.git
     cd /opt/tools/jadx
     ./gradlew dist
     ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
