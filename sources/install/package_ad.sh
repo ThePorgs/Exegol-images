@@ -77,12 +77,12 @@ function install_crackmapexec() {
     # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
     # TODO: Optimize so that the PATH is always up to date
     source /root/.zshrc || true
-    git -C /opt/tools/ clone https://github.com/Porchetta-Industries/CrackMapExec.git
+    git -C /opt/tools/ clone https://github.com/mpgn/CrackMapExec.git
     python3 -m pipx install /opt/tools/CrackMapExec/
     add-aliases crackmapexec
     add-history crackmapexec
     add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/byt3bl33d3r/CrackMapExec,Network scanner."
+    add-to-list "crackmapexec,https://github.com/mpgn/CrackMapExec,Network scanner."
 }
 
 function configure_crackmapexec() {
