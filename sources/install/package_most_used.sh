@@ -55,7 +55,6 @@ function install_most_used_apt_tools() {
 function package_most_used() {
     set_go_env
     install_most_used_apt_tools
-    install_searchsploit            # Exploitdb local search engine
     install_metasploit              # Offensive framework
     install_nmap                    # Port scanner
     install_seclists                # Awesome wordlists
