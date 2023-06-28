@@ -23,9 +23,38 @@ source package_code_analysis.sh
 source package_cracking.sh
 source package_c2.sh
 
+function install_most_used_apt_tools() {
+    fapt sqlmap hydra sslscan weevely smbclient hashcat fcrackzip
+
+    add-history sqlmap
+    add-history hydra
+    add-history sslscan
+    add-history weevely
+    add-history smbclient
+    add-history hashcat
+    add-history fcrackzip
+
+    add-test-command "sqlmap --version"                             # SQL injection scanner
+    add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
+    add-test-command "sslscan --version"                            # SSL/TLS scanner
+    add-test-command "weevely --help"                               # Awesome secure and light PHP webshell
+    add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
+    add-test-command "hashcat --help"                               # Password cracker
+    add-test-command "fcrackzip --help"                             # Zip cracker
+
+    add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
+    add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
+    add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
+    add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
+    add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
+    add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery"
+    add-to-list "fcrackzip,https://github.com/hyc/fcrackzip,Password cracker for zip archives."
+}
+
 # Package dedicated to most used offensive tools
 function package_most_used() {
     set_go_env
+    install_most_used_apt_tools
     install_searchsploit            # Exploitdb local search engine
     install_metasploit              # Offensive framework
     install_nmap                    # Port scanner
@@ -33,18 +62,14 @@ function package_most_used() {
     install_subfinder               # Subdomain bruteforcer
     install_autorecon               # External recon tool
     install_waybackurls             # Website history
-    install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
+    install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_simplyemail             # Gather emails
     install_ffuf                    # Web fuzzer (little favorites)
-    install_sqlmap                  # SQL injection scanner
-    install_hydra                   # Login scanner
-    # install_joomscan              # Joomla scanner FIXME (https://github.com/ThePorgs/Exegol-images/actions/runs/3557732633/jobs/5977150292)
+    install_joomscan                # Joomla scanner
     install_wpscan                  # Wordpress scanner
     install_droopescan              # Drupal scanner
     install_drupwn                  # Drupal scanner
     install_testssl                 # SSL/TLS scanner
-    install_sslscan                 # SSL/TLS scanner
-    install_weevely                 # Awesome secure and light PHP webshell
     install_cloudfail               # Cloudflare misconfiguration detector
     install_eyewitness              # Website screenshoter
     install_wafw00f                 # Waf detector
@@ -55,11 +80,8 @@ function package_most_used() {
     install_crackmapexec            # Network scanner
     install_impacket                # Network protocols scripts
     install_enum4linux-ng           # Active Directory enumeration tool, improved Python alternative to enum4linux
-    install_smbclient               # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
     install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
     install_nuclei                  # Vulnerability scanner
     install_evilwinrm               # WinRM shell
     install_john                    # Password cracker
-    install_hashcat                 # Password cracker
-    install_fcrackzip               # Zip cracker
 }

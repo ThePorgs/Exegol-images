@@ -1,0 +1,1 @@
+cowpatty -f wordlist.txt -r crackme.cap -s Mandela2

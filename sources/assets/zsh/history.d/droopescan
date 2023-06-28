@@ -1,0 +1,1 @@
+droopescan scan drupal -u $TARGET -t 32

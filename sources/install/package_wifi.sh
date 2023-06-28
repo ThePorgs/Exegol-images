@@ -7,7 +7,11 @@ function install_wifi_apt_tools() {
     fapt aircrack-ng reaver bully cowpatty
   
     add-aliases aircrack-ng
+
     add-history aircrack-ng
+    add-history reaver
+    add-history bully
+    add-history cowpatty
   
     add-test-command "aircrack-ng --help"                                                # WiFi security auditing tools suite
     add-test-command "reaver --help; reaver --help |& grep 'Tactical Network Solutions'" # Brute force attack against Wifi Protected Setup
@@ -22,7 +26,7 @@ function install_wifi_apt_tools() {
 
 function install_pyrit() {
     colorecho "Installing pyrit"
-    git -C /opt/tools clone --depth=1 https://github.com/JPaulMora/Pyrit
+    git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
     cd /opt/tools/Pyrit
     fapt libpq-dev
     virtualenv -p /usr/bin/python2 ./venv
@@ -36,17 +40,19 @@ function install_pyrit() {
     python2 setup.py install
     deactivate
     add-aliases pyrit
+    add-history pyrit
     add-test-command "pyrit help"
     add-to-list "pyrit,https://github.com/JPaulMora/Pyrit,Python-based WPA/WPA2-PSK attack tool."
 }
 
 function install_wifite2() {
     colorecho "Installing wifite2"
-    git -C /opt/tools/ clone --depth=1 https://github.com/derv82/wifite2.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
     cd /opt/tools/wifite2
     python3 -m venv ./venv
     ./venv/bin/python3 setup.py install
-    add-aliases "wifite"
+    add-aliases wifite
+    add-history wifite
     add-test-command "wifite --help"
     add-to-list "wifite2,https://github.com/derv82/wifite2,Script for auditing wireless networks."
 }
@@ -61,6 +67,7 @@ function install_bettercap() {
     sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/https-ui.cap
     sed -i 's/set api.rest.password pass/set api.rest.password exegol4thewin/g' /usr/local/share/bettercap/caplets/https-ui.cap
     add-aliases bettercap
+    add-history bettercap
     add-test-command "bettercap --version"
     add-to-list "bettercap,https://github.com/bettercap/bettercap,The Swiss Army knife for 802.11, BLE, and Ethernet networks reconnaissance and MITM attacks."
 }

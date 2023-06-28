@@ -8,8 +8,16 @@ function install_network_apt_tools() {
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
 
+    add-history wireshark
+    add-history tshark
+    add-history hping3
     add-history masscan
     add-history netdiscover
+    add-history tcpdump
+    add-history iptables
+    add-history traceroute
+    add-history rdesktop
+    add-history hydra
     add-history xfreerdp
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
@@ -49,7 +57,7 @@ function install_network_apt_tools() {
 
 function install_proxychains() {
     colorecho "Installing proxychains"
-    git -C /opt/tools/ clone --depth=1 https://github.com/rofl0r/proxychains-ng
+    git -C /opt/tools/ clone --depth 1 https://github.com/rofl0r/proxychains-ng
     cd /opt/tools/proxychains-ng
     ./configure --prefix=/usr --sysconfdir=/etc
     make
@@ -59,6 +67,7 @@ function install_proxychains() {
     make install-config
     cp -v /root/sources/assets/proxychains/proxychains.conf /etc/proxychains.conf
     add-aliases proxychains
+    add-history proxychains
     add-test-command "proxychains4 echo test"
     add-test-command "proxyresolv"
     add-to-list "proxychains,https://github.com/rofl0r/proxychains,Proxy chains - redirect connections through proxy servers."
@@ -77,9 +86,9 @@ function install_nmap() {
 
 function install_autorecon() {
     colorecho "Installing autorecon"
-    git -C /opt/tools/ clone --depth=1 https://gitlab.com/kalilinux/packages/oscanner.git
+    git -C /opt/tools/ clone --depth 1 https://gitlab.com/kalilinux/packages/oscanner.git
     ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
-    git -C /opt/tools clone --depth=1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
+    git -C /opt/tools clone --depth 1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
     ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
     fapt dnsrecon wkhtmltopdf
     python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
@@ -92,11 +101,12 @@ function install_autorecon() {
 
 function install_dnschef() {
     colorecho "Installing DNSChef"
-    git -C /opt/tools/ clone --depth=1 https://github.com/iphelix/dnschef
+    git -C /opt/tools/ clone --depth 1 https://github.com/iphelix/dnschef
     cd /opt/tools/dnschef
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases dnschef
+    add-history dnschef
     add-test-command "dnschef --help"
     add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
 }
@@ -113,6 +123,7 @@ function install_chisel() {
     colorecho "Installing chisel"
     go install -v github.com/jpillora/chisel@latest
     # TODO: add windows pre-compiled binaries in /opt/ressources/windows ?
+    add-history chisel
     add-test-command "chisel --help"
     add-to-list "chisel,https://github.com/jpillora/chisel,Go based TCP tunnel, with authentication and encryption support"
 }
@@ -120,8 +131,22 @@ function install_chisel() {
 function install_sshuttle() {
     colorecho "Installing sshtuttle"
     python3 -m pipx install git+https://github.com/sshuttle/sshuttle.git
+    add-history sshuttle
     add-test-command "sshuttle --version"
     add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
+}
+
+function install_eaphammer() {
+    colorecho "Installing eaphammer"
+    git -C /opt/tools clone --depth 1 https://github.com/s0lst1c3/eaphammer.git
+    cd /opt/tools/eaphammer
+    xargs apt install -y < kali-dependencies.txt
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r pip.req
+    add-aliases eaphammer
+    add-history eaphammer
+    add-test-command "eaphammer -h"
+    add-to-list "eaphammer,https://github.com/s0lst1c3/eaphammer,EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks."
 }
 
 function install_fierce() {
@@ -187,14 +212,13 @@ function package_network() {
     set_go_env
     install_network_apt_tools
     install_proxychains             # Network tool
-    # install_wireshark_sources     # Install Wireshark from sources
     install_nmap                    # Port scanner
     install_autorecon               # External recon tool
     install_dnschef                 # Python DNS server
     install_divideandscan           # Python project to automate port scanning routine
     install_chisel                  # Fast TCP/UDP tunnel over HTTP
     install_sshuttle                # Transparent proxy over SSH
-    # install_eaphammer             # FIXME
+    install_eaphammer               # EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks.
     install_fierce
     # install_odat                  # Oracle Database Attacking Tool, FIXME
     install_dnsx                    # Fast and multi-purpose DNS toolkit

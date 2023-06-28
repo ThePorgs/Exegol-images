@@ -8,22 +8,34 @@ function configure_tor() {
 }
 
 function install_osint_apt_tools() {
-    fapt exiftool exifprobe dnsenum tor
+    fapt exiftool exifprobe dnsenum tor whois recon-ng
+
+    add-history exiftool
+    add-history exifprobe
+    add-history dnsenum
+    add-history tor
+    add-history whois
+    add-history recon-ng
     
     add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png" # For read exif information
     add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"             # Probe and report structure and metadata content of camera image files
     add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'" # DNSEnum is a command-line tool that automatically identifies basic DNS records
     add-test-command "service tor start"                                                # Tor proxy
+    add-test-command "whois --help"                                                     # See information about a specific domain name or IP address
+    add-test-command "recon-ng --help"                                                  # External recon tool
 
     add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading, writing and editing meta information in image, audio and video files."
     add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."
     add-to-list "dnsenum,https://github.com/fwaeytens/dnsenum,dnsenum is a tool for enumerating DNS information about a domain."
     add-to-list "tor,https://github.com/torproject/tor,Anonymity tool that can help protect your privacy and online identity by routing your traffic through a network of servers."
+    add-to-list "whois,https://packages.debian.org/sid/whois,See information about a specific domain name or IP address."
+    add-to-list "recon-ng,https://github.com/lanmaster53/recon-ng,External recon tool."
 }
 
 function install_youtubedl() {
     colorecho "Installing youtube-dl"
     python3 -m pipx install youtube-dl
+    add-history youtube-dl
     add-test-command "youtube-dl --version"
     add-to-list "youtubedl,https://github.com/ytdl-org/youtube-dl,Download videos from YouTube and other sites."
 }
@@ -52,13 +64,6 @@ function install_subfinder() {
     add-to-list "subfinder,https://github.com/projectdiscovery/subfinder,Tool to find subdomains associated with a domain."
 }
 
-function install_amass(){
-    colorecho "Installing Amass"
-    go install -v github.com/owasp-amass/amass/v3/...@master
-    add-test-command "amass -version"
-    add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration, attack surface mapping & external assets discovery tool"
-}
-
 function install_findomain() {
     colorecho "Installing findomain"
     if [[ $(uname -m) = 'x86_64' ]]
@@ -73,6 +78,7 @@ function install_findomain() {
     unzip -d /opt/tools/bin/ /tmp/findomain.zip
     chmod +x /opt/tools/bin/findomain
     rm /tmp/findomain.zip
+    add-history findomain
     add-test-command "findomain --version"
     add-to-list "findomain,https://github.com/findomain/findomain,The fastest and cross-platform subdomain enumerator."
 }
@@ -87,12 +93,11 @@ function install_holehe() {
 
 function install_simplyemail() {
     colorecho "Installing SimplyEmail"
-    git -C /opt/tools/ clone --branch master --depth=1 https://github.com/killswitch-GUI/SimplyEmail.git
+    git -C /opt/tools/ clone --branch master --depth 1 https://github.com/killswitch-GUI/SimplyEmail.git
     cd /opt/tools/SimplyEmail/
     fapt antiword odt2txt python-dev libxml2-dev libxslt1-dev
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
-    
     add-aliases simplyemail
     add-history simplyemail
     add-test-command "SimplyEmail -l"
@@ -101,7 +106,7 @@ function install_simplyemail() {
 
 function install_theharvester() {
     colorecho "Installing theHarvester"
-    git -C /opt/tools/ clone --depth=1 https://github.com/laramies/theHarvester
+    git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -123,7 +128,7 @@ function install_h8mail() {
 
 function install_infoga() {
     colorecho "Installing infoga"
-    git -C /opt/tools/ clone --depth=1 https://github.com/m4ll0k/Infoga
+    git -C /opt/tools/ clone --depth 1 https://github.com/m4ll0k/Infoga
     find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
     cd /opt/tools/Infoga
     python3 -m venv ./venv
@@ -136,7 +141,14 @@ function install_infoga() {
 
 function install_buster() {
     colorecho "Installing buster"
-    python3 -m pipx install git+https://github.com/sham00n/buster
+    git -C /opt/tools clone --depth 1 https://github.com/sham00n/buster
+    cd /opt/tools/buster
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip install cython requests beautifulsoup4 PyYaml lxml grequests gevent twint
+    python3 setup.py install
+    deactivate
+    ln -s /opt/tools/buster/venv/bin/buster /opt/tools/bin
     add-history buster
     add-test-command "buster --help"
     add-to-list "buster,https://github.com/sham00n/Buster,Advanced OSINT tool"
@@ -144,13 +156,14 @@ function install_buster() {
 
 function install_pwnedornot() {
     colorecho "Installing pwnedornot"
-    git -C /opt/tools/ clone --depth=1 https://github.com/thewhiteh4t/pwnedOrNot
+    git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
     cd /opt/tools/pwnedOrNot
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install requests html2text
     mkdir -p "$HOME/.config/pwnedornot"
     cp config.json "$HOME/.config/pwnedornot/config.json"
     add-aliases pwnedornot
+    add-history pwnedornot
     add-test-command "pwnedornot.py --help"
     add-to-list "pwnedornot,https://github.com/thewhiteh4t/pwnedOrNot,Check if a password has been leaked in a data breach."
 }
@@ -183,7 +196,7 @@ function install_maigret() {
 
 function install_linkedin2username() {
     colorecho "Installing linkedin2username"
-    git -C /opt/tools/ clone --depth=1 https://github.com/initstring/linkedin2username
+    git -C /opt/tools/ clone --depth 1 https://github.com/initstring/linkedin2username
     cd /opt/tools/linkedin2username
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -211,7 +224,7 @@ function install_waybackurls() {
 
 function install_carbon14() {
     colorecho "Installing Carbon14"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Lazza/Carbon14
+    git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
     cd /opt/tools/Carbon14
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -223,11 +236,12 @@ function install_carbon14() {
 
 function install_photon() {
     colorecho "Installing photon"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/photon
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/photon
     cd /opt/tools/photon
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases photon
+    add-history photon
     add-test-command "photon.py --help"
     add-to-list "photon,https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs, files, intel & endpoints from a target."
 }
@@ -254,20 +268,22 @@ function install_constellation() {
     fi
     # TODO ARM64 install
     # TODO add-test-command
+    add-history constellation
     add-to-list "constellation,https://github.com/constellation-app/Constellation,Find and exploit vulnerabilities in mobile applications."
 }
 
-function install_maltego(){
+function install_maltego() {
     colorecho "Installing Maltego"
     wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
     dpkg -i /tmp/maltegov4.3_package.deb
+    add-history maltego
     add-test-command "file /usr/share/maltego/bin/maltego"
     add-to-list "maltego,https://www.paterva.com/web7/downloads.php,A tool used for open-source intelligence and forensics"
 }
 
-function install_spiderfoot(){
+function install_spiderfoot() {
     colorecho "Installing Spiderfoot"
-    git -C /opt/tools/ clone --depth=1 https://github.com/smicallef/spiderfoot
+    git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -278,20 +294,31 @@ function install_spiderfoot(){
     add-to-list "spiderfoot,https://github.com/smicallef/spiderfoot,A reconnaissance tool that automatically queries over 100 public data sources"
 }
 
-function install_finalrecon(){
+function install_finalrecon() {
     colorecho "Installing FinalRecon"
-    git -C /opt/tools/ clone --depth=1 https://github.com/thewhiteh4t/FinalRecon
+    git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases finalrecon
+    add-history finalrecon
     add-test-command "finalrecon.py --help"
     add-to-list "finalrecon,https://github.com/thewhiteh4t/FinalRecon,A web reconnaissance tool that gathers information about web pages"
 }
 
+function install_osrframework() {
+    colorecho "Installing osrframework"
+    python3 -m pipx install osrframework
+    python3 -m pipx inject osrframework 'urllib3<2'
+    python3 -m pipx inject osrframework 'pip==21.2'
+    add-history osrframework
+    add-test-command "osrframework-cli --help"
+    add-to-list "osrframework,https://github.com/i3visio/osrframework,Include references to a bunch of different applications related to username checking, DNS lookups, information leaks research, deep web search, regular expressions extraction and many others."
+}
+
 function install_pwndb() {
     colorecho "Installing pwndb"
-    git -C /opt/tools/ clone --depth=1 https://github.com/davidtavarez/pwndb.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/davidtavarez/pwndb.git
     cd /opt/tools/pwndb
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -312,11 +339,12 @@ function install_githubemail() {
 
 function install_recondog() {
     colorecho "Installing ReconDog"
-    git -C /opt/tools/ clone --depth=1 https://github.com/s0md3v/ReconDog
+    git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/ReconDog
     cd /opt/tools/ReconDog/
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases recondog
+    add-history recondog
     add-test-command "recondog --help"
     add-to-list "recondog,https://github.com/s0md3v/ReconDog,a reconnaissance tool for performing information gathering on a target."
 }
@@ -324,12 +352,21 @@ function install_recondog() {
 function install_gron() {
     colorecho "Installing gron"
     go install -v github.com/tomnomnom/gron@latest
+    add-history gron
     add-test-command "gron --help"
     add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!"
 }
 
+function install_ignorant() {
+    colorecho "Installing ignorant"
+    python3 -m pipx install git+https://github.com/megadose/ignorant
+    add-history ignorant
+    add-test-command "ignorant --help"
+    add-to-list "ignorant,https://github.com/megadose/ignorant,holehe but for phone numbers."
+}
+
 function install_trevorspray() {
-    git -C /opt/tools/ clone --depth=1 https://github.com/blacklanternsecurity/TREVORspray
+    git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/TREVORspray
     cd /opt/tools/TREVORspray
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27
     sed -i "s/1.0.5/1.0.4/" pyproject.toml
@@ -347,16 +384,15 @@ function package_osint() {
     install_sublist3r               # Fast subdomains enumeration tool
     install_assetfinder             # Find domains and subdomains potentially related to a given domain
     install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
-    install_amass                   # OWASP Amass tool suite is used to build a network map of the target
     install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
     install_holehe                  # Check if the mail is used on different sites
     install_simplyemail             # Gather emails
-    install_theharvester          # Gather emails, subdomains, hosts, employee names, open ports and banners FIXME
+    install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
     install_infoga                  # Gathering email accounts informations
-    # install_buster                  # An advanced tool for email reconnaissance FIXME
+    install_buster                  # An advanced tool for email reconnaissance
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
-    # install_ghunt                 # Investigate Google Accounts with emails FIXME
+    # install_ghunt                 # Investigate Google Accounts with emails FIXME: Need python3.10 -> https://github.com/mxrch/GHunt/issues/398
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
     install_maigret                 # Search pseudos and information about users on many platforms
     install_linkedin2username       # Generate username lists for companies on LinkedIn
@@ -369,15 +405,13 @@ function package_osint() {
     install_maltego                 # Maltego is a software used for open-source intelligence and forensics
     install_spiderfoot              # SpiderFoot automates OSINT collection
     install_finalrecon              # A fast and simple python script for web reconnaissance
-    # fapt recon-ng                 # External recon tool FIXME
-    # install_osrframework          # OSRFramework, the Open Sources Research Framework FIXME
-    # install_torbrowser            # Tor browser FIXME
+    install_osrframework            # OSRFramework, the Open Sources Research Framework
+    # install_torbrowser            # Tor browser FIXME: Github project ?
     install_pwndb					# No need to say more, no ? Be responsible with this tool please !
     install_githubemail             # Retrieve a GitHub user's email even if it's not public
-    # fapt whois                    # See information about a specific domain name or IP address FIXME
     install_recondog                # Informations gathering tool
     install_gron                    # JSON parser
-    # install_ignorant              # holehe but for phone numbers
+    install_ignorant                # holehe but for phone numbers
     install_trevorspray             # modular password sprayer with threading, SSH proxying, loot modules, and more!
 }
 

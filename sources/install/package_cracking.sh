@@ -8,6 +8,8 @@ function install_cracking_apt_tools() {
 
     add-history hashcat
     add-history fcrackzip
+    add-history pdfcrack
+    add-history bruteforce-luks
 
     add-test-command "hashcat --help"                                   # Password cracker
     add-test-command "fcrackzip --help"                                 # Zip cracker

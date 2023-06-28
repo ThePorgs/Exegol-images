@@ -7,6 +7,8 @@ function install_wordlists_apt_tools() {
     fapt crunch cupp cewl
 
     add-history cewl
+    add-history cupp
+    add-history crunch
 
     add-test-command "crunch --help" # Wordlist generator
     add-test-command "cupp --help"   # User password profiler
@@ -53,8 +55,9 @@ function install_pass_station() {
 
 function install_username-anarchy() {
     colorecho "Installing Username-Anarchy"
-    git -C /opt/tools/ clone --depth=1 https://github.com/urbanadventurer/username-anarchy
+    git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
     add-aliases username-anarchy
+    add-history username-anarchy
     add-test-command "username-anarchy --help"
     add-to-list "username-anarchy,https://github.com/urbanadventurer/username-anarchy,TODO"
 }
@@ -64,6 +67,7 @@ function install_genusernames() {
     mkdir -p /opt/tools/genusernames
     wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
     sed -i 's/genadname/genusernames/g' /opt/tools/genusernames/genusernames.function
+    add-history genusernames
     add-test-command "genusernames 'john doe'"
     add-to-list "genusernames,https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."
 }

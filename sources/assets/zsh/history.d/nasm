@@ -1,0 +1,1 @@
+nasm -felf64 -o <object> <filename>

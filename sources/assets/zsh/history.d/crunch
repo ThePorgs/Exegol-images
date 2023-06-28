@@ -1,0 +1,1 @@
+crunch 4 7 abcdefghijklmnopqrstuvwxyz1234567890 -o wordlist.txt

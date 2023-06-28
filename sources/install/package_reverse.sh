@@ -5,6 +5,9 @@ source common.sh
 
 function install_reverse_apt_tools() {
     fapt nasm wabt strace
+
+    add-history nasm
+    add-history strace
     
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -35,11 +38,12 @@ function install_pwntools() {
 
 function install_pwndbg() {
     colorecho "Installing pwndbg"
-    git -C /opt/tools/ clone --depth=1 https://github.com/pwndbg/pwndbg
+    git -C /opt/tools/ clone --depth 1 https://github.com/pwndbg/pwndbg
     cd /opt/tools/pwndbg
     ./setup.sh
     echo 'set disassembly-flavor intel' >> ~/.gdbinit
     add-aliases gdb
+    add-history gdb
     add-test-command "gdb --help"
     add-to-list "pwndbg,https://github.com/pwndbg/pwndbg,a GDB plugin that makes debugging with GDB suck less"
 }
@@ -54,7 +58,7 @@ function install_angr() {
 
 function install_checksec-py() {
     colorecho "Installing checksec.py"
-    git -C /opt/tools/ clone --depth=1 https://github.com/Wenzel/checksec.py.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
     cd /opt/tools/checksec.py
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install .
@@ -69,6 +73,7 @@ function install_radare2(){
     colorecho "Installing radare2"
     git -C /opt/tools/ clone https://github.com/radareorg/radare2
     /opt/tools/radare2/sys/install.sh
+    add-history radare2
     add-test-command "radare2 -h"
     add-to-list "radare2,https://github.com/radareorg/radare2,A complete framework for reverse-engineering and analyzing binaries"
 }
@@ -79,6 +84,7 @@ function install_ghidra() {
     unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
     rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
     add-aliases ghidra
+    add-history ghidra
     # TODO add-test-command GUI app
     add-to-list "ghidra,https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools."
 }
@@ -95,6 +101,7 @@ function install_ida() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64" && return
     fi
     add-aliases ida
+    add-history ida
     # TODO add-test-command GUI app
     add-to-list "ida,https://www.hex-rays.com/products/ida/,Interactive disassembler for software analysis."
 }
@@ -104,6 +111,7 @@ function install_jd-gui() {
     mkdir -p /opt/tools/jd-gui && cd /opt/tools/jd-gui || exit
     wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
     add-aliases jd-gui
+    add-history jd-gui
     # TODO add-test-command GUI app
     add-to-list "jd-gui,https://github.com/java-decompiler/jd-gui,A standalone Java Decompiler GUI"
 }
@@ -114,6 +122,7 @@ function install_pwninit() {
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     cargo install pwninit
+    add-history pwninit
     add-test-command "pwninit --help"
     add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
 }

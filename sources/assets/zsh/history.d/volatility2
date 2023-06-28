@@ -1,0 +1,2 @@
+volatility2 --profile=Win7SP1x86_23418 netscan -f file.dmp
+volatility2 --profile=SomeLinux -f file.dmp linux_netstat
