@@ -85,7 +85,7 @@ function install_trilium() {
     colorecho "Installing Trilium (building from sources)"
     # TODO : apt install in a second step
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
-    git -C /opt/tools/ clone -b stable https://github.com/zadam/trilium.git
+    git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
     cd /opt/tools/trilium
     add-aliases trilium
     add-history trilium

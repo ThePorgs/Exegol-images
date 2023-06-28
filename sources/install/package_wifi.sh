@@ -75,7 +75,7 @@ function install_bettercap() {
 function install_hcxtools() {
     colorecho "Installing hcxtools"
     fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
-    git -C /opt/tools/ clone https://github.com/ZerBea/hcxtools
+    git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools
     cd /opt/tools/hcxtools
     # Checking out to specific commit is a temporary fix to the project no compiling anymore.
     # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxtools/issues/233)
@@ -91,7 +91,7 @@ function install_hcxtools() {
 function install_hcxdumptool() {
     colorecho "Installing hcxdumptool"
     fapt libcurl4-openssl-dev libssl-dev
-    git -C /opt/tools/ clone https://github.com/ZerBea/hcxdumptool
+    git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool
     cd /opt/tools/hcxdumptool
     # Checking out to specific commit is a temporary fix to the project no compiling anymore.
     # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232)
