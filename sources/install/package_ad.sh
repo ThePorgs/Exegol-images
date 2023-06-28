@@ -91,7 +91,7 @@ function configure_crackmapexec() {
     [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
-    # git -C /opt/tools/ clone https://github.com/byt3bl33d3r/CrackMapExec
+    # git -C /opt/tools/ clone https://github.com/mpgn/CrackMapExec
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
 }
 
