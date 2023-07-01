@@ -65,10 +65,10 @@ function install_cloudsplaining() {
 
 function install_cloudsploit() {
     colorecho "Installing Cloudsploit"
-    git -C /opt/tools/ clone https://github.com/aquasecurity/cloudsploit
-	cd /opt/cloudsploit && npm install
-	add-aliases cloudsploit
-	add-history cloudsploit
+    git -C /opt/tools/ clone --depth 1 https://github.com/aquasecurity/cloudsploit
+    cd /opt/cloudsploit && npm install
+    add-aliases cloudsploit
+    add-history cloudsploit
     add-test-command "cloudsploit -h"
     add-to-list "cloudsploit,https://github.com/aquasecurity/cloudsploit,Cloud Security Posture Management"
 }
