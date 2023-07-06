@@ -662,7 +662,7 @@ function install_donpapi() {
     colorecho "Installing DonPAPI"
     fapt swig
     python3 -m pipx install git+https://github.com/login-securite/DonPAPI
-    add-history DonPAPI
+    add-history donpapi
     add-test-command "DonPAPI --help"
     add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Dumping revelant information on compromised targets without AV detection"
 }
