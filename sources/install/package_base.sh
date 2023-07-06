@@ -11,8 +11,8 @@ function update() {
 
 function install_exegol-history() {
     colorecho "Installing Exegol-history"
-    #  git -C /opt/tools/ clone https://github.com/ThePorgs/Exegol-history
-    # todo : below is something basic. A nice tool being created for faster and smoother worflow
+    #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
+    # todo : below is something basic. A nice tool being created for faster and smoother workflow
     mkdir -p /opt/tools/Exegol-history
     rm -rf /opt/tools/Exegol-history/profile.sh
     echo "#export INTERFACE='eth0'" >> /opt/tools/Exegol-history/profile.sh
@@ -118,11 +118,11 @@ function install_ohmyzsh() {
     colorecho "Installing oh-my-zsh, config, history, aliases"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-autosuggestions
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-syntax-highlighting
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-completions
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/agkozak/zsh-z
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/lukechilds/zsh-nvm
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-completions
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/agkozak/zsh-z
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
     add-aliases fzf
     add-test-command "fzf-wordlists --help"

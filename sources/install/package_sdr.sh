@@ -22,7 +22,7 @@ function install_sdr_apt_tools() {
 function install_mousejack() {
     colorecho "Installing mousejack"
     fapt sdcc binutils
-    git -C /opt/tools/ clone https://github.com/BastilleResearch/mousejack
+    git -C /opt/tools/ clone --depth 1 https://github.com/BastilleResearch/mousejack
     cd /opt/tools/mousejack
     git submodule init
     git submodule update

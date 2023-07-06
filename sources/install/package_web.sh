@@ -245,7 +245,7 @@ function install_droopescan() {
 
 function install_drupwn() {
     colorecho "Installing drupwn"
-    git -C /opt/tools/ clone https://github.com/immunIT/drupwn
+    git -C /opt/tools/ clone --depth 1 https://github.com/immunIT/drupwn
     python3 -m pipx install git+https://github.com/immunIT/drupwn
     add-aliases drupwn
     add-history drupwn
@@ -295,7 +295,7 @@ function install_testssl() {
 function install_tls-scanner() {
     colorecho "Installing TLS-Scanner"
     fapt maven
-    git -C /opt/tools/ clone https://github.com/tls-attacker/TLS-Scanner
+    git -C /opt/tools/ clone --depth 1 https://github.com/tls-attacker/TLS-Scanner
     cd /opt/tools/TLS-Scanner
     git submodule update --init --recursive
     mvn clean package -DskipTests=true
@@ -675,7 +675,7 @@ function install_php_filter_chain_generator() {
 
 function install_kraken() {
     colorecho "Installing Kraken"
-    git -C /opt/tools clone --recurse-submodules https://github.com/kraken-ng/Kraken.git
+    git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
     cd /opt/tools/Kraken
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt

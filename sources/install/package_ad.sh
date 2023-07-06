@@ -91,7 +91,6 @@ function configure_crackmapexec() {
     [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
-    # git -C /opt/tools/ clone https://github.com/mpgn/CrackMapExec
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
 }
 
@@ -367,7 +366,7 @@ function install_libmspack() {
 function install_windapsearch-go() {
     colorecho "Installing Go windapsearch"
     # Install mage dependency
-    git -C /opt/tools/ clone https://github.com/magefile/mage
+    git -C /opt/tools/ clone --depth 1 https://github.com/magefile/mage
     cd /opt/tools/mage
     go run bootstrap.go
     # Install windapsearch tool
@@ -622,7 +621,7 @@ function install_manspider() {
 
 function install_targetedKerberoast() {
     colorecho "Installing targetedKerberoast"
-    git -C /opt/tools/ clone https://github.com/ShutdownRepo/targetedKerberoast
+    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
     cd /opt/tools/targetedKerberoast
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -787,7 +786,7 @@ function install_ldeep() {
 function install_rusthound() {
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone https://github.com/OPENCYBER-FR/RustHound
+    git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
     cd /opt/tools/RustHound
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
