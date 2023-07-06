@@ -660,13 +660,10 @@ function install_pywsus() {
 
 function install_donpapi() {
     colorecho "Installing DonPAPI"
-    git -C /opt/tools/ clone --depth 1 https://github.com/login-securite/DonPAPI.git
-    cd /opt/tools/DonPAPI
-    python3 -m venv ./venv/
-    ./venv/bin/python3 -m pip install -r ./requirements.txt
-    add-aliases donpapi
+    fapt swig
+    python3 -m pipx install git+https://github.com/login-securite/DonPAPI
     add-history donpapi
-    add-test-command "DonPAPI.py --help"
+    add-test-command "DonPAPI --help"
     add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Python network and web application scanner"
 }
 
