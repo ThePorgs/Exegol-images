@@ -664,7 +664,7 @@ function install_donpapi() {
     python3 -m pipx install git+https://github.com/login-securite/DonPAPI
     add-history DonPAPI
     add-test-command "DonPAPI --help"
-    add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Python network and web application scanner"
+    add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Dumping revelant information on compromised targets without AV detection"
 }
 
 function install_webclientservicescanner() {
