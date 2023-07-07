@@ -19,7 +19,7 @@ function deploy_zsh() {
   ##### ZSH deployment
   if [ -d "$MY_Setup_PATH/zsh" ]; then
     # TODO remove fallback 'cp' command
-    grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/zsh/history" >>/root/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_Setup_PATH/zsh/history"
+    grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/zsh/history" >> ~/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_Setup_PATH/zsh/history"
   else
     mkdir -p /opt/my-resources/setup/zsh
     cp --preserve=mode /.exegol/skel/zsh/* "$MY_Setup_PATH/zsh/"
@@ -131,28 +131,41 @@ function deploy_firefox_addons() {
   fi
 }
 
-function deploy_bloodhound_customqueries_replacement() {
-  # Merge all the *.json files in customqueries format from my-resources/.../replacement to replace the Exegol provided one
-  if \
-    [[ -d "$MY_Setup_PATH/bloodhound_customqueries/replacement" ]] && \
-    [[ -n $(find "$MY_Setup_PATH/bloodhound_customqueries/replacement" -type f -name "*.json") ]]; then
-      bqm --verbose --ignore-default --output-path /root/.config/bloodhound/customqueries.json.bqm -i "$MY_Setup_PATH/bloodhound_customqueries/replacement"
-      [[ -f "/root/.config/bloodhound/customqueries.json.bqm" ]] && mv "/root/.config/bloodhound/customqueries.json.bqm" "/root/.config/bloodhound/customqueries.json"
-  fi
+function deploy_bloodhound_config() {
+  [[ -f "$MY_Setup_PATH/bloodhound/config.json" ]] && cp "$MY_Setup_PATH/bloodhound/config.json" "$bh_config_directory/config.json"
 }
 
 function deploy_bloodhound_customqueries_merge() {
-  # Merge all the *.json files in customqueries format from my-resources/.../merge with the Exegol provided one
+  # Merge Exegol's customqueries.json file with the ones from my-resources
+  local cq_merge_directory="$MY_Setup_PATH/bloodhound/customqueries_merge"
   if \
-    [[ -d "$MY_Setup_PATH/bloodhound_customqueries/merge" ]] && \
-    [[ -n $(find "$MY_Setup_PATH/bloodhound_customqueries/merge" -type f -name "*.json") ]]; then
-      bqm --verbose --ignore-default --output-path /root/.config/bloodhound/customqueries.json.bqm -i "$MY_Setup_PATH/bloodhound_customqueries/merge,/root/.config/bloodhound/customqueries.json"
-      [[ -f "/root/.config/bloodhound/customqueries.json.bqm" ]] && mv "/root/.config/bloodhound/customqueries.json.bqm" "/root/.config/bloodhound/customqueries.json"
+    [[ -d "$cq_merge_directory" ]] && \
+    [[ -f "$bh_config_directory/customqueries.json" ]] && \
+    [[ -n $(find "$cq_merge_directory" -type f -name "*.json") ]]; then
+      bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_directory/customqueries.json"
+      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_directory/customqueries.json"
   fi
 }
 
-function deploy_bloodhound_customqueries() {
-  # If a user places Bloodhound json files in both folders my-resources/.../merge and my-resources/.../replacement,
+function deploy_bloodhound_customqueries_replacement() {
+  # Replace Exegol's customqueries.json file with the merge of ones from my-resources
+  local cq_replacement_directory="$MY_Setup_PATH/bloodhound/customqueries_replacement"
+  if \
+    [[ -d "$cq_replacement_directory" ]] && \
+    [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
+      bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_replacement_directory"
+      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_directory/customqueries.json"
+  fi
+}
+
+function deploy_bloodhound() {
+  local bh_config_directory=~/.config/bloodhound
+  local bqm_output_file="$bh_config_directory/customqueries.json.bqm"
+
+  [[ ! -d "$bh_config_directory" ]] && mkdir -p "$bh_config_directory"
+  deploy_bloodhound_config
+
+  # If a user places Bloodhound json files in both folders merge and replacement,
   # replacement must be executed last to only keep the output of replacement.
   deploy_bloodhound_customqueries_merge
   deploy_bloodhound_customqueries_replacement
@@ -177,7 +190,7 @@ deploy_vim
 deploy_apt
 deploy_python3
 deploy_firefox_addons
-deploy_bloodhound_customqueries
+deploy_bloodhound
 
 run_user_setup
 
