@@ -132,37 +132,43 @@ function deploy_firefox_addons() {
 }
 
 function deploy_bloodhound_config() {
-  [[ -f "$MY_Setup_PATH/bloodhound/config.json" ]] && cp "$MY_Setup_PATH/bloodhound/config.json" "$bh_config_directory/config.json"
+  [[ -f "$my_setup_bh_path/config.json" ]] && cp "$my_setup_bh_path/config.json" "$bh_config_homedir/config.json"
 }
 
 function deploy_bloodhound_customqueries_merge() {
   # Merge Exegol's customqueries.json file with the ones from my-resources
-  local cq_merge_directory="$MY_Setup_PATH/bloodhound/customqueries_merge"
+  local cq_merge_directory="$my_setup_bh_path/customqueries_merge"
+
+  [[ ! -d "$cq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$cq_merge_directory"
+
   if \
-    [[ -d "$cq_merge_directory" ]] && \
-    [[ -f "$bh_config_directory/customqueries.json" ]] && \
+    [[ -f "$bh_config_homedir/customqueries.json" ]] && \
     [[ -n $(find "$cq_merge_directory" -type f -name "*.json") ]]; then
-      bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_directory/customqueries.json"
-      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_directory/customqueries.json"
+      bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_homedir/customqueries.json"
+      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_homedir/customqueries.json"
   fi
 }
 
 function deploy_bloodhound_customqueries_replacement() {
   # Replace Exegol's customqueries.json file with the merge of ones from my-resources
-  local cq_replacement_directory="$MY_Setup_PATH/bloodhound/customqueries_replacement"
-  if \
-    [[ -d "$cq_replacement_directory" ]] && \
-    [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
+  local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
+
+  [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
+
+  if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_replacement_directory"
-      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_directory/customqueries.json"
+      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_homedir/customqueries.json"
   fi
 }
 
 function deploy_bloodhound() {
-  local bh_config_directory=~/.config/bloodhound
-  local bqm_output_file="$bh_config_directory/customqueries.json.bqm"
+  local bh_config_homedir=~/.config/bloodhound
+  local my_setup_bh_path="$MY_Setup_PATH/bloodhound"
+  local bqm_output_file="$bh_config_homedir/customqueries.json.bqm"
 
-  [[ ! -d "$bh_config_directory" ]] && mkdir -p "$bh_config_directory"
+  [[ ! -d "$bh_config_homedir" ]] && mkdir -p "$bh_config_homedir"
+  [[ ! -d "$my_setup_bh_path" ]] && cp -r /.exegol/skel/bloodhound "$my_setup_bh_path"
+
   deploy_bloodhound_config
 
   # If a user places Bloodhound json files in both folders merge and replacement,
