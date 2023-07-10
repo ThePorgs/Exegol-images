@@ -4,22 +4,25 @@
 source common.sh
 
 function install_mobile_apt_tools() {
-    fapt android-tools-adb zipalign apksigner apktool
+    fapt android-tools-adb zipalign apksigner apktool scrcpy
 
     add-history adb
     add-history zipalign
     add-history apksigner
     add-history apktool
+    add-history scrcpy
 
     add-test-command "adb --help"
     add-test-command "zipalign --help |& grep 'verbose output'"
     add-test-command "apksigner --version"
     add-test-command "apktool --version"
+    add-test-command "scrcpy --version"
 
     add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications"
     add-to-list "zipalign,https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file"
     add-to-list "apksigner,https://source.android.com/security/apksigning,arguably the most important step to optimize your APK file"
     add-to-list "apktool,https://github.com/iBotPeaches/Apktool,It is a tool for reverse engineering 3rd party, closed, binary Android apps."
+    add-to-list "scrcpy,https://github.com/Genymobile/scrcpy,Display and control your Android device."
 }
 
 function install_smali(){
