@@ -90,6 +90,17 @@ function install_androguard() {
     add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications"
 }
 
+function install_mobsf(){
+    colorecho "Installing Mobile Security Framework"
+    fapt wkhtmltopdf
+    git clone https://github.com/MobSF/Mobile-Security-Framework-MobSF /opt/tools/Mobile-Security-Framework-MobSF
+    cd /opt/tools/Mobile-Security-Framework-MobSF && ./setup.sh
+
+    add-aliases mobsf
+    add-history mobsf
+    add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated, all-in-one mobile application (Android/iOS/Windows) pen-testing, malware analysis and security assessment framework"
+}
+
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
     set_cargo_env
@@ -102,4 +113,6 @@ function package_mobile() {
     install_frida
     install_objection               # Runtime mobile exploration toolkit
     install_androguard              # Reverse engineering and analysis of Android applications
+    install_mobsf                   # Automated mobile application testing framework
 }
+

@@ -1,0 +1,1 @@
+alias mobsf='cd /opt/tools/Mobile-Security-Framework-MobSF/ && echo "[*] changed dir : cd /opt/tools/Mobile-Security-Framework-MobSF/" && ./run.sh'
