@@ -71,7 +71,7 @@ function install_checksec-py() {
 
 function install_radare2(){
     colorecho "Installing radare2"
-    git -C /opt/tools/ clone https://github.com/radareorg/radare2
+    git -C /opt/tools/ clone --depth 1 https://github.com/radareorg/radare2
     /opt/tools/radare2/sys/install.sh
     add-history radare2
     add-test-command "radare2 -h"
