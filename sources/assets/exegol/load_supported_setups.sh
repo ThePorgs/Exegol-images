@@ -19,7 +19,7 @@ function deploy_zsh() {
   ##### ZSH deployment
   if [ -d "$MY_Setup_PATH/zsh" ]; then
     # TODO remove fallback 'cp' command
-    grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/zsh/history" >>/root/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_Setup_PATH/zsh/history"
+    grep -vE "^(\s*|#.*)$" "$MY_Setup_PATH/zsh/history" >> ~/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_Setup_PATH/zsh/history"
   else
     mkdir -p /opt/my-resources/setup/zsh
     cp --preserve=mode /.exegol/skel/zsh/* "$MY_Setup_PATH/zsh/"
@@ -131,6 +131,52 @@ function deploy_firefox_addons() {
   fi
 }
 
+function deploy_bloodhound_config() {
+  [[ -f "$my_setup_bh_path/config.json" ]] && cp "$my_setup_bh_path/config.json" "$bh_config_homedir/config.json"
+}
+
+function deploy_bloodhound_customqueries_merge() {
+  # Merge Exegol's customqueries.json file with the ones from my-resources
+  local cq_merge_directory="$my_setup_bh_path/customqueries_merge"
+
+  [[ ! -d "$cq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$cq_merge_directory"
+
+  if \
+    [[ -f "$bh_config_homedir/customqueries.json" ]] && \
+    [[ -n $(find "$cq_merge_directory" -type f -name "*.json") ]]; then
+      bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_homedir/customqueries.json"
+      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_homedir/customqueries.json"
+  fi
+}
+
+function deploy_bloodhound_customqueries_replacement() {
+  # Replace Exegol's customqueries.json file with the merge of ones from my-resources
+  local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
+
+  [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
+
+  if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
+      bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_replacement_directory"
+      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_homedir/customqueries.json"
+  fi
+}
+
+function deploy_bloodhound() {
+  local bh_config_homedir=~/.config/bloodhound
+  local my_setup_bh_path="$MY_Setup_PATH/bloodhound"
+  local bqm_output_file="$bh_config_homedir/customqueries.json.bqm"
+
+  [[ ! -d "$bh_config_homedir" ]] && mkdir -p "$bh_config_homedir"
+  [[ ! -d "$my_setup_bh_path" ]] && cp -r /.exegol/skel/bloodhound "$my_setup_bh_path"
+
+  deploy_bloodhound_config
+
+  # If a user places Bloodhound json files in both folders merge and replacement,
+  # replacement must be executed last to only keep the output of replacement.
+  deploy_bloodhound_customqueries_merge
+  deploy_bloodhound_customqueries_replacement
+}
+
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
@@ -150,6 +196,7 @@ deploy_vim
 deploy_apt
 deploy_python3
 deploy_firefox_addons
+deploy_bloodhound
 
 run_user_setup
 
