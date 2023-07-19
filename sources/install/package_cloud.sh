@@ -52,7 +52,7 @@ function install_scout() {
     python3 -m pipx install scoutsuite
     add-history scout
     add-test-command "scout --help"
-    add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud environments."
+    add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool which enables security posture assessment of cloud environments."
 }
 
 function install_cloudsplaining() {
@@ -78,7 +78,7 @@ function install_prowler() {
     python3 -m pipx install prowler
     add-history prowler
     add-test-command "prowler -h"
-    add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments, audits, incident response, compliance, continuous monitoring, hardening and forensics readiness."
+    add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness."
 }
 
 # Package dedicated to cloud tools
