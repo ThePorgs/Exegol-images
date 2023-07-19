@@ -1,4 +1,3 @@
-prowler
 prowler aws --checks s3_bucket_public_access
 prowler aws --services s3 ec2
 prowler aws --profile custom-profile -f us-east-1 eu-south-2
