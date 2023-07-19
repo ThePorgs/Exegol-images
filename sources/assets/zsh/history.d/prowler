@@ -1,0 +1,8 @@
+prowler aws --checks s3_bucket_public_access
+prowler aws --services s3 ec2
+prowler aws --profile custom-profile -f us-east-1 eu-south-2
+prowler azure --sp-env-auth
+prowler azure --az-cli-auth
+prowler azure --browser-auth
+prowler azure --managed-identity-auth
+prowler gcp --credentials-file path
