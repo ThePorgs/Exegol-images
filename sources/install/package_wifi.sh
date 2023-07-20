@@ -75,10 +75,11 @@ function install_bettercap() {
 function install_hcxtools() {
     colorecho "Installing hcxtools"
     fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
-    git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools
+    # git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools  # Depth 1 must be removed because of the git checkout
+    git -C /opt/tools/ clone https://github.com/ZerBea/hcxtools
     cd /opt/tools/hcxtools
     # Checking out to specific commit is a temporary fix to the project no compiling anymore.
-    # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxtools/issues/233)
+    # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxtools/issues/233) => Need to upgrade to the Debian 12 release
     git checkout 5937d2ad9d021f3b5e2edd55d79439b8485d3222
     make
     make install
