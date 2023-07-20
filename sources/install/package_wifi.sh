@@ -92,10 +92,11 @@ function install_hcxtools() {
 function install_hcxdumptool() {
     colorecho "Installing hcxdumptool"
     fapt libcurl4-openssl-dev libssl-dev
-    git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool
+    # git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool  # Depth 1 must be removed because of the git checkout
+    git -C /opt/tools/ clone https://github.com/ZerBea/hcxdumptool
     cd /opt/tools/hcxdumptool
     # Checking out to specific commit is a temporary fix to the project no compiling anymore.
-    # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232)
+    # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232) => upgrade to debian 12
     git checkout 56d078de4d6f5cef07b378707ab478fde03168c0
     make
     make install
