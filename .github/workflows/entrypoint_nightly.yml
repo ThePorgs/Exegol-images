@@ -89,9 +89,91 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
+  tools_list:
+    name: Export tools list
+    needs:
+      - varset
+      - publish
+      - build_belt
+    # only exporting tools list if publish was a success AND the tests were a success
+    if: always() && ( needs.publish.result == 'success' && !contains(needs.build_belt.outputs.build, 'failure'))
+    # even if this job fails, it won't affect the success/fail status of the whole workflow
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ matrix.arch }}
+    steps:
+      - name: Checkout Exegol-images
+        uses: actions/checkout@v3
+      - name: Prepare image version
+        id: prepare
+        run: |
+          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          if [ "$IMAGE_VERSION" == "" ]; then
+            IMAGE_VERSION=${COMMIT_ID:0:8}
+          fi
+          echo "image_version=${IMAGE_VERSION}"
+          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+      - name: Checkout Exegol-docs
+        uses: actions/checkout@v3
+        with:
+          repository: 'ThePorgs/Exegol-docs'
+          ref: 'dev-images'
+      - name: Inspect the built image
+        run: docker inspect ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}:${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Create a container from the built image
+        run: |
+          docker run --name exegol-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }} --rm -t -d ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}:${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }} endless
+      - name: Export the tools list
+        if: success()
+        run: |
+          docker cp exegol-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}:/.exegol/installed_tools.csv installed_tools.csv
+      - name: Debug - print installed_tools.csv
+        run: cat installed_tools.csv
+      - name: Make sure the list is 3 columns on all lines
+        if: success()
+        run: |
+          awk -F ',' 'NF==3 {count++} END {exit count != NR}' installed_tools.csv
+      - name: Stop the container
+        if: always()
+        run: docker stop exegol-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Adding list to repo and tables
+        run: |
+          mkdir -p source/assets/installed_tools/lists
+          mv installed_tools.csv source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
+          cp source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
+          (head -n 1 source/assets/installed_tools/lists.csv; echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv>\`"; tail -n +2 source/assets/installed_tools/lists.csv) | grep -Ev "${{ needs.varset.outputs.IMAGE_BASE_NAME }},[0-9a-fA-F]{8},${{ matrix.arch }}" | tee source/assets/installed_tools/new_lists.csv
+          mv source/assets/installed_tools/new_lists.csv source/assets/installed_tools/lists.csv
+      - name: Debug - print lists.csv
+        run: cat source/assets/installed_tools/lists.csv
+      - name: Push Exegol-docs
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
+        run: |
+          mkdir -p "$HOME/.ssh"
+          DEPLOY_KEY_FILE="$HOME/.ssh/deploy_key"
+          echo "${SSH_DEPLOY_KEY}" > "$DEPLOY_KEY_FILE"
+          chmod 600 "$DEPLOY_KEY_FILE"
+          SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
+          ssh-keyscan -H github.com > "$SSH_KNOWN_HOSTS_FILE"
+          export GIT_SSH_COMMAND="ssh -i "$DEPLOY_KEY_FILE" -o UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
+          GIT_CMD_REPOSITORY="git@github.com:ThePorgs/Exegol-docs.git"
+          git config --global user.name "exegol-images[pipeline]"
+          git config --global user.email "pipeline@exegol.images"
+          git add --verbose source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
+          git add --verbose source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
+          git add --verbose source/assets/installed_tools/lists.csv
+          git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}"
+          git push --verbose "$GIT_CMD_REPOSITORY"
+
   clean_runners:
     name: Clean runner
     needs:
+      - tools_list
       - publish
       - build_belt
     # clean runners, if publish was a success, or at least if build succeeded
