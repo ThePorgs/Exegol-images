@@ -179,6 +179,7 @@ jobs:
           git add --verbose source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
           git add --verbose source/assets/installed_tools/lists.csv
           git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}"
+          git pull
           git push --verbose "$GIT_CMD_REPOSITORY"
 
   clean_runners:
