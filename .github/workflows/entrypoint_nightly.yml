@@ -148,7 +148,13 @@ jobs:
           mkdir -p source/assets/installed_tools/lists
           mv installed_tools.csv source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
           cp source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
-          (head -n 1 source/assets/installed_tools/lists.csv; echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv>\`"; tail -n +2 source/assets/installed_tools/lists.csv) | grep -Ev "${{ needs.varset.outputs.IMAGE_BASE_NAME }},[0-9a-fA-F]{8},${{ matrix.arch }}" | tee source/assets/installed_tools/new_lists.csv
+          (head -n 1 source/assets/installed_tools/lists.csv; \
+            echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv \
+              </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv>\`"; \
+            ( \
+              tail -n +2 source/assets/installed_tools/lists.csv | grep -Ev "${{ needs.varset.outputs.IMAGE_BASE_NAME }},[0-9a-fA-F]{8},${{ matrix.arch }}" \
+            ) \
+          ) | tee source/assets/installed_tools/new_lists.csv
           mv source/assets/installed_tools/new_lists.csv source/assets/installed_tools/lists.csv
       - name: Debug print lists.csv
         if: always()
