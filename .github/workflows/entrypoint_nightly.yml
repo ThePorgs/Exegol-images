@@ -97,9 +97,10 @@ jobs:
       - build_belt
     # only exporting tools list if publish was a success AND the tests were a success
     if: always() && ( needs.publish.result == 'success' && !contains(needs.build_belt.outputs.build, 'failure'))
-    # even if this job fails, it won't affect the success/fail status of the whole workflow
     strategy:
       fail-fast: false
+      # only 1 job at a time, else there will be a conflict. Runner 2 will pull exegol-docs before runner 1 pushes changes.
+      max-parallel: 1
       matrix:
         arch: [ arm64, amd64 ]
     runs-on:
@@ -146,8 +147,12 @@ jobs:
         if: always() && steps.list_exists.outcome == 'success'
         run: |
           mkdir -p source/assets/installed_tools/lists
+          echo '[*] Moving tools list to imagetag_version_arch.csv'
           mv installed_tools.csv source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
+          echo '[*] [SHOULD BE NIGHTLY ONLY] Copying tools list to latest_nightly_arch.csv'
           cp source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
+          echo '[*] Changing lists.csv so that new tools list appears'
+          echo '[*] [SHOULD BE NIGHTLY ONLY] Removing occurences of nightly_whateverversion_arch so that only the latest nightly is shown'
           (head -n 1 source/assets/installed_tools/lists.csv; \
             echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv \
               </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv>\`"; \
@@ -165,6 +170,7 @@ jobs:
         env:
           SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
         run: |
+          echo '[*] Setting up git env for SSH use'
           mkdir -p "$HOME/.ssh"
           DEPLOY_KEY_FILE="$HOME/.ssh/deploy_key"
           echo "${SSH_DEPLOY_KEY}" > "$DEPLOY_KEY_FILE"
@@ -173,13 +179,16 @@ jobs:
           ssh-keyscan -H github.com > "$SSH_KNOWN_HOSTS_FILE"
           export GIT_SSH_COMMAND="ssh -i "$DEPLOY_KEY_FILE" -o UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
           GIT_CMD_REPOSITORY="git@github.com:ThePorgs/Exegol-docs.git"
+          echo '[*] Setting git config'
           git config --global user.name "exegol-images[pipeline]"
           git config --global user.email "pipeline@exegol.images"
+          echo '[*] Staging changes'
           git add --verbose source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
           git add --verbose source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
           git add --verbose source/assets/installed_tools/lists.csv
+          echo '[*] Commiting changes'
           git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}"
-          git pull
+          echo '[*] Pushing changes'
           git push --verbose "$GIT_CMD_REPOSITORY"
 
   clean_runners:
@@ -189,6 +198,7 @@ jobs:
       - publish
       - build_belt
     # clean runners, if publish was a success, or at least if build succeeded
+    # we don't care if tools_list worked or not
     if: always() && ( needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure'))
     # even if this job fails, it won't affect the success/fail status of the whole workflow
     continue-on-error: true
