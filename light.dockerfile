@@ -22,14 +22,14 @@ RUN chmod +x entrypoint.sh
 
 RUN ./entrypoint.sh package_base
 
-# WARNING: package_most_used can't be used with other functions other than: package_base, post_install_clean
+# WARNING: package_most_used can't be used with other functions other than: package_base, post_install
 RUN ./entrypoint.sh package_most_used
 
-# WARNING: the following installs (except: package_base, post_install_clean) can't be used with package_most_used
+# WARNING: the following installs (except: package_base, post_install) can't be used with package_most_used
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_misc_configure
 
-RUN ./entrypoint.sh post_install_clean
+RUN ./entrypoint.sh post_install
 
 RUN rm -rf /root/sources
 
