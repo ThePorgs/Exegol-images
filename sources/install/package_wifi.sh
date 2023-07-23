@@ -69,7 +69,7 @@ function install_bettercap() {
     add-aliases bettercap
     add-history bettercap
     add-test-command "bettercap --version"
-    add-to-list "bettercap,https://github.com/bettercap/bettercap,The Swiss Army knife for 802.11, BLE, and Ethernet networks reconnaissance and MITM attacks."
+    add-to-list "bettercap,https://github.com/bettercap/bettercap,The Swiss Army knife for 802.11 / BLE / and Ethernet networks reconnaissance and MITM attacks."
 }
 
 function install_hcxtools() {

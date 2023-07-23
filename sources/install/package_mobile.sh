@@ -19,7 +19,7 @@ function install_mobile_apt_tools() {
     add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications"
     add-to-list "zipalign,https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file"
     add-to-list "apksigner,https://source.android.com/security/apksigning,arguably the most important step to optimize your APK file"
-    add-to-list "apktool,https://github.com/iBotPeaches/Apktool,It is a tool for reverse engineering 3rd party, closed, binary Android apps."
+    add-to-list "apktool,https://github.com/iBotPeaches/Apktool,It is a tool for reverse engineering 3rd party / closed / binary Android apps."
 }
 
 function install_smali(){

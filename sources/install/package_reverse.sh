@@ -22,7 +22,7 @@ function install_reverse_apt_tools() {
     add-test-command "strace --version"
 
     add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity."
-    add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm), including assembler and disassembler, a syntax checker, and a binary format validator."
+    add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm) including assembler and disassembler / a syntax checker / and a binary format validator."
     add-to-list "strace,https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process."
 }
 

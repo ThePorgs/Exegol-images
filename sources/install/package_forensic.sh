@@ -19,10 +19,10 @@ function install_forensic_apt_tools() {
     add-test-command "blkcalc -V"       # Collection of command line tools that allow you to investigate disk images
 
     add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
-    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing, reverse engineering, and extracting firmware images."
-    add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers, footers, and internal data structures."
+    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
+    add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers / footers / and internal data structures."
     add-to-list "testdisk,https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
-    add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities, including fdisk partitioning tool"
+    add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool"
     add-to-list "sleuthkit,https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
 }
 

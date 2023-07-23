@@ -24,7 +24,7 @@ function install_osint_apt_tools() {
     add-test-command "whois --help"                                                     # See information about a specific domain name or IP address
     add-test-command "recon-ng --help"                                                  # External recon tool
 
-    add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading, writing and editing meta information in image, audio and video files."
+    add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading / writing and editing meta information in image / audio and video files."
     add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."
     add-to-list "dnsenum,https://github.com/fwaeytens/dnsenum,dnsenum is a tool for enumerating DNS information about a domain."
     add-to-list "tor,https://github.com/torproject/tor,Anonymity tool that can help protect your privacy and online identity by routing your traffic through a network of servers."
@@ -115,7 +115,7 @@ function install_theharvester() {
     add-aliases theharvester
     add-history theharvester
     add-test-command "theHarvester.py --help"
-    add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts, subdomain names, virtual hosts, open ports/ banners, and employee names from different public sources"
+    add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts / subdomain names / virtual host / open ports / banners / and employee names from different public sources"
 }
 
 function install_h8mail() {
@@ -211,7 +211,7 @@ function install_toutatis() {
     python3 -m pipx install git+https://github.com/megadose/toutatis
     add-history toutatis
     add-test-command "toutatis --help"
-    add-to-list "toutatis,https://github.com/megadose/Toutatis,Toutatis is a tool that allows you to extract information from instagrams accounts such as e-mails, phone numbers and more."
+    add-to-list "toutatis,https://github.com/megadose/Toutatis,Toutatis is a tool that allows you to extract information from instagrams accounts such as e-mails / phone numbers and more."
 }
 
 function install_waybackurls() {
@@ -243,7 +243,7 @@ function install_photon() {
     add-aliases photon
     add-history photon
     add-test-command "photon.py --help"
-    add-to-list "photon,https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs, files, intel & endpoints from a target."
+    add-to-list "photon,https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs / files / intel & endpoints from a target."
 }
 
 function install_ipinfo() {
@@ -313,7 +313,7 @@ function install_osrframework() {
     python3 -m pipx inject osrframework 'pip==21.2'
     add-history osrframework
     add-test-command "osrframework-cli --help"
-    add-to-list "osrframework,https://github.com/i3visio/osrframework,Include references to a bunch of different applications related to username checking, DNS lookups, information leaks research, deep web search, regular expressions extraction and many others."
+    add-to-list "osrframework,https://github.com/i3visio/osrframework,Include references to a bunch of different applications related to username checking / DNS lookups / information leaks research / deep web search / regular expressions extraction and many others."
 }
 
 function install_pwndb() {
@@ -373,7 +373,7 @@ function install_trevorspray() {
     python3 -m pipx install .
     add-history trevorspray
     add-test-command "trevorspray --help"
-    add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules, and more"
+    add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules / and more"
 }
 
 # Package dedicated to osint, recon and passive tools
