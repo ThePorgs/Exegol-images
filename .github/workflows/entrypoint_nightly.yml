@@ -136,10 +136,11 @@ jobs:
       - name: Debug print installed_tools.csv
         id: list_exists
         run: cat installed_tools.csv
-      - name: Make sure the list is 3 columns on all lines
+      - name: Sanity check for installed_tools.csv
         if: success()
         run: |
           awk -F ',' 'NF==3 {count++} END {exit count != NR}' installed_tools.csv
+          grep -E 'add-to-list([^,]*,[^,]*){3,}' installed_tools.csv
       - name: Stop the container
         if: always()
         run: docker stop exegol-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
@@ -152,7 +153,7 @@ jobs:
           echo '[*] [SHOULD BE NIGHTLY ONLY] Copying tools list to latest_nightly_arch.csv'
           cp source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
           echo '[*] Changing lists.csv so that new tools list appears'
-          echo '[*] [SHOULD BE NIGHTLY ONLY] Removing occurences of nightly_whateverversion_arch so that only the latest nightly is shown'
+          echo '[*] [SHOULD BE NIGHTLY ONLY] Removing occurences of nightly,whateverversion,arch so that only the latest nightly is shown'
           (head -n 1 source/assets/installed_tools/lists.csv; \
             echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv \
               </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv>\`"; \
@@ -184,6 +185,7 @@ jobs:
           git config --global user.email "pipeline@exegol.images"
           echo '[*] Staging changes'
           git add --verbose source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
+          echo '[*] [SHOULD BE NIGHTLY ONLY] Staging latest_nightly_arch.csv'
           git add --verbose source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
           git add --verbose source/assets/installed_tools/lists.csv
           echo '[*] Commiting changes'
