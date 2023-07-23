@@ -139,8 +139,8 @@ jobs:
       - name: Sanity check for installed_tools.csv
         if: success()
         run: |
-          awk -F ',' 'NF==3 {count++} END {exit count != NR}' installed_tools.csv
           grep -E '([^,]*,[^,]*){3,}' installed_tools.csv
+          awk -F ',' 'NF==3 {count++} END {exit count != NR}' installed_tools.csv
       - name: Stop the container
         if: always()
         run: docker stop exegol-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}

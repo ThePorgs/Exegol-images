@@ -183,7 +183,7 @@ function post_install() {
     updatedb
     rm -rfv /tmp/*
     colorecho "Sorting tools list"
-    (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort ) | tee /tmp/installed_tools.csv.sorted
+    (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
     colorecho "Adding end-of-preset in zsh_history"
     echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
