@@ -1,4 +1,12 @@
 #!/bin/bash
+
+# This file is the default entrypoint for the exegol docker image.
+
+# !!!!!!!!!!!!! #
+# This file is no longer up-to-date because in the later version, the wrapper upload it's own entrypoint to the container.
+# This default file is kept here for backward compatibility purpose.
+# !!!!!!!!!!!!! #
+
 trap shutdown SIGTERM
 
 # Function specific
@@ -75,7 +83,7 @@ function cmd() {
 function compatibility() {
   # Older versions of exegol wrapper launch the container with the 'bash' command
   # This command is now interpreted by the custom entrypoint
-  echo "Your version of Exegol wrapper is not up-to-date!"
+  echo "Your version of Exegol wrapper is not up-to-date!" | tee -a ~/banner.txt
   # If the command is bash, redirect to endless. Otherwise execute the command as job to keep the shutdown procedure available
   if [ "$*" != "bash" ]; then
     echo "Executing command in backwards compatibility mode"
@@ -85,15 +93,18 @@ function compatibility() {
   endless
 }
 
+echo "Your version of Exegol wrapper is not up-to-date!" | tee ~/banner.txt
+
 # Default action is "default"
 func_name="${1:-default}"
 
 # Older versions of exegol wrapper launch the container with the 'bash' command
 # This command is now interpreted by the custom entrypoint. Redirect execution to the raw execution for backward compatibility.
+# shellcheck disable=SC2068
 [ "$func_name" == "bash" ] || [ "$func_name" == "zsh" ] && compatibility $@
 
 # Dynamic execution
 $func_name "$@" || (
-  echo "An error occurred executing the '$func_name' action. Your image version is probably out of date for this feature. Please update your image."
+  echo "An error occurred executing the '$func_name' action. Your exegol (wrapper / image) version might be out of date to use this feature. Please update your wrapper and image."  | tee -a ~/banner.txt
   exit 1
 )
