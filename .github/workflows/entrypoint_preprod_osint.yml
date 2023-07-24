@@ -144,8 +144,10 @@ jobs:
       - name: Sanity check for installed_tools.csv
         if: success()
         run: |
-          awk -F ',' 'NF==3 {count++} END {exit count != NR}' installed_tools.csv
-          grep -E 'add-to-list([^,]*,[^,]*){3,}' installed_tools.csv
+          grep -qE '([^,]*,[^,]*){3,}' installed_tools.csv \
+            && (echo '[-] Wrong number of columns on the following lines' \
+            && grep -oE '([^,]*,[^,]*){3,}' installed_tools.csv || exit 1) \
+            || (echo '[+] List contains right number of columns' && exit 0)
       - name: Stop the container
         if: always()
         run: docker stop exegol-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
