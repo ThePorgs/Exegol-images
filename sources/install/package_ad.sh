@@ -100,7 +100,7 @@ function install_bloodhound-py() {
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
-    add-to-list "bloodhound-py,https://github.com/fox-it/BloodHound.py,Trust relationship analysis tool for Active Directory environments."
+    add-to-list "bloodhound.py,https://github.com/fox-it/BloodHound.py,BloodHound ingestor in Python."
 }
 
 function install_bloodhound() {
@@ -791,7 +791,7 @@ function install_rusthound() {
     ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
     add-history rusthound
     add-test-command "rusthound --help"
-    add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,Rusthound is a tool for searching through git repositories for secrets and sensitive information."
+    add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,BloodHound ingestor in Rust."
 }
 
 function install_certsync() {
