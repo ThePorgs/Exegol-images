@@ -150,15 +150,13 @@ jobs:
         if: always() && steps.list_exists.outcome == 'success'
         run: |
           mkdir -p source/assets/installed_tools/lists
-          echo '[*] Moving tools list to imagetag_version_arch.csv'
-          mv installed_tools.csv source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
-          echo '[*] [SHOULD BE NIGHTLY ONLY] Copying tools list to latest_nightly_arch.csv'
-          cp source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
+          echo '[*] [SHOULD BE NIGHTLY ONLY] Moving tools list to latest_nightly_arch.csv'
+          mv installed_tools.csv source/assets/installed_tools/lists/latest_nightly_${{ matrix.arch }}.csv
           echo '[*] Changing lists.csv so that new tools list appears'
           echo '[*] [SHOULD BE NIGHTLY ONLY] Removing occurences of nightly,whateverversion,arch so that only the latest nightly is shown'
           (head -n 1 source/assets/installed_tools/lists.csv; \
             echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv \
-              </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv>\`"; \
+              </assets/installed_tools/lists/latest_nightly_${{ matrix.arch }}.csv>\`"; \
             ( \
               tail -n +2 source/assets/installed_tools/lists.csv | grep -Ev "${{ needs.varset.outputs.IMAGE_BASE_NAME }},[0-9a-fA-F]{8},${{ matrix.arch }}" \
             ) \
@@ -186,9 +184,8 @@ jobs:
           git config --global user.name "exegol-images[pipeline]"
           git config --global user.email "pipeline@exegol.images"
           echo '[*] Staging changes'
-          git add --verbose source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
           echo '[*] [SHOULD BE NIGHTLY ONLY] Staging latest_nightly_arch.csv'
-          git add --verbose source/assets/installed_tools/latest_nightly_${{ matrix.arch }}.csv
+          git add --verbose source/assets/installed_tools/lists/latest_nightly_${{ matrix.arch }}.csv
           git add --verbose source/assets/installed_tools/lists.csv
           echo '[*] Commiting changes'
           git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}"
