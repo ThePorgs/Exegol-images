@@ -81,6 +81,17 @@ function install_prowler() {
     add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness."
 }
 
+function install_cloudmapper() {
+    colorecho "Installing Cloudmapper"
+    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git
+    cd /opt/tools/cloudmapper
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases cloudmapper
+    add-history cloudmapper
+    add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
+}
+
 # Package dedicated to cloud tools
 function package_cloud() {
     install_kubectl
@@ -89,4 +100,5 @@ function package_cloud() {
     install_cloudsplaining
     install_cloudsploit
     install_prowler
+    install_cloudmapper
 }
