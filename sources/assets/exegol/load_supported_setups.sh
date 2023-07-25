@@ -171,6 +171,9 @@ function deploy_bloodhound() {
 
   deploy_bloodhound_config
 
+  # Clean up any unlikely pre-existing file to avoid bqm prompts
+  [[ -f "$bqm_output_file" ]] && rm -f "$bqm_output_file"
+
   # If a user places Bloodhound json files in both folders merge and replacement,
   # replacement must be executed last to only keep the output of replacement.
   deploy_bloodhound_customqueries_merge
