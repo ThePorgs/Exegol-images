@@ -22,7 +22,7 @@ RUN chmod +x entrypoint.sh
 
 RUN ./entrypoint.sh package_base
 
-# WARNING: the following installs (except: package_base, post_install_clean) can't be used with package_most_used
+# WARNING: the following installs (except: package_base, post_install) can't be used with package_most_used
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_misc_configure
 RUN ./entrypoint.sh package_c2
@@ -37,7 +37,7 @@ RUN ./entrypoint.sh package_ad
 RUN ./entrypoint.sh package_ad_configure
 RUN ./entrypoint.sh package_network
 
-RUN ./entrypoint.sh post_install_clean
+RUN ./entrypoint.sh post_install
 
 RUN rm -rf /root/sources
 

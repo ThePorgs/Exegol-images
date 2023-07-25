@@ -23,7 +23,7 @@ function criticalecho-noexit () {
 }
 
 function add-to-list() {
-  echo $1 >> "/.exegol/installed_tools"
+  echo $1 >> "/.exegol/installed_tools.csv"
 }
 
 function add-aliases() {

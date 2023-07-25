@@ -22,7 +22,7 @@ RUN chmod +x entrypoint.sh
 
 RUN ./entrypoint.sh package_base_debug
 
-RUN ./entrypoint.sh post_install_clean
+RUN ./entrypoint.sh post_install
 
 RUN rm -rf /root/sources
 

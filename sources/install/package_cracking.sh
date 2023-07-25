@@ -53,6 +53,14 @@ function install_haiti() {
     add-to-list "haiti,https://github.com/noraj/haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
 }
 
+function install_geowordlists() {
+    colorecho "Installing GeoWordlists"
+    python3 -m pipx install git+https://github.com/p0dalirius/GeoWordlists
+    add-history geowordlists
+    add-test-command "geowordlists --help"
+    add-to-list "geowordlists,https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city."
+}
+
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
     install_cracking_apt_tools

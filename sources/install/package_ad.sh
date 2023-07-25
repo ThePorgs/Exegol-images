@@ -31,7 +31,7 @@ function install_responder() {
     add-aliases responder
     add-history responder
     add-test-command "responder --version"
-    add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR, NBT-NS and MDNS poisoner."
+    add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR / NBT-NS and MDNS poisoner."
 }
 
 function configure_responder() {
@@ -100,7 +100,7 @@ function install_bloodhound-py() {
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
-    add-to-list "bloodhound-py,https://github.com/fox-it/BloodHound.py,Trust relationship analysis tool for Active Directory environments."
+    add-to-list "bloodhound.py,https://github.com/fox-it/BloodHound.py,BloodHound ingestor in Python."
 }
 
 function install_bloodhound() {
@@ -141,7 +141,7 @@ function install_cypheroth() {
     add-aliases cypheroth
     add-history cypheroth
     add-test-command "cypheroth --help|& grep 'Example with Defaults:'"
-    add-to-list "cyperoth,https://github.com/seajaysec/cypheroth/,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
+    add-to-list "cyperoth,https://github.com/seajaysec/cypheroth,Automated extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
 }
 
 function install_mitm6_pip() {
@@ -193,7 +193,7 @@ function install_pykek() {
     add-aliases pykek
     add-history pykek
     add-test-command "ms14-068.py |& grep '<clearPassword>'"
-    add-to-list "pykek,https://github.com/preempt/pykek,PyKEK (Python Kerberos Exploitation Kit), a python library to manipulate KRB5-related data."
+    add-to-list "pykek,https://github.com/preempt/pykek,PyKEK (Python Kerberos Exploitation Kit) a python library to manipulate KRB5-related data."
 }
 
 function install_lsassy() {
@@ -248,7 +248,7 @@ function install_amber() {
     go install -v github.com/EgeBalci/amber@latest
     add-history amber
     add-test-command "amber --help"
-    add-to-list "amber,https://github.com/EgeBalci/amber,Forensic tool to recover browser history, cookies, and credentials"
+    add-to-list "amber,https://github.com/EgeBalci/amber,Forensic tool to recover browser history / cookies and credentials"
 }
 
 function install_powershell() {
@@ -401,7 +401,7 @@ function install_lnkup() {
     add-aliases lnkup
     add-history lnkup
     add-test-command "lnk-generate.py --help"
-    add-to-list "lnkup,https://github.com/Plazmaz/lnkUp,This tool will allow you to generate LNK payloads. Upon rendering or being run, they will exfiltrate data."
+    add-to-list "lnkup,https://github.com/Plazmaz/lnkUp,This tool will allow you to generate LNK payloads. Upon rendering or being run they will exfiltrate data."
 }
 
 function install_polenum() {
@@ -616,7 +616,7 @@ function install_manspider() {
     add-aliases manspider
     add-history manspider
     add-test-command "manspider --help"
-    add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work, it will fall back to "guest", then to a null session."
+    add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
 }
 
 function install_targetedKerberoast() {
@@ -761,7 +761,7 @@ function install_crackhound() {
     add-aliases crackhound
     add-history crackhound
     add-test-command "crackhound.py --help"
-    add-to-list "crackhound,https://github.com/trustedsec/crackhound.git,A fast WPA/WPA2/WPA3 WiFi Handshake capture, password recovery and analysis tool"
+    add-to-list "crackhound,https://github.com/trustedsec/crackhound.git,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
 }
 
 function install_kerbrute() {
@@ -791,7 +791,7 @@ function install_rusthound() {
     ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
     add-history rusthound
     add-test-command "rusthound --help"
-    add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,Rusthound is a tool for searching through git repositories for secrets and sensitive information."
+    add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,BloodHound ingestor in Rust."
 }
 
 function install_certsync() {
@@ -831,7 +831,7 @@ function install_masky() {
     python3 -m pipx install git+https://github.com/Z4kSec/Masky
     add-history masky
     add-test-command "masky --help"
-    add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data, such as credit card numbers, in logs and other files."
+    add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data / such as credit card numbers / in logs and other files."
 }
 
 function install_roastinthemiddle() {

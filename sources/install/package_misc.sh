@@ -16,8 +16,8 @@ function install_misc_apt_tools() {
     add-test-command "ascii -v"                                    # The ascii table in the shell
     add-test-command "rsync -h"                                    # File synchronization tool for efficiently copying and updating data between local or remote locations.
 
-    add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables, making it possible to edit and re-run input history"
-    add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create, edit, compose, or convert bitmap images."
+    add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history"
+    add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images."
     add-to-list "ascii,https://github.com/moul/ascii,ASCII command-line tool to replace images with color-coded ASCII art."
     add-to-list "rsync,https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations"
 }
@@ -43,7 +43,7 @@ function install_uberfile() {
     python3 -m pipx install git+https://github.com/ShutdownRepo/uberfile
     add-history uberfile
     add-test-command "uberfile --help"
-    add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget, curl, powershell, certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
+    add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget / curl / powershell / certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
 }
 
 function install_arsenal() {
