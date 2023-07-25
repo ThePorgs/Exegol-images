@@ -19,7 +19,7 @@ WORKDIR /root/sources/install
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
     chmod +x entrypoint.sh && \
     ./entrypoint.sh package_base_debug && \
-    ./entrypoint.sh post_install_clean && \
+    ./entrypoint.sh post_install && \
     rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace

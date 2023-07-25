@@ -1,0 +1,1 @@
+geowordlists --postal-code 75001 --kilometers 25 --output-file /tmp/around_paris.txt

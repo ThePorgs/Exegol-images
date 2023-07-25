@@ -16,7 +16,7 @@ COPY sources /root/sources/
 
 WORKDIR /root/sources/install
 
-# WARNING: package_most_used can't be used with other functions other than: package_base, post_install_clean
+# WARNING: package_most_used can't be used with other functions other than: package_base, post_install
 # ./entrypoint.sh package_most_used
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
@@ -26,7 +26,7 @@ RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
     ./entrypoint.sh package_misc_configure && \
     ./entrypoint.sh package_osint && \
     ./entrypoint.sh package_osint_configure && \
-    ./entrypoint.sh post_install_clean && \
+    ./entrypoint.sh post_install && \
     rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace

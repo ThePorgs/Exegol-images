@@ -38,6 +38,8 @@ function filesystem() {
     colorecho "Preparing filesystem"
     mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/
     touch /.exegol/build_pipeline_tests/all_commands.txt
+    touch /.exegol/installed_tools.csv
+    echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
 }
 
 function install_go() {
@@ -175,11 +177,15 @@ function install_gf() {
     add-test-command "ls ~/.gf | grep 'redirect.json'"
 }
 
-function post_install_clean() {
+function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
     updatedb
     rm -rfv /tmp/*
+    colorecho "Sorting tools list"
+    (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
+    mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
+    colorecho "Adding end-of-preset in zsh_history"
     echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
 }
 
