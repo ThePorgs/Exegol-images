@@ -123,7 +123,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: 'ThePorgs/Exegol-docs'
-          ref: 'dev-images'
+          ref: 'main'
       - name: Inspect the built image
         run: docker inspect ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}:${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
       - name: Create a container from the built image
