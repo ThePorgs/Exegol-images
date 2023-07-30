@@ -1,0 +1,119 @@
+name: Nightly build
+
+on:
+  push:
+    branches:
+      - webui
+    paths-ignore:
+      - "**.md"
+
+env:
+  # intermediary registry in which architecture-specific images must be pushed
+  DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+  # final registry target, in which arch-specific images must be aggregated
+  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
+  IMAGE_BASE_NAME: "webui"
+  DOCKERFILE: "webui.dockerfile"
+
+jobs:
+  # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
+  varset:
+    name: Initialize variables
+    runs-on: self-hosted
+    outputs:
+      DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
+      DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
+      IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+    steps:
+      - name: Passing workflow env vars to reusable workflows
+        id: varset
+        run: |
+          echo "DOCKER_BUILD_REPO=${DOCKER_BUILD_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
+          echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
+
+  build_belt:
+    name: Build belt
+    needs: varset
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
+      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
+      DOCKER_TARGET_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
+      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      ARCH: ${{ matrix.arch }}
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  publish:
+    name: Publish
+    timeout-minutes: 60
+    needs: build_belt
+    runs-on: self-hosted
+    # only publishing if the tests were a success (implicit by the success of build_belt).
+    if: needs.build_belt.result == 'success'
+    steps:
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Create and push manifest
+        if: success()
+        run: |
+          echo "Create manifest"
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
+      - name: Create and push version manifest
+        if: success() && env.IMAGE_VERSION != ''
+        run: |
+          echo "Create version manifest"
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+
+  clean_runners:
+    name: Clean runner
+    needs:
+      - publish
+      - build_belt
+    # clean runners, if publish was a success, or at least if build succeeded
+    if: always() && ( needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure'))
+    # even if this job fails, it won't affect the success/fail status of the whole workflow
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ matrix.arch }}
+    steps:
+      - name: Remove local image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+        run: |
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
+          echo "Removing $image_name"
+          docker image inspect $image_name || exit 0 && docker rmi $image_name
+
+  clean_registry:
+    name: Clean intermediate registry
+    needs: publish
+    runs-on: self-hosted
+    # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
+    if: needs.publish.result == 'success'
+    steps:
+      - name: Remove arch-specific images on intermediate registry
+        run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
+  
