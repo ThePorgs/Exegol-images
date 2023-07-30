@@ -15,10 +15,6 @@ function install_webui() {
 
     chmod u+x ~/.vnc/xstartup
 
-    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes None :0
-
-    websockify -D --web /usr/share/novnc/ 6080 localhost:5900
-
     cp /root/sources/assets/webui/bin/* /opt/tools/bin
 
     chmod +x /opt/tools/bin/desktop-*
