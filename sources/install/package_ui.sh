@@ -34,7 +34,22 @@ function install_mate() {
     chmod +x /opt/tools/bin/desktop-*
 }
 
+function install_kde() {
+    echo "Installing Kde"
+    fapt tigervnc-standalone-server novnc websockify kde-plasma-desktop dbus-x11
+    mkdir ~/.vnc
+
+    cp /root/sources/assets/webui/config-mate.conf ~/.vnc/xstartup
+
+    chmod u+x ~/.vnc/xstartup
+
+    cp /root/sources/assets/webui/bin/* /opt/tools/bin
+
+    chmod +x /opt/tools/bin/desktop-*
+}
+
 function package_webui() {
     # install_xfce
-    install_mate
+    # install_mate
+    install_kde
 }
