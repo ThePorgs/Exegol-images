@@ -12,7 +12,7 @@ env:
   DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
   # final registry target, in which arch-specific images must be aggregated
   DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
-  IMAGE_BASE_NAME: "webui-xfce"
+  IMAGE_BASE_NAME: "webui_xfce"
   DOCKERFILE: "webui.dockerfile"
 
 jobs:
