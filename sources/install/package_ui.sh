@@ -21,7 +21,7 @@ function install_xfce() {
 }
 
 function install_mate() {
-    
+    echo "Installing Mate"
 }
 
 function package_webui() {
