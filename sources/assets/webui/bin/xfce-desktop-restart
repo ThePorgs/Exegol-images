@@ -1,0 +1,4 @@
+#!/bin/bash
+
+xfce-desktop-stop
+xfce-desktop-start

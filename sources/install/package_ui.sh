@@ -5,7 +5,7 @@ source common.sh
 
 set -e
 
-function install_webui() {
+function install_xfce() {
     fapt tigervnc-standalone-server novnc websockify xfce4 dbus-x11
     mkdir ~/.vnc
 
@@ -17,5 +17,14 @@ function install_webui() {
 
     cp /root/sources/assets/webui/bin/* /opt/tools/bin
 
-    chmod +x /opt/tools/bin/desktop-*
+    chmod +x /opt/tools/bin/xfce-desktop-*
+}
+
+function install_mate() {
+    
+}
+
+function package_webui() {
+    # install_xfce
+    install_mate
 }
