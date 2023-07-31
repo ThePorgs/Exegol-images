@@ -20,7 +20,7 @@ function install_xfce() {
     
     # Debug Icons
     cp /root/sources/assets/webui/papirus-icon-theme-20230601.tar.gz ./
-    # tar -zxvf papirus-icon-theme-20230601.tar.gz
+    tar -zxvf papirus-icon-theme-20230601.tar.gz
 
 
     mkdir /root/.themes
@@ -36,7 +36,7 @@ function install_xfce() {
     # xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor1/last-image -s /root/sources/assets/webui/wallpaper.png
 
     # Icons
-    # cp -r ./Papirus-Dark /usr/share/icons/Papirus-Dark
+    cp -r ./Papirus-Dark /usr/share/icons/Papirus-Dark
     # xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
 
     # TODO: Remove me
