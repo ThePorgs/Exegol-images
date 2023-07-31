@@ -7,7 +7,7 @@ set -e
 
 function install_xfce() {
     fapt xz-utils
-    fapt tigervnc-standalone-server novnc websockify xfce4 dbus-x11 plank
+    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 plank
     mkdir ~/.vnc
     cp /root/sources/assets/webui/xstartup.conf ~/.vnc/xstartup
     chmod u+x ~/.vnc/xstartup
@@ -31,6 +31,10 @@ function install_xfce() {
 
     # Icons
     cp -r ./Papirus-Dark /usr/share/icons/Papirus-Dark
+    cp -r ./Papirus /usr/share/icons/
+    cp -r ./Papirus-Light /usr/share/icons/
+    cp -r ./ePapirus /usr/share/icons/
+    cp -r ./ePapirus-Dark /usr/share/icons/
     cp /root/sources/assets/webui/xsettings.xml /root/.vnc/xsettings.xml
 
     # TODO: Remove me
