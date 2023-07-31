@@ -27,12 +27,12 @@ function install_xfce() {
     cp -r ./McOS-CTLina /root/.themes/
 
     # Appearance theme
-    xfconf-query -c xsettings -p /Net/ThemeName -s McOS-CTLina
-    xfconf-query -c xfwm4 -p /general/theme -s McOS-CTLina
+    # xfconf-query -c xsettings -p /Net/ThemeName -s McOS-CTLina
+    # xfconf-query -c xfwm4 -p /general/theme -s McOS-CTLina
     
     # Backgroup wallpaper
     # cp wallpaper.png /usr/share/images/desktop-base/
-    xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/last-image -s /root/sources/assets/webui/wallpaper.png
+    # xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/last-image -s /root/sources/assets/webui/wallpaper.png
     # xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor1/last-image -s /root/sources/assets/webui/wallpaper.png
 
     # Icons
