@@ -3,7 +3,7 @@
 
 source common.sh
 
-set -e
+# set -e
 
 function install_xfce() {
     fapt xz-utils
