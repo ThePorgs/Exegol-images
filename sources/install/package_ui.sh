@@ -6,7 +6,7 @@ source common.sh
 set -e
 
 function install_xfce() {
-    fapt xz-utils gzip
+    fapt xz-utils
     fapt tigervnc-standalone-server novnc websockify xfce4 dbus-x11 plank
     mkdir ~/.vnc
     cp /root/sources/assets/webui/xstartup.conf ~/.vnc/xstartup
@@ -19,8 +19,7 @@ function install_xfce() {
     
     # Debug Icons
     cp /root/sources/assets/webui/papirus-icon-theme-20230601.tar.gz ./
-    gunzip papirus-icon-theme-20230601.tar.gz
-    tar -xvf papirus-icon-theme-20230601.tar
+    tar -zxvf papirus-icon-theme-20230601.tar.gz
 
 
     mkdir /root/.themes
