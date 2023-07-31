@@ -1,9 +1,9 @@
 #!/bin/bash
 
-vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd $HOME/.vnc/passwd :0
-
-if [[ ! -d ~/.config/xfce4/xfconf/xfce-perchannel-xml ]]; then
+if [[ ! -d /root/.config/xfce4/xfconf/xfce-perchannel-xml ]]; then
+    echo "Configuring the desktop..."
     vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd $HOME/.vnc/passwd :0
+    sleep 5
     xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
     sed -i "s#Default#McOS-CTLina#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
     sed -i "s#xfce-verticals.png#wallpaper.png#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
