@@ -19,8 +19,9 @@ function install_xfce() {
     mv Mc-OS-CTLina-XFCE-Dark McOS-CTLina
     
     # Debug Icons
-    cp /root/sources/assets/webui/papirus-icon-theme-20230601.tar.gz ./
-    tar -zxvf papirus-icon-theme-20230601.tar.gz
+    fapt papirus-icon-theme
+    # cp /root/sources/assets/webui/papirus-icon-theme-20230601.tar.gz ./
+    # tar -zxvf papirus-icon-theme-20230601.tar.gz
 
 
     mkdir /root/.themes
@@ -30,11 +31,11 @@ function install_xfce() {
     cp /root/sources/assets/webui/wallpaper.png /usr/share/backgrounds/xfce/
 
     # Icons
-    cp -r ./Papirus-Dark /usr/share/icons/Papirus-Dark
-    cp -r ./Papirus /usr/share/icons/
-    cp -r ./Papirus-Light /usr/share/icons/
-    cp -r ./ePapirus /usr/share/icons/
-    cp -r ./ePapirus-Dark /usr/share/icons/
+    # cp -r ./Papirus-Dark /usr/share/icons/Papirus-Dark
+    # cp -r ./Papirus /usr/share/icons/
+    # cp -r ./Papirus-Light /usr/share/icons/
+    # cp -r ./ePapirus /usr/share/icons/
+    # cp -r ./ePapirus-Dark /usr/share/icons/
     cp /root/sources/assets/webui/xsettings.xml /root/.vnc/xsettings.xml
 
     # TODO: Remove me
