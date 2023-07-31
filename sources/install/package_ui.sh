@@ -34,9 +34,9 @@ function install_xfce() {
     # # xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/last-image -s /root/sources/assets/webui/wallpaper.png
     # # xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor1/last-image -s /root/sources/assets/webui/wallpaper.png
 
-    # # Icons
-    # cp -r ./Papirus-Dark /usr/share/icons/Papirus-Dark
-    # xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
+    # Icons
+    cp -r ./Papirus-Dark /usr/share/icons/Papirus-Dark
+    xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
 
     # TODO: Remove me
     echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
