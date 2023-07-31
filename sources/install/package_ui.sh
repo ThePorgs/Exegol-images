@@ -13,8 +13,9 @@ function install_xfce() {
     chmod u+x ~/.vnc/xstartup
 
     # Debug Theme
-    cp /root/sources/assets/webui/Mc-OS-CTLina-XFCE-Dark.tar.xz ./
-    tar -xvf Mc-OS-CTLina-XFCE-Dark.tar.xz
+    cd /tmp
+    cp /root/sources/assets/webui/Mc-OS-CTLina-XFCE-Dark.tar.xz /tmp
+    tar -xvf ./Mc-OS-CTLina-XFCE-Dark.tar.xz
     mv Mc-OS-CTLina-XFCE-Dark McOS-CTLina
     
     # Debug Icons
