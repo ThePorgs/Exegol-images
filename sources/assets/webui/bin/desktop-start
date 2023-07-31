@@ -1,6 +1,15 @@
 #!/bin/bash
 
 vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd $HOME/.vnc/passwd :0
-websockify -D --web /usr/share/novnc/ 6080 localhost:5900
 
+if [[ ! -d ~/.config/xfce4/xfconf/xfce-perchannel-xml ]]; then
+    xfconf-query -c xsettings -p /Net/ThemeName -s McOS-CTLina
+    xfconf-query -c xfwm4 -p /general/theme -s McOS-CTLina
+    xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
+    xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/last-image -s /usr/share/backgrounds/xfce/wallpaper.png
+    xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor1/last-image -s /usr/share/backgrounds/xfce/wallpaper.png
+fi
+
+
+websockify -D --web /usr/share/novnc/ 6080 localhost:5900
 echo "Desktop up : http://127.0.0.1:6080/vnc.html?resize=remote&path=websockify&autoconnect=true"

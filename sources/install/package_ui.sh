@@ -31,7 +31,7 @@ function install_xfce() {
     # xfconf-query -c xfwm4 -p /general/theme -s McOS-CTLina
     
     # Backgroup wallpaper
-    # cp wallpaper.png /usr/share/images/desktop-base/
+    cp /root/sources/assets/webui/wallpaper.png /usr/share/backgrounds/xfce/
     # xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/last-image -s /root/sources/assets/webui/wallpaper.png
     # xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor1/last-image -s /root/sources/assets/webui/wallpaper.png
 
