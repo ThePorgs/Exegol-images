@@ -24,10 +24,10 @@ function install_xfce() {
 
 
     mkdir /root/.themes
-    # cp -r ./McOS-CTLina /root/.themes/
+    cp -r ./McOS-CTLina /root/.themes/
 
-    # # Appearance theme
-    # xfconf-query -c xsettings -p /Net/ThemeName -s "McOS-CTLina"
+    # Appearance theme
+    xfconf-query -c xsettings -p /Net/ThemeName -s "McOS-CTLina"
     
     # # Backgroup wallpaper
     # # cp wallpaper.png /usr/share/images/desktop-base/
@@ -38,11 +38,11 @@ function install_xfce() {
     # cp -r ./Papirus-Dark /usr/share/icons/Papirus-Dark
     # xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
 
-    # # TODO: Remove me
-    # echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
+    # TODO: Remove me
+    echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
 
-    # cp /root/sources/assets/webui/bin/* /opt/tools/bin
-    # chmod +x /opt/tools/bin/desktop-*
+    cp /root/sources/assets/webui/bin/* /opt/tools/bin
+    chmod +x /opt/tools/bin/desktop-*
 }
 
 function install_mate() {
