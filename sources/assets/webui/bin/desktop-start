@@ -10,7 +10,7 @@ if [[ ! -d /root/.config/xfce4/xfconf/xfce-perchannel-xml ]]; then
     sed -i "s#Default#McOS-CTLina#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
     sed -i "s#xfce-verticals.png#wallpaper.png#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
     vncserver -kill :0
-    sleep 5
+    sleep 6
     echo "Starting VNC..."
     vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd $HOME/.vnc/passwd :0
 else
