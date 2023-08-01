@@ -6,7 +6,7 @@ source common.sh
 set -e
 
 function install_xfce() {
-    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 papirus-icon-theme cairo-dock
+    fapt xz-utils tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 papirus-icon-theme cairo-dock
     mkdir ~/.vnc
     cp /root/sources/assets/webui/xstartup.conf ~/.vnc/xstartup
     chmod u+x ~/.vnc/xstartup
