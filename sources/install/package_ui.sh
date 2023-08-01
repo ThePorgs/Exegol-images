@@ -7,7 +7,7 @@ set -e
 
 function install_xfce() {
     fapt xz-utils
-    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 plank
+    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 xfce4-dev-tools libglib2.0-dev libgtk-3-dev libwnck-3-dev libxfce4ui-2-dev libxfce4panel-2.0-dev g++ build-essential
     mkdir ~/.vnc
     cp /root/sources/assets/webui/xstartup.conf ~/.vnc/xstartup
     chmod u+x ~/.vnc/xstartup
@@ -38,6 +38,11 @@ function install_xfce() {
     # cp -r ./ePapirus-Dark /usr/share/icons/
     cp /root/sources/assets/webui/xsettings.xml /root/.vnc/xsettings.xml
 
+    git -C /tmp/ clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git
+    cd /tmp/xfce4-docklike-plugin
+    sh autogen.sh
+    make
+    make install
     # TODO: Remove me
     echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
 
