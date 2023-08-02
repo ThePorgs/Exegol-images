@@ -6,7 +6,6 @@ source common.sh
 set -e
 
 function install_xfce() {
-    update
     fapt terminator firefox-esr intltool libtool
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 papirus-icon-theme
     mkdir ~/.vnc
@@ -25,8 +24,6 @@ function install_xfce() {
     mkdir /root/.remote-desktop
     cp /root/sources/assets/webui/configuration/* /root/.remote-desktop/
 
-    #cp /root/sources/assets/webui/xsettings.xml /root/.vnc/xsettings.xml
-
     fapt xfce4-dev-tools libglib2.0-dev libgtk-3-dev libwnck-3-dev libxfce4ui-2-dev libxfce4panel-2.0-dev g++ build-essential
     git -C /tmp clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git
     cd /tmp/xfce4-docklike-plugin
@@ -37,9 +34,14 @@ function install_xfce() {
     echo $CUSTOM_PATH
     mv /tmp/lib/xfce4/panel/plugins/libdocklike.* $CUSTOM_PATH/panel/plugins
     mv /tmp/share/xfce4/panel/plugins/docklike.desktop /usr/share/xfce4/panel/plugins
-    #fapt xfce4-docklike-plugin
     cp -rv /tmp/share/locale/* /usr/share/locale
+    cp /root/.remote-desktop/wallpaper* /usr/share/backgrounds/xfce
     
+    cp /root/sources/assets/webui/logo.png /usr/share/novnc/app/images/icons/
+    sed -i "/novnc-.*.png/d" /usr/share/novnc/vnc.html
+    sed -i "s#novnc-icon.svg#logo.png#" /usr/share/novnc/vnc.html
+    sed -i "s#svg+xml#png#" /usr/share/novnc/vnc.html
+
     # TODO: Remove me
     echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
 

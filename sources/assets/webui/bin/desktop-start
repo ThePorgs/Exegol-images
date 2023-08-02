@@ -8,14 +8,14 @@ if [[ ! -d /root/.config/xfce4/xfconf/xfce-perchannel-xml ]]; then
     xfconf-query -c xsettings -p /Net/ThemeName -s Prof_XFCE_2_1
     xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
     sed -i "s#Default#Prof_XFCE_2_1#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
-    # sed -i "s#xfce-verticals.png#wallpaper.png#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+    sed -i "s#xfce-verticals.png#wallpaper.png#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
     mkdir /root/.config/xfce4/appfinder/
     mkdir /root/.config/terminator/
     cp /root/.remote-desktop/bookmarks /root/.config/xfce4/appfinder/bookmarks
     cp /root/.remote-desktop/config /root/.config/terminator/config
     cp /root/.remote-desktop/docklike-2.rc /root/.config/xfce4/panel/docklike-2.rc
     cp /root/.remote-desktop/xfce4-panel.xml /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-    #cp /root/.remote-desktop/wallpaper.png
+    cp /root/.remote-desktop/xfce4-desktop.xml /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
 
     vncserver -kill :0
     sleep 6
