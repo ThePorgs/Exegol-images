@@ -8,7 +8,6 @@ if [[ ! -d /root/.config/xfce4/xfconf/xfce-perchannel-xml ]]; then
     xfconf-query -c xsettings -p /Net/ThemeName -s Prof_XFCE_2_1
     xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
     sed -i "s#Default#Prof_XFCE_2_1#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
-    sed -i "s#xfce-verticals.png#wallpaper.png#g" /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
     mkdir /root/.config/xfce4/appfinder/
     mkdir /root/.config/terminator/
     cp /root/.remote-desktop/bookmarks /root/.config/xfce4/appfinder/bookmarks
