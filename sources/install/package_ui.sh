@@ -44,6 +44,8 @@ function install_xfce() {
     CUSTOM_PATH=`find /usr/lib/ -name "xfce*"|head -n1`
     mv /tmp/lib/xfce4/panel/plugins/libdocklike.* $CUSTOM_PATH/panel/plugins
     mv /tmp/share/xfce4/panel/plugins/docklike.desktop /usr/share/xfce4/panel/plugins
+    # Locale configuration
+    cp -rv /tmp/share/locale/* /usr/share/locale
     rm -rf /tmp/*
     
     
@@ -53,9 +55,6 @@ function install_xfce() {
     sed -i "/novnc-.*.png/d" /usr/share/novnc/vnc.html
     sed -i "s#novnc-icon.svg#logo.png#" /usr/share/novnc/vnc.html
     sed -i "s#svg+xml#png#" /usr/share/novnc/vnc.html
-
-    # Locale configuration
-    cp -rv /tmp/share/locale/* /usr/share/locale
     
     # TODO: Remove me
     echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
