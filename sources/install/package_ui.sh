@@ -6,25 +6,38 @@ source common.sh
 set -e
 
 function install_xfce() {
-    fapt xz-utils tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 papirus-icon-theme cairo-dock
+    fapt terminator firefox-esr
+    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 papirus-icon-theme
     mkdir ~/.vnc
-    cp /root/sources/assets/webui/xstartup.conf ~/.vnc/xstartup
+    cp /root/sources/assets/webui/configuration/xstartup.conf ~/.vnc/xstartup
     chmod u+x ~/.vnc/xstartup
 
     # Debug Theme
     cd /tmp
-    cp /root/sources/assets/webui/Mc-OS-CTLina-XFCE-Dark.tar.xz /tmp
-    tar -xvf ./Mc-OS-CTLina-XFCE-Dark.tar.xz
-    mv Mc-OS-CTLina-XFCE-Dark McOS-CTLina
+    cp /root/sources/assets/webui/Prof_XFCE_2_1.tar.gz ./
+    tar -xvf ./Prof_XFCE_2_1.tar.gz
+    mv 'Prof--XFCE- 2.1' Prof_XFCE_2_1
     
     mkdir /root/.themes
-    cp -r ./McOS-CTLina /root/.themes/
+    cp -r ./Prof_XFCE_2_1 /root/.themes/
 
-    # Backgroup wallpaper
-    cp /root/sources/assets/webui/wallpaper.png /usr/share/backgrounds/xfce/
+    mkdir /root/.remote-desktop
+    cp /root/sources/assets/webui/configuration/* /root/.remote-desktop/
 
-    cp /root/sources/assets/webui/xsettings.xml /root/.vnc/xsettings.xml
+    #cp /root/sources/assets/webui/xsettings.xml /root/.vnc/xsettings.xml
 
+    fapt xfce4-dev-tools libglib2.0-dev libgtk-3-dev libwnck-3-dev libxfce4ui-2-dev libxfce4panel-2.0-dev g++ build-essential
+    git -C /tmp clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git
+    cd /tmp/xfce4-docklike-plugin
+    sh autogen.sh --prefix=/tmp/
+    make
+    make install
+    CUSTOM_PATH=`find /usr/lib/ -name "xfce*"|head -n1`
+    echo $CUSTOM_PATH
+    mv /tmp/lib/xfce4/panel/plugins/libdocklike.* $CUSTOM_PATH/panel/plugins
+    mv /tmp/share/xfce4/panel/plugins/docklike.desktop /usr/share/xfce4/panel/plugins
+    cp -rv /tmp/share/locale/* /usr/share/locale
+    
     # TODO: Remove me
     echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
 
