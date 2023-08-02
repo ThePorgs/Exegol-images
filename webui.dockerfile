@@ -20,9 +20,13 @@ WORKDIR /root/sources/install
 
 RUN chmod +x entrypoint.sh
 
-RUN ./entrypoint.sh package_base_debug
+RUN ./entrypoint.sh package_base
 
-RUN ./entrypoint.sh package_webui
+RUN ./entrypoint.sh package_ad
+RUN ./entrypoint.sh package_ad_configure
+RUN ./entrypoint.sh package_network
+RUN ./entrypoint.sh package_forensic
+RUN ./entrypoint.sh package_reverse
 
 RUN ./entrypoint.sh post_install_clean
 
