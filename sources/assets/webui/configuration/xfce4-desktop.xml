@@ -19,12 +19,12 @@
         <property name="workspace1" type="empty">
           <property name="color-style" type="int" value="0"/>
           <property name="image-style" type="int" value="5"/>
-          <property name="last-image" type="string" value="/usr/share/backgrounds/xfce/wallpaper.png2"/>
+          <property name="last-image" type="string" value="/usr/share/backgrounds/xfce/wallpaper2.png"/>
         </property>
         <property name="workspace2" type="empty">
           <property name="color-style" type="int" value="0"/>
           <property name="image-style" type="int" value="5"/>
-          <property name="last-image" type="string" value="/usr/share/backgrounds/xfce/wallpaper.png3"/>
+          <property name="last-image" type="string" value="/usr/share/backgrounds/xfce/wallpaper3.png"/>
         </property>
         <property name="workspace3" type="empty">
           <property name="color-style" type="int" value="0"/>
@@ -33,6 +33,8 @@
         </property>
       </property>
     </property>
+    <property name="single-workspace-mode" type="bool" value="false"/>
+    <property name="single-workspace-number" type="int" value="0"/>
   </property>
   <property name="last" type="empty">
     <property name="window-width" type="int" value="626"/>

@@ -8,6 +8,7 @@ set -e
 function install_xfce() {
     fapt terminator firefox-esr intltool libtool
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 papirus-icon-theme
+    fapt libaacs0 libavcodec58 libavformat58 libavutil56 libbluray2 libdvdnav4 libdvdread8 libpostproc55 libswresample3 libswscale5 libx264-160 libx265-192
     mkdir ~/.vnc
     cp /root/sources/assets/webui/configuration/xstartup.conf ~/.vnc/xstartup
     chmod u+x ~/.vnc/xstartup
