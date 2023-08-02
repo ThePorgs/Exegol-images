@@ -21,6 +21,7 @@ WORKDIR /root/sources/install
 RUN chmod +x entrypoint.sh
 
 RUN ./entrypoint.sh package_base
+RUN ./entrypoint.sh package_webui
 
 RUN ./entrypoint.sh package_ad
 RUN ./entrypoint.sh package_ad_configure
