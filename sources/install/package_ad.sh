@@ -31,7 +31,7 @@ function install_responder() {
     add-aliases responder
     add-history responder
     add-test-command "responder --version"
-    add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR, NBT-NS and MDNS poisoner."
+    add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR / NBT-NS and MDNS poisoner."
 }
 
 function configure_responder() {
@@ -91,7 +91,6 @@ function configure_crackmapexec() {
     [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
-    # git -C /opt/tools/ clone https://github.com/mpgn/CrackMapExec
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
 }
 
@@ -101,7 +100,7 @@ function install_bloodhound-py() {
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
-    add-to-list "bloodhound-py,https://github.com/fox-it/BloodHound.py,Trust relationship analysis tool for Active Directory environments."
+    add-to-list "bloodhound.py,https://github.com/fox-it/BloodHound.py,BloodHound ingestor in Python."
 }
 
 function install_bloodhound() {
@@ -142,7 +141,7 @@ function install_cypheroth() {
     add-aliases cypheroth
     add-history cypheroth
     add-test-command "cypheroth --help|& grep 'Example with Defaults:'"
-    add-to-list "cyperoth,https://github.com/seajaysec/cypheroth/,Automated, extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
+    add-to-list "cyperoth,https://github.com/seajaysec/cypheroth,Automated extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
 }
 
 function install_mitm6_pip() {
@@ -194,7 +193,7 @@ function install_pykek() {
     add-aliases pykek
     add-history pykek
     add-test-command "ms14-068.py |& grep '<clearPassword>'"
-    add-to-list "pykek,https://github.com/preempt/pykek,PyKEK (Python Kerberos Exploitation Kit), a python library to manipulate KRB5-related data."
+    add-to-list "pykek,https://github.com/preempt/pykek,PyKEK (Python Kerberos Exploitation Kit) a python library to manipulate KRB5-related data."
 }
 
 function install_lsassy() {
@@ -249,7 +248,7 @@ function install_amber() {
     go install -v github.com/EgeBalci/amber@latest
     add-history amber
     add-test-command "amber --help"
-    add-to-list "amber,https://github.com/EgeBalci/amber,Forensic tool to recover browser history, cookies, and credentials"
+    add-to-list "amber,https://github.com/EgeBalci/amber,Forensic tool to recover browser history / cookies and credentials"
 }
 
 function install_powershell() {
@@ -367,7 +366,7 @@ function install_libmspack() {
 function install_windapsearch-go() {
     colorecho "Installing Go windapsearch"
     # Install mage dependency
-    git -C /opt/tools/ clone https://github.com/magefile/mage
+    git -C /opt/tools/ clone --depth 1 https://github.com/magefile/mage
     cd /opt/tools/mage
     go run bootstrap.go
     # Install windapsearch tool
@@ -402,7 +401,7 @@ function install_lnkup() {
     add-aliases lnkup
     add-history lnkup
     add-test-command "lnk-generate.py --help"
-    add-to-list "lnkup,https://github.com/Plazmaz/lnkUp,This tool will allow you to generate LNK payloads. Upon rendering or being run, they will exfiltrate data."
+    add-to-list "lnkup,https://github.com/Plazmaz/lnkUp,This tool will allow you to generate LNK payloads. Upon rendering or being run they will exfiltrate data."
 }
 
 function install_polenum() {
@@ -617,12 +616,12 @@ function install_manspider() {
     add-aliases manspider
     add-history manspider
     add-test-command "manspider --help"
-    add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work, it will fall back to "guest", then to a null session."
+    add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
 }
 
 function install_targetedKerberoast() {
     colorecho "Installing targetedKerberoast"
-    git -C /opt/tools/ clone https://github.com/ShutdownRepo/targetedKerberoast
+    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
     cd /opt/tools/targetedKerberoast
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -660,14 +659,11 @@ function install_pywsus() {
 
 function install_donpapi() {
     colorecho "Installing DonPAPI"
-    git -C /opt/tools/ clone --depth 1 https://github.com/login-securite/DonPAPI.git
-    cd /opt/tools/DonPAPI
-    python3 -m venv ./venv/
-    ./venv/bin/python3 -m pip install -r ./requirements.txt
-    add-aliases donpapi
+    fapt swig
+    python3 -m pipx install git+https://github.com/login-securite/DonPAPI
     add-history donpapi
-    add-test-command "DonPAPI.py --help"
-    add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Python network and web application scanner"
+    add-test-command "DonPAPI --help"
+    add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Dumping revelant information on compromised targets without AV detection"
 }
 
 function install_webclientservicescanner() {
@@ -765,7 +761,7 @@ function install_crackhound() {
     add-aliases crackhound
     add-history crackhound
     add-test-command "crackhound.py --help"
-    add-to-list "crackhound,https://github.com/trustedsec/crackhound.git,A fast WPA/WPA2/WPA3 WiFi Handshake capture, password recovery and analysis tool"
+    add-to-list "crackhound,https://github.com/trustedsec/crackhound.git,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
 }
 
 function install_kerbrute() {
@@ -787,15 +783,17 @@ function install_ldeep() {
 function install_rusthound() {
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone https://github.com/OPENCYBER-FR/RustHound
+    git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
     cd /opt/tools/RustHound
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     cargo build --release
+    # Clean dependencies used to build the binary
+    rm -rf target/release/{deps,build}
     ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
     add-history rusthound
     add-test-command "rusthound --help"
-    add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,Rusthound is a tool for searching through git repositories for secrets and sensitive information."
+    add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,BloodHound ingestor in Rust."
 }
 
 function install_certsync() {
@@ -835,7 +833,7 @@ function install_masky() {
     python3 -m pipx install git+https://github.com/Z4kSec/Masky
     add-history masky
     add-test-command "masky --help"
-    add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data, such as credit card numbers, in logs and other files."
+    add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data / such as credit card numbers / in logs and other files."
 }
 
 function install_roastinthemiddle() {

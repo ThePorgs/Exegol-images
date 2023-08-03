@@ -1,0 +1,8 @@
+cloudsplaining download
+cloudsplaining download --profile someprofile
+cloudsplaining scan --input-file default.json
+cloudsplaining scan --input-file default.json --exclusions-file exclusions.yml
+cloudsplaining scan-policy-file --input-file examples/policies/wildcards.json
+cloudsplaining scan-policy-file --input-file examples/policies/wildcards.json  --exclusions-file examples/example-exclusions.yml
+cloudsplaining create-multi-account-config-file -o accounts.yml
+cloudsplaining scan-multi-account -c accounts.yml -r TargetRole --output-directory ./

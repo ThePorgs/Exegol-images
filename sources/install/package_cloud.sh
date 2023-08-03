@@ -52,7 +52,44 @@ function install_scout() {
     python3 -m pipx install scoutsuite
     add-history scout
     add-test-command "scout --help"
-    add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud environments."
+    add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool which enables security posture assessment of cloud environments."
+}
+
+function install_cloudsplaining() {
+    colorecho "Installing Cloudsplaining"
+    python3 -m pipx install cloudsplaining
+    add-history cloudsplaining
+    add-test-command "cloudsplaining --help"
+    add-to-list "cloudsplaining,https://github.com/salesforce/cloudsplaining,AWS IAM Security Assessment tool that identifies violations of least privilege and generates a risk-prioritized report."
+}
+
+function install_cloudsploit() {
+    colorecho "Installing Cloudsploit"
+    git -C /opt/tools/ clone --depth 1 https://github.com/aquasecurity/cloudsploit
+    cd /opt/tools/cloudsploit && npm install && chmod +x index.js
+    add-aliases cloudsploit
+    add-history cloudsploit
+    add-test-command "cloudsploit -h"
+    add-to-list "cloudsploit,https://github.com/aquasecurity/cloudsploit,Cloud Security Posture Management"
+}
+
+function install_prowler() {
+    colorecho "Installing Prowler"
+    python3 -m pipx install prowler
+    add-history prowler
+    add-test-command "prowler -h"
+    add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness."
+}
+
+function install_cloudmapper() {
+    colorecho "Installing Cloudmapper"
+    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git
+    cd /opt/tools/cloudmapper
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases cloudmapper
+    add-history cloudmapper
+    add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
 }
 
 # Package dedicated to cloud tools
@@ -60,4 +97,8 @@ function package_cloud() {
     install_kubectl
     install_awscli
     install_scout       # Multi-Cloud Security Auditing Tool
+    install_cloudsplaining
+    install_cloudsploit
+    install_prowler
+    install_cloudmapper
 }

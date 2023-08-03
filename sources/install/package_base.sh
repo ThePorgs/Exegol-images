@@ -11,8 +11,8 @@ function update() {
 
 function install_exegol-history() {
     colorecho "Installing Exegol-history"
-    #  git -C /opt/tools/ clone https://github.com/ThePorgs/Exegol-history
-    # todo : below is something basic. A nice tool being created for faster and smoother worflow
+    #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
+    # todo : below is something basic. A nice tool being created for faster and smoother workflow
     mkdir -p /opt/tools/Exegol-history
     rm -rf /opt/tools/Exegol-history/profile.sh
     echo "#export INTERFACE='eth0'" >> /opt/tools/Exegol-history/profile.sh
@@ -38,6 +38,8 @@ function filesystem() {
     colorecho "Preparing filesystem"
     mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/
     touch /.exegol/build_pipeline_tests/all_commands.txt
+    touch /.exegol/installed_tools.csv
+    echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
 }
 
 function install_go() {
@@ -118,11 +120,11 @@ function install_ohmyzsh() {
     colorecho "Installing oh-my-zsh, config, history, aliases"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-autosuggestions
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-syntax-highlighting
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/zsh-users/zsh-completions
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/agkozak/zsh-z
-    git -C ~/.oh-my-zsh/custom/plugins/ clone https://github.com/lukechilds/zsh-nvm
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-completions
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/agkozak/zsh-z
+    git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
     add-aliases fzf
     add-test-command "fzf-wordlists --help"
@@ -175,11 +177,15 @@ function install_gf() {
     add-test-command "ls ~/.gf | grep 'redirect.json'"
 }
 
-function post_install_clean() {
+function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
     updatedb
     rm -rfv /tmp/*
+    colorecho "Sorting tools list"
+    (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
+    mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
+    colorecho "Adding end-of-preset in zsh_history"
     echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
 }
 
@@ -203,7 +209,7 @@ function package_base() {
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev bundler \
     nim perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-11-jdk openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
-    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client
+    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel fzf

@@ -50,10 +50,12 @@ jobs:
       - builder
       - ${{ inputs.ARCH }}
     steps:
-      - name: Clean unused dangling images
+      - name: Clean dangling build cache
+        run: docker builder prune --force
+      - name: Clean Exegol dangling images
         # dangling: images that were replaced with ones with the same name and tag
-        run: docker image prune --filter "label=org.exegol.app=Exegol" --force
-      - name: Clean unused volumes
+        run: docker image prune --force --filter "label=org.exegol.app=Exegol"
+      - name: Clean unused local volumes
         run: docker volume prune --force
 
   debug_pre_build:

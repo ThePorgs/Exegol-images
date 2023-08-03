@@ -21,7 +21,7 @@ function install_steganography_apt_tools() {
     
     add-to-list "stegosuite,https://github.com/osde8info/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files."
     add-to-list "steghide,https://github.com/StefanoDeVuono/steghide,steghide is a steganography program that is able to hide data in various kinds of image and audio files."
-    add-to-list "exif,https://exiftool.org/,Utility to read, write and edit metadata in image, audio and video files"
+    add-to-list "exif,https://exiftool.org/,Utility to read / write and edit metadata in image / audio and video files"
     add-to-list "exiv2,https://github.com/Exiv2/exiv2,Image metadata library and toolset"
     add-to-list "hexedit,https://github.com/pixel/hexedit,View and edit binary files"
 }

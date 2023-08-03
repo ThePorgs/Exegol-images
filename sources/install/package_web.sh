@@ -67,7 +67,7 @@ function install_amass(){
     go install -v github.com/owasp-amass/amass/v3/...@master
     add-history amass
     add-test-command "amass -version"
-    add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration, attack surface mapping & external assets discovery tool"
+    add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration / attack surface mapping & external assets discovery tool"
 }
 
 function install_ffuf() {
@@ -245,7 +245,7 @@ function install_droopescan() {
 
 function install_drupwn() {
     colorecho "Installing drupwn"
-    git -C /opt/tools/ clone https://github.com/immunIT/drupwn
+    git -C /opt/tools/ clone --depth 1 https://github.com/immunIT/drupwn
     python3 -m pipx install git+https://github.com/immunIT/drupwn
     add-aliases drupwn
     add-history drupwn
@@ -295,7 +295,7 @@ function install_testssl() {
 function install_tls-scanner() {
     colorecho "Installing TLS-Scanner"
     fapt maven
-    git -C /opt/tools/ clone https://github.com/tls-attacker/TLS-Scanner
+    git -C /opt/tools/ clone --depth 1 https://github.com/tls-attacker/TLS-Scanner
     cd /opt/tools/TLS-Scanner
     git submodule update --init --recursive
     mvn clean package -DskipTests=true
@@ -328,7 +328,7 @@ function install_eyewitness() {
     add-aliases eyewitness
     add-history eyewitness
     add-test-command "eyewitness --help"
-    add-to-list "eyewitness,https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites, provide some server header info, and identify default credentials if possible."
+    add-to-list "eyewitness,https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites / provide some server header info / and identify default credentials if possible."
 }
 
 function install_oneforall() {
@@ -485,7 +485,7 @@ function install_jdwp_shellifier(){
     add-aliases jdwp-shellifier
     add-history jdwp-shellifier
     add-test-command "jdwp-shellifier.py --help"
-    add-to-list "jdwp,https://github.com/IOActive/jdwp-shellifier,This exploitation script is meant to be used by pentesters against active JDWP service, in order to gain Remote Code Execution."
+    add-to-list "jdwp,https://github.com/IOActive/jdwp-shellifier,This exploitation script is meant to be used by pentesters against active JDWP service / in order to gain Remote Code Execution."
 }
 
 function install_httpmethods() {
@@ -497,7 +497,7 @@ function install_httpmethods() {
     add-aliases httpmethods
     add-history httpmethods
     add-test-command "httpmethods --help"
-    add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT, DELETE, etc.)"
+    add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
 }
 
 function install_h2csmuggler() {
@@ -530,7 +530,7 @@ function install_feroxbuster() {
     add-aliases feroxbuster
     add-history feroxbuster
     add-test-command "feroxbuster --help"
-    add-to-list "feroxbuster,https://github.com/epi052/feroxbuster,Simple, fast and recursive content discovery tool"
+    add-to-list "feroxbuster,https://github.com/epi052/feroxbuster,Simple / fast and recursive content discovery tool"
 }
 
 function install_tomcatwardeployer() {
@@ -574,7 +574,7 @@ function install_nuclei() {
     go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
     add-history nuclei
     add-test-command "nuclei --version"
-    add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues, including XSS, SQL injection, and misconfigured servers."
+    add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues / including XSS / SQL injection / and misconfigured servers."
 }
 
 function configure_nuclei() {
@@ -610,7 +610,7 @@ function install_httpx() {
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
     add-history httpx
     add-test-command "httpx --help"
-    add-to-list "httpx,https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities, including outdated software versions and weak encryption protocols."
+    add-to-list "httpx,https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities / including outdated software versions and weak encryption protocols."
 }
 
 function install_anew() {
@@ -618,7 +618,7 @@ function install_anew() {
     go install -v github.com/tomnomnom/anew@latest
     add-history anew
     add-test-command "anew --help"
-    add-to-list "anew,https://github.com/tomnomnom/anew,A simple tool for filtering and manipulating text data, such as log files and other outputs."
+    add-to-list "anew,https://github.com/tomnomnom/anew,A simple tool for filtering and manipulating text data / such as log files and other outputs."
 }
 
 function install_robotstester() {
@@ -675,14 +675,14 @@ function install_php_filter_chain_generator() {
 
 function install_kraken() {
     colorecho "Installing Kraken"
-    git -C /opt/tools clone --recurse-submodules https://github.com/kraken-ng/Kraken.git
+    git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
     cd /opt/tools/Kraken
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases kraken
     add-history kraken
     add-test-command "kraken.py -h"
-    add-to-list "Modular multi-language webshell,https://github.com/kraken-ng/Kraken.git,Kraken is a modular multi-language webshell focused on web post-exploitation and defense evasion. It supports three technologies (PHP, JSP and ASPX) and is core is developed in Python."
+    add-to-list "Kraken,https://github.com/kraken-ng/Kraken.git,Kraken is a modular multi-language webshell focused on web post-exploitation and defense evasion. It supports three technologies (PHP / JSP and ASPX) and is core is developed in Python."
 }
 
 function install_soapui() {

@@ -22,7 +22,7 @@ function install_reverse_apt_tools() {
     add-test-command "strace --version"
 
     add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity."
-    add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm), including assembler and disassembler, a syntax checker, and a binary format validator."
+    add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm) including assembler and disassembler / a syntax checker / and a binary format validator."
     add-to-list "strace,https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process."
 }
 
@@ -71,7 +71,7 @@ function install_checksec-py() {
 
 function install_radare2(){
     colorecho "Installing radare2"
-    git -C /opt/tools/ clone https://github.com/radareorg/radare2
+    git -C /opt/tools/ clone --depth 1 https://github.com/radareorg/radare2
     /opt/tools/radare2/sys/install.sh
     add-history radare2
     add-test-command "radare2 -h"
