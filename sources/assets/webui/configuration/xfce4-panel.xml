@@ -52,6 +52,7 @@
   <property name="plugins" type="empty">
     <property name="plugin-1" type="string" value="applicationsmenu">
       <property name="show-generic-names" type="bool" value="false"/>
+      <property name="button-icon" type="string" value="/usr/share/novnc/app/images/icons/logo.png"/>
     </property>
     <property name="plugin-3" type="string" value="separator">
       <property name="expand" type="bool" value="true"/>
