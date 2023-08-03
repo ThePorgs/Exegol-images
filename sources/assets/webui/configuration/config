@@ -2,7 +2,7 @@
   geometry_hinting = True
   title_transmit_bg_color = "#613583"
   title_inactive_fg_color = "#ffffff"
-  title_inactive_bg_color = "#a51d2d"
+  title_inactive_bg_color = "#613583"
 [keybindings]
 [profiles]
   [[default]]
