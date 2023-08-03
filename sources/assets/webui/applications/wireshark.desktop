@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Wireshark
 Comment=TODO
-Exec=
-Icon=
+Exec=/usr/bin/wireshark
+Icon=/usr/share/icons/hicolor/128x128/apps/wireshark.png
 Terminal=false
 Type=Application
 StartupNotify=true

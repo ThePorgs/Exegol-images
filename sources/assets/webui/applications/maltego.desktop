@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Maltego
-Comment=
-Exec=
-Icon=
+Comment=TODO
+Exec=/usr/bin/maltego
+Icon=/usr/share/pixmaps/maltego.png
 Terminal=false
 Type=Application
 StartupNotify=true
