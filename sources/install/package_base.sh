@@ -272,11 +272,11 @@ function package_base() {
     bundle config path vendor/
 
     # Remote Graphical Desktop installation
-    chmod +x /root/sources/install/guacamole_install.sh
-    /root/sources/install/guacamole_install.sh
-    add-test-command "ls /opt/tools/bin/desktop-start"
-    add-test-command "ls /opt/tools/bin/desktop-stop"
-    add-test-command "ls /opt/tools/bin/desktop-restart"
+    #chmod +x /root/sources/install/guacamole_install.sh
+    #/root/sources/install/guacamole_install.sh
+    #add-test-command "ls /opt/tools/bin/desktop-start"
+    #add-test-command "ls /opt/tools/bin/desktop-stop"
+    #add-test-command "ls /opt/tools/bin/desktop-restart"
 }
 
 # FOR DEBUGGING, FAST MINIMAL INSTALL
