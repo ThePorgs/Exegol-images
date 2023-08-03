@@ -56,6 +56,11 @@ function install_xfce() {
     sed -i "/novnc-.*.png/d" /usr/share/novnc/vnc.html
     sed -i "s#novnc-icon.svg#logo.png#" /usr/share/novnc/vnc.html
     sed -i "s#svg+xml#png#" /usr/share/novnc/vnc.html
+    echo '<link rel="icon" sizes="any" type="image/png" href="app/images/icons/logo.png">' >> /usr/share/novnc/vnc.html
+    
+    # Title bar configuration
+    sed -i "s#<title>noVNC</title>#<title>Exegol</title>#" /usr/share/novnc/vnc.html
+    sed -i 's#document.title = e.detail.name + " - noVNC";#document.title = "Exegol (" + e.detail.name.split(":")[0].replace("exegol-", "") + ")";#' /usr/share/novnc/app/ui.js
 
     # TODO: Remove me
     echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
