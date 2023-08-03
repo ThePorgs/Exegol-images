@@ -17,6 +17,12 @@ if [[ ! -d /root/.config/xfce4/xfconf/xfce-perchannel-xml ]]; then
     cp /root/.remote-desktop/xfce4-desktop.xml /root/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
     cp /root/.remote-desktop/xsettings.xml /root/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
 
+    # Configure menu
+    mkdir /root/.config/menus/
+    cp /root/.remote-desktop/xfce-applications.menu ~/.config/menus/xfce-applications.menu
+    cp /root/.remote-desktop/exegol.directory /usr/share/desktop-directories/exegol.directory
+    cp /root/.remote-desktop/applications/* /usr/share/applications/
+
     vncserver -kill :0
     sleep 6
     echo "Starting VNC..."

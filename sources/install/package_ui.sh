@@ -31,8 +31,9 @@ function install_xfce() {
     rm -rf /tmp/Prof*
 
     # Get configuration files
-    mkdir /root/.remote-desktop
+    mkdir -p /root/.remote-desktop/applications
     cp /root/sources/assets/webui/configuration/* /root/.remote-desktop/
+    cp /root/sources/assets/webui/applications/* /root/.remote-desktop/applications/
 
     # Dock Dependencies + Configuration
     fapt xfce4-dev-tools libglib2.0-dev libgtk-3-dev libwnck-3-dev libxfce4ui-2-dev libxfce4panel-2.0-dev g++ build-essential
@@ -47,14 +48,6 @@ function install_xfce() {
     # Locale configuration
     cp -rv /tmp/share/locale/* /usr/share/locale
     rm -rf /tmp/*
-
-
-    # Configure menu
-    mkdir ~/.config/menus/
-    cp /root/sources/assets/webui/configuration/xfce-applications.menu ~/.config/menus/xfce-applications.menu
-    cp /root/sources/assets/webui/configuration/exegol.directory /usr/share/desktop-directories/exegol.directory
-    cp /root/sources/assets/webui/applications/* /usr/share/applications/
-    
 
     # Wallpapers + favicon configuration
     rm -rf /usr/share/backgrounds/xfce/xfce*
