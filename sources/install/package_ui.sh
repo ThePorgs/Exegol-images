@@ -49,7 +49,11 @@ function install_xfce() {
     rm -rf /tmp/*
 
 
+    # ~/.config/menus/xfce-applications.menu
+    # /usr/share/desktop-directories/exegol.directory
+
     # Wallpapers + favicon configuration
+    rm -rf /usr/share/backgrounds/xfce/xfce*
     cp /root/.remote-desktop/wallpaper* /usr/share/backgrounds/xfce
     cp /root/sources/assets/webui/logo.png /usr/share/novnc/app/images/icons/
     sed -i "/novnc-.*.png/d" /usr/share/novnc/vnc.html
