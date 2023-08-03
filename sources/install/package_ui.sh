@@ -8,7 +8,7 @@ set -e
 function install_xfce() {
 
     # DEBUG TOOLS
-    fapt terminator firefox-esr
+    fapt terminator firefox-esr iproute2
 
     # DEPENDENCIES
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 papirus-icon-theme intltool libtool
