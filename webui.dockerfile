@@ -20,17 +20,9 @@ WORKDIR /root/sources/install
 
 RUN chmod +x entrypoint.sh
 
-RUN ./entrypoint.sh package_base
-RUN ./entrypoint.sh package_webui
+RUN ./entrypoint.sh package_base_debug
 
-RUN ./entrypoint.sh install_bloodhound
-RUN ./entrypoint.sh configure_bloodhound
-RUN ./entrypoint.sh install_neo4j
-RUN ./entrypoint.sh install_ghidra
-RUN ./entrypoint.sh install_jd-gui
-RUN ./entrypoint.sh install_burpsuite
-RUN ./entrypoint.sh install_maltego
-RUN apt install -y wireshark
+RUN ./entrypoint.sh package_webui
 
 RUN ./entrypoint.sh post_install
 
