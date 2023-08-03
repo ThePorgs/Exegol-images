@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Wireshark
+Comment=TODO
+Exec=
+Icon=
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;Network;
+MimeType=text/plain;

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Maltego
+Comment=
+Exec=
+Icon=
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;OSINT;
+MimeType=text/plain;

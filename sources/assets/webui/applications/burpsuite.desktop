@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Burpsuite
+Comment=
+Exec=
+Icon=
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;Web;
+MimeType=text/plain;

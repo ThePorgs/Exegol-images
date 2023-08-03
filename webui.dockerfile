@@ -28,6 +28,9 @@ RUN ./entrypoint.sh configure_bloodhound
 RUN ./entrypoint.sh install_neo4j
 RUN ./entrypoint.sh install_ghidra
 RUN ./entrypoint.sh install_jd-gui
+RUN ./entrypoint.sh install_burpsuite
+RUN ./entrypoint.sh install_maltego
+RUN apt install -y wireshark
 
 RUN ./entrypoint.sh post_install_clean
 

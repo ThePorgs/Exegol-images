@@ -49,8 +49,12 @@ function install_xfce() {
     rm -rf /tmp/*
 
 
-    # ~/.config/menus/xfce-applications.menu
-    # /usr/share/desktop-directories/exegol.directory
+    # Configure menu
+    mkdir ~/.config/menus/
+    cp /root/sources/assets/webui/configuration/xfce-applications.menu ~/.config/menus/xfce-applications.menu
+    cp /root/sources/assets/webui/configuration/exegol.directory /usr/share/desktop-directories/exegol.directory
+    cp /root/sources/assets/webui/applications/* /usr/share/applications/
+    
 
     # Wallpapers + favicon configuration
     rm -rf /usr/share/backgrounds/xfce/xfce*
