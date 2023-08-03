@@ -32,7 +32,7 @@ RUN ./entrypoint.sh install_burpsuite
 RUN ./entrypoint.sh install_maltego
 RUN apt install -y wireshark
 
-RUN ./entrypoint.sh post_install_clean
+RUN ./entrypoint.sh post_install
 
 RUN rm -rf /root/sources
 
