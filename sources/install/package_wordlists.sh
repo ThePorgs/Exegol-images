@@ -79,6 +79,7 @@ function configure_genusernames() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
+    set_ruby_env
     install_wordlists_apt_tools
     install_seclists                # Awesome wordlists
     install_pass_station            # Default credentials database

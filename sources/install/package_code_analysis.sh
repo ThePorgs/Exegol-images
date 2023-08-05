@@ -31,6 +31,7 @@ function install_semgrep() {
 
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
+    set_ruby_env
     install_vulny-code-static-analysis
     install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
     install_semgrep                     # Static analysis engine for finding bugs and vulnerabilities

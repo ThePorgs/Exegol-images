@@ -78,9 +78,14 @@ function fapt-history-aliases() {
 }
 
 function set_go_env() {
-    colorecho "Setting environment variables for installation"
+    colorecho "Setting golang environment variables for installation"
     export GO111MODULE=on
     export PATH=$PATH:/usr/local/go/bin:/root/.local/bin
+}
+
+function set_ruby_env() {
+    colorecho "Setting ruby environment variables for installation"
+    rvm --default use 3.0.0
 }
 
 function install_pipx_git_tool() {

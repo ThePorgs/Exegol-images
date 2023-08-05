@@ -896,6 +896,7 @@ function install_noPac() {
 function package_ad() {
     install_ad_apt_tools
     set_go_env
+    set_ruby_env
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
     install_crackmapexec            # Network scanner

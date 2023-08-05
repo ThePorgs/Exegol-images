@@ -129,6 +129,7 @@ function install_pwninit() {
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
+    set_ruby_env
     install_reverse_apt_tools
     install_pwntools                # CTF framework and exploit development library
     install_pwndbg                  # Advanced Gnu Debugger

@@ -28,6 +28,7 @@ function install_rsactftool() {
 
 # Package dedicated to attack crypto
 function package_crypto() {
+    set_ruby_env
     install_rsactftool              # attack rsa
     install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
 }

@@ -63,6 +63,7 @@ function install_geowordlists() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
+    set_ruby_env
     install_cracking_apt_tools
     install_john                    # Password cracker
     install_name-that-hash          # Name-That-Hash, the hash identifier tool

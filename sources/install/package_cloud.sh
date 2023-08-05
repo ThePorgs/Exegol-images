@@ -94,6 +94,7 @@ function install_cloudmapper() {
 
 # Package dedicated to cloud tools
 function package_cloud() {
+    set_ruby_env
     install_kubectl
     install_awscli
     install_scout       # Multi-Cloud Security Auditing Tool

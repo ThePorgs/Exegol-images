@@ -774,6 +774,7 @@ function package_web() {
 
 function package_web_configure() {
     set_go_env
+    set_ruby_env
     configure_nuclei
     configure_moodlescan
     configure_clusterd

@@ -45,6 +45,7 @@ function install_stegolsb() {
 
 # Package dedicated to steganography tools
 function package_steganography() {
+    set_ruby_env
     install_steganography_apt_tools
     install_zsteg                   # Detect stegano-hidden data in PNG & BMP
     install_stegolsb                # (including wavsteg)

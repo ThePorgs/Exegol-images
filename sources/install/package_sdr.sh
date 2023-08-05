@@ -47,6 +47,7 @@ function install_jackit() {
 
 # Package dedicated to SDR
 function package_sdr() {
+    set_ruby_env
     install_sdr_apt_tools
     install_mousejack               # tools for mousejacking
     install_jackit                  # tools for mousejacking

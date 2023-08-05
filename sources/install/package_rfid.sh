@@ -84,6 +84,7 @@ function install_proxmark3() {
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
+    set_ruby_env
     install_rfid_apt_tools
     install_mfoc                    # Tool for nested attack on Mifare Classic
     install_libnfc-crypto1-crack    # tool for hardnested attack on Mifare Classic

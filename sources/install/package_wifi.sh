@@ -109,6 +109,7 @@ function install_hcxdumptool() {
 # Package dedicated to wifi pentest tools
 function package_wifi() {
     set_go_env
+    set_ruby_env
     install_wifi_apt_tools
     install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
     install_wifite2                 # Retrieving password of a wireless access point (router)
