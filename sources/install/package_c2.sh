@@ -76,5 +76,5 @@ function package_c2() {
 }
 
 function package_c2_configure() {
-    configure_metasploit
+    # configure_metasploit
 }
