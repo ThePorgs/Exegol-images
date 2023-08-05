@@ -19,7 +19,7 @@ function install_metasploit() {
     curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb -o msfinstall
     chmod +x msfinstall
     ./msfinstall
-    echo "gem 'mini_portile2', '~> 2.8', '>= 2.8.4'" >> /opt/metasploit-framework/embedded/framework/Gemfile
+    # echo "gem 'mini_portile2', '~> 2.8', '>= 2.8.4'" >> /opt/metasploit-framework/embedded/framework/Gemfile
     bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
     cd /tmp
     rm -rf /tmp/metasploit_install
