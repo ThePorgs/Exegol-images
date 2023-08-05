@@ -1,0 +1,5 @@
+#!/bin/bash
+
+vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd $HOME/.vnc/passwd :0
+websockify -D --web /usr/share/novnc/ 6080 localhost:5900
+echo "Desktop up : http://127.0.0.1:6080/vnc.html?resize=remote&path=websockify&autoconnect=true"
