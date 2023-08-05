@@ -118,6 +118,7 @@ function install_rvm() {
     gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     curl -sSL https://get.rvm.io | bash -s stable --ruby
     source /usr/local/rvm/scripts/rvm
+    rvm --default use 3.0.0
     gem update
     add-test-command "rvm --help"
 }
@@ -229,6 +230,7 @@ function package_base() {
     fapt-aliases php python3 grc emacs-nox xsel fzf
 
     install_rust_cargo
+    install_rvm                                         # Ruby Version Manager
 
     ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
@@ -255,7 +257,6 @@ function package_base() {
     install_gf                                          # wrapper around grep
     fapt-noexit rar                                     # rar (Only AMD)
     install_firefox
-    install_rvm                                         # Ruby Version Manager
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
