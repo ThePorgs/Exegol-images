@@ -15,7 +15,7 @@ function install_wordlists_apt_tools() {
     add-test-command "cewl --help"   # Wordlist generator
 
     add-to-list "crunch,https://github.com/crunchsec/crunch,A wordlist generator where you can specify a standard character set or a character set you specify."
-    add-to-list "cupp,https://github.com/Mebus/cupp,TODO"
+    add-to-list "cupp,https://github.com/Mebus/cupp,Cupp is a tool used to generate personalized password lists based on target information."
     add-to-list "cewl,https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results"
 }
 
@@ -59,7 +59,7 @@ function install_username-anarchy() {
     add-aliases username-anarchy
     add-history username-anarchy
     add-test-command "username-anarchy --help"
-    add-to-list "username-anarchy,https://github.com/urbanadventurer/username-anarchy,TODO"
+    add-to-list "username-anarchy,https://github.com/urbanadventurer/username-anarchy,Tools for generating usernames when penetration testing. Usernames are half the password brute force problem."
 }
 
 function install_genusernames() {

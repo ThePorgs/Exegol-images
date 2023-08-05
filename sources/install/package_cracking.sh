@@ -50,7 +50,7 @@ function install_haiti() {
     gem install haiti-hash
     add-history haiti
     add-test-command "haiti --help"
-    add-to-list "haiti,https://github.com/noraj/haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
+    add-to-list "haiti,https://github.com/noraj/haiti,haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
 }
 
 function install_geowordlists() {

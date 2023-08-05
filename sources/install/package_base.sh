@@ -111,6 +111,7 @@ function install_firefox() {
     add-history firefox
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
     add-test-command "firefox --version"
+    add-to-list "firefox,https://www.mozilla.org,A web browser"
 }
 
 function install_ohmyzsh() {
@@ -127,6 +128,7 @@ function install_ohmyzsh() {
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
     add-aliases fzf
+    add-test-command "which fzf-history-widget"
     add-test-command "fzf-wordlists --help"
     add-test-command "fzf --help"
 }
@@ -159,7 +161,9 @@ function install_mdcat() {
     colorecho "Installing mdcat"
     cargo install mdcat
     source "$HOME/.cargo/env"
+    add-history mdcat
     add-test-command "mdcat --version"
+    add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
 }
 
 function install_gf() {
@@ -173,8 +177,10 @@ function install_gf() {
     cp -r /opt/tools/Gf-Patterns/*.json ~/.gf
     # Remove repo to save space
     rm -r /opt/tools/Gf-Patterns
+    add-history gf
     add-test-command "gf --list"
     add-test-command "ls ~/.gf | grep 'redirect.json'"
+    add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
 function post_install() {

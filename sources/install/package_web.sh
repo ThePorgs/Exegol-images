@@ -72,7 +72,12 @@ function install_amass(){
 
 function install_ffuf() {
     colorecho "Installing ffuf"
-    go install -v github.com/ffuf/ffuf@latest
+    git -C /opt/tools clone --depth 1 https://github.com/ffuf/ffuf.git
+    cd /opt/tools/ffuf
+    go build .
+    mv ./ffuf /opt/tools/bin/
+    # https://github.com/ffuf/ffuf/issues/681
+    # go install github.com/ffuf/ffuf/v2@latest
     add-history ffuf
     add-test-command "ffuf --help"
     add-to-list "ffuf,https://github.com/ffuf/ffuf,Fast web fuzzer written in Go."
@@ -175,7 +180,7 @@ function install_bolt() {
     add-aliases bolt
     add-history bolt
     add-test-command "bolt --help"
-    add-to-list "bolt,https://github.com/s0md3v/bolt,TODO"
+    add-to-list "bolt,https://github.com/s0md3v/bolt,Bolt crawls the target website to the specified depth and stores all the HTML forms found in a database for further processing."
 }
 
 function install_kadimus() {
@@ -647,9 +652,9 @@ function install_burpsuite() {
     # FIXME: set up the dark theme right away?
     # FIXME: add burp certificate to embedded firefox and chrome?
     # TODO: change Burp config to allow built-in browser to run
-    # TODO: Add test command
     add-aliases burpsuite
     add-history burpsuite
+    add-test-command "which burpsuite"
     add-to-list "burpsuite,https://portswigger.net/burp,Web application security testing tool."
 }
 
@@ -670,7 +675,7 @@ function install_php_filter_chain_generator() {
     add-aliases php_filter_chain_generator
     add-history php_filter_chain_generator
     add-test-command "php_filter_chain_generator --help"
-    add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,TODO"
+    add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,A CLI to generate PHP filters chain / get your RCE without uploading a file if you control entirely the parameter passed to a require or an include in PHP!"
 }
 
 function install_kraken() {

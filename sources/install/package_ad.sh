@@ -862,7 +862,7 @@ function install_bqm() {
     gem install bqm --no-wrapper
     add-history bqm
     add-test-command "bqm --help"
-    add-to-list "bqm,https://github.com/Acceis/bqm"
+    add-to-list "bqm,https://github.com/Acceis/bqm,Tool to deduplicate custom BloudHound queries from different datasets and merge them in one file."
 }
 
 function install_neo4j() {
