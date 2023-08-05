@@ -85,6 +85,7 @@ function set_go_env() {
 
 function set_ruby_env() {
     colorecho "Setting ruby environment variables for installation"
+    source /usr/local/rvm/scripts/rvm
     rvm --default use 3.0.0
 }
 
