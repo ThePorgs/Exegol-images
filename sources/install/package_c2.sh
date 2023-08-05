@@ -27,6 +27,7 @@ function install_metasploit() {
     echo "Adding mini_portile2 to Gemfile..."
     echo "gem 'mini_portile2', '~> 2.8', '>= 2.8.4'" >> /opt/metasploit-framework/embedded/framework/Gemfile
     echo "bundle install"
+    ln -s /bin/mkdir /usr/bin/mkdir
     bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
     add-aliases msfconsole
     add-history msfconsole
