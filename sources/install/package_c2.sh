@@ -18,11 +18,16 @@ function install_metasploit() {
     cd /tmp/metasploit_install
     curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb -o msfinstall
     chmod +x msfinstall
+    echo "Metasploit install start..."
     ./msfinstall
-    echo "gem 'mini_portile2', '~> 2.8', '>= 2.8.4'" >> /opt/metasploit-framework/embedded/framework/Gemfile
-    bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
     cd /tmp
     rm -rf /tmp/metasploit_install
+    echo "Display gem list..."
+    gem list
+    echo "Adding mini_portile2 to Gemfile..."
+    echo "gem 'mini_portile2', '~> 2.8', '>= 2.8.4'" >> /opt/metasploit-framework/embedded/framework/Gemfile
+    echo "bundle install"
+    bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
     add-aliases msfconsole
     add-history msfconsole
     add-test-command "msfconsole --help"
