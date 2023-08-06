@@ -14,6 +14,8 @@ plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autos
 
 source $ZSH/oh-my-zsh.sh
 
+source /usr/local/rvm/scripts/rvm
+
 function prompt_char {
   if [ $UID -eq 0 ]; then echo "#"; else echo $; fi
 }
