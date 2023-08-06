@@ -20,7 +20,6 @@ function install_network_apt_tools() {
     add-history rdesktop
     add-history hydra
     add-history xfreerdp
-    add-history remmina
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
     add-test-command "tshark --version"                             # Tshark packet sniffer
