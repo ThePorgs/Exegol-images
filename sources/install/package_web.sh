@@ -144,11 +144,9 @@ function install_xsstrike() {
 
 function install_xspear() {
     colorecho "Installing XSpear"
-    set -x
     rvm use 3.0.0@xspear --create
     gem install XSpear
     rvm use 3.0.0@default
-    set +x
     add-aliases xspear
     add-history xspear
     add-test-command "XSpear --help"

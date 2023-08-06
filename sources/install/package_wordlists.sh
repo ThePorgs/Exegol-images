@@ -4,18 +4,27 @@
 source common.sh
 
 function install_wordlists_apt_tools() {
-    fapt crunch cupp cewl
+    fapt crunch cupp 
 
-    add-history cewl
     add-history cupp
     add-history crunch
 
     add-test-command "crunch --help" # Wordlist generator
     add-test-command "cupp --help"   # User password profiler
-    add-test-command "cewl --help"   # Wordlist generator
 
     add-to-list "crunch,https://github.com/crunchsec/crunch,A wordlist generator where you can specify a standard character set or a character set you specify."
     add-to-list "cupp,https://github.com/Mebus/cupp,Cupp is a tool used to generate personalized password lists based on target information."
+}
+
+function install_cewl() {
+    colorecho "Installing cewl"
+    rvm use 3.0.0@cewl --create
+    git -C /opt/tools clone --depth 1 https://github.com/digininja/CeWL.git
+    bundle install --gemfile /opt/tools/CeWL/Gemfile
+    rvm use 3.0.0@default
+    add-aliases cewl
+    add-history cewl
+    add-test-command "cewl --help"
     add-to-list "cewl,https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results"
 }
 
@@ -83,6 +92,7 @@ function configure_genusernames() {
 function package_wordlists() {
     set_ruby_env
     install_wordlists_apt_tools
+    install_cewl                    # Wordlist generator
     install_seclists                # Awesome wordlists
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
