@@ -144,13 +144,15 @@ function install_xsstrike() {
 
 function install_xspear() {
     colorecho "Installing XSpear"
+    set -x
     rvm use 3.0.0@xspear --create
     gem install XSpear
     rvm use 3.0.0@default
-    add-aliases Xspear
-    add-history XSpear
+    set +x
+    add-aliases xspear
+    add-history xspear
     add-test-command "XSpear --help"
-    add-to-list "xspear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
+    add-to-list "XSpear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
 }
 
 function install_xsser() {
