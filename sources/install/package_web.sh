@@ -144,8 +144,10 @@ function install_xsstrike() {
 
 function install_xspear() {
     colorecho "Installing XSpear"
-    # TODO : gem venv
+    rvm use 3.0.0@xspear --create
     gem install XSpear
+    rvm use 3.0.0@default
+    add-aliases Xspear
     add-history XSpear
     add-test-command "XSpear --help"
     add-to-list "xspear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
@@ -232,9 +234,10 @@ function install_joomscan() {
 
 function install_wpscan() {
     colorecho "Installing wpscan"
+    rvm use 3.0.0@wpscan --create
     gem install wpscan
-    gem uninstall nokogiri -v `gem list |grep nokogiri|cut -d "(" -f2|cut -d " " -f1` -I
-    gem install nokogiri -v 1.11.4 # use this version to resolve the conflict with cewl
+    rvm use 3.0.0@default
+    add-aliases wpscan
     add-history wpscan
     add-test-command "wpscan --help"
     add-to-list "wpscan,https://github.com/wpscanteam/wpscan,A tool to enumerate WordPress-based websites"
@@ -399,8 +402,10 @@ function install_linkfinder() {
 
 function install_timing_attack() {
     colorecho "Installing timing_attack"
-    # TODO: gem venv
+    rvm use 3.0.0@timing_attack --create
     gem install timing_attack
+    rvm use 3.0.0@default
+    add-aliases timing_attack
     add-history timing_attack
     add-test-command "timing_attack --help"
     add-to-list "timing,https://github.com/ffleming/timing_attack,Tool to generate a timing profile for a given command."

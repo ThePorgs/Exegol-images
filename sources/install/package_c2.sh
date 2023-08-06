@@ -18,16 +18,16 @@ function install_metasploit() {
     cd /tmp/metasploit_install
     curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb -o msfinstall
     chmod +x msfinstall
+    rvm use 3.0.0@metasploit --create
     ./msfinstall
     cd /tmp
     rm -rf /tmp/metasploit_install
-    gem list
-    echo "gem 'mini_portile2', '~> 2.8', '>= 2.8.4'" >> /opt/metasploit-framework/embedded/framework/Gemfile
     ln -s /bin/mkdir /usr/bin/mkdir
     bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
-    add-aliases msfconsole
+    rvm use 3.0.0@default
     add-history msfconsole
     add-test-command "msfconsole --help"
+    add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 

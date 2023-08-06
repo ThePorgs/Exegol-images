@@ -45,9 +45,11 @@ function configure_rockyou() {
 }
 
 function install_pass_station() {
-    # TODO : gem venv
     colorecho "Installing Pass Station"
+    rvm use 3.0.0@pass-station --create
     gem install pass-station
+    rvm use 3.0.0@default
+    add-aliases pass-station
     add-history pass-station
     add-test-command "pass-station --help"
     add-to-list "pass,https://github.com/hashcat/hashcat,TODO"

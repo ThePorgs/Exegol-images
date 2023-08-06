@@ -28,8 +28,10 @@ function install_steganography_apt_tools() {
 
 function install_zsteg() {
     colorecho "Installing zsteg"
-    # TODO: gem venv
+    rvm use 3.0.0@zsteg --create
     gem install zsteg
+    rvm use 3.0.0@default
+    add-aliases zsteg
     add-history zsteg
     add-test-command "zsteg --help"
     add-to-list "zsteg,https://github.com/zed-0xff/zsteg,Detect steganography hidden in PNG and BMP images"

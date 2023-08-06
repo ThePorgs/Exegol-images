@@ -1,1 +1,1 @@
-alias evil-winrm='BUNDLE_GEMFILE=/opt/tools/evil-winrm/Gemfile bundle exec evil-winrm'
+alias evil-winrm='/usr/local/rvm/gems/ruby-3.0.0@evil-winrm/wrappers/ruby /usr/local/rvm/gems/ruby-3.0.0@evil-winrm/bin/evil-winrm'

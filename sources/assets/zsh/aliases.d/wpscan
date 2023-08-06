@@ -1,0 +1,1 @@
+alias wpscan='/usr/local/rvm/gems/ruby-3.0.0@wpscan/wrappers/ruby /usr/local/rvm/gems/ruby-3.0.0@wpscan/bin/wpscan'

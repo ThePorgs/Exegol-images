@@ -46,8 +46,10 @@ function install_name-that-hash() {
 
 function install_haiti() {
     colorecho "Installing haiti"
-    # TODO: Gem venv
+    rvm use 3.0.0@haiti --create
     gem install haiti-hash
+    rvm use 3.0.0@default
+    add-aliases haiti
     add-history haiti
     add-test-command "haiti --help"
     add-to-list "haiti,https://github.com/noraj/haiti,haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
