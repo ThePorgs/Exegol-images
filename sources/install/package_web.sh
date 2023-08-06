@@ -712,6 +712,7 @@ function install_soapui() {
 function package_web() {
     install_web_apt_tools
     set_go_env
+    set_ruby_env
     install_wfuzz                   # Web fuzzer (second favorites)
     install_gobuster                # Web fuzzer (pretty good for several extensions)
     install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
