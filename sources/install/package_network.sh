@@ -195,10 +195,10 @@ function install_ligolo-ng() {
     mkdir /tmp/ligolo
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_agent_0.4.4_linux_amd64.tar.gz"
+        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_proxy_0.4.4_linux_amd64.tar.gz"
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_agent_0.4.4_linux_arm64.tar.gz"
+        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_proxy_0.4.4_linux_arm64.tar.gz"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
