@@ -111,6 +111,17 @@ function install_firefox() {
     add-history firefox
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
     add-test-command "firefox --version"
+    add-to-list "firefox,https://www.mozilla.org,A web browser"
+}
+
+function install_rvm() {
+    gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+    curl -sSL https://get.rvm.io | bash -s stable --ruby
+    source /usr/local/rvm/scripts/rvm
+    rvm autolibs read-fail
+    rvm rvmrc warning ignore allGemfiles
+    gem update
+    add-test-command "rvm --help"
 }
 
 function install_ohmyzsh() {
@@ -159,7 +170,9 @@ function install_mdcat() {
     colorecho "Installing mdcat"
     cargo install mdcat
     source "$HOME/.cargo/env"
+    add-history mdcat
     add-test-command "mdcat --version"
+    add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
 }
 
 function install_gf() {
@@ -173,8 +186,10 @@ function install_gf() {
     cp -r /opt/tools/Gf-Patterns/*.json ~/.gf
     # Remove repo to save space
     rm -r /opt/tools/Gf-Patterns
+    add-history gf
     add-test-command "gf --list"
     add-test-command "ls ~/.gf | grep 'redirect.json'"
+    add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
 function post_install() {
@@ -207,7 +222,7 @@ function package_base() {
     python-setuptools python3-setuptools npm gem automake autoconf make cmake time gcc g++ file lsof \
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
-    screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev bundler \
+    screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
     nim perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-11-jdk openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
     virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3
 
@@ -215,6 +230,7 @@ function package_base() {
     fapt-aliases php python3 grc emacs-nox xsel fzf
 
     install_rust_cargo
+    install_rvm                                         # Ruby Version Manager
 
     ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture

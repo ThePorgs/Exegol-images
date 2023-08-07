@@ -20,7 +20,7 @@ function install_osint_apt_tools() {
     add-test-command "wget -O /tmp/duck.png https://play-lh.googleusercontent.com/A6y8kFPu6iiFg7RSkGxyNspjOBmeaD3oAOip5dqQvXASnZp-Vg65jigJJLHr5mOEOryx && exiftool /tmp/duck.png && rm /tmp/duck.png" # For read exif information
     add-test-command "exifprobe -V; exifprobe -V |& grep 'Hubert Figuiere'"             # Probe and report structure and metadata content of camera image files
     add-test-command "dnsenum --help; dnsenum --help |& grep 'Print this help message'" # DNSEnum is a command-line tool that automatically identifies basic DNS records
-    add-test-command "service tor start"                                                # Tor proxy
+    add-test-command "tor --help"                                                # Tor proxy
     add-test-command "whois --help"                                                     # See information about a specific domain name or IP address
     add-test-command "recon-ng --help"                                                  # External recon tool
 
@@ -379,6 +379,7 @@ function install_trevorspray() {
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
     set_go_env
+    set_ruby_env
     install_osint_apt_tools
     install_youtubedl               # Command-line program to download videos from YouTube.com and other video sites
     install_sublist3r               # Fast subdomains enumeration tool

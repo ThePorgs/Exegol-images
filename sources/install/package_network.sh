@@ -7,6 +7,7 @@ function install_network_apt_tools() {
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
+    fapt remmina remmina-plugin-rdp remmina-plugin-secret remmina-plugin-spice
 
     add-history wireshark
     add-history tshark
@@ -36,12 +37,13 @@ function install_network_apt_tools() {
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
+    add-test-command "remmina --help"                          # Redis protocol
 
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
     add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
     add-to-list "masscan,https://github.com/robertdavidgraham/masscan,Masscan is an Internet-scale port scanner"
-    add-to-list "netdiscover,https://github.com/netdiscover-scanner/netdiscover is an active/passive address reconnaissance tool"
+    add-to-list "netdiscover,https://github.com/netdiscover-scanner/netdiscover,netdiscover is an active/passive address reconnaissance tool"
     add-to-list "tcpdump,https://github.com/the-tcpdump-group/tcpdump,a powerful command-line packet analyzer for Unix-like systems"
     add-to-list "iptables,https://linux.die.net/man/8/iptables,Userspace command line tool for configuring kernel firewall"
     add-to-list "traceroute,https://github.com/iputils/iputils,Traceroute is a command which can show you the path a packet of information takes from your computer to one you specify."
@@ -53,6 +55,7 @@ function install_network_apt_tools() {
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
     add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
+    add-to-list "remmina,https://github.com/FreeRDP/Remmina,Remote desktop client."
 }
 
 function install_proxychains() {
@@ -192,10 +195,10 @@ function install_ligolo-ng() {
     mkdir /tmp/ligolo
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/latest/download/ligolo-ng_proxy_0.4.3_Linux_64bit.tar.gz"
+        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_proxy_0.4.4_linux_amd64.tar.gz"
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/latest/download/ligolo-ng_proxy_0.4.3_Linux_ARM64.tar.gz"
+        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_proxy_0.4.4_linux_arm64.tar.gz"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
@@ -210,6 +213,7 @@ function install_ligolo-ng() {
 # Package dedicated to network pentest tools
 function package_network() {
     set_go_env
+    set_ruby_env
     install_network_apt_tools
     install_proxychains             # Network tool
     install_nmap                    # Port scanner

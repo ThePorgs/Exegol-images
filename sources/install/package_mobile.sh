@@ -72,6 +72,7 @@ function install_androguard() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
+    set_ruby_env
     install_mobile_apt_tools
     install_smali
     install_dex2jar
