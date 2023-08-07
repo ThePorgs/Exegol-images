@@ -4,13 +4,12 @@
 source common.sh
 
 function install_web_apt_tools() {
-    fapt dirb sqlmap sslscan weevely whatweb prips swaks
+    fapt dirb sqlmap sslscan weevely prips swaks
   
     add-history dirb
     add-history sqlmap
     add-history sslscan
     add-history weevely
-    add-history whatweb
     add-history prips
     add-history swaks
   
@@ -18,7 +17,6 @@ function install_web_apt_tools() {
     add-test-command "sqlmap --version"                  # SQL injection scanner
     add-test-command "sslscan --version"                 # SSL/TLS scanner
     add-test-command "weevely --help"                    # Awesome secure and light PHP webshell
-    add-test-command "whatweb --version"                 # Recognises web technologies including content management
     add-test-command "prips --help"                      # Print the IP addresses in a given range
     add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 
@@ -26,9 +24,22 @@ function install_web_apt_tools() {
     add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
     add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
-    add-to-list "whatweb,https://github.com/urbanadventurer/WhatWeb,Next generation web scanner that identifies what websites are running."
     add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
     add-to-list "swaks,https://github.com/jetmore/swaks,Swaks is a featureful flexible scriptable transaction-oriented SMTP test tool."
+}
+
+function install_whatweb() {
+    colorecho "Installing whatweb"
+    git -C /opt/tools clone --depth 1 https://github.com/urbanadventurer/WhatWeb.git
+    rvm use 3.0.0@whatweb --create
+    gem install addressable
+    bundle install --gemfile /opt/tools/WhatWeb/Gemfile
+    rvm use 3.0.0@default
+    add-aliases whatweb
+    add-history whatweb
+    add-test-command "whatweb --version"
+    add-to-list "whatweb,https://github.com/urbanadventurer/WhatWeb,Next generation web scanner that identifies what websites are running."
+
 }
 
 function install_wfuzz() {
@@ -147,7 +158,7 @@ function install_xspear() {
     rvm use 3.0.0@xspear --create
     gem install XSpear
     rvm use 3.0.0@default
-    add-aliases xspear
+    add-aliases Xspear
     add-history xspear
     add-test-command "XSpear --help"
     add-to-list "XSpear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
@@ -711,6 +722,7 @@ function package_web() {
     install_web_apt_tools
     set_go_env
     set_ruby_env
+    install_whatweb                 # Recognises web technologies including content management
     install_wfuzz                   # Web fuzzer (second favorites)
     install_gobuster                # Web fuzzer (pretty good for several extensions)
     install_kiterunner              # Web fuzzer (fast and pretty good for api bruteforce)
