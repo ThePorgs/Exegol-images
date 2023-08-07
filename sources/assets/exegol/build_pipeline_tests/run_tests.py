@@ -41,6 +41,10 @@ def run_command(command):
                 for line in output.decode().split("\n"):
                     f.write(f"    {line}\n")
                 f.write("\033[0m")
+        except subprocess.TimeoutExpired as e:
+            # If the command timeout, store it in the list of failed commands
+            failed_commands.append(command)
+            print(f"\033[1;31mTIMEOUT\033[0m - Running command: {command}")
         except subprocess.CalledProcessError as e:
             # If the command fails, store it in the list of failed commands
             failed_commands.append(command)
