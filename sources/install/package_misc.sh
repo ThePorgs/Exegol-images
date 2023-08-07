@@ -131,6 +131,7 @@ function install_objectwalker() {
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_go_env
+    set_ruby_env
     install_misc_apt_tools
     install_goshs           # Web uploader/downloader page
     install_searchsploit    # Exploitdb local search engine

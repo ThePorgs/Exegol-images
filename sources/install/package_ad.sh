@@ -302,9 +302,9 @@ function configure_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Hackplayers/evil-winrm
-    cd /opt/tools/evil-winrm
-    bundle install
+    rvm use 3.0.0@evil-winrm --create
+    gem install evil-winrm
+    rvm use 3.0.0@default
     add-aliases evil-winrm
     add-history evil-winrm
     add-test-command "evil-winrm --help"
@@ -857,12 +857,14 @@ function install_PassTheCert() {
 }
 
 function install_bqm() {
-    # TODO: gem venv
     colorecho "Installing BQM"
+    rvm use 3.0.0@bqm --create
     gem install bqm --no-wrapper
+    rvm use 3.0.0@default
+    add-aliases bqm
     add-history bqm
     add-test-command "bqm --help"
-    add-to-list "bqm,https://github.com/Acceis/bqm"
+    add-to-list "bqm,https://github.com/Acceis/bqm,Tool to deduplicate custom BloudHound queries from different datasets and merge them in one file."
 }
 
 function install_neo4j() {
@@ -896,6 +898,7 @@ function install_noPac() {
 function package_ad() {
     install_ad_apt_tools
     set_go_env
+    set_ruby_env
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
     install_crackmapexec            # Network scanner

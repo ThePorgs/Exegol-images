@@ -5,8 +5,10 @@ source common.sh
 
 function install_tls-map() {
     colorecho "Installing TLS map"
-    # TODO: gem venv
+    rvm use 3.0.0@tls-map --create
     gem install tls-map
+    rvm use 3.0.0@default
+    add-aliases tls-map
     add-history tls-map
     add-test-command "tls-map --help"
     add-to-list "tls-map,https://github.com/sec-it/tls-map,tls-map is a library for mapping TLS cipher algorithm names."
@@ -28,6 +30,7 @@ function install_rsactftool() {
 
 # Package dedicated to attack crypto
 function package_crypto() {
+    set_ruby_env
     install_rsactftool              # attack rsa
     install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
 }
