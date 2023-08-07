@@ -15,7 +15,7 @@ on:
 
 jobs:
   test:
-    timeout-minutes: 3
+    timeout-minutes: 5
     name: Test ${{ inputs.ARCH }}
     runs-on:
       - self-hosted
