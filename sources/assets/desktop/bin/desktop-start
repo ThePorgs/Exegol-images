@@ -42,17 +42,21 @@ port=${DESKTOP_PORT:-"6336"}
 
 echo "Starting Exegol desktop with $mode"
 
+display_id=$(find_available_display)
+
+echo "Using display :$display_id"
+
 case "$mode" in
   vnc)
     # TODO handle host config
     host="localhost"
     # TODO handle dynamic display socket
-    vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$(find_available_display)"
+    vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$display_id"
     ;;
   http)
     # TODO add random port for VNC (multi-host container)
-    vncserver -localhost "yes" -rfbport "5900" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$(find_available_display)"
-    websockify -D --web /usr/share/novnc/ "$host:$port" "localhost:5900"
+    vncserver -localhost "yes" -rfbport "5900" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$display_id" && \
+      websockify -D --web /usr/share/novnc/ "$host:$port" "localhost:5900"
     ;;
 esac
 
