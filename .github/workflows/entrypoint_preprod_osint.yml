@@ -158,7 +158,7 @@ jobs:
           echo '[*] Moving tools list to imagetag_version_arch.csv'
           mv installed_tools.csv source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
           echo '[*] Changing lists.csv so that new tools list appears'
-          echo '[*] [SHOULD BE RELEASES ONLY] Removing occurences of image,version,arch. This is because this workflow runs in the prerelease pipeline, meaning that there's a possibility tools list is pushed to exegol-docs even if the images are not released for some reasons (e.g. imageA prerelease works but not for imageB). Doing this grep -v will ensure that lists.csv doesn't have duplicates to the same tag, same version and same arch'
+          echo '[*] [SHOULD BE RELEASES ONLY] Removing occurences of image,version,arch. This is because this workflow runs in the prerelease pipeline, meaning that there is a possibility tools list is pushed to exegol-docs even if the images are not released for some reasons (e.g. imageA prerelease works but not for imageB). Doing this grep -v will ensure that lists.csv does not have duplicates to the same tag, same version and same arch'
           (head -n 1 source/assets/installed_tools/lists.csv; \
             echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv \
               </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv>\`"; \
