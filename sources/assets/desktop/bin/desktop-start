@@ -1,5 +1,21 @@
 #!/bin/bash
+mode=${DESKTOP_PROTO:-"http"}
+host=${DESKTOP_HOST:-"localhost"}
+port=${DESKTOP_PORT:-"6336"}
 
-vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd $HOME/.vnc/passwd :0
-websockify -D --web /usr/share/novnc/ 6080 localhost:5900
-echo "Desktop up : http://127.0.0.1:6080/vnc.html?resize=remote&path=websockify&autoconnect=true"
+echo "Starting Exegol desktop with $mode"
+
+case "$mode" in
+  vnc)
+    # TODO handle host config
+    host="localhost"
+    # TODO handle dynamic display socket
+    vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd"  # ":0"
+    ;;
+  http)
+    vncserver -localhost "yes" -rfbport "5900" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd"  # :0
+    websockify -D --web /usr/share/novnc/ "$host:$port" "localhost:5900"
+    ;;
+esac
+
+echo "Desktop is accessible from $mode://$host:$port"

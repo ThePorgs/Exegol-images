@@ -61,7 +61,10 @@ function install_xfce() {
     sed -i "s#<title>noVNC</title>#<title>Exegol</title>#" /usr/share/novnc/vnc.html
     sed -i 's#document.title = e.detail.name + " - noVNC";#document.title = "Exegol (" + e.detail.name.split(":")[0].replace("exegol-", "") + ")";#' /usr/share/novnc/app/ui.js
 
-    # TODO: Remove me
+    # NoVNC index redirection
+    echo '<html><head><meta http-equiv="refresh" content="0; URL=/vnc.html?resize=remote&path=websockify&autoconnect=true" /></head></html>' > /usr/share/novnc/index.html
+
+    # This is the image default password. It will be dynamically changed through the wrapper during the creation of a new container
     echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
 
     # Desktop
@@ -94,8 +97,8 @@ function install_xfce() {
     [ -d "/root/.config/xfce4/" ] || echo "Directory /root/.config/xfce4/ does not exist."
 
     # Binaries
-    cp /root/sources/assets/desktop/bin/* /opt/tools/bin
-    chmod +x /opt/tools/bin/desktop-*
+    cp /root/sources/assets/desktop/bin/* /usr/sbin/
+    chmod +x /usr/sbin/desktop-*
 }
 
 function package_desktop() {

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-vncserver -kill :0
+vncserver -kill
 pkill websockify
