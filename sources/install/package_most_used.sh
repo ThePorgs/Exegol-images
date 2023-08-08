@@ -24,9 +24,8 @@ source package_cracking.sh
 source package_c2.sh
 
 function install_most_used_apt_tools() {
-    fapt sqlmap hydra sslscan weevely smbclient hashcat fcrackzip
+    fapt hydra sslscan weevely smbclient hashcat fcrackzip
 
-    add-history sqlmap
     add-history hydra
     add-history sslscan
     add-history weevely
@@ -34,7 +33,6 @@ function install_most_used_apt_tools() {
     add-history hashcat
     add-history fcrackzip
 
-    add-test-command "sqlmap --version"                             # SQL injection scanner
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "sslscan --version"                            # SSL/TLS scanner
     add-test-command "weevely --help"                               # Awesome secure and light PHP webshell
@@ -42,7 +40,6 @@ function install_most_used_apt_tools() {
     add-test-command "hashcat --help"                               # Password cracker
     add-test-command "fcrackzip --help"                             # Zip cracker
 
-    add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
     add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
@@ -85,4 +82,5 @@ function package_most_used() {
     install_nuclei                  # Vulnerability scanner
     install_evilwinrm               # WinRM shell
     install_john                    # Password cracker
+    install_sqlmap                  # SQL injection scanner
 }
