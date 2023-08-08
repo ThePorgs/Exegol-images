@@ -1,4 +1,41 @@
 #!/bin/bash
+
+# Function to find the first available display ID
+find_available_display() {
+  # Search for available socket if the X11 socket directory is not available
+  if [ -d /tmp/.X11-unix/ ]; then
+    readarray -t x11_sockets < <(ls -1 "/tmp/.X11-unix/" | cut -d 'X' -f2)
+  else
+    # X11 not shared, need to check socket
+    readarray -t x11_sockets < <(ss -x | grep X11| cut -d 'X' -f3 | cut -d ' ' -f 1 | sort -u)
+  fi
+
+  local max_num=0
+
+  # Find the maximum number
+  for num in "${x11_sockets[@]}"; do
+    if (( num > max_num )); then
+      max_num=$num
+    fi
+  done
+
+  # Search number from 1 to max_num+1 to find the first available DISPLAY id
+  for (( i = 1; i <= max_num + 1; i++ )); do
+    found=0
+    for num in "${x11_sockets[@]}"; do
+      if (( num == i )); then
+        found=1
+        break
+      fi
+    done
+    if (( found == 0 )); then
+      echo "$i"
+      return
+    fi
+  done
+}
+
+
 mode=${DESKTOP_PROTO:-"http"}
 host=${DESKTOP_HOST:-"localhost"}
 port=${DESKTOP_PORT:-"6336"}
@@ -10,10 +47,11 @@ case "$mode" in
     # TODO handle host config
     host="localhost"
     # TODO handle dynamic display socket
-    vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd"  # ":0"
+    vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$(find_available_display)"
     ;;
   http)
-    vncserver -localhost "yes" -rfbport "5900" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd"  # :0
+    # TODO add random port for VNC (multi-host container)
+    vncserver -localhost "yes" -rfbport "5900" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$(find_available_display)"
     websockify -D --web /usr/share/novnc/ "$host:$port" "localhost:5900"
     ;;
 esac
