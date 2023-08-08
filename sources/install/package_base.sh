@@ -129,7 +129,6 @@ function install_fzf() {
     colorecho "Installing fzf"
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
-    source ~/.zshrc
     add-aliases fzf
     add-test-command "which fzf-history-widget"
     add-test-command "fzf-wordlists --help"
