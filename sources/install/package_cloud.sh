@@ -86,6 +86,7 @@ function install_cloudmapper() {
     git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git
     cd /opt/tools/cloudmapper
     python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install wheel
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases cloudmapper
     add-history cloudmapper
