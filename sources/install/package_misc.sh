@@ -67,10 +67,15 @@ function install_whatportis() {
 
 function install_searchsploit() {
     colorecho "Installing searchsploit"
-    git -C /opt/tools/ clone --depth 1 https://gitlab.com/exploit-database/exploitdb
-    add-history searchsploit
-    add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
-    add-to-list "searchsploit,https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
+    if [ ! -d /opt/tools/exploitdb ]
+    then
+        git -C /opt/tools/ clone --depth 1 https://gitlab.com/exploit-database/exploitdb
+        add-history searchsploit
+        add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
+        add-to-list "searchsploit,https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
+    else
+        colorecho "Searchsploit is already installed"
+    fi
 }
 
 function configure_searchsploit() {

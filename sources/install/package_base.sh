@@ -238,6 +238,7 @@ function package_base() {
 
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
+    ln -s /bin/mkdir /usr/bin/mkdir                     # Some tools need this path for build
 
     ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
