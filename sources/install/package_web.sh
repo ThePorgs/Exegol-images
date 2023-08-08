@@ -4,7 +4,7 @@
 source common.sh
 
 function install_web_apt_tools() {
-    fapt dirb sslscan whatweb prips swaks
+    fapt dirb sslscan weevely prips swaks
   
     add-history dirb
     add-history sslscan
