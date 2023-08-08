@@ -34,7 +34,7 @@ RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
     ./entrypoint.sh package_web_configure && \
     ./entrypoint.sh package_ad && \
     ./entrypoint.sh package_ad_configure && \
-    ./entrypoint.sh package_network
+    ./entrypoint.sh package_network && \
     ./entrypoint.sh post_install && \
     rm -rf /root/sources /var/lib/apt/lists/*
 
