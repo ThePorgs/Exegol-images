@@ -115,6 +115,7 @@ function install_firefox() {
 }
 
 function install_rvm() {
+    colorecho "Installing rvm"
     gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     curl -sSL https://get.rvm.io | bash -s stable --ruby
     source /usr/local/rvm/scripts/rvm
@@ -122,6 +123,15 @@ function install_rvm() {
     rvm rvmrc warning ignore allGemfiles
     gem update
     add-test-command "rvm --help"
+}
+
+function install_fzf() {
+    colorecho "Installing fzf"
+    git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
+    yes|/opt/tools/fzf/install
+    add-aliases fzf
+    add-test-command "fzf-wordlists --help"
+    add-test-command "fzf --help"
 }
 
 function install_ohmyzsh() {
@@ -137,9 +147,6 @@ function install_ohmyzsh() {
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/agkozak/zsh-z
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
-    add-aliases fzf
-    add-test-command "fzf-wordlists --help"
-    add-test-command "fzf --help"
 }
 
 function install_pipx() {
@@ -227,7 +234,7 @@ function package_base() {
     virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3
 
     fapt-history dnsutils samba ssh snmp faketime
-    fapt-aliases php python3 grc emacs-nox xsel fzf
+    fapt-aliases php python3 grc emacs-nox xsel
 
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
@@ -244,10 +251,10 @@ function package_base() {
     set_go_env
     install_locales
     install_ohmyzsh                                     # Awesome shell
+    install_fzf                                         # Fuzzy finder
     python3 -m pip install wheel
     python -m pip install wheel
     install_pipx
-    add-test-command "fzf --version"
     add-history curl
     install_yarn
     install_ultimate_vimrc                              # Make vim usable OOFB
@@ -286,9 +293,6 @@ function package_base() {
     # NVM (install in conctext)
     zsh -c "source ~/.zshrc && nvm install node"
 
-    # FZF
-    touch /usr/share/doc/fzf/examples/key-bindings.zsh
-
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/
     bundle config path vendor/
@@ -310,19 +314,16 @@ function package_base_debug() {
     fapt sudo git curl zsh asciinema zip wget ncat dnsutils python2 python3 python3-setuptools python3-pip vim nano procps automake autoconf make bundler mlocate
 
     fapt-history dnsutils samba ssh snmp faketime
-    fapt-aliases php python3 grc emacs-nox xsel fzf
+    fapt-aliases php python3 grc emacs-nox xsel
 
     ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
 #    python3 -m pip install --upgrade pip
     filesystem
     install_locales
     install_ohmyzsh                                     # Awesome shell
+    install_fzf                                         # Fuzzy finder
     install_pipx
-    add-test-command "fzf --version"
     add-history curl
-
-    # FZF
-    touch /usr/share/doc/fzf/examples/key-bindings.zsh
 
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/
