@@ -1,6 +1,6 @@
-alias multirelay='python3 /opt/tools/Responder/tools/MultiRelay.py'
-alias runfinger='python3 /opt/tools/Responder/tools/RunFinger.py'
-alias responder='python3 /opt/tools/Responder/Responder.py'
+alias multirelay='/opt/tools/Responder/venv/bin/python3 /opt/tools/Responder/tools/MultiRelay.py'
+alias runfinger='/opt/tools/Responder/venv/bin/python3 /opt/tools/Responder/tools/RunFinger.py'
+alias responder='/opt/tools/Responder/venv/bin/python3 /opt/tools/Responder/Responder.py'
 alias responder-http-on="sed -i 's/HTTP = Off/HTTP = On/g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'HTTP ='"
 alias responder-http-off="sed -i 's/HTTP = On/HTTP = Off/g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'HTTP ='"
 alias responder-smb-on="sed -i 's/SMB = Off/SMB = On/g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'SMB ='"

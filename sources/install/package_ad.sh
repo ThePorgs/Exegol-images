@@ -28,9 +28,15 @@ function install_ad_apt_tools() {
 function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
+    cd /opt/tools/Responder
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    ./venv/bin/python3 -m pip install pycryptodome six pycryptodomex
     add-aliases responder
     add-history responder
     add-test-command "responder --version"
+    add-test-command "runfinger --help"
+    add-test-command "multirelay --help"
     add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR / NBT-NS and MDNS poisoner."
 }
 

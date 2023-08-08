@@ -23,6 +23,7 @@ RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
     chmod +x entrypoint.sh && \
     ./entrypoint.sh package_base && \
     ./entrypoint.sh package_most_used && \
+    ./entrypoint.sh configure_john && \
     ./entrypoint.sh package_misc && \
     ./entrypoint.sh package_misc_configure && \
     ./entrypoint.sh post_install && \
