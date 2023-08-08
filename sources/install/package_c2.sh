@@ -25,6 +25,7 @@ function install_metasploit() {
     ln -s /bin/mkdir /usr/bin/mkdir
     bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
     rvm use 3.0.0@default
+    # https://github.com/ruby/fileutils/issues/22 -> Warnings
     add-history msfconsole
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
