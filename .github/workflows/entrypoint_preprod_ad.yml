@@ -161,7 +161,7 @@ jobs:
           ) | tee source/assets/installed_tools/new_lists.csv
           mv source/assets/installed_tools/new_lists.csv source/assets/installed_tools/lists.csv
       - name: Debug print lists.csv
-        if: always() && !contains(steps.adding_list.outcome, 'skipped'))
+        if: always() && !contains(steps.adding_list.outcome, 'skipped')
         id: final_list_exists
         run: cat source/assets/installed_tools/lists.csv
       - name: Push Exegol-docs
