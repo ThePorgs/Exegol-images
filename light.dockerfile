@@ -20,14 +20,20 @@ WORKDIR /root/sources/install
 # ./entrypoint.sh package_most_used
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
-    chmod +x entrypoint.sh && \
-    ./entrypoint.sh package_base && \
-    ./entrypoint.sh package_most_used && \
-    ./entrypoint.sh configure_john && \
-    ./entrypoint.sh package_misc && \
-    ./entrypoint.sh package_misc_configure && \
-    ./entrypoint.sh post_install && \
-    rm -rf /root/sources /var/lib/apt/lists/*
+chmod +x entrypoint.sh && \
+# ad osint web all light
+./entrypoint.sh package_base && \
+./entrypoint.sh package_misc && \
+./entrypoint.sh package_misc_configure && \
+rm -rf /var/lib/apt/lists/*
+
+RUN apt update && \
+./entrypoint.sh package_most_used && \
+./entrypoint.sh configure_john && \
+rm -rf /var/lib/apt/lists/*
+
+RUN ./entrypoint.sh post_install && \
+rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace
 

@@ -20,23 +20,32 @@ WORKDIR /root/sources/install
 # ./entrypoint.sh package_most_used
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
-    chmod +x entrypoint.sh && \
-    ./entrypoint.sh package_base && \
-    ./entrypoint.sh package_misc && \
-    ./entrypoint.sh package_misc_configure && \
-    ./entrypoint.sh package_c2 && \
-    ./entrypoint.sh package_c2_configure && \
-    ./entrypoint.sh package_wordlists && \
-    ./entrypoint.sh package_wordlists_configure && \
-    ./entrypoint.sh package_cracking && \
-    ./entrypoint.sh package_cracking_configure && \
-    ./entrypoint.sh package_web && \
-    ./entrypoint.sh package_web_configure && \
-    ./entrypoint.sh package_ad && \
-    ./entrypoint.sh package_ad_configure && \
-    ./entrypoint.sh package_network && \
-    ./entrypoint.sh post_install && \
-    rm -rf /root/sources /var/lib/apt/lists/*
+chmod +x entrypoint.sh && \
+# ad osint web all light
+./entrypoint.sh package_base && \
+./entrypoint.sh package_misc && \
+./entrypoint.sh package_misc_configure && \
+rm -rf /var/lib/apt/lists/*
+
+RUN apt update && \ 
+./entrypoint.sh package_wordlists && \
+./entrypoint.sh package_wordlists_configure && \
+./entrypoint.sh package_cracking && \
+./entrypoint.sh package_cracking_configure && \
+./entrypoint.sh package_web && \
+./entrypoint.sh package_web_configure && \
+rm -rf /var/lib/apt/lists/*
+
+RUN apt update && \
+./entrypoint.sh package_ad && \
+./entrypoint.sh package_ad_configure && \
+./entrypoint.sh package_network && \
+./entrypoint.sh package_c2 && \
+./entrypoint.sh package_c2_configure && \
+rm -rf /var/lib/apt/lists/*
+
+RUN ./entrypoint.sh post_install && \
+rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace
 
