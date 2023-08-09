@@ -125,6 +125,7 @@ jobs:
           repository: 'ThePorgs/Exegol-docs'
           ref: 'main'
       - name: Inspect the built image
+        id: image_exists
         run: docker inspect ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}:${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
       - name: Create a container from the built image
         run: |
@@ -144,9 +145,10 @@ jobs:
             && grep -oE '([^,]*,[^,]*){3,}' installed_tools.csv || exit 1) \
             || (echo '[+] List contains right number of columns' && exit 0)
       - name: Stop the container
-        if: always()
+        if: always() && steps.image_exists.outcome == 'success'
         run: docker stop exegol-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
       - name: Adding list to repo and tables
+        id: adding_list
         if: always() && steps.list_exists.outcome == 'success'
         run: |
           mkdir -p source/assets/installed_tools/lists
@@ -163,7 +165,7 @@ jobs:
           ) | tee source/assets/installed_tools/new_lists.csv
           mv source/assets/installed_tools/new_lists.csv source/assets/installed_tools/lists.csv
       - name: Debug print lists.csv
-        if: always()
+        if: always() && !contains(steps.adding_list.outcome, 'skipped'))
         id: final_list_exists
         run: cat source/assets/installed_tools/lists.csv
       - name: Push Exegol-docs

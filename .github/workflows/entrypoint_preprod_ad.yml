@@ -115,21 +115,13 @@ jobs:
     steps:
       - name: Checkout Exegol-images
         uses: actions/checkout@v3
-      - name: Prepare image version
-        id: prepare
-        run: |
-          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
-          if [ "$IMAGE_VERSION" == "" ]; then
-            IMAGE_VERSION=${COMMIT_ID:0:8}
-          fi
-          echo "image_version=${IMAGE_VERSION}"
-          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
       - name: Checkout Exegol-docs
         uses: actions/checkout@v3
         with:
           repository: 'ThePorgs/Exegol-docs'
           ref: 'dev-images'
       - name: Inspect the built image
+        id: image_exists
         run: docker inspect ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}:${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
       - name: Create a container from the built image
         run: |
@@ -149,26 +141,27 @@ jobs:
             && grep -oE '([^,]*,[^,]*){3,}' installed_tools.csv || exit 1) \
             || (echo '[+] List contains right number of columns' && exit 0)
       - name: Stop the container
-        if: always()
+        if: always() && steps.image_exists.outcome == 'success'
         run: docker stop exegol-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
       - name: Adding list to repo and tables
+        id: adding_list
         if: always() && steps.list_exists.outcome == 'success'
         run: |
           mkdir -p source/assets/installed_tools/lists
           echo '[*] Moving tools list to imagetag_version_arch.csv'
-          mv installed_tools.csv source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
+          mv installed_tools.csv source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ needs.varset.outputs.IMAGE_VERSION }}_${{ matrix.arch }}.csv
           echo '[*] Changing lists.csv so that new tools list appears'
           echo '[*] [SHOULD BE RELEASES ONLY] Removing occurences of image,version,arch. This is because this workflow runs in the prerelease pipeline, meaning that there is a possibility tools list is pushed to exegol-docs even if the images are not released for some reasons (e.g. imageA prerelease works but not for imageB). Doing this grep -v will ensure that lists.csv does not have duplicates to the same tag, same version and same arch'
           (head -n 1 source/assets/installed_tools/lists.csv; \
-            echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv \
-              </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv>\`"; \
+            echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ needs.varset.outputs.IMAGE_VERSION }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ needs.varset.outputs.IMAGE_VERSION }}_${{ matrix.arch }}.csv \
+              </assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ needs.varset.outputs.IMAGE_VERSION }}_${{ matrix.arch }}.csv>\`"; \
             ( \
-              tail -n +2 source/assets/installed_tools/lists.csv | grep -Ev "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }}" \
+              tail -n +2 source/assets/installed_tools/lists.csv | grep -Ev "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ needs.varset.outputs.IMAGE_VERSION }},${{ matrix.arch }}" \
             ) \
           ) | tee source/assets/installed_tools/new_lists.csv
           mv source/assets/installed_tools/new_lists.csv source/assets/installed_tools/lists.csv
       - name: Debug print lists.csv
-        if: always()
+        if: always() && !contains(steps.adding_list.outcome, 'skipped'))
         id: final_list_exists
         run: cat source/assets/installed_tools/lists.csv
       - name: Push Exegol-docs
@@ -189,10 +182,10 @@ jobs:
           git config --global user.name "exegol-images[pipeline]"
           git config --global user.email "pipeline@exegol.images"
           echo '[*] Staging changes'
-          git add --verbose source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
+          git add --verbose source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ needs.varset.outputs.IMAGE_VERSION }}_${{ matrix.arch }}.csv
           git add --verbose source/assets/installed_tools/lists.csv
           echo '[*] Commiting changes'
-          git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}"
+          git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ needs.varset.outputs.IMAGE_VERSION }}_${{ matrix.arch }}"
           echo '[*] Pushing changes'
           git push --verbose "$GIT_CMD_REPOSITORY"
 
