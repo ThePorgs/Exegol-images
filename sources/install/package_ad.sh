@@ -877,7 +877,7 @@ function install_neo4j() {
     colorecho "Configure neo4j"
     wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
     echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
-    apt-get update
+    apt update
     fapt neo4j
     # TODO: when temporary fix is not needed anymore --> neo4j-admin dbms set-initial-password exegol4thewin
     neo4j-admin dbms set-initial-password exegol4thewin

@@ -6,7 +6,7 @@ source common.sh
 function update() {
     colorecho "Updating, upgrading, cleaning"
     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-    apt-get -y update && apt-get -y install apt-utils dialog && apt-get -y upgrade && apt-get -y autoremove && apt-get clean
+    apt -y update && apt -y install apt-utils dialog && apt -y upgrade && apt -y autoremove && apt clean
 }
 
 function install_exegol-history() {
@@ -88,7 +88,7 @@ function deploy_exegol() {
 
 function install_locales() {
     colorecho "Configuring locales"
-    apt-get -y install locales
+    apt -y install locales
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
     locale-gen
 }
@@ -215,14 +215,15 @@ function post_install() {
 function package_base() {
     update
     colorecho "Installing apt-fast for faster dep installs"
-    apt-get install -y curl sudo wget
+    apt install -y curl sudo wget
     /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
+    echo "_APTMGR=apt" >> /etc/apt-fast.conf # for apt-fast use apt and not apt-get
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
     add-apt-repository contrib
     add-apt-repository non-free
-    apt-get update
+    apt update
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 python2 wget \
     gnupg2 python2-dev python3-dev python3-venv libffi-dev python3-pip zsh asciinema \
@@ -303,14 +304,14 @@ function package_base() {
 function package_base_debug() {
     update
     colorecho "Installing apt-fast for faster dep installs"
-    apt-get install -y curl sudo wget
+    apt install -y curl sudo wget
     /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
     add-apt-repository contrib
     add-apt-repository non-free
-    apt-get update
+    apt update
     colorecho "Starting main programs install"
     fapt sudo git curl zsh asciinema zip wget ncat dnsutils python2 python3 python3-setuptools python3-pip vim nano procps automake autoconf make bundler mlocate
 

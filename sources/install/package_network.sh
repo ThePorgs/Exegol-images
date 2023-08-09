@@ -79,7 +79,7 @@ function install_proxychains() {
 function install_nmap() {
     colorecho "Installing nmap"
     echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
-    apt-get update
+    apt update
     fapt nmap/bullseye-backports
     add-aliases nmap
     add-history nmap
@@ -180,7 +180,7 @@ function install_tailscale() {
     colorecho "Installing tailscale"
     curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
     curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-    apt-get update
+    apt update
     fapt tailscale
     add-aliases tailscale
     add-history tailscale
