@@ -173,6 +173,14 @@ function install_ultimate_vimrc() {
     sh ~/.vim_runtime/install_awesome_vimrc.sh
 }
 
+function install_neovim() {
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+    chmod u+x nvim.appimage
+    ./nvim.appimage --appimage-extract
+    cp -r squashfs-root/usr/* /usr/
+    rm -rf squashfs-root
+}
+
 function install_mdcat() {
     colorecho "Installing mdcat"
     cargo install mdcat
@@ -259,6 +267,7 @@ function package_base() {
     add-history curl
     install_yarn
     install_ultimate_vimrc                              # Make vim usable OOFB
+    install_neovim
     install_mdcat                                       # cat markdown files
     add-test-command "batcat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
