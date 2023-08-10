@@ -1,0 +1,2 @@
+h2csmuggler --scan-list urls.txt --threads 5
+h2csmuggler -x $TARGET --test

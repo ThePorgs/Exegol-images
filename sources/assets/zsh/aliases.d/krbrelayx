@@ -1,0 +1,5 @@
+alias krbrelayx='grc krbrelayx.py'
+alias addspn.py='/opt/tools/krbrelayx/venv/bin/python3 /opt/tools/krbrelayx/addspn.py'
+alias dnstool.py='/opt/tools/krbrelayx/venv/bin/python3 /opt/tools/krbrelayx/dnstool.py'
+alias printerbug.py='/opt/tools/krbrelayx/venv/bin/python3 /opt/tools/krbrelayx/printerbug.py'
+alias krbrelayx.py='/opt/tools/krbrelayx/venv/bin/python3 /opt/tools/krbrelayx/krbrelayx.py'

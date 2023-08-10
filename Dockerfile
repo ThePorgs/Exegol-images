@@ -1,6 +1,6 @@
 # Author: The Exegol Project
 
-FROM debian
+FROM debian:11-slim
 
 ARG TAG="local"
 ARG VERSION="local"
@@ -12,41 +12,45 @@ LABEL org.exegol.build_date="${BUILD_DATE}"
 LABEL org.exegol.app="Exegol"
 LABEL org.exegol.src_repository="https://github.com/ThePorgs/Exegol-images"
 
-RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
+COPY sources /root/sources/
 
-ADD sources /root/sources
-RUN chmod +x /root/sources/install.sh
+WORKDIR /root/sources/install
 
-RUN /root/sources/install.sh package_base
+# WARNING: package_most_used can't be used with other functions other than: package_base, post_install
+# ./entrypoint.sh package_most_used
 
-# WARNING: package_most_used can't be used with other functions other than: package_base, post_install_clean
-# RUN /root/sources/install.sh package_most_used
-
-# WARNING: the following installs (except: package_base, post_install_clean) can't be used with package_most_used
-RUN /root/sources/install.sh package_misc
-RUN /root/sources/install.sh package_wordlists
-RUN /root/sources/install.sh package_cracking
-RUN /root/sources/install.sh package_osint
-RUN /root/sources/install.sh package_web
-RUN /root/sources/install.sh package_c2
-RUN /root/sources/install.sh package_ad
-RUN /root/sources/install.sh package_mobile
-RUN /root/sources/install.sh package_iot
-RUN /root/sources/install.sh package_rfid
-RUN /root/sources/install.sh package_voip
-RUN /root/sources/install.sh package_sdr
-RUN /root/sources/install.sh package_network
-RUN /root/sources/install.sh package_wifi
-RUN /root/sources/install.sh package_forensic
-RUN /root/sources/install.sh package_cloud
-RUN /root/sources/install.sh package_steganography
-RUN /root/sources/install.sh package_reverse
-RUN /root/sources/install.sh package_crypto
-RUN /root/sources/install.sh package_code_analysis
-
-RUN /root/sources/install.sh post_install_clean
-
-RUN rm -rf /root/sources
+RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
+    chmod +x entrypoint.sh && \
+    ./entrypoint.sh package_base && \
+    ./entrypoint.sh package_misc && \
+    ./entrypoint.sh package_misc_configure && \
+    ./entrypoint.sh package_c2 && \
+    ./entrypoint.sh package_c2_configure && \
+    ./entrypoint.sh package_wordlists && \
+    ./entrypoint.sh package_wordlists_configure && \
+    ./entrypoint.sh package_cracking && \
+    ./entrypoint.sh package_cracking_configure && \
+    ./entrypoint.sh package_osint && \
+    ./entrypoint.sh package_osint_configure && \
+    ./entrypoint.sh package_web && \
+    ./entrypoint.sh package_web_configure && \
+    ./entrypoint.sh package_ad && \
+    ./entrypoint.sh package_ad_configure && \
+    ./entrypoint.sh package_mobile && \
+    ./entrypoint.sh package_iot && \
+    ./entrypoint.sh package_rfid && \
+    ./entrypoint.sh package_voip && \
+    ./entrypoint.sh package_sdr && \
+    ./entrypoint.sh package_network && \
+    ./entrypoint.sh package_wifi && \
+    ./entrypoint.sh package_forensic && \
+    ./entrypoint.sh package_cloud && \
+    ./entrypoint.sh package_steganography && \
+    ./entrypoint.sh package_reverse && \
+    ./entrypoint.sh package_crypto && \
+    ./entrypoint.sh package_code_analysis && \
+    ./entrypoint.sh post_install && \
+    rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace
 

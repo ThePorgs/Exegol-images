@@ -2,7 +2,9 @@ name: External PR tests
 
 on:
   pull_request:
-    branches: dev
+    branches:
+      - dev
+      - webui
     paths-ignore:
       - ".github/**"
       - "**.md"
@@ -77,5 +79,5 @@ jobs:
         run: |
           image_name=${DOCKER_BUILD_REPO}:${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ matrix.arch }}
           echo "Removing $image_name"
-          docker image inspect $image_name && docker rmi $image_name
+          docker image inspect $image_name || exit 0 && docker rmi $image_name
 

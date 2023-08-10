@@ -1,0 +1,1 @@
+alias dfscoerce.py='/opt/tools/DFSCoerce/venv/bin/python3 /opt/tools/DFSCoerce/dfscoerce.py'

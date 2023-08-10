@@ -1,0 +1,1 @@
+alias finalrecon.py='/opt/tools/FinalRecon/venv/bin/python3 /opt/tools/FinalRecon/finalrecon.py'

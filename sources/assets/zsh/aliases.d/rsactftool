@@ -1,0 +1,1 @@
+alias rsactftool='/opt/tools/RsaCtfTool/venv/bin/python3 /opt/tools/RsaCtfTool/RsaCtfTool.py'

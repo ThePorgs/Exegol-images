@@ -1,0 +1,1 @@
+alias ysoserial='JAVA_HOME=/usr/lib/jvm/java-11-openjdk java -jar /opt/tools/ysoserial/ysoserial.jar'

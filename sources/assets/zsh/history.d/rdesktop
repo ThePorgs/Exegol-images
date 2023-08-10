@@ -1,0 +1,1 @@
+rdesktop -u $USER -p $PASSWORD -d $DOMAIN

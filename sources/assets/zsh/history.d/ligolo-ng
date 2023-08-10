@@ -1,0 +1,4 @@
+ligolo-ng -selfcert
+ip tuntap add user root mode tun ligolo
+ip link set ligolo up
+ip route add 192.168.0.0/24 dev ligolo

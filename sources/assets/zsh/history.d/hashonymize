@@ -1,0 +1,1 @@
+hashonymize --ntds $DOMAIN --kerberoast Kerberoastables.txt --asreproast ASREProstables.txt
