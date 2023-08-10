@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=jd-gui
+Comment=TODO
+Exec=java -jar /opt/tools/jd-gui/jd-gui-1.6.6.jar
+Icon=/usr/share/icons/Papirus/64x64/apps/kali-jd-gui.svg
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;Reverse;
+MimeType=text/plain;

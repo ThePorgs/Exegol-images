@@ -1,0 +1,23 @@
+[global_config]
+  geometry_hinting = True
+  title_transmit_bg_color = "#613583"
+  title_inactive_fg_color = "#ffffff"
+  title_inactive_bg_color = "#613583"
+[keybindings]
+[profiles]
+  [[default]]
+    background_darkness = 0.81
+    cursor_color = "#aaaaaa"
+    font = DejaVu Sans 11
+    foreground_color = "#ffffff"
+    scrollback_infinite = True
+    palette = "#000000:#cc0000:#8ff0a4:#f9f06b:#83afd8:#88658d:#00a7aa:#deddda:#3d3846:#a51d2d:#26a269:#e5a50a:#417ab3:#bc93b6:#35e5e7:#ffffff"
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]

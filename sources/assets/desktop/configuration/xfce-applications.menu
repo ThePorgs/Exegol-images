@@ -1,0 +1,98 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+  "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+
+<Menu>
+    <Name>Xfce</Name>
+
+    <DefaultAppDirs/>
+    <DefaultDirectoryDirs/>
+    <DefaultMergeDirs/>
+
+    <Include>
+        <Category>X-Xfce-Toplevel</Category>
+    </Include>
+
+    <Layout>
+        <Filename>About.desktop</Filename>
+        <Separator/>
+ <Menuname>Accessories</Menuname>
+ <Menuname>Settings</Menuname>
+ <Menuname>Network</Menuname>
+ <Menuname>Exegol</Menuname>
+ <Separator/>
+        <Filename>xfce4-session-logout.desktop</Filename>
+    </Layout>
+
+    <Menu>
+        <Name>Accessories</Name>
+        <Directory>xfce-accessories.directory</Directory>
+        <Include>
+                <Category>Accessibility</Category>
+                <Category>Core</Category>
+                <Category>Legacy</Category>
+                <Category>Utility</Category>
+    <Category>Graphics</Category>
+                <Category>Audio</Category>
+                <Category>Video</Category>
+                <Category>AudioVideo</Category>
+        </Include>
+        <Exclude>
+            <Or>
+                <Filename>exo-file-manager.desktop</Filename>
+                <Filename>exo-terminal-emulator.desktop</Filename>
+                <Filename>xfce4-about.desktop</Filename>
+                <Filename>xfce4-run.desktop</Filename>
+            </Or>
+        </Exclude>
+    </Menu>
+
+
+    <Menu>
+        <Name>Settings</Name>
+        <Directory>xfce-settings.directory</Directory>
+        <Include>
+            <Category>Settings</Category>
+     <Category>System</Category>
+     <Category>PackageManager</Category>
+        </Include>
+ <Exclude>
+     <Or>
+      <Filename>xfce4-session-logout.desktop</Filename>
+     </Or>
+ </Exclude>
+
+        <Layout>
+            <Filename>xfce-settings-manager.desktop</Filename>
+            <Separator/>
+            <Merge type="all"/>
+        </Layout>
+
+
+    </Menu>
+
+    <Menu>
+        <Name>Network</Name>
+        <Directory>xfce-network.directory</Directory>
+        <Include>
+            <Category>Network</Category>
+        </Include>
+        <Exclude>
+            <Or>
+                <Filename>exo-mail-reader.desktop</Filename>
+                <Filename>firefox.desktop</Filename>
+    <Filename>google-chrome.desktop</Filename>
+            </Or>
+        </Exclude>
+    </Menu>
+
+
+
+    <Menu>
+        <Name>Exegol</Name>
+        <Directory>exegol.directory</Directory>
+        <Include>
+            <Category>Exegol</Category>
+        </Include>
+    </Menu>
+
+</Menu>

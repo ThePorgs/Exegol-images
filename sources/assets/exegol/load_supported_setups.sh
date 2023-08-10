@@ -100,6 +100,7 @@ function run_user_setup() {
   # Executing user setup (or create the file)
   if [ -f "$MY_Setup_PATH/load_user_setup.sh" ]; then
     echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading user setup ($MY_Setup_PATH/load_user_setup.sh) ===="
+    echo "[Exegol] Installing [green]my-resources[/green] user's defined custom setup ..."
     "$MY_Setup_PATH"/load_user_setup.sh
   else
     echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== User setup loader missing, deploying it ($MY_Setup_PATH/load_user_setup.sh) ===="

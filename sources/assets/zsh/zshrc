@@ -65,7 +65,7 @@ source $HOME/.cargo/env
 # Color correction for zsh-syntax-highlighting
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
 
-# In case pipx ensurepath didn't work, and positionning pipx in priority
+# In case pipx ensurepath didn't work, and positioning pipx in priority
 export PATH="/root/.local/bin:$PATH"
 
 # Add my-resources custom tools to PATH if my-resources is activated
@@ -83,3 +83,5 @@ else
   [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
   cp /.exegol/skel/zsh/zshrc /opt/my-resources/setup/zsh/zshrc
 fi
+
+[ -f ~/banner.txt ] && cat ~/banner.txt
