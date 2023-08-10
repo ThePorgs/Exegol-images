@@ -115,15 +115,6 @@ jobs:
     steps:
       - name: Checkout Exegol-images
         uses: actions/checkout@v3
-      - name: Prepare image version
-        id: prepare
-        run: |
-          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
-          if [ "$IMAGE_VERSION" == "" ]; then
-            IMAGE_VERSION=${COMMIT_ID:0:8}
-          fi
-          echo "image_version=${IMAGE_VERSION}"
-          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
       - name: Checkout Exegol-docs
         uses: actions/checkout@v3
         with:
@@ -191,10 +182,10 @@ jobs:
           git config --global user.name "exegol-images[pipeline]"
           git config --global user.email "pipeline@exegol.images"
           echo '[*] Staging changes'
-          git add --verbose source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv
+          git add --verbose source/assets/installed_tools/lists/${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ needs.varset.outputs.IMAGE_VERSION }}_${{ matrix.arch }}.csv
           git add --verbose source/assets/installed_tools/lists.csv
           echo '[*] Commiting changes'
-          git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}"
+          git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ needs.varset.outputs.IMAGE_VERSION }}_${{ matrix.arch }}"
           echo '[*] Pushing changes'
           git push --verbose "$GIT_CMD_REPOSITORY"
 
