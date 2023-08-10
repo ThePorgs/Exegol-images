@@ -48,15 +48,14 @@ echo "Using display :$display_id"
 
 case "$mode" in
   vnc)
-    # TODO handle host config
+    # TODO handle specific host exposition for vnc server
     host="localhost"
-    # TODO handle dynamic display socket
     vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$display_id"
     ;;
   http)
-    # TODO add random port for VNC (multi-host container)
-    vncserver -localhost "yes" -rfbport "5900" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$display_id" && \
-      websockify -D --web /usr/share/novnc/ "$host:$port" "localhost:5900"
+    random_port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
+    vncserver -localhost "yes" -rfbport "$random_port" -geometry "1920x1080" -SecurityTypes "VncAuth" -passwd "$HOME/.vnc/passwd" ":$display_id" && \
+      websockify -D --web /usr/share/novnc/ "$host:$port" "localhost:$random_port"
     ;;
 esac
 
