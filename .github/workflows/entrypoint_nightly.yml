@@ -154,20 +154,20 @@ jobs:
           mkdir -p source/assets/installed_tools/lists
           echo '[*] [SHOULD BE NIGHTLY ONLY] Moving tools list to latest_nightly_arch.csv'
           mv installed_tools.csv source/assets/installed_tools/lists/latest_nightly_${{ matrix.arch }}.csv
-          echo '[*] Changing lists.csv so that new tools list appears'
+          echo '[*] Changing nightly.csv so that new tools list appears'
           echo '[*] [SHOULD BE NIGHTLY ONLY] Removing occurences of nightly,whateverversion,arch so that only the latest nightly is shown'
-          (head -n 1 source/assets/installed_tools/lists.csv; \
+          (head -n 1 source/assets/installed_tools/nightly.csv; \
             echo "${{ needs.varset.outputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ matrix.arch }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}.csv \
               </assets/installed_tools/lists/latest_nightly_${{ matrix.arch }}.csv>\`"; \
             ( \
-              tail -n +2 source/assets/installed_tools/lists.csv | grep -Ev "${{ needs.varset.outputs.IMAGE_BASE_NAME }},[0-9a-fA-F]{8},${{ matrix.arch }}" \
+              tail -n +2 source/assets/installed_tools/nightly.csv | grep -Ev "${{ needs.varset.outputs.IMAGE_BASE_NAME }},[0-9a-fA-F]{8},${{ matrix.arch }}" \
             ) \
-          ) | tee source/assets/installed_tools/new_lists.csv
-          mv source/assets/installed_tools/new_lists.csv source/assets/installed_tools/lists.csv
-      - name: Debug print lists.csv
+          ) | tee source/assets/installed_tools/new_nightly.csv
+          mv source/assets/installed_tools/new_nightly.csv source/assets/installed_tools/nightly.csv
+      - name: Debug print nightly.csv
         if: always() && !contains(steps.adding_list.outcome, 'skipped')
         id: final_list_exists
-        run: cat source/assets/installed_tools/lists.csv
+        run: cat source/assets/installed_tools/nightly.csv
       - name: Push Exegol-docs
         if: always() && steps.final_list_exists.outcome == 'success'
         env:
@@ -188,7 +188,7 @@ jobs:
           echo '[*] Staging changes'
           echo '[*] [SHOULD BE NIGHTLY ONLY] Staging latest_nightly_arch.csv'
           git add --verbose source/assets/installed_tools/lists/latest_nightly_${{ matrix.arch }}.csv
-          git add --verbose source/assets/installed_tools/lists.csv
+          git add --verbose source/assets/installed_tools/nightly.csv
           echo '[*] Commiting changes'
           git commit --verbose -m "PIPELINE: tools list for ${{ needs.varset.outputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ matrix.arch }}"
           echo '[*] Pushing changes'
