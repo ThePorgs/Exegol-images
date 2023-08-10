@@ -22,11 +22,11 @@ WORKDIR /root/sources/install
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
     chmod +x entrypoint.sh && \
     ./entrypoint.sh package_base && \
+    ./entrypoint.sh package_desktop && \
     ./entrypoint.sh package_misc && \
     ./entrypoint.sh package_misc_configure && \
     ./entrypoint.sh package_osint && \
     ./entrypoint.sh package_osint_configure && \
-    ./entrypoint.sh package_desktop && \
     ./entrypoint.sh post_install && \
     rm -rf /root/sources /var/lib/apt/lists/*
 
