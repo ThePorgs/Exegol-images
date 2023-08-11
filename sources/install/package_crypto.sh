@@ -5,9 +5,9 @@ source common.sh
 
 function install_tls-map() {
     colorecho "Installing TLS map"
-    rvm use 3.0.0@tls-map --create
+    rvm use 3.1.2@tls-map --create
     gem install tls-map
-    rvm use 3.0.0@default
+    rvm use 3.1.2@default
     add-aliases tls-map
     add-history tls-map
     add-test-command "tls-map --help"

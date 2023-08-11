@@ -28,6 +28,7 @@ function install_ad_apt_tools() {
 function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
+    cd /opt/tools/cloudmapper
     cd /opt/tools/Responder
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
@@ -37,6 +38,11 @@ function install_responder() {
     add-test-command "responder --version"
     add-test-command "runfinger --help"
     add-test-command "multirelay --help"
+    echo '#!/usr/bin/env python3' > tempfile.py
+    tail -n +2 /opt/tools/Responder/tools/MultiRelay.py >> tempfile.py
+    mv tempfile.py /opt/tools/Responder/tools/MultiRelay.py 
+    chmod +x /opt/tools/Responder/tools/MultiRelay.py 
+    rm -f ./tempfile.py
     add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR / NBT-NS and MDNS poisoner."
 }
 
@@ -230,9 +236,17 @@ function install_ruler() {
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
 }
 
+function install_upx-ucl() {
+    git -C /tmp clone https://github.com/ferseiti/upx-ucl.git
+    mkdir /opt/tools/upx-ucl
+    cp -r /tmp/upx-ucl/debian/upx-ucl/usr/* /opt/tools/upx-ucl
+    ln -v -s /opt/tools/upx-ucl/bin/upx-ucl /opt/tools/bin/upx-ucl
+}
+
 function install_darkarmour() {
     colorecho "Installing darkarmour"
-    fapt mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 upx-ucl osslsigncode
+    fapt mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 osslsigncode
+    install_upx-ucl
     git -C /opt/tools/ clone --depth 1 https://github.com/bats3c/darkarmour
     add-aliases darkarmour
     add-history darkarmour
@@ -308,9 +322,9 @@ function configure_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    rvm use 3.0.0@evil-winrm --create
+    rvm use 3.1.2@evil-winrm --create
     gem install evil-winrm
-    rvm use 3.0.0@default
+    rvm use 3.1.2@default
     add-aliases evil-winrm
     add-history evil-winrm
     add-test-command "evil-winrm --help"
@@ -424,7 +438,13 @@ function install_polenum() {
 
 function install_smbmap() {
     colorecho "Installing smbmap"
-    python3 -m pipx install git+https://github.com/ShawnDEvans/smbmap
+    git -C /opt/tools clone --depth 1 https://github.com/ShawnDEvans/smbmap
+    cd /opt/tools/smbmap
+    cp -v /root/sources/assets/patches/smbmap.patch smbmap.patch
+    git apply --verbose smbmap.patch
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install .
+    add-aliases smbmap
     add-history smbmap
     add-test-command "smbmap --help"
     add-to-list "smbmap,https://github.com/ShawnDEvans/smbmap,A tool to enumerate SMB shares and check for null sessions"
@@ -466,7 +486,7 @@ function install_gpp-decrypt() {
     git -C /opt/tools/ clone --depth 1 https://github.com/t0thkr1s/gpp-decrypt
     cd /opt/tools/gpp-decrypt
     python3 -m venv ./venv/
-    ./venv/bin/python3 -m pip install pycrypto colorama
+    ./venv/bin/python3 -m pip install pycryptodome colorama
     add-aliases gpp-decrypt
     add-history gpp-decrypt
     add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
@@ -656,7 +676,9 @@ function install_pywsus() {
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
     cd /opt/tools/pywsus
     python3 -m venv ./venv/
+    echo -e "beautifulsoup4==4.9.1\nlxml==4.9.1\nsoupsieve==2.0.1" > requirements.txt
     ./venv/bin/python3 -m pip install -r ./requirements.txt
+    # https://github.com/GoSecure/pywsus/pull/12
     add-aliases pywsus
     add-history pywsus
     add-test-command "pywsus.py --help"
@@ -864,9 +886,9 @@ function install_PassTheCert() {
 
 function install_bqm() {
     colorecho "Installing BQM"
-    rvm use 3.0.0@bqm --create
+    rvm use 3.1.2@bqm --create
     gem install bqm --no-wrapper
-    rvm use 3.0.0@default
+    rvm use 3.1.2@default
     add-aliases bqm
     add-history bqm
     add-test-command "bqm --help"

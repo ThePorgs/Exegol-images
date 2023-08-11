@@ -14,9 +14,9 @@ function install_vulny-code-static-analysis() {
 
 function install_brakeman() {
     colorecho "Installing Brakeman"
-    rvm use 3.0.0@brakeman --create
+    rvm use 3.1.2@brakeman --create
     gem install brakeman
-    rvm use 3.0.0@default
+    rvm use 3.1.2@default
     add-aliases brakeman
     add-history brakeman
     add-test-command "brakeman --help"

@@ -12,7 +12,7 @@ function install_xfce() {
     fapt terminator firefox-esr iproute2
 
     # Dependencies
-    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool
+    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
 
     # Icons
     fapt librsvg2-common papirus-icon-theme

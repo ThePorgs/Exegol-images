@@ -1,6 +1,6 @@
 # Author: The Exegol Project
 
-FROM debian:11
+FROM debian:12-slim
 
 ARG TAG="local"
 ARG VERSION="local"

@@ -14,17 +14,19 @@ function install_pwncat() {
 function install_metasploit() {
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
-    mkdir /tmp/metasploit_install
-    cd /tmp/metasploit_install
-    curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb -o msfinstall
-    chmod +x msfinstall
-    rvm use 3.0.0@metasploit --create
-    ./msfinstall
-    cd /tmp
-    rm -rf /tmp/metasploit_install
-    bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
-    rvm use 3.0.0@default
-    # https://github.com/ruby/fileutils/issues/22 -> Warnings
+    git -C /opt/tools clone https://github.com/rapid7/metasploit-framework.git
+    cd /opt/tools/metasploit-framework
+    rvm use 3.1.2@metasploit --create
+    gem install bundler
+    bundle install --path /opt/tools/metasploit-framework/vendor
+    rvm use 3.1.2@default
+    add-aliases msfconsole
+    add-aliases msfd
+    add-aliases msfdb
+    add-aliases msfrpc
+    add-aliases msfrpcd
+    add-aliases msfupdate
+    add-aliases msfvenom
     add-history msfconsole
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"

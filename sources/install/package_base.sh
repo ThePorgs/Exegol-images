@@ -93,11 +93,38 @@ function install_locales() {
     locale-gen
 }
 
+function install_python2() {
+    PYTHONIOENCODING=UTF-8
+    PYTHON_VERSION=2.7.18
+    fapt gir1.2-rsvg-2.0 libdb5.3-dev libdjvulibre-dev libdjvulibre-text libdjvulibre21 libevent-extra-2.1-7 libevent-openssl-2.1-7 libevent-pthreads-2.1-7  libexif-dev libimath-3-1-29 \
+    libimath-dev liblcms2-dev liblqr-1-0-dev libltdl-dev libmagickcore-6-arch-config libmagickcore-6-headers  libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev libmagickwand-6-headers \
+    libmagickwand-6.q16-dev libmariadb-dev-compat libopenexr-3-1-30 libopenexr-dev libopenjp2-7-dev librsvg2-dev libwmf-0.2-7 libwmf-dev libwmflite-0.2-7 libsqlite3-dev \
+    default-libmysqlclient-dev libdb-dev libevent-dev libmagickcore-dev libmagickwand-dev libmaxminddb-dev libncursesw5-dev
+    wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"
+    mkdir -p /usr/src/python 
+    tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz
+    rm python.tar.xz
+    cd /usr/src/python 
+    gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" 
+    ./configure --build="$gnuArch" --enable-optimizations --enable-option-checking=fatal --enable-shared --enable-unicode=ucs4 
+    make -j "$(nproc)" PROFILE_TASK='-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_bytes test_c_locale_coercion test_class test_cmath test_codecs test_compile test_complex test_csv test_decimal test_dict test_float test_fstring test_hashlib test_io test_iter test_json test_long test_math test_memoryview test_pickle test_re test_set test_slice test_struct test_threading test_time test_traceback test_unicode ' 
+    make install 
+    ldconfig 
+    find /usr/local -depth \( \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \) -exec rm -rf '{}' +
+    rm -rf /usr/src/python
+    add-test-command "python2 --version"
+    cd /root/sources/install
+}
+
 function install_python-pip() {
     colorecho "Installing python-pip (for Python2.7)"
-    curl --insecure https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
-    python get-pip.py
-    rm get-pip.py
+    PYTHON_PIP_VERSION=20.0.2
+    PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/23.2.1/public/2.7/get-pip.py
+    wget -O get-pip.py "$PYTHON_GET_PIP_URL"
+    python2 get-pip.py "pip==$PYTHON_PIP_VERSION" --disable-pip-version-check --no-cache-dir
+    pip --version
+    find /usr/local -depth \( \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \) -exec rm -rf '{}' +
+    rm -f get-pip.py
     add-test-command "pip --version"
 }
 
@@ -117,7 +144,8 @@ function install_firefox() {
 function install_rvm() {
     colorecho "Installing rvm"
     gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-    curl -sSL https://get.rvm.io | bash -s stable --ruby
+    { command -v gpgconf > /dev/null && gpgconf --kill all || :; }
+    curl -sSL https://get.rvm.io | bash -s stable --ruby=3.1.2
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
@@ -199,6 +227,20 @@ function install_gf() {
     add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
+function add-repository() {
+    source_file="/etc/apt/sources.list.d/debian.sources"  # Remplacez par le chemin de votre fichier
+    out_file="/etc/apt/sources.list.d/debian2.sources"  # Remplacez par le chemin de votre fichier
+
+    while IFS= read -r line; do
+      if [[ "$line" == "Components"* ]]; then
+        echo  "${line} non-free non-free-firmware contrib" >> "$out_file"
+      else
+        echo "$line" >> "$out_file"
+      fi
+    done < "$source_file"
+    mv "$out_file" "$source_file"
+}
+
 function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
@@ -220,33 +262,36 @@ function package_base() {
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
-    add-apt-repository contrib
-    add-apt-repository non-free
+    add-repository # add-apt-repository does not work
     apt-get update
     chsh -s /bin/zsh
     colorecho "Starting main programs install"
-    fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 python2 wget \
-    gnupg2 python2-dev python3-dev python3-venv libffi-dev python3-pip zsh asciinema \
-    python-setuptools python3-setuptools npm gem automake autoconf make cmake time gcc g++ file lsof \
+    fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
+    python3-dev python3-venv libffi-dev python3-pip zsh asciinema \
+    python3-setuptools npm gem automake autoconf make cmake time gcc g++ file lsof \
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
-    nim perl libwww-perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-11-jdk openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
-    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3
+    nim perl libwww-perl openjdk-17-jre openjdk-17-jdk-headless openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
+    virtualenv chromium libsasl2-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3 tk-dev libssl-dev
+    install_python2
+    install_python-pip                                  # Pip. Should we set pip2 to default?
+    pip install --no-cache-dir virtualenv
+
+    rm /usr/lib/python3.*/EXTERNALLY-MANAGED # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel
 
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
-    ln -s /bin/mkdir /usr/bin/mkdir                     # Some tools need this path for build
 
-    ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
-    ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
-    install_python-pip                                  # Pip. Should we set pip2 to default?
+    ln -fs /usr/local/bin/python /usr/bin/python2.7
+    ln -fs /usr/local/bin/python /usr/bin/python2
+    ln -fs /usr/local/bin/python /usr/bin/python
     python3 -m pip install --upgrade pip
     filesystem
     install_go                                          # Golang language
@@ -311,16 +356,21 @@ function package_base_debug() {
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
-    add-apt-repository contrib
-    add-apt-repository non-free
+    add-repository # add-apt-repository does not work
     apt-get update
     colorecho "Starting main programs install"
-    fapt sudo git curl zsh asciinema zip wget ncat dnsutils python2 python3 python3-setuptools python3-pip vim nano procps automake autoconf make bundler mlocate
+    fapt sudo git curl zsh asciinema zip wget ncat dnsutils python3 python3-setuptools python3-pip vim nano procps automake autoconf make bundler mlocate tk-dev gnupg2 gcc g++ libssl-dev
+    install_python2
+    install_python-pip                                  # Pip. Should we set pip2 to default?
+
+    rm /usr/lib/python3.*/EXTERNALLY-MANAGED # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel
 
-    ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
+    ln -fs /usr/local/bin/python /usr/bin/python2.7
+    ln -fs /usr/local/bin/python /usr/bin/python2
+    ln -fs /usr/local/bin/python /usr/bin/python
 #    python3 -m pip install --upgrade pip
     filesystem
     install_locales

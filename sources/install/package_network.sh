@@ -7,7 +7,9 @@ function install_network_apt_tools() {
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
-    fapt remmina remmina-plugin-rdp remmina-plugin-secret remmina-plugin-spice
+    fapt remmina remmina-plugin-rdp remmina-plugin-secret
+    # remmina-plugin-spice need build ?
+    # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
 
     add-history wireshark
     add-history tshark
@@ -78,9 +80,10 @@ function install_proxychains() {
 
 function install_nmap() {
     colorecho "Installing nmap"
-    echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+    # echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+    # nmap in main repo is a latest version
     apt-get update
-    fapt nmap/bullseye-backports
+    fapt nmap
     add-aliases nmap
     add-history nmap
     add-test-command "nmap --version"

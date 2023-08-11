@@ -1,1 +1,1 @@
-alias infoga.py='/opt/tools/Infoga/venv/bin/python3 /opt/tools/Infoga/infoga.py'
+alias infoga.py='/opt/tools/Infoga/venv/bin/python2 /opt/tools/Infoga/infoga.py'

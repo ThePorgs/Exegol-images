@@ -95,7 +95,7 @@ function install_simplyemail() {
     colorecho "Installing SimplyEmail"
     git -C /opt/tools/ clone --branch master --depth 1 https://github.com/killswitch-GUI/SimplyEmail.git
     cd /opt/tools/SimplyEmail/
-    fapt antiword odt2txt python-dev libxml2-dev libxslt1-dev
+    fapt antiword odt2txt libxml2-dev libxslt1-dev
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
     add-aliases simplyemail
@@ -131,8 +131,8 @@ function install_infoga() {
     git -C /opt/tools/ clone --depth 1 https://github.com/m4ll0k/Infoga
     find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
     cd /opt/tools/Infoga
-    python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install .
+    python -m virtualenv ./venv
+    ./venv/bin/python -m pip install .
     add-aliases infoga
     add-history infoga
     add-test-command "infoga.py --help"
@@ -145,7 +145,7 @@ function install_buster() {
     cd /opt/tools/buster
     python3 -m venv ./venv
     source ./venv/bin/activate
-    pip install cython requests beautifulsoup4 PyYaml lxml grequests gevent twint
+    pip3 install cython requests beautifulsoup4 PyYaml lxml grequests gevent twint cchardet
     python3 setup.py install
     deactivate
     ln -s /opt/tools/buster/venv/bin/buster /opt/tools/bin
@@ -391,6 +391,8 @@ function package_osint() {
     install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
     install_infoga                  # Gathering email accounts informations
+    pip3 install cython Cython
+    pip3 install cchardet
     install_buster                  # An advanced tool for email reconnaissance
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     # install_ghunt                 # Investigate Google Accounts with emails FIXME: Need python3.10 -> https://github.com/mxrch/GHunt/issues/398

@@ -83,8 +83,10 @@ function install_prowler() {
 
 function install_cloudmapper() {
     colorecho "Installing Cloudmapper"
-    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git
+    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git 
     cd /opt/tools/cloudmapper
+    cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
+    git apply --verbose cloudmapper.patch
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install wheel
     ./venv/bin/python3 -m pip install -r requirements.txt

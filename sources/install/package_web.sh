@@ -28,10 +28,10 @@ function install_web_apt_tools() {
 function install_whatweb() {
     colorecho "Installing whatweb"
     git -C /opt/tools clone --depth 1 https://github.com/urbanadventurer/WhatWeb.git
-    rvm use 3.0.0@whatweb --create
+    rvm use 3.1.2@whatweb --create
     gem install addressable
     bundle install --gemfile /opt/tools/WhatWeb/Gemfile
-    rvm use 3.0.0@default
+    rvm use 3.1.2@default
     add-aliases whatweb
     add-history whatweb
     add-test-command "whatweb --version"
@@ -152,9 +152,9 @@ function install_xsstrike() {
 
 function install_xspear() {
     colorecho "Installing XSpear"
-    rvm use 3.0.0@xspear --create
+    rvm use 3.1.2@xspear --create
     gem install XSpear
-    rvm use 3.0.0@default
+    rvm use 3.1.2@default
     add-aliases Xspear
     add-history xspear
     add-test-command "XSpear --help"
@@ -242,9 +242,9 @@ function install_joomscan() {
 
 function install_wpscan() {
     colorecho "Installing wpscan"
-    rvm use 3.0.0@wpscan --create
+    rvm use 3.1.2@wpscan --create
     gem install wpscan
-    rvm use 3.0.0@default
+    rvm use 3.1.2@default
     add-aliases wpscan
     add-history wpscan
     add-test-command "wpscan --help"
@@ -349,8 +349,10 @@ function install_eyewitness() {
 
 function install_oneforall() {
     colorecho "Installing OneForAll"
-    git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git 
     cd /opt/tools/OneForAll
+    cp -v /root/sources/assets/patches/OneForAll.patch OneForAll.patch
+    git apply --verbose OneForAll.patch
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases oneforall
@@ -410,9 +412,9 @@ function install_linkfinder() {
 
 function install_timing_attack() {
     colorecho "Installing timing_attack"
-    rvm use 3.0.0@timing_attack --create
+    rvm use 3.1.2@timing_attack --create
     gem install timing_attack
-    rvm use 3.0.0@default
+    rvm use 3.1.2@default
     add-aliases timing_attack
     add-history timing_attack
     add-test-command "timing_attack --help"
@@ -718,6 +720,11 @@ function install_sqlmap() {
     colorecho "Installing sqlmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
     ln -s "/opt/tools/sqlmap/sqlmap.py" /opt/tools/bin/sqlmap
+    echo '#!/usr/bin/env python3' > tempfile.py
+    tail -n +2 /opt/tools/sqlmap/sqlmap.py >> tempfile.py
+    mv tempfile.py /opt/tools/sqlmap/sqlmap.py 
+    chmod +x /opt/tools/sqlmap/sqlmap.py 
+    rm -f ./tempfile.py
     add-history sqlmap
     add-test-command "sqlmap --version"
     add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"

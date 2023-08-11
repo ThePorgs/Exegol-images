@@ -1,6 +1,6 @@
 # Author: The Exegol Project
 
-FROM debian:11-slim
+FROM debian:12-slim
 
 ARG TAG="local"
 ARG VERSION="local"
@@ -27,7 +27,7 @@ RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
     ./entrypoint.sh package_misc && \
     ./entrypoint.sh package_misc_configure && \
     ./entrypoint.sh post_install && \
-    rm -rf /root/sources /var/lib/apt/lists/*
+    rm -rf /root/sources /var/lib/apt/lists/* /var/cache/ /root/.cache
 
 WORKDIR /workspace
 
