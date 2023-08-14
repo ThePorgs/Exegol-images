@@ -43,9 +43,9 @@ jobs:
             IMAGE_VERSION=${COMMIT_ID:0:8}
           fi
           if [ "${{ inputs.IMAGE_BASE_NAME }}" == "nightly" ]; then
-            DOCS_BRANCH="export_tools_main"
+            DOCS_BRANCH="main"
           else
-            DOCS_BRANCH="export_tools_dev_images"
+            DOCS_BRANCH="dev_images"
           fi
           echo "image_version=${IMAGE_VERSION}"
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
