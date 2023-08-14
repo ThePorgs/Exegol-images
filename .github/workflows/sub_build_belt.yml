@@ -134,9 +134,9 @@ jobs:
     if: always() && inputs.PR_MODE == false && ( needs.push.result == 'success' && needs.test.result == 'success' )
     uses: ./.github/workflows/sub_export_tools.yml
     with:
-      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       ARCH: ${{ inputs.ARCH }}
     secrets:
       EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
