@@ -129,7 +129,7 @@ jobs:
     needs: test
     # Only exporting tools list if not in PR_MODE, in order to prevent external PRs from accessing GitHub token
     # Only exporting tools list if tests were a success
-    if: always() && inputs.PR_MODE == false && && needs.test.result == 'success'
+    if: always() && inputs.PR_MODE == false && needs.test.result == 'success'
     uses: ./.github/workflows/sub_export_tools.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}

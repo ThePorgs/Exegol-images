@@ -51,7 +51,7 @@ jobs:
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
           echo "docs_branch=${DOCS_BRANCH}"
           echo "docs_branch=${DOCS_BRANCH}" >> $GITHUB_OUTPUT
-      - name: Checkout Exegol-docs (main branch for nightly)
+      - name: Checkout Exegol-docs
         uses: actions/checkout@v3
         with:
           repository: 'ThePorgs/Exegol-docs'
