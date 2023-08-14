@@ -42,20 +42,20 @@ jobs:
           if [ "$IMAGE_VERSION" == "" ]; then
             IMAGE_VERSION=${COMMIT_ID:0:8}
           fi
+          if [ "${{ inputs.IMAGE_BASE_NAME }}" == "nightly" ]; then
+            DOCS_BRANCH="export_tools_main"
+          else
+            DOCS_BRANCH="export_tools_main"
+          fi
           echo "image_version=${IMAGE_VERSION}"
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "docs_branch=${DOCS_BRANCH}"
+          echo "docs_branch=${DOCS_BRANCH}" >> $GITHUB_OUTPUT
       - name: Checkout Exegol-docs (main branch for nightly)
-        if: success() && ${{ inputs.IMAGE_BASE_NAME }} == "nightly"
         uses: actions/checkout@v3
         with:
           repository: 'ThePorgs/Exegol-docs'
-          ref: 'export_tools_main'
-      - name: Checkout Exegol-docs (dev-images branch for nightly)
-        if: success() && ${{ inputs.IMAGE_BASE_NAME }} != "nightly"
-        uses: actions/checkout@v3
-        with:
-          repository: 'ThePorgs/Exegol-docs'
-          ref: 'export_tools_dev_images'
+          ref: ${{ steps.prepare.outputs.docs_branch }}
       - name: Inspect the built image
         id: image_exists
         run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
