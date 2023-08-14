@@ -92,7 +92,6 @@ jobs:
   clean_runners:
     name: Clean runner
     needs:
-      - tools_list
       - publish
       - build_belt
     # clean runners, if publish was a success, or at least if build succeeded
