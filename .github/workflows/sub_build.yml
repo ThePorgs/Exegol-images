@@ -36,6 +36,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Prepare build
+        # IMAGE_VERSION is empty if the image is nightly
+        # For nightly, we then use the first 8 chars as the image version
+        # Also preparing other variables used for tagging the image to build
         id: prepare_build
         env:
           DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
