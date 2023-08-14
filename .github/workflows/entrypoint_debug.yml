@@ -1,25 +1,27 @@
-name: Pre-release (light)
+name: (debug) Nightly build
 
 on:
-  pull_request:
-    title:
-      - "Release *.*.*"
-      - "Release *.*.*b*"
-    branches: main
+  push:
+    branches:
+      - export_tools
     paths-ignore:
-      - ".github/**"
+#      - ".github/**"
       - "**.md"
-
-# cf https://github.com/actions/runner/issues/2324, paths-ignore will only be respected at PR creation
-# all new commits then added in the PR will trigger the workflow
 
 env:
   # intermediary registry in which architecture-specific images must be pushed
   DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
   # final registry target, in which arch-specific images must be aggregated
-  DOCKER_TARGET_REPO: "nwodtuhs/exegol-preprod"
-  IMAGE_BASE_NAME: "light"
-  DOCKERFILE: "light.dockerfile"
+  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
+  IMAGE_BASE_NAME: "nightly"
+  DOCKERFILE: "debug.dockerfile"
+
+# creating a concurrency group for nightly builds
+# so that when pushing multiple things in dev, build is always running for the latest push
+# this is to save resources, by killing "in progress" jobs when another build starts for the last push
+#concurrency:
+#  group: nightly_build
+#  cancel-in-progress: true
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -31,7 +33,6 @@ jobs:
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
-      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
@@ -40,8 +41,6 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)"
-          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
 
   build_belt:
     name: Build belt
@@ -49,14 +48,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [arm64, amd64]
+        arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
       DOCKER_TARGET_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       ARCH: ${{ matrix.arch }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -66,9 +64,7 @@ jobs:
   publish:
     name: Publish
     timeout-minutes: 60
-    needs:
-      - varset
-      - build_belt
+    needs: build_belt
     runs-on: self-hosted
     # only publishing if the tests were a success (implicit by the success of build_belt).
     if: needs.build_belt.result == 'success'
@@ -86,8 +82,6 @@ jobs:
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
-        env:
-          IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
         if: success() && env.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
@@ -98,10 +92,14 @@ jobs:
   clean_runners:
     name: Clean runner
     needs:
+      - tools_list
       - publish
       - build_belt
     # clean runners, if publish was a success, or at least if build succeeded
+    # we don't care if tools_list worked or not
     if: always() && ( needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure'))
+    # even if this job fails, it won't affect the success/fail status of the whole workflow
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -111,7 +109,7 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove image built for ${{ matrix.arch }}
+      - name: Remove local image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
         run: |
           image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
           echo "Removing $image_name"
@@ -129,5 +127,3 @@ jobs:
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
-  
-
