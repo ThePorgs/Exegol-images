@@ -137,7 +137,7 @@ jobs:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
-      ARCH: ${{ matrix.arch }}
+      ARCH: ${{ inputs.ARCH }}
     secrets:
       EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
 
