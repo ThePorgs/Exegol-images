@@ -63,6 +63,18 @@ function install_geowordlists() {
     add-to-list "geowordlists,https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city."
 }
 
+function install_pkcrack() {
+    colorecho "Installing pkcrack"
+    git -C /opt/tools/ clone https://github.com/keyunluo/pkcrack
+    cd /opt/tools/pkcrack/build
+    cmake ..
+    make
+    ln -s /opt/tools/pkcrack/bin/pkcrack /opt/tools/bin
+    ln -s /opt/tools/pkcrack/bin/zipdecrypt /opt/tools/bin
+    add-history pkcrack
+    add-to-list "pkcrack,https://github.com/keyunluo/pkcrack,tool to generate wordlists of passwords containing cities at a defined distance around the client city"
+}
+
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
     set_ruby_env
@@ -70,6 +82,8 @@ function package_cracking() {
     install_john                    # Password cracker
     install_name-that-hash          # Name-That-Hash, the hash identifier tool
     install_haiti                   # haiti, hash type identifier
+    install_geowordlists            # wordlists generator
+    install_pkcrack                 # known plaintext ZIP cracker
 }
 
 function package_cracking_configure() {
