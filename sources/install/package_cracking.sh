@@ -66,6 +66,7 @@ function install_geowordlists() {
 function install_pkcrack() {
     colorecho "Installing pkcrack"
     git -C /opt/tools/ clone https://github.com/keyunluo/pkcrack
+    mkdir -v /opt/tools/pkcrack/build/
     cd /opt/tools/pkcrack/build
     cmake ..
     make
