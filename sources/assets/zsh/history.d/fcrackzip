@@ -1,1 +1,1 @@
-fcrackzip -u -v -D -p /usr/share/wordlists/rockyou.txt file.zip
+fcrackzip -u -v -D -p `fzf-wordlists` file.zip
