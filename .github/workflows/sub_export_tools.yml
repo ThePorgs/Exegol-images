@@ -45,13 +45,13 @@ jobs:
           echo "image_version=${IMAGE_VERSION}"
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
       - name: Checkout Exegol-docs (main branch for nightly)
-        if: success() && ${{ inputs.IMAGE_BASE_NAME == "nightly" }}
+        if: success() && ${{ inputs.IMAGE_BASE_NAME }} == "nightly"
         uses: actions/checkout@v3
         with:
           repository: 'ThePorgs/Exegol-docs'
           ref: 'export_tools_main'
       - name: Checkout Exegol-docs (dev-images branch for nightly)
-        if: success() && ${{ inputs.IMAGE_BASE_NAME != "nightly" }}
+        if: success() && ${{ inputs.IMAGE_BASE_NAME }} != "nightly"
         uses: actions/checkout@v3
         with:
           repository: 'ThePorgs/Exegol-docs'
