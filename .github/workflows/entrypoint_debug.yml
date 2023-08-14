@@ -95,7 +95,6 @@ jobs:
       - publish
       - build_belt
     # clean runners, if publish was a success, or at least if build succeeded
-    # we don't care if tools_list worked or not
     if: always() && ( needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure'))
     # even if this job fails, it won't affect the success/fail status of the whole workflow
     continue-on-error: true

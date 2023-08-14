@@ -132,13 +132,14 @@ jobs:
           echo '[*] Setting git config'
           git config --global user.name "exegol-images[pipeline]"
           git config --global user.email "pipeline@exegol.images"
-          echo '[*] Staging changes'
           if [ "${{ inputs.IMAGE_BASE_NAME }}" == "nightly" ]
           then
+            echo '[*] Staging changes (nightly)'
             git add --verbose source/assets/installed_tools/lists/latest_nightly_${{ inputs.ARCH }}.csv
             git add --verbose source/assets/installed_tools/nightly.csv
           else
-            git add --verbose source/assets/installed_tools/lists/${{ inputs.IMAGE_BASE_NAME }}_${{ inputs.IMAGE_VERSION }}_${{ inputs.ARCH }}.csv
+            echo '[*] Staging changes (release)'
+            git add --verbose source/assets/installed_tools/lists/${{ inputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ inputs.ARCH }}.csv
             git add --verbose source/assets/installed_tools/releases.csv
           fi
           echo '[*] Commiting changes'
