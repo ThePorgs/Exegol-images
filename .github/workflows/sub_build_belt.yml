@@ -52,6 +52,8 @@ jobs:
       - builder
       - ${{ inputs.ARCH }}
     steps:
+      - name: Clean dangling build cache
+        run: docker builder prune --force
       - name: Clean Exegol dangling images
         # dangling: images that were replaced with ones with the same name and tag
         run: docker image prune --force --filter "label=org.exegol.app=Exegol"
