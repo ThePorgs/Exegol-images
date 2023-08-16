@@ -874,16 +874,19 @@ function install_bqm() {
 }
 
 function install_neo4j() {
-    colorecho "Configure neo4j"
+    colorecho "Installing neo4j"
     wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
-    echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
-    apt-get update
+    # TODO: temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
+    #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
+    echo 'deb https://debian.neo4j.com stable 4.4' | tee /etc/apt/sources.list.d/neo4j.list
+    apt update
+    apt install -y --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
     fapt neo4j
     # TODO: when temporary fix is not needed anymore --> neo4j-admin dbms set-initial-password exegol4thewin
-    neo4j-admin dbms set-initial-password exegol4thewin
+    neo4j-admin set-initial-password exegol4thewin
     mkdir -p /usr/share/neo4j/logs/
     touch /usr/share/neo4j/logs/neo4j.log
-    cp /usr/bin/neo4j /opt/tools/bin/
+    add-aliases neo4j
     add-history neo4j
     add-test-command "neo4j version"
     add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
