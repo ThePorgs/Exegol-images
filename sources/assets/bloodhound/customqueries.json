@@ -107,7 +107,7 @@
         },
         {
             "name": "Kerberoastable users with a path to DA",
-            "category": "Kerberoasting",
+            "category": "Roasting",
             "queryList": [{
                 "final": true,
                 "query": "MATCH (u:User {hasspn:true}) MATCH (g:Group) WHERE g.objectid ENDS WITH '-512' MATCH p = shortestPath( (u)-[*1..]->(g) ) RETURN p"
@@ -115,7 +115,7 @@
         },
         {
             "name": "Kerberoastable users with a path to High Value",
-            "category": "Kerberoasting",
+            "category": "Roasting",
             "queryList": [{
                 "final": true,
                 "query": "MATCH (u:User {hasspn:true}),(n {highvalue:true}),p = shortestPath( (u)-[*1..]->(n) ) RETURN p"
@@ -123,7 +123,7 @@
         },
         {
             "name": " Kerberoastable users and where they are AdminTo",
-            "category": "Kerberoasting",
+            "category": "Roasting",
             "queryList": [{
                 "final": true,
                 "query": "OPTIONAL MATCH (u:User) WHERE u.hasspn=true OPTIONAL MATCH (u)-[r:AdminTo]->(c:Computer) RETURN u"
@@ -131,7 +131,7 @@
         },
         {
             "name": "Kerberoastable users who are members of high value groups",
-            "category": "Kerberoasting",
+            "category": "Roasting",
             "queryList": [{
                 "final": true,
                 "query": "MATCH (u:User)-[r:MemberOf*1..]->(g:Group) WHERE g.highvalue=true AND u.hasspn=true RETURN u"
@@ -139,7 +139,7 @@
         },
         {
             "name": "Kerberoastable users with passwords last set > 5 years ago",
-            "category": "Kerberoasting",
+            "category": "Roasting",
             "queryList": [{
                 "final": true,
                 "query": "MATCH (u:User) WHERE n.hasspn=true AND WHERE u.pwdlastset < (datetime().epochseconds - (1825 * 86400)) and NOT u.pwdlastset IN [-1.0, 0.0] RETURN u"
@@ -147,7 +147,7 @@
         },
         {
             "name": "Kerberoastable Users",
-            "category": "Kerberoasting",
+            "category": "Roasting",
             "queryList": [{
                 "final": true,
                 "query": "MATCH (n:User)WHERE n.hasspn=true RETURN n",
@@ -156,7 +156,7 @@
         },
         {
             "name": "AS-REProastable Users",
-            "category": "Kerberoasting",
+            "category": "Roasting",
             "queryList": [{
                 "final": true,
                 "query": "MATCH (u:User {dontreqpreauth: true}) RETURN u"
