@@ -183,10 +183,13 @@ function install_neovim() {
         rm -rf squashfs-root nvim.appimage
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
-        tar -xvf nvim-macos.tar.gz
-        cp -r nvim-macos/* /opt/tools/nvim
-        rm -rf nvim-macos nvim-macos.tar.gz
+        git clone https://github.com/neovim/neovim.git
+        cd neovim
+        make CMAKE_BUILD_TYPE=RelWithDebInfo
+        make install
+        cd ..
+        rm -rf neovim
+    fi
     add-test-command "nvim --version"
     add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
 }
