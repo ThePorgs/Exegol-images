@@ -179,6 +179,7 @@ function install_neovim() {
         curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
         chmod u+x nvim.appimage
         ./nvim.appimage --appimage-extract
+        mkdir /opt/tools/nvim
         cp -r squashfs-root/usr/ /opt/tools/nvim
         rm -rf squashfs-root nvim.appimage
     elif [[ $(uname -m) = 'aarch64' ]]
@@ -188,7 +189,7 @@ function install_neovim() {
         make CMAKE_BUILD_TYPE=RelWithDebInfo
         make install
         cd ..
-        rm -rf neovim
+        rm -rf ./neovim
     fi
     add-test-command "nvim --version"
     add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
