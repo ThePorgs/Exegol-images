@@ -177,8 +177,10 @@ function install_neovim() {
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
     chmod u+x nvim.appimage
     ./nvim.appimage --appimage-extract
-    cp -r squashfs-root/usr/* /usr/
+    cp -r squashfs-root/usr/ /opt/tools/nvim
     rm -rf squashfs-root
+    add-test-command "nvim --version"
+    add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
 }
 
 function install_mdcat() {
@@ -334,6 +336,7 @@ function package_base_debug() {
     install_fzf                                         # Fuzzy finder
     install_pipx
     add-history curl
+    install_neovim
 
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/

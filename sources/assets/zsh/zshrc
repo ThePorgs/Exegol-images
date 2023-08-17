@@ -40,6 +40,9 @@ setopt HIST_FIND_NO_DUPS
 # Adding exegol bins to PATH
 export PATH=/opt/tools/bin:$PATH
 
+# Adding neovim to PATH
+export PATH=/opt/tools/nvim/bin:$PATH
+
 # Adding john to PATH
 export JOHN=/opt/tools/john/run
 export PATH=$JOHN:$PATH
