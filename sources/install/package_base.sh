@@ -174,11 +174,19 @@ function install_ultimate_vimrc() {
 }
 
 function install_neovim() {
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-    chmod u+x nvim.appimage
-    ./nvim.appimage --appimage-extract
-    cp -r squashfs-root/usr/ /opt/tools/nvim
-    rm -rf squashfs-root
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        chmod u+x nvim.appimage
+        ./nvim.appimage --appimage-extract
+        cp -r squashfs-root/usr/ /opt/tools/nvim
+        rm -rf squashfs-root nvim.appimage
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
+        tar -xvf nvim-macos.tar.gz
+        cp -r nvim-macos/* /opt/tools/nvim
+        rm -rf nvim-macos nvim-macos.tar.gz
     add-test-command "nvim --version"
     add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
 }
