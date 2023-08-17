@@ -184,6 +184,7 @@ function install_neovim() {
         rm -rf squashfs-root nvim.appimage
     elif [[ $(uname -m) = 'aarch64' ]]
     then
+        # Build take ~5min
         git clone https://github.com/neovim/neovim.git
         cd neovim
         make CMAKE_BUILD_TYPE=RelWithDebInfo
