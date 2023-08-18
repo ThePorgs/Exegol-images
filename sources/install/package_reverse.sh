@@ -29,7 +29,7 @@ function install_reverse_apt_tools() {
 }
 
 function install_pwntools() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing pwntools"
     python -m pip install pwntools
     python -m pip install pathlib2
@@ -52,7 +52,7 @@ function install_pwndbg() {
 }
 
 function install_angr() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing angr"
     fapt libffi-dev
     python3 -m pip install angr

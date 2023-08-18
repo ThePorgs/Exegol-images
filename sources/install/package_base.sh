@@ -29,6 +29,7 @@ function install_exegol-history() {
 
 function install_rust_cargo() {
     # CODE-CHECK-WHITELIST=add-aliases
+    # CHECK : add-history - Cargo install ... ?
     colorecho "Installing rustc, cargo, rustup"
     curl https://sh.rustup.rs -sSf | sh -s -- -y
     source "$HOME/.cargo/env"
@@ -45,6 +46,7 @@ function filesystem() {
 
 function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases
+    # CHECK : add-history - go install ... ?
     if command -v /usr/local/go/bin/go &>/dev/null; then
         return
     fi
@@ -89,7 +91,7 @@ function deploy_exegol() {
 }
 
 function install_locales() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
     colorecho "Configuring locales"
     apt-get -y install locales
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
@@ -119,7 +121,7 @@ function install_firefox() {
 }
 
 function install_rvm() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing rvm"
     gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     curl -sSL https://get.rvm.io | bash -s stable --ruby
@@ -131,6 +133,7 @@ function install_rvm() {
 }
 
 function install_fzf() {
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing fzf"
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
@@ -140,7 +143,7 @@ function install_fzf() {
 }
 
 function install_ohmyzsh() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
     if [ -d /root/.oh-my-zsh ]; then
         return
     fi
@@ -156,7 +159,7 @@ function install_ohmyzsh() {
 }
 
 function install_pipx() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing pipx"
     python3 -m pip install pipx
     pipx ensurepath
@@ -164,7 +167,7 @@ function install_pipx() {
 }
 
 function install_yarn() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing yarn"
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
@@ -173,7 +176,7 @@ function install_yarn() {
 }
 
 function install_ultimate_vimrc() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
     if [ -d /root/.vim_runtime ]; then
         return
     fi

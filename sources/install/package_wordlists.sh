@@ -32,7 +32,7 @@ function install_cewl() {
 }
 
 function install_seclists() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing seclists"
     git -C /opt clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
     cd /opt/seclists
