@@ -4,6 +4,7 @@
 source common.sh
 
 function install_pwncat() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwncat"
     python3 -m pipx install pwncat-cs
     add-history pwncat
@@ -12,6 +13,7 @@ function install_pwncat() {
 }
 
 function install_metasploit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
     mkdir /tmp/metasploit_install

@@ -4,6 +4,7 @@
 source common.sh
 
 function install_cracking_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing cracking apt tools"
     fapt hashcat fcrackzip pdfcrack bruteforce-luks
 
@@ -57,6 +58,7 @@ function install_haiti() {
 }
 
 function install_geowordlists() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GeoWordlists"
     python3 -m pipx install git+https://github.com/p0dalirius/GeoWordlists
     add-history geowordlists

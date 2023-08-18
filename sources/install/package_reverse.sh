@@ -4,6 +4,7 @@
 source common.sh
 
 function install_reverse_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing reverse apt tools"
     fapt nasm wabt strace
 
@@ -28,6 +29,7 @@ function install_reverse_apt_tools() {
 }
 
 function install_pwntools() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwntools"
     python -m pip install pwntools
     python -m pip install pathlib2
@@ -50,6 +52,7 @@ function install_pwndbg() {
 }
 
 function install_angr() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing angr"
     fapt libffi-dev
     python3 -m pip install angr
@@ -70,7 +73,8 @@ function install_checksec-py() {
     add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
 
-function install_radare2(){
+function install_radare2() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing radare2"
     git -C /opt/tools/ clone --depth 1 https://github.com/radareorg/radare2
     /opt/tools/radare2/sys/install.sh
@@ -118,6 +122,7 @@ function install_jd-gui() {
 }
 
 function install_pwninit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwninit"
     fapt liblzma-dev
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme

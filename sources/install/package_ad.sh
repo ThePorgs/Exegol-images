@@ -4,6 +4,7 @@
 source common.sh
 
 function install_ad_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing AD apt tools"
     fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
 
@@ -56,6 +57,7 @@ function configure_responder() {
 }
 
 function install_sprayhound() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sprayhound"
     python3 -m pipx install git+https://github.com/Hackndo/sprayhound
     add-history sprayhound
@@ -64,6 +66,7 @@ function install_sprayhound() {
 }
 
 function install_smartbrute() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smartbrute"
     python3 -m pipx install git+https://github.com/ShutdownRepo/smartbrute
     add-history smartbrute
@@ -72,6 +75,7 @@ function install_smartbrute() {
 }
 
 function install_ldapdomaindump() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldapdomaindump"
     python3 -m pipx install git+https://github.com/dirkjanm/ldapdomaindump
     add-history ldapdomaindump
@@ -152,6 +156,7 @@ function install_cypheroth() {
 }
 
 function install_mitm6_pip() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mitm6 with pip"
     python3 -m pipx install mitm6
     add-history mitm6
@@ -160,6 +165,7 @@ function install_mitm6_pip() {
 }
 
 function install_aclpwn() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing aclpwn with pip"
     python3 -m pipx install git+https://github.com/aas-n/aclpwn.py
     add-history aclpwn
@@ -204,6 +210,7 @@ function install_pykek() {
 }
 
 function install_lsassy() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing lsassy"
     python3 -m pipx install lsassy
     add-history lsassy
@@ -224,6 +231,7 @@ function install_privexchange() {
 }
 
 function install_ruler() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
     go install github.com/sensepost/ruler@latest
     add-history ruler
@@ -242,6 +250,7 @@ function install_darkarmour() {
 }
 
 function install_amber() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing amber"
     # Installing keystone requirement
     git -C /opt/tools/ clone --depth 1 https://github.com/EgeBalci/keystone
@@ -319,6 +328,7 @@ function install_evilwinrm() {
 }
 
 function install_pypykatz() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
     python3 -m pipx install pypykatz
     add-history pypykatz
@@ -424,6 +434,7 @@ function install_polenum() {
 }
 
 function install_smbmap() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smbmap"
     python3 -m pipx install git+https://github.com/ShawnDEvans/smbmap
     add-history smbmap
@@ -484,6 +495,7 @@ function install_ntlmv1-multi() {
 }
 
 function install_hashonymize() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hashonymizer"
     python3 -m pipx install git+https://github.com/ShutdownRepo/hashonymize
     add-history hashonymize
@@ -492,6 +504,7 @@ function install_hashonymize() {
 }
 
 function install_gosecretsdump() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gosecretsdump"
     go install -v github.com/C-Sto/gosecretsdump@latest
     add-history gosecretsdump
@@ -500,6 +513,7 @@ function install_gosecretsdump() {
 }
 
 function install_adidnsdump() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing adidnsdump"
     python3 -m pipx install git+https://github.com/dirkjanm/adidnsdump
     add-history adidnsdump
@@ -581,6 +595,7 @@ function install_dfscoerce() {
 }
 
 function install_coercer() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Coercer"
     python3 -m pipx install git+https://github.com/p0dalirius/Coercer
     add-history coercer
@@ -665,6 +680,7 @@ function install_pywsus() {
 }
 
 function install_donpapi() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DonPAPI"
     fapt swig
     python3 -m pipx install git+https://github.com/login-securite/DonPAPI
@@ -674,6 +690,7 @@ function install_donpapi() {
 }
 
 function install_webclientservicescanner() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing webclientservicescanner"
     python3 -m pipx install git+https://github.com/Hackndo/WebclientServiceScanner
     add-history webclientservicescanner
@@ -682,6 +699,7 @@ function install_webclientservicescanner() {
 }
 
 function install_certipy() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Certipy"
     python3 -m pipx install git+https://github.com/ly4k/Certipy
     add-history certipy
@@ -750,6 +768,7 @@ function install_ldaprelayscan() {
 }
 
 function install_goldencopy() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
     python3 -m pipx install goldencopy
     add-history goldencopy
@@ -772,6 +791,7 @@ function install_crackhound() {
 }
 
 function install_kerbrute() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Kerbrute"
     go install -v github.com/ropnop/kerbrute@latest
     add-history kerbrute
@@ -780,6 +800,7 @@ function install_kerbrute() {
 }
 
 function install_ldeep() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldeep"
     python3 -m pipx install ldeep
     add-history ldeep
@@ -804,6 +825,7 @@ function install_rusthound() {
 }
 
 function install_certsync() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing certsync"
     python3 -m pipx install git+https://github.com/zblurx/certsync
     add-history certsync
@@ -812,6 +834,7 @@ function install_certsync() {
 }
 
 function install_keepwn() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing KeePwn"
     python3 -m pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
     add-history keepwn
@@ -820,6 +843,7 @@ function install_keepwn() {
 }
 
 function install_pre2k() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pre2k"
     python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
     add-history pre2k
@@ -828,6 +852,7 @@ function install_pre2k() {
 }
 
 function install_msprobe() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing msprobe"
     python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
     add-history msprobe
@@ -836,6 +861,7 @@ function install_msprobe() {
 }
 
 function install_masky() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing masky"
     python3 -m pipx install git+https://github.com/Z4kSec/Masky
     add-history masky
@@ -844,6 +870,7 @@ function install_masky() {
 }
 
 function install_roastinthemiddle() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing roastinthemiddle"
     python3 -m pipx install git+https://github.com/Tw1sm/RITM
     add-history roastinthemiddle

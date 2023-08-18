@@ -4,6 +4,7 @@
 source common.sh
 
 function install_sipvicious() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing SIPVicious"
     python3 -m pipx install git+https://github.com/enablesecurity/sipvicious.git
     add-history sipvicious_svcrack
