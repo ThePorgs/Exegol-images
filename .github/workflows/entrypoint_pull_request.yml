@@ -44,7 +44,7 @@ jobs:
           echo "IMAGE_BASE_NAME=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
 
-  setup-tree-sitter:
+  setup-code-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -94,7 +94,7 @@ jobs:
 
   build_belt:
     name: Build belt
-    needs: [varset, setup-tree-sitter]
+    needs: [varset, setup-code-check]
     strategy:
       fail-fast: false
       matrix:

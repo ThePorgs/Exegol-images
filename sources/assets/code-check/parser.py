@@ -33,6 +33,7 @@ def get_functions_name(input_string):
     result = []
     while i < len(lines):
         line = lines[i]
+        print(f"Line :", line)
         if file_pattern.match(line):
             current_file = {
                 "filename": line,
@@ -42,6 +43,7 @@ def get_functions_name(input_string):
             i += 1
             continue
         if name_pattern.search(line):
+            print(name_pattern.search(line).group('name'))
             current_file["functions"].append(name_pattern.search(line).group('name'))
             i += 1
             continue
