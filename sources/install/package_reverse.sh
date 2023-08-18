@@ -4,6 +4,7 @@
 source common.sh
 
 function install_reverse_apt_tools() {
+    colorecho "Installing reverse apt tools"
     fapt nasm wabt strace
 
     add-history nasm

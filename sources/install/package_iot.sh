@@ -4,6 +4,7 @@
 source common.sh
 
 function install_iot_apt_tools() {
+    colorecho "Installing IOT apt tools"
     fapt avrdude minicom
 
     add-history avrdude

@@ -4,6 +4,7 @@
 source common.sh
 
 function install_ad_apt_tools() {
+    colorecho "Installing AD apt tools"
     fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
 
     add-history samdump2

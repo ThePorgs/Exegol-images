@@ -4,6 +4,7 @@
 source common.sh
 
 function install_web_apt_tools() {
+    colorecho "Installing web apt tools"
     fapt dirb sslscan weevely prips swaks
   
     add-history dirb

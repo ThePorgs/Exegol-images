@@ -4,6 +4,7 @@
 source common.sh
 
 function install_mobile_apt_tools() {
+    colorecho "Installing mobile apt tools"
     fapt android-tools-adb zipalign apksigner apktool scrcpy
 
     add-history adb

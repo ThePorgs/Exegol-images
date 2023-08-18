@@ -4,6 +4,7 @@
 source common.sh
 
 function install_wifi_apt_tools() {
+    colorecho "Installing wifi apt tools"
     fapt aircrack-ng reaver bully cowpatty
   
     add-aliases aircrack-ng

@@ -4,6 +4,7 @@
 source common.sh
 
 function install_forensic_apt_tools() {
+    colorecho "Installing forensic apt tools"
     fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
     
     add-history binwalk

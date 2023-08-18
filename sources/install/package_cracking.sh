@@ -4,6 +4,7 @@
 source common.sh
 
 function install_cracking_apt_tools() {
+    colorecho "Installing cracking apt tools"
     fapt hashcat fcrackzip pdfcrack bruteforce-luks
 
     add-history hashcat

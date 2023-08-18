@@ -183,6 +183,7 @@ function install_mdcat() {
 }
 
 function install_gf() {
+    colorecho "Installing gf"
     # A wrapper around grep, to help you grep for things
     go install -v github.com/tomnomnom/gf@latest
     # Enable autocompletion

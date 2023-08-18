@@ -4,6 +4,7 @@
 source common.sh
 
 function install_sdr_apt_tools() {
+    colorecho "Installing sdr apt tools"
     fapt hackrf gqrx-sdr rtl-433
     
     add-history hackrf

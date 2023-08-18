@@ -6,6 +6,7 @@ source common.sh
 set -e
 
 function install_xfce() {
+    colorecho "Installing and configuring xfce desktop"
 
     # DEBUG TOOLS
     # TODO remove

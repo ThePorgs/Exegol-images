@@ -4,6 +4,7 @@
 source common.sh
 
 function install_misc_apt_tools() {
+    colorecho "Installing misc apt tools"
     fapt rlwrap imagemagick ascii rsync
 
     add-history rlwrap

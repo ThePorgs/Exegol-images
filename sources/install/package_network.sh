@@ -4,6 +4,7 @@
 source common.sh
 
 function install_network_apt_tools() {
+    colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools

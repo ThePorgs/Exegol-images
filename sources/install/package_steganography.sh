@@ -4,6 +4,7 @@
 source common.sh
 
 function install_steganography_apt_tools() {
+    colorecho "Installing steganography apt tools"
     fapt stegosuite steghide exif exiv2 hexedit
 
     add-history stegosuite

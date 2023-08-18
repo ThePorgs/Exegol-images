@@ -4,6 +4,7 @@
 source common.sh
 
 function install_wordlists_apt_tools() {
+    colorecho "Installing wordlists apt tools"
     fapt crunch cupp 
 
     add-history cupp

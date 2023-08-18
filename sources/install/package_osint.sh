@@ -8,6 +8,7 @@ function configure_tor() {
 }
 
 function install_osint_apt_tools() {
+    colorecho "Installing OSINT apt tools"
     fapt exiftool exifprobe dnsenum tor whois recon-ng
 
     add-history exiftool
