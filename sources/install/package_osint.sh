@@ -367,6 +367,7 @@ function install_ignorant() {
 }
 
 function install_trevorspray() {
+    colorecho "Installing trevorspray"
     git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/TREVORspray
     cd /opt/tools/TREVORspray
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27
