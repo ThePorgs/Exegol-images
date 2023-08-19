@@ -1,0 +1,44 @@
+name: (level 1 sub) Code compliance check
+
+on:
+  workflow_call:
+
+jobs:
+  code-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Install Rust and Cargo
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    - name: Setup tree-sitter
+      run: |
+        cargo install tree-sitter-cli
+        mkdir $HOME/src
+        git -C $HOME/src/ clone https://github.com/tree-sitter/tree-sitter-bash.git
+        tree-sitter init-config
+    - name: Debug print tree-sitter parsing
+      run: |
+        tree-sitter query -c ./sources/assets/code-check/colorecho.conf "./sources/install/package*.sh"
+        tree-sitter query -c ./sources/assets/code-check/add-aliases.conf "./sources/install/package*.sh"
+        tree-sitter query -c ./sources/assets/code-check/add-history.conf "./sources/install/package*.sh"
+        tree-sitter query -c ./sources/assets/code-check/add-test-command.conf "./sources/install/package*.sh"
+        tree-sitter query -c ./sources/assets/code-check/add-to-list.conf "./sources/install/package*.sh"
+    - name: Check colorecho
+      run: tree-sitter query -c ./sources/assets/code-check/colorecho.conf "./sources/install/package*.sh"|python3 ./sources/assets/code-check/parser.py
+    - name: Check add-aliases
+      if: always()
+      run: tree-sitter query -c ./sources/assets/code-check/add-aliases.conf "./sources/install/package*.sh"|python3 ./sources/assets/code-check/parser.py
+    - name: Check add-history
+      if: always()
+      run: tree-sitter query -c ./sources/assets/code-check/add-history.conf "./sources/install/package*.sh"|python3 ./sources/assets/code-check/parser.py
+    - name: Check add-test-command
+      if: always()
+      run: tree-sitter query -c ./sources/assets/code-check/add-test-command.conf "./sources/install/package*.sh"|python3 ./sources/assets/code-check/parser.py
+    - name: Check add-to-list
+      if: always()
+      run: tree-sitter query -c ./sources/assets/code-check/add-to-list.conf "./sources/install/package*.sh"|python3 ./sources/assets/code-check/parser.py
