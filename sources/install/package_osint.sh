@@ -8,6 +8,8 @@ function configure_tor() {
 }
 
 function install_osint_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing OSINT apt tools"
     fapt exiftool exifprobe dnsenum tor whois recon-ng
 
     add-history exiftool
@@ -33,6 +35,7 @@ function install_osint_apt_tools() {
 }
 
 function install_youtubedl() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing youtube-dl"
     python3 -m pipx install youtube-dl
     add-history youtube-dl
@@ -41,6 +44,7 @@ function install_youtubedl() {
 }
 
 function install_sublist3r() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sublist3r"
     python3 -m pipx install git+https://github.com/aboul3la/Sublist3r
     add-history sublist3r
@@ -49,6 +53,7 @@ function install_sublist3r() {
 }
 
 function install_assetfinder() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing assetfinder"
     go install -v github.com/tomnomnom/assetfinder@latest
     add-history assetfinder
@@ -57,6 +62,7 @@ function install_assetfinder() {
 }
 
 function install_subfinder() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing subfinder"
     go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
     add-history subfinder
@@ -65,6 +71,7 @@ function install_subfinder() {
 }
 
 function install_findomain() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing findomain"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -84,6 +91,7 @@ function install_findomain() {
 }
 
 function install_holehe() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing holehe"
     python3 -m pipx install holehe
     add-history holehe
@@ -119,6 +127,7 @@ function install_theharvester() {
 }
 
 function install_h8mail() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing h8mail"
     python3 -m pipx install h8mail
     add-history h8mail
@@ -140,6 +149,7 @@ function install_infoga() {
 }
 
 function install_buster() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing buster"
     git -C /opt/tools clone --depth 1 https://github.com/sham00n/buster
     cd /opt/tools/buster
@@ -169,6 +179,7 @@ function install_pwnedornot() {
 }
 
 function install_phoneinfoga() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing phoneinfoga"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -187,6 +198,7 @@ function install_phoneinfoga() {
 }
 
 function install_maigret() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing maigret"
     python3 -m pipx install git+https://github.com/soxoj/maigret.git
     add-history maigret
@@ -207,6 +219,7 @@ function install_linkedin2username() {
 }
 
 function install_toutatis() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing toutatis"
     python3 -m pipx install git+https://github.com/megadose/toutatis
     add-history toutatis
@@ -215,6 +228,7 @@ function install_toutatis() {
 }
 
 function install_waybackurls() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing waybackurls"
     go install -v github.com/tomnomnom/waybackurls@latest
     add-history waybackurls
@@ -247,6 +261,7 @@ function install_photon() {
 }
 
 function install_ipinfo() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ipinfo"
     # TODO: npm venv
     sudo npm install ipinfo-cli --global
@@ -256,6 +271,7 @@ function install_ipinfo() {
 }
 
 function install_constellation() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-test-command
     colorecho "Installing constellation"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -273,6 +289,7 @@ function install_constellation() {
 }
 
 function install_maltego() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Maltego"
     wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
     dpkg -i /tmp/maltegov4.3_package.deb
@@ -307,6 +324,7 @@ function install_finalrecon() {
 }
 
 function install_osrframework() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing osrframework"
     python3 -m pipx install osrframework
     python3 -m pipx inject osrframework 'urllib3<2'
@@ -329,6 +347,7 @@ function install_pwndb() {
 }
 
 function install_githubemail() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing github-email"
     # TODO: npm venv
     npm install --global github-email
@@ -350,6 +369,7 @@ function install_recondog() {
 }
 
 function install_gron() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gron"
     go install -v github.com/tomnomnom/gron@latest
     add-history gron
@@ -358,6 +378,7 @@ function install_gron() {
 }
 
 function install_ignorant() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ignorant"
     python3 -m pipx install git+https://github.com/megadose/ignorant
     add-history ignorant
@@ -366,6 +387,8 @@ function install_ignorant() {
 }
 
 function install_trevorspray() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing trevorspray"
     git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/TREVORspray
     cd /opt/tools/TREVORspray
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27

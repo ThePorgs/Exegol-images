@@ -4,6 +4,8 @@
 source common.sh
 
 function install_misc_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing misc apt tools"
     fapt rlwrap imagemagick ascii rsync
 
     add-history rlwrap
@@ -23,6 +25,7 @@ function install_misc_apt_tools() {
 }
 
 function install_goshs() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing goshs"
     go install -v github.com/patrickhener/goshs@latest
     add-history goshs
@@ -31,6 +34,7 @@ function install_goshs() {
 }
 
 function install_shellerator() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing shellerator"
     python3 -m pipx install git+https://github.com/ShutdownRepo/shellerator
     add-history shellerator
@@ -39,6 +43,7 @@ function install_shellerator() {
 }
 
 function install_uberfile() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing uberfile"
     python3 -m pipx install git+https://github.com/ShutdownRepo/uberfile
     add-history uberfile
@@ -56,6 +61,7 @@ function install_arsenal() {
 }
 
 function install_whatportis() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing whatportis"
     python3 -m pipx install whatportis
     # TODO : FIX : "port": port[1] if port[1] else "---",list index out of range - cli.py
@@ -66,6 +72,7 @@ function install_whatportis() {
 }
 
 function install_searchsploit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing searchsploit"
     if [ ! -d /opt/tools/exploitdb ]
     then
@@ -106,6 +113,7 @@ function configure_trilium() {
 }
 
 function install_ngrok() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ngrok"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -126,6 +134,7 @@ function install_ngrok() {
 }
 
 function install_objectwalker() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing objectwalker"
     python3 -m pipx install git+https://github.com/p0dalirius/objectwalker
     add-history objectwalker

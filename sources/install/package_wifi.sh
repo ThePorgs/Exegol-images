@@ -4,6 +4,7 @@
 source common.sh
 
 function install_wifi_apt_tools() {
+    colorecho "Installing wifi apt tools"
     fapt aircrack-ng reaver bully cowpatty
   
     add-aliases aircrack-ng
@@ -73,6 +74,7 @@ function install_bettercap() {
 }
 
 function install_hcxtools() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxtools"
     fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
     # git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools  # Depth 1 must be removed because of the git checkout
@@ -81,8 +83,8 @@ function install_hcxtools() {
     # Checking out to specific commit is a temporary fix to the project no compiling anymore.
     # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxtools/issues/233) => Need to upgrade to the Debian 12 release
     git checkout 5937d2ad9d021f3b5e2edd55d79439b8485d3222
-    make
-    make install
+    make install PREFIX=/opt/tools
+    ln -s /opt/tools/bin/hcxpcapngtool /opt/tools/bin/hcxpcaptool
     add-history hcxtools
     add-test-command "hcxpcapngtool --version"
     add-test-command "hcxhashtool --version"
@@ -90,6 +92,7 @@ function install_hcxtools() {
 }
 
 function install_hcxdumptool() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxdumptool"
     fapt libcurl4-openssl-dev libssl-dev
     # git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool  # Depth 1 must be removed because of the git checkout
@@ -98,9 +101,7 @@ function install_hcxdumptool() {
     # Checking out to specific commit is a temporary fix to the project no compiling anymore.
     # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232) => upgrade to debian 12
     git checkout 56d078de4d6f5cef07b378707ab478fde03168c0
-    make
-    make install
-    ln -s /usr/local/bin/hcxpcapngtool /usr/local/bin/hcxpcaptool
+    make install PREFIX=/opt/tools
     add-history hcxdumptool
     add-test-command "hcxdumptool --version"
     add-to-list "hcxdumptool,https://github.com/ZerBea/hcxdumptool,Small tool to capture packets from wlan devices."

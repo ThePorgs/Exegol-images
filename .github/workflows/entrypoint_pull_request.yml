@@ -4,7 +4,8 @@ on:
   pull_request:
     branches:
       - dev
-      - webui
+      - "*.*.*"
+      - "*.*.*b*"
     paths-ignore:
       - ".github/**"
       - "**.md"
@@ -43,9 +44,13 @@ jobs:
           echo "IMAGE_BASE_NAME=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
 
+  code-check:
+    name: Code compliance
+    uses: ./.github/workflows/sub_code_check.yml
+
   build_belt:
     name: Build belt
-    needs: varset
+    needs: [varset, code-check]
     strategy:
       fail-fast: false
       matrix:

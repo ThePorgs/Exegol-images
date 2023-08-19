@@ -1,0 +1,148 @@
+name: (level 2 sub) Export tools list
+
+on:
+  workflow_call:
+    inputs:
+      DOCKER_BUILD_REPO:
+        required: true
+        type: string
+      IMAGE_BASE_NAME:
+        required: true
+        type: string
+      IMAGE_VERSION:
+        required: false
+        default: ''
+        type: string
+      ARCH:
+        required: true
+        type: string
+    secrets:
+      EXEGOL_DOCS_SSH_DEPLOY_KEY:
+        required: true
+
+jobs:
+  export_tools:
+    name: Export tools list
+    # Only exporting tools list if not in PR_MODE, in order to prevent external PRs from accessing GitHub token
+    # Only exporting tools list if tests and push were a success
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    steps:
+      - name: Checkout Exegol-images
+        uses: actions/checkout@v3
+      - name: Prepare image version
+        # IMAGE_VERSION is empty if the image is nightly
+        # For nightly, we then use the first 8 chars as the image version
+        id: prepare
+        run: |
+          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          IMAGE_VERSION=${{ inputs.IMAGE_VERSION }}
+          if [ "$IMAGE_VERSION" == "" ]; then
+            IMAGE_VERSION=${COMMIT_ID:0:8}
+          fi
+          if [ "${{ inputs.IMAGE_BASE_NAME }}" == "nightly" ]; then
+            DOCS_BRANCH="main"
+          else
+            DOCS_BRANCH="dev_images"
+          fi
+          echo "image_version=${IMAGE_VERSION}"
+          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "docs_branch=${DOCS_BRANCH}"
+          echo "docs_branch=${DOCS_BRANCH}" >> $GITHUB_OUTPUT
+      - name: Checkout Exegol-docs
+        uses: actions/checkout@v3
+        with:
+          repository: 'ThePorgs/Exegol-docs'
+          ref: ${{ steps.prepare.outputs.docs_branch }}
+      - name: Inspect the built image
+        id: image_exists
+        run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+      - name: Create a container from the built image
+        run: docker run --name exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }} --rm -t -d ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }} endless
+      - name: Export the tools list
+        if: success()
+        run: docker cp exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}:/.exegol/installed_tools.csv installed_tools.csv
+      - name: Debug print installed_tools.csv
+        id: list_exists
+        run: cat installed_tools.csv
+      - name: Sanity check for installed_tools.csv
+        if: success()
+        run: |
+          grep -qE '([^,]*,[^,]*){3,}' installed_tools.csv \
+            && (echo '[-] Wrong number of columns on the following lines' \
+            && grep -oE '([^,]*,[^,]*){3,}' installed_tools.csv || exit 1) \
+            || (echo '[+] List contains right number of columns' && exit 0)
+      - name: Stop the container
+        if: always() && steps.image_exists.outcome == 'success'
+        run: docker stop exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+      - name: Adding list to repo and tables
+        id: adding_list
+        if: always() && steps.list_exists.outcome == 'success'
+        run: |
+          mkdir -p source/assets/installed_tools/lists
+          if [ "${{ inputs.IMAGE_BASE_NAME }}" == "nightly" ]
+          then
+            echo '[*] Moving tools list to (static) latest_nightly_arch.csv'
+            mv -v installed_tools.csv source/assets/installed_tools/lists/latest_nightly_${{ inputs.ARCH }}.csv
+            echo '[*] Editing nightly.csv content so that new tools list appears'
+            echo '[*] Removing occurences of nightly,*version,arch so that only the latest nightly is shown'
+            (head -n 1 source/assets/installed_tools/nightly.csv; \
+              echo "${{ inputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ inputs.ARCH }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ inputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ inputs.ARCH }}.csv \
+                </assets/installed_tools/lists/latest_nightly_${{ inputs.ARCH }}.csv>\`"; \
+              ( \
+                tail -n +2 source/assets/installed_tools/nightly.csv | grep -Ev "${{ inputs.IMAGE_BASE_NAME }},[0-9a-fA-F]{8},${{ inputs.ARCH }}" \
+              ) \
+            ) | tee source/assets/installed_tools/new_nightly.csv
+            mv -v source/assets/installed_tools/new_nightly.csv source/assets/installed_tools/nightly.csv
+          else
+            echo '[*] Moving tools list to (dynamic) imagetag_version_arch.csv'
+            mv -v installed_tools.csv source/assets/installed_tools/lists/${{ inputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ inputs.ARCH }}.csv
+            echo '[*] Editing releases.csv content so that new tools list appears'
+            echo '[*] Removing occurences of image,version,arch. This is because this workflow runs in the prerelease pipeline, meaning that there is a possibility tools list is pushed to exegol-docs even if the images are not released for some reasons (e.g. imageA prerelease works but not for imageB). Doing this grep -v will ensure that releases.csv does not have duplicates to the same tag, same version and same arch'
+            (head -n 1 source/assets/installed_tools/releases.csv; \
+              echo "${{ inputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ inputs.ARCH }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ inputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ inputs.ARCH }}.csv \
+                </assets/installed_tools/lists/${{ inputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ inputs.ARCH }}.csv>\`"; \
+              ( \
+                tail -n +2 source/assets/installed_tools/releases.csv | grep -Ev "${{ inputs.IMAGE_BASE_NAME }},${{ steps.prepare.outputs.image_version }},${{ inputs.ARCH }}" \
+              ) \
+            ) | tee source/assets/installed_tools/new_releases.csv
+            mv -v source/assets/installed_tools/new_releases.csv source/assets/installed_tools/releases.csv
+          fi
+
+      - name: Debug print nightly.csv
+        if: always() && !contains(steps.adding_list.outcome, 'skipped')
+        id: final_list_exists
+        run: cat source/assets/installed_tools/nightly.csv
+      - name: Push Exegol-docs
+        if: always() && steps.final_list_exists.outcome == 'success'
+        env:
+          EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
+        run: |
+          echo '[*] Setting up git env for SSH use'
+          mkdir -p "$HOME/.ssh"
+          DEPLOY_KEY_FILE="$HOME/.ssh/deploy_key"
+          echo "${EXEGOL_DOCS_SSH_DEPLOY_KEY}" > "$DEPLOY_KEY_FILE"
+          chmod 600 "$DEPLOY_KEY_FILE"
+          SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
+          ssh-keyscan -H github.com > "$SSH_KNOWN_HOSTS_FILE"
+          export GIT_SSH_COMMAND="ssh -i "$DEPLOY_KEY_FILE" -o UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
+          GIT_CMD_REPOSITORY="git@github.com:ThePorgs/Exegol-docs.git"
+          echo '[*] Setting git config'
+          git config --global user.name "exegol-images[pipeline]"
+          git config --global user.email "pipeline@exegol.images"
+          if [ "${{ inputs.IMAGE_BASE_NAME }}" == "nightly" ]
+          then
+            echo '[*] Staging changes (nightly)'
+            git add --verbose source/assets/installed_tools/lists/latest_nightly_${{ inputs.ARCH }}.csv
+            git add --verbose source/assets/installed_tools/nightly.csv
+          else
+            echo '[*] Staging changes (release)'
+            git add --verbose source/assets/installed_tools/lists/${{ inputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ inputs.ARCH }}.csv
+            git add --verbose source/assets/installed_tools/releases.csv
+          fi
+          echo '[*] Commiting changes'
+          git commit --verbose -m "PIPELINE: tools list for ${{ inputs.IMAGE_BASE_NAME }}_${{ steps.prepare.outputs.image_version }}_${{ inputs.ARCH }}"
+          echo '[*] Pushing changes'
+          git push --verbose "$GIT_CMD_REPOSITORY"

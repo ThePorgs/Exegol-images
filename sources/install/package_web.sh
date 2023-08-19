@@ -4,6 +4,8 @@
 source common.sh
 
 function install_web_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing web apt tools"
     fapt dirb sslscan weevely prips swaks
   
     add-history dirb
@@ -40,6 +42,7 @@ function install_whatweb() {
 }
 
 function install_wfuzz() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wfuzz"
     apt --purge remove python3-pycurl -y
     fapt libcurl4-openssl-dev libssl-dev
@@ -50,6 +53,7 @@ function install_wfuzz() {
 }
 
 function install_gobuster() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gobuster"
     go install -v github.com/OJ/gobuster/v3@latest
     add-history gobuster
@@ -58,6 +62,7 @@ function install_gobuster() {
 }
 
 function install_kiterunner() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kiterunner (kr)"
     git -C /opt/tools/ clone --depth 1 https://github.com/assetnote/kiterunner.git
     cd /opt/tools/kiterunner
@@ -70,7 +75,8 @@ function install_kiterunner() {
     add-to-list "kiterunner,https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments."
 }
 
-function install_amass(){
+function install_amass() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Amass"
     go install -v github.com/owasp-amass/amass/v3/...@master
     add-history amass
@@ -79,6 +85,7 @@ function install_amass(){
 }
 
 function install_ffuf() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ffuf"
     git -C /opt/tools clone --depth 1 https://github.com/ffuf/ffuf.git
     cd /opt/tools/ffuf
@@ -92,6 +99,7 @@ function install_ffuf() {
 }
 
 function install_dirsearch() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
     python3 -m pipx install git+https://github.com/maurosoria/dirsearch
     add-history dirsearch
@@ -174,6 +182,7 @@ function install_xsser() {
 }
 
 function install_xsrfprobe() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing XSRFProbe"
     python3 -m pipx install git+https://github.com/0xInfection/XSRFProbe
     add-history xsrfprobe
@@ -252,6 +261,7 @@ function install_wpscan() {
 }
 
 function install_droopescan() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing droopescan"
     python3 -m pipx install git+https://github.com/droope/droopescan.git
     add-history droopescan
@@ -270,6 +280,7 @@ function install_drupwn() {
 }
 
 function install_cmsmap() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing CMSmap"
     python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
     # TODO: Config ?
@@ -360,6 +371,7 @@ function install_oneforall() {
 }
 
 function install_wafw00f() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wafw00f"
     python3 -m pipx install wafw00F
     add-history wafw00f
@@ -380,6 +392,7 @@ function install_corscanner() {
 }
 
 function install_hakrawler() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hakrawler"
     go install -v github.com/hakluke/hakrawler@latest
     add-history hakrawler
@@ -388,6 +401,7 @@ function install_hakrawler() {
 }
 
 function install_gowitness() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gowitness"
     go install -v github.com/sensepost/gowitness@latest
     add-history gowitness
@@ -420,6 +434,7 @@ function install_timing_attack() {
 }
 
 function install_updog() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing updog"
     python3 -m pipx install updog
     add-history updog
@@ -440,6 +455,7 @@ function install_jwt_tool() {
 }
 
 function install_wuzz() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wuzz"
     go install -v github.com/asciimoo/wuzz@latest
     add-history wuzz
@@ -531,6 +547,7 @@ function install_h2csmuggler() {
 }
 
 function install_byp4xx() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing byp4xx"
     go install -v github.com/lobuhi/byp4xx@latest
     add-history byp4xx
@@ -569,17 +586,14 @@ function install_clusterd() {
     cd /opt/tools/clusterd
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r requirements.txt
+    add-aliases clusterd
     add-history clusterd
     add-test-command "clusterd --help"
     add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents."
 }
 
-function configure_clusterd() {
-    echo -e '#!/bin/sh\n(cd /opt/tools/clusterd/ && ./venv/bin/python2 clusterd.py $@)' > /usr/local/bin/clusterd
-    chmod +x /usr/local/bin/clusterd
-}
-
 function install_arjun() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing arjun"
     python3 -m pipx install arjun
     add-history arjun
@@ -588,6 +602,7 @@ function install_arjun() {
 }
 
 function install_nuclei() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Nuclei"
     go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
     add-history nuclei
@@ -600,6 +615,7 @@ function configure_nuclei() {
 }
 
 function install_gau() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gau"
     GO111MODULE=on go install -v github.com/lc/gau@latest
     add-history gau
@@ -608,6 +624,7 @@ function install_gau() {
 }
 
 function install_hakrevdns() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Hakrevdns"
     go install -v github.com/hakluke/hakrevdns@latest
     add-history hakrevdns
@@ -616,6 +633,7 @@ function install_hakrevdns() {
 }
 
 function install_httprobe() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httprobe"
     go install -v github.com/tomnomnom/httprobe@latest
     add-history httprobe
@@ -624,6 +642,7 @@ function install_httprobe() {
 }
 
 function install_httpx() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httpx"
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
     add-history httpx
@@ -632,6 +651,7 @@ function install_httpx() {
 }
 
 function install_anew() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing anew"
     go install -v github.com/tomnomnom/anew@latest
     add-history anew
@@ -640,6 +660,7 @@ function install_anew() {
 }
 
 function install_robotstester() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Robotstester"
     python3 -m pipx install git+https://github.com/p0dalirius/robotstester
     add-history robotstester
@@ -648,6 +669,7 @@ function install_robotstester() {
 }
 
 function install_naabu() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing naabu"
     # TODO: Check if deps is already installed
     fapt libpcap-dev
@@ -715,6 +737,7 @@ function install_soapui() {
 }
 
 function install_sqlmap() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sqlmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
     ln -s "/opt/tools/sqlmap/sqlmap.py" /opt/tools/bin/sqlmap
@@ -802,5 +825,4 @@ function package_web_configure() {
     set_ruby_env
     configure_nuclei
     configure_moodlescan
-    configure_clusterd
 }

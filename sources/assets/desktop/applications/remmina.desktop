@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Remmina
+Comment=TODO
+Exec=remmina
+Icon=/usr/share/icons/Papirus/64x64/apps/remmina.svg
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;Misc;
+MimeType=text/plain;

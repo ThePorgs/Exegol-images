@@ -4,6 +4,8 @@
 source common.sh
 
 function install_wordlists_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing wordlists apt tools"
     fapt crunch cupp 
 
     add-history cupp
@@ -30,6 +32,7 @@ function install_cewl() {
 }
 
 function install_seclists() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing seclists"
     git -C /opt clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
     cd /opt/seclists
@@ -75,6 +78,7 @@ function install_username-anarchy() {
 }
 
 function install_genusernames() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing genusernames"
     mkdir -p /opt/tools/genusernames
     wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash

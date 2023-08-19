@@ -4,6 +4,8 @@
 source common.sh
 
 function install_sdr_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing sdr apt tools"
     fapt hackrf gqrx-sdr rtl-433
     
     add-history hackrf
@@ -38,6 +40,7 @@ function install_mousejack() {
 }
 
 function install_jackit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jackit"
     python3 -m pipx install git+https://github.com/insecurityofthings/jackit
     add-history jackit

@@ -24,6 +24,8 @@ source package_cracking.sh
 source package_c2.sh
 
 function install_most_used_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing most used apt tools"
     fapt hydra sslscan weevely smbclient hashcat fcrackzip
 
     add-history hydra
@@ -53,7 +55,6 @@ function package_most_used() {
     set_go_env
     set_ruby_env
     install_most_used_apt_tools
-    install_searchsploit            # Exploitdb local search engine
     install_metasploit              # Offensive framework
     install_nmap                    # Port scanner
     install_seclists                # Awesome wordlists

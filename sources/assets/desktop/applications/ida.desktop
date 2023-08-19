@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=IDA
+Comment=TODO (only amd)
+Exec=
+Icon=
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;Reverse;
+MimeType=text/plain;

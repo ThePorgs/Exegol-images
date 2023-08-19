@@ -28,6 +28,7 @@ function install_exegol-history() {
 }
 
 function install_rust_cargo() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing rustc, cargo, rustup"
     curl https://sh.rustup.rs -sSf | sh -s -- -y
     source "$HOME/.cargo/env"
@@ -43,6 +44,7 @@ function filesystem() {
 }
 
 function install_go() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     if command -v /usr/local/go/bin/go &>/dev/null; then
         return
     fi
@@ -87,6 +89,7 @@ function deploy_exegol() {
 }
 
 function install_locales() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
     colorecho "Configuring locales"
     apt-get -y install locales
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
@@ -102,6 +105,7 @@ function install_python-pip() {
 }
 
 function install_firefox() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing firefox"
     fapt firefox-esr
     mkdir /opt/tools/firefox
@@ -115,6 +119,7 @@ function install_firefox() {
 }
 
 function install_rvm() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing rvm"
     gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     curl -sSL https://get.rvm.io | bash -s stable --ruby
@@ -126,15 +131,18 @@ function install_rvm() {
 }
 
 function install_fzf() {
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing fzf"
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
     add-aliases fzf
     add-test-command "fzf-wordlists --help"
     add-test-command "fzf --help"
+    add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
 }
 
 function install_ohmyzsh() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
     if [ -d /root/.oh-my-zsh ]; then
         return
     fi
@@ -150,6 +158,7 @@ function install_ohmyzsh() {
 }
 
 function install_pipx() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing pipx"
     python3 -m pip install pipx
     pipx ensurepath
@@ -157,14 +166,17 @@ function install_pipx() {
 }
 
 function install_yarn() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing yarn"
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
     apt update
-    apt install -y yarn
+    fapt yarn
+    add-test-command "yarn --help"
 }
 
 function install_ultimate_vimrc() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
     if [ -d /root/.vim_runtime ]; then
         return
     fi
@@ -197,6 +209,7 @@ function install_neovim() {
 }
 
 function install_mdcat() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mdcat"
     cargo install mdcat
     source "$HOME/.cargo/env"
@@ -206,6 +219,8 @@ function install_mdcat() {
 }
 
 function install_gf() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing gf"
     # A wrapper around grep, to help you grep for things
     go install -v github.com/tomnomnom/gf@latest
     # Enable autocompletion
@@ -246,6 +261,7 @@ function package_base() {
     add-apt-repository contrib
     add-apt-repository non-free
     apt-get update
+    chsh -s /bin/zsh
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 python2 wget \
     gnupg2 python2-dev python3-dev python3-venv libffi-dev python3-pip zsh asciinema \
@@ -284,7 +300,8 @@ function package_base() {
     install_ultimate_vimrc                              # Make vim usable OOFB
     install_neovim
     install_mdcat                                       # cat markdown files
-    add-test-command "batcat --version"
+    add-aliases bat
+    add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
     fapt-noexit rar                                     # rar (Only AMD)
@@ -321,9 +338,12 @@ function package_base() {
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/
     bundle config path vendor/
+
+    # Remote Graphical Desktop installation
 }
 
 # FOR DEBUGGING, FAST MINIMAL INSTALL
+# TODO MOVE THIS IN ANOTHER SEPARATE FILE
 function package_base_debug() {
     update
     colorecho "Installing apt-fast for faster dep installs"

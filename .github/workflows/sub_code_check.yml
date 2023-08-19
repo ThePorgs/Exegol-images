@@ -1,0 +1,17 @@
+name: (level 1 sub) Code compliance
+
+on: workflow_call
+
+jobs:
+  code-check:
+    name: Check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        checked_function: [ "colorecho", "add-aliases", "add-history", "add-test-command", "add-to-list" ]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Check ${{ matrix.checked_function }}
+      run: python3 sources/code_compliance_check.py ${{ matrix.checked_function }}
