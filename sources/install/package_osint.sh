@@ -271,7 +271,7 @@ function install_ipinfo() {
 }
 
 function install_constellation() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-test-command
     colorecho "Installing constellation"
     if [[ $(uname -m) = 'x86_64' ]]
     then

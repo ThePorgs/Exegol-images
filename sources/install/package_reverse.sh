@@ -84,6 +84,7 @@ function install_radare2() {
 }
 
 function install_ghidra() {
+    # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing Ghidra"
     wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
     unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
@@ -95,6 +96,7 @@ function install_ghidra() {
 }
 
 function install_ida() {
+    # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing IDA"
     if [[ $(uname -m) = 'x86_64' ]]
     then
