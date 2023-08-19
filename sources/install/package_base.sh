@@ -28,8 +28,8 @@ function install_exegol-history() {
 }
 
 function install_rust_cargo() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    # TODO CHECK : add-history - Cargo install ... ?
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list
+    # TODO CHECK : add-history
     colorecho "Installing rustc, cargo, rustup"
     curl https://sh.rustup.rs -sSf | sh -s -- -y
     source "$HOME/.cargo/env"
@@ -45,8 +45,8 @@ function filesystem() {
 }
 
 function install_go() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    # TODO CHECK : add-history - go install ... ?
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list
+    # TODO CHECK : add-history
     if command -v /usr/local/go/bin/go &>/dev/null; then
         return
     fi
@@ -121,7 +121,7 @@ function install_firefox() {
 }
 
 function install_rvm() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing rvm"
     gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     curl -sSL https://get.rvm.io | bash -s stable --ruby
@@ -140,6 +140,7 @@ function install_fzf() {
     add-aliases fzf
     add-test-command "fzf-wordlists --help"
     add-test-command "fzf --help"
+    add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
 }
 
 function install_ohmyzsh() {
@@ -167,7 +168,7 @@ function install_pipx() {
 }
 
 function install_yarn() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing yarn"
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
