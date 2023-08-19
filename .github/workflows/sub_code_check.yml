@@ -3,28 +3,28 @@ name: (level 1 sub) Code compliance check
 on: workflow_call
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Rust and Cargo
+        run: curl https://sh.rustup.rs -sSf | sh -s -- -y
+      - name: Setup tree-sitter
+        run: |
+          cargo install tree-sitter-cli
+          mkdir $HOME/src
+          git -C $HOME/src/ clone https://github.com/tree-sitter/tree-sitter-bash.git
+          tree-sitter init-config
   code-check:
     name: Code check
+    needs: setup
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         checked_function: [ "colorecho", "add-aliases", "add-history", "add-test-command", "add-to-list" ]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Install Rust and Cargo
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-    - name: Setup tree-sitter
-      run: |
-        cargo install tree-sitter-cli
-        mkdir $HOME/src
-        git -C $HOME/src/ clone https://github.com/tree-sitter/tree-sitter-bash.git
-        tree-sitter init-config
     - name: Debug print tree-sitter parsing
       run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/${{ matrix.checked_function }}.conf "./sources/install/package*.sh"
     - name: Check ${{ matrix.checked_function }}
