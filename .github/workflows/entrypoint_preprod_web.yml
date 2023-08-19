@@ -43,9 +43,13 @@ jobs:
           echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)"
           echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
 
+  code-check:
+    name: Code compliance
+    uses: ./.github/workflows/sub_code_check.yml
+
   build_belt:
     name: Build belt
-    needs: varset
+    needs: [varset, code-check]
     strategy:
       fail-fast: false
       matrix:

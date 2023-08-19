@@ -4,6 +4,8 @@
 source common.sh
 
 function install_network_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
@@ -88,6 +90,7 @@ function install_nmap() {
 }
 
 function install_autorecon() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing autorecon"
     git -C /opt/tools/ clone --depth 1 https://gitlab.com/kalilinux/packages/oscanner.git
     ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
@@ -115,6 +118,7 @@ function install_dnschef() {
 }
 
 function install_divideandscan() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DivideAndScan"
     python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
     add-history divideandscan
@@ -123,6 +127,7 @@ function install_divideandscan() {
 }
 
 function install_chisel() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing chisel"
     go install -v github.com/jpillora/chisel@latest
     # TODO: add windows pre-compiled binaries in /opt/ressources/windows ?
@@ -132,6 +137,7 @@ function install_chisel() {
 }
 
 function install_sshuttle() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sshtuttle"
     python3 -m pipx install git+https://github.com/sshuttle/sshuttle.git
     add-history sshuttle
@@ -153,6 +159,7 @@ function install_eaphammer() {
 }
 
 function install_fierce() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing fierce"
     python3 -m pipx install git+https://github.com/mschwager/fierce
     add-history fierce
@@ -161,6 +168,7 @@ function install_fierce() {
 }
 
 function install_dnsx() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dnsx"
     go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
     add-history dnsx
@@ -169,6 +177,7 @@ function install_dnsx() {
 }
 
 function install_shuffledns() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing shuffledns"
     go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
     add-history shuffledns

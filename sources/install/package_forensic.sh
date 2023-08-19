@@ -4,6 +4,8 @@
 source common.sh
 
 function install_forensic_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing forensic apt tools"
     fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
     
     add-history binwalk
@@ -84,6 +86,7 @@ function install_peepdf() {
 } 
 
 function install_jadx() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jadx"
     git -C /opt/tools/ clone --depth 1 https://github.com/skylot/jadx.git
     cd /opt/tools/jadx

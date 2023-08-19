@@ -42,9 +42,13 @@ jobs:
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
 
+  code-check:
+    name: Code compliance check
+    uses: ./.github/workflows/sub_code_check.yml
+
   build_belt:
     name: Build belt
-    needs: varset
+    needs: [varset, code-check]
     strategy:
       fail-fast: false
       matrix:

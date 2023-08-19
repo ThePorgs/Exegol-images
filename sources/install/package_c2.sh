@@ -4,6 +4,7 @@
 source common.sh
 
 function install_pwncat() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwncat"
     python3 -m pipx install pwncat-cs
     add-history pwncat
@@ -12,6 +13,7 @@ function install_pwncat() {
 }
 
 function install_metasploit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
     mkdir /tmp/metasploit_install
@@ -48,11 +50,12 @@ function install_routersploit() {
 }
 
 function install_sliver() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sliver"
     git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/sliver.git
     cd /opt/tools/sliver
     make
-    cp sliver-* /opt/tools/bin
+    mv sliver-* /opt/tools/bin
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"

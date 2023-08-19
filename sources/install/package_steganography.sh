@@ -4,6 +4,8 @@
 source common.sh
 
 function install_steganography_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing steganography apt tools"
     fapt stegosuite steghide exif exiv2 hexedit
 
     add-history stegosuite
@@ -38,6 +40,7 @@ function install_zsteg() {
 }
 
 function install_stegolsb() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing stegolsb"
     python3 -m pipx install stego-lsb
     add-history stegolsb
