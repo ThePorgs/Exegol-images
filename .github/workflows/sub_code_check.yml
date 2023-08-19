@@ -4,6 +4,7 @@ on: workflow_call
 
 jobs:
   code-check:
+    name: Code check
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
