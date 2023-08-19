@@ -186,6 +186,8 @@ function install_ultimate_vimrc() {
 }
 
 function install_neovim() {
+    colorecho "Installing neovim"
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     if [[ $(uname -m) = 'x86_64' ]]
     then
         curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
