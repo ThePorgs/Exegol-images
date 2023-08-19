@@ -14,4 +14,4 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Check ${{ matrix.checked_function }}
-      run: python3 ./sources/code-check/tree-sitter-parser.py ${{ matrix.checked_function }}
+      run: python3 ./sources/code_compliance_check ${{ matrix.checked_function }}
