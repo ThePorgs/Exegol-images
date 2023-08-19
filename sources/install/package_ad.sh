@@ -268,6 +268,7 @@ function install_amber() {
 }
 
 function install_powershell() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powershell"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -285,15 +286,11 @@ function install_powershell() {
     tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
     chmod -v +x /opt/tools/powershell/7/pwsh
     rm -v /tmp/powershell.tar.gz
+    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
+    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
     add-history powershell
     add-test-command "powershell -Version"
     add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
-}
-
-function configure_powershell() {
-    colorecho "Configure powershell"
-    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
-    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
 }
 
 function install_krbrelayx() {
@@ -809,6 +806,7 @@ function install_ldeep() {
 }
 
 function install_rusthound() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
     git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
@@ -1019,5 +1017,4 @@ function package_ad_configure() {
     configure_bloodhound
     configure_impacket
     configure_krbrelayx
-    configure_powershell
 }

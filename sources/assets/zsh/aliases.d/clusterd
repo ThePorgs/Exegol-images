@@ -1,0 +1,1 @@
+alias clusterd='cd /opt/tools/clusterd/ && echo "[*] changed dir : cd /opt/tools/clusterd/" && ./venv/bin/python2 clusterd.py'

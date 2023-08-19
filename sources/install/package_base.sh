@@ -276,7 +276,8 @@ function package_base() {
     install_yarn
     install_ultimate_vimrc                              # Make vim usable OOFB
     install_mdcat                                       # cat markdown files
-    add-test-command "batcat --version"
+    add-aliases bat
+    add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
     fapt-noexit rar                                     # rar (Only AMD)
@@ -318,6 +319,7 @@ function package_base() {
 }
 
 # FOR DEBUGGING, FAST MINIMAL INSTALL
+# TODO MOVE THIS IN ANOTHER SEPARATE FILE
 function package_base_debug() {
     update
     colorecho "Installing apt-fast for faster dep installs"

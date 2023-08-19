@@ -67,6 +67,7 @@ function install_geowordlists() {
 }
 
 function install_pkcrack() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pkcrack"
     git -C /opt/tools/ clone https://github.com/keyunluo/pkcrack
     mkdir -v /opt/tools/pkcrack/build/

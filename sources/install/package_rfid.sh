@@ -27,6 +27,7 @@ function install_rfid_apt_tools() {
 }
 
 function install_mfoc() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mfoc"
     git -C /opt/tools/ clone --depth 1 https://github.com/nfc-tools/mfoc
     cd /opt/tools/mfoc

@@ -586,15 +586,10 @@ function install_clusterd() {
     cd /opt/tools/clusterd
     virtualenv -p /usr/bin/python2 ./venv
     ./venv/bin/python2 -m pip install -r requirements.txt
+    add-aliases clusterd
     add-history clusterd
     add-test-command "clusterd --help"
     add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents."
-}
-
-function configure_clusterd() {
-    # TODO: Add alias
-    echo -e '#!/bin/sh\n(cd /opt/tools/clusterd/ && ./venv/bin/python2 clusterd.py $@)' > /usr/local/bin/clusterd
-    chmod +x /usr/local/bin/clusterd
 }
 
 function install_arjun() {
@@ -830,5 +825,4 @@ function package_web_configure() {
     set_ruby_env
     configure_nuclei
     configure_moodlescan
-    configure_clusterd
 }
