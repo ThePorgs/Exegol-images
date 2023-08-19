@@ -1,58 +1,53 @@
-#!/usr/bin/env python3
-
-import sys
+import os
 import re
+import sys
 
 blue = "\033[1;34m"
 magenta = "\033[1;35m"
 clear = "\033[0m"
 
-def non_compliance(file_dict, input_string):
-    not_compliant = False
-    for element in file_dict["functions"]:
-        if not element.startswith("install_"):
-            continue
-        formatted_string = r"text: `({})`".format(element)
-        function_name_match = re.search(formatted_string, input_string)
-        if function_name_match:
-            content = r'text: `({})`\n.*?text: `(.*?)`'.format(element)
-            body_pattern = re.compile(content, re.DOTALL)
-            body_match = body_pattern.search(input_string)
-            if body_match:
-                print(f"{magenta}File : {file_dict['filename']}{clear}")
-                print(f"{blue}Function : {body_match.group(1)}{clear}")
-                print(body_match.group(2), end='\n\n')
-                not_compliant = True
-    return(not_compliant)
+def is_whitelisted(check_function_name, function_content):
+    """Check if the function content is whitelisted based on # CODE-CHECK-WHITELIST directive."""
+    for line in function_content.split("\n"):
+        if line.strip().startswith("# CODE-CHECK-WHITELIST="):
+            _, arguments = line.strip().split("=")
+            if check_function_name in arguments:
+                return True
+    return False
 
-def get_functions_name(input_string):
-    lines = input_string.strip().split('\n')
-    file_pattern = re.compile(r'^sources/install/(?P<filename>package_\w+.sh)$')
-    name_pattern = re.compile(r'text: `(?P<name>[\w_]+)`')
-    i = 0
-    result = []
-    while i < len(lines):
-        line = lines[i]
-        if file_pattern.match(line):
-            current_file = {
-                "filename": line,
-                "functions": []
-            }
-            result.append(current_file)
-            i += 1
-            continue
-        if name_pattern.search(line):
-            current_file["functions"].append(name_pattern.search(line).group('name'))
-            i += 1
-            continue
-        i += 1
-    return result
+def get_functions_with_content(filename):
+    """Extract functions starting with 'install_' and their content."""
+    with open(filename, 'r') as file:
+        content = file.read()
+
+    pattern = r'function\s+(install_\w+)\(\)\s+({[^}]*\n})'
+    return re.findall(pattern, content, re.DOTALL)
+
+def contains_target_function(function_content, target_function):
+    """Check if the function content contains the target function, not commented."""
+    for line in function_content.split("\n"):
+        stripped_line = line.strip()
+        if target_function in stripped_line and not stripped_line.startswith("#"):
+            return True
+    return False
+
+def main(check_function_name):
+    error = False
+    for root, _, files in os.walk("./sources/install/"):
+        for file in files:
+            if file.startswith("package_") and file.endswith(".sh"):
+                file_path = os.path.join(root, file)
+                for func_name, func_content in get_functions_with_content(file_path):
+                    if not contains_target_function(func_content, check_function_name) and not is_whitelisted(check_function_name, func_content):
+                        print(f"{magenta}File: {file_path}{clear}")
+                        print(f"{blue}Function: {func_name}{clear}")
+                        print(func_content)
+                        error = True
+    return error
 
 if __name__ == "__main__":
-    input_string = sys.stdin.read()
-    files_and_functions = get_functions_name(input_string)
-    compliant = 0
-    for file_dict in files_and_functions:
-        if non_compliance(file_dict, input_string):
-            compliant = 1
-    exit(compliant)
+    if len(sys.argv) != 2:
+        print("Usage: python3 script_name.py <check_function_name>")
+        sys.exit(1)
+    if main(sys.argv[1]):
+        exit(1)
