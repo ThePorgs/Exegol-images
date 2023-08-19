@@ -29,7 +29,7 @@ function install_exegol-history() {
 
 function install_rust_cargo() {
     # CODE-CHECK-WHITELIST=add-aliases
-    # CHECK : add-history - Cargo install ... ?
+    # TODO CHECK : add-history - Cargo install ... ?
     colorecho "Installing rustc, cargo, rustup"
     curl https://sh.rustup.rs -sSf | sh -s -- -y
     source "$HOME/.cargo/env"
@@ -46,7 +46,7 @@ function filesystem() {
 
 function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases
-    # CHECK : add-history - go install ... ?
+    # TODO CHECK : add-history - go install ... ?
     if command -v /usr/local/go/bin/go &>/dev/null; then
         return
     fi
