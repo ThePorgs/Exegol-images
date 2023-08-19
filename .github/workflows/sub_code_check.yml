@@ -6,6 +6,10 @@ jobs:
   code-check:
     name: Code check
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        checked_function: [ "colorecho", "add-aliases", "add-history", "add-test-command", "add-to-list" ]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -22,23 +26,6 @@ jobs:
         git -C $HOME/src/ clone https://github.com/tree-sitter/tree-sitter-bash.git
         tree-sitter init-config
     - name: Debug print tree-sitter parsing
-      run: |
-        tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/colorecho.conf "./sources/install/package*.sh"
-        tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-aliases.conf "./sources/install/package*.sh"
-        tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-history.conf "./sources/install/package*.sh"
-        tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-test-command.conf "./sources/install/package*.sh"
-        tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-to-list.conf "./sources/install/package*.sh"
-    - name: Check colorecho
-      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/colorecho.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
-    - name: Check add-aliases
-      if: always()
-      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-aliases.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
-    - name: Check add-history
-      if: always()
-      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-history.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
-    - name: Check add-test-command
-      if: always()
-      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-test-command.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
-    - name: Check add-to-list
-      if: always()
-      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-to-list.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
+      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/${{ matrix.checked_function }}.conf "./sources/install/package*.sh"
+    - name: Check ${{ matrix.checked_function }}
+      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/${{ matrix.checked_function }}.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
