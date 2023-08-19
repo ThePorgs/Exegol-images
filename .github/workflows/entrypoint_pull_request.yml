@@ -45,7 +45,7 @@ jobs:
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
 
   code-check:
-    name: Code compliance check
+    name: Code compliance
     uses: ./.github/workflows/sub_code_check.yml
 
   build_belt:

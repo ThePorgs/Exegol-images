@@ -1,4 +1,4 @@
-name: (level 1 sub) Code compliance check
+name: (level 1 sub) Code compliance
 
 on: workflow_call
 
