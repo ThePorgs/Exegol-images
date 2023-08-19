@@ -173,6 +173,7 @@ function install_yarn() {
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
     apt update
     fapt yarn
+    add-test-command "yarn --help"
 }
 
 function install_ultimate_vimrc() {
