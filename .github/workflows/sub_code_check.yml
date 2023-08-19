@@ -29,16 +29,16 @@ jobs:
         tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-test-command.conf "./sources/install/package*.sh"
         tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-to-list.conf "./sources/install/package*.sh"
     - name: Check colorecho
-      run: tree-sitter query -c ./sources/assets/code-check/colorecho.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
+      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/colorecho.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
     - name: Check add-aliases
       if: always()
-      run: tree-sitter query -c ./sources/assets/code-check/add-aliases.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
+      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-aliases.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
     - name: Check add-history
       if: always()
-      run: tree-sitter query -c ./sources/assets/code-check/add-history.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
+      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-history.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
     - name: Check add-test-command
       if: always()
-      run: tree-sitter query -c ./sources/assets/code-check/add-test-command.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
+      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-test-command.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
     - name: Check add-to-list
       if: always()
-      run: tree-sitter query -c ./sources/assets/code-check/add-to-list.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
+      run: tree-sitter query -c ./sources/code-check/tree-sitter.conf.d/add-to-list.conf "./sources/install/package*.sh"|python3 ./sources/code-check/tree-sitter-parser.py
