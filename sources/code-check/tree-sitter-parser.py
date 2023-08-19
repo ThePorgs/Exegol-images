@@ -27,7 +27,7 @@ def non_compliance(file_dict, input_string):
 
 def get_functions_name(input_string):
     lines = input_string.strip().split('\n')
-    file_pattern = re.compile(r'^(?P<path>.*/)?(?P<filename>\w+\.sh)')
+    file_pattern = re.compile(r'^sources/install/(?P<filename>package_\w+.sh)$')
     name_pattern = re.compile(r'text: `(?P<name>[\w_]+)`')
     i = 0
     result = []
