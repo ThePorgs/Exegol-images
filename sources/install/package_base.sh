@@ -194,7 +194,7 @@ function install_neovim() {
         chmod u+x nvim.appimage
         ./nvim.appimage --appimage-extract
         mkdir /opt/tools/nvim
-        cp -r squashfs-root/usr/ /opt/tools/nvim
+        cp -r squashfs-root/usr/* /opt/tools/nvim
         rm -rf squashfs-root nvim.appimage
     elif [[ $(uname -m) = 'aarch64' ]]
     then
