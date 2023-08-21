@@ -200,6 +200,7 @@ function install_neovim() {
     elif [[ $(uname -m) = 'aarch64' ]]
     then
         # Build take ~5min
+        fapt gettext
         git clone https://github.com/neovim/neovim.git
         cd neovim
         make CMAKE_BUILD_TYPE=RelWithDebInfo
