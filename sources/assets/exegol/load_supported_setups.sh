@@ -57,6 +57,8 @@ function deploy_nvim () {
   if [ -d "$MY_Setup_PATH/nvim" ]; then
     mkdir -p ~/.config/
     cp -r "$MY_Setup_PATH/nvim/" ~/.config
+  else 
+    mkdir -p "$MY_Setup_PATH/nvim"
   fi
 }
 

@@ -196,6 +196,7 @@ function install_neovim() {
         mkdir /opt/tools/nvim
         cp -r squashfs-root/usr/* /opt/tools/nvim
         rm -rf squashfs-root nvim.appimage
+        ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     elif [[ $(uname -m) = 'aarch64' ]]
     then
         # Build take ~5min
@@ -371,7 +372,6 @@ function package_base_debug() {
     install_fzf                                         # Fuzzy finder
     install_pipx
     add-history curl
-    install_neovim
 
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/
