@@ -185,6 +185,33 @@ function install_ultimate_vimrc() {
     sh ~/.vim_runtime/install_awesome_vimrc.sh
 }
 
+function install_neovim() {
+    colorecho "Installing neovim"
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        chmod u+x nvim.appimage
+        ./nvim.appimage --appimage-extract
+        mkdir /opt/tools/nvim
+        cp -r squashfs-root/usr/* /opt/tools/nvim
+        rm -rf squashfs-root nvim.appimage
+        ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        # Build take ~5min
+        fapt gettext
+        git clone https://github.com/neovim/neovim.git
+        cd neovim
+        make CMAKE_BUILD_TYPE=RelWithDebInfo
+        make install
+        cd ..
+        rm -rf ./neovim
+    fi
+    add-test-command "nvim --version"
+    add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
+}
+
 function install_mdcat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mdcat"
@@ -275,6 +302,7 @@ function package_base() {
     add-history curl
     install_yarn
     install_ultimate_vimrc                              # Make vim usable OOFB
+    install_neovim
     install_mdcat                                       # cat markdown files
     add-aliases bat
     add-test-command "bat --version"

@@ -52,6 +52,16 @@ function deploy_vim() {
   fi
 }
 
+function deploy_nvim () {
+  #### neovim deployment
+  if [ -d "$MY_Setup_PATH/nvim" ]; then
+    mkdir -p ~/.config/
+    cp -r "$MY_Setup_PATH/nvim/" ~/.config
+  else 
+    mkdir -p "$MY_Setup_PATH/nvim"
+  fi
+}
+
 function deploy_apt() {
   ##### Install custom APT packages
   if [ -d "$MY_Setup_PATH/apt" ]; then
@@ -197,6 +207,7 @@ init
 deploy_zsh
 deploy_tmux
 deploy_vim
+deploy_nvim
 deploy_apt
 deploy_python3
 deploy_firefox_addons
