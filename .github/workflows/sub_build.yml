@@ -22,9 +22,13 @@ on:
       ARCH:
         required: true
         type: string
+    outputs:
+      build:
+        description: "Build job result"
+        value: ${{ jobs.export_results.outputs.build }}
 
 jobs:
-  buildx:
+  build:
     name: Build ${{ inputs.ARCH }}
     timeout-minutes: 360
     runs-on:
@@ -45,8 +49,19 @@ jobs:
           echo "IMAGE_FULL_NAME=${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
           echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
-      - name: Build and load the image
-        if: success()
+      - name: Checking if image exists remotely already
+        id: check_remote_image
+        run: |
+          if docker manifest inspect ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}; then
+            echo "Image exists"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
+          fi
+          cat $GITHUB_OUTPUT
+      - name: Build the image
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         uses: docker/build-push-action@v4
         with:
           load: true
@@ -60,8 +75,23 @@ jobs:
           platforms: linux/${{ inputs.ARCH }}
           file: ${{ inputs.DOCKERFILE }}
           context: .
+      - name: Pull the image
+        if: cancelled() && steps.check_remote_image.outputs.image_exists == 'true'
+        run: docker pull ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}
       - name: (dbg) post-build docker info
+        if: always()
         run: |
           docker image ls -a
           docker ps
           docker inspect ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}
+  export_results:
+    name: Exporting test results for higher jobs
+    needs: build
+    if: always()
+    runs-on: self-hosted
+    steps:
+      - name: Extract build result
+        id: build
+        run: echo "result=${{ needs.build.result }}" >> $GITHUB_OUTPUT
+    outputs:
+      build: ${{ steps.build.outputs.result }}

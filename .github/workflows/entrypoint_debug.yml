@@ -76,31 +76,9 @@ jobs:
     name: Code compliance check
     uses: ./.github/workflows/sub_code_check.yml
 
-  check_base_image:
-    name: Base image existence check
-    needs: varset
-    runs-on: self-hosted
-    outputs:
-      image_exists: ${{ steps.check.outputs.image_exists }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Checking if remote base image exists
-        id: check
-        run: |
-          if docker manifest inspect ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}; then
-            echo "Image exists"
-            echo "image_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "Image does not exist"
-            echo "image_exists=false" >> $GITHUB_OUTPUT
-          fi
-          cat $GITHUB_OUTPUT
-
   build_base:
     name: Base layer build
-    needs: [ varset, code_check, check_base_image ]
-    if: needs.check_base_image.outputs.image_exists != 'true'
+    needs: varset
     strategy:
       fail-fast: false
       matrix:
@@ -131,13 +109,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Create and push manifest
-        if: success()
-        run: |
-          echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}
-          docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}
       - name: Create and push version manifest
         if: success() && needs.varset.outputs.IMAGE_VERSION != ''
         run: |
@@ -148,8 +119,8 @@ jobs:
 
   build:
     name: Build image
-    needs: [varset, code_check, check_base_image, publish_base]
-    if: always() && ( needs.publish_base.result == 'success' || needs.check_base_image.outputs.image_exists == 'true' )
+    needs: [varset, code_check, publish_base]
+    if: always() && needs.publish_base.result == 'success'
     strategy:
       fail-fast: false
       matrix:
@@ -218,7 +189,7 @@ jobs:
           echo "Removing $image_name"
           docker image inspect $image_name || exit 0 && docker rmi $image_name
 
-  clean_registry:
+  clean_registries:
     name: Clean registry
     needs: publish
     runs-on: self-hosted
@@ -229,8 +200,12 @@ jobs:
       matrix:
         arch: [ arm64, amd64 ]
     steps:
-      - name: Remove remote images in ${{ env.DOCKER_BUILD_REPO }}
+      - name: Remove remote arch-specific images in ${{ env.DOCKER_BUILD_REPO }}
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
           curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+      - name: Remove remote base image in ${{ env.DOCKER_TARGET_REPO_BASE }}
+        run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_TARGET_REPO_BASE}/tags/${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}/

@@ -123,10 +123,10 @@ jobs:
 
   push:
     name: Push
-    needs: test
+    needs: [ build, test ]
     # Push image to exegol-builds whatever the outcome of "test" is, as long as the image was built (which is already an implicit requirement of the "test" job)
     # Only pushing if not in PR_MODE, in order to prevent external PRs from accessing secrets
-    if: always() && inputs.PR_MODE == false && ( needs.test.result == 'failure' || needs.test.result == 'success' )
+    if: always() && inputs.PR_MODE == false && ( needs.test.result == 'failure' || needs.test.result == 'success' ) && needs.build.outputs.build == 'success'
     uses: ./.github/workflows/sub_push.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
@@ -177,5 +177,6 @@ jobs:
         if: needs.push.result != 'success'
         run: echo "result=failure" >> $GITHUB_OUTPUT
     outputs:
+      build: ${{ steps.build.outputs.result }}
       test: ${{ steps.test.outputs.result }}
       push: ${{ steps.push.outputs.result }}
