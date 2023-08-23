@@ -7,15 +7,21 @@ on:
       - "*.*.*b*"
 
 env:
+  # TODO uncomment below
+
   # "preprod" registry
-  DOCKER_PREPROD_REPO: "nwodtuhs/exegol-preprod"
+  DOCKER_PREPROD_REPO: "nwodtuhs/exegol-dev-preprod"
+  # DOCKER_PREPROD_REPO: "nwodtuhs/exegol-preprod"
   # final "production" registry target
-  DOCKER_PROD_REPO: "nwodtuhs/exegol"
+  DOCKER_PROD_REPO: "nwodtuhs/exegol-dev"
+  # DOCKER_PROD_REPO: "nwodtuhs/exegol"
 
   # "preprod" registry for the misc images
-  MISC_DOCKER_PREPROD_REPO: "nwodtuhs/exegol-misc-preprod"
+  # MISC_DOCKER_PREPROD_REPO: "nwodtuhs/exegol-misc-preprod"
+  MISC_DOCKER_PREPROD_REPO: "nwodtuhs/exegol-misc-dev-preprod"
   # final "production" registry target for misc images
-  MISC_DOCKER_PROD_REPO: "nwodtuhs/exegol-misc"
+  # MISC_DOCKER_PROD_REPO: "nwodtuhs/exegol-misc"
+  MISC_DOCKER_PROD_REPO: "nwodtuhs/exegol-misc-dev"
 
 jobs:
   varset:
