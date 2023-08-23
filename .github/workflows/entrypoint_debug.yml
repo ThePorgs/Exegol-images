@@ -38,7 +38,7 @@ jobs:
     outputs:
       DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
-      DOCKER_TARGET_REPO_BASE: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
+      DOCKER_TARGET_REPO_BASE: ${{ steps.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
       DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE_BASE }}
