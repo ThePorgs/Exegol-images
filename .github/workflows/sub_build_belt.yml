@@ -77,10 +77,9 @@ jobs:
             echo "Image does not exist"
             echo "image_exists=false" >> $GITHUB_OUTPUT
           fi
-          echo "image_exists=True" >> $GITHUB_OUTPUT
 
   prune:
-    name: Pre-build ${{ inputs.ARCH }} runner clean
+    name: Pre-build runner clean
     needs: check
     if: needs.check.outputs.image_exists != 'true'
     runs-on:
