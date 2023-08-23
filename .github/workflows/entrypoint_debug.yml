@@ -63,7 +63,7 @@ jobs:
           echo "DOCS_NIGHTLY_BRANCH=${DOCS_NIGHTLY_BRANCH}" >> $GITHUB_OUTPUT
           echo "DOCS_RELEASES_BRANCH=${DOCS_RELEASES_BRANCH}" >> $GITHUB_OUTPUT
 
-  code-check:
+  code_check:
     name: Code compliance check
     uses: ./.github/workflows/sub_code_check.yml
 
@@ -94,7 +94,7 @@ jobs:
 
   build_base:
     name: Base layer build
-    needs: [ varset, code-check, check_base_image ]
+    needs: [ varset, code_check, check_base_image ]
     if: needs.check_base_image.outputs.image_exists != 'true'
     strategy:
       fail-fast: false
@@ -147,7 +147,8 @@ jobs:
 
   build:
     name: Build image
-    needs: [varset, code-check, publish_base]
+    needs: [varset, code_check, check_base_image, publish_base]
+    if: always() && ( needs.publish_base.result == 'success' || needs.check_base_image.outputs.image_exists == 'true' ))
     strategy:
       fail-fast: false
       matrix:
