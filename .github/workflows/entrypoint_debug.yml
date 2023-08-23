@@ -101,7 +101,7 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}"
+      IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}"
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
       ARCH: ${{ matrix.arch }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
