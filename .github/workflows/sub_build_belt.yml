@@ -14,8 +14,7 @@ on:
         required: true
         type: string
       IMAGE_VERSION:
-        description: "Nothing if nightly build, else x.y.z with x, y, z integers"
-        required: true
+        required: false
         default: ''
         type: string
       DOCKERFILE:
@@ -100,7 +99,6 @@ jobs:
       BASE_IMAGE_NAME: ${{ inputs.BASE_IMAGE_NAME }}
       IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
-      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ inputs.ARCH }}
       PR_MODE: ${{ inputs.PR_MODE }}
