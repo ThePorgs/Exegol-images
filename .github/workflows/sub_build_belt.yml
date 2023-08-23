@@ -146,8 +146,7 @@ jobs:
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       ARCH: ${{ inputs.ARCH }}
-      DOCS_NIGHTLY_BRANCH: ${{ inputs.DOCS_NIGHTLY_BRANCH }}
-      DOCS_RELEASES_BRANCH: ${{ inputs.DOCS_RELEASES_BRANCH }}
+      DOCS_TARGET_BRANCH: ${{ inputs.DOCS_TARGET_BRANCH }}
     secrets:
       EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
 
