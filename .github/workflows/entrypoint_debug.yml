@@ -34,7 +34,6 @@ concurrency:
   group: debug_build
   cancel-in-progress: true
 
-# TODO for nightly images, compute the version (8 first chars of commit) here instead of sub_build.yml + publish_base + other places ?
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -51,6 +50,8 @@ jobs:
       DOCS_NIGHTLY_BRANCH: ${{ steps.varset.outputs.DOCS_NIGHTLY_BRANCH }}
       DOCS_RELEASES_BRANCH: ${{ steps.varset.outputs.DOCS_RELEASES_BRANCH }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Passing workflow env vars to reusable workflows
         id: varset
         run: |
@@ -62,6 +63,9 @@ jobs:
           echo "DOCKERFILE_BASE=${DOCKERFILE_BASE}" >> $GITHUB_OUTPUT
           echo "DOCS_NIGHTLY_BRANCH=${DOCS_NIGHTLY_BRANCH}" >> $GITHUB_OUTPUT
           echo "DOCS_RELEASES_BRANCH=${DOCS_RELEASES_BRANCH}" >> $GITHUB_OUTPUT
+          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          echo "IMAGE_VERSION=${COMMIT_ID:0:8}" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
 
   code_check:
     name: Code compliance check
@@ -78,12 +82,7 @@ jobs:
       - name: Checking if remote base image exists
         id: varset
         run: |
-          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
-          if [ "${IMAGE_VERSION}" == "" ]; then
-            IMAGE_VERSION=${COMMIT_ID:0:8}
-          fi
-          IMAGE_VERSION="7b3dd7e2"
-          if docker manifest inspect ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}; then
+          if docker manifest inspect ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}; then
             echo "Image exists"
             echo "image_exists=true" >> $GITHUB_OUTPUT
           else
@@ -106,6 +105,7 @@ jobs:
       IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}"
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
       ARCH: ${{ matrix.arch }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       BASE_MODE: true
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -120,18 +120,6 @@ jobs:
     # only publishing if the tests were a success (implicit by the success of build_belt).
     if: needs.build_base.result == 'success'
     steps:
-      - name: Prepare build
-        # IMAGE_VERSION is empty if the image is nightly
-        # For nightly, we then use the first 8 chars as the image version
-        # Also preparing other variables used for tagging the image to build
-        id: prepare
-        run: |
-          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
-          if [ "$IMAGE_VERSION" == "" ]; then
-            IMAGE_VERSION=${COMMIT_ID:0:8}
-          fi
-          echo "image_version=${IMAGE_VERSION}"
-          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
       - name: Login to Dockerhub
         uses: docker/login-action@v2
         with:
@@ -141,9 +129,9 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ steps.prepare.outputs.image_version }} ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ steps.prepare.outputs.image_version }}
-          docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ steps.prepare.outputs.image_version }}
+          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   build:
     name: Build image
@@ -159,6 +147,7 @@ jobs:
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       DOCS_NIGHTLY_BRANCH: ${{ needs.varset.outputs.DOCS_NIGHTLY_BRANCH }}
       DOCS_RELEASES_BRANCH: ${{ needs.varset.outputs.DOCS_RELEASES_BRANCH }}
     secrets:

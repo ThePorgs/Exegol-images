@@ -39,15 +39,8 @@ jobs:
       - name: Checkout Exegol-images
         uses: actions/checkout@v3
       - name: Prepare image version
-        # IMAGE_VERSION is empty if the image is nightly
-        # For nightly, we then use the first 8 chars as the image version
         id: prepare
         run: |
-          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
-          IMAGE_VERSION=${{ inputs.IMAGE_VERSION }}
-          if [ "$IMAGE_VERSION" == "" ]; then
-            IMAGE_VERSION=${COMMIT_ID:0:8}
-          fi
           if [ "${{ inputs.IMAGE_BASE_NAME }}" == "nightly" ]; then
             DOCS_BRANCH=${{ inputs.DOCS_NIGHTLY_BRANCH }}
           else
@@ -56,10 +49,9 @@ jobs:
           if [ "DOCS_BRANCH" == "" ]; then
             DOCS_BRANCH="dev-images"
           fi
-          echo "image_version=${IMAGE_VERSION}"
-          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
-          echo "docs_branch=${DOCS_BRANCH}"
+          echo "image_version=${{ inputs.IMAGE_VERSION }}" >> $GITHUB_OUTPUT
           echo "docs_branch=${DOCS_BRANCH}" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
       - name: Checkout Exegol-docs
         uses: actions/checkout@v3
         with:
