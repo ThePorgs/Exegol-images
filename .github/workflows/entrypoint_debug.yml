@@ -101,7 +101,7 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}"
+      IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}"
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
       ARCH: ${{ matrix.arch }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
@@ -192,14 +192,14 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove local base image ${{ env.DOCKER_BUILD_REPO }}:base-${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Remove local base image ${{ env.DOCKER_BUILD_REPO }}:base-${{ env.IMAGE_BASE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
         run: |
-          image_name=${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ matrix.arch }}
+          image_name=${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
           echo "Removing $image_name"
           docker image inspect $image_name || exit 0 && docker rmi $image_name
-      - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
         run: |
-          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
           echo "Removing $image_name"
           docker image inspect $image_name || exit 0 && docker rmi $image_name
 
