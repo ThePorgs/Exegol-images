@@ -142,7 +142,7 @@ jobs:
         if: success() && needs.varset.outputs.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}
           docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
