@@ -1,12 +1,13 @@
 # Author: The Exegol Project
 
+ARG BASE_LAYER_REGISTRY="nwodtuhs/exegol-misc"
 ARG TAG="local"
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
 
 # TODO uncomment below when for prod
 # FROM nwodtuhs/exegol-misc:base-${VERSION}
-FROM nwodtuhs/exegol-misc-dev:base-${VERSION}
+FROM ${BASE_LAYER_REGISTRY}:base-${VERSION}
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"

@@ -6,6 +6,9 @@ on:
       DOCKER_BUILD_REPO:
         required: true
         type: string
+      BASE_IMAGE_REGISTRY:
+        required: false
+        type: string
       IMAGE_BASE_NAME:
         required: true
         type: string
@@ -49,6 +52,7 @@ jobs:
           load: true
           no-cache: true
           build-args: |
+            BASE_IMAGE_REGISTRY=${{ inputs.BASE_IMAGE_REGISTRY }}
             TAG=${{ inputs.IMAGE_BASE_NAME }}
             VERSION=${{ inputs.IMAGE_VERSION }}
             BUILD_DATE=${{ steps.prepare.outputs.BUILD_DATE }}

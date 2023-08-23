@@ -6,6 +6,9 @@ on:
       DOCKER_BUILD_REPO:
         required: true
         type: string
+      BASE_IMAGE_REGISTRY:
+        required: false
+        type: string
       IMAGE_BASE_NAME:
         description: "nightly/full/osint/ad/..., or PRxyz if external pull request (with x, y, z integers)"
         required: true
@@ -87,6 +90,7 @@ jobs:
     needs: debug_pre_build
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      BASE_IMAGE_REGISTRY: ${{ inputs.BASE_IMAGE_REGISTRY }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
