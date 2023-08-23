@@ -24,11 +24,11 @@ on:
         type: string
       DOCS_NIGHTLY_BRANCH:
         description: "Target branch on ThePorgs/Exegol-docs on which tools list are exported for nightly images"
-        required: true
+        required: false
         type: string
       DOCS_RELEASES_BRANCH:
         description: "Target branch on ThePorgs/Exegol-docs on which tools list are exported for release images"
-        required: true
+        required: false
         type: string
       PR_MODE:
         description: "External pull request mode, no authenticated action operated (ex. push to dockerhub or other github repo)"

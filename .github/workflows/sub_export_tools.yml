@@ -14,10 +14,10 @@ on:
         default: ''
         type: string
       DOCS_NIGHTLY_BRANCH:
-        required: true
+        required: false
         type: string
       DOCS_RELEASES_BRANCH:
-        required: true
+        required: false
         type: string
       ARCH:
         required: true
@@ -52,6 +52,9 @@ jobs:
             DOCS_BRANCH=${{ inputs.DOCS_NIGHTLY_BRANCH }}
           else
             DOCS_BRANCH=${{ inputs.DOCS_RELEASES_BRANCH }}
+          fi
+          if [ "DOCS_BRANCH" == "" ]; then
+            DOCS_BRANCH="dev-images"
           fi
           echo "image_version=${IMAGE_VERSION}"
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
