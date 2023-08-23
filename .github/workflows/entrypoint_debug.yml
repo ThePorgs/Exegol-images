@@ -41,7 +41,7 @@ jobs:
       DOCKER_TARGET_REPO_BASE: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
-      DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE }}
+      DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE_BASE }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
@@ -51,7 +51,7 @@ jobs:
           echo "DOCKER_TARGET_REPO_BASE=${DOCKER_TARGET_REPO_BASE}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "DOCKERFILE_BASE=${DOCKERFILE_base}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE_BASE=${DOCKERFILE_BASE}" >> $GITHUB_OUTPUT
 
   code-check:
     name: Code compliance check
