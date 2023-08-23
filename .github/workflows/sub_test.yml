@@ -22,7 +22,7 @@ jobs:
       - tester
       - ${{ inputs.ARCH }}
     steps:
-      - name: Inspect the built image
+      - name: (dbg) inspect the image
         run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
       - name: Create a container from the built image
         run: |

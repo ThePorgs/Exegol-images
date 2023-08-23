@@ -1,38 +1,35 @@
-name: Debug (nightly) build
+name: Debug (pr1) build
 
 on:
-  push:
-    branches:
-      - refacto2
+  pull_request:
+    title:
+      - "Release *.*.*"
+      - "Release *.*.*b*"
+    branches: refacto2
     paths-ignore:
 #      - ".github/**"
       - "**.md"
+
+# cf https://github.com/actions/runner/issues/2324, paths-ignore will only be respected at PR creation
+# all new commits then added in the PR will trigger the workflow
 
 env:
   # intermediary registry in which architecture-specific images and base images must be pushed
   DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
 
   # final registry target, in which arch-specific images must be aggregated
-  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
-  IMAGE_BASE_NAME: "debug"
+  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-preprod"
+  IMAGE_BASE_NAME: "debugpr1"
   # final dockerfile
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists
-  DOCS_TARGET_BRANCH: "main"
+  DOCS_TARGET_BRANCH: "dev-images"
 
   # exegol-base registry target
   DOCKER_TARGET_REPO_BASE: "nwodtuhs/exegol-base"
   # base.dockerfile, will build exegol-base, which will be used as initial layer for the other images
   DOCKERFILE_BASE: "./sources/dockerfiles/base.dockerfile"
-
-# creating a concurrency group for nightly builds
-# so that when pushing multiple things in dev, build is always running for the latest push
-# this is to save resources, by killing "in progress" jobs when another build starts for the last push
-concurrency:
-  group: debug_build
-  cancel-in-progress: true
-
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -46,7 +43,8 @@ jobs:
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
       DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE_BASE }}
-      DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}
+      DOCS_NIGHTLY_BRANCH: ${{ steps.varset.outputs.DOCS_NIGHTLY_BRANCH }}
+      DOCS_RELEASES_BRANCH: ${{ steps.varset.outputs.DOCS_RELEASES_BRANCH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -59,9 +57,9 @@ jobs:
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE_BASE=${DOCKERFILE_BASE}" >> $GITHUB_OUTPUT
-          echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
-          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
-          echo "IMAGE_VERSION=${COMMIT_ID:0:8}" >> $GITHUB_OUTPUT
+          echo "DOCS_NIGHTLY_BRANCH=${DOCS_NIGHTLY_BRANCH}" >> $GITHUB_OUTPUT
+          echo "DOCS_RELEASES_BRANCH=${DOCS_RELEASES_BRANCH}" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
   code_check:
@@ -146,7 +144,8 @@ jobs:
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
-      DOCS_TARGET_BRANCH: ${{ needs.varset.outputs.DOCS_TARGET_BRANCH }}
+      DOCS_NIGHTLY_BRANCH: ${{ needs.varset.outputs.DOCS_NIGHTLY_BRANCH }}
+      DOCS_RELEASES_BRANCH: ${{ needs.varset.outputs.DOCS_RELEASES_BRANCH }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -172,6 +171,15 @@ jobs:
           docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
+      - name: Create and push version manifest
+        env:
+          IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+        if: success() && env.IMAGE_VERSION != ''
+        run: |
+          echo "Create version manifest"
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
   clean_runners:
     name: Clean runner

@@ -22,12 +22,8 @@ on:
         description: "Target architecture (arm64 or amd64)"
         required: true
         type: string
-      DOCS_NIGHTLY_BRANCH:
-        description: "Target branch on ThePorgs/Exegol-docs on which tools list are exported for nightly images"
-        required: false
-        type: string
-      DOCS_RELEASES_BRANCH:
-        description: "Target branch on ThePorgs/Exegol-docs on which tools list are exported for release images"
+      DOCS_TARGET_BRANCH:
+        description: "Target branch on ThePorgs/Exegol-docs on which tools list are exported"
         required: false
         type: string
       PR_MODE:
@@ -73,7 +69,7 @@ jobs:
         run: docker volume prune --force
 
   debug_pre_build:
-    name: Pre-build debug
+    name: (dbg) pre-build docker info
     needs: prune
     runs-on:
       - self-hosted
@@ -97,7 +93,7 @@ jobs:
       ARCH: ${{ inputs.ARCH }}
 
   debug_post_build:
-    name: Post-build debug
+    name: (dbg) post-build docker info
     needs: build
     runs-on:
       - self-hosted
