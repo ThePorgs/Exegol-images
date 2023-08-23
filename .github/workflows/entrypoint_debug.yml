@@ -5,7 +5,7 @@ on:
     branches:
       - refacto2
     paths-ignore:
-      - ".github/**"
+#      - ".github/**"
       - "**.md"
 
 env:
