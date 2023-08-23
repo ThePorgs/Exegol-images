@@ -1,4 +1,4 @@
-name: (sub) Pre-release
+name: (level 1 sub) Pre-release
 
 on:
   workflow_call:
