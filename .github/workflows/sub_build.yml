@@ -54,7 +54,7 @@ jobs:
           cat $GITHUB_OUTPUT
       - name: Checking if remote images exist
         id: check_remote_image
-        if: inputs.FINAL_MANIFEST_REGISTRY == ''
+        if: inputs.FINAL_MANIFEST_REGISTRY != ''
         run: |
           if docker manifest inspect ${{ inputs.FINAL_MANIFEST_REGISTRY }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}
           then  
