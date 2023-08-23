@@ -44,8 +44,7 @@ jobs:
           IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
           ARCH: ${{ inputs.ARCH }}
         run: |
-          echo "IMAGE_FULL_NAME=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}" >> $GITHUB_OUTPUT
-          echo "IMAGE_VERSION=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "IMAGE_FULL_NAME=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}-${ARCH}" >> $GITHUB_OUTPUT
           echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
       - name: Build and load the image
@@ -56,7 +55,7 @@ jobs:
           no-cache: true
           build-args: |
             TAG=${{ inputs.IMAGE_BASE_NAME }}
-            VERSION=${{ steps.prepare.outputs.IMAGE_VERSION }}
+            VERSION=${{ inputs.IMAGE_VERSION }}
             BUILD_DATE=${{ steps.prepare.outputs.BUILD_DATE }}
           tags: ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}
           platforms: linux/${{ inputs.ARCH }}
