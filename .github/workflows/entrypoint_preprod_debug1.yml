@@ -1,0 +1,239 @@
+name: Debug (pr1) build
+
+on:
+  pull_request:
+    title:
+      - "Release *.*.*"
+      - "Release *.*.*b*"
+    branches: refacto2
+    paths-ignore:
+#      - ".github/**"
+      - "**.md"
+
+# cf https://github.com/actions/runner/issues/2324, paths-ignore will only be respected at PR creation
+# all new commits then added in the PR will trigger the workflow
+
+env:
+  # intermediary registry in which architecture-specific images and base images must be pushed
+  DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+
+  # final registry target, in which arch-specific images must be aggregated
+  # TODO uncomment below
+  # DOCKER_TARGET_REPO: "nwodtuhs/exegol-preprod"
+  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-preprod"
+  IMAGE_BASE_NAME: "debugpr1"
+  # final dockerfile
+  DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
+
+  # ThePorgs/Exegol-docs branch for tools lists
+  DOCS_TARGET_BRANCH: "dev-images"
+
+  # exegol-base registry target
+  # TODO uncomment below
+  # DOCKER_TARGET_REPO_BASE: "nwodtuhs/exegol-misc-preprod"
+  DOCKER_TARGET_REPO_BASE: "nwodtuhs/exegol-misc-dev-preprod"
+  IMAGE_BASE_NAME_BASE: "base"
+  # base.dockerfile, will build exegol-base, which will be used as initial layer for the other images
+  DOCKERFILE_BASE: "./sources/dockerfiles/base.dockerfile"
+
+jobs:
+  # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
+  varset:
+    name: Initialize variables
+    runs-on: self-hosted
+    outputs:
+      DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
+      DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
+      DOCKER_TARGET_REPO_BASE: ${{ steps.varset.outputs.DOCKER_TARGET_REPO_BASE }}
+      IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
+      IMAGE_BASE_NAME_BASE: ${{ steps.varset.outputs.IMAGE_BASE_NAME_BASE }}
+      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
+      DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+      DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE_BASE }}
+      DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setting variables
+        id: varset
+        run: |
+          echo "DOCKER_BUILD_REPO=${DOCKER_BUILD_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_TARGET_REPO_BASE=${DOCKER_TARGET_REPO_BASE}" >> $GITHUB_OUTPUT
+          echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
+          echo "IMAGE_BASE_NAME_BASE=${IMAGE_BASE_NAME_BASE}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE_BASE=${DOCKERFILE_BASE}" >> $GITHUB_OUTPUT
+          echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
+
+  code_check:
+    name: Code compliance check
+    uses: ./.github/workflows/sub_code_check.yml
+
+  check_base_image:
+    name: Base image existence check
+    needs: varset
+    runs-on: self-hosted
+    outputs:
+      image_exists: ${{ steps.check.outputs.image_exists }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Checking if remote base image exists
+        id: check
+        run: |
+          if docker manifest inspect ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}; then
+            echo "Image exists"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
+          fi
+          cat $GITHUB_OUTPUT
+
+  build_base:
+    name: Base layer build
+    needs: [ varset, code_check, check_base_image ]
+    if: needs.check_base_image.outputs.image_exists != 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
+      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
+      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME_BASE }}
+      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
+      ARCH: ${{ matrix.arch }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      BASE_MODE: true
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  publish_base:
+    # TODO test whats happens if build_base fails, where does the pipeline stop, all the rest (excepts cleans) must be skipped
+    name: Publish base
+    timeout-minutes: 60
+    needs: [ varset, build_base ]
+    runs-on: self-hosted
+    # only publishing if the tests were a success (implicit by the success of build_belt).
+    if: needs.build_base.result == 'success'
+    steps:
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Create and push manifest
+        if: success()
+        run: |
+          echo "Create manifest"
+          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}
+          docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}
+      - name: Create and push version manifest
+        if: success() && needs.varset.outputs.IMAGE_VERSION != ''
+        run: |
+          echo "Create version manifest"
+          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}
+
+  build:
+    name: Build image
+    needs: [varset, code_check, check_base_image, publish_base]
+    if: always() && ( needs.publish_base.result == 'success' || needs.check_base_image.outputs.image_exists == 'true' )
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
+      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
+      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
+      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      ARCH: ${{ matrix.arch }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      DOCS_TARGET_BRANCH: ${{ needs.varset.outputs.DOCS_TARGET_BRANCH }}
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
+
+  publish:
+    name: Publish image
+    timeout-minutes: 60
+    needs: [ varset, build ]
+    runs-on: self-hosted
+    # only publishing if the tests were a success (implicit by the success of build_belt).
+    if: needs.build.result == 'success'
+    steps:
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Create and push manifest
+        if: success()
+        run: |
+          echo "Create manifest"
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
+      - name: Create and push version manifest
+        if: success() && needs.varset.outputs.IMAGE_VERSION != ''
+        run: |
+          echo "Create version manifest"
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+
+  clean_runners:
+    name: Clean runner
+    needs:
+      - publish
+      - build
+    # clean runners, if publish was a success, or at least if build succeeded
+    if: always() && ( needs.publish.result == 'success' || !contains(needs.build.outputs.build, 'failure'))
+    # even if this job fails, it won't affect the success/fail status of the whole workflow
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ matrix.arch }}
+    steps:
+      - name: Remove local base image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME_BASE }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+        run: |
+          image_name=${DOCKER_BUILD_REPO}:${{ env.IMAGE_BASE_NAME_BASE }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+          echo "Removing $image_name"
+          docker image inspect $image_name || exit 0 && docker rmi $image_name
+      - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+        run: |
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+          echo "Removing $image_name"
+          docker image inspect $image_name || exit 0 && docker rmi $image_name
+
+  clean_registry:
+    name: Clean registry
+    needs: publish
+    runs-on: self-hosted
+    # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
+    if: needs.publish.result == 'success'
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    steps:
+      - name: Remove remote images in ${{ env.DOCKER_BUILD_REPO }}
+        run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
