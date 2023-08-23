@@ -93,10 +93,10 @@ jobs:
   publish:
     name: Publish
     timeout-minutes: 60
-    needs: build_belt
+    needs: build
     runs-on: self-hosted
     # only publishing if the tests were a success (implicit by the success of build_belt).
-    if: needs.build_belt.result == 'success'
+    if: needs.build.result == 'success'
     steps:
       - name: Login to Dockerhub
         uses: docker/login-action@v2
@@ -115,9 +115,9 @@ jobs:
     name: Clean runner
     needs:
       - publish
-      - build_belt
+      - build
     # clean runners, if publish was a success, or at least if build succeeded
-    if: always() && ( needs.publish.result == 'success' || !contains(needs.build_belt.outputs.build, 'failure'))
+    if: always() && ( needs.publish.result == 'success' || !contains(needs.build.outputs.build, 'failure'))
     # even if this job fails, it won't affect the success/fail status of the whole workflow
     continue-on-error: true
     strategy:
