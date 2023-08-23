@@ -75,14 +75,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Checking if remote ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ env.IMAGE_VERSION }} exits
+      - name: Checking if remote base image exists
         id: varset
         run: |
           COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
           if [ "${IMAGE_VERSION}" == "" ]; then
             IMAGE_VERSION=${COMMIT_ID:0:8}
           fi
-          if docker manifest inspect ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}; then
+          if docker manifest inspect ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}; then
             echo "Image exists"
             echo "image_exists=true" >> $GITHUB_OUTPUT
           else
