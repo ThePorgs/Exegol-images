@@ -1,4 +1,4 @@
-name: Debug (pr1) build
+name: Debug (pr2) build
 
 on:
   pull_request:

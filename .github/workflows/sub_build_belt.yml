@@ -9,6 +9,9 @@ on:
       BASE_IMAGE_REGISTRY:
         required: false
         type: string
+      FINAL_MANIFEST_REGISTRY:
+        required: false
+        type: string
       IMAGE_BASE_NAME:
         description: "nightly/full/osint/ad/..., or PRxyz if external pull request (with x, y, z integers)"
         required: true
@@ -91,6 +94,7 @@ jobs:
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       BASE_IMAGE_REGISTRY: ${{ inputs.BASE_IMAGE_REGISTRY }}
+      FINAL_MANIFEST_REGISTRY: ${{ inputs.FINAL_MANIFEST_REGISTRY }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
@@ -156,7 +160,7 @@ jobs:
       EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
 
   export_results:
-    name: Exporting test results for higher jobs
+    name: Exporting all results for higher jobs
     needs:
       - build
       - test
