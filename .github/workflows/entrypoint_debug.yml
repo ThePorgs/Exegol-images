@@ -1,4 +1,4 @@
-name: Nightly build
+name: Debug (nightly) build
 
 on:
   push:
@@ -11,16 +11,23 @@ on:
 env:
   # intermediary registry in which architecture-specific images must be pushed
   DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+
   # final registry target, in which arch-specific images must be aggregated
   DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev"
   IMAGE_BASE_NAME: "debug"
-  DOCKERFILE: "./sources/dockerfiles/debug.Dockerfile"
+  # final dockerfile
+  DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
+
+  # exegol-base registry target
+  DOCKER_TARGET_REPO_BASE: "nwodtuhs/exegol-base"
+  # base.dockerfile, will build exegol-base, which will be used as initial layer for the other images
+  DOCKERFILE_BASE: "./sources/dockerfiles/base.dockerfile"
 
 # creating a concurrency group for nightly builds
 # so that when pushing multiple things in dev, build is always running for the latest push
 # this is to save resources, by killing "in progress" jobs when another build starts for the last push
 concurrency:
-  group: nightly_build
+  group: debug_build
   cancel-in-progress: true
 
 jobs:
@@ -32,6 +39,7 @@ jobs:
       DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
+      BASE_IMAGE_BASE_NAME: ${{ steps.varset.outputs.BASE_IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
     steps:
       - name: Passing workflow env vars to reusable workflows
@@ -46,8 +54,8 @@ jobs:
     name: Code compliance check
     uses: ./.github/workflows/sub_code_check.yml
 
-  build_belt:
-    name: Build belt
+  build_base:
+    name: Base layer build
     needs: [varset, code-check]
     strategy:
       fail-fast: false
@@ -55,8 +63,25 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
+      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
+      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
+      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
+      ARCH: ${{ matrix.arch }}
+      BASE_MODE: true
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  build:
+    name: Build
+    needs: [varset, code-check, build_base]
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      DOCKER_TARGET_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
@@ -85,13 +110,6 @@ jobs:
           docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
-      - name: Create and push version manifest
-        if: success() && env.IMAGE_VERSION != ''
-        run: |
-          echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
-          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
   clean_runners:
     name: Clean runner
@@ -111,7 +129,12 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove local image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Remove local base image ${{ env.DOCKER_TARGET_REPO_BASE }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+        run: |
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
+          echo "Removing $image_name"
+          docker image inspect $image_name || exit 0 && docker rmi $image_name
+      - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
         run: |
           image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
           echo "Removing $image_name"

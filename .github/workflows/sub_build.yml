@@ -73,6 +73,7 @@ jobs:
           no-cache: true
           build-args: |
             TAG=${{ inputs.IMAGE_BASE_NAME }}
+            ARCH=${{ inputs.ARCH }}
             VERSION=${{ steps.prepare_build.outputs.image_version }}
             BUILD_DATE=${{ steps.prepare_build.outputs.build_date }}
           tags: ${{ steps.prepare_build.outputs.image_full_name }}

@@ -1,10 +1,11 @@
 # Author: The Exegol Project
 
-FROM exegol-base
-
 ARG TAG="local"
+ARG ARCH
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
+
+FROM nwodtuhs/exegol-base:${TAG}-${ARCH}
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"
@@ -16,9 +17,12 @@ COPY sources /root/sources/
 
 WORKDIR /root/sources/install
 
+# WARNING: package_most_used can't be used with other functions other than: package_base, post_install
+# ./entrypoint.sh package_most_used
+
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
-RUN ./entrypoint.sh package_base_debug
+RUN ./entrypoint.sh package_iot
 RUN ./entrypoint.sh post_install
 RUN rm -rf /root/sources /var/lib/apt/lists/*
 

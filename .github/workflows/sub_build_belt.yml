@@ -6,14 +6,12 @@ on:
       DOCKER_BUILD_REPO:
         required: true
         type: string
-      DOCKER_TARGET_REPO:
-        required: false
-        default: ''
-        type: string
       IMAGE_BASE_NAME:
+        description: "nightly/full/osint/ad/..., or PRxyz if external pull request (with x, y, z integers)"
         required: true
         type: string
       IMAGE_VERSION:
+        description: "Nothing if nightly build, else x.y.z with x, y, z integers"
         required: false
         default: ''
         type: string
@@ -21,9 +19,15 @@ on:
         required: true
         type: string
       ARCH:
+        description: "Target architecture (arm64 or amd64)"
         required: true
         type: string
       PR_MODE:
+        description: "External pull request mode, no authenticated action operated (ex. push to dockerhub or other github repo)"
+        required: false
+        type: boolean
+      BASE_MODE:
+        description: "Layer 0 build mode, no push to documentation github repo"
         required: false
         type: boolean
     secrets:
@@ -76,9 +80,7 @@ jobs:
   build:
     name: Build
     uses: ./.github/workflows/sub_build.yml
-    needs:
-      - prune
-      - debug_pre_build
+    needs: debug_pre_build
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
@@ -131,7 +133,7 @@ jobs:
     needs: test
     # Only exporting tools list if not in PR_MODE, in order to prevent external PRs from accessing GitHub token
     # Only exporting tools list if tests were a success
-    if: always() && inputs.PR_MODE == false && needs.test.result == 'success'
+    if: always() && inputs.PR_MODE == false && inputs.BASE_MODE == false && needs.test.result == 'success'
     uses: ./.github/workflows/sub_export_tools.yml
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
