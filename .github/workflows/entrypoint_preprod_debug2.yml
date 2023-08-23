@@ -202,7 +202,7 @@ jobs:
           docker image inspect $image_name || exit 0 && docker rmi $image_name
 
   clean_registries:
-    name: Clean registry
+    name: Clean registries
     needs: publish
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry

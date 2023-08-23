@@ -23,7 +23,7 @@ on:
 
 jobs:
   push:
-    name: Push ${{ inputs.ARCH }}
+    name: Push image (${{ inputs.ARCH }})
     timeout-minutes: 360
     runs-on:
       - self-hosted

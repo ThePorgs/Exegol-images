@@ -19,7 +19,7 @@ on:
 jobs:
   test:
     timeout-minutes: 5
-    name: Test ${{ inputs.ARCH }}
+    name: Test image (${{ inputs.ARCH }})
     runs-on:
       - self-hosted
       - tester

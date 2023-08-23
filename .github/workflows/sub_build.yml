@@ -32,7 +32,7 @@ on:
 
 jobs:
   build:
-    name: Build or pull ${{ inputs.ARCH }}
+    name: Build or pull image (${{ inputs.ARCH }})
     timeout-minutes: 360
     runs-on:
       - self-hosted
