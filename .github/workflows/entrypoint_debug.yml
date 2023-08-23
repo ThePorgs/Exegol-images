@@ -128,7 +128,7 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-amd64
+          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
           docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
@@ -170,7 +170,7 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
 
@@ -217,5 +217,5 @@ jobs:
       - name: Remove remote images in ${{ env.DOCKER_BUILD_REPO }}
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-${{ matrix.arch }}/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-${{ matrix.arch }}/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
