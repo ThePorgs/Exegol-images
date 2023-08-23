@@ -3,7 +3,7 @@ name: (level 2 sub) Build
 on:
   workflow_call:
     inputs:
-      DOCKER_BUILD_REPO:
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY:
         required: true
         type: string
       BASE_IMAGE_REGISTRY:
@@ -12,7 +12,7 @@ on:
       FINAL_MANIFEST_REGISTRY:
         required: false
         type: string
-      IMAGE_BASE_NAME:
+      IMAGE_NAME:
         required: true
         type: string
       IMAGE_VERSION:
@@ -24,6 +24,9 @@ on:
         type: string
       ARCH:
         required: true
+        type: string
+      PR_MODE:
+        required: false
         type: string
     outputs:
       build:
@@ -49,14 +52,20 @@ jobs:
         # Preparing variables used for tagging the image to build
         id: prepare
         run: |
-          echo "IMAGE_FULL_NAME=${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
+          echo "IMAGE_FULL_NAME=${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
+          if ${{ inputs.PR_MODE }} == "true"
+          then
+            echo "BASE_IMAGE_NAME=${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
+          else
+            echo "BASE_IMAGE_NAME=${{ inputs.IMAGE_NAME }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
+          fi
           echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
       - name: Checking if remote images exist
         id: check_remote_image
         if: inputs.FINAL_MANIFEST_REGISTRY != ''
         run: |
-          if docker manifest inspect ${{ inputs.FINAL_MANIFEST_REGISTRY }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}
+          if docker manifest inspect ${{ inputs.FINAL_MANIFEST_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}
           then  
             if docker manifest inspect ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}; then
               echo "Image exists"
@@ -75,7 +84,8 @@ jobs:
           no-cache: true
           build-args: |
             BASE_IMAGE_REGISTRY=${{ inputs.BASE_IMAGE_REGISTRY }}
-            TAG=${{ inputs.IMAGE_BASE_NAME }}
+            BASE_IMAGE_NAME=${{ steps.prepare.outputs.BASE_IMAGE_NAME }}
+            TAG=${{ inputs.IMAGE_NAME }}
             VERSION=${{ inputs.IMAGE_VERSION }}
             BUILD_DATE=${{ steps.prepare.outputs.BUILD_DATE }}
           tags: ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}

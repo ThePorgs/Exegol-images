@@ -1,13 +1,12 @@
 # Author: The Exegol Project
 
 ARG BASE_IMAGE_REGISTRY="nwodtuhs/exegol-misc"
+ARG BASE_IMAGE_NAME="base"
 ARG TAG="local"
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
 
-# TODO uncomment below when for prod
-# FROM nwodtuhs/exegol-misc:base-${VERSION}
-FROM ${BASE_IMAGE_REGISTRY}:base-${VERSION}
+FROM ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"

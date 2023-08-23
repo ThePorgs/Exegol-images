@@ -3,10 +3,10 @@ name: (level 2 sub) Test
 on:
   workflow_call:
     inputs:
-      DOCKER_BUILD_REPO:
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY:
         required: true
         type: string
-      IMAGE_BASE_NAME:
+      IMAGE_NAME:
         required: true
         type: string
       IMAGE_VERSION:
@@ -26,23 +26,23 @@ jobs:
       - ${{ inputs.ARCH }}
     steps:
       - name: (dbg) inspect the image
-        run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
+        run: docker inspect ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
       - name: Create a container from the built image
         run: |
-          docker run --name exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} --rm -t -d ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} endless
+          docker run --name exegol-${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} --rm -t -d ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} endless
       - name: Run the tests
         if: success()
         run: |
-          docker exec exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | grep -vE "^\s*$" | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt'
-          docker exec exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} python3 /.exegol/build_pipeline_tests/run_tests.py
+          docker exec exegol-${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | grep -vE "^\s*$" | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt'
+          docker exec exegol-${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} python3 /.exegol/build_pipeline_tests/run_tests.py
       - name: Print the failed tests if any
         if: failure()
         run: |
-          docker exec exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} cat /.exegol/build_pipeline_tests/failed_commands.log
+          docker exec exegol-${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} cat /.exegol/build_pipeline_tests/failed_commands.log
       - name: Print the successful tests
         if: always()
         run: |
-          docker exec exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} cat /.exegol/build_pipeline_tests/success_commands.log
+          docker exec exegol-${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} cat /.exegol/build_pipeline_tests/success_commands.log
       - name: Stop the container
         if: always()
-        run: docker stop exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
+        run: docker stop exegol-${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}

@@ -3,7 +3,7 @@ name: (level 1 sub) Belt
 on:
   workflow_call:
     inputs:
-      DOCKER_BUILD_REPO:
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY:
         required: true
         type: string
       BASE_IMAGE_REGISTRY:
@@ -12,7 +12,7 @@ on:
       FINAL_MANIFEST_REGISTRY:
         required: false
         type: string
-      IMAGE_BASE_NAME:
+      IMAGE_NAME:
         description: "nightly/full/osint/ad/..., or PRxyz if external pull request (with x, y, z integers)"
         required: true
         type: string
@@ -92,13 +92,14 @@ jobs:
     uses: ./.github/workflows/sub_build.yml
     needs: debug_pre_build
     with:
-      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
       BASE_IMAGE_REGISTRY: ${{ inputs.BASE_IMAGE_REGISTRY }}
       FINAL_MANIFEST_REGISTRY: ${{ inputs.FINAL_MANIFEST_REGISTRY }}
-      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ inputs.ARCH }}
+      PR_MODE: ${{ inputs.PR_MODE }}
 
   debug_post_build:
     name: (dbg) post-build docker info
@@ -113,15 +114,15 @@ jobs:
       - name: List containers
         run: docker ps
       - name: Inspect built image
-        run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
+        run: docker inspect ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
 
   test:
     name: Test
     needs: build
     uses: ./.github/workflows/sub_test.yml
     with:
-      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       ARCH: ${{ inputs.ARCH }}
 
@@ -133,8 +134,8 @@ jobs:
     if: always() && inputs.PR_MODE == false && ( needs.test.result == 'failure' || needs.test.result == 'success' ) && needs.build.outputs.build == 'success'
     uses: ./.github/workflows/sub_push.yml
     with:
-      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       ARCH: ${{ inputs.ARCH }}
     secrets:
@@ -151,8 +152,8 @@ jobs:
     #if: always() && inputs.PR_MODE == false && inputs.BASE_MODE == false && needs.test.result == 'success'
     uses: ./.github/workflows/sub_export_tools.yml
     with:
-      DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       ARCH: ${{ inputs.ARCH }}
       DOCS_TARGET_BRANCH: ${{ inputs.DOCS_TARGET_BRANCH }}

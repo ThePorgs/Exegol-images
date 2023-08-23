@@ -14,29 +14,25 @@ on:
 # all new commits then added in the PR will trigger the workflow
 
 env:
-  # intermediary registry in which architecture-specific images and base images must be pushed
-  DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
+  # intermediate registry in which architecture-specific images and base images must be pushed
+  INTERMEDIATE_IMAGES_BUILDS_REGISTRY: "nwodtuhs/exegol-builds"
 
-  # final registry target, in which arch-specific images must be aggregated
+  # base image is used as initial layer when building the final image
   # TODO uncomment below
-  # DOCKER_TARGET_REPO: "nwodtuhs/exegol-preprod"
-  DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-preprod"
-  IMAGE_BASE_NAME: "ad"
-  # final dockerfile
+  # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
+  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
+  BASE_IMAGE_NAME: "base"
+  BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
+
+  # final image parameters
   # TODO uncomment below
-  # DOCKERFILE: "ad.dockerfile"
+  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
+  IMAGE_NAME: "ad"
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists
   DOCS_TARGET_BRANCH: "dev-images"
-
-  # exegol-base registry target
-  # TODO uncomment below
-  # DOCKER_TARGET_REPO_BASE: "nwodtuhs/exegol-misc-preprod"
-  DOCKER_TARGET_REPO_BASE: "nwodtuhs/exegol-misc-dev-preprod"
-  IMAGE_BASE_NAME_BASE: "base"
-  # base.dockerfile, will build exegol-base, which will be used as initial layer for the other images
-  DOCKERFILE_BASE: "./sources/dockerfiles/base.dockerfile"
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -44,14 +40,14 @@ jobs:
     name: Initialize variables
     runs-on: self-hosted
     outputs:
-      DOCKER_BUILD_REPO: ${{ steps.varset.outputs.DOCKER_BUILD_REPO }}
-      DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
-      DOCKER_TARGET_REPO_BASE: ${{ steps.varset.outputs.DOCKER_TARGET_REPO_BASE }}
-      IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
-      IMAGE_BASE_NAME_BASE: ${{ steps.varset.outputs.IMAGE_BASE_NAME_BASE }}
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ steps.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_TARGET_REGISTRY: ${{ steps.varset.outputs.IMAGE_TARGET_REGISTRY }}
+      BASE_IMAGE_REGISTRY: ${{ steps.varset.outputs.BASE_IMAGE_REGISTRY }}
+      IMAGE_NAME: ${{ steps.varset.outputs.IMAGE_NAME }}
+      BASE_IMAGE_NAME: ${{ steps.varset.outputs.BASE_IMAGE_NAME }}
       IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
-      DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE_BASE }}
+      BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
       DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}
     steps:
       - name: Checkout
@@ -59,13 +55,13 @@ jobs:
       - name: Setting variables
         id: varset
         run: |
-          echo "DOCKER_BUILD_REPO=${DOCKER_BUILD_REPO}" >> $GITHUB_OUTPUT
-          echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
-          echo "DOCKER_TARGET_REPO_BASE=${DOCKER_TARGET_REPO_BASE}" >> $GITHUB_OUTPUT
-          echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
-          echo "IMAGE_BASE_NAME_BASE=${IMAGE_BASE_NAME_BASE}" >> $GITHUB_OUTPUT
+          echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_NAME=${BASE_IMAGE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "DOCKERFILE_BASE=${DOCKERFILE_BASE}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
           echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
@@ -83,10 +79,10 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      FINAL_MANIFEST_REGISTRY: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
-      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME_BASE }}
-      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      FINAL_MANIFEST_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
+      IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
+      DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       BASE_MODE: true
@@ -112,16 +108,16 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}
-          docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}
+          docker manifest create ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest push ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
+          docker manifest rm ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
       - name: Create and push version manifest
         if: success() && needs.varset.outputs.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}
-          docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest create ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest push ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest rm ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   build:
     name: Final image build
@@ -133,9 +129,9 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
-      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
+      IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
@@ -162,26 +158,23 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
-          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
+          docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
+          docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
       - name: Create and push version manifest
         if: success() && needs.varset.outputs.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
-          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+          docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   clean_runners:
     name: Clean runner
-    needs:
-      - publish
-      - build
+    needs: [ publish, build, varset ]
     # clean runners, if publish was a success, or at least if build succeeded
     if: always() && ( needs.publish.result == 'success' || !contains(needs.build.outputs.build, 'failure'))
     # even if this job fails, it won't affect the success/fail status of the whole workflow
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -191,14 +184,14 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove local base image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME_BASE }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+      - name: Remove local base image ${{ env.DOCKER_BUILD_REPO }}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
         run: |
-          image_name=${DOCKER_BUILD_REPO}:${{ env.IMAGE_BASE_NAME_BASE }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+          image_name=${DOCKER_BUILD_REPO}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
           echo "Removing $image_name"
           docker image inspect $image_name || exit 0 && docker rmi $image_name
-      - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+      - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
         run: |
-          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
           echo "Removing $image_name"
           docker image inspect $image_name || exit 0 && docker rmi $image_name
 
@@ -216,5 +209,6 @@ jobs:
       - name: Remove remote arch-specific images in ${{ env.DOCKER_BUILD_REPO }}
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.DOCKER_BUILD_REPO }}/tags/${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.DOCKER_BUILD_REPO }}/tags/${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+      # no need to remove versioned manifest for base image here. We want it to stay on the preprod registry and be transfered to prod registry on final release

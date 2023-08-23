@@ -1,0 +1,142 @@
+name: External PR tests
+
+on:
+  pull_request:
+    branches:
+#      - dev
+      - refacto2
+      - refacto2_pr
+      - "*.*.*"
+      - "*.*.*b*"
+    paths-ignore:
+#      - ".github/**"
+      - "**.md"
+
+env:
+  # intermediary registry in which architecture-specific images and base images must be pushed
+  INTERMEDIATE_IMAGES_BUILDS_REGISTRY: "nwodtuhs/exegol-builds"
+
+  # final registry target, in which arch-specific images must be aggregated
+  # TODO uncomment below
+  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol"
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev"
+  IMAGE_NAME: "debugextpr"
+  IMAGE_VERSION: "none"
+  # final dockerfile
+  DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
+
+  # exegol-base registry target
+  # TODO uncomment below
+  # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
+  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
+  BASE_IMAGE_NAME: "base"
+  # base.dockerfile, will build exegol-base, which will be used as initial layer for the other images
+  BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
+
+# creating a separate concurrency group for each PR
+# so that our "PR checks" are always running for the latest commit in the PR
+# and as PRs are updated we want to make sure "in progress" jobs are killed so we don't waste resources
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
+  varset:
+    name: Initialize variables
+    runs-on: self-hosted
+    outputs:
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ steps.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_TARGET_REGISTRY: ${{ steps.varset.outputs.IMAGE_TARGET_REGISTRY }}
+      IMAGE_NAME: ${{ steps.varset.outputs.IMAGE_NAME }}
+      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
+      DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+      BASE_IMAGE_REGISTRY: ${{ steps.varset.outputs.BASE_IMAGE_REGISTRY }}
+      BASE_IMAGE_NAME: ${{ steps.varset.outputs.BASE_IMAGE_NAME }}
+      BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setting variables
+        id: varset
+        run: |
+          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "IMAGE_NAME=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_NAME=${BASE_IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
+
+  code_check:
+    name: Code compliance check
+    uses: ./.github/workflows/sub_code_check.yml
+
+  build_base:
+    name: Base image build
+    needs: varset
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      FINAL_MANIFEST_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
+      IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
+      DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
+      ARCH: ${{ matrix.arch }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      BASE_MODE: true
+      PR_MODE: true
+
+  build:
+    name: Final image build
+    needs: [varset, code_check, publish_base]
+    if: always() && needs.publish_base.result == 'success'
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_NAME }}
+      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      ARCH: ${{ matrix.arch }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      PR_MODE: true
+
+  clean_runners:
+    name: Clean runner
+    needs:
+      - publish
+      - build
+    # clean runners, if publish was a success, or at least if build succeeded
+    if: always() && ( needs.publish.result == 'success' || !contains(needs.build.outputs.build, 'failure'))
+    # even if this job fails, it won't affect the success/fail status of the whole workflow
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ matrix.arch }}
+    steps:
+      - name: Remove local base image ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+        run: |
+          image_name=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+          echo "Removing $image_name"
+          docker image inspect $image_name || exit 0 && docker rmi $image_name
+      - name: Remove local final image ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+        run: |
+          image_name=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+          echo "Removing $image_name"
+          docker image inspect $image_name || exit 0 && docker rmi $image_name
