@@ -69,7 +69,7 @@ jobs:
 
   check_base_image:
     name: Base image existence check
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       image_exists: ${{ steps.varset.outputs.image_exists }}
     steps:
@@ -89,6 +89,7 @@ jobs:
             echo "Image does not exist"
             echo "image_exists=false" >> $GITHUB_OUTPUT
           fi
+          echo $GITHUB_OUTPUT
 
   build_base:
     name: Base layer build
