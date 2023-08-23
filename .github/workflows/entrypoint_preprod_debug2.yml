@@ -73,7 +73,7 @@ jobs:
     uses: ./.github/workflows/sub_code_check.yml
 
   build_base:
-    name: Base layer build
+    name: Base image build
     needs: varset
     strategy:
       fail-fast: false
@@ -82,6 +82,7 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
+      FINAL_MANIFEST_REGISTRY: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME_BASE }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
       ARCH: ${{ matrix.arch }}
@@ -121,7 +122,7 @@ jobs:
           docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME_BASE}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   build:
-    name: Build image
+    name: Final image build
     needs: [varset, code_check, publish_base]
     if: always() && needs.publish_base.result == 'success'
     strategy:
@@ -131,6 +132,7 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
+      FINAL_MANIFEST_REGISTRY: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
       BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
@@ -168,7 +170,7 @@ jobs:
           echo "Create version manifest"
           docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
-          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
+          docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   clean_runners:
     name: Clean runner
