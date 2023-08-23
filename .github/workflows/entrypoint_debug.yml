@@ -44,6 +44,7 @@ jobs:
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       DOCKER_TARGET_REPO_BASE: ${{ steps.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
+      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
       DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE_BASE }}
       DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}

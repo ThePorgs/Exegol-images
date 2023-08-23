@@ -94,7 +94,7 @@ jobs:
             ) | tee source/assets/installed_tools/new_releases.csv
             mv -v source/assets/installed_tools/new_releases.csv source/assets/installed_tools/releases.csv
           fi
-      - name: (dbg) print nightly.csv
+      - name: (dbg) print nightly.csv or releases.csv
         if: always() && !contains(steps.adding_list.outcome, 'skipped')
         id: final_list_exists
         run: |
