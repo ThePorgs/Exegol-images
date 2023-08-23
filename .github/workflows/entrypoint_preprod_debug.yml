@@ -19,7 +19,7 @@ env:
 
   # final registry target, in which arch-specific images must be aggregated
   DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-preprod"
-  IMAGE_BASE_NAME: "debugpr1"
+  IMAGE_BASE_NAME: "debugpr"
   # final dockerfile
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
@@ -57,8 +57,7 @@ jobs:
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE_BASE=${DOCKERFILE_BASE}" >> $GITHUB_OUTPUT
-          echo "DOCS_NIGHTLY_BRANCH=${DOCS_NIGHTLY_BRANCH}" >> $GITHUB_OUTPUT
-          echo "DOCS_RELEASES_BRANCH=${DOCS_RELEASES_BRANCH}" >> $GITHUB_OUTPUT
+          echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
           echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
@@ -98,7 +97,7 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}"
+      IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}"
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
       ARCH: ${{ matrix.arch }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
@@ -125,7 +124,7 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-amd64
+          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
           docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
@@ -167,16 +166,14 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}
       - name: Create and push version manifest
-        env:
-          IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
-        if: success() && env.IMAGE_VERSION != ''
+        if: success() && needs.varset.outputs.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-amd64
+          docker manifest create ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION} ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
           docker manifest rm ${DOCKER_TARGET_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}
 
@@ -198,14 +195,14 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove local base image ${{ env.DOCKER_BUILD_REPO }}:base-${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Remove local base image ${{ env.DOCKER_BUILD_REPO }}:base-${{ env.IMAGE_BASE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
         run: |
-          image_name=${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ matrix.arch }}
+          image_name=${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
           echo "Removing $image_name"
           docker image inspect $image_name || exit 0 && docker rmi $image_name
-      - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
         run: |
-          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
+          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
           echo "Removing $image_name"
           docker image inspect $image_name || exit 0 && docker rmi $image_name
 
@@ -223,5 +220,5 @@ jobs:
       - name: Remove remote images in ${{ env.DOCKER_BUILD_REPO }}
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-${{ matrix.arch }}/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-${{ matrix.arch }}/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
