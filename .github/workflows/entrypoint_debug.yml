@@ -148,7 +148,7 @@ jobs:
   build:
     name: Build image
     needs: [varset, code_check, check_base_image, publish_base]
-    if: always() && ( needs.publish_base.result == 'success' || needs.check_base_image.outputs.image_exists == 'true' ))
+    if: always() && ( needs.publish_base.result == 'success' || needs.check_base_image.outputs.image_exists == 'true' )
     strategy:
       fail-fast: false
       matrix:
