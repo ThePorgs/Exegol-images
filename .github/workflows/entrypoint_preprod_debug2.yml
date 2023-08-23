@@ -21,7 +21,7 @@ env:
   # TODO uncomment below
   # DOCKER_TARGET_REPO: "nwodtuhs/exegol-preprod"
   DOCKER_TARGET_REPO: "nwodtuhs/exegol-dev-preprod"
-  IMAGE_BASE_NAME: "debugpr2"
+  IMAGE_BASE_NAME: "debugpr_2"
   # final dockerfile
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
@@ -132,7 +132,6 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      FINAL_MANIFEST_REGISTRY: ${{ needs.varset.outputs.DOCKER_TARGET_REPO }}
       BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
