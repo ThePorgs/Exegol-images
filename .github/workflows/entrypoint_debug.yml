@@ -95,7 +95,7 @@ jobs:
   build_base:
     name: Base layer build
     needs: [ varset, code-check, check_base_image ]
-    if: needs.check.outputs.image_exists != 'true'
+    if: needs.check_base_image.outputs.image_exists != 'true'
     strategy:
       fail-fast: false
       matrix:
