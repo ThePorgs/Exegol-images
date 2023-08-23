@@ -198,7 +198,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ "base-${{ env.IMAGE_BASE_NAME }}", "${{ env.IMAGE_BASE_NAME }}" ]
+        image: [ "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}", "${{ needs.varset.outputs.IMAGE_BASE_NAME }}" ]
         arch: [ arm64, amd64 ]
     steps:
       - name: Remove remote image ${{ env.DOCKER_BUILD_REPO }}:${{ matrix.image }}-${{ matrix.arch }}
