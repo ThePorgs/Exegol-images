@@ -10,7 +10,7 @@ on:
         required: true
         type: string
       IMAGE_VERSION:
-        required: false
+        required: true
         default: ''
         type: string
       DOCS_TARGET_BRANCH:
@@ -42,12 +42,12 @@ jobs:
           ref: ${{ inputs.DOCS_TARGET_BRANCH }}
       - name: (dbg) inspect the built image
         id: image_exists
-        run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+        run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
       - name: Create a container from the built image
-        run: docker run --name exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }} --rm -t -d ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }} endless
+        run: docker run --name exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} --rm -t -d ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }} endless
       - name: Export the tools list
         if: success()
-        run: docker cp exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}:/.exegol/installed_tools.csv installed_tools.csv
+        run: docker cp exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}:/.exegol/installed_tools.csv installed_tools.csv
       - name: (dbg) print installed_tools.csv
         id: list_exists
         run: cat installed_tools.csv
@@ -60,7 +60,7 @@ jobs:
             || (echo '[+] List contains right number of columns' && exit 0)
       - name: Stop the container
         if: always() && steps.image_exists.outcome == 'success'
-        run: docker stop exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+        run: docker stop exegol-${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
       - name: Adding list to repo and tables
         id: adding_list
         if: always() && steps.list_exists.outcome == 'success'

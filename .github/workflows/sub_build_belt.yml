@@ -12,7 +12,7 @@ on:
         type: string
       IMAGE_VERSION:
         description: "Nothing if nightly build, else x.y.z with x, y, z integers"
-        required: false
+        required: true
         default: ''
         type: string
       DOCKERFILE:
@@ -105,7 +105,7 @@ jobs:
       - name: List containers
         run: docker ps
       - name: Inspect built image
-        run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+        run: docker inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
 
   test:
     name: Test
@@ -114,6 +114,7 @@ jobs:
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       ARCH: ${{ inputs.ARCH }}
 
   push:
@@ -126,6 +127,7 @@ jobs:
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
+      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ inputs.ARCH }}
     secrets:

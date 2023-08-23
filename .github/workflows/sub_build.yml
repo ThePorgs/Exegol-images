@@ -10,7 +10,7 @@ on:
         required: true
         type: string
       IMAGE_VERSION:
-        required: false
+        required: true
         default: ''
         type: string
       DOCKERFILE:
@@ -43,7 +43,7 @@ jobs:
           IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
           ARCH: ${{ inputs.ARCH }}
         run: |
-          echo "IMAGE_FULL_NAME=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${ARCH}" >> $GITHUB_OUTPUT
+          echo "IMAGE_FULL_NAME=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}-${ARCH}" >> $GITHUB_OUTPUT
           echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
       - name: Build and load the image

@@ -9,7 +9,7 @@ on:
       IMAGE_BASE_NAME:
         required: true
         type: string
-      DOCKERFILE:
+      IMAGE_VERSION:
         required: true
         type: string
       ARCH:
@@ -36,4 +36,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push docker image
-        run: docker push ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.ARCH }}
+        run: docker push ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
