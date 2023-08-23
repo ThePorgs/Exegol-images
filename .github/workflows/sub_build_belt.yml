@@ -22,6 +22,14 @@ on:
         description: "Target architecture (arm64 or amd64)"
         required: true
         type: string
+      DOCS_NIGHTLY_BRANCH:
+        description: "Target branch on ThePorgs/Exegol-docs on which tools list are exported for nightly images"
+        required: true
+        type: string
+      DOCS_RELEASES_BRANCH:
+        description: "Target branch on ThePorgs/Exegol-docs on which tools list are exported for release images"
+        required: true
+        type: string
       PR_MODE:
         description: "External pull request mode, no authenticated action operated (ex. push to dockerhub or other github repo)"
         required: false
@@ -142,6 +150,8 @@ jobs:
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       ARCH: ${{ inputs.ARCH }}
+      DOCS_NIGHTLY_BRANCH: ${{ inputs.DOCS_NIGHTLY_BRANCH }}
+      DOCS_RELEASES_BRANCH: ${{ inputs.DOCS_RELEASES_BRANCH }}
     secrets:
       EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
 

@@ -18,6 +18,10 @@ env:
   # final dockerfile
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
+  # ThePorgs/Exegol-docs branches for tools lists
+  DOCS_NIGHTLY_BRANCH: "main"
+  DOCS_RELEASES_BRANCH: "dev-images"
+
   # exegol-base registry target
   DOCKER_TARGET_REPO_BASE: "nwodtuhs/exegol-base"
   # base.dockerfile, will build exegol-base, which will be used as initial layer for the other images
@@ -40,8 +44,11 @@ jobs:
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       DOCKER_TARGET_REPO_BASE: ${{ steps.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
+      IMAGE_BASE_NAME_BASE: ${{ steps.varset.outputs.IMAGE_BASE_NAME_BASE }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
       DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE_BASE }}
+      DOCS_NIGHTLY_BRANCH: ${{ steps.varset.outputs.DOCS_NIGHTLY_BRANCH }}
+      DOCS_RELEASES_BRANCH: ${{ steps.varset.outputs.DOCS_RELEASES_BRANCH }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
@@ -50,8 +57,11 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
           echo "DOCKER_TARGET_REPO_BASE=${DOCKER_TARGET_REPO_BASE}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
+          echo "IMAGE_BASE_NAME_BASE=base-${IMAGE_BASE_NAME_BASE}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE_BASE=${DOCKERFILE_BASE}" >> $GITHUB_OUTPUT
+          echo "DOCS_NIGHTLY_BRANCH=${DOCS_NIGHTLY_BRANCH}" >> $GITHUB_OUTPUT
+          echo "DOCS_RELEASES_BRANCH=${DOCS_RELEASES_BRANCH}" >> $GITHUB_OUTPUT
 
   code-check:
     name: Code compliance check
@@ -67,7 +77,7 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
-      IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
+      IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}"
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
       ARCH: ${{ matrix.arch }}
       BASE_MODE: true
@@ -88,6 +98,8 @@ jobs:
       IMAGE_BASE_NAME: ${{ needs.varset.outputs.IMAGE_BASE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
+      DOCS_NIGHTLY_BRANCH: ${{ needs.varset.outputs.DOCS_NIGHTLY_BRANCH }}
+      DOCS_RELEASES_BRANCH: ${{ needs.varset.outputs.DOCS_RELEASES_BRANCH }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

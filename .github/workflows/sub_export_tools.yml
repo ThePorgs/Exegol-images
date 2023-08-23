@@ -13,6 +13,12 @@ on:
         required: false
         default: ''
         type: string
+      DOCS_NIGHTLY_BRANCH:
+        required: true
+        type: string
+      DOCS_RELEASES_BRANCH:
+        required: true
+        type: string
       ARCH:
         required: true
         type: string
@@ -43,9 +49,9 @@ jobs:
             IMAGE_VERSION=${COMMIT_ID:0:8}
           fi
           if [ "${{ inputs.IMAGE_BASE_NAME }}" == "nightly" ]; then
-            DOCS_BRANCH="main"
+            DOCS_BRANCH=${{ inputs.DOCS_NIGHTLY_BRANCH }}
           else
-            DOCS_BRANCH="dev_images"
+            DOCS_BRANCH=${{ inputs.DOCS_RELEASES_BRANCH }}
           fi
           echo "image_version=${IMAGE_VERSION}"
           echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
