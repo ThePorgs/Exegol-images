@@ -96,7 +96,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [varset, code_check, publish_base]
+    needs: [varset, code_check ]
     if: always() && needs.publish_base.result == 'success'
     strategy:
       fail-fast: false
@@ -117,10 +117,6 @@ jobs:
     needs:
       - publish
       - build
-    # clean runners, if publish was a success, or at least if build succeeded
-    if: always() && ( needs.publish.result == 'success' || !contains(needs.build.outputs.build, 'failure'))
-    # even if this job fails, it won't affect the success/fail status of the whole workflow
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
