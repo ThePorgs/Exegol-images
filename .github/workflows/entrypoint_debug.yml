@@ -82,6 +82,7 @@ jobs:
           if [ "${IMAGE_VERSION}" == "" ]; then
             IMAGE_VERSION=${COMMIT_ID:0:8}
           fi
+          IMAGE_VERSION="7b3dd7e2"
           if docker manifest inspect ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${IMAGE_VERSION}; then
             echo "Image exists"
             echo "image_exists=true" >> $GITHUB_OUTPUT
@@ -89,7 +90,7 @@ jobs:
             echo "Image does not exist"
             echo "image_exists=false" >> $GITHUB_OUTPUT
           fi
-          echo $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
 
   build_base:
     name: Base layer build
