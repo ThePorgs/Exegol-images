@@ -1,11 +1,10 @@
 # Author: The Exegol Project
 
 ARG TAG="local"
-ARG ARCH
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
 
-FROM nwodtuhs/exegol-base:${TAG}-${ARCH}
+FROM nwodtuhs/exegol-base:${TAG}-${VERSION}
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"

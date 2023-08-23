@@ -34,6 +34,8 @@ concurrency:
   group: debug_build
   cancel-in-progress: true
 
+# TODO for nightly images, compute the version (8 first chars of commit) here instead of sub_build.yml + publish_base + other places ?
+
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
   varset:
@@ -44,7 +46,6 @@ jobs:
       DOCKER_TARGET_REPO: ${{ steps.varset.outputs.DOCKER_TARGET_REPO }}
       DOCKER_TARGET_REPO_BASE: ${{ steps.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: ${{ steps.varset.outputs.IMAGE_BASE_NAME }}
-      IMAGE_BASE_NAME_BASE: ${{ steps.varset.outputs.IMAGE_BASE_NAME_BASE }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
       DOCKERFILE_BASE: ${{ steps.varset.outputs.DOCKERFILE_BASE }}
       DOCS_NIGHTLY_BRANCH: ${{ steps.varset.outputs.DOCS_NIGHTLY_BRANCH }}
@@ -57,7 +58,6 @@ jobs:
           echo "DOCKER_TARGET_REPO=${DOCKER_TARGET_REPO}" >> $GITHUB_OUTPUT
           echo "DOCKER_TARGET_REPO_BASE=${DOCKER_TARGET_REPO_BASE}" >> $GITHUB_OUTPUT
           echo "IMAGE_BASE_NAME=${IMAGE_BASE_NAME}" >> $GITHUB_OUTPUT
-          echo "IMAGE_BASE_NAME_BASE=base-${IMAGE_BASE_NAME_BASE}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE_BASE=${DOCKERFILE_BASE}" >> $GITHUB_OUTPUT
           echo "DOCS_NIGHTLY_BRANCH=${DOCS_NIGHTLY_BRANCH}" >> $GITHUB_OUTPUT
@@ -76,7 +76,9 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
+      DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
+      # TODO remove line below
+      #DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}"
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
       ARCH: ${{ matrix.arch }}
@@ -85,9 +87,43 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
+  publish_base:
+    # TODO test whats happens if build_base fails, where does the pipeline stop, all the rest (excepts cleans) must be skipped
+    name: Publish base
+    timeout-minutes: 60
+    needs: build_base
+    runs-on: self-hosted
+    # only publishing if the tests were a success (implicit by the success of build_belt).
+    if: needs.build_base.result == 'success'
+    steps:
+      - name: Prepare build
+        # IMAGE_VERSION is empty if the image is nightly
+        # For nightly, we then use the first 8 chars as the image version
+        # Also preparing other variables used for tagging the image to build
+        id: prepare
+        run: |
+          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          if [ "$IMAGE_VERSION" == "" ]; then
+            IMAGE_VERSION=${COMMIT_ID:0:8}
+          fi
+          echo "image_version=${IMAGE_VERSION}"
+          echo "image_version=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Create and push manifest
+        if: success()
+        run: |
+          echo "Create manifest"
+          docker manifest create ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ steps.prepare.outputs.image_version }} ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-arm64 ${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-amd64
+          docker manifest push ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ steps.prepare.outputs.image_version }}
+          docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ steps.prepare.outputs.image_version }}
+
   build:
     name: Build
-    needs: [varset, code-check, build_base]
+    needs: [varset, code-check, publish_base]
     strategy:
       fail-fast: false
       matrix:
@@ -144,9 +180,9 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove local base image ${{ env.DOCKER_TARGET_REPO_BASE }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
+      - name: Remove local base image ${{ env.DOCKER_BUILD_REPO }}:base-${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
         run: |
-          image_name=${DOCKER_BUILD_REPO}:${IMAGE_BASE_NAME}-${{ matrix.arch }}
+          image_name=${DOCKER_BUILD_REPO}:base-${IMAGE_BASE_NAME}-${{ matrix.arch }}
           echo "Removing $image_name"
           docker image inspect $image_name || exit 0 && docker rmi $image_name
       - name: Remove local final image ${{ env.DOCKER_BUILD_REPO }}:${{ env.IMAGE_BASE_NAME }}-${{ matrix.arch }}
@@ -162,6 +198,11 @@ jobs:
     # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
     if: needs.publish.result == 'success'
     steps:
+      - name: Remove arch-specific base images on intermediate registry
+        run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-arm64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-amd64/
       - name: Remove arch-specific images on intermediate registry
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
