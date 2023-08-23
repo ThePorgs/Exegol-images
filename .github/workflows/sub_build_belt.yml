@@ -6,10 +6,7 @@ on:
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY:
         required: true
         type: string
-      BASE_IMAGE_REGISTRY:
-        required: false
-        type: string
-      FINAL_MANIFEST_REGISTRY:
+      IMAGE_REGISTRY:
         required: false
         type: string
       IMAGE_NAME:
@@ -36,6 +33,12 @@ on:
         description: "External pull request mode, no authenticated action operated (ex. push to dockerhub or other github repo)"
         required: false
         type: boolean
+      BASE_IMAGE_REGISTRY:
+        required: false
+        type: string
+      BASE_IMAGE_NAME:
+        required: false
+        type: string
       BASE_MODE:
         description: "Layer 0 build mode, no push to documentation github repo"
         required: false
@@ -94,7 +97,8 @@ jobs:
     with:
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
       BASE_IMAGE_REGISTRY: ${{ inputs.BASE_IMAGE_REGISTRY }}
-      FINAL_MANIFEST_REGISTRY: ${{ inputs.FINAL_MANIFEST_REGISTRY }}
+      BASE_IMAGE_NAME: ${{ inputs.BASE_IMAGE_NAME }}
+      IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}

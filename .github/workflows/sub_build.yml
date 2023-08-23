@@ -9,7 +9,10 @@ on:
       BASE_IMAGE_REGISTRY:
         required: false
         type: string
-      FINAL_MANIFEST_REGISTRY:
+      BASE_IMAGE_NAME:
+        required: false
+        type: string
+      IMAGE_REGISTRY:
         required: false
         type: string
       IMAGE_NAME:
@@ -55,17 +58,17 @@ jobs:
           echo "IMAGE_FULL_NAME=${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
           if ${{ inputs.PR_MODE }} == "true"
           then
-            echo "BASE_IMAGE_NAME=${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
+            echo "BASE_IMAGE_NAME=${{ inputs.BASE_IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
           else
-            echo "BASE_IMAGE_NAME=${{ inputs.IMAGE_NAME }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
+            echo "BASE_IMAGE_NAME=${{ inputs.BASE_IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}" >> $GITHUB_OUTPUT
           fi
           echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
       - name: Checking if remote images exist
         id: check_remote_image
-        if: inputs.FINAL_MANIFEST_REGISTRY != ''
+        if: inputs.IMAGE_REGISTRY != ''
         run: |
-          if docker manifest inspect ${{ inputs.FINAL_MANIFEST_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}
+          if docker manifest inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}
           then  
             if docker manifest inspect ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}; then
               echo "Image exists"

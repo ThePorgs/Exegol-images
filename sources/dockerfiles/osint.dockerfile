@@ -12,13 +12,21 @@ LABEL org.exegol.build_date="${BUILD_DATE}"
 LABEL org.exegol.app="Exegol"
 LABEL org.exegol.src_repository="https://github.com/ThePorgs/Exegol-images"
 
-COPY sources /root/sources/
+COPY .. /root/sources/
 
 WORKDIR /root/sources/install
 
+# WARNING: package_most_used can't be used with other functions other than: package_base, post_install
+# ./entrypoint.sh package_most_used
+
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
-RUN ./entrypoint.sh package_base_debug
+RUN ./entrypoint.sh package_base
+RUN ./entrypoint.sh package_desktop
+RUN ./entrypoint.sh package_misc
+RUN ./entrypoint.sh package_misc_configure
+RUN ./entrypoint.sh package_osint
+RUN ./entrypoint.sh package_osint_configure
 RUN ./entrypoint.sh post_install
 RUN rm -rf /root/sources /var/lib/apt/lists/*
 

@@ -79,12 +79,15 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
+      # build will make sure the base image doesn't already exist on remote (BASE_IMAGE_REGISTRY)
+      IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
+      # build target registry
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      FINAL_MANIFEST_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
+      # build target image name
       IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       BASE_MODE: true
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -129,13 +132,16 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
+      # build target registry
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
+      # build target image name
       IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_NAME }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      # where build will find the base image
+      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
+      BASE_IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
-      DOCS_TARGET_BRANCH: ${{ needs.varset.outputs.DOCS_TARGET_BRANCH }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -158,14 +164,14 @@ jobs:
         if: success()
         run: |
           echo "Create manifest"
-          docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
           docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
       - name: Create and push version manifest
         if: success() && needs.varset.outputs.IMAGE_VERSION != ''
         run: |
           echo "Create version manifest"
-          docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${DOCKER_BUILD_REPO}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+          docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
           docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
           docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
