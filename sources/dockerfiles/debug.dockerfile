@@ -4,7 +4,9 @@ ARG TAG="local"
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
 
-FROM nwodtuhs/exegol-base:${TAG}-${VERSION}
+# TODO uncomment below when for prod
+# FROM nwodtuhs/exegol-misc:base-${VERSION}
+FROM nwodtuhs/exegol-misc-dev:base-${VERSION}
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"

@@ -12,19 +12,41 @@ env:
   # final "production" registry target
   DOCKER_PROD_REPO: "nwodtuhs/exegol"
 
+  # "preprod" registry for the misc images
+  MISC_DOCKER_PREPROD_REPO: "nwodtuhs/exegol-misc-preprod"
+  # final "production" registry target for misc images
+  MISC_DOCKER_PROD_REPO: "nwodtuhs/exegol-misc"
+
 jobs:
   varset:
     name: Initialize variables
     runs-on: self-hosted
     outputs:
       DOCKER_PREPROD_REPO: ${{ steps.varset.outputs.DOCKER_PREPROD_REPO }}
+      MISC_DOCKER_PREPROD_REPO: ${{ steps.varset.outputs.DOCKER_PREPROD_REPO }}
       DOCKER_PROD_REPO: ${{ steps.varset.outputs.DOCKER_PROD_REPO }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
         run: |
           echo "DOCKER_PREPROD_REPO=${DOCKER_PREPROD_REPO}" >> $GITHUB_OUTPUT
+          echo "MISC_DOCKER_PREPROD_REPO=${MISC_DOCKER_PREPROD_REPO}" >> $GITHUB_OUTPUT
           echo "DOCKER_PROD_REPO=${DOCKER_PROD_REPO}" >> $GITHUB_OUTPUT
+  release_base:
+    name: Publish base manifest
+    needs: varset
+    strategy:
+      matrix:
+        tag: [ "base" ]
+        version: [ '', "-${{ github.ref_name }}" ]
+    uses: ./.github/workflows/sub_release_manifest.yml
+    with:
+      DOCKER_PREPROD_REPO: ${{ needs.varset.outputs.MISC_DOCKER_PREPROD_REPO }}
+      MISC_PREPROD_MANIFEST_LIST: "${{ needs.varset.outputs.MISC_DOCKER_PREPROD_REPO }}:${{ matrix.tag }}{{ matrix.version }}"
+      MISC_PROD_MANIFEST_LIST: "${{ needs.varset.outputs.MISC_DOCKER_PROD_REPO }}:${{ matrix.tag }}{{ matrix.version }}"
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   release:
     name: Publish manifest
     needs: varset
