@@ -144,8 +144,7 @@ jobs:
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
-      DOCS_NIGHTLY_BRANCH: ${{ needs.varset.outputs.DOCS_NIGHTLY_BRANCH }}
-      DOCS_RELEASES_BRANCH: ${{ needs.varset.outputs.DOCS_RELEASES_BRANCH }}
+      DOCS_TARGET_BRANCH: ${{ needs.varset.outputs.DOCS_TARGET_BRANCH }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
