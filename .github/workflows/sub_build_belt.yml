@@ -57,8 +57,32 @@ on:
         value: ${{ jobs.export_results.outputs.test }}
 
 jobs:
+  check:
+    name: Checking if base image exists
+    runs-on: self-hosted
+    outputs:
+      image_exists: ${{ steps.varset.outputs.image_exists }}
+    steps:
+      - name: Passing workflow env vars to reusable workflows
+        id: varset
+        run: |
+          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          if [ "$IMAGE_VERSION" == "" ]; then
+            IMAGE_VERSION=${COMMIT_ID:0:8}
+          fi
+          if docker manifest inspect ${{ inputs.DOCKER_BUILD_REPO }}:${{ inputs.IMAGE_BASE_NAME }}-${IMAGE_VERSION}; then
+            echo "Image exists"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
+          fi
+          echo "image_exists=True" >> $GITHUB_OUTPUT
+
   prune:
     name: Pre-build ${{ inputs.ARCH }} runner clean
+    needs: check
+    if: needs.check.outputs.image_exists != 'true'
     runs-on:
       - self-hosted
       - builder
@@ -86,9 +110,10 @@ jobs:
         run: docker ps
 
   build:
-    name: Build
+    name: Build image
     uses: ./.github/workflows/sub_build.yml
-    needs: debug_pre_build
+    needs: [ debug_pre_build, check ]
+    if: needs.check.outputs.image_exists != 'true'
     with:
       DOCKER_BUILD_REPO: ${{ inputs.DOCKER_BUILD_REPO }}
       IMAGE_BASE_NAME: ${{ inputs.IMAGE_BASE_NAME }}

@@ -9,7 +9,7 @@ on:
       - "**.md"
 
 env:
-  # intermediary registry in which architecture-specific images must be pushed
+  # intermediary registry in which architecture-specific images and base images must be pushed
   DOCKER_BUILD_REPO: "nwodtuhs/exegol-builds"
 
   # final registry target, in which arch-specific images must be aggregated
@@ -77,8 +77,6 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_BUILD_REPO }}
-      # TODO remove line below
-      #DOCKER_BUILD_REPO: ${{ needs.varset.outputs.DOCKER_TARGET_REPO_BASE }}
       IMAGE_BASE_NAME: "base-${{ needs.varset.outputs.IMAGE_BASE_NAME }}"
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE_BASE }}
       ARCH: ${{ matrix.arch }}
@@ -122,7 +120,7 @@ jobs:
           docker manifest rm ${DOCKER_TARGET_REPO_BASE}:${IMAGE_BASE_NAME}-${{ steps.prepare.outputs.image_version }}
 
   build:
-    name: Build
+    name: Build image
     needs: [varset, code-check, publish_base]
     strategy:
       fail-fast: false
@@ -142,7 +140,7 @@ jobs:
       EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
 
   publish:
-    name: Publish
+    name: Publish image
     timeout-minutes: 60
     needs: build
     runs-on: self-hosted
@@ -192,19 +190,18 @@ jobs:
           docker image inspect $image_name || exit 0 && docker rmi $image_name
 
   clean_registry:
-    name: Clean intermediate registry
+    name: Clean registry
     needs: publish
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
     if: needs.publish.result == 'success'
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [ "base-${{ env.IMAGE_BASE_NAME }}", ${{ env.IMAGE_BASE_NAME }} ]
+        arch: [ arm64, amd64 ]
     steps:
-      - name: Remove arch-specific base images on intermediate registry
+      - name: Remove remote image ${{ env.DOCKER_BUILD_REPO }}:${{ matrix.image }}-${{ matrix.arch }}
         run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-arm64/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-amd64/
-      - name: Remove arch-specific images on intermediate registry
-        run: |
-          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-arm64/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/${IMAGE_BASE_NAME}-amd64/
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${DOCKER_BUILD_REPO}/tags/base-${IMAGE_BASE_NAME}-${{ matrix.arch }}/
