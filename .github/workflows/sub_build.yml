@@ -6,7 +6,7 @@ on:
       BASE_IMAGE_REGISTRY:
         required: false
         type: string
-      BASE_IMAGE_NAME:
+      BASE_IMAGE_TAG:
         required: false
         type: string
       IMAGE_REGISTRY:
@@ -71,7 +71,7 @@ jobs:
           no-cache: true
           build-args: |
             BASE_IMAGE_REGISTRY=${{ inputs.BASE_IMAGE_REGISTRY }}
-            BASE_IMAGE_NAME=${{ steps.prepare.outputs.BASE_IMAGE_NAME }}
+            BASE_IMAGE_NAME=${{ steps.prepare.outputs.BASE_IMAGE_TAG }}
             TAG=${{ inputs.IMAGE_TAG }}
             VERSION=${{ inputs.IMAGE_VERSION }}
             BUILD_DATE=${{ steps.prepare.outputs.BUILD_DATE }}
