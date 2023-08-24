@@ -178,6 +178,8 @@ jobs:
     needs: [ publish, build, varset ]
     # clean runners, if publish was a success, or at least if build succeeded
     if: always() && ( needs.publish.result == 'success' || !contains(needs.build.outputs.build, 'failure'))
+    # if this job errors, it will not affect the rest of the workflow
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -188,15 +190,9 @@ jobs:
       - ${{ matrix.arch }}
     steps:
       - name: Remove local base image ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-        run: |
-          image_name=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-          echo "Removing $image_name"
-          docker image inspect $image_name || exit 0 && docker rmi $image_name
+        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
       - name: Remove local final image ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-        run: |
-          image_name=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-          echo "Removing $image_name"
-          docker image inspect $image_name || exit 0 && docker rmi $image_name
+        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
 
   clean_registries:
     name: Clean registries
@@ -211,7 +207,7 @@ jobs:
     steps:
       - name: Remove remote arch-specific images in ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
         run: |
-          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          HUB_TOKEN=$(curl --silent --header "Content-Type: application/json" --request POST --data "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl --fail-with-body --include --request DELETE -H "Accept: application/json" --header "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          curl --fail-with-body --include --request DELETE -H "Accept: application/json" --header "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
       # no need to remove versioned manifest for base image here. We want it to stay on the preprod registry and be transfered to prod registry on final release
