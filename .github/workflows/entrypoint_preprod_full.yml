@@ -58,7 +58,7 @@ jobs:
           echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
           echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_TAG=${BASE_IMAGE_TAG}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
@@ -156,8 +156,8 @@ jobs:
       ARCH: ${{ matrix.arch }}
       # ex: nwodtuhs/exegol-misc-preprod
       BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
-      # ex: base-1.2.3-arm64
-      BASE_IMAGE_TAG:  ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+      # ex: base-1.2.3
+      BASE_IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
