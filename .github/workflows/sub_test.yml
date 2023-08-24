@@ -9,6 +9,9 @@ on:
       IMAGE_NAME:
         required: true
         type: string
+      ARCH:
+        required: true
+        type: string
 
 jobs:
   test:
