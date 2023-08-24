@@ -164,6 +164,7 @@ jobs:
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
       DOCS_TARGET_BRANCH: ${{ inputs.DOCS_TARGET_BRANCH }}
+      ARCH: ${{ inputs.ARCH }}
     secrets:
       EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}
 
