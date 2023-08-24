@@ -37,7 +37,7 @@ on:
         description: "registry of the base layer image"
         required: false
         type: string
-      BASE_IMAGE_TAG:
+      BASE_IMAGE_NAME:
         description: "base layer image name"
         required: false
         type: string
@@ -98,7 +98,7 @@ jobs:
     needs: debug_pre_build
     with:
       BASE_IMAGE_REGISTRY: ${{ inputs.BASE_IMAGE_REGISTRY }}
-      BASE_IMAGE_TAG: ${{ inputs.BASE_IMAGE_TAG }}
+      BASE_IMAGE_NAME: ${{ inputs.BASE_IMAGE_NAME }}
       IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
       IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
