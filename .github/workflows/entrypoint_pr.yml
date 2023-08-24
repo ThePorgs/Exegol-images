@@ -95,7 +95,7 @@ jobs:
   build:
     name: Final image build
     needs: [varset, code_check, build_base ]
-    if: always() && needs.build.outputs.build == 'success'
+    if: always() && needs.build_base.outputs.build == 'success'
     strategy:
       fail-fast: false
       matrix:

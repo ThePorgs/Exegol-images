@@ -174,15 +174,15 @@ jobs:
       - name: Extract build result
         id: build
         if: needs.build.result != 'success'
-        run: echo "result=failure" >> $GITHUB_OUTPUT
+        run: echo "result=${{ needs.build.result }}" >> $GITHUB_OUTPUT
       - name: Extract tests result
         id: test
-        if: needs.test.result != 'success'
-        run: echo "result=failure" >> $GITHUB_OUTPUT
+        run: echo "result=${{ needs.test.result }}" >> $GITHUB_OUTPUT
       - name: Extract push result
         id: push
-        if: needs.push.result != 'success'
-        run: echo "result=failure" >> $GITHUB_OUTPUT
+        run: echo "result=${{ needs.push.result }}" >> $GITHUB_OUTPUT
+      - name: Show results
+        run: cat $GITHUB_OUTPUT
     outputs:
       build: ${{ steps.build.outputs.result }}
       test: ${{ steps.test.outputs.result }}

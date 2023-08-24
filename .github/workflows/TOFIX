@@ -1,5 +1,3 @@
 - les bases des images preprod sont toutes built, faut trouver un moyen qu'un seule de chaque arch se build. Là j'attend que le manifest soit push sur misc-dev-preprod sauf que ça n'arrive qu'à la fin du workflow. Avec le clean runner, les builds intermédiaires devraient rester le temps de
 - le build final de entrypoint_pr ne se fait pas -> le fix est passé ?
-- soucis au publish -> fix passé ?
 - pas de clean registries
-- pas de clean runners -> fix passé ?

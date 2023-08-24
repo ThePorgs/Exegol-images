@@ -124,7 +124,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [varset, code_check, publish_base]
+    needs: [ varset, code_check, publish_base ]
     if: always() && needs.publish_base.result == 'success'
     strategy:
       fail-fast: false
@@ -201,7 +201,7 @@ jobs:
 
   clean_registries:
     name: Clean registries
-    needs: publish
+    needs: [ varset, publish ]
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
     if: needs.publish.result == 'success'
