@@ -3,14 +3,14 @@ name: (level 2 sub) Build
 on:
   workflow_call:
     inputs:
-      TARGET_REGISTRY:
-        required: true
-        type: string
       BASE_IMAGE_REGISTRY:
         required: false
         type: string
       BASE_IMAGE_NAME:
         required: false
+        type: string
+      IMAGE_REGISTRY:
+        required: true
         type: string
       IMAGE_NAME:
         required: true
@@ -53,9 +53,9 @@ jobs:
         run: echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
       - name: Checking if remote images exist
         id: check_remote_image
-        if: inputs.TARGET_REGISTRY != ''
+        if: inputs.IMAGE_REGISTRY != ''
         run: |
-          if docker manifest inspect ${{ inputs.TARGET_REGISTRY }}:${{ inputs.IMAGE_NAME }}; then
+          if docker manifest inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}; then
             echo "Image exists"
             echo "image_exists=true" >> $GITHUB_OUTPUT
           else
@@ -75,19 +75,19 @@ jobs:
             TAG=${{ inputs.IMAGE_TAG }}
             VERSION=${{ inputs.IMAGE_VERSION }}
             BUILD_DATE=${{ steps.prepare.outputs.BUILD_DATE }}
-          tags: "${{ inputs.TARGET_REGISTRY }}:${{ inputs.IMAGE_NAME }}"
+          tags: "${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}"
           platforms: linux/${{ inputs.ARCH }}
           file: ${{ inputs.DOCKERFILE }}
           context: .
       - name: Pull the image
         if: always() && steps.check_remote_image.outputs.image_exists == 'true'
-        run: docker pull ${{ inputs.TARGET_REGISTRY }}:${{ inputs.IMAGE_NAME }}
+        run: docker pull ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
       - name: (dbg) post-build docker info
         if: always()
         run: |
           docker image ls -a
           docker ps
-          docker inspect ${{ inputs.TARGET_REGISTRY }}:${{ inputs.IMAGE_NAME }}
+          docker inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
   export_results:
     name: Exporting build results for higher jobs
     needs: build
