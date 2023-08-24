@@ -79,11 +79,8 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      # build will make sure the base image doesn't already exist on remote (BASE_IMAGE_REGISTRY)
       IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
-      # build target registry
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      # build target image name
       IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
