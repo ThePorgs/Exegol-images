@@ -21,17 +21,17 @@ env:
   # TODO uncomment below
   # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
   BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
-  BASE_IMAGE_NAME: "base"
+  BASE_IMAGE_TAG: "full"
   BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
 
   # final image parameters
   # TODO uncomment below
   # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
-  IMAGE_NAME: "full"
+  IMAGE_TAG: "ad"
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
-  # ThePorgs/Exegol-docs branch for tools lists
+  # ThePorgs/Exegol-docs branch for tools lists export
   DOCS_TARGET_BRANCH: "dev-images"
 
 jobs:
@@ -42,11 +42,11 @@ jobs:
     outputs:
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ steps.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
       IMAGE_TARGET_REGISTRY: ${{ steps.varset.outputs.IMAGE_TARGET_REGISTRY }}
-      BASE_IMAGE_REGISTRY: ${{ steps.varset.outputs.BASE_IMAGE_REGISTRY }}
-      IMAGE_NAME: ${{ steps.varset.outputs.IMAGE_NAME }}
-      BASE_IMAGE_NAME: ${{ steps.varset.outputs.BASE_IMAGE_NAME }}
+      IMAGE_TAG: ${{ steps.varset.outputs.IMAGE_TAG }}
       IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+      BASE_IMAGE_REGISTRY: ${{ steps.varset.outputs.BASE_IMAGE_REGISTRY }}
+      BASE_IMAGE_TAG: ${{ steps.varset.outputs.BASE_IMAGE_TAG }}
       BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
       DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}
     steps:
@@ -59,7 +59,7 @@ jobs:
           echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
           echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_NAME=${BASE_IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_TAG=${BASE_IMAGE_TAG}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
@@ -79,14 +79,17 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      # build will make sure the base image doesn't already exist on remote (BASE_IMAGE_REGISTRY)
-      IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
-      # build target registry
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      # build target image name
-      IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
+      # ex: nwodtuhs/exegol-builds
+      IMAGE_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      # ex: base
+      IMAGE_TAG: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}
+      # ex: base-1.2.3-arm64
+      IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+      # ex: 1.2.3
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      # ex: base.dockerfile
       DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
+      # ex: arm64
       ARCH: ${{ matrix.arch }}
       BASE_MODE: true
     secrets:
@@ -107,20 +110,27 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Create and push manifest
+      # only version manifest is used for later builds. Unversioned manifest will stay on the exegol-misc registry for people to use.
+      - name: Create manifest
+        # ex: docker manifest create nwodtuhs/exegol-misc-preprod:base nwodtuhs/exegol-builds:base-1.2.3-arm64 nwodtuhs/exegol-builds:base-1.2.3-amd64
+        run: docker manifest create ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+      - name: Push manifest to remote
+        # ex: docker manifest push nwodtuhs/exegol-misc-preprod:base
+        run: docker manifest push ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}
+      - name: Remove manifest locally
+        # ex: docker manifest rm nwodtuhs/exegol-misc-preprod:base
+        run: docker manifest rm ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}
+
+      - name: Create version manifest
         if: success()
-        run: |
-          echo "Create manifest"
-          docker manifest create ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
-          docker manifest rm ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
-      - name: Create and push version manifest
-        if: success() && needs.varset.outputs.IMAGE_VERSION != ''
-        run: |
-          echo "Create version manifest"
-          docker manifest create ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
-          docker manifest rm ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+        # ex: docker manifest create nwodtuhs/exegol-misc-preprod:base-1.2.3 nwodtuhs/exegol-builds:base-1.2.3-arm64 nwodtuhs/exegol-builds:base-1.2.3-amd64
+        run: docker manifest create ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+      - name: Push version manifest to remote
+        # ex: docker manifest push nwodtuhs/exegol-misc-preprod:base-1.2.3
+        run: docker manifest push ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}
+      - name: Remove version manifest locally
+        # ex: docker manifest rm nwodtuhs/exegol-misc-preprod:base-1.2.3
+        run: docker manifest rm ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   build:
     name: Final image build
@@ -132,18 +142,22 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      # build will make sure the base image doesn't already exist on remote (BASE_IMAGE_REGISTRY)
-      IMAGE_REGISTRY: ${{ needs.varset.outputs.IMAGE_REGISTRY }}
-      # build target registry
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      # build target image name
-      IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_NAME }}
+      # ex: nwodtuhs/exegol-builds
+      IMAGE_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      # ex: full
+      IMAGE_TAG: ${{ needs.varset.outputs.IMAGE_TAG }}
+      # ex: full-1.2.3-arm64
+      IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+      # ex: 1.2.3
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
-      # where build will find the base image
-      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
-      BASE_IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
+      # ex: full.dockerfile
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      # ex: arm64
       ARCH: ${{ matrix.arch }}
+      # ex: nwodtuhs/exegol-misc-preprod
+      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.BASE_IMAGE_REGISTRY }}
+      # ex: base-1.2.3-arm64
+      BASE_IMAGE_TAG:  ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -163,17 +177,23 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Create manifest
-        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+        # ex: docker manifest create nwodtuhs/exegol-preprod:full nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
+        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
       - name: Push manifest to remote
-        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
+        # ex: docker manifest push nwodtuhs/exegol-preprod:full
+        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}
       - name: Remove manifest locally
-        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
+        # ex: docker manifest rm nwodtuhs/exegol-preprod:full
+        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}
       - name: Create version manifest
-        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+        # ex: docker manifest create nwodtuhs/exegol-preprod:full-1.2.3
+        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
       - name: Push version manifest to remote
-        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+        # ex: docker manifest push nwodtuhs/exegol-preprod:full-1.2.3
+        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}
       - name: Remove version manifest locally
-        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+        # ex: docker manifest rm nwodtuhs/exegol-preprod:full-1.2.3
+        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   clean_runners:
     name: Clean runner
@@ -191,10 +211,12 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove local base image ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-      - name: Remove local final image ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+      - name: Remove local base image
+        # ex: docker rmi nwodtuhs/exegol-builds:base-1.2.3-arm64
+        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+      - name: Remove local final image
+        # ex: docker rmi nwodtuhs/exegol-builds:full-1.2.3-arm64
+        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
 
   clean_registries:
     name: Clean registries
@@ -208,8 +230,10 @@ jobs:
         arch: [ arm64, amd64 ]
     steps:
       - name: Remove remote arch-specific images in ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+        # ex: curl [...] --request DELETE [...]exegol-builds/tags/full-1.2.3-arm64
+        # ex: curl [...] --request DELETE [...]exegol-builds/tags/base-1.2.3-arm64
         run: |
-          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          HUB_TOKEN=$(curl --silent --header "Content-Type: application/json" --request POST --data "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl --fail-with-body --include --request DELETE -H "Accept: application/json" --header "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
+          curl --fail-with-body --include --request DELETE -H "Accept: application/json" --header "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
       # no need to remove versioned manifest for base image here. We want it to stay on the preprod registry and be transfered to prod registry on final release

@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
 #      - dev
-      - refacto2
-      - refacto2_pr
+#      - refacto2
+#      - refacto2_pr
       - "*.*.*"
       - "*.*.*b*"
     paths-ignore:

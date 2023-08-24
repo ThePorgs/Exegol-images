@@ -3,13 +3,15 @@ name: (level 1 sub) Belt
 on:
   workflow_call:
     inputs:
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY:
+      IMAGE_REGISTRY:
+        description: "registry for the image to build"
         required: true
         type: string
-      IMAGE_REGISTRY:
-        required: false
-        type: string
       IMAGE_NAME:
+        description: "full name for the image to build"
+        required: true
+        type: string
+      IMAGE_TAG:
         description: "nightly/full/osint/ad/..., or PRxyz if external pull request (with x, y, z integers)"
         required: true
         type: string
@@ -32,13 +34,15 @@ on:
         required: false
         type: boolean
       BASE_IMAGE_REGISTRY:
+        description: "registry of the base layer image"
         required: false
         type: string
       BASE_IMAGE_NAME:
+        description: "base layer image name"
         required: false
         type: string
       BASE_MODE:
-        description: "Layer 0 build mode, no push to documentation github repo"
+        description: "no push to documentation github repo if building a base image"
         required: false
         type: boolean
     secrets:
@@ -93,15 +97,15 @@ jobs:
     uses: ./.github/workflows/sub_build.yml
     needs: debug_pre_build
     with:
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      TARGET_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       BASE_IMAGE_REGISTRY: ${{ inputs.BASE_IMAGE_REGISTRY }}
       BASE_IMAGE_NAME: ${{ inputs.BASE_IMAGE_NAME }}
       IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
+      IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
       IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ inputs.DOCKERFILE }}
       ARCH: ${{ inputs.ARCH }}
-      PR_MODE: ${{ inputs.PR_MODE }}
 
   debug_post_build:
     name: (dbg) post-build docker info
@@ -116,33 +120,35 @@ jobs:
       - name: List containers
         run: docker ps
       - name: Inspect built image
-        run: docker inspect ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}
+        run: docker inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
 
   test:
     name: Test
     needs: build
     uses: ./.github/workflows/sub_test.yml
     with:
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
-      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
-      ARCH: ${{ inputs.ARCH }}
 
   push:
-    name: Push
+    name: Push image (${{ inputs.ARCH }})
     needs: [ build, test ]
     # Push image to exegol-builds whatever the outcome of "test" is, as long as the image was built (which is already an implicit requirement of the "test" job)
     # Only pushing if not in PR_MODE, in order to prevent external PRs from accessing secrets
     if: always() && inputs.PR_MODE == false && ( needs.test.result == 'failure' || needs.test.result == 'success' ) && needs.build.outputs.build == 'success'
-    uses: ./.github/workflows/sub_push.yml
-    with:
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
-      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
-      ARCH: ${{ inputs.ARCH }}
-    secrets:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ inputs.ARCH }}
+    timeout-minutes: 360
+    steps:
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push docker image
+        run: docker push ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
 
   export_tools:
     name: Export tools list
@@ -154,10 +160,9 @@ jobs:
     #if: always() && inputs.PR_MODE == false && inputs.BASE_MODE == false && needs.test.result == 'success'
     uses: ./.github/workflows/sub_export_tools.yml
     with:
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
-      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
-      ARCH: ${{ inputs.ARCH }}
+      IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
       DOCS_TARGET_BRANCH: ${{ inputs.DOCS_TARGET_BRANCH }}
     secrets:
       EXEGOL_DOCS_SSH_DEPLOY_KEY: ${{ secrets.EXEGOL_DOCS_SSH_DEPLOY_KEY }}

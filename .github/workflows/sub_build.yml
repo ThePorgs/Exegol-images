@@ -3,7 +3,7 @@ name: (level 2 sub) Build
 on:
   workflow_call:
     inputs:
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY:
+      TARGET_REGISTRY:
         required: true
         type: string
       BASE_IMAGE_REGISTRY:
@@ -12,10 +12,10 @@ on:
       BASE_IMAGE_NAME:
         required: false
         type: string
-      IMAGE_REGISTRY:
-        required: false
-        type: string
       IMAGE_NAME:
+        required: true
+        type: string
+      IMAGE_TAG:
         required: true
         type: string
       IMAGE_VERSION:
@@ -26,9 +26,6 @@ on:
         type: string
       ARCH:
         required: true
-        type: string
-      PR_MODE:
-        required: false
         type: string
     outputs:
       build:
@@ -53,29 +50,17 @@ jobs:
       - name: Prepare build
         # Preparing variables used for tagging the image to build
         id: prepare
-        run: |
-          echo "IMAGE_FULL_NAME=${{ inputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
-          if ${{ inputs.PR_MODE }} == "true"
-          then
-            echo "BASE_IMAGE_NAME=${{ inputs.BASE_IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}-${{ inputs.ARCH }}" >> $GITHUB_OUTPUT
-          else
-            echo "BASE_IMAGE_NAME=${{ inputs.BASE_IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}" >> $GITHUB_OUTPUT
-          fi
-          echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
+        run: echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
       - name: Checking if remote images exist
         id: check_remote_image
-        if: inputs.IMAGE_REGISTRY != ''
+        if: inputs.TARGET_REGISTRY != ''
         run: |
-          if docker manifest inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}
-          then  
-            if docker manifest inspect ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}; then
-              echo "Image exists"
-              echo "image_exists=true" >> $GITHUB_OUTPUT
-            else
-              echo "Image does not exist"
-              echo "image_exists=false" >> $GITHUB_OUTPUT
-            fi
+          if docker manifest inspect ${{ inputs.TARGET_REGISTRY }}:${{ inputs.IMAGE_NAME }}; then
+            echo "Image exists"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
           fi
           cat $GITHUB_OUTPUT
       - name: Build the image
@@ -87,22 +72,22 @@ jobs:
           build-args: |
             BASE_IMAGE_REGISTRY=${{ inputs.BASE_IMAGE_REGISTRY }}
             BASE_IMAGE_NAME=${{ steps.prepare.outputs.BASE_IMAGE_NAME }}
-            TAG=${{ inputs.IMAGE_NAME }}
+            TAG=${{ inputs.IMAGE_TAG }}
             VERSION=${{ inputs.IMAGE_VERSION }}
             BUILD_DATE=${{ steps.prepare.outputs.BUILD_DATE }}
-          tags: ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}
+          tags: "${{ inputs.TARGET_REGISTRY }}:${{ inputs.IMAGE_NAME }}"
           platforms: linux/${{ inputs.ARCH }}
           file: ${{ inputs.DOCKERFILE }}
           context: .
       - name: Pull the image
         if: always() && steps.check_remote_image.outputs.image_exists == 'true'
-        run: docker pull ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}
+        run: docker pull ${{ inputs.TARGET_REGISTRY }}:${{ inputs.IMAGE_NAME }}
       - name: (dbg) post-build docker info
         if: always()
         run: |
           docker image ls -a
           docker ps
-          docker inspect ${{ steps.prepare.outputs.IMAGE_FULL_NAME }}
+          docker inspect ${{ inputs.TARGET_REGISTRY }}:${{ inputs.IMAGE_NAME }}
   export_results:
     name: Exporting build results for higher jobs
     needs: build
