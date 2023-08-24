@@ -161,6 +161,7 @@ jobs:
     with:
       IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
+      IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
       IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
       DOCS_TARGET_BRANCH: ${{ inputs.DOCS_TARGET_BRANCH }}
     secrets:
