@@ -124,7 +124,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [varset, code_check, publish_base]
+    needs: [ varset, code_check, publish_base ]
     if: always() && needs.publish_base.result == 'success'
     strategy:
       fail-fast: false
@@ -132,6 +132,8 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
+      # build will make sure the base image doesn't already exist on remote (BASE_IMAGE_REGISTRY)
+      IMAGE_REGISTRY: ${{ needs.varset.outputs.IMAGE_REGISTRY }}
       # build target registry
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
       # build target image name
@@ -178,7 +180,6 @@ jobs:
     needs: [ publish, build, varset ]
     # clean runners, if publish was a success, or at least if build succeeded
     if: always() && ( needs.publish.result == 'success' || !contains(needs.build.outputs.build, 'failure'))
-    # even if this job fails, it won't affect the success/fail status of the whole workflow
     strategy:
       fail-fast: false
       matrix:
@@ -201,7 +202,7 @@ jobs:
 
   clean_registries:
     name: Clean registries
-    needs: publish
+    needs: [ varset, publish ]
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
     if: needs.publish.result == 'success'

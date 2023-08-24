@@ -173,7 +173,6 @@ jobs:
     steps:
       - name: Extract build result
         id: build
-        if: needs.build.result != 'success'
         run: echo "result=${{ needs.build.result }}" >> $GITHUB_OUTPUT
       - name: Extract tests result
         id: test
