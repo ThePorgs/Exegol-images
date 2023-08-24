@@ -97,7 +97,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [varset, code_check ]
+    needs: [varset, code_check, build_base ]
     if: always() && needs.publish_base.result == 'success'
     strategy:
       fail-fast: false

@@ -160,20 +160,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Create and push manifest
-        if: success()
-        run: |
-          echo "Create manifest"
-          docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
-          docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
-      - name: Create and push version manifest
-        if: success() && needs.varset.outputs.IMAGE_VERSION != ''
-        run: |
-          echo "Create version manifest"
-          docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-          docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
-          docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+      - name: Create manifest
+        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+      - name: Push manifest to remote
+        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
+      - name: Remove manifest locally
+        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}
+      - name: Create version manifest
+        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${DOCKER_BUILD_REPO}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+      - name: Push version manifest to remote
+        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
+      - name: Remove version manifest locally
+        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}
 
   clean_runners:
     name: Clean runner
