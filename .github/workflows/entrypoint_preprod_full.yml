@@ -223,7 +223,7 @@ jobs:
     needs: [ varset, publish_base, publish ]
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
-    if: always && ( needs.publish_base.result == 'success' || needs.publish.result == 'success' )
+    if: always() && ( needs.publish_base.result == 'success' || needs.publish.result == 'success' )
     strategy:
       fail-fast: false
       matrix:
