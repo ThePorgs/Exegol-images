@@ -21,7 +21,6 @@ env:
   # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol"
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev"
   IMAGE_NAME: "debugextpr"
-  IMAGE_VERSION: "none"
   # final dockerfile
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
@@ -50,7 +49,6 @@ jobs:
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ steps.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
       IMAGE_TARGET_REGISTRY: ${{ steps.varset.outputs.IMAGE_TARGET_REGISTRY }}
       IMAGE_NAME: ${{ steps.varset.outputs.IMAGE_NAME }}
-      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
       BASE_IMAGE_REGISTRY: ${{ steps.varset.outputs.BASE_IMAGE_REGISTRY }}
       BASE_IMAGE_NAME: ${{ steps.varset.outputs.BASE_IMAGE_NAME }}
@@ -65,7 +63,6 @@ jobs:
           echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
           echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
           echo "IMAGE_NAME=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
-          echo "IMAGE_VERSION=${IMAGE_VERSION}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_NAME=${BASE_IMAGE_NAME}" >> $GITHUB_OUTPUT
@@ -89,7 +86,7 @@ jobs:
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
       # build target image name
       IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
       BASE_MODE: true
@@ -110,7 +107,7 @@ jobs:
       IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_NAME }}
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       ARCH: ${{ matrix.arch }}
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
+      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_NAME }}
       PR_MODE: true
 
   clean_runners:
