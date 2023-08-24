@@ -21,14 +21,14 @@ env:
   # TODO uncomment below
   # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
   BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
-  BASE_IMAGE_TAG: "full"
+  BASE_IMAGE_TAG: "base"
   BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
 
   # final image parameters
   # TODO uncomment below
   # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
-  IMAGE_TAG: "ad"
+  IMAGE_TAG: "full"
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists export
