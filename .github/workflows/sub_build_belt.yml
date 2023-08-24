@@ -97,7 +97,6 @@ jobs:
     uses: ./.github/workflows/sub_build.yml
     needs: debug_pre_build
     with:
-      TARGET_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
       BASE_IMAGE_REGISTRY: ${{ inputs.BASE_IMAGE_REGISTRY }}
       BASE_IMAGE_NAME: ${{ inputs.BASE_IMAGE_NAME }}
       IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
