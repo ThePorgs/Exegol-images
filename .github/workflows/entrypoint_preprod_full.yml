@@ -187,12 +187,12 @@ jobs:
           fi
           cat $GITHUB_OUTPUT
       - name: Login to Dockerhub
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Create manifest
-        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest create nwodtuhs/exegol-preprod:full nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
         # ex: docker manifest create nwodtuhs/exegol-preprod:full-1.2.3 nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
         run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
