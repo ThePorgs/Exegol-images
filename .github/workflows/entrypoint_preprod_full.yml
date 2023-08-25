@@ -170,30 +170,40 @@ jobs:
     runs-on: self-hosted
     # only publishing if the tests were a success (implicit by the success of build_belt).
     if: needs.build.result == 'success'
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [ "", "-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
     steps:
+      - name: Checking if remote image exists
+        id: check_remote_image
+        run: |
+          if docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }}; then
+            echo "Image exists"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
+          fi
+          cat $GITHUB_OUTPUT
       - name: Login to Dockerhub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Create manifest
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest create nwodtuhs/exegol-preprod:full nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
-        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+        # ex: docker manifest create nwodtuhs/exegol-preprod:full-1.2.3 nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
+        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
       - name: Push manifest to remote
         # ex: docker manifest push nwodtuhs/exegol-preprod:full
-        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}
+        # ex: docker manifest push nwodtuhs/exegol-preprod:full-1.2.3
+        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}}${{ matrix.version }}
       - name: Remove manifest locally
         # ex: docker manifest rm nwodtuhs/exegol-preprod:full
-        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}
-      - name: Create version manifest
-        # ex: docker manifest create nwodtuhs/exegol-preprod:full-1.2.3
-        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
-      - name: Push version manifest to remote
-        # ex: docker manifest push nwodtuhs/exegol-preprod:full-1.2.3
-        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}
-      - name: Remove version manifest locally
         # ex: docker manifest rm nwodtuhs/exegol-preprod:full-1.2.3
-        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}
+        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}}${{ matrix.version }}
 
   clean_runners:
     name: Clean runner
