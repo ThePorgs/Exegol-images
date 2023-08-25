@@ -106,8 +106,8 @@ jobs:
     if: needs.build_base.result == 'success'
     strategy:
       fail-fast: false
-      matrix:
       # only version manifest is used for later builds. Unversioned manifest will stay on the exegol-misc registry for people to use.
+      matrix:
         image: [ ${ BASE_IMAGE_TAG }, "${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
     steps:
       - name: Checking if remote image exists
