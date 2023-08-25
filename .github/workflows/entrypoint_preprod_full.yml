@@ -108,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ ${BASE_IMAGE_TAG}, "${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
+        image: [ ${{ env.BASE_IMAGE_TAG }}, "${{ env.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
     steps:
       - name: Checking if remote image exists
         id: check_remote_image
@@ -181,7 +181,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ ${IMAGE_TAG}, "${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
+        image: [ ${{ env.IMAGE_TAG }}, "${{ env.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
     steps:
       - name: Checking if remote image exists
         id: check_remote_image
