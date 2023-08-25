@@ -128,14 +128,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Create manifest
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest create nwodtuhs/exegol-misc-preprod:base nwodtuhs/exegol-builds:base-1.2.3-arm64 nwodtuhs/exegol-builds:base-1.2.3-amd64
         # ex: docker manifest create nwodtuhs/exegol-misc-preprod:base-1.2.3 nwodtuhs/exegol-builds:base-1.2.3-arm64 nwodtuhs/exegol-builds:base-1.2.3-amd64
         run: docker manifest create ${BASE_IMAGE_REGISTRY}:${{ matrix.image }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
       - name: Push manifest to remote
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest push nwodtuhs/exegol-misc-preprod:base
         # ex: docker manifest push nwodtuhs/exegol-misc-preprod:base-1.2.3
         run: docker manifest push ${BASE_IMAGE_REGISTRY}:${{ matrix.image }}
       - name: Remove manifest locally
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest rm nwodtuhs/exegol-misc-preprod:base
         # ex: docker manifest rm nwodtuhs/exegol-misc-preprod:base-1.2.3
         run: docker manifest rm ${BASE_IMAGE_REGISTRY}:${{ matrix.image }}
@@ -201,14 +204,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Create manifest
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest create nwodtuhs/exegol-preprod:full nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
         # ex: docker manifest create nwodtuhs/exegol-preprod:full-1.2.3 nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
         run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
       - name: Push manifest to remote
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest push nwodtuhs/exegol-preprod:full
         # ex: docker manifest push nwodtuhs/exegol-preprod:full-1.2.3
         run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
       - name: Remove manifest locally
+        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest rm nwodtuhs/exegol-preprod:full
         # ex: docker manifest rm nwodtuhs/exegol-preprod:full-1.2.3
         run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
