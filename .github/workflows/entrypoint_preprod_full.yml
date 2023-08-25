@@ -104,11 +104,11 @@ jobs:
     runs-on: self-hosted
     # only publishing if the tests were a success (implicit by the success of build_belt).
     if: needs.build_base.result == 'success'
+    # only version manifest is used for later builds. Unversioned manifest will stay on the exegol-misc registry for people to use.
     strategy:
       fail-fast: false
-      # only version manifest is used for later builds. Unversioned manifest will stay on the exegol-misc registry for people to use.
       matrix:
-        image: [ ${ BASE_IMAGE_TAG }, "${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
+        image: [ ${BASE_IMAGE_TAG}, "${BASE_IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
     steps:
       - name: Checking if remote image exists
         id: check_remote_image
