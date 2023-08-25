@@ -113,7 +113,8 @@ jobs:
       - name: Checking if remote image exists
         id: check_remote_image
         run: |
-          if docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }}; then
+          echo "docker manifest inspect ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}${{ matrix.version }}"
+          if docker manifest inspect ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}${{ matrix.version }}; then
             echo "Image exists"
             echo "image_exists=true" >> $GITHUB_OUTPUT
           else
@@ -189,6 +190,7 @@ jobs:
       - name: Checking if remote image exists
         id: check_remote_image
         run: |
+          echo "docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }}"
           if docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }}; then
             echo "Image exists"
             echo "image_exists=true" >> $GITHUB_OUTPUT
