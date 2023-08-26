@@ -1,6 +1,6 @@
 name: Pre-release (full)
 
-on:
+#on:
 #  pull_request:
 #    title:
 #      - "Release *.*.*"
