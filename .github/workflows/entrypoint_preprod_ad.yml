@@ -2,7 +2,7 @@ name: Pre-release (ad)
 
 on:
   workflow_run:
-    workflows: ["Pre-release (base)"]
+    workflows: [Pre-release (base)]
     types:
       - completed
 
