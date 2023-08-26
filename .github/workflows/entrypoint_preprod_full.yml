@@ -35,6 +35,13 @@ env:
   DOCS_TARGET_BRANCH: "dev-images"
 
 jobs:
+  test_call:
+    name: test call other workflow
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GH_CLI_WORKFLOW_CALL }}
+        run: gh workflow run entrypoint_preprod_ad.yml -f pr_title=${{ github.event.pull_request.title }}
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
   varset:
     name: Initialize variables

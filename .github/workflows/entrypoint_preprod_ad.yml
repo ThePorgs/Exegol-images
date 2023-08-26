@@ -1,0 +1,64 @@
+name: Pre-release (full)
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_title:
+        description: "PR title"
+        required: true
+
+# cf https://github.com/actions/runner/issues/2324, paths-ignore will only be respected at PR creation
+# all new commits then added in the PR will trigger the workflow
+
+env:
+  # intermediate registry in which architecture-specific images and base images must be pushed
+  INTERMEDIATE_IMAGES_BUILDS_REGISTRY: "nwodtuhs/exegol-builds"
+
+  # base image is used as initial layer when building the final image
+  # TODO uncomment below
+  # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
+  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
+  BASE_IMAGE_TAG: "base"
+  BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
+
+  # final image parameters
+  # TODO uncomment below
+  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
+  IMAGE_TAG: "ad"
+  DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
+
+  # ThePorgs/Exegol-docs branch for tools lists export
+  DOCS_TARGET_BRANCH: "dev-images"
+
+jobs:
+  # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
+  varset:
+    name: Initialize variables
+    runs-on: self-hosted
+    outputs:
+      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ steps.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
+      IMAGE_TARGET_REGISTRY: ${{ steps.varset.outputs.IMAGE_TARGET_REGISTRY }}
+      IMAGE_TAG: ${{ steps.varset.outputs.IMAGE_TAG }}
+      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
+      DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+      BASE_IMAGE_REGISTRY: ${{ steps.varset.outputs.BASE_IMAGE_REGISTRY }}
+      BASE_IMAGE_TAG: ${{ steps.varset.outputs.BASE_IMAGE_TAG }}
+      BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
+      DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setting variables
+        id: varset
+        run: |
+          echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_TAG=${BASE_IMAGE_TAG}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
+          echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
+          echo "IMAGE_VERSION=$(echo ${{ inputs.pr_title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
