@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: [Pre-release (base)]
     types: [completed]
-    branches: [refacto2_pr]
+    branches: [refacto2, refacto2_pr]
 
 
 # cf https://github.com/actions/runner/issues/2324, paths-ignore will only be respected at PR creation
