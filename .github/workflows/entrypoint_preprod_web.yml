@@ -1,5 +1,5 @@
-name: Pre-release (ad)
-run-name: Pre-release (ad) - ${{ github.event.pull_request.title }}
+name: Pre-release (web)
+run-name: Pre-release (web) - ${{ github.event.pull_request.title }}
 
 on:
   pull_request:
@@ -26,7 +26,7 @@ env:
   # TODO uncomment below
   # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
-  IMAGE_TAG: "ad"
+  IMAGE_TAG: "web"
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists export

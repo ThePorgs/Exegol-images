@@ -20,10 +20,10 @@ env:
 
   # base image is used as initial layer when building the final image
   # TODO uncomment below
-  # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
-  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
-  BASE_IMAGE_TAG: "base"
-  BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
+  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-misc-preprod"
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
+  IMAGE_TAG: "base"
+  DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
@@ -36,10 +36,6 @@ jobs:
       IMAGE_TAG: ${{ steps.varset.outputs.IMAGE_TAG }}
       IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
-      BASE_IMAGE_REGISTRY: ${{ steps.varset.outputs.BASE_IMAGE_REGISTRY }}
-      BASE_IMAGE_TAG: ${{ steps.varset.outputs.BASE_IMAGE_TAG }}
-      BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
-      DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -48,13 +44,9 @@ jobs:
         run: |
           echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
           echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
           echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_TAG=${BASE_IMAGE_TAG}" >> $GITHUB_OUTPUT
-          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
           echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
   code_check:
@@ -62,8 +54,9 @@ jobs:
     uses: ./.github/workflows/sub_code_check.yml
 
   build:
-    name: Base image build
-    needs: varset
+    name: Image build
+    needs: [ varset, code_check ]
+    if: always() && needs.code_check.result == 'success'
     strategy:
       fail-fast: false
       matrix:
@@ -73,39 +66,39 @@ jobs:
       # ex: nwodtuhs/exegol-builds
       IMAGE_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
       # ex: base
-      IMAGE_TAG: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}
+      IMAGE_TAG: ${{ needs.varset.outputs.IMAGE_TAG }}
       # ex: base-1.2.3-arm64
-      IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+      IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
       # ex: 1.2.3
       IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_VERSION }}
       # ex: base.dockerfile
-      DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
+      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
       # ex: arm64
       ARCH: ${{ matrix.arch }}
-      BASE_MODE: true
+      EXPORT_TOOLS: false
+      PUSH_IMAGE: true
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   publish:
     # TODO test whats happens if build fails, where does the pipeline stop, all the rest (excepts cleans) must be skipped
-    name: Publish base
-    timeout-minutes: 60
+    name: Publish image
     needs: [ varset, build ]
-    runs-on: self-hosted
-    # only publishing if the tests were a success (implicit by the success of build_belt).
     if: needs.build.result == 'success'
-    # only version manifest is used for later builds. Unversioned manifest will stay on the exegol-misc registry for people to use.
+    timeout-minutes: 60
+    runs-on: self-hosted
+    # only publishing if the tests were a success (implicit by the success of build).
     strategy:
       fail-fast: false
       matrix:
-        image: [ "${{ needs.varset.outputs.BASE_IMAGE_TAG }}", "${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
+        image: [ "${{ needs.varset.outputs.IMAGE_TAG }}", "${{ needs.varset.outputs.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}" ]
     steps:
       - name: Checking if remote image exists
         id: check_remote_image
         run: |
-          echo "docker manifest inspect ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}${{ matrix.version }}"
-          if docker manifest inspect ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_TAG}${{ matrix.version }}; then
+          echo "docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }}"
+          if docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }}; then
             echo "Image exists"
             echo "image_exists=true" >> $GITHUB_OUTPUT
           else
@@ -124,21 +117,21 @@ jobs:
         if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest create nwodtuhs/exegol-misc-preprod:base nwodtuhs/exegol-builds:base-1.2.3-arm64 nwodtuhs/exegol-builds:base-1.2.3-amd64
         # ex: docker manifest create nwodtuhs/exegol-misc-preprod:base-1.2.3 nwodtuhs/exegol-builds:base-1.2.3-arm64 nwodtuhs/exegol-builds:base-1.2.3-amd64
-        run: docker manifest create ${BASE_IMAGE_REGISTRY}:${{ matrix.image }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
+        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.varset.outputs.IMAGE_VERSION }}-amd64
       - name: Push manifest to remote
         if: success() && steps.check_remote_image.outputs.image_exists != 'true'
         # ex: docker manifest push nwodtuhs/exegol-misc-preprod:base
         # ex: docker manifest push nwodtuhs/exegol-misc-preprod:base-1.2.3
-        run: docker manifest push ${BASE_IMAGE_REGISTRY}:${{ matrix.image }}
+        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
       - name: Remove manifest locally
         if: always() && steps.create_manifest.result == success()
         # ex: docker manifest rm nwodtuhs/exegol-misc-preprod:base
         # ex: docker manifest rm nwodtuhs/exegol-misc-preprod:base-1.2.3
-        run: docker manifest rm ${BASE_IMAGE_REGISTRY}:${{ matrix.image }}
+        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
 
   clean_runners:
     name: Clean runner
-    needs: [ varset, publish ]
+    needs: [ varset, build, publish ]
     # clean runners, if publish was a success, or at least if build succeeded
     if: always() && ( needs.publish.result == 'success' || !contains(needs.build.outputs.build, 'failure'))
     # if this job errors, it will not affect the rest of the workflow
@@ -152,16 +145,16 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove local base image
+      - name: Remove local image
         # ex: docker rmi nwodtuhs/exegol-builds:base-1.2.3-arm64
-        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
 
   clean_registries:
     name: Clean registries
     needs: [ varset, publish ]
+    if: always() && needs.publish.result == 'success'
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success. If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
-    if: always() && needs.publish.result == 'success'
     strategy:
       fail-fast: false
       matrix:
@@ -171,5 +164,4 @@ jobs:
         # ex: curl [...] --request DELETE [...]exegol-builds/tags/base-1.2.3-arm64
         run: |
           HUB_TOKEN=$(curl --silent --header "Content-Type: application/json" --request POST --data "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl --fail-with-body --include --request DELETE -H "Accept: application/json" --header "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
-      # no need to remove versioned manifest for base image here. We want it to stay on the preprod registry and be transfered to prod registry on final release
+          curl --fail-with-body --include --request DELETE -H "Accept: application/json" --header "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/

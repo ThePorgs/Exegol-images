@@ -28,8 +28,7 @@ on:
 jobs:
   export_tools:
     name: Export tools list
-    # Only exporting tools list if not in PR_MODE, in order to prevent external PRs from accessing GitHub token
-    # Only exporting tools list if tests and push were a success
+    # Only exporting tools list if tests and push were a success, and if we're not in an external pull request
     runs-on:
       - self-hosted
       - builder

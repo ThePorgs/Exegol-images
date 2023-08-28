@@ -25,14 +25,18 @@ on:
         description: "Target architecture (arm64 or amd64)"
         required: true
         type: string
+      PUSH_IMAGE:
+        description: "push image to registry"
+        required: true
+        type: boolean
+      EXPORT_TOOLS:
+        description: "push to documentation github repo"
+        required: true
+        type: boolean
       DOCS_TARGET_BRANCH:
         description: "Target branch on ThePorgs/Exegol-docs on which tools list are exported"
         required: false
         type: string
-      PR_MODE:
-        description: "External pull request mode, no authenticated action operated (ex. push to dockerhub or other github repo)"
-        required: false
-        type: boolean
       BASE_IMAGE_REGISTRY:
         description: "registry of the base layer image"
         required: false
@@ -41,10 +45,6 @@ on:
         description: "base layer image name"
         required: false
         type: string
-      BASE_MODE:
-        description: "no push to documentation github repo if building a base image"
-        required: false
-        type: boolean
     secrets:
       DOCKER_PASSWORD:
         required: false
@@ -134,8 +134,7 @@ jobs:
     name: Push image (${{ inputs.ARCH }})
     needs: [ build, test ]
     # Push image to exegol-builds whatever the outcome of "test" is, as long as the image was built (which is already an implicit requirement of the "test" job)
-    # Only pushing if not in PR_MODE, in order to prevent external PRs from accessing secrets
-    if: always() && inputs.PR_MODE == false && ( needs.test.result == 'failure' || needs.test.result == 'success' ) && needs.build.outputs.build == 'success'
+    if: always() && inputs.PUSH_IMAGE == true && ( needs.test.result == 'failure' || needs.test.result == 'success' ) && needs.build.outputs.build == 'success'
     runs-on:
       - self-hosted
       - builder
@@ -153,11 +152,10 @@ jobs:
   export_tools:
     name: Export tools list
     needs: test
-    # Only exporting tools list if not in PR_MODE, in order to prevent external PRs from accessing GitHub token
     # Only exporting tools list if tests were a success
     # TODO remove the following line when merging this in dev, this is only to prevent debug tests from exporting to the doc
-    if: always() && inputs.PR_MODE == false && inputs.BASE_MODE == false && needs.test.result == 'success' && inputs.BASE_MODE == true
-    #if: always() && inputs.PR_MODE == false && inputs.BASE_MODE == false && needs.test.result == 'success'
+    if: always() && inputs.EXPORT_TOOLS == true && needs.test.result == 'success' && inputs.EXPORT_TOOLS == false
+#    if: always() && inputs.EXPORT_TOOLS == true && needs.test.result == 'success'
     uses: ./.github/workflows/sub_export_tools.yml
     with:
       IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}

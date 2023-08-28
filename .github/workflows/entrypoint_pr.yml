@@ -3,9 +3,9 @@ name: External PR tests
 on:
   pull_request:
     branches:
-#      - dev
-#      - refacto2
-#      - refacto2_pr
+      - dev
+      - refacto2
+      - refacto2_pr
       - "*.*.*"
       - "*.*.*b*"
     paths-ignore:
@@ -13,24 +13,18 @@ on:
       - "**.md"
 
 env:
-  # intermediary registry in which architecture-specific images and base images must be pushed
-  INTERMEDIATE_IMAGES_BUILDS_REGISTRY: "nwodtuhs/exegol-builds"
+  # fake local registry for base and final images
+  FAKE_LOCAL_REGISTRY: "nwodtuhs/exegol-local"
 
-  # final registry target, in which arch-specific images must be aggregated
+  BASE_IMAGE_TAG: "base"
+  BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
+
+  # final image parameters
   # TODO uncomment below
-  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol"
-  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev"
-  IMAGE_NAME: "debugextpr"
-  # final dockerfile
+  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
-  # exegol-base registry target
-  # TODO uncomment below
-  # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
-  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
-  BASE_IMAGE_NAME: "base"
-  # base.dockerfile, will build exegol-base, which will be used as initial layer for the other images
-  BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
 
 # creating a separate concurrency group for each PR
 # so that our "PR checks" are always running for the latest commit in the PR
@@ -46,12 +40,11 @@ jobs:
     name: Initialize variables
     runs-on: self-hosted
     outputs:
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ steps.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      IMAGE_TARGET_REGISTRY: ${{ steps.varset.outputs.IMAGE_TARGET_REGISTRY }}
-      IMAGE_NAME: ${{ steps.varset.outputs.IMAGE_NAME }}
+      FAKE_LOCAL_REGISTRY: ${{ steps.varset.outputs.FAKE_LOCAL_REGISTRY }}
+      IMAGE_TAG: ${{ steps.varset.outputs.IMAGE_TAG }}
+      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
-      BASE_IMAGE_REGISTRY: ${{ steps.varset.outputs.BASE_IMAGE_REGISTRY }}
-      BASE_IMAGE_NAME: ${{ steps.varset.outputs.BASE_IMAGE_NAME }}
+      BASE_IMAGE_TAG: ${{ steps.varset.outputs.BASE_IMAGE_TAG }}
       BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
     steps:
       - name: Checkout
@@ -60,12 +53,10 @@ jobs:
         id: varset
         run: |
           PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-          echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "IMAGE_NAME=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
+          echo "FAKE_LOCAL_REGISTRY=${FAKE_LOCAL_REGISTRY}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
           echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_NAME=${BASE_IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_TAG=${BASE_IMAGE_TAG}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
@@ -75,22 +66,26 @@ jobs:
 
   build_base:
     name: Base image build
-    needs: varset
+    needs: [ varset, code_check ]
+    if: always() && needs.code_check.result == 'success'
     strategy:
       fail-fast: false
       matrix:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      # build target registry
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      # build target image name
-      IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_NAME }}
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_NAME }}
+      # ex: nwodtuhs/exegol-local
+      IMAGE_REGISTRY: ${{ needs.varset.outputs.FAKE_LOCAL_REGISTRY }}
+      # ex: base
+      IMAGE_TAG: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}
+      # ex: base-PR123-arm64
+      IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      # ex: base.dockerfile
       DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
+      # ex: arm64
       ARCH: ${{ matrix.arch }}
-      BASE_MODE: true
-      PR_MODE: true
+      EXPORT_TOOLS: false
+      PUSH_IMAGE: false
 
   build:
     name: Final image build
@@ -102,13 +97,22 @@ jobs:
         arch: [ arm64, amd64 ]
     uses: ./.github/workflows/sub_build_belt.yml
     with:
-      INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
-      IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_NAME }}
+      # ex: nwodtuhs/exegol-local
+      IMAGE_REGISTRY: ${{ needs.varset.outputs.FAKE_LOCAL_REGISTRY }}
+      # ex: PR123
+      IMAGE_TAG: ${{ needs.varset.outputs.IMAGE_TAG }}
+      # ex: PR123-arm64
+      IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      # ex: full.dockerfile
       DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      # ex: arm64
       ARCH: ${{ matrix.arch }}
-      IMAGE_VERSION: ${{ needs.varset.outputs.IMAGE_NAME }}
-      PR_MODE: true
+      # ex: nwodtuhs/exegol-local
+      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.FAKE_LOCAL_REGISTRY }}
+      # ex: base-PR123-arm64
+      BASE_IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      EXPORT_TOOLS: false
+      PUSH_IMAGE: false
 
   clean_runners:
     name: Clean runner
@@ -122,13 +126,9 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
-      - name: Remove local base image ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-        run: |
-          image_name=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.BASE_IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-          echo "Removing $image_name"
-          docker image inspect $image_name || exit 0 && docker rmi $image_name
-      - name: Remove local final image ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_NAME }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-        run: |
-          image_name=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_NAME}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
-          echo "Removing $image_name"
-          docker image inspect $image_name || exit 0 && docker rmi $image_name
+      - name: Remove local base image
+        # ex: docker rmi nwodtuhs/exegol-local:base-arm64
+        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ matrix.arch }}
+      - name: Remove local final image
+        # ex: docker rmi nwodtuhs/exegol-local:PR123-arm64
+        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.IMAGE_TAG }}-${{ matrix.arch }}
