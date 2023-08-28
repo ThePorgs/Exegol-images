@@ -125,7 +125,7 @@ jobs:
         # ex: docker manifest push nwodtuhs/exegol-misc-preprod:base-1.2.3
         run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
       - name: Remove manifest locally
-        if: always() && steps.create_manifest.result == success()
+        if: always() && steps.create_manifest.result == 'success'
         # ex: docker manifest rm nwodtuhs/exegol-misc-preprod:base
         # ex: docker manifest rm nwodtuhs/exegol-misc-preprod:base-1.2.3
         run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
@@ -180,6 +180,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: List labels
+        # TODO if label already there, remove and re-add ?
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT_BASE_TRIGGER }}
         run: gh pr view --json labels ${{ github.event.number }} -q '.labels[].name'

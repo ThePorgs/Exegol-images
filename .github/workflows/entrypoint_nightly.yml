@@ -48,6 +48,7 @@ jobs:
     name: Initialize
     runs-on: self-hosted
     outputs:
+      FAKE_LOCAL_REGISTRY: ${{ steps.varset.outputs.FAKE_LOCAL_REGISTRY }}
       INTERMEDIATE_IMAGES_BUILDS_REGISTRY: ${{ steps.varset.outputs.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}
       IMAGE_TARGET_REGISTRY: ${{ steps.varset.outputs.IMAGE_TARGET_REGISTRY }}
       IMAGE_TAG: ${{ steps.varset.outputs.IMAGE_TAG }}
@@ -65,6 +66,7 @@ jobs:
         id: varset
         run: |
           COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
+          echo "FAKE_LOCAL_REGISTRY=${FAKE_LOCAL_REGISTRY}" >> $GITHUB_OUTPUT
           echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
           echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
           echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_OUTPUT
@@ -179,7 +181,7 @@ jobs:
         # ex: docker manifest push nwodtuhs/exegol:nightly
         run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
       - name: Remove manifest locally
-        if: always() && steps.create_manifest.result == success()
+        if: always() && steps.create_manifest.result == 'success'
         # ex: docker manifest rm nwodtuhs/exegol:nightly
         run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
 
