@@ -116,7 +116,7 @@ jobs:
 
   clean_runners:
     name: Clean runner
-    needs: [ varset, build ]
+    needs: [ init, build ]
     strategy:
       fail-fast: false
       matrix:

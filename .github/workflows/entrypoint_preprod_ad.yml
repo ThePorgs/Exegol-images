@@ -117,7 +117,7 @@ jobs:
 
   publish:
     name: Publish image
-    needs: [ varset, build ]
+    needs: [ init, build ]
     # only publishing if the tests were a success (implicit by the success of build).
     if: ${{ github.event.label.name == 'base success' }} && needs.build.result == 'success'
     timeout-minutes: 60
@@ -152,7 +152,7 @@ jobs:
 
   clean_runners:
     name: Clean runner
-    needs: [ varset, build, publish ]
+    needs: [ init, build, publish ]
     # clean runners, if publish was a success, or at least if build succeeded
     if: always() && ${{ github.event.label.name == 'base success' }} && needs.build.result == 'success'
     # even if this job fails, it won't affect the success/fail status of the whole workflow
@@ -174,7 +174,7 @@ jobs:
 
   clean_registries:
     name: Clean registries
-    needs: [ varset, publish ]
+    needs: [ init, publish ]
     if: always() && ${{ github.event.label.name == 'base success' }} && needs.publish.result == 'success'
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success.

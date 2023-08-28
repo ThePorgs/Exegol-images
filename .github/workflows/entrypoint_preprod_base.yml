@@ -69,7 +69,7 @@ jobs:
   build:
     # TODO : skip build if image already exists? If so, refactor the inside of sub_build
     name: Image build
-    needs: [ varset, code_check ]
+    needs: [ init, code_check ]
     if: always() && needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false'
     strategy:
       fail-fast: false
@@ -97,7 +97,7 @@ jobs:
 
   publish:
     name: Publish image
-    needs: [ varset, build ]
+    needs: [ init, build ]
     # only publishing if the tests were a success (implicit by the success of build).
     if: needs.build.result == 'success'
     timeout-minutes: 60
@@ -132,7 +132,7 @@ jobs:
 
   clean_runners:
     name: Clean runner
-    needs: [ varset, build, publish ]
+    needs: [ init, build, publish ]
     # clean runners, if publish was a success, or at least if build succeeded
     if: always() && ( needs.publish.result == 'success' || needs.build.result == 'success'
     # if this job errors, it will not affect the rest of the workflow
@@ -154,7 +154,7 @@ jobs:
 
   clean_registries:
     name: Clean registries
-    needs: [ varset, publish ]
+    needs: [ init, publish ]
     if: always() && needs.publish.result == 'success'
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success.
@@ -172,7 +172,7 @@ jobs:
 
   add_label:
     name: Trigger image builds
-    needs: [ varset, clean_registries ]
+    needs: [ init, clean_registries ]
     # running either if publish and clean_registries were a success, or if the image already existed on remote
     if: always() && ( needs.clean_registries.result == 'success' || needs.init.outputs.image_exists == 'true' )
     runs-on: ubuntu-latest

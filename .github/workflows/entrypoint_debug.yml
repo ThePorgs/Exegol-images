@@ -119,7 +119,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [varset, code_check, build_base]
+    needs: [ init, code_check, build_base ]
     if: always() && needs.build_base.result == 'success'
     strategy:
       fail-fast: false
@@ -153,7 +153,7 @@ jobs:
 
   publish:
     name: Publish image
-    needs: [ varset, build ]
+    needs: [ init, build ]
     # only publishing if the tests were a success (implicit by the success of build).
     if: needs.build.result == 'success'
     timeout-minutes: 60
@@ -184,7 +184,7 @@ jobs:
 
   clean_runners:
     name: Clean runner
-    needs: [ varset, build, publish ]
+    needs: [ init, build, publish ]
     # clean runners, if publish was a success, or at least if build succeeded
     if: always() && ( needs.publish.result == 'success' || needs.build.result == 'success' )
     # even if this job fails, it won't affect the success/fail status of the whole workflow
@@ -209,7 +209,7 @@ jobs:
 
   clean_registries:
     name: Clean registries
-    needs: [ varset, publish ]
+    needs: [ init, publish ]
     # only cleaning if publish was a success. And publish requires that tests were a success.
     # If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
     if: always() && needs.publish.result == 'success'
