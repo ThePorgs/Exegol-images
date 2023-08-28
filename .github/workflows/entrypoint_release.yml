@@ -38,8 +38,8 @@ jobs:
           echo "DOCKER_PREPROD_REPO=${DOCKER_PREPROD_REPO}" >> $GITHUB_OUTPUT
           echo "MISC_DOCKER_PREPROD_REPO=${MISC_DOCKER_PREPROD_REPO}" >> $GITHUB_OUTPUT
           echo "DOCKER_PROD_REPO=${DOCKER_PROD_REPO}" >> $GITHUB_OUTPUT
-  release_base:
-    name: Publish base manifest
+  release_misc:
+    name: Publish misc manifests
     needs: init
     strategy:
       matrix:

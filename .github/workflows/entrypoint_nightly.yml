@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - refacto2
+      - refacto2_pr
     paths-ignore:
 #      - ".github/**"
       - "**.md"
@@ -186,7 +187,7 @@ jobs:
     name: Clean runner
     needs: [ init, build, publish ]
     # clean runners if build succeeded
-    if: always() && ( needs.publish.result == 'success' || needs.build.result == 'success' )
+    if: always() && needs.build.result == 'success'
     # even if this job fails, it won't affect the success/fail status of the whole workflow
     strategy:
       fail-fast: false
