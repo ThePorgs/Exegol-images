@@ -1,10 +1,12 @@
 # Author: The Exegol Project
 
-FROM debian:11-slim
-
+ARG BASE_IMAGE_REGISTRY="nwodtuhs/exegol-misc"
+ARG BASE_IMAGE_NAME="base"
 ARG TAG="local"
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
+
+FROM ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"

@@ -1,10 +1,12 @@
 # Author: The Exegol Project
 
-FROM debian:11-slim
-
+ARG BASE_IMAGE_REGISTRY="nwodtuhs/exegol-misc"
+ARG BASE_IMAGE_NAME="base"
 ARG TAG="local"
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
+
+FROM ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"
@@ -12,7 +14,7 @@ LABEL org.exegol.build_date="${BUILD_DATE}"
 LABEL org.exegol.app="Exegol"
 LABEL org.exegol.src_repository="https://github.com/ThePorgs/Exegol-images"
 
-COPY .. /root/sources/
+COPY sources /root/sources/
 
 WORKDIR /root/sources/install
 
@@ -25,15 +27,17 @@ RUN ./entrypoint.sh package_base
 RUN ./entrypoint.sh package_desktop
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_misc_configure
+RUN ./entrypoint.sh package_c2
+RUN ./entrypoint.sh package_c2_configure
 RUN ./entrypoint.sh package_wordlists
 RUN ./entrypoint.sh package_wordlists_configure
 RUN ./entrypoint.sh package_cracking
 RUN ./entrypoint.sh package_cracking_configure
-RUN ./entrypoint.sh package_osint
-RUN ./entrypoint.sh package_osint_configure
 RUN ./entrypoint.sh package_web
 RUN ./entrypoint.sh package_web_configure
-RUN ./entrypoint.sh package_code_analysis
+RUN ./entrypoint.sh package_ad
+RUN ./entrypoint.sh package_ad_configure
+RUN ./entrypoint.sh package_network
 RUN ./entrypoint.sh post_install
 RUN rm -rf /root/sources /var/lib/apt/lists/*
 

@@ -128,7 +128,8 @@ jobs:
     steps:
       - name: Remove local base image
         # ex: docker rmi nwodtuhs/exegol-local:base-arm64
-        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
       - name: Remove local final image
+        if: always()
         # ex: docker rmi nwodtuhs/exegol-local:PR123-arm64
-        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}

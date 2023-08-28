@@ -199,6 +199,7 @@ jobs:
         # ex: docker rmi nwodtuhs/exegol-local:base-f31c8d23-arm64
         run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
       - name: Remove local final image
+        if: always()
         # ex: docker rmi nwodtuhs/exegol-builds:nightly-arm64
         run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.IMAGE_TAG }}-${{ matrix.arch }}
 
