@@ -1,0 +1,20 @@
+name: Pre-release (after base)
+
+on:
+  pull_request:
+    title:
+      - "Release *.*.*"
+      - "Release *.*.*b*"
+    types: [labeled]
+    branches: refacto2
+    paths-ignore:
+#      - ".github/**"
+      - "**.md"
+
+jobs:
+  test:
+    name: test
+    if: ${{ github.event.label.name == 'base_success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "test"
