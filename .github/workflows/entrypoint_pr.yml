@@ -132,4 +132,4 @@ jobs:
       - name: Remove local final image
         if: always()
         # ex: docker rmi nwodtuhs/exegol-local:PR123-arm64
-        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
