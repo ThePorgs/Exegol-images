@@ -54,20 +54,20 @@ jobs:
       - name: Setting variables
         id: varset
         run: |
-          echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "IMAGE_TARGET_REGISTRY=${IMAGE_TARGET_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+          echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TARGET_REGISTRY=${{ env.IMAGE_TARGET_REGISTRY }}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
           echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
-          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_TAG=${BASE_IMAGE_TAG}" >> $GITHUB_OUTPUT
-          echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${{ env.DOCKERFILE }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_REGISTRY=${{ env.BASE_IMAGE_REGISTRY }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_TAG=${{ env.BASE_IMAGE_TAG }}" >> $GITHUB_OUTPUT
+          echo "DOCS_TARGET_BRANCH=${{ env.DOCS_TARGET_BRANCH }}" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
       - name: Checking if remote image exists
         id: check_remote_image
         run: |
-          echo "docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}-${{ steps.varset.outputs.IMAGE_VERSION }}"
-          if docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}-${{ steps.varset.outputs.IMAGE_VERSION }}; then
+          echo "docker manifest inspect ${{ env.IMAGE_TARGET_REGISTRY }}:${{ env.IMAGE_TAG }}-${{ steps.varset.outputs.IMAGE_VERSION }}"
+          if docker manifest inspect ${{ env.IMAGE_TARGET_REGISTRY }}:${{ env.IMAGE_TAG }}-${{ steps.varset.outputs.IMAGE_VERSION }}; then
             echo "Image exists"
             echo "image_exists=true" >> $GITHUB_OUTPUT
           else
@@ -138,17 +138,17 @@ jobs:
         if: success()
         # ex: docker manifest create nwodtuhs/exegol-preprod:full nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
         # ex: docker manifest create nwodtuhs/exegol-preprod:full-1.2.3 nwodtuhs/exegol-builds:full-1.2.3-arm64 nwodtuhs/exegol-builds:full-1.2.3-amd64
-        run: docker manifest create ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }} ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.init.outputs.IMAGE_VERSION }}-arm64 ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${IMAGE_TAG}-${{ needs.init.outputs.IMAGE_VERSION }}-amd64
+        run: docker manifest create ${{ env.IMAGE_TARGET_REGISTRY }}:${{ matrix.image }} ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-arm64 ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-amd64
       - name: Push manifest to remote
         if: success()
         # ex: docker manifest push nwodtuhs/exegol-preprod:full
         # ex: docker manifest push nwodtuhs/exegol-preprod:full-1.2.3
-        run: docker manifest push ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
+        run: docker manifest push ${{ env.IMAGE_TARGET_REGISTRY }}:${{ matrix.image }}
       - name: Remove manifest locally
         if: always() && steps.create_manifest.result == 'success'
         # ex: docker manifest rm nwodtuhs/exegol-preprod:full
         # ex: docker manifest rm nwodtuhs/exegol-preprod:full-1.2.3
-        run: docker manifest rm ${IMAGE_TARGET_REGISTRY}:${{ matrix.image }}
+        run: docker manifest rm ${{ env.IMAGE_TARGET_REGISTRY }}:${{ matrix.image }}
 
   clean_runners:
     name: Clean runner
@@ -170,7 +170,7 @@ jobs:
         run: docker image ls
       - name: Remove local image
         # ex: docker rmi nwodtuhs/exegol-builds:full-1.2.3-arm64
-        run: docker rmi ${INTERMEDIATE_IMAGES_BUILDS_REGISTRY}:${{ env.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
+        run: docker rmi ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
 
   clean_registries:
     name: Clean registries

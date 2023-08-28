@@ -29,15 +29,17 @@ jobs:
     runs-on: self-hosted
     outputs:
       DOCKER_PREPROD_REPO: ${{ steps.varset.outputs.DOCKER_PREPROD_REPO }}
-      MISC_DOCKER_PREPROD_REPO: ${{ steps.varset.outputs.DOCKER_PREPROD_REPO }}
       DOCKER_PROD_REPO: ${{ steps.varset.outputs.DOCKER_PROD_REPO }}
+      MISC_DOCKER_PREPROD_REPO: ${{ steps.varset.outputs.DOCKER_PREPROD_REPO }}
+      MISC_DOCKER_PROD_REPO: ${{ steps.varset.outputs.MISC_DOCKER_PROD_REPO }}
     steps:
       - name: Passing workflow env vars to reusable workflows
         id: varset
         run: |
-          echo "DOCKER_PREPROD_REPO=${DOCKER_PREPROD_REPO}" >> $GITHUB_OUTPUT
-          echo "MISC_DOCKER_PREPROD_REPO=${MISC_DOCKER_PREPROD_REPO}" >> $GITHUB_OUTPUT
-          echo "DOCKER_PROD_REPO=${DOCKER_PROD_REPO}" >> $GITHUB_OUTPUT
+          echo "DOCKER_PREPROD_REPO=${{ env.DOCKER_PREPROD_REPO }}" >> $GITHUB_OUTPUT
+          echo "DOCKER_PROD_REPO=${{ env.DOCKER_PROD_REPO }}" >> $GITHUB_OUTPUT
+          echo "MISC_DOCKER_PREPROD_REPO=${{ env.MISC_DOCKER_PREPROD_REPO }}" >> $GITHUB_OUTPUT
+          echo "MISC_DOCKER_PROD_REPO=${{ env.MISC_DOCKER_PROD_REPO }}" >> $GITHUB_OUTPUT
   release_misc:
     name: Publish misc manifests
     needs: init
@@ -48,8 +50,8 @@ jobs:
     uses: ./.github/workflows/sub_release_manifest.yml
     with:
       DOCKER_PREPROD_REPO: ${{ needs.init.outputs.MISC_DOCKER_PREPROD_REPO }}
-      MISC_PREPROD_MANIFEST_LIST: "${{ needs.init.outputs.MISC_DOCKER_PREPROD_REPO }}:${{ matrix.tag }}{{ matrix.version }}"
-      MISC_PROD_MANIFEST_LIST: "${{ needs.init.outputs.MISC_DOCKER_PROD_REPO }}:${{ matrix.tag }}{{ matrix.version }}"
+      PREPROD_MANIFEST_LIST: ${{ needs.init.outputs.MISC_DOCKER_PREPROD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
+      PROD_MANIFEST_LIST: ${{ needs.init.outputs.MISC_DOCKER_PROD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
