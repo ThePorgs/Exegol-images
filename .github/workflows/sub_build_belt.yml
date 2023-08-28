@@ -134,7 +134,7 @@ jobs:
     name: Push image (${{ inputs.ARCH }})
     needs: [ build, test ]
     # Push image to exegol-builds whatever the outcome of "test" is, as long as the image was built (which is already an implicit requirement of the "test" job)
-    if: always() && inputs.PUSH_IMAGE == true && ( needs.test.result == 'failure' || needs.test.result == 'success' ) && needs.build.outputs.build == 'success'
+    if: always() && inputs.PUSH_IMAGE == true && ( needs.test.result == 'failure' || needs.test.result == 'success' ) && needs.build.result == 'success'
     runs-on:
       - self-hosted
       - builder

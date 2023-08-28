@@ -27,10 +27,6 @@ on:
       ARCH:
         required: true
         type: string
-    outputs:
-      build:
-        description: "Build job result"
-        value: ${{ jobs.export_results.outputs.build }}
 
 jobs:
   build:
@@ -51,20 +47,8 @@ jobs:
         # Preparing variables used for tagging the image to build
         id: prepare
         run: echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
-      - name: Checking if remote images exist
-        id: check_remote_image
-        if: inputs.IMAGE_REGISTRY != ''
-        run: |
-          if docker manifest inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}; then
-            echo "Image exists"
-            echo "image_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "Image does not exist"
-            echo "image_exists=false" >> $GITHUB_OUTPUT
-          fi
-          cat $GITHUB_OUTPUT
       - name: Build the image
-        if: success() && steps.check_remote_image.outputs.image_exists != 'true'
+        if: success()
         uses: docker/build-push-action@v4
         with:
           load: true
@@ -79,23 +63,9 @@ jobs:
           platforms: linux/${{ inputs.ARCH }}
           file: ${{ inputs.DOCKERFILE }}
           context: .
-      - name: Pull the image
-        if: always() && steps.check_remote_image.outputs.image_exists == 'true'
-        run: docker pull ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
       - name: (dbg) post-build docker info
         if: always()
         run: |
           docker image ls -a
           docker ps
           docker inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
-  export_results:
-    name: Exporting build results for higher jobs
-    needs: build
-    if: always()
-    runs-on: self-hosted
-    steps:
-      - name: Extract build result
-        id: build
-        run: echo "result=${{ needs.build.result }}" >> $GITHUB_OUTPUT
-    outputs:
-      build: ${{ steps.build.outputs.result }}

@@ -24,8 +24,8 @@ env:
   MISC_DOCKER_PROD_REPO: "nwodtuhs/exegol-misc-dev"
 
 jobs:
-  varset:
-    name: Initialize variables
+  init:
+    name: Initialize
     runs-on: self-hosted
     outputs:
       DOCKER_PREPROD_REPO: ${{ steps.varset.outputs.DOCKER_PREPROD_REPO }}
@@ -40,31 +40,31 @@ jobs:
           echo "DOCKER_PROD_REPO=${DOCKER_PROD_REPO}" >> $GITHUB_OUTPUT
   release_base:
     name: Publish base manifest
-    needs: varset
+    needs: init
     strategy:
       matrix:
         tag: [ "base" ]
         version: [ '', "-${{ github.ref_name }}" ]
     uses: ./.github/workflows/sub_release_manifest.yml
     with:
-      DOCKER_PREPROD_REPO: ${{ needs.varset.outputs.MISC_DOCKER_PREPROD_REPO }}
-      MISC_PREPROD_MANIFEST_LIST: "${{ needs.varset.outputs.MISC_DOCKER_PREPROD_REPO }}:${{ matrix.tag }}{{ matrix.version }}"
-      MISC_PROD_MANIFEST_LIST: "${{ needs.varset.outputs.MISC_DOCKER_PROD_REPO }}:${{ matrix.tag }}{{ matrix.version }}"
+      DOCKER_PREPROD_REPO: ${{ needs.init.outputs.MISC_DOCKER_PREPROD_REPO }}
+      MISC_PREPROD_MANIFEST_LIST: "${{ needs.init.outputs.MISC_DOCKER_PREPROD_REPO }}:${{ matrix.tag }}{{ matrix.version }}"
+      MISC_PROD_MANIFEST_LIST: "${{ needs.init.outputs.MISC_DOCKER_PROD_REPO }}:${{ matrix.tag }}{{ matrix.version }}"
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   release:
     name: Publish manifest
-    needs: varset
+    needs: init
     strategy:
       matrix:
         tag: [ full, light, ad, web, osint ]
         version: ['', "-${{ github.ref_name }}"]
     uses: ./.github/workflows/sub_release_manifest.yml
     with:
-      DOCKER_PREPROD_REPO: ${{ needs.varset.outputs.DOCKER_PREPROD_REPO }}
-      PREPROD_MANIFEST_LIST: ${{ needs.varset.outputs.DOCKER_PREPROD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
-      PROD_MANIFEST_LIST: ${{ needs.varset.outputs.DOCKER_PROD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
+      DOCKER_PREPROD_REPO: ${{ needs.init.outputs.DOCKER_PREPROD_REPO }}
+      PREPROD_MANIFEST_LIST: ${{ needs.init.outputs.DOCKER_PREPROD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
+      PROD_MANIFEST_LIST: ${{ needs.init.outputs.DOCKER_PROD_REPO }}:${{ matrix.tag }}${{ matrix.version }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

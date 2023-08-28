@@ -36,8 +36,8 @@ concurrency:
 
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
-  varset:
-    name: Initialize variables
+  init:
+    name: Initialize
     runs-on: self-hosted
     outputs:
       FAKE_LOCAL_REGISTRY: ${{ steps.varset.outputs.FAKE_LOCAL_REGISTRY }}
@@ -66,7 +66,7 @@ jobs:
 
   build_base:
     name: Base image build
-    needs: [ varset, code_check ]
+    needs: [ init, code_check ]
     if: always() && needs.code_check.result == 'success'
     strategy:
       fail-fast: false
@@ -75,13 +75,13 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       # ex: nwodtuhs/exegol-local
-      IMAGE_REGISTRY: ${{ needs.varset.outputs.FAKE_LOCAL_REGISTRY }}
+      IMAGE_REGISTRY: ${{ needs.init.outputs.FAKE_LOCAL_REGISTRY }}
       # ex: base
-      IMAGE_TAG: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}
+      IMAGE_TAG: ${{ needs.init.outputs.BASE_IMAGE_TAG }}
       # ex: base-PR123-arm64
-      IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      IMAGE_NAME: ${{ needs.init.outputs.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
       # ex: base.dockerfile
-      DOCKERFILE: ${{ needs.varset.outputs.BASE_IMAGE_DOCKERFILE }}
+      DOCKERFILE: ${{ needs.init.outputs.BASE_IMAGE_DOCKERFILE }}
       # ex: arm64
       ARCH: ${{ matrix.arch }}
       EXPORT_TOOLS: false
@@ -89,7 +89,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [varset, code_check, build_base ]
+    needs: [init, code_check, build_base ]
     if: always() && needs.build_base.outputs.build == 'success'
     strategy:
       fail-fast: false
@@ -98,19 +98,19 @@ jobs:
     uses: ./.github/workflows/sub_build_belt.yml
     with:
       # ex: nwodtuhs/exegol-local
-      IMAGE_REGISTRY: ${{ needs.varset.outputs.FAKE_LOCAL_REGISTRY }}
+      IMAGE_REGISTRY: ${{ needs.init.outputs.FAKE_LOCAL_REGISTRY }}
       # ex: PR123
-      IMAGE_TAG: ${{ needs.varset.outputs.IMAGE_TAG }}
+      IMAGE_TAG: ${{ needs.init.outputs.IMAGE_TAG }}
       # ex: PR123-arm64
-      IMAGE_NAME: ${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      IMAGE_NAME: ${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
       # ex: full.dockerfile
-      DOCKERFILE: ${{ needs.varset.outputs.DOCKERFILE }}
+      DOCKERFILE: ${{ needs.init.outputs.DOCKERFILE }}
       # ex: arm64
       ARCH: ${{ matrix.arch }}
       # ex: nwodtuhs/exegol-local
-      BASE_IMAGE_REGISTRY: ${{ needs.varset.outputs.FAKE_LOCAL_REGISTRY }}
+      BASE_IMAGE_REGISTRY: ${{ needs.init.outputs.FAKE_LOCAL_REGISTRY }}
       # ex: base-PR123-arm64
-      BASE_IMAGE_NAME: ${{ needs.varset.outputs.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      BASE_IMAGE_NAME: ${{ needs.init.outputs.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
       EXPORT_TOOLS: false
       PUSH_IMAGE: false
 
@@ -126,10 +126,12 @@ jobs:
       - builder
       - ${{ matrix.arch }}
     steps:
+      - name: List docker images
+        run: docker image ls
       - name: Remove local base image
         # ex: docker rmi nwodtuhs/exegol-local:base-arm64
-        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
       - name: Remove local final image
         if: always()
         # ex: docker rmi nwodtuhs/exegol-local:PR123-arm64
-        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ needs.varset.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
