@@ -36,9 +36,22 @@ jobs:
       IMAGE_TAG: ${{ steps.varset.outputs.IMAGE_TAG }}
       IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
       DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+      image_exists: ${{ steps.check_remote_image.outputs.image_exists }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Checking if remote image exists
+        id: check_remote_image
+        run: |
+          echo "docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }}"
+          if docker manifest inspect ${IMAGE_TARGET_REGISTRY}:${IMAGE_TAG}${{ matrix.version }}; then
+            echo "Image exists"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
+          fi
+          cat $GITHUB_OUTPUT
       - name: Setting variables
         id: varset
         run: |
@@ -54,9 +67,10 @@ jobs:
     uses: ./.github/workflows/sub_code_check.yml
 
   build:
+    # TODO : skip build if image already exists? If so, refactor the inside of sub_build
     name: Image build
     needs: [ varset, code_check ]
-    if: always() && needs.code_check.result == 'success'
+    if: always() && needs.code_check.result == 'success' && needs.varset.outputs.image_exists == 'false'
     strategy:
       fail-fast: false
       matrix:
@@ -173,6 +187,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: List labels
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr view --json labels ${{ github.event.number }} -q '.labels[].name'
       - name: Add label
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

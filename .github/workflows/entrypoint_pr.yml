@@ -3,9 +3,9 @@ name: External PR tests
 on:
   pull_request:
     branches:
-#      - dev
-#      - refacto2
-#      - refacto2_pr
+      - dev
+      - refacto2
+      - refacto2_pr
       - "*.*.*"
       - "*.*.*b*"
     paths-ignore:
@@ -116,7 +116,7 @@ jobs:
 
   clean_runners:
     name: Clean runner
-    needs: build
+    needs: [ varset, build ]
     strategy:
       fail-fast: false
       matrix:
