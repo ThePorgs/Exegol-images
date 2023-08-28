@@ -60,22 +60,20 @@ jobs:
       DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}
       image_exists: ${{ steps.check_remote_image.outputs.image_exists }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Setting variables
         id: varset
         run: |
-          COMMIT_ID=$(git rev-parse "$GITHUB_SHA")
-          echo "FAKE_LOCAL_REGISTRY=${FAKE_LOCAL_REGISTRY}" >> $GITHUB_OUTPUT
+          COMMIT_ID=${{ github.sha }}
+          echo "FAKE_LOCAL_REGISTRY=${{ env.FAKE_LOCAL_REGISTRY }}" >> $GITHUB_OUTPUT
           echo "INTERMEDIATE_IMAGES_BUILDS_REGISTRY=${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}" >> $GITHUB_OUTPUT
           echo "IMAGE_TARGET_REGISTRY=${{ env.IMAGE_TARGET_REGISTRY }}" >> $GITHUB_OUTPUT
           echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
           echo "IMAGE_VERSION=${COMMIT_ID:0:8}" >> $GITHUB_OUTPUT
-          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_REGISTRY=${BASE_IMAGE_REGISTRY}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_TAG=${BASE_IMAGE_TAG}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "DOCS_TARGET_BRANCH=${DOCS_TARGET_BRANCH}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${{ env.DOCKERFILE }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_REGISTRY=${{ env.BASE_IMAGE_REGISTRY }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_TAG=${{ env.BASE_IMAGE_TAG }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_DOCKERFILE=${{ env.BASE_IMAGE_DOCKERFILE }}" >> $GITHUB_OUTPUT
+          echo "DOCS_TARGET_BRANCH=${{ env.DOCS_TARGET_BRANCH }}" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
       - name: Checking if remote image exists
         id: check_remote_image

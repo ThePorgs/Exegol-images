@@ -47,17 +47,15 @@ jobs:
       BASE_IMAGE_TAG: ${{ steps.varset.outputs.BASE_IMAGE_TAG }}
       BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Setting variables
         id: varset
         run: |
-          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-          echo "FAKE_LOCAL_REGISTRY=${FAKE_LOCAL_REGISTRY}" >> $GITHUB_OUTPUT
+          PR_NUMBER=$(echo ${{ github.ref }} | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "FAKE_LOCAL_REGISTRY=${{ env.FAKE_LOCAL_REGISTRY }}" >> $GITHUB_OUTPUT
           echo "IMAGE_TAG=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
-          echo "DOCKERFILE=${DOCKERFILE}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_TAG=${BASE_IMAGE_TAG}" >> $GITHUB_OUTPUT
-          echo "BASE_IMAGE_DOCKERFILE=${BASE_IMAGE_DOCKERFILE}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${{ env.DOCKERFILE }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_TAG=${{ env.BASE_IMAGE_TAG }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_DOCKERFILE=${{ env.BASE_IMAGE_DOCKERFILE }}" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
   code_check:
@@ -130,8 +128,8 @@ jobs:
         run: docker image ls
       - name: Remove local base image
         # ex: docker rmi nwodtuhs/exegol-local:base-arm64
-        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ env.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ env.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
       - name: Remove local final image
         if: always()
         # ex: docker rmi nwodtuhs/exegol-local:PR123-arm64
-        run: docker rmi ${FAKE_LOCAL_REGISTRY}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
