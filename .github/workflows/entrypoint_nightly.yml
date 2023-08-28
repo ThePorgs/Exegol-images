@@ -181,7 +181,7 @@ jobs:
         # ex: docker manifest push nwodtuhs/exegol:nightly
         run: docker manifest push ${{ env.IMAGE_TARGET_REGISTRY }}:${{ matrix.image }}
       - name: Remove manifest locally
-        if: always() && ${{ steps.create_manifest.result }} == 'success'
+        if: always() && steps.create_manifest.outcome == 'success'
         # ex: docker manifest rm nwodtuhs/exegol:nightly
         run: docker manifest rm ${{ env.IMAGE_TARGET_REGISTRY }}:${{ matrix.image }}
 
