@@ -1,5 +1,5 @@
-name: Pre-release (web)
-run-name: Pre-release (web) - ${{ github.event.pull_request.title }}
+name: Pre-release (ad)
+run-name: Pre-release (ad) - ${{ github.event.pull_request.title }}
 
 on:
   pull_request:
@@ -26,7 +26,7 @@ env:
   # TODO uncomment below
   # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
-  IMAGE_TAG: "web"
+  IMAGE_TAG: "ad"
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists export
@@ -35,7 +35,7 @@ env:
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
   init:
-    if: ${{ github.event.label.name == 'base success' }}
+    if: github.event.label.name == 'base success'
     name: Initialize
     runs-on: self-hosted
     outputs:
@@ -78,13 +78,13 @@ jobs:
 
   code_check:
     name: Code compliance check
-    if: ${{ github.event.label.name == 'base success' }}
+    if: github.event.label.name == 'base success'
     uses: ./.github/workflows/sub_code_check.yml
 
   build:
     name: Image build
     needs: [ init, code_check ]
-    if: always() && needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false' && ${{ github.event.label.name == 'base success' }}
+    if: always() && needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false' && github.event.label.name == 'base success'
     strategy:
       fail-fast: false
       matrix:
@@ -119,7 +119,7 @@ jobs:
     name: Publish image
     needs: [ init, build ]
     # only publishing if the tests were a success (implicit by the success of build).
-    if: ${{ github.event.label.name == 'base success' }} && needs.build.result == 'success'
+    if: github.event.label.name == 'base success' && needs.build.result == 'success'
     timeout-minutes: 60
     runs-on: self-hosted
     strategy:
@@ -154,7 +154,7 @@ jobs:
     name: Clean runner
     needs: [ init, build, publish ]
     # clean runners if build succeeded
-    if: always() && ${{ github.event.label.name == 'base success' }} && needs.build.result == 'success'
+    if: always() && github.event.label.name == 'base success' && needs.build.outputs.build == 'success'
     # even if this job fails, it won't affect the success/fail status of the whole workflow
     continue-on-error: true
     strategy:
@@ -175,7 +175,7 @@ jobs:
   clean_registries:
     name: Clean registries
     needs: [ init, publish ]
-    if: always() && ${{ github.event.label.name == 'base success' }} && needs.publish.result == 'success'
+    if: always() && github.event.label.name == 'base success' && needs.publish.result == 'success'
     runs-on: self-hosted
     # only cleaning if publish was a success. And publish requires that tests were a success.
     # If tests were a success, there's no need for debugging the images, they can be removed from the exegol-builds registry
