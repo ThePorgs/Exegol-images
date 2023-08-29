@@ -3,9 +3,12 @@ run-name: Release (all tags) - Release ${{ github.ref_name }}
 
 on:
   push:
-    tags:
-      - "*.*.*"
-      - "*.*.*b*"
+    branches:
+      - refacto2_pr
+#  push:
+#    tags:
+#      - "*.*.*"
+#      - "*.*.*b*"
 
 env:
   # TODO uncomment below

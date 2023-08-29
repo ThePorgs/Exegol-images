@@ -2,15 +2,18 @@ name: Pre-release (ad)
 run-name: Pre-release (ad) - ${{ github.event.pull_request.title }}
 
 on:
-  pull_request:
-    title:
-      - "Release *.*.*"
-      - "Release *.*.*b*"
-    types: [labeled]
-    branches: refacto2
-    paths-ignore:
-#      - ".github/**"
-      - "**.md"
+  push:
+    branches:
+      - disabled
+#  pull_request:
+#    title:
+#      - "Release *.*.*"
+#      - "Release *.*.*b*"
+#    types: [labeled]
+#    branches: refacto2
+#    paths-ignore:
+##      - ".github/**"
+#      - "**.md"
 
 env:
   # intermediate registry in which architecture-specific images and base images must be pushed
