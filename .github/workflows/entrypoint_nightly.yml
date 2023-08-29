@@ -187,7 +187,7 @@ jobs:
     name: Clean runner
     needs: [ init, build_base, build, publish ]
     # clean runners if build succeeded
-    if: always() && ( needs.build_base.result == 'success' || needs.build.result == 'success' )
+    if: always() && ( needs.build_base.outputs.build == 'success' || needs.build.outputs.build == 'success' )
     # even if this job fails, it won't affect the success/fail status of the whole workflow
     strategy:
       fail-fast: false
