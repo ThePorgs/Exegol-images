@@ -1,5 +1,6 @@
 # Author: The Exegol Project
 
+ARG BASE_IMAGE_REGISTRY="nwodtuhs/exegol-misc"
 ARG BASE_IMAGE_NAME="base"
 ARG TAG="local"
 ARG VERSION="local"
