@@ -63,13 +63,13 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   clean_misc_registry:
-    name: Clean registries
+    name: Clean misc preprod registry
     needs: release_misc
     runs-on: self-hosted
     # only cleaning if release was a success.
     strategy:
       matrix:
-        tag: [ full, light, ad, web, osint ]
+        tag: [ "base" ]
         version: [ '', "-6.6.6" ]
     steps:
       - name: Remove remote arch-specific images in ${{ env.MISC_DOCKER_PREPROD_REPO }}
@@ -84,7 +84,7 @@ jobs:
     needs: init
     strategy:
       matrix:
-        tag: [ full, light, ad, web, osint ]
+        tag: [ "full", "light", "ad", "web", "osint" ]
         version: ['', "-6.6.6"]
     uses: ./.github/workflows/sub_release_manifest.yml
     with:
@@ -96,13 +96,13 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   clean_registry:
-    name: Clean registries
+    name: Clean preprod registry
     needs: release
     runs-on: self-hosted
     # only cleaning if release was a success.
     strategy:
       matrix:
-        tag: [ full, light, ad, web, osint ]
+        tag: [ "full", "light", "ad", "web", "osint" ]
         version: [ '', "-6.6.6" ]
     steps:
       - name: Remove remote arch-specific images in ${{ env.DOCKER_PREPROD_REPO }}
