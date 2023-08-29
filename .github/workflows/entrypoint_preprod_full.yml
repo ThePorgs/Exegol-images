@@ -2,35 +2,28 @@ name: Pre-release (full)
 run-name: Pre-release (full) - ${{ github.event.pull_request.title }}
 
 on:
-  push:
-    branches:
-      - disabled
-#  pull_request:
-#    title:
-#      - "Release *.*.*"
-#      - "Release *.*.*b*"
-#    types: [labeled]
-#    branches: refacto2
-#    paths-ignore:
-##      - ".github/**"
-#      - "**.md"
+  pull_request:
+    title:
+      - "Release *.*.*"
+      - "Release *.*.*b*"
+    types: [labeled]
+    branches: main
+    paths-ignore:
+      - ".github/**"
+      - "**.md"
 
 env:
   # intermediate registry in which architecture-specific images and base images must be pushed
   INTERMEDIATE_IMAGES_BUILDS_REGISTRY: "nwodtuhs/exegol-builds"
 
   # base image is used as initial layer when building the final image
-  # TODO uncomment below
-  # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
-  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
+  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
   BASE_IMAGE_TAG: "base"
 
   # final image parameters
-  # TODO uncomment below
-  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
-  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   IMAGE_TAG: "full"
-  DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
+  DOCKERFILE: "./Dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists export
   DOCS_TARGET_BRANCH: "dev-images"
@@ -102,7 +95,7 @@ jobs:
       IMAGE_NAME: ${{ needs.init.outputs.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
       # ex: 1.2.3
       IMAGE_VERSION: ${{ needs.init.outputs.IMAGE_VERSION }}
-      # ex: full.dockerfile
+      # ex: Dockerfile
       DOCKERFILE: ${{ needs.init.outputs.DOCKERFILE }}
       # ex: arm64
       ARCH: ${{ matrix.arch }}

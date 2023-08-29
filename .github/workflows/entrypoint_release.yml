@@ -1,7 +1,5 @@
 name: Release (all tags)
-run-name: Release (all tags) - Release 6.6.6
-
-# TODO replace 6.6.6 with ${{ github.ref_name }}
+run-name: Release (all tags) - Release ${{ github.ref_name }}
 
 on:
   push:
@@ -13,21 +11,15 @@ on:
 #      - "*.*.*b*"
 
 env:
-  # TODO uncomment below
-
   # "preprod" registry
-  DOCKER_PREPROD_REPO: "nwodtuhs/exegol-dev-preprod"
-  # DOCKER_PREPROD_REPO: "nwodtuhs/exegol-preprod"
+   DOCKER_PREPROD_REPO: "nwodtuhs/exegol-preprod"
   # final "production" registry target
-  DOCKER_PROD_REPO: "nwodtuhs/exegol-dev"
-  # DOCKER_PROD_REPO: "nwodtuhs/exegol"
+   DOCKER_PROD_REPO: "nwodtuhs/exegol"
 
   # "preprod" registry for the misc images
-  # MISC_DOCKER_PREPROD_REPO: "nwodtuhs/exegol-misc-preprod"
-  MISC_DOCKER_PREPROD_REPO: "nwodtuhs/exegol-misc-dev-preprod"
+   MISC_DOCKER_PREPROD_REPO: "nwodtuhs/exegol-misc-preprod"
   # final "production" registry target for misc images
-  # MISC_DOCKER_PROD_REPO: "nwodtuhs/exegol-misc"
-  MISC_DOCKER_PROD_REPO: "nwodtuhs/exegol-misc-dev"
+   MISC_DOCKER_PROD_REPO: "nwodtuhs/exegol-misc"
 
 jobs:
   init:
@@ -52,7 +44,7 @@ jobs:
     strategy:
       matrix:
         tag: [ "base" ]
-        version: [ '', "-6.6.6" ]
+        version: [ '', "-${{ github.ref_name }}" ]
     uses: ./.github/workflows/sub_release_manifest.yml
     with:
       DOCKER_PREPROD_REPO: ${{ needs.init.outputs.MISC_DOCKER_PREPROD_REPO }}
@@ -70,7 +62,7 @@ jobs:
     strategy:
       matrix:
         tag: [ "base" ]
-        version: [ '', "-6.6.6" ]
+        version: [ '', "-${{ github.ref_name }}" ]
     steps:
       - name: Remove remote arch-specific images in ${{ env.MISC_DOCKER_PREPROD_REPO }}
         # ex: curl [...] --request DELETE [...]exegol-misc-preprod/tags/base
@@ -85,7 +77,7 @@ jobs:
     strategy:
       matrix:
         tag: [ "full", "light", "ad", "web", "osint" ]
-        version: ['', "-6.6.6"]
+        version: ['', "-${{ github.ref_name }}"]
     uses: ./.github/workflows/sub_release_manifest.yml
     with:
       DOCKER_PREPROD_REPO: ${{ needs.init.outputs.DOCKER_PREPROD_REPO }}
@@ -103,7 +95,7 @@ jobs:
     strategy:
       matrix:
         tag: [ "full", "light", "ad", "web", "osint" ]
-        version: [ '', "-6.6.6" ]
+        version: [ '', "-${{ github.ref_name }}" ]
     steps:
       - name: Remove remote arch-specific images in ${{ env.DOCKER_PREPROD_REPO }}
         # ex: curl [...] --request DELETE [...]exegol-preprod/tags/full

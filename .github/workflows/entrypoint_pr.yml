@@ -1,19 +1,14 @@
 name: External PR tests
 
 on:
-  push:
+  pull_request:
     branches:
-      - disabled
-#  pull_request:
-#    branches:
-#      - dev
-#      - refacto2
-#      - refacto2_pr
-#      - "*.*.*"
-#      - "*.*.*b*"
-#    paths-ignore:
-##      - ".github/**"
-#      - "**.md"
+      - dev
+      - "*.*.*"
+      - "*.*.*b*"
+    paths-ignore:
+      - ".github/**"
+      - "**.md"
 
 env:
   # fake local registry for base and final images
@@ -23,9 +18,7 @@ env:
   BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
 
   # final image parameters
-  # TODO uncomment below
-  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
-  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev-preprod"
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
 
@@ -104,7 +97,7 @@ jobs:
       IMAGE_TAG: ${{ needs.init.outputs.IMAGE_TAG }}
       # ex: PR123-arm64
       IMAGE_NAME: ${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
-      # ex: full.dockerfile
+      # ex: Dockerfile
       DOCKERFILE: ${{ needs.init.outputs.DOCKERFILE }}
       # ex: arm64
       ARCH: ${{ matrix.arch }}

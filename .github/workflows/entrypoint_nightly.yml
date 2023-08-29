@@ -3,8 +3,7 @@ name: Nightly build
 on:
   push:
     branches:
-      - refacto2
-      - refacto2_pr
+      - dev
     paths-ignore:
 #      - ".github/**"
       - "**.md"
@@ -17,28 +16,23 @@ env:
   INTERMEDIATE_IMAGES_BUILDS_REGISTRY: "nwodtuhs/exegol-builds"
 
   # base image is used as initial layer when building the final image
-  # TODO uncomment below
-  # BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
-  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-dev-preprod"
+  BASE_IMAGE_REGISTRY: "nwodtuhs/exegol-misc-preprod"
   BASE_IMAGE_TAG: "base"
   BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
 
   # final image parameters
-  # TODO uncomment below
-  # IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol"
-  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-dev"
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol"
   IMAGE_TAG: "nightly"
   DOCKERFILE: "./sources/dockerfiles/debug.dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists
   DOCS_TARGET_BRANCH: "main"
 
-# TODO change group name when merging this to dev
 # creating a concurrency group for nightly builds
 # so that when pushing multiple things in dev, build is always running for the latest push
 # this is to save resources, by killing "in progress" jobs when another build starts for the last push
 concurrency:
-  group: debug_build
+  group: nightly_builds
   cancel-in-progress: true
 
 
@@ -136,7 +130,7 @@ jobs:
       IMAGE_NAME: ${{ needs.init.outputs.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
       # ex: f31c8d23
       IMAGE_VERSION: ${{ needs.init.outputs.IMAGE_VERSION }}
-      # ex: full.dockerfile
+      # ex: Dockerfile
       DOCKERFILE: ${{ needs.init.outputs.DOCKERFILE }}
       # ex: arm64
       ARCH: ${{ matrix.arch }}

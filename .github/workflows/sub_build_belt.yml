@@ -153,9 +153,7 @@ jobs:
     name: Export tools list
     needs: test
     # Only exporting tools list if tests were a success
-    # TODO remove the following line when merging this in dev, this is only to prevent debug tests from exporting to the doc
-    if: always() && inputs.EXPORT_TOOLS == true && needs.test.result == 'success' && inputs.EXPORT_TOOLS == false
-#    if: always() && inputs.EXPORT_TOOLS == true && needs.test.result == 'success'
+    if: always() && inputs.EXPORT_TOOLS == true && needs.test.result == 'success'
     uses: ./.github/workflows/sub_export_tools.yml
     with:
       IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
