@@ -3,12 +3,9 @@ run-name: Release (all tags) - Release ${{ github.ref_name }}
 
 on:
   push:
-    branches:
-      - refacto2_pr
-#  push:
-#    tags:
-#      - "*.*.*"
-#      - "*.*.*b*"
+    tags:
+      - "*.*.*"
+      - "*.*.*b*"
 
 env:
   # "preprod" registry
