@@ -333,6 +333,14 @@ function install_pypykatz() {
     add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
 }
 
+function install_krbjack() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing krbjack"
+    python3 -m pipx install krbjack
+    add-test-command "krbjack --help"
+    add-to-list "krbjack,https://github.com/almandin/krbjack,A Kerberos AP-REQ hijacking tool with DNS unsecure updates abuse."
+}
+
 function install_enyx() {
     colorecho "Installing enyx"
     git -C /opt/tools/ clone --depth 1 https://github.com/trickster0/Enyx
@@ -957,6 +965,7 @@ function package_ad() {
     install_krbrelayx               # Kerberos unconstrained delegation abuse toolkit
     install_evilwinrm               # WinRM shell
     install_pypykatz                # Mimikatz implementation in pure Python
+    install_krbjack                 # KrbJack
     install_enyx                    # Hosts discovery
     install_enum4linux-ng           # Hosts enumeration
     install_zerologon               # Exploit for zerologon cve-2020-1472

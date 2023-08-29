@@ -246,6 +246,8 @@ function post_install() {
     colorecho "Cleaning..."
     updatedb
     rm -rfv /tmp/*
+    rm -rfv /var/lib/apt/lists/*
+    rm -rfv /root/sources
     colorecho "Sorting tools list"
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv

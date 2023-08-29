@@ -1,0 +1,133 @@
+name: External PR tests
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - "*.*.*"
+      - "*.*.*b*"
+    paths-ignore:
+      - ".github/**"
+      - "**.md"
+
+env:
+  # fake local registry for base and final images
+  FAKE_LOCAL_REGISTRY: "nwodtuhs/exegol-local"
+
+  BASE_IMAGE_TAG: "base"
+  BASE_IMAGE_DOCKERFILE: "./sources/dockerfiles/base.dockerfile"
+
+  # final image parameters
+  IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
+  DOCKERFILE: "./Dockerfile"
+
+
+# creating a separate concurrency group for each PR
+# so that our "PR checks" are always running for the latest commit in the PR
+# and as PRs are updated we want to make sure "in progress" jobs are killed so we don't waste resources
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
+  init:
+    name: Initialize
+    runs-on: self-hosted
+    outputs:
+      FAKE_LOCAL_REGISTRY: ${{ steps.varset.outputs.FAKE_LOCAL_REGISTRY }}
+      IMAGE_TAG: ${{ steps.varset.outputs.IMAGE_TAG }}
+      IMAGE_VERSION: ${{ steps.varset.outputs.IMAGE_VERSION }}
+      DOCKERFILE: ${{ steps.varset.outputs.DOCKERFILE }}
+      BASE_IMAGE_TAG: ${{ steps.varset.outputs.BASE_IMAGE_TAG }}
+      BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
+    steps:
+      - name: Setting variables
+        id: varset
+        run: |
+          PR_NUMBER=$(echo ${{ github.ref }} | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "FAKE_LOCAL_REGISTRY=${{ env.FAKE_LOCAL_REGISTRY }}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=PR${PR_NUMBER}" >> $GITHUB_OUTPUT
+          echo "DOCKERFILE=${{ env.DOCKERFILE }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_TAG=${{ env.BASE_IMAGE_TAG }}" >> $GITHUB_OUTPUT
+          echo "BASE_IMAGE_DOCKERFILE=${{ env.BASE_IMAGE_DOCKERFILE }}" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
+
+  code_check:
+    name: Code compliance check
+    uses: ./.github/workflows/sub_code_check.yml
+
+  build_base:
+    name: Base image build
+    needs: [ init, code_check ]
+    if: always() && needs.code_check.result == 'success'
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
+      # ex: nwodtuhs/exegol-local
+      IMAGE_REGISTRY: ${{ needs.init.outputs.FAKE_LOCAL_REGISTRY }}
+      # ex: base
+      IMAGE_TAG: ${{ needs.init.outputs.BASE_IMAGE_TAG }}
+      # ex: base-PR123-arm64
+      IMAGE_NAME: ${{ needs.init.outputs.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      # ex: base.dockerfile
+      DOCKERFILE: ${{ needs.init.outputs.BASE_IMAGE_DOCKERFILE }}
+      # ex: arm64
+      ARCH: ${{ matrix.arch }}
+      EXPORT_TOOLS: false
+      PUSH_IMAGE: false
+
+  build:
+    name: Final image build
+    needs: [init, code_check, build_base ]
+    if: always() && needs.build_base.outputs.build == 'success'
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    uses: ./.github/workflows/sub_build_belt.yml
+    with:
+      # ex: nwodtuhs/exegol-local
+      IMAGE_REGISTRY: ${{ needs.init.outputs.FAKE_LOCAL_REGISTRY }}
+      # ex: PR123
+      IMAGE_TAG: ${{ needs.init.outputs.IMAGE_TAG }}
+      # ex: PR123-arm64
+      IMAGE_NAME: ${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      # ex: Dockerfile
+      DOCKERFILE: ${{ needs.init.outputs.DOCKERFILE }}
+      # ex: arm64
+      ARCH: ${{ matrix.arch }}
+      # ex: nwodtuhs/exegol-local
+      BASE_IMAGE_REGISTRY: ${{ needs.init.outputs.FAKE_LOCAL_REGISTRY }}
+      # ex: base-PR123-arm64
+      BASE_IMAGE_NAME: ${{ needs.init.outputs.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      EXPORT_TOOLS: false
+      PUSH_IMAGE: false
+
+  clean_runners:
+    name: Clean runner
+    needs: [ init, build_base, build ]
+    if: always() && ( needs.build_base.outputs.build == 'success' || needs.build.outputs.build == 'success' )
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ arm64, amd64 ]
+    runs-on:
+      - self-hosted
+      - builder
+      - ${{ matrix.arch }}
+    steps:
+      - name: List docker images
+        run: docker image ls
+      - name: Remove local base image
+        if: always() && needs.build_base.result == 'success'
+        # ex: docker rmi nwodtuhs/exegol-local:base-arm64
+        run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ env.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      - name: Remove local final image
+        if: always() && needs.build.result == 'success'
+        # ex: docker rmi nwodtuhs/exegol-local:PR123-arm64
+        run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
