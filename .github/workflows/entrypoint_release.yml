@@ -1,5 +1,7 @@
 name: Release (all tags)
-run-name: Release (all tags) - Release ${{ github.ref_name }}
+run-name: Release (all tags) - Release 6.6.6
+
+# TODO replace 6.6.6 with ${{ github.ref_name }}
 
 on:
   push:
@@ -50,7 +52,7 @@ jobs:
     strategy:
       matrix:
         tag: [ "base" ]
-        version: [ '', "-${{ github.ref_name }}" ]
+        version: [ '', "-6.6.6" ]
     uses: ./.github/workflows/sub_release_manifest.yml
     with:
       DOCKER_PREPROD_REPO: ${{ needs.init.outputs.MISC_DOCKER_PREPROD_REPO }}
@@ -68,7 +70,7 @@ jobs:
     strategy:
       matrix:
         tag: [ full, light, ad, web, osint ]
-        version: [ '', "-${{ github.ref_name }}" ]
+        version: [ '', "-6.6.6" ]
     steps:
       - name: Remove remote arch-specific images in ${{ env.MISC_DOCKER_PREPROD_REPO }}
         # ex: curl [...] --request DELETE [...]exegol-misc-preprod/tags/base
@@ -83,7 +85,7 @@ jobs:
     strategy:
       matrix:
         tag: [ full, light, ad, web, osint ]
-        version: ['', "-${{ github.ref_name }}"]
+        version: ['', "-6.6.6"]
     uses: ./.github/workflows/sub_release_manifest.yml
     with:
       DOCKER_PREPROD_REPO: ${{ needs.init.outputs.DOCKER_PREPROD_REPO }}
@@ -101,7 +103,7 @@ jobs:
     strategy:
       matrix:
         tag: [ full, light, ad, web, osint ]
-        version: [ '', "-${{ github.ref_name }}" ]
+        version: [ '', "-6.6.6" ]
     steps:
       - name: Remove remote arch-specific images in ${{ env.DOCKER_PREPROD_REPO }}
         # ex: curl [...] --request DELETE [...]exegol-preprod/tags/full
