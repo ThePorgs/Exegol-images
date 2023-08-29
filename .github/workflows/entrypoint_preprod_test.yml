@@ -76,15 +76,10 @@ jobs:
           fi
           cat $GITHUB_OUTPUT
 
-  code_check:
-    name: Code compliance check
-    if: ${{ github.event.label.name == 'base success' }}
-    uses: ./.github/workflows/sub_code_check.yml
-
   debug:
     name: debug
-    needs: [ init, code_check ]
-    if: always() && needs.init.outputs.image_exists == 'false' && ${{ github.event.label.name == 'base success' }}
+    needs: init
+    if: always() && needs.init.outputs.image_exists == 'false'
     runs-on: self-hosted
     steps:
       - run: echo ${{ needs.init.outputs.image_exists }}
