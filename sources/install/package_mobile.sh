@@ -7,25 +7,21 @@ function install_mobile_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mobile apt tools"
     fapt android-tools-adb zipalign apksigner apktool
-    install_scrpy
 
     add-history adb
     add-history zipalign
     add-history apksigner
     add-history apktool
-    add-history scrcpy
 
     add-test-command "adb --help"
     add-test-command "zipalign --help |& grep 'verbose output'"
     add-test-command "apksigner --version"
     add-test-command "apktool --version"
-    add-test-command "scrcpy --version"
 
     add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications"
     add-to-list "zipalign,https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file"
     add-to-list "apksigner,https://source.android.com/security/apksigning,arguably the most important step to optimize your APK file"
     add-to-list "apktool,https://github.com/iBotPeaches/Apktool,It is a tool for reverse engineering 3rd party / closed / binary Android apps."
-    add-to-list "scrcpy,https://github.com/Genymobile/scrcpy,Display and control your Android device."
 }
 
 function install_scrpy() {
@@ -36,9 +32,12 @@ function install_scrpy() {
                  libswresample-dev libusb-1.0-0 libusb-1.0-0-dev
     git clone https://github.com/Genymobile/scrcpy
     cd scrcpy
-   ./install_release.sh
-   cd ..
-   rm -rf scrcpy
+    ./install_release.sh
+    cd ..
+    rm -rf ./scrcpy
+    add-history scrcpy
+    add-test-command "scrcpy --version"
+    add-to-list "scrcpy,https://github.com/Genymobile/scrcpy,Display and control your Android device."
 }
 
 function install_smali() {
@@ -94,6 +93,7 @@ function install_androguard() {
 function package_mobile() {
     set_ruby_env
     install_mobile_apt_tools
+    install_scrpy
     install_smali
     install_dex2jar
     install_frida

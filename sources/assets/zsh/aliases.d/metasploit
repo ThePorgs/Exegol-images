@@ -1,0 +1,7 @@
+alias msfconsole='/usr/local/rvm/gems/ruby-3.1.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfconsole'
+alias msfd='/usr/local/rvm/gems/ruby-3.1.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfd'
+alias msfdb='/usr/local/rvm/gems/ruby-3.1.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfdb'
+alias msfrpc='/usr/local/rvm/gems/ruby-3.1.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfrpc'
+alias msfrpcd='/usr/local/rvm/gems/ruby-3.1.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfrpcd'
+alias msfupdate='/usr/local/rvm/gems/ruby-3.1.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfupdate'
+alias msfvenom='/usr/local/rvm/gems/ruby-3.1.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfvenom'

@@ -22,14 +22,7 @@ function install_metasploit() {
     gem install bundler
     bundle install --path /opt/tools/metasploit-framework/vendor
     rvm use 3.1.2@default
-    add-aliases msfconsole
-    add-aliases msfd
-    add-aliases msfdb
-    add-aliases msfrpc
-    add-aliases msfrpcd
-    add-aliases msfupdate
-    add-aliases msfvenom
-    add-history msfconsole
+    add-aliases metasploit 
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"

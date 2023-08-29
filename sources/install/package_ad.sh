@@ -30,7 +30,6 @@ function install_ad_apt_tools() {
 function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
-    cd /opt/tools/cloudmapper
     cd /opt/tools/Responder
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
