@@ -1,4 +1,5 @@
 name: Release (all tags)
+run-name: Release (all tags) - Release ${{ github.ref_name }}
 
 on:
   push:
