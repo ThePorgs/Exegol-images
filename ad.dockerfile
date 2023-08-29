@@ -38,7 +38,6 @@ RUN ./entrypoint.sh package_ad
 RUN ./entrypoint.sh package_ad_configure
 RUN ./entrypoint.sh package_network
 RUN ./entrypoint.sh post_install
-RUN rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace
 

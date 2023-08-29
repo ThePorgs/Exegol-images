@@ -36,7 +36,6 @@ RUN ./entrypoint.sh package_web
 RUN ./entrypoint.sh package_web_configure
 RUN ./entrypoint.sh package_code_analysis
 RUN ./entrypoint.sh post_install
-RUN rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace
 

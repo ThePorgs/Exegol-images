@@ -25,7 +25,6 @@ RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
 RUN touch /tmp/test1
 RUN ./entrypoint.sh post_install
-RUN rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace
 

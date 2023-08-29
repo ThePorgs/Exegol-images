@@ -29,7 +29,6 @@ RUN ./entrypoint.sh configure_john
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_misc_configure
 RUN ./entrypoint.sh post_install
-RUN rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace
 
