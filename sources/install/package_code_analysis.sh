@@ -24,6 +24,7 @@ function install_brakeman() {
 }
 
 function install_semgrep() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing semgrep"
     python3 -m pipx install semgrep
     add-history semgrep

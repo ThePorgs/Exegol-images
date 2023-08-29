@@ -64,6 +64,7 @@ source $HOME/.cargo/env
 
 # Color correction for zsh-syntax-highlighting
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
+ZSH_HIGHLIGHT_STYLES[comment]='fg=#888888'
 
 # In case pipx ensurepath didn't work, and positioning pipx in priority
 export PATH="/root/.local/bin:$PATH"

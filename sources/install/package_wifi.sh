@@ -4,6 +4,7 @@
 source common.sh
 
 function install_wifi_apt_tools() {
+    colorecho "Installing wifi apt tools"
     fapt aircrack-ng reaver bully cowpatty
   
     add-aliases aircrack-ng
@@ -73,12 +74,13 @@ function install_bettercap() {
 }
 
 function install_hcxtools() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxtools"
     fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools  # Depth 1 must be removed because of the git checkout
     cd /opt/tools/hcxtools
-    make
-    make install
+    make install PREFIX=/opt/tools
+    ln -s /opt/tools/bin/hcxpcapngtool /opt/tools/bin/hcxpcaptool
     add-history hcxtools
     add-test-command "hcxpcapngtool --version"
     add-test-command "hcxhashtool --version"
@@ -86,13 +88,14 @@ function install_hcxtools() {
 }
 
 function install_hcxdumptool() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxdumptool"
     fapt libcurl4-openssl-dev libssl-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool  # Depth 1 must be removed because of the git checkout
     cd /opt/tools/hcxdumptool
     make
-    make install
-    ln -s /usr/local/bin/hcxpcapngtool /usr/local/bin/hcxpcaptool
+    make install PREFIX=/opt/tools
+    ln -s /opt/tools/bin/hcxdumptool /opt/tools/binhcxdumptool/
     add-history hcxdumptool
     add-test-command "hcxdumptool --version"
     add-to-list "hcxdumptool,https://github.com/ZerBea/hcxdumptool,Small tool to capture packets from wlan devices."

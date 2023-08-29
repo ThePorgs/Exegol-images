@@ -4,6 +4,7 @@
 source common.sh
 
 function install_kubectl() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kubectl"
     mkdir -p /opt/tools/kubectl
     cd /opt/tools/kubectl
@@ -26,6 +27,7 @@ function install_kubectl() {
 }
 
 function install_awscli() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing aws cli"
     cd /tmp
     if [[ $(uname -m) = 'x86_64' ]]
@@ -48,6 +50,7 @@ function install_awscli() {
 }
 
 function install_scout() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ScoutSuite"
     python3 -m pipx install scoutsuite
     add-history scout
@@ -56,6 +59,7 @@ function install_scout() {
 }
 
 function install_cloudsplaining() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Cloudsplaining"
     python3 -m pipx install cloudsplaining
     add-history cloudsplaining
@@ -74,6 +78,7 @@ function install_cloudsploit() {
 }
 
 function install_prowler() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Prowler"
     python3 -m pipx install prowler
     add-history prowler
@@ -92,6 +97,7 @@ function install_cloudmapper() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases cloudmapper
     add-history cloudmapper
+    add-test-command 'cloudmapper --help |& grep "usage"'
     add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
 }
 

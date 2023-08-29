@@ -4,6 +4,8 @@
 source common.sh
 
 function install_ad_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing AD apt tools"
     fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
 
     add-history samdump2
@@ -61,6 +63,7 @@ function configure_responder() {
 }
 
 function install_sprayhound() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sprayhound"
     python3 -m pipx install git+https://github.com/Hackndo/sprayhound
     add-history sprayhound
@@ -69,6 +72,7 @@ function install_sprayhound() {
 }
 
 function install_smartbrute() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smartbrute"
     python3 -m pipx install git+https://github.com/ShutdownRepo/smartbrute
     add-history smartbrute
@@ -77,6 +81,7 @@ function install_smartbrute() {
 }
 
 function install_ldapdomaindump() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldapdomaindump"
     python3 -m pipx install git+https://github.com/dirkjanm/ldapdomaindump
     add-history ldapdomaindump
@@ -157,6 +162,7 @@ function install_cypheroth() {
 }
 
 function install_mitm6_pip() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mitm6 with pip"
     python3 -m pipx install mitm6
     add-history mitm6
@@ -165,6 +171,7 @@ function install_mitm6_pip() {
 }
 
 function install_aclpwn() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing aclpwn with pip"
     python3 -m pipx install git+https://github.com/aas-n/aclpwn.py
     add-history aclpwn
@@ -209,6 +216,7 @@ function install_pykek() {
 }
 
 function install_lsassy() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing lsassy"
     python3 -m pipx install lsassy
     add-history lsassy
@@ -229,6 +237,7 @@ function install_privexchange() {
 }
 
 function install_ruler() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
     go install github.com/sensepost/ruler@latest
     add-history ruler
@@ -255,6 +264,7 @@ function install_darkarmour() {
 }
 
 function install_amber() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing amber"
     # Installing keystone requirement
     git -C /opt/tools/ clone --depth 1 https://github.com/EgeBalci/keystone
@@ -272,6 +282,7 @@ function install_amber() {
 }
 
 function install_powershell() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powershell"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -289,15 +300,11 @@ function install_powershell() {
     tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
     chmod -v +x /opt/tools/powershell/7/pwsh
     rm -v /tmp/powershell.tar.gz
+    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
+    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
     add-history powershell
     add-test-command "powershell -Version"
     add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
-}
-
-function configure_powershell() {
-    colorecho "Configure powershell"
-    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
-    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
 }
 
 function install_krbrelayx() {
@@ -332,11 +339,20 @@ function install_evilwinrm() {
 }
 
 function install_pypykatz() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
     python3 -m pipx install pypykatz
     add-history pypykatz
     add-test-command "pypykatz version"
     add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
+}
+
+function install_krbjack() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing krbjack"
+    python3 -m pipx install krbjack
+    add-test-command "krbjack --help"
+    add-to-list "krbjack,https://github.com/almandin/krbjack,A Kerberos AP-REQ hijacking tool with DNS unsecure updates abuse."
 }
 
 function install_enyx() {
@@ -437,6 +453,7 @@ function install_polenum() {
 }
 
 function install_smbmap() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smbmap"
     git -C /opt/tools clone --depth 1 https://github.com/ShawnDEvans/smbmap
     cd /opt/tools/smbmap
@@ -503,6 +520,7 @@ function install_ntlmv1-multi() {
 }
 
 function install_hashonymize() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hashonymizer"
     python3 -m pipx install git+https://github.com/ShutdownRepo/hashonymize
     add-history hashonymize
@@ -511,6 +529,7 @@ function install_hashonymize() {
 }
 
 function install_gosecretsdump() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gosecretsdump"
     go install -v github.com/C-Sto/gosecretsdump@latest
     add-history gosecretsdump
@@ -519,6 +538,7 @@ function install_gosecretsdump() {
 }
 
 function install_adidnsdump() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing adidnsdump"
     python3 -m pipx install git+https://github.com/dirkjanm/adidnsdump
     add-history adidnsdump
@@ -600,6 +620,7 @@ function install_dfscoerce() {
 }
 
 function install_coercer() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Coercer"
     python3 -m pipx install git+https://github.com/p0dalirius/Coercer
     add-history coercer
@@ -686,6 +707,7 @@ function install_pywsus() {
 }
 
 function install_donpapi() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DonPAPI"
     fapt swig
     python3 -m pipx install git+https://github.com/login-securite/DonPAPI
@@ -695,6 +717,7 @@ function install_donpapi() {
 }
 
 function install_webclientservicescanner() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing webclientservicescanner"
     python3 -m pipx install git+https://github.com/Hackndo/WebclientServiceScanner
     add-history webclientservicescanner
@@ -703,6 +726,7 @@ function install_webclientservicescanner() {
 }
 
 function install_certipy() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Certipy"
     python3 -m pipx install git+https://github.com/ly4k/Certipy
     add-history certipy
@@ -771,6 +795,7 @@ function install_ldaprelayscan() {
 }
 
 function install_goldencopy() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
     python3 -m pipx install goldencopy
     add-history goldencopy
@@ -793,6 +818,7 @@ function install_crackhound() {
 }
 
 function install_kerbrute() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Kerbrute"
     go install -v github.com/ropnop/kerbrute@latest
     add-history kerbrute
@@ -801,6 +827,7 @@ function install_kerbrute() {
 }
 
 function install_ldeep() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldeep"
     python3 -m pipx install ldeep
     add-history ldeep
@@ -809,6 +836,7 @@ function install_ldeep() {
 }
 
 function install_rusthound() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
     git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
@@ -825,6 +853,7 @@ function install_rusthound() {
 }
 
 function install_certsync() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing certsync"
     python3 -m pipx install git+https://github.com/zblurx/certsync
     add-history certsync
@@ -833,6 +862,7 @@ function install_certsync() {
 }
 
 function install_keepwn() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing KeePwn"
     python3 -m pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
     add-history keepwn
@@ -841,6 +871,7 @@ function install_keepwn() {
 }
 
 function install_pre2k() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pre2k"
     python3 -m pipx install git+https://github.com/garrettfoster13/pre2k
     add-history pre2k
@@ -849,6 +880,7 @@ function install_pre2k() {
 }
 
 function install_msprobe() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing msprobe"
     python3 -m pipx install git+https://github.com/puzzlepeaches/msprobe
     add-history msprobe
@@ -857,6 +889,7 @@ function install_msprobe() {
 }
 
 function install_masky() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing masky"
     python3 -m pipx install git+https://github.com/Z4kSec/Masky
     add-history masky
@@ -865,6 +898,7 @@ function install_masky() {
 }
 
 function install_roastinthemiddle() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing roastinthemiddle"
     python3 -m pipx install git+https://github.com/Tw1sm/RITM
     add-history roastinthemiddle
@@ -896,16 +930,20 @@ function install_bqm() {
 }
 
 function install_neo4j() {
-    colorecho "Configure neo4j"
+    colorecho "Installing neo4j"
     wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
-    echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
-    apt-get update
+    # TODO: temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
+    #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
+    echo 'deb https://debian.neo4j.com stable 4.4' | tee /etc/apt/sources.list.d/neo4j.list
+    apt update
+    apt install -y --no-install-recommends gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1
     fapt neo4j
-    # TODO: when temporary fix is not needed anymore --> neo4j-admin dbms set-initial-password exegol4thewin
-    neo4j-admin dbms set-initial-password exegol4thewin
+    # TODO: when temporary fix is not needed anymore add --> neo4j-admin dbms set-initial-password exegol4thewin
+    # TODO: when temporary fix is not needed anymore remove following line
+    neo4j-admin set-initial-password exegol4thewin
     mkdir -p /usr/share/neo4j/logs/
     touch /usr/share/neo4j/logs/neo4j.log
-    cp /usr/bin/neo4j /opt/tools/bin/
+    add-aliases neo4j
     add-history neo4j
     add-test-command "neo4j version"
     add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
@@ -949,6 +987,7 @@ function package_ad() {
     install_krbrelayx               # Kerberos unconstrained delegation abuse toolkit
     install_evilwinrm               # WinRM shell
     install_pypykatz                # Mimikatz implementation in pure Python
+    install_krbjack                 # KrbJack
     install_enyx                    # Hosts discovery
     install_enum4linux-ng           # Hosts enumeration
     install_zerologon               # Exploit for zerologon cve-2020-1472
@@ -1009,5 +1048,4 @@ function package_ad_configure() {
     configure_bloodhound
     configure_impacket
     configure_krbrelayx
-    configure_powershell
 }

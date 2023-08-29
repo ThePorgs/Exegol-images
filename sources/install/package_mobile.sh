@@ -4,6 +4,8 @@
 source common.sh
 
 function install_mobile_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing mobile apt tools"
     fapt android-tools-adb zipalign apksigner apktool
     install_scrpy
 
@@ -39,7 +41,7 @@ function install_scrpy() {
    rm -rf scrcpy
 }
 
-function install_smali(){
+function install_smali() {
     colorecho "Installing smali"
     mkdir /opt/tools/smali/
     wget https://bitbucket.org/JesusFreke/smali/downloads/smali-2.5.2.jar -O /opt/tools/smali/smali-2.5.2.jar
@@ -49,7 +51,8 @@ function install_smali(){
     add-to-list "smali,https://github.com/JesusFreke/smali,A tool to disassemble and assemble Android's dex files"
 }
 
-function install_dex2jar(){
+function install_dex2jar() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dex2jar"
     wget https://github.com/pxb1988/dex2jar/releases/latest/download/dex2jar-2.1.zip -O /tmp/dex2jar.zip
     unzip /tmp/dex2jar.zip -d /opt/tools/
@@ -61,6 +64,7 @@ function install_dex2jar(){
 }
 
 function install_frida() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing frida"
     python3 -m pipx install frida-tools
     add-history frida
@@ -69,6 +73,7 @@ function install_frida() {
 }
 
 function install_objection() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing objection"
     python3 -m pipx install git+https://github.com/sensepost/objection
     add-history objection
@@ -77,6 +82,7 @@ function install_objection() {
 }
 
 function install_androguard() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing androguard"
     python3 -m pipx install androguard
     add-history androguard

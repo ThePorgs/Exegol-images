@@ -1,7 +1,0 @@
-- find a better way to install the tools (exegol repo?)
-- improve history and aliases so that only those of installed tools are present
-- find a better solution to aliases (/opt/tools/bin for symbolic links and aliases for commands with preset args?)
-- add advanced option to set IMAGE_NAME, allowing users from pip to be able to join alpha and beta programs easily
-- add advanced option for `exegol install local` to disable automatic removal of intermediary containers when then fail. This would allow debuggers to commit an image from a container and manually find a fix to the failing install function without having to build everything again everytime.
-- equipment for self-hosted runner
-- add requirements to self-hosted runners (docker, etc etc, jq)

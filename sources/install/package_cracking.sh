@@ -4,6 +4,8 @@
 source common.sh
 
 function install_cracking_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing cracking apt tools"
     fapt hashcat fcrackzip pdfcrack bruteforce-luks
 
     add-history hashcat
@@ -56,11 +58,27 @@ function install_haiti() {
 }
 
 function install_geowordlists() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GeoWordlists"
     python3 -m pipx install git+https://github.com/p0dalirius/GeoWordlists
     add-history geowordlists
     add-test-command "geowordlists --help"
     add-to-list "geowordlists,https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city."
+}
+
+function install_pkcrack() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing pkcrack"
+    git -C /opt/tools/ clone https://github.com/keyunluo/pkcrack
+    mkdir -v /opt/tools/pkcrack/build/
+    cd /opt/tools/pkcrack/build
+    cmake ..
+    make
+    ln -s /opt/tools/pkcrack/bin/pkcrack /opt/tools/bin
+    ln -s /opt/tools/pkcrack/bin/zipdecrypt /opt/tools/bin
+    add-history pkcrack
+    add-test-command 'pkcrack --help |& grep "Usage"'
+    add-to-list "pkcrack,https://github.com/keyunluo/pkcrack,tool to generate wordlists of passwords containing cities at a defined distance around the client city"
 }
 
 # Package dedicated to offline cracking/bruteforcing tools
@@ -70,6 +88,8 @@ function package_cracking() {
     install_john                    # Password cracker
     install_name-that-hash          # Name-That-Hash, the hash identifier tool
     install_haiti                   # haiti, hash type identifier
+    install_geowordlists            # wordlists generator
+    install_pkcrack                 # known plaintext ZIP cracker
 }
 
 function package_cracking_configure() {
