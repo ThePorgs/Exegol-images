@@ -79,7 +79,7 @@ jobs:
   debug:
     name: debug
     needs: init
-    if: always() && needs.init.outputs.image_exists == 'false'
+    if: always() && needs.init.outputs.image_exists == 'false' && github.event.label.name == 'base success'
     runs-on: self-hosted
     steps:
       - run: echo ${{ needs.init.outputs.image_exists }}
