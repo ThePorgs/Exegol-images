@@ -81,6 +81,14 @@ jobs:
     if: ${{ github.event.label.name == 'base success' }}
     uses: ./.github/workflows/sub_code_check.yml
 
+  debug:
+    name: debug
+    needs: [ init, code_check ]
+    if: always() && needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false' && ${{ github.event.label.name == 'base success' }}
+    runs-on: self-hosted
+    steps:
+      - run: echo ${{ needs.init.outputs.image_exists }}
+
   build:
     name: Image build
     needs: [ init, code_check ]
