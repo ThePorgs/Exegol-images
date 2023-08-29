@@ -1,10 +1,12 @@
 # Author: The Exegol Project
 
-FROM debian:11-slim
-
+ARG BASE_IMAGE_REGISTRY="nwodtuhs/exegol-misc"
+ARG BASE_IMAGE_NAME="base"
 ARG TAG="local"
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
+
+FROM ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"
@@ -21,7 +23,7 @@ WORKDIR /root/sources/install
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
-RUN ./entrypoint.sh package_base
+RUN apt-get update
 RUN ./entrypoint.sh package_desktop
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_misc_configure
@@ -51,7 +53,6 @@ RUN ./entrypoint.sh package_reverse
 RUN ./entrypoint.sh package_crypto
 RUN ./entrypoint.sh package_code_analysis
 RUN ./entrypoint.sh post_install
-RUN rm -rf /root/sources /var/lib/apt/lists/*
 
 WORKDIR /workspace
 
