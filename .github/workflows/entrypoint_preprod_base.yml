@@ -67,7 +67,6 @@ jobs:
     uses: ./.github/workflows/sub_code_check.yml
 
   build:
-    # TODO : skip build if image already exists? If so, refactor the inside of sub_build
     name: Image build
     needs: [ init, code_check ]
     if: always() && needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false'
@@ -176,18 +175,32 @@ jobs:
     # running either if publish and clean_registries were a success, or if the image already existed on remote
     if: always() && ( needs.clean_registries.result == 'success' || needs.init.outputs.image_exists == 'true' )
     runs-on: ubuntu-latest
+    # Cannot use secrets.GITHUB_TOKEN as it is the default "github-actions bot" token, and "An action in a workflow run can’t trigger a new workflow run."
+    # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#about-workflow-events
+    # https://github.com/orgs/community/discussions/25565
+    env:
+      GITHUB_TOKEN: ${{ secrets.GH_PAT_BASE_TRIGGER }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: List labels
-        # TODO if label already there, remove and re-add ?
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_BASE_TRIGGER }}
         run: gh pr view --json labels ${{ github.event.number }} -q '.labels[].name'
+      - name: Label "base success" already set?
+        id: already_labeled
+        run: |
+          if gh pr view --json labels ${{ github.event.number }} -q '.labels[].name' | grep -q "base success"
+          then
+            echo "PR already labeled"
+            echo "already_labeled=true" >> $GITHUB_OUTPUT
+          else
+            echo "PR not already labeled"
+            echo "already_labeled=false" >> $GITHUB_OUTPUT
+          fi
+          cat $GITHUB_OUTPUT
+      - name: Remove label
+        # removing and re-adding label in order to re-trigger next preprod workflows
+        if: steps.already_labeled.outputs.already_labeled == 'true'
+        run: gh pr edit --remove-label "base success" ${{ github.event.number }}
       - name: Add label
-        # Cannot use secrets.GITHUB_TOKEN as it is the default "github-actions bot" token, and "An action in a workflow run can’t trigger a new workflow run."
-        # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#about-workflow-events
-        # https://github.com/orgs/community/discussions/25565
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_BASE_TRIGGER }}
+        if: always()
         run: gh pr edit --add-label "base success" ${{ github.event.number }}
