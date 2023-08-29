@@ -20,7 +20,7 @@ RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 
 RUN chmod +x entrypoint.sh
 
-RUN ./entrypoint.sh package_base_debug
+RUN ./entrypoint.sh package_base
 
 RUN ./entrypoint.sh post_install
 
