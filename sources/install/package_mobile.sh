@@ -25,6 +25,7 @@ function install_mobile_apt_tools() {
 }
 
 function install_scrpy() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing scrcpy"
     fapt ffmpeg libsdl2-2.0-0 adb wget \
                  gcc git pkg-config meson ninja-build libsdl2-dev \
