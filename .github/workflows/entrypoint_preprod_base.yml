@@ -67,7 +67,8 @@ jobs:
   build:
     name: Image build
     needs: [ init, code_check ]
-    if: always() && needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false'
+    # only building base if ccc was a success and image doesn't already exist
+    if: needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false'
     strategy:
       fail-fast: false
       matrix:

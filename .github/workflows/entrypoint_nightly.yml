@@ -89,7 +89,7 @@ jobs:
   build_base:
     name: Base image build
     needs: [ init, code_check ]
-    if: always() && needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false'
+    if: needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false'
     strategy:
       fail-fast: false
       matrix:
@@ -115,7 +115,11 @@ jobs:
   build:
     name: Final image build
     needs: [ init, code_check, build_base ]
-    if: always() && needs.build_base.result == 'success'
+    # Can't have always() in the if statement
+    # as per https://github.com/orgs/community/discussions/26303
+    # and https://github.com/actions/runner/issues/1846
+    # running build if base was built successfully
+    if: needs.build_base.result == 'success'
     strategy:
       fail-fast: false
       matrix:

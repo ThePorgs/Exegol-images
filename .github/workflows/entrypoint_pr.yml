@@ -61,7 +61,8 @@ jobs:
   build_base:
     name: Base image build
     needs: [ init, code_check ]
-    if: always() && needs.code_check.result == 'success'
+    # only running build if ccc was a success
+    if: needs.code_check.result == 'success'
     strategy:
       fail-fast: false
       matrix:
@@ -84,7 +85,8 @@ jobs:
   build:
     name: Final image build
     needs: [init, code_check, build_base ]
-    if: always() && needs.build_base.outputs.build == 'success'
+    # only running build if base_build was a success
+    if: needs.build_base.outputs.build == 'success'
     strategy:
       fail-fast: false
       matrix:
