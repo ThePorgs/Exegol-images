@@ -403,7 +403,6 @@ function install_trevorspray() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
-    apt update
     set_go_env
     set_ruby_env
     install_osint_apt_tools
