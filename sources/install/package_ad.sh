@@ -125,6 +125,53 @@ function install_bloodhound() {
     add-to-list "bloodhound,https://github.com/BloodHoundAD/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments."
 }
 
+function install_bloodhound-ce() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing BloodHound-CE"
+
+    colorecho "Installing and configuring the database"
+    fapt postgresql postgresql-client
+    service postgresql start
+    cd /tmp
+    sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'bloodhoundcommunityedition';"
+    sudo -u postgres psql -c "CREATE DATABASE bloodhound;"
+    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bloodhound TO bloodhound;"
+    service postgresql restart
+
+    colorecho "Installing and configuring the Bloodhound-CE"
+    git -C /opt/tools clone --depth 1 https://github.com/SpecterOps/BloodHound.git
+    cd /opt/tools/BloodHound
+    python3 -m venv ./venv
+    cd ./packages/javascript/bh-shared-ui
+    yarn install
+    yarn build
+    cd /opt/tools/BloodHound
+    ./venv/bin/python3 ./packages/python/beagle/main.py build bh-ui -v
+    ./venv/bin/python3 ./packages/python/beagle/main.py build bh -v -d
+    wget https://github.com/BloodHoundAD/SharpHound/releases/download/v2.0.0/SharpHound-v2.0.0.zip -O sharphound-v2.0.0.zip
+    sha256sum sharphound-v2.0.0.zip > sharphound-v2.0.0.zip.sha256
+    mkdir ./azurehound
+    cd ./azurehound
+    wget \
+    https://github.com/BloodHoundAD/AzureHound/releases/download/v2.0.5/azurehound-linux-amd64.zip \
+    https://github.com/BloodHoundAD/AzureHound/releases/download/v2.0.5/azurehound-linux-arm64.zip
+    cd /opt/tools/BloodHound
+    cp ./dist/bhapi ./bloodhound
+    mkdir -p /etc/bloodhound/collectors/sharphound/
+    cp -r ./sharphound-v2.0.0.zip* /etc/bloodhound/collectors/sharphound/
+    mkdir -p /etc/bloodhound/collectors/azurehound/
+    cp -r ./azurehound/azurehound-linux-a* /etc/bloodhound/collectors/azurehound/
+    cp ./dockerfiles/configs/bloodhound.config.json ./
+    sed -i "s#app-db#127.0.0.1##" bloodhound.config.json
+    sed -i "s#graph-db#127.0.0.1##" bloodhound.config.json
+    sed -i "s#8080#1030##" bloodhound.config.json
+    sed -i "s#neo4j:bloodhoundcommunityedition#neo4j:exegol4thewin##" bloodhound.config.json
+    cp /root/sources/assets/bloodhound-ce/*.sh /opt/tools/bin/
+    chmod +x /opt/tools/bin/bloodhound*
+    add-test-command "bloodhound-ce --help"
+    add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
+}
+
 function configure_bloodhound() {
     colorecho "Configure bloodhound"
     if [[ $(uname -m) = 'x86_64' ]]
@@ -1017,6 +1064,7 @@ function package_ad() {
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
     install_noPac
+    install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
 }
 
 function package_ad_configure() {

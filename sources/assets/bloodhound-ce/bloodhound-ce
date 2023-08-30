@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if ! pg_isready -q; then
+    service postgresql start
+fi
+
+/opt/tools/BloodHound/bloodhound -configfile /opt/tools/BloodHound/bloodhound.config.json
+
