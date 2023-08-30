@@ -80,7 +80,8 @@ jobs:
   build:
     name: Image build
     needs: [ init, code_check ]
-    if: always() && needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false' && github.event.label.name == 'base success'
+    # running build if ccc was a success and if image doesn't already exist
+    if: needs.code_check.result == 'success' && needs.init.outputs.image_exists == 'false' && github.event.label.name == 'base success'
     strategy:
       fail-fast: false
       matrix:
