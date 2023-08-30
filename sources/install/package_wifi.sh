@@ -95,7 +95,6 @@ function install_hcxdumptool() {
     cd /opt/tools/hcxdumptool
     make
     make install PREFIX=/opt/tools
-    ln -s /opt/tools/bin/hcxdumptool /opt/tools/binhcxdumptool/
     add-history hcxdumptool
     add-test-command "hcxdumptool --version"
     add-to-list "hcxdumptool,https://github.com/ZerBea/hcxdumptool,Small tool to capture packets from wlan devices."
