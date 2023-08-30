@@ -198,7 +198,7 @@ function install_yarn() {
     colorecho "Installing yarn"
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-    apt update
+    apt-get update
     fapt yarn
     add-test-command "yarn --help"
 }
