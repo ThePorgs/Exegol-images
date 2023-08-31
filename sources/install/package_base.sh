@@ -244,7 +244,6 @@ function install_gf() {
 function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
-    apt update
     updatedb
     rm -rfv /tmp/*
     rm -rfv /var/lib/apt/lists/*

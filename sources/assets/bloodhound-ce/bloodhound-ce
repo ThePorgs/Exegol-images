@@ -4,5 +4,5 @@ if ! pg_isready -q; then
     service postgresql start
 fi
 
-/opt/tools/BloodHound/bloodhound -configfile /opt/tools/BloodHound/bloodhound.config.json
+/opt/tools/BloodHound-CE/bloodhound -configfile /opt/tools/BloodHound-CE/bloodhound.config.json
 
