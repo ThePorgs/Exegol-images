@@ -58,7 +58,7 @@ def run_command(command):
 
             # Write the output of the failed command to the log file
             with open(fail_log_file, "a") as f:
-                f.write(f"{blue}mFailed command: {command}\n{clear}")
+                f.write(f"{blue}Failed command: {command}\n{clear}")
                 if e.output:
                     f.write(f"{yellow}Standard output:\n")
                     for line in e.output.decode().split("\n"):

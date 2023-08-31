@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Expanding aliases. Bugfix #207
+EXEGOL_ALIASES="/opt/.exegol_aliases"
+if [[ -f "$EXEGOL_ALIASES" ]]; then
+  shopt -s expand_aliases
+  source "$EXEGOL_ALIASES"
+else
+  echo "Exiting, file $EXEGOL_ALIASES is missing"
+  exit 2
+fi
+
 function init() {
   # Deploying the /opt/my-resources/ folder if not already there
   if [ -d "$MY_Root_PATH" ]; then
