@@ -1,0 +1,14 @@
+diff --git a/tools/SMBFinger/odict.py b/tools/SMBFinger/odict.py
+index 714cf67..107cb01 100644
+--- a/tools/SMBFinger/odict.py
++++ b/tools/SMBFinger/odict.py
+@@ -3,7 +3,7 @@ try:
+     from UserDict import DictMixin
+ except ImportError:
+     from collections import UserDict
+-    from collections import MutableMapping as DictMixin
++    from collections.abc import MutableMapping as DictMixin
+ 
+ class OrderedDict(dict, DictMixin):
+ 
+

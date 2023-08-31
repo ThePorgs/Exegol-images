@@ -31,6 +31,8 @@ function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
     cd /opt/tools/Responder
+    cp -v /root/sources/assets/patches/responder.patch responder.patch
+    git apply --verbose responder.patch
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     ./venv/bin/python3 -m pip install pycryptodome six pycryptodomex
