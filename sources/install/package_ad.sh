@@ -119,6 +119,7 @@ function install_bloodhound() {
     git -C /opt/tools/ clone --depth 1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
     zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
+    nvm use default
     add-aliases bloodhound
     add-history bloodhound
     add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
