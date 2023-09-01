@@ -141,7 +141,7 @@ function install_bloodhound-ce() {
     # Build BloodHound-CE
     git -C /opt/tools/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git BloodHound-CE-build
     cd /opt/tools/BloodHound-CE-build
-    python3 -m venv ./venv
+    # python3 -m venv ./venv
     cd ./packages/javascript/bh-shared-ui
     colorecho "DEBUG : Node version"
     node -v
@@ -149,8 +149,8 @@ function install_bloodhound-ce() {
     colorecho "DEBUG : Check directory"
     ls -la /opt/tools/BloodHound-CE-build/packages/javascript/bh-shared-ui/node_modules/rollup/dist/bin/
     cd /opt/tools/BloodHound-CE-build
-    ./venv/bin/python3 ./packages/python/beagle/main.py build bh-ui -v
-    ./venv/bin/python3 ./packages/python/beagle/main.py build bh -v -d
+    python3 ./packages/python/beagle/main.py build bh-ui -v
+    python3 ./packages/python/beagle/main.py build bh -v -d
 
     # Need to move in Exegol-Resources
     wget https://github.com/BloodHoundAD/SharpHound/releases/download/v2.0.0/SharpHound-v2.0.0.zip -O sharphound-v2.0.0.zip
