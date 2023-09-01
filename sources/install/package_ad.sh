@@ -149,8 +149,10 @@ function install_bloodhound-ce() {
     colorecho "DEBUG : Check directory"
     ls -la /opt/tools/BloodHound-CE-build/packages/javascript/bh-shared-ui/node_modules/rollup/dist/bin/
     cd /opt/tools/BloodHound-CE-build
-    python3 ./packages/python/beagle/main.py build bh-ui -v
-    python3 ./packages/python/beagle/main.py build bh -v -d
+    colorecho "DEBUG : Python version"
+    python3 --version
+    python3 ./packages/python/beagle/main.py build bh-ui -v -c
+    python3 ./packages/python/beagle/main.py build bh -v -d -c
 
     # Need to move in Exegol-Resources
     wget https://github.com/BloodHoundAD/SharpHound/releases/download/v2.0.0/SharpHound-v2.0.0.zip -O sharphound-v2.0.0.zip
