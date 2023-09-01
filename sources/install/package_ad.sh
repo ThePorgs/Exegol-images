@@ -143,7 +143,11 @@ function install_bloodhound-ce() {
     cd /opt/tools/BloodHound-CE-build
     python3 -m venv ./venv
     cd ./packages/javascript/bh-shared-ui
+    colorecho "DEBUG : Node version"
+    node -v
     yarn install
+    colorecho "DEBUG : Check directory"
+    ls -la /opt/tools/BloodHound-CE-build/packages/javascript/bh-shared-ui/node_modules/rollup/dist/bin/
     yarn build
     cd /opt/tools/BloodHound-CE-build
     ./venv/bin/python3 ./packages/python/beagle/main.py build bh-ui -v
@@ -172,6 +176,7 @@ function install_bloodhound-ce() {
     
     # Clean build folder
     rm -rf /opt/tools/BloodHound-CE-build/
+    service postgresql stop
 
     # Configuration
     cd /opt/tools/BloodHound-CE/
