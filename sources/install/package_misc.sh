@@ -107,10 +107,9 @@ function install_trilium() {
 
 function configure_trilium() {
     colorecho "Configuring trilium"
-    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild"
+    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild && nvm use default"
     mkdir -p /root/.local/share/trilium-data
     cp -v /root/sources/assets/trilium/* /root/.local/share/trilium-data
-    nvm use default
 }
 
 function install_ngrok() {
