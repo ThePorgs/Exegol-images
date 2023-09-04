@@ -97,6 +97,7 @@ function install_mobsf(){
     cd /opt/tools/Mobile-Security-Framework-MobSF && ./setup.sh
     add-aliases mobsf
     add-history mobsf
+    add-test-command "poetry --directory /opt/tools/Mobile-Security-Framework-MobSF run python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
     add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated, all-in-one mobile application (Android/iOS/Windows) pen-testing, malware analysis and security assessment framework"
 }
 

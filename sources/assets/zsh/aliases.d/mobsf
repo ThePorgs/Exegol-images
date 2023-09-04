@@ -1,1 +1,1 @@
-alias mobsf='cd /opt/tools/Mobile-Security-Framework-MobSF/ && echo "[*] changed dir : cd /opt/tools/Mobile-Security-Framework-MobSF/" && ./run.sh'
+alias mobsf='poetry --directory /opt/tools/Mobile-Security-Framework-MobSF run mobsf "[::]:8000"'
