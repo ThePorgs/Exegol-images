@@ -93,7 +93,7 @@ function install_androguard() {
 function install_mobsf(){
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf
-    git clone https://github.com/MobSF/Mobile-Security-Framework-MobSF /opt/tools/Mobile-Security-Framework-MobSF
+    git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF
     cd /opt/tools/Mobile-Security-Framework-MobSF && ./setup.sh
 
     add-aliases mobsf
