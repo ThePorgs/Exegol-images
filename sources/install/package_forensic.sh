@@ -50,7 +50,12 @@ function install_volatility2() {
 
 function install_volatility3() {
     colorecho "Installing volatility3"
-    python3 -m pipx install git+https://github.com/volatilityfoundation/volatility3
+    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
+    # TODO remove when issue fixed
+    git -C /opt/tools/volatility3 revert b4c6b661f01fc3dde54362a4f55be4d89e4cc6e5
+    python3 -m pipx install /opt/tools/volatility3
+    # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
+    python3 -m pipx inject volatility3 yara-python capstone pycryptodome
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
