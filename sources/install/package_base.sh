@@ -126,8 +126,10 @@ function install_rvm() {
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
+    rvm use 3.0.0@default
+    rvm get head
     gem update
-    add-test-command "rvm --help"
+    add-test-command "rvm --version"
 }
 
 function install_fzf() {
