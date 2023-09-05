@@ -267,6 +267,7 @@ function package_base() {
     add-apt-repository contrib
     add-apt-repository non-free
     apt-get update
+    fapt zsh
     chsh -s /bin/zsh
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 python2 wget \
