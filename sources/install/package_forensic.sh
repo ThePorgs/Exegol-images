@@ -50,7 +50,8 @@ function install_volatility2() {
 
 function install_volatility3() {
     colorecho "Installing volatility3"
-    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
+    git -C /opt/tools/ clone https://github.com/volatilityfoundation/volatility3
+#    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
     # TODO remove when issue fixed
     git -C /opt/tools/volatility3 revert b4c6b661f01fc3dde54362a4f55be4d89e4cc6e5
     python3 -m pipx install /opt/tools/volatility3
