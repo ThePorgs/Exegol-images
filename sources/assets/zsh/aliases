@@ -1,5 +1,6 @@
 alias rickroll='curl tiredand.gay/rick'
 alias l='ls -alh'
+alias ip='grc ip'
 alias ipa='ip --brief --color a'
 alias ipr='ip --brief --color r'
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
