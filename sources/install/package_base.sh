@@ -267,8 +267,6 @@ function package_base() {
     add-apt-repository contrib
     add-apt-repository non-free
     apt-get update
-    fapt zsh
-    chsh -s /bin/zsh
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 python2 wget \
     gnupg2 python2-dev python3-dev python3-venv libffi-dev python3-pip zsh asciinema \
@@ -278,6 +276,7 @@ function package_base() {
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
     nim perl libwww-perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-11-jdk openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
     virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3
+    chsh -s /bin/zsh
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel
