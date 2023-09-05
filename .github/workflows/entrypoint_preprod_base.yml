@@ -3,7 +3,7 @@ run-name: Pre-release (base) - ${{ github.event.pull_request.title }}
 
 on:
   pull_request:
-    branches: main
+    branches: [main]
     paths-ignore: # not always respected. See https://github.com/actions/runner/issues/2324#issuecomment-1703345084
       - ".github/**"
       - "**.md"

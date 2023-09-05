@@ -50,12 +50,14 @@ def run_command(command):
         except subprocess.TimeoutExpired as e:
             # If the command timeout, store it in the list of failed commands
             failed_commands.append(command)
-            print(f"{red}TIMEOUT{clear} - Running command: {command}")
+            print(f"{yellow}TIMEOUT{clear} - Running command: {command}")
+            # Add the timed out command to the log file
+            with open(fail_log_file, "a") as f:
+                f.write(f"{blue}Timed out command: {command}\n{clear}")
         except subprocess.CalledProcessError as e:
             # If the command fails, store it in the list of failed commands
             failed_commands.append(command)
             print(f"{red}FAILURE{clear} - Running command: {command}")
-
             # Write the output of the failed command to the log file
             with open(fail_log_file, "a") as f:
                 f.write(f"{blue}Failed command: {command}\n{clear}")
@@ -83,7 +85,7 @@ for thread in threads:
 
 # Check if any of the commands failed
 if failed_commands:
-    print(f"{yellow}The following commands failed:{clear}")
+    print(f"{yellow}The following commands failed or timed out:{clear}")
     for command in failed_commands:
         print(f"    {command}")
     print(f"{yellow}Logs of failed commands are stored in{clear} {fail_log_file}")
