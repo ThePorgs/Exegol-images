@@ -937,6 +937,20 @@ function install_noPac() {
     add-test-command "noPac --help"
     add-to-list "noPac,https://github.com/Ridter/noPac,Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user."
 }
+
+function install_GPOddity() {
+  colorecho "Installing GPOddity"
+  git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/GPOddity
+  cd /opt/tools/GPOddity
+  python3 -m venv ./venv
+  ./venv/bin/python3 -m pip install -r requirements.txt
+  add-aliases GPOddity
+  add-history GPOddity
+  add-test-command "GPOddity --help"
+  add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
+
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
