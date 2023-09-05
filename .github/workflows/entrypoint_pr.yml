@@ -19,7 +19,8 @@ env:
 
   # final image parameters
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
-  DOCKERFILE: "./Dockerfile"
+  #DOCKERFILE: "./Dockerfile"
+  DOCKERFILE: "./dockerfiles/misc-forensic.dockerfile"
 
 
 # creating a separate concurrency group for each PR
