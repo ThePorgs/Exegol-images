@@ -94,10 +94,10 @@ function install_mobsf(){
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf
     git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF
-    cd /opt/tools/Mobile-Security-Framework-MobSF && ./setup.sh
+    python3 -m pipx install /opt/tools/Mobile-Security-Framework-MobSF/
     add-aliases mobsf
     add-history mobsf
-    add-test-command "poetry --directory /opt/tools/Mobile-Security-Framework-MobSF run python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
+    add-test-command "/root/.local/pipx/venvs/mobsf/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
     add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated, all-in-one mobile application (Android/iOS/Windows) pen-testing, malware analysis and security assessment framework"
 }
 

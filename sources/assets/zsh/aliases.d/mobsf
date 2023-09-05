@@ -1,1 +1,0 @@
-alias mobsf='poetry --directory /opt/tools/Mobile-Security-Framework-MobSF run mobsf "[::]:8000"'
