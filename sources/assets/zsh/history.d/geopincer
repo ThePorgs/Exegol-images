@@ -1,0 +1,2 @@
+geopincer "Texas" "Office Depot" "Sam's Club"
+geopincer "Texas" "Office Depot" "Sam's Club" --distance 300

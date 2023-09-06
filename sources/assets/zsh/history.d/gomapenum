@@ -1,0 +1,2 @@
+gomapenum linkedin gather -c contoso -f "{f}{last}@contoso.com" -e -s 'test'
+gomapenum searchEngine gather -c contoso -f "{f}{last}@contoso.com" -e

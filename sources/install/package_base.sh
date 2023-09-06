@@ -215,8 +215,8 @@ function install_neovim() {
 function install_mdcat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mdcat"
-    cargo install mdcat
     source "$HOME/.cargo/env"
+    cargo install mdcat
     add-history mdcat
     add-test-command "mdcat --version"
     add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
@@ -280,6 +280,7 @@ function package_base() {
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel
+    add-aliases pyftpdlib
 
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager

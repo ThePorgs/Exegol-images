@@ -1,0 +1,2 @@
+yalis -u admin@example.com -p Password123 --id 1234 -f csv -o yalis-1234.csv
+yalis -u admin@example.com -p Password123 --name "Company Name Inc." -f csv -o yalis-company-name.csv

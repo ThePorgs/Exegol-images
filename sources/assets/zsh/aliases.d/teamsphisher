@@ -1,0 +1,1 @@
+alias TeamsPhisher="/opt/tools/TeamsPhisher/venv/bin/python3 /opt/tools/TeamsPhisher/teamsphisher.py"
