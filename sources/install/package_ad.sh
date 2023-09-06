@@ -948,7 +948,6 @@ function install_GPOddity() {
   add-history GPOddity
   add-test-command "GPOddity --help"
   add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
-
 }
 
 # Package dedicated to internal Active Directory tools
