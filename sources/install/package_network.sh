@@ -219,6 +219,22 @@ function install_ligolo-ng() {
     add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."
 }
 
+function install_rustscan() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing RustScan"
+    git -C /opt/tools/ clone --depth 1 https://github.com/RustScan/RustScan.git
+    cd /opt/tools/RustScan
+    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+    source "$HOME/.cargo/env"
+    cargo build --release
+    # Clean dependencies used to build the binary
+    rm -rf target/release/{deps,build,.fingerprint}
+    ln -s /opt/tools/RustScan/target/release/rustscan /opt/tools/bin/rustscan
+    add-history rustscan
+    add-test-command "rustscan --help"
+    add-to-list "rustscan,https://github.com/RustScan/RustScan,The Modern Port Scanner"
+}
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_go_env
@@ -238,4 +254,5 @@ function package_network() {
     install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
     install_tailscale               # Zero config VPN for building secure networks
     install_ligolo-ng               # Tunneling tool that uses a TUN interface
+    install_rustscan
 }
