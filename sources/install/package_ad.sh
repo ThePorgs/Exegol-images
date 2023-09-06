@@ -946,7 +946,7 @@ function install_GPOddity() {
   ./venv/bin/python3 -m pip install -r requirements.txt
   add-aliases GPOddity
   add-history GPOddity
-  add-test-command "GPOddity --help"
+  add-test-command "gpoddity.py --help"
   add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
 }
 
