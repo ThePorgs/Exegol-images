@@ -1031,6 +1031,7 @@ function package_ad() {
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
     install_noPac
+    install_GPOddity
 }
 
 function package_ad_configure() {
