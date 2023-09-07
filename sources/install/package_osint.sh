@@ -417,7 +417,7 @@ function install_geopincer() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases geopincer
     add-history geopincer
-    add-test-command "geopincer --help"
+    add-test-command "geopincer.py --help"
     add-to-list "GeoPincer,https://github.com/tloja/GeoPincer,GeoPincer is a script that leverages OpenStreetMap's Overpass API in order to search for locations."
 }
 
@@ -441,7 +441,7 @@ function install_murmurhash() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases MurMurHash
     add-history MurMurHash
-    add-test-command "MurMurHash"
+    add-test-command "MurMurHash.py"
     add-to-list "MurMurHash,https://github.com/QU35T-code/MurMurHash,This little tool is to calculate a MurmurHash value of a favicon to hunt phishing websites on the Shodan platform."
 }
 
@@ -455,7 +455,7 @@ function install_blackbird() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases blackbird
     add-history blackbird
-    add-test-command "blackbird --help"
+    add-test-command "blackbird.py --help"
     add-to-list "Blackbird,https://github.com/p1ngul1n0/blackbird,An OSINT tool to search fast for accounts by username across 581 sites."
 }
 
@@ -467,7 +467,7 @@ function install_sherlock() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases sherlock
     add-history sherlock
-    add-test-command "sherlock --help"
+    add-test-command "sherlock.py --help"
     add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks."
 }
 

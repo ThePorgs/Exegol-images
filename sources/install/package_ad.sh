@@ -955,7 +955,7 @@ function install_teamsphisher() {
     ./venv/bin/python3 -m pip install msal colorama requests
     add-aliases teamsphisher
     add-history teamsphisher
-    add-test-command "TeamsPhisher --help"
+    add-test-command "teamsphisher.py --help"
     add-to-list "TeamsPhisher,https://github.com/Octoberfest7/TeamsPhisher,TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications."
 }
 
