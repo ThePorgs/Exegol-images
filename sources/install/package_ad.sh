@@ -247,7 +247,7 @@ function install_ruler() {
 }
 
 function install_upx-ucl() {
-    git -C /tmp clone https://github.com/ferseiti/upx-ucl.git
+    git -C /tmp clone --depth 1 https://github.com/ferseiti/upx-ucl.git
     mkdir /opt/tools/upx-ucl
     cp -r /tmp/upx-ucl/debian/upx-ucl/usr/* /opt/tools/upx-ucl
     ln -v -s /opt/tools/upx-ucl/bin/upx-ucl /opt/tools/bin/upx-ucl
