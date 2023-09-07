@@ -785,8 +785,8 @@ function install_crackhound() {
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
     cd /opt/tools/CrackHound
-    prs="6"
-    for pr in $prs; do git fetch origin pull/$pr/head:pull/$pr && git merge --strategy-option theirs --no-edit pull/$pr; done
+    PRS="6"
+    for PR in $PRS; do git fetch origin pull/$PR/head:pull/$PR && git merge --strategy-option theirs --no-edit pull/$PR; done
     python3 -m venv ./venv/
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases crackhound

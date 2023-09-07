@@ -126,8 +126,10 @@ function install_rvm() {
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
+    rvm use 3.0.0@default
+    rvm get head
     gem update
-    add-test-command "rvm --help"
+    add-test-command "rvm --version"
 }
 
 function install_fzf() {
@@ -248,6 +250,15 @@ function post_install() {
     rm -rfv /tmp/*
     rm -rfv /var/lib/apt/lists/*
     rm -rfv /root/sources
+    colorecho "Stop listening processes"
+    LISTENING_PROCESSES=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
+    if [[ -n $LISTENING_PROCESSES ]]; then
+        echo "Listening processes detected"
+        ss -lnpt
+        echo "Kill processes"
+        kill -9 $LISTENING_PROCESSES
+    fi
+    add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
     colorecho "Sorting tools list"
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
@@ -318,13 +329,13 @@ function package_base() {
 
     # openvpn
     # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
-    line=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i ${line}'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+    LINE=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+    sed -i ${LINE}'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
 
-    line=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i ${line}'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
-    line=$(($line + 1))
-    sed -i ${line}'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+    LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+    sed -i ${LINE}'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+    LINE=$(($LINE + 1))
+    sed -i ${LINE}'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
     add-test-command "openvpn --version"
 
     # logrotate
