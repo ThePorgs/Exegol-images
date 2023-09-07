@@ -90,6 +90,7 @@ function deploy_exegol() {
 
 function install_locales() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
+    colorecho "Installing locales"
     fapt locales
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
     locale-gen
