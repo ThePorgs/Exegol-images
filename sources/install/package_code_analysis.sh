@@ -32,10 +32,23 @@ function install_semgrep() {
     add-to-list "semgrep,https://github.com/returntocorp/semgrep/,Static analysis tool that supports multiple languages and can find a variety of vulnerabilities and coding errors."
 }
 
+function install_pp-finder() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing pp-finder"
+    # https://github.com/yeswehack/pp-finder/issues/2
+    source ~/.nvm/nvm.sh
+    nvm use default
+    npm install -g pp-finder
+    add-history pp-finder
+    add-test-command "npm ls -g|grep pp-finder"
+    add-to-list "pp-finder,https://github.com/yeswehack/pp-finder,Prototype pollution finder tool for javascript. pp-finder lets you find prototype pollution candidates in your code."
+}
+
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
     set_ruby_env
     install_vulny-code-static-analysis
     install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
     install_semgrep                     # Static analysis engine for finding bugs and vulnerabilities
+    install_pp-finder                   # Prototype pollution finder tool for javascript
 }

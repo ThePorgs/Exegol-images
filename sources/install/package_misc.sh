@@ -135,6 +135,28 @@ function install_objectwalker() {
     add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
 }
 
+function install_tig() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing tig"
+    git -C /opt/tools clone --depth 1 https://github.com/jonas/tig.git
+    cd /opt/tools/tig
+    make
+    make install
+    mv /root/bin/tig /opt/tools/bin/tig
+    # Need add-history ?
+    add-test-command "tig --help"
+    add-to-list "tig,https://github.com/jonas/tig.git,Tig is an ncurses-based text-mode interface for git."
+}
+
+function install_yt-dlp() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing yt-dlp"
+    python3 -m pipx install git+https://github.com/yt-dlp/yt-dlp
+    add-test-command "yt-dlp --help"
+    add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes"
+}
+
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_go_env
@@ -149,4 +171,6 @@ function package_misc() {
     install_ngrok           # expose a local development server to the Internet
     install_whatportis      # Search default port number
     install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory
+    install_tig             # ncurses-based text-mode interface for git
+    install_yt-dlp          # A youtube-dl fork with additional features and fixes
 }

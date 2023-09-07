@@ -101,6 +101,16 @@ function install_jadx() {
     add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler"
 }
 
+function install_chainsaw() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing chainsaw"
+    source "$HOME/.cargo/env"
+    cargo install chainsaw
+    add-history chainsaw
+    add-test-command "chainsaw --help"
+    add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
+}
+
 # Package dedicated to forensic tools
 function package_forensic() {
     set_ruby_env
@@ -110,4 +120,5 @@ function package_forensic() {
     install_trid                    # filetype detection tool
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
+    install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
 }
