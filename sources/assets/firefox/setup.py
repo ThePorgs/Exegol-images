@@ -106,9 +106,14 @@ def activate_addons(addon_list):
 
 def adjust_ui():
     with open(Path(glob("%s" % PATHNAME)[0] + "/prefs.js"), 'r+') as pref_js:
+        # removing import-button
         new_pref = re.sub(r'\\"import-button\\",', '', pref_js.read())
+        # removing save-to-pocket button
         new_pref = re.sub(r'\\"save-to-pocket-button\\",', '', new_pref)
+        # switching active theme to firefox-compact-dark
         new_pref = re.sub('"extensions.activeThemeID", "default-theme@mozilla.org"', '"extensions.activeThemeID", "firefox-compact-dark@mozilla.org"', new_pref)
+        # removing title bar
+        new_pref = re.sub('"browser.tabs.inTitlebar", 1', '"browser.tabs.inTitlebar", 0', new_pref)
         pref_js.seek(0)
         pref_js.write(new_pref)
         pref_js.truncate()
