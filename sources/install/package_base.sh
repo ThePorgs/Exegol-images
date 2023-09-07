@@ -253,9 +253,12 @@ function post_install() {
     colorecho "Stop listening processes"
     LISTENING_PROCESSES=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
     if [[ -n $LISTENING_PROCESSES ]]; then
+        echo "Listening processes detected"
+        ss -lnpt
+        echo "Kill processes"
         kill -9 $LISTENING_PROCESSES
     fi
-    add-test-command "[[ $(sudo ss -lnpt | tail -n +2 | wc -l) -eq 0 ]]"
+    add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
     colorecho "Sorting tools list"
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
