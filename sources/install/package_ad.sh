@@ -95,7 +95,7 @@ function install_crackmapexec() {
     # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
     # TODO: Optimize so that the PATH is always up to date
     source /root/.zshrc || true
-    git -C /opt/tools/ clone --depth 1 https://github.com/mpgn/CrackMapExec.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
     python3 -m pipx install /opt/tools/CrackMapExec/
     add-aliases crackmapexec
     add-history crackmapexec
@@ -960,6 +960,19 @@ function install_noPac() {
     add-test-command "noPac --help"
     add-to-list "noPac,https://github.com/Ridter/noPac,Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user."
 }
+
+function install_GPOddity() {
+  colorecho "Installing GPOddity"
+  git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/GPOddity
+  cd /opt/tools/GPOddity
+  python3 -m venv ./venv
+  ./venv/bin/python3 -m pip install -r requirements.txt
+  add-aliases GPOddity
+  add-history GPOddity
+  add-test-command "gpoddity.py --help"
+  add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1040,6 +1053,7 @@ function package_ad() {
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
     install_noPac
+    install_GPOddity
 }
 
 function package_ad_configure() {

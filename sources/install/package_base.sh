@@ -154,8 +154,10 @@ function install_rvm() {
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
+    rvm use 3.0.0@default
+    rvm get head
     gem update
-    add-test-command "rvm --help"
+    add-test-command "rvm --version"
 }
 
 function install_fzf() {
@@ -270,8 +272,8 @@ function install_gf() {
 }
 
 function add-repository() {
-    source_file="/etc/apt/sources.list.d/debian.sources"  # Remplacez par le chemin de votre fichier
-    out_file="/etc/apt/sources.list.d/debian2.sources"  # Remplacez par le chemin de votre fichier
+    source_file="/etc/apt/sources.list.d/debian.sources"
+    out_file="/etc/apt/sources.list.d/debian2.sources"
 
     while IFS= read -r line; do
       if [[ "$line" == "Components"* ]]; then
@@ -308,7 +310,6 @@ function package_base() {
     fapt software-properties-common
     add-repository # add-apt-repository does not work
     apt-get update
-    chsh -s /bin/zsh
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
     python3-dev python3-venv libffi-dev python3-pip zsh asciinema \
@@ -323,6 +324,7 @@ function package_base() {
     pip install --no-cache-dir virtualenv
 
     rm /usr/lib/python3.*/EXTERNALLY-MANAGED # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
+    chsh -s /bin/zsh
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel

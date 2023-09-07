@@ -3,12 +3,9 @@ run-name: Pre-release (full) - ${{ github.event.pull_request.title }}
 
 on:
   pull_request:
-    title:
-      - "Release *.*.*"
-      - "Release *.*.*b*"
     types: [labeled]
-    branches: main
-    paths-ignore:
+    branches: [main]
+    paths-ignore: # not always respected. See https://github.com/actions/runner/issues/2324#issuecomment-1703345084
       - ".github/**"
       - "**.md"
 
