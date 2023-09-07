@@ -1,0 +1,1 @@
+alias geopincer.py="/opt/tools/GeoPincer/venv/bin/python3 /opt/tools/GeoPincer/GeoPincer.py"

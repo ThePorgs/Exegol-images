@@ -399,6 +399,99 @@ function install_trevorspray() {
     add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules / and more"
 }
 
+function install_gitfive() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # GitFive only works with Python 3.10+.
+    colorecho "Installing GitFive"
+    python3 -m pipx install git+https://github.com/mxrch/GitFive
+    add-test-command "gitfive --help"
+    add-to-list "GitFive,https://github.com/mxrch/GitFive,GitFive is an OSINT tool to investigate GitHub profiles."
+}
+
+function install_geopincer() {
+    colorecho "Installing GeoPincer"
+    git -C /opt/tools clone --depth 1 https://github.com/tloja/GeoPincer.git
+    cd /opt/tools/GeoPincer
+    sed -i "s#regions.txt#/opt/tools/GeoPincer/regions.txt##" GeoPincer.py
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases geopincer
+    add-history geopincer
+    add-test-command "geopincer.py --help"
+    add-to-list "GeoPincer,https://github.com/tloja/GeoPincer,GeoPincer is a script that leverages OpenStreetMap's Overpass API in order to search for locations."
+}
+
+function install_yalis() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Yalis"
+    git -C /opt/tools clone --depth 1 https://github.com/EatonChips/yalis
+    cd /opt/tools/yalis
+    go build .
+    mv ./yalis /opt/tools/bin/
+    add-history yalis
+    add-test-command 'yalis --help|& grep "Usage of yalis"'
+    add-to-list "Yalis,https://github.com/EatonChips/yalis,Yet Another LinkedIn Scraper"
+}
+
+function install_murmurhash() {
+    colorecho "Installing MurMurHash"
+    git -C /opt/tools clone --depth 1 https://github.com/QU35T-code/MurMurHash
+    cd /opt/tools/MurMurHash
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases MurMurHash
+    add-history MurMurHash
+    add-test-command "MurMurHash.py"
+    add-to-list "MurMurHash,https://github.com/QU35T-code/MurMurHash,This little tool is to calculate a MurmurHash value of a favicon to hunt phishing websites on the Shodan platform."
+}
+
+function install_blackbird() {
+    colorecho "Installing Blackbird"
+    git -C /opt/tools clone --depth 1 https://github.com/p1ngul1n0/blackbird
+    cd /opt/tools/blackbird
+    sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
+    sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases blackbird
+    add-history blackbird
+    add-test-command "blackbird.py --help"
+    add-to-list "Blackbird,https://github.com/p1ngul1n0/blackbird,An OSINT tool to search fast for accounts by username across 581 sites."
+}
+
+function install_sherlock() {
+    colorecho "Installing Sherlock"
+    git -C /opt/tools/ clone --depth 1 https://github.com/sherlock-project/sherlock
+    cd /opt/tools/sherlock
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases sherlock
+    add-history sherlock
+    add-test-command "sherlock.py --help"
+    add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks."
+}
+
+function install_censys() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Censys"
+    python3 -m pipx install censys
+    add-history censys
+    add-test-command "censys --help"
+    add-to-list "Censys,https://github.com/censys/censys-python,An easy-to-use and lightweight API wrapper for Censys APIs"
+}
+
+function install_gomapenum() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing GoMapEnum"
+    git -C /opt/tools clone --depth 1 https://github.com/nodauf/GoMapEnum
+    cd /opt/tools/GoMapEnum/src
+    go build .
+    mv ./src /opt/tools/bin/gomapenum
+    add-history gomapenum
+    add-test-command "gomapenum --help"
+    add-to-list "GoMapEnum,https://github.com/nodauf/GoMapEnum,Nothing new but existing techniques are brought together in one tool."
+}
+
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
     set_go_env
@@ -437,6 +530,14 @@ function package_osint() {
     install_gron                    # JSON parser
     install_ignorant                # holehe but for phone numbers
     install_trevorspray             # modular password sprayer with threading, SSH proxying, loot modules, and more!
+    # install_gitfive               # TODO : only works with python3.10+
+    install_geopincer               # GeoPincer is a script that leverages OpenStreetMap's Overpass API in order to search for locations
+    install_yalis                   # Yet Another LinkedIn Scraper
+    install_murmurhash              # Little tool is to calculate a MurmurHash value
+    install_blackbird               # OSINT tool to search fast for accounts by username
+    install_sherlock                # Hunt down social media accounts by username across social networks
+    install_censys                  # An easy-to-use and lightweight API wrapper for Censys APIs
+    install_gomapenum               # Nothing new but existing techniques are brought together in one tool.
 }
 
 function package_osint_configure() {

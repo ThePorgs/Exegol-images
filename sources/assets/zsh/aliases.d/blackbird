@@ -1,0 +1,1 @@
+alias blackbird.py="/opt/tools/blackbird/venv/bin/python3 /opt/tools/blackbird/blackbird.py"
