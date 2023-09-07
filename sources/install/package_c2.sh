@@ -35,12 +35,6 @@ function install_metasploit() {
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 
-function configure_metasploit() {
-    colorecho "Configuring Metasploit"
-    cd /opt/metasploit-framework/embedded/framework
-    bundle install
-}
-
 function install_routersploit() {
     colorecho "Installing RouterSploit"
     python3 -m pipx install routersploit
@@ -74,9 +68,4 @@ function package_c2() {
     install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
-}
-
-function package_c2_configure() {
-    echo "Package C2 configure"
-    # configure_metasploit
 }

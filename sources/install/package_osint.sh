@@ -524,6 +524,7 @@ function package_osint() {
     install_finalrecon              # A fast and simple python script for web reconnaissance
     install_osrframework            # OSRFramework, the Open Sources Research Framework
     # install_torbrowser            # Tor browser FIXME: Github project ?
+    # configure_tor
     install_pwndb					# No need to say more, no ? Be responsible with this tool please !
     install_githubemail             # Retrieve a GitHub user's email even if it's not public
     install_recondog                # Informations gathering tool
@@ -538,8 +539,4 @@ function package_osint() {
     install_sherlock                # Hunt down social media accounts by username across social networks
     install_censys                  # An easy-to-use and lightweight API wrapper for Censys APIs
     install_gomapenum               # Nothing new but existing techniques are brought together in one tool.
-}
-
-function package_osint_configure() {
-    configure_tor
 }
