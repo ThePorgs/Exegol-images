@@ -335,9 +335,9 @@ function package_base() {
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
-    ln -fs /usr/local/bin/python /usr/bin/python2.7
-    ln -fs /usr/local/bin/python /usr/bin/python2
-    ln -fs /usr/local/bin/python /usr/bin/python
+    ln -fs -v /usr/local/bin/python /usr/bin/python2.7
+    ln -fs -v /usr/local/bin/python /usr/bin/python2
+    ln -fs -v /usr/local/bin/python /usr/bin/python
     python3 -m pip install --upgrade pip
     filesystem
     install_go                                          # Golang language
