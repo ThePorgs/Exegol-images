@@ -2,38 +2,38 @@
 
 function shell_logging() {
     # First parameter is the method to use for shell logging (default to script)
-    method=$1
+    METHOD=$1
     # The second parameter is the shell command to use for the user
-    user_shell=$2
+    USER_SHELL=$2
     # The third enable compression at the end of the session
-    compress=$3
+    COMPRESS=$3
 
-    # Logging shell using $method and spawn a $user_shell shell
+    # Logging shell using $METHOD and spawn a $USER_SHELL shell
 
     umask 007
     mkdir -p /workspace/logs/
-    filelog="/workspace/logs/$(date +%d-%m-%Y_%H-%M-%S)_shell.${method}"
+    FILELOG="/workspace/logs/$(date +%d-%m-%Y_%H-%M-%S)_shell.${METHOD}"
 
-    case $method in
+    case $METHOD in
       "asciinema")
         # echo "Run using asciinema"
-        asciinema rec -i 2 --stdin --quiet --command "$user_shell" --title "$(hostname | sed 's/^exegol-/\[EXEGOL\] /') $(date '+%d/%m/%Y %H:%M:%S')" "$filelog"
+        asciinema rec -i 2 --stdin --quiet --command "$USER_SHELL" --title "$(hostname | sed 's/^exegol-/\[EXEGOL\] /') $(date '+%d/%m/%Y %H:%M:%S')" "$FILELOG"
         ;;
 
       "script")
         # echo "Run using script"
-        script -qefac "$user_shell" "$filelog"
+        script -qefac "$USER_SHELL" "$FILELOG"
         ;;
 
       *)
-        echo "Unknown '$method' shell logging method, using 'script' as default shell logging method."
-        script -qefac "$user_shell" "$filelog"
+        echo "Unknown '$METHOD' shell logging method, using 'script' as default shell logging method."
+        script -qefac "$USER_SHELL" "$FILELOG"
         ;;
     esac
 
-    if [ "$compress" = 'True' ]; then
+    if [ "$COMPRESS" = 'True' ]; then
       echo 'Compressing logs, please wait...'
-      gzip "$filelog"
+      gzip "$FILELOG"
     fi
     exit 0
 }

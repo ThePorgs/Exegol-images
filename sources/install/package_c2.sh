@@ -7,6 +7,8 @@ function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwncat"
     python3 -m pipx install pwncat-cs
+    # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
+    python3 -m pipx inject pwncat-cs cryptography==36.0.2
     add-history pwncat
     add-test-command "pwncat-cs --version"
     add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
