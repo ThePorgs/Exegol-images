@@ -90,7 +90,7 @@ function install_hcxtools() {
 function install_hcxdumptool() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxdumptool"
-    fapt libcurl4-openssl-dev libssl-dev
+    fapt libcurl4-openssl-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool
     cd /opt/tools/hcxdumptool
     make
