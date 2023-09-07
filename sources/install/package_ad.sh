@@ -35,7 +35,7 @@ function install_responder() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     ./venv/bin/python3 -m pip install pycryptodome six pycryptodomex
     colorecho "Configuring responder"
-    fapt python3-netifaces
+    fapt python3-netifaces gcc-mingw-w64-x86-64
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/BindShell.exe/\/opt\/tools\/Responder\/files\/BindShell.exe/g' /opt/tools/Responder/Responder.conf
