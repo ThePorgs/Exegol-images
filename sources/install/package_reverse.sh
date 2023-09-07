@@ -34,7 +34,7 @@ function install_pwntools() {
     python -m pip install pwntools
     python -m pip install pathlib2 pyelftools==0.29
     python3 -m pip install pwntools
-    python3 -m pip install pathlib2 pyelftools==0.29
+    python3 -m pip install pyelftools==0.29
     add-test-command "python -c 'import pwn'"
     add-test-command "python3 -c 'import pwn'"
     add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
