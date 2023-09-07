@@ -32,6 +32,7 @@ function install_pwntools() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing pwntools"
     python -m pip install pwntools
+    # Downgrade pyelftools version because : https://github.com/Gallopsled/pwntools/issues/2260
     python -m pip install pathlib2 pyelftools==0.29
     python3 -m pip install pwntools
     python3 -m pip install pyelftools==0.29
