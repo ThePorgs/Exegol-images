@@ -29,15 +29,10 @@ RUN chmod +x entrypoint.sh
 RUN apt-get update
 RUN ./entrypoint.sh package_desktop
 RUN ./entrypoint.sh package_misc
-RUN ./entrypoint.sh package_misc_configure
 RUN ./entrypoint.sh package_wordlists
-RUN ./entrypoint.sh package_wordlists_configure
 RUN ./entrypoint.sh package_cracking
-RUN ./entrypoint.sh package_cracking_configure
 RUN ./entrypoint.sh package_osint
-RUN ./entrypoint.sh package_osint_configure
 RUN ./entrypoint.sh package_web
-RUN ./entrypoint.sh package_web_configure
 RUN ./entrypoint.sh package_code_analysis
 RUN ./entrypoint.sh post_install
 

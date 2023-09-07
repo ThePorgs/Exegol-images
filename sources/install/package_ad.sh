@@ -34,16 +34,7 @@ function install_responder() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     ./venv/bin/python3 -m pip install pycryptodome six pycryptodomex
-    add-aliases responder
-    add-history responder
-    add-test-command "responder --version"
-    add-test-command "runfinger --help"
-    add-test-command "multirelay --help"
-    add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR / NBT-NS and MDNS poisoner."
-}
-
-function configure_responder() {
-    colorecho "Configure responder"
+    colorecho "Configuring responder"
     fapt python3-netifaces
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
@@ -54,6 +45,12 @@ function configure_responder() {
     x86_64-w64-mingw32-gcc /opt/tools/Responder/tools/MultiRelay/bin/Syssvc.c -o /opt/tools/Responder/tools/MultiRelay/bin/Syssvc.exe -municode
     cd /opt/tools/Responder || false
     /opt/tools/Responder/certs/gen-self-signed-cert.sh
+    add-aliases responder
+    add-history responder
+    add-test-command "responder --version"
+    add-test-command "runfinger --help"
+    add-test-command "multirelay --help"
+    add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR / NBT-NS and MDNS poisoner."
 }
 
 function install_sprayhound() {
@@ -90,19 +87,16 @@ function install_crackmapexec() {
     source /root/.zshrc || true
     git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
     python3 -m pipx install /opt/tools/CrackMapExec/
-    add-aliases crackmapexec
-    add-history crackmapexec
-    add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/mpgn/CrackMapExec,Network scanner."
-}
-
-function configure_crackmapexec() {
-    colorecho "Configure crackmapexec"
+    colorecho "Configuring crackmapexec"
     mkdir -p ~/.cme
     [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
+    add-aliases crackmapexec
+    add-history crackmapexec
+    add-test-command "crackmapexec --help"
+    add-to-list "crackmapexec,https://github.com/mpgn/CrackMapExec,Network scanner."
 }
 
 function install_bloodhound-py() {
@@ -119,14 +113,7 @@ function install_bloodhound() {
     git -C /opt/tools/ clone --depth 1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
     zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
-    add-aliases bloodhound
-    add-history bloodhound
-    add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
-    add-to-list "bloodhound,https://github.com/BloodHoundAD/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments."
-}
-
-function configure_bloodhound() {
-    colorecho "Configure bloodhound"
+    colorecho "Configuring bloodhound"
     if [[ $(uname -m) = 'x86_64' ]]
     then
         ln -s /opt/tools/BloodHound4/BloodHound-linux-x64/BloodHound /opt/tools/BloodHound4/BloodHound
@@ -144,6 +131,10 @@ function configure_bloodhound() {
     mkdir -p ~/.config/bloodhound
     cp -v /root/sources/assets/bloodhound/config.json ~/.config/bloodhound/config.json
     cp -v /root/sources/assets/bloodhound/customqueries.json ~/.config/bloodhound/customqueries.json
+    add-aliases bloodhound
+    add-history bloodhound
+    add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
+    add-to-list "bloodhound,https://github.com/BloodHoundAD/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments."
 }
 
 function install_cypheroth() {
@@ -177,6 +168,12 @@ function install_impacket() {
     colorecho "Installing Impacket scripts"
     python3 -m pipx install git+https://github.com/ThePorgs/impacket
     python3 -m pipx inject impacket chardet
+    colorecho "Configuring impacket"
+    cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
+    cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
+    cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
+    cp -v /root/sources/assets/grc/conf.rbcd /usr/share/grc/conf.rbcd
+    cp -v /root/sources/assets/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
     add-aliases impacket
     add-history impacket
     add-test-command "ntlmrelayx.py --help"
@@ -189,15 +186,6 @@ function install_impacket() {
     add-test-command "dacledit.py --help"
     add-test-command "describeTicket.py --help"
     add-to-list "impacket,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
-}
-
-function configure_impacket() {
-    colorecho "Configure impacket"
-    cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
-    cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
-    cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
-    cp -v /root/sources/assets/grc/conf.rbcd /usr/share/grc/conf.rbcd
-    cp -v /root/sources/assets/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
 }
 
 function install_pykek() {
@@ -299,6 +287,8 @@ function install_krbrelayx() {
     cd /opt/tools/krbrelayx
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install dnspython ldap3 impacket dsinternals
+    colorecho "Configuring krbrelayx"
+    cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
     add-history krbrelayx
     add-test-command "krbrelayx.py --help"
@@ -306,11 +296,6 @@ function install_krbrelayx() {
     add-test-command "addspn.py --help"
     add-test-command "printerbug.py --help"
     add-to-list "krbrelayx,https://github.com/dirkjanm/krbrelayx,a tool for performing Kerberos relay attacks"
-}
-
-function configure_krbrelayx() {
-    colorecho "Configure krbrelayx"
-    cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
 }
 
 function install_evilwinrm() {
@@ -1031,12 +1016,4 @@ function package_ad() {
     install_neo4j                  # Bloodhound dependency
     install_noPac
     install_GPOddity
-}
-
-function package_ad_configure() {
-    configure_responder
-    configure_crackmapexec
-    configure_bloodhound
-    configure_impacket
-    configure_krbrelayx
 }

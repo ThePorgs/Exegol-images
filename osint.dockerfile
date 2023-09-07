@@ -29,9 +29,7 @@ RUN chmod +x entrypoint.sh
 RUN apt-get update
 RUN ./entrypoint.sh package_desktop
 RUN ./entrypoint.sh package_misc
-RUN ./entrypoint.sh package_misc_configure
 RUN ./entrypoint.sh package_osint
-RUN ./entrypoint.sh package_osint_configure
 RUN ./entrypoint.sh post_install
 
 WORKDIR /workspace
