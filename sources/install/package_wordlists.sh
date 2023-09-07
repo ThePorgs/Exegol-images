@@ -37,11 +37,9 @@ function install_seclists() {
     git -C /opt clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
     cd /opt/seclists
     rm -r LICENSE .git* CONTRIBUT* .bin
-    colorecho "Configuring seclists"
     mkdir -p /usr/share/wordlists
     ln -v -s /opt/seclists /usr/share/seclists
     ln -v -s /opt/seclists /usr/share/wordlists/seclists
-    colorecho "Configuring rockyou"
     tar -xvf /opt/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/
     ln -v -s /opt/rockyou.txt /usr/share/wordlists/rockyou.txt
     add-test-command "[ -f '/usr/share/wordlists/rockyou.txt' ]"
@@ -75,7 +73,6 @@ function install_genusernames() {
     mkdir -p /opt/tools/genusernames
     wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
     sed -i 's/genadname/genusernames/g' /opt/tools/genusernames/genusernames.function
-    colorecho "Configuring genusernames"
     echo 'source /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
     add-history genusernames
     add-test-command "genusernames 'john doe'"

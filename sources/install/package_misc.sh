@@ -83,7 +83,6 @@ function install_searchsploit() {
     else
         colorecho "Searchsploit is already installed"
     fi
-    colorecho "Configuring Searchsploit"
     ln -sf /opt/tools/exploitdb/searchsploit /opt/tools/bin/searchsploit
     cp -n /opt/tools/exploitdb/.searchsploit_rc ~/
     sed -i 's/\(.*[pP]aper.*\)/#\1/' ~/.searchsploit_rc
@@ -95,7 +94,6 @@ function install_trilium() {
     # TODO : apt install in a second step
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
-    colorecho "Configuring trilium"
     zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild"
     mkdir -p /root/.local/share/trilium-data
     cp -v /root/sources/assets/trilium/* /root/.local/share/trilium-data

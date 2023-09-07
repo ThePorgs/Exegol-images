@@ -34,7 +34,6 @@ function install_responder() {
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     ./venv/bin/python3 -m pip install pycryptodome six pycryptodomex
-    colorecho "Configuring responder"
     fapt python3-netifaces gcc-mingw-w64-x86-64
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
@@ -87,7 +86,6 @@ function install_crackmapexec() {
     source /root/.zshrc || true
     git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
     python3 -m pipx install /opt/tools/CrackMapExec/
-    colorecho "Configuring crackmapexec"
     mkdir -p ~/.cme
     [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
@@ -113,7 +111,6 @@ function install_bloodhound() {
     git -C /opt/tools/ clone --depth 1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
     zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
-    colorecho "Configuring bloodhound"
     if [[ $(uname -m) = 'x86_64' ]]
     then
         ln -s /opt/tools/BloodHound4/BloodHound-linux-x64/BloodHound /opt/tools/BloodHound4/BloodHound
@@ -168,7 +165,6 @@ function install_impacket() {
     colorecho "Installing Impacket scripts"
     python3 -m pipx install git+https://github.com/ThePorgs/impacket
     python3 -m pipx inject impacket chardet
-    colorecho "Configuring impacket"
     cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
     cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
     cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
@@ -287,7 +283,6 @@ function install_krbrelayx() {
     cd /opt/tools/krbrelayx
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install dnspython ldap3 impacket dsinternals
-    colorecho "Configuring krbrelayx"
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
     add-history krbrelayx
