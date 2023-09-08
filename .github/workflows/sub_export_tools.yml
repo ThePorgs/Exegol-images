@@ -136,5 +136,7 @@ jobs:
           fi
           echo '[*] Commiting changes'
           git commit --verbose -m "PIPELINE: tools list for ${{ inputs.IMAGE_TAG }}_${{ inputs.IMAGE_VERSION }}_${{ inputs.ARCH }}"
+          echo '[*] Pulling latest changes from remote'
+          git pull --rebase
           echo '[*] Pushing changes'
           git push --verbose "$GIT_CMD_REPOSITORY"
