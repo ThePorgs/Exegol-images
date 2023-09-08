@@ -99,7 +99,7 @@ function install_trilium() {
     cp -v /root/sources/assets/trilium/* /root/.local/share/trilium-data
     add-aliases trilium
     add-history trilium
-    add-test-command "trilium-start;sleep 20;trilium-stop"
+    add-test-command "nvm use 16 && TRILIUM_ENV=dev node /opt/tools/trilium/src/www &;sleep 20;trilium-stop"
     add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
 }
 
