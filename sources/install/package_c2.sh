@@ -36,6 +36,7 @@ function install_metasploit() {
 }
 
 function install_routersploit() {
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing RouterSploit"
     python3 -m pipx install routersploit
     python3 -m pipx inject routersploit colorama
