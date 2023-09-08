@@ -1,1 +1,1 @@
-smuggler -u "http://$TARGET/"
+smuggler.py -u "http://$TARGET/"
