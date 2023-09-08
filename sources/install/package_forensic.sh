@@ -84,7 +84,7 @@ function install_peepdf() {
     git -C /opt/tools clone --depth 1 https://github.com/jesparza/peepdf
     add-aliases peepdf
     add-history peepdf
-    add-test-command "peepdf --help"
+    add-test-command "peepdf.py --help"
     add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
 } 
 

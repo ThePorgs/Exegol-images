@@ -1,1 +1,1 @@
-clusterd -i "http://$TARGET/"
+clusterd.py -i "http://$TARGET/"

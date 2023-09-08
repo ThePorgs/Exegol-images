@@ -54,7 +54,7 @@ function install_wifite2() {
     ./venv/bin/python3 setup.py install
     add-aliases wifite
     add-history wifite
-    add-test-command "wifite --help"
+    add-test-command "Wifite.py --help"
     add-to-list "wifite2,https://github.com/derv82/wifite2,Script for auditing wireless networks."
 }
 

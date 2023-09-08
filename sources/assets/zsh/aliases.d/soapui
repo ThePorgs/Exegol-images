@@ -1,1 +1,1 @@
-alias soapui='/opt/tools/SoapUI/bin/soapui.sh'
+alias soapui.sh='/opt/tools/SoapUI/bin/soapui.sh'

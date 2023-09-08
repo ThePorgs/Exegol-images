@@ -1,1 +1,1 @@
-gopherus --exploit mysql
+gopherus.py --exploit mysql

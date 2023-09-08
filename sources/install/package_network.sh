@@ -113,7 +113,7 @@ function install_dnschef() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases dnschef
     add-history dnschef
-    add-test-command "dnschef --help"
+    add-test-command "dnschef.py --help"
     add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
 }
 

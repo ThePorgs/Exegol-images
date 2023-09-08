@@ -46,9 +46,9 @@ function install_responder() {
     /opt/tools/Responder/certs/gen-self-signed-cert.sh
     add-aliases responder
     add-history responder
-    add-test-command "responder --version"
-    add-test-command "runfinger --help"
-    add-test-command "multirelay --help"
+    add-test-command "Responder.py --version"
+    add-test-command "RunFinger.py --help"
+    add-test-command "MultiRelay.py --help"
     add-to-list "responder,https://github.com/lgandx/Responder,a LLMNR / NBT-NS and MDNS poisoner."
 }
 
@@ -139,7 +139,7 @@ function install_cypheroth() {
     git -C /opt/tools/ clone --depth 1 https://github.com/seajaysec/cypheroth
     add-aliases cypheroth
     add-history cypheroth
-    add-test-command "cypheroth --help|& grep 'Example with Defaults:'"
+    add-test-command "cypheroth.sh --help|& grep 'Example with Defaults:'"
     add-to-list "cyperoth,https://github.com/seajaysec/cypheroth,Automated extensible toolset that runs cypher queries against Bloodhound's Neo4j backend and saves output to spreadsheets."
 }
 
@@ -175,10 +175,10 @@ function install_impacket() {
     add-test-command "ntlmrelayx.py --help"
     add-test-command "secretsdump.py --help"
     add-test-command "Get-GPPPassword.py --help"
-    add-test-command "getST.py --help | grep 'u2u'"
-    add-test-command "ticketer.py --help | grep impersonate"
-    add-test-command "ticketer.py --help | grep hours"
-    add-test-command "ticketer.py --help | grep extra-pac"
+    add-test-command "getST.py --help |& grep 'u2u'"
+    add-test-command "ticketer.py --help |& grep impersonate"
+    add-test-command "ticketer.py --help |& grep hours"
+    add-test-command "ticketer.py --help |& grep extra-pac"
     add-test-command "dacledit.py --help"
     add-test-command "describeTicket.py --help"
     add-to-list "impacket,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
@@ -229,7 +229,7 @@ function install_darkarmour() {
     git -C /opt/tools/ clone --depth 1 https://github.com/bats3c/darkarmour
     add-aliases darkarmour
     add-history darkarmour
-    add-test-command "darkarmour --help"
+    add-test-command "darkarmour.py --help"
     add-to-list "darkarmour,https://github.com/bats3c/darkarmour,a tool to detect and evade common antivirus products"
 }
 
@@ -326,7 +326,7 @@ function install_enyx() {
     git -C /opt/tools/ clone --depth 1 https://github.com/trickster0/Enyx
     add-aliases enyx
     add-history enyx
-    add-test-command "enyx"
+    add-test-command "enyx.py"
     add-to-list "enyx,https://github.com/trickster0/enyx,Framework for building offensive security tools."
 }
 
@@ -348,7 +348,7 @@ function install_zerologon() {
     git -C /opt/tools/zerologon clone --depth 1 https://github.com/dirkjanm/CVE-2020-1472 zerologon-exploit
     add-aliases zerologon
     add-history zerologon
-    add-test-command "zerologon-scan| grep Usage"
+    add-test-command "zerologon-scan.py |& grep Usage"
     add-to-list "zerologon,https://github.com/SecuraBV/CVE-2020-1472,Exploit for the Zerologon vulnerability (CVE-2020-1472)."
 }
 
@@ -475,7 +475,7 @@ function install_ntlmv1-multi() {
     git -C /opt/tools clone --depth 1 https://github.com/evilmog/ntlmv1-multi
     add-aliases ntlmv1-multi
     add-history ntlmv1-multi
-    add-test-command "ntlmv1-multi --ntlmv1 a::a:a:a:a"
+    add-test-command "ntlmv1-multi.py --ntlmv1 a::a:a:a:a"
     add-to-list "ntlmv1-multi,https://github.com/evilmog/ntlmv1-multi,Exploit a vulnerability in Microsoft Windows to gain system-level access."
 }
 
@@ -514,7 +514,7 @@ function install_pygpoabuse() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pygpoabuse
     add-history pygpoabuse
-    add-test-command "pygpoabuse --help"
+    add-test-command "pygpoabuse.py --help"
     add-to-list "pygpoabuse,https://github.com/Hackndo/pyGPOAbuse,A tool for abusing GPO permissions to escalate privileges"
 }
 
@@ -546,7 +546,7 @@ function install_ldapsearch-ad() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ldapsearch-ad
     add-history ldapsearch-ad
-    add-test-command "ldapsearch-ad --version"
+    add-test-command "ldapsearch-ad.py --version"
     add-to-list "ldapsearch-ad,https://github.com/yaap7/ldapsearch-ad,LDAP search utility with AD support"
 }
 
@@ -622,7 +622,7 @@ function install_manspider() {
     sed -i "s#from .lib import#from lib import##" man_spider/manspider.py
     add-aliases manspider
     add-history manspider
-    add-test-command "manspider --help"
+    add-test-command "manspider.py --help"
     add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
 }
 
@@ -914,7 +914,7 @@ function install_noPac() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases noPac
     add-history noPac
-    add-test-command "noPac --help"
+    add-test-command "noPac.py --help"
     add-to-list "noPac,https://github.com/Ridter/noPac,Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user."
 }
 
