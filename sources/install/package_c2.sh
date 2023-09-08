@@ -39,7 +39,7 @@ function install_routersploit() {
     colorecho "Installing RouterSploit"
     python3 -m pipx install routersploit
     python3 -m pipx inject routersploit colorama
-    add-history routersploit
+    add-aliases routersploit
     add-test-command "routersploit --help"
     add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
 }
