@@ -122,8 +122,8 @@ jobs:
           export GIT_SSH_COMMAND="ssh -i "$DEPLOY_KEY_FILE" -o UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
           GIT_CMD_REPOSITORY="git@github.com:ThePorgs/Exegol-docs.git"
           echo '[*] Setting git config'
-          git config --global user.name "exegol-images[pipeline]"
-          git config --global user.email "pipeline@exegol.images"
+          git config --local user.name "Github Actions"
+          git config --local user.email "actions@github.com"
           if [ "${{ inputs.IMAGE_TAG }}" == "nightly" ]
           then
             echo '[*] Staging changes (nightly)'
