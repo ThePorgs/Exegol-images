@@ -83,10 +83,6 @@ function install_searchsploit() {
     else
         colorecho "Searchsploit is already installed"
     fi
-}
-
-function configure_searchsploit() {
-    colorecho "Configuring Searchsploit"
     ln -sf /opt/tools/exploitdb/searchsploit /opt/tools/bin/searchsploit
     cp -n /opt/tools/exploitdb/.searchsploit_rc ~/
     sed -i 's/\(.*[pP]aper.*\)/#\1/' ~/.searchsploit_rc
@@ -98,18 +94,13 @@ function install_trilium() {
     # TODO : apt install in a second step
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
-    cd /opt/tools/trilium
+    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild"
+    mkdir -p /root/.local/share/trilium-data
+    cp -v /root/sources/assets/trilium/* /root/.local/share/trilium-data
     add-aliases trilium
     add-history trilium
     add-test-command "trilium-start;sleep 20;trilium-stop"
     add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
-}
-
-function configure_trilium() {
-    colorecho "Configuring trilium"
-    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild"
-    mkdir -p /root/.local/share/trilium-data
-    cp -v /root/sources/assets/trilium/* /root/.local/share/trilium-data
 }
 
 function install_ngrok() {
@@ -142,6 +133,28 @@ function install_objectwalker() {
     add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
 }
 
+function install_tig() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing tig"
+    git -C /opt/tools clone --depth 1 https://github.com/jonas/tig.git
+    cd /opt/tools/tig
+    make
+    make install
+    mv /root/bin/tig /opt/tools/bin/tig
+    # Need add-history ?
+    add-test-command "tig --help"
+    add-to-list "tig,https://github.com/jonas/tig.git,Tig is an ncurses-based text-mode interface for git."
+}
+
+function install_yt-dlp() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing yt-dlp"
+    python3 -m pipx install git+https://github.com/yt-dlp/yt-dlp
+    add-test-command "yt-dlp --help"
+    add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes"
+}
+
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_go_env
@@ -156,9 +169,6 @@ function package_misc() {
     install_ngrok           # expose a local development server to the Internet
     install_whatportis      # Search default port number
     install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory
-}
-
-function package_misc_configure() {
-    configure_searchsploit
-    configure_trilium
+    install_tig             # ncurses-based text-mode interface for git
+    install_yt-dlp          # A youtube-dl fork with additional features and fixes
 }

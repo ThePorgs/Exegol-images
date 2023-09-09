@@ -297,15 +297,12 @@ function install_moodlescan() {
     cd /opt/tools/moodlescan
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
+    cd /opt/tools/moodlescan
+    ./venv/bin/python3 moodlescan.py -a
     add-aliases moodlescan
     add-history moodlescan
     add-test-command "moodlescan --help"
     add-to-list "moodlescan,https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities."
-}
-
-function configure_moodlescan() {
-    cd /opt/tools/moodlescan
-    ./venv/bin/python3 moodlescan.py -a
 }
 
 function install_testssl() {
@@ -607,13 +604,10 @@ function install_nuclei() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Nuclei"
     go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+    /root/go/bin/nuclei -update-templates
     add-history nuclei
     add-test-command "nuclei --version"
     add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues / including XSS / SQL injection / and misconfigured servers."
-}
-
-function configure_nuclei() {
-    /root/go/bin/nuclei -update-templates
 }
 
 function install_gau() {
@@ -827,11 +821,4 @@ function package_web() {
     install_kraken                  # Kraken is a modular multi-language webshell.
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
-}
-
-function package_web_configure() {
-    set_go_env
-    set_ruby_env
-    configure_nuclei
-    configure_moodlescan
 }

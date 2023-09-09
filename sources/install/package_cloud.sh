@@ -101,14 +101,25 @@ function install_cloudmapper() {
     add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
 }
 
+function install_azure_cli() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Azure-cli"
+    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash | true
+    fapt azure-cli
+    add-history azure-cli
+    add-test-command "az --help"
+    add-to-list "azure-cli,https://github.com/Azure/azure-cli,A great cloud needs great tools; we're excited to introduce Azure CLI our next generation multi-platform command line experience for Azure."
+}
+
 # Package dedicated to cloud tools
 function package_cloud() {
     set_ruby_env
     install_kubectl
     install_awscli
-    install_scout       # Multi-Cloud Security Auditing Tool
+    install_scout           # Multi-Cloud Security Auditing Tool
     install_cloudsplaining
     install_cloudsploit
     install_prowler
     install_cloudmapper
+    install_azure_cli       # Command line for Azure
 }

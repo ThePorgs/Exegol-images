@@ -28,9 +28,20 @@ function install_rsactftool() {
     add-to-list "rsactftool,https://github.com/RsaCtfTool/RsaCtfTool,The rsactftool tool is used for RSA cryptographic operations and analysis."
 }
 
+function install_rsacracker() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing RsaCracker"
+    source "$HOME/.cargo/env"
+    cargo install rsacracker
+    add-history rsacracker
+    add-test-command "rsacracker --help"
+    add-to-list "RsaCracker,https://github.com/skyf0l/RsaCracker,Powerful RSA cracker for CTFs. Supports RSA - X509 - OPENSSH in PEM and DER formats."
+}
+
 # Package dedicated to attack crypto
 function package_crypto() {
     set_ruby_env
     install_rsactftool              # attack rsa
     install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
+    install_rsacracker              # Powerful RSA cracker for CTFs. Supports RSA, X509, OPENSSH in PEM and DER formats.
 }

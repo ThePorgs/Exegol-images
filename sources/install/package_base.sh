@@ -90,8 +90,8 @@ function deploy_exegol() {
 
 function install_locales() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
-    colorecho "Configuring locales"
-    apt-get -y install locales
+    colorecho "Installing locales"
+    fapt locales
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
     locale-gen
 }
@@ -245,8 +245,8 @@ function install_neovim() {
 function install_mdcat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mdcat"
-    cargo install mdcat
     source "$HOME/.cargo/env"
+    cargo install mdcat
     add-history mdcat
     add-test-command "mdcat --version"
     add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
@@ -292,6 +292,15 @@ function post_install() {
     rm -rfv /tmp/*
     rm -rfv /var/lib/apt/lists/*
     rm -rfv /root/sources
+    colorecho "Stop listening processes"
+    LISTENING_PROCESSES=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
+    if [[ -n $LISTENING_PROCESSES ]]; then
+        echo "Listening processes detected"
+        ss -lnpt
+        echo "Kill processes"
+        kill -9 $LISTENING_PROCESSES
+    fi
+    add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
     colorecho "Sorting tools list"
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
@@ -328,6 +337,7 @@ function package_base() {
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel
+    add-aliases pyftpdlib
 
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
@@ -364,13 +374,13 @@ function package_base() {
 
     # openvpn
     # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
-    line=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i ${line}'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+    LINE=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+    sed -i ${LINE}'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
 
-    line=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i ${line}'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
-    line=$(($line + 1))
-    sed -i ${line}'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+    LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+    sed -i ${LINE}'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+    LINE=$(($LINE + 1))
+    sed -i ${LINE}'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
     add-test-command "openvpn --version"
 
     # logrotate

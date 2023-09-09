@@ -27,15 +27,12 @@ function install_cracking_apt_tools() {
 function install_john() {
     colorecho "Installing john the ripper"
     git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
+    cd /opt/tools/john/src
+    ./configure --disable-native-tests && make
     add-aliases john-the-ripper
     add-history john-the-ripper
     add-test-command "john --help"
     add-to-list "john,https://github.com/openwall/john,John the Ripper password cracker."
-}
-
-function configure_john() {
-    cd /opt/tools/john/src
-    ./configure --disable-native-tests && make
 }
 
 function install_name-that-hash() {
@@ -90,8 +87,4 @@ function package_cracking() {
     install_haiti                   # haiti, hash type identifier
     install_geowordlists            # wordlists generator
     install_pkcrack                 # known plaintext ZIP cracker
-}
-
-function package_cracking_configure() {
-    configure_john
 }

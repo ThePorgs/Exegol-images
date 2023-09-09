@@ -7,6 +7,8 @@ function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwncat"
     python3 -m pipx install pwncat-cs
+    # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
+    python3 -m pipx inject pwncat-cs cryptography==36.0.2
     add-history pwncat
     add-test-command "pwncat-cs --version"
     add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
@@ -26,12 +28,6 @@ function install_metasploit() {
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
-}
-
-function configure_metasploit() {
-    colorecho "Configuring Metasploit"
-    cd /opt/metasploit-framework/embedded/framework
-    bundle install
 }
 
 function install_routersploit() {
@@ -67,9 +63,4 @@ function package_c2() {
     install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
-}
-
-function package_c2_configure() {
-    echo "Package C2 configure"
-    # configure_metasploit
 }
