@@ -30,9 +30,9 @@ function install_steganography_apt_tools() {
 
 function install_zsteg() {
     colorecho "Installing zsteg"
-    rvm use 3.1.2@zsteg --create
+    rvm use 3.2.2@zsteg --create
     gem install zsteg
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases zsteg
     add-history zsteg
     add-test-command "zsteg --help"

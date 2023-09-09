@@ -310,9 +310,9 @@ function install_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    rvm use 3.1.2@evil-winrm --create
+    rvm use 3.2.2@evil-winrm --create
     gem install evil-winrm
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases evil-winrm
     add-history evil-winrm
     add-test-command "evil-winrm --help"
@@ -901,9 +901,9 @@ function install_PassTheCert() {
 
 function install_bqm() {
     colorecho "Installing BQM"
-    rvm use 3.1.2@bqm --create
+    rvm use 3.2.2@bqm --create
     gem install bqm --no-wrapper
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases bqm
     add-history bqm
     add-test-command "bqm --help"

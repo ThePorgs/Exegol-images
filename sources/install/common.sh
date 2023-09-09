@@ -86,7 +86,7 @@ function set_go_env() {
 function set_ruby_env() {
     colorecho "Setting ruby environment variables for installation"
     source /usr/local/rvm/scripts/rvm
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
 }
 
 function install_pipx_git_tool() {

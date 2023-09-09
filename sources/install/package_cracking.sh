@@ -45,9 +45,9 @@ function install_name-that-hash() {
 
 function install_haiti() {
     colorecho "Installing haiti"
-    rvm use 3.1.2@haiti --create
+    rvm use 3.2.2@haiti --create
     gem install haiti-hash
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases haiti
     add-history haiti
     add-test-command "haiti --help"

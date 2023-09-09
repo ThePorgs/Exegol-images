@@ -150,11 +150,11 @@ function install_rvm() {
     colorecho "Installing rvm"
     gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     { command -v gpgconf > /dev/null && gpgconf --kill all || :; }
-    curl -sSL https://get.rvm.io | bash -s stable --ruby=3.1.2
+    curl -sSL https://get.rvm.io | bash -s stable --ruby=3.2.2
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     rvm get head
     gem update
     add-test-command "rvm --version"

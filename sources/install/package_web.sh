@@ -30,10 +30,10 @@ function install_web_apt_tools() {
 function install_whatweb() {
     colorecho "Installing whatweb"
     git -C /opt/tools clone --depth 1 https://github.com/urbanadventurer/WhatWeb.git
-    rvm use 3.1.2@whatweb --create
+    rvm use 3.2.2@whatweb --create
     gem install addressable
     bundle install --gemfile /opt/tools/WhatWeb/Gemfile
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases whatweb
     add-history whatweb
     add-test-command "whatweb --version"
@@ -160,9 +160,9 @@ function install_xsstrike() {
 
 function install_xspear() {
     colorecho "Installing XSpear"
-    rvm use 3.1.2@xspear --create
+    rvm use 3.2.2@xspear --create
     gem install XSpear
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases Xspear
     add-history xspear
     add-test-command "XSpear --help"
@@ -251,9 +251,9 @@ function install_joomscan() {
 
 function install_wpscan() {
     colorecho "Installing wpscan"
-    rvm use 3.1.2@wpscan --create
+    rvm use 3.2.2@wpscan --create
     gem install wpscan
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases wpscan
     add-history wpscan
     add-test-command "wpscan --help"
@@ -423,9 +423,9 @@ function install_linkfinder() {
 
 function install_timing_attack() {
     colorecho "Installing timing_attack"
-    rvm use 3.1.2@timing_attack --create
+    rvm use 3.2.2@timing_attack --create
     gem install timing_attack
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases timing_attack
     add-history timing_attack
     add-test-command "timing_attack --help"

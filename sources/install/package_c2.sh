@@ -20,10 +20,10 @@ function install_metasploit() {
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
     git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
     cd /opt/tools/metasploit-framework
-    rvm use 3.1.2@metasploit --create
+    rvm use 3.2.2@metasploit --create
     gem install bundler
     bundle install --path /opt/tools/metasploit-framework/vendor
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases metasploit 
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
