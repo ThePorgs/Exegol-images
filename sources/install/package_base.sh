@@ -364,6 +364,8 @@ function package_base() {
 # TODO MOVE THIS IN ANOTHER SEPARATE FILE
 function package_base_debug() {
     update
+    # TODO remove this, it's a test made to fail to test catch&retry functions
+    wget -O /tmp/go.tar.gz https://go.dev/dl/gdo1.20.linux-amd64.tar.gz
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
     /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
