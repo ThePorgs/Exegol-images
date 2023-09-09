@@ -20,7 +20,8 @@ function install_wordlists_apt_tools() {
 
 function install_cewl() {
     colorecho "Installing cewl"
-    rvm use 3.2.2@cewl --create
+    rvm install ruby-3.1.2
+    rvm use 3.1.2@cewl --create
     gem install mime mime-types mini_exiftool nokogiri rubyzip spider
     git -C /opt/tools clone --depth 1 https://github.com/digininja/CeWL.git
     bundle install --gemfile /opt/tools/CeWL/Gemfile
