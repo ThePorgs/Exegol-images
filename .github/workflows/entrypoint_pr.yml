@@ -112,8 +112,8 @@ jobs:
 
   clean_runners:
     name: Clean runner
-    needs: [ init, build_base, build ]
-    if: always() && ( needs.build_base.outputs.build == 'success' || needs.build.outputs.build == 'success' )
+    needs: [ init, build ]
+    if: always()
     strategy:
       fail-fast: false
       matrix:
@@ -125,11 +125,39 @@ jobs:
     steps:
       - name: List docker images
         run: docker image ls
+      - name: Checking if local base image exists
+        id: check_local_base_image
+        if: always()
+        run: |
+          echo "docker image inspect ${{ env.FAKE_LOCAL_REGISTRY }}:${{ env.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}"
+          if docker manifest inspect ${{ env.FAKE_LOCAL_REGISTRY }}:${{ env.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}; then
+            echo "Image exists"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
+          fi
+          cat $GITHUB_OUTPUT
       - name: Remove local base image
-        if: always() && needs.build_base.result == 'success'
+        # always removing image if it exists, no need to keep it on the runner
+        if: steps.check_local_base_image.outputs.image_exists == 'true'
         # ex: docker rmi nwodtuhs/exegol-local:base-arm64
         run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ env.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+      - name: Checking if local final image exists
+        id: check_local_final_image
+        if: always()
+        run: |
+          echo "docker image inspect ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}"
+          if docker manifest inspect ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}; then
+            echo "Image exists"
+            echo "image_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist"
+            echo "image_exists=false" >> $GITHUB_OUTPUT
+          fi
+          cat $GITHUB_OUTPUT
       - name: Remove local final image
-        if: always() && needs.build.result == 'success'
+        # always removing image if it exists, no need to keep it on the runner
+        if: steps.check_local_final_image.outputs.image_exists == 'true'
         # ex: docker rmi nwodtuhs/exegol-local:PR123-arm64
         run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
