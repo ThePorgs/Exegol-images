@@ -96,7 +96,11 @@ function install_trilium() {
     git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
     zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild"
     mkdir -p /root/.local/share/trilium-data
-    cp -v /root/sources/assets/trilium/* /root/.local/share/trilium-data
+    # config.ini contains the exposition port and host
+    cp -v /root/sources/assets/trilium/config.ini /root/.local/share/trilium-data
+    # password could be init with the following commands
+    # curl --request POST 'http://0.0.0.0:8080/api/setup/new-document'
+    # curl --request POST --data-raw 'password1=exegol4thewin&password2=exegol4thewin' 'http://0.0.0.0:8080/set-password'
     add-aliases trilium
     add-history trilium
     add-test-command "nvm use 16 && TRILIUM_ENV=dev node /opt/tools/trilium/src/www &;sleep 20;trilium-stop"
