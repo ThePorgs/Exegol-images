@@ -54,6 +54,15 @@ def run_command(command):
             # Add the timed out command to the log file
             with open(fail_log_file, "a") as f:
                 f.write(f"{blue}Timed out command: {command}\n{clear}")
+                if e.output:
+                    f.write(f"{yellow}Standard output:\n")
+                    for line in e.output.decode().split("\n"):
+                        f.write(f"    {line}\n")
+                    f.write(f"{clear}")
+                f.write(f"{red}Standard error:\n")
+                for line in e.stderr.decode().split("\n"):
+                    f.write(f"    {line}\n")
+                f.write(f"{clear}")
         except subprocess.CalledProcessError as e:
             # If the command fails, store it in the list of failed commands
             failed_commands.append(command)
