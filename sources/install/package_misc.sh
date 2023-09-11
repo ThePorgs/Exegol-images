@@ -98,12 +98,14 @@ function install_trilium() {
     mkdir -p /root/.local/share/trilium-data
     # config.ini contains the exposition port and host
     cp -v /root/sources/assets/trilium/config.ini /root/.local/share/trilium-data
-    # password could be init with the following commands
-    # curl --request POST 'http://0.0.0.0:8080/api/setup/new-document'
-    # curl --request POST --data-raw 'password1=exegol4thewin&password2=exegol4thewin' 'http://0.0.0.0:8080/set-password'
+    cp -v /root/sources/assets/trilium/trilium-manager.sh /opt/tools/trilium/trilium-manager.sh
+    chmod +x /opt/tools/trilium/trilium-manager.sh
+    zsh /opt/tools/trilium/trilium-manager.sh start
+    zsh /opt/tools/trilium/trilium-manager.sh configure
+    zsh /opt/tools/trilium/trilium-manager.sh stop
     add-aliases trilium
     add-history trilium
-    add-test-command "nvm use 16 && TRILIUM_ENV=dev node /opt/tools/trilium/src/www &;sleep 20;trilium-stop"
+    add-test-command "trilium-test"
     add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
 }
 
