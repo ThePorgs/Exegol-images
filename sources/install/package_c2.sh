@@ -15,6 +15,7 @@ function install_pwncat() {
 }
 
 function install_metasploit() {
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
     git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
@@ -24,7 +25,6 @@ function install_metasploit() {
     bundle install --path /opt/tools/metasploit-framework/vendor
     rvm use 3.2.2@default
     add-aliases metasploit
-    add-history msfvenom
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"

@@ -126,7 +126,7 @@ function install_pip2() {
     wget -O get-pip.py "$PYTHON_GET_PIP_URL"
     python2 get-pip.py "pip==$PYTHON_PIP_VERSION" --disable-pip-version-check --no-cache-dir
     rm -f get-pip.py
-    add-test-command "pip --version"
+    add-test-command "pip2 --version"
 }
 
 function install_firefox() {
@@ -333,7 +333,7 @@ function package_base() {
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
-    add-repository # add-apt-repository does not work
+    add-repository
     apt-get update
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \

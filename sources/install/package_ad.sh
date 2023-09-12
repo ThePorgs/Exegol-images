@@ -440,9 +440,7 @@ function install_smbmap() {
     cd /opt/tools/smbmap
     cp -v /root/sources/assets/patches/smbmap.patch smbmap.patch
     git apply --verbose smbmap.patch
-    python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install .
-    add-aliases smbmap
+    python3 -m pipx install .
     add-history smbmap
     add-test-command "smbmap --help"
     add-to-list "smbmap,https://github.com/ShawnDEvans/smbmap,A tool to enumerate SMB shares and check for null sessions"

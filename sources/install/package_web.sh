@@ -491,6 +491,7 @@ function install_ysoserial() {
     add-aliases ysoserial
     add-history ysoserial
     add-test-command "ysoserial --help|& grep 'spring-core:4.1.4.RELEASE'"
+    add-test-command "ysoserial CommonsCollections4 'whoami'"
     add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
 }
 
