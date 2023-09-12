@@ -110,23 +110,21 @@ function install_python2() {
     cd /usr/src/python 
     gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" 
     ./configure --build="$gnuArch" --enable-optimizations --enable-option-checking=fatal --enable-shared --enable-unicode=ucs4 
-    make -j "$(nproc)" PROFILE_TASK='-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_bytes test_c_locale_coercion test_class test_cmath test_codecs test_compile test_complex test_csv test_decimal test_dict test_float test_fstring test_hashlib test_io test_iter test_json test_long test_math test_memoryview test_pickle test_re test_set test_slice test_struct test_threading test_time test_traceback test_unicode ' 
+    # make -j "$(nproc)" PROFILE_TASK='-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_bytes test_c_locale_coercion test_class test_cmath test_codecs test_compile test_complex test_csv test_decimal test_dict test_float test_fstring test_hashlib test_io test_iter test_json test_long test_math test_memoryview test_pickle test_re test_set test_slice test_struct test_threading test_time test_traceback test_unicode ' 
+    make -j "$(nproc)" PROFILE_TASK=''
     make install 
     ldconfig 
-    find /usr/local -depth \( \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \) -exec rm -rf '{}' +
     rm -rf /usr/src/python
     add-test-command "python2 --version"
     cd /root/sources/install
 }
 
-function install_python-pip() {
+function install_pip2() {
     colorecho "Installing python-pip (for Python2.7)"
     PYTHON_PIP_VERSION=20.0.2
     PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/23.2.1/public/2.7/get-pip.py
     wget -O get-pip.py "$PYTHON_GET_PIP_URL"
     python2 get-pip.py "pip==$PYTHON_PIP_VERSION" --disable-pip-version-check --no-cache-dir
-    pip --version
-    find /usr/local -depth \( \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \) -exec rm -rf '{}' +
     rm -f get-pip.py
     add-test-command "pip --version"
 }
@@ -149,7 +147,7 @@ function install_rvm() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing rvm"
     gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-    { command -v gpgconf > /dev/null && gpgconf --kill all || :; }
+    { command -v gpgconf > /dev/null && gpgconf --kill all || :; } # kill all gpg processes
     curl -sSL https://get.rvm.io | bash -s stable --ruby=3.2.2
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
@@ -272,7 +270,24 @@ function install_gf() {
     add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
+function install_java11() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases
+    colorecho "Installing java 11"
+    mkdir -p /tmp/java
+    cp -r /root/source/assets/java/java11 /tmp/java
+    cd /tmp/java/java11
+    dpkg -i openjdk-11-jre-headless_11.0.20+8-1\~deb11u1_amd64.deb
+    dpkg -i openjdk-11-jdk-headless_11.0.20+8-1\~deb11u1_amd64.deb
+    dpkg -i openjdk-11-jre_11.0.20+8-1\~deb11u1_amd64.deb
+    dpkg -i openjdk-11-jdk_11.0.20+8-1\~deb11u1_amd64.deb
+    rm -rf /tmp/java
+    add-test-command /usr/lib/jvm/java-11-openjdk/bin/java --version
+}
+
 function add-repository() {
+    # add non-free non-free-firmware contrib repository 
+    # adding at the end of the line start with Components of the repository to add
+    colorecho "add non-free non-free-firmware contrib repository"
     source_file="/etc/apt/sources.list.d/debian.sources"
     out_file="/etc/apt/sources.list.d/debian2.sources"
 
@@ -330,8 +345,8 @@ function package_base() {
     nim perl libwww-perl openjdk-17-jre openjdk-17-jdk-headless openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
     virtualenv chromium libsasl2-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3 tk-dev libssl-dev
     install_python2
-    install_python-pip                                  # Pip. Should we set pip2 to default?
-    pip install --no-cache-dir virtualenv
+    install_pip2
+    python2 -m pip install --no-cache-dir virtualenv
 
     rm /usr/lib/python3.*/EXTERNALLY-MANAGED # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
     chsh -s /bin/zsh
@@ -342,8 +357,10 @@ function package_base() {
 
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
+    install_java11
 
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+    ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
     ln -fs -v /usr/local/bin/python /usr/bin/python2.7
@@ -357,7 +374,7 @@ function package_base() {
     install_ohmyzsh                                     # Awesome shell
     install_fzf                                         # Fuzzy finder
     python3 -m pip install wheel
-    python -m pip install wheel
+    python2 -m pip install wheel
     install_pipx
     add-history curl
     install_yarn
@@ -416,21 +433,21 @@ function package_base_debug() {
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
-    add-repository # add-apt-repository does not work
+    add-repository
     apt-get update
     colorecho "Starting main programs install"
     fapt sudo git curl zsh asciinema zip wget ncat dnsutils python3 python3-setuptools python3-pip vim nano procps automake autoconf make bundler mlocate tk-dev gnupg2 gcc g++ libssl-dev
     install_python2
-    install_python-pip                                  # Pip. Should we set pip2 to default?
+    install_pip2
 
     rm /usr/lib/python3.*/EXTERNALLY-MANAGED # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
 
     fapt-history dnsutils samba ssh snmp faketime
     fapt-aliases php python3 grc emacs-nox xsel
 
-    ln -fs /usr/local/bin/python /usr/bin/python2.7
-    ln -fs /usr/local/bin/python /usr/bin/python2
-    ln -fs /usr/local/bin/python /usr/bin/python
+    ln -fs -v /usr/local/bin/python /usr/bin/python2.7
+    ln -fs -v /usr/local/bin/python /usr/bin/python2
+    ln -fs -v /usr/local/bin/python /usr/bin/python
 #    python3 -m pip install --upgrade pip
     filesystem
     install_locales
