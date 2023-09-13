@@ -2,7 +2,7 @@
 # Author: The Exegol Project
 
 # Functions and commands that will be retried multiple times to counter random network issues when building
-CATCH_AND_RETRY_COMMANDS=("curl" "wget" "fapt" "git" "go" "git" "apt-get")
+CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "git" "apt-get")
 
 export RED='\033[1;31m'
 export BLUE='\033[1;34m'
