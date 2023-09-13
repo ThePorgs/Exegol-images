@@ -34,12 +34,12 @@ function catch_and_retry() {
   # 3rd retry: 2×4^3 = 2×64   = 128 seconds
   # 4th retry: 2×4^4 = 2×256  = 512 seconds
   # 5th retry: 2×4^5 = 2×1024 = 2048 seconds
-  local max_wait_time=1
+  local max_wait_time=600
   local command="$@"
   for ((i=1; i<=retries; i++)); do
-    # TODO find out what's the right interpreter
-    # this is done instead of a "eval" in order to avoid an infinite loop
-    bash -c "$command"
+    # sh -c is used instead of an "eval" in order to avoid an infinite loop
+    #  for instance, with an "eval", "wget" would point to the "wget" function defined with define_retry_function()
+    sh -c "$command"
     # If command exits successfully, no need for more retries
     if [[ $? -eq 0 ]]; then
       return 0
