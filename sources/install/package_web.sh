@@ -359,8 +359,6 @@ function install_oneforall() {
     colorecho "Installing OneForAll"
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git 
     cd /opt/tools/OneForAll
-    cp -v /root/sources/assets/patches/OneForAll.patch OneForAll.patch
-    git apply --verbose OneForAll.patch
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases oneforall

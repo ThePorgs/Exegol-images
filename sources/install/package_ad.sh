@@ -32,7 +32,7 @@ function install_responder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
     cd /opt/tools/Responder
     cp -v /root/sources/assets/patches/responder.patch responder.patch
-    git apply --verbose responder.patch
+    git apply --verbose responder.patch # https://stackoverflow.com/questions/70870041/cannot-import-name-mutablemapping-from-collections
     python3 -m venv ./venv
     ./venv/bin/python3 -m pip install -r requirements.txt
     ./venv/bin/python3 -m pip install pycryptodome six pycryptodomex
@@ -231,10 +231,12 @@ function install_ruler() {
 }
 
 function install_upx-ucl() {
-    git -C /tmp clone --depth 1 https://github.com/ferseiti/upx-ucl.git
-    mkdir /opt/tools/upx-ucl
-    cp -r /tmp/upx-ucl/debian/upx-ucl/usr/* /opt/tools/upx-ucl
-    ln -v -s /opt/tools/upx-ucl/bin/upx-ucl /opt/tools/bin/upx-ucl
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing upx-ucl"
+    git -C /opt/tools clone --depth 1 https://github.com/ferseiti/upx-ucl.git
+    ln -v -s /opt/tools/upx-ucl/debian/upx-ucl/usr/bin/upx-ucl /opt/tools/bin/upx-ucl
+    add-test-command "upx-ucl --help"
+    add-to-list "upx-ucl,https://github.com/ferseiti/upx-ucl.git,UPX is an advanced executable file compressor."
 }
 
 function install_darkarmour() {

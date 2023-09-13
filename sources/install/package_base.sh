@@ -281,7 +281,7 @@ function install_java11() {
     dpkg -i openjdk-11-jre_11.0.20+8-1\~deb11u1_amd64.deb
     dpkg -i openjdk-11-jdk_11.0.20+8-1\~deb11u1_amd64.deb
     rm -rf /tmp/java
-    add-test-command /usr/lib/jvm/java-11-openjdk/bin/java --version
+    add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
 function add-repository() {
@@ -365,7 +365,7 @@ function package_base() {
 
     ln -fs -v /usr/local/bin/python /usr/bin/python2.7
     ln -fs -v /usr/local/bin/python /usr/bin/python2
-    ln -fs -v /usr/local/bin/python /usr/bin/python
+    ln -fs -v /usr/bin/python3 /usr/bin/python
     python3 -m pip install --upgrade pip
     filesystem
     install_go                                          # Golang language
