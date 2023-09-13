@@ -738,11 +738,6 @@ function install_sqlmap() {
     colorecho "Installing sqlmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
     ln -s "/opt/tools/sqlmap/sqlmap.py" /opt/tools/bin/sqlmap
-    echo '#!/usr/bin/env python3' > tempfile.py
-    tail -n +2 /opt/tools/sqlmap/sqlmap.py >> tempfile.py
-    mv tempfile.py /opt/tools/sqlmap/sqlmap.py 
-    chmod +x /opt/tools/sqlmap/sqlmap.py 
-    rm -f ./tempfile.py
     add-history sqlmap
     add-test-command "sqlmap --version"
     add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
