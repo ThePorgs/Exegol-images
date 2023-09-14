@@ -27,7 +27,7 @@ function criticalecho-noexit () {
 ### Support functions
 
 function add-to-list() {
-  echo $1 >> "/.exegol/installed_tools.csv"
+  echo "$1" >> "/.exegol/installed_tools.csv"
 }
 
 function add-aliases() {
@@ -77,18 +77,19 @@ function catch_and_retry() {
   # 4th retry: 2×4^4 = 2×256  = 512 seconds
   # 5th retry: 2×4^5 = 2×1024 = 2048 seconds
   local max_wait_time=600
-  local command="$@"
+  local command="$*"
   # escaping characters that could mess with the sh execution
-  local escaped_command=$(printf '%q ' $command)
+  local escaped_command
+  escaped_command=$(printf '%q ' "$command")
   for ((i=1; i<=retries; i++)); do
     # sh -c is used instead of an "eval" in order to avoid an infinite loop
     #  for instance, with an "eval", "wget" would point to the "wget" function defined with define_retry_function()
     # TODO : there is a limitation to this approach. It escapes metachars as well (like &&, ;, ||,)
     #  it means commands like "cmd1 && cmd2" won't work and will be interpreted as "cmd1 \&\& cmd2"
     echo "[EXEGOL DEBUG] sh -c \"$escaped_command\""
-    sh -c "$escaped_command"
     # If command exits successfully, no need for more retries
-    if [[ $? -eq 0 ]]; then
+    if sh -c "$escaped_command"
+    then
       return 0
     fi
     # Calculate the exponential backoff time
