@@ -286,12 +286,23 @@ function package_base() {
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
-    nim perl libwww-perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-11-jdk openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
-    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3
+    nim perl libwww-perl openjdk-17-jre openjdk-11-jre openjdk-11-jdk-headless openjdk-17-jdk-headless \
+    openjdk-11-jdk openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
+    virtualenv chromium libsasl2-dev python-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba \
+    ssh snmp faketime php python3 grc emacs-nox xsel
     chsh -s /bin/zsh
 
-    fapt-history dnsutils samba ssh snmp faketime
-    fapt-aliases php python3 grc emacs-nox xsel
+    add-history dnsutils
+    add-history samba
+    add-history ssh
+    add-history snmp
+    add-history faketime
+
+    add-aliases php
+    add-aliases python3
+    add-aliases grc
+    add-aliases emacs-nox
+    add-aliases xsel
     add-aliases pyftpdlib
 
     install_rust_cargo
@@ -323,7 +334,6 @@ function package_base() {
     add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
-    fapt-noexit rar                                     # rar (Only AMD)
     install_firefox
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc

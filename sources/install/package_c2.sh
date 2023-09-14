@@ -15,7 +15,7 @@ function install_pwncat() {
 }
 
 function install_metasploit() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
     mkdir /tmp/metasploit_install
@@ -29,7 +29,6 @@ function install_metasploit() {
     bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
     rvm use 3.0.0@default
     # https://github.com/ruby/fileutils/issues/22 -> Warnings
-    add-history msfconsole
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
