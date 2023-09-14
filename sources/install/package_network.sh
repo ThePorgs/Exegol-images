@@ -97,7 +97,7 @@ function install_autorecon() {
     git -C /opt/tools clone --depth 1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
     ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
     fapt dnsrecon wkhtmltopdf
-    python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
+    pipx install git+https://github.com/Tib3rius/AutoRecon
     add-history autorecon
     # test below cannot work because test runner cannot have a valid display
     # add-test-command "autorecon --version"
@@ -110,7 +110,7 @@ function install_dnschef() {
     git -C /opt/tools/ clone --depth 1 https://github.com/iphelix/dnschef
     cd /opt/tools/dnschef
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases dnschef
     add-history dnschef
     add-test-command "dnschef --help"
@@ -120,7 +120,7 @@ function install_dnschef() {
 function install_divideandscan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DivideAndScan"
-    python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
+    pipx install git+https://github.com/snovvcrash/DivideAndScan
     add-history divideandscan
     add-test-command "divideandscan --help"
     add-to-list "divideandscan,https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
@@ -139,7 +139,7 @@ function install_chisel() {
 function install_sshuttle() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sshtuttle"
-    python3 -m pipx install git+https://github.com/sshuttle/sshuttle.git
+    pipx install git+https://github.com/sshuttle/sshuttle.git
     add-history sshuttle
     add-test-command "sshuttle --version"
     add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
@@ -151,7 +151,7 @@ function install_eaphammer() {
     cd /opt/tools/eaphammer
     xargs apt install -y < kali-dependencies.txt
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r pip.req
+    catch_and_retry ./venv/bin/python3 -m pip install -r pip.req
     add-aliases eaphammer
     add-history eaphammer
     add-test-command "eaphammer -h"
@@ -161,7 +161,7 @@ function install_eaphammer() {
 function install_fierce() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing fierce"
-    python3 -m pipx install git+https://github.com/mschwager/fierce
+    pipx install git+https://github.com/mschwager/fierce
     add-history fierce
     add-test-command "fierce --help"
     add-to-list "fierce,https://github.com/mschwager/fierce,A DNS reconnaissance tool for locating non-contiguous IP space"

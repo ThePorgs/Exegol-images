@@ -2,7 +2,7 @@
 # Author: The Exegol Project
 
 # Functions and commands that will be retried multiple times to counter random network issues when building
-CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "git" "apt-get")
+CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "git" "apt-get" "nvm" "pipx" "pip2" "pip3")
 
 export RED='\033[1;31m'
 export BLUE='\033[1;34m'
@@ -95,7 +95,7 @@ function set_ruby_env() {
 
 function install_pipx_git_tool() {
     colorecho "Installing $2 with pipx"
-    python3 -m pipx install $1
+    pipx install $1
     if [ "$3" ]
     then
         add-test-command $3
@@ -121,7 +121,7 @@ function install_go_tool() {
 
 function install_pipx_tool() {
     colorecho "Installing $1 with pipx"
-    python3 -m pipx install $1
+    pipx install $1
     if [ "$2" ]
     then
         add-test-command $2
@@ -169,6 +169,8 @@ function catch_and_retry() {
   for ((i=1; i<=retries; i++)); do
     # sh -c is used instead of an "eval" in order to avoid an infinite loop
     #  for instance, with an "eval", "wget" would point to the "wget" function defined with define_retry_function()
+    # TODO : there is a limitation to this approach. It escapes metachars as well (like &&, ;, ||,)
+    #  it means commands like "cmd1 && cmd2" won't work and will be interpreted as "cmd1 \&\& cmd2"
     echo "[EXEGOL DEBUG] sh -c \"$escaped_command\""
     sh -c "$escaped_command"
     # If command exits successfully, no need for more retries

@@ -36,7 +36,7 @@ function install_goshs() {
 function install_shellerator() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing shellerator"
-    python3 -m pipx install git+https://github.com/ShutdownRepo/shellerator
+    pipx install git+https://github.com/ShutdownRepo/shellerator
     add-history shellerator
     add-test-command "shellerator --help"
     add-to-list "shellerator,https://github.com/ShutdownRepo/Shellerator,a simple command-line tool for generating shellcode"
@@ -45,7 +45,7 @@ function install_shellerator() {
 function install_uberfile() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing uberfile"
-    python3 -m pipx install git+https://github.com/ShutdownRepo/uberfile
+    pipx install git+https://github.com/ShutdownRepo/uberfile
     add-history uberfile
     add-test-command "uberfile --help"
     add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget / curl / powershell / certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
@@ -53,7 +53,7 @@ function install_uberfile() {
 
 function install_arsenal() {
     colorecho "Installing arsenal"
-    python3 -m pipx install git+https://github.com/Orange-Cyberdefense/arsenal
+    pipx install git+https://github.com/Orange-Cyberdefense/arsenal
     add-aliases arsenal
     add-history arsenal
     add-test-command "arsenal --version"
@@ -63,7 +63,7 @@ function install_arsenal() {
 function install_whatportis() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing whatportis"
-    python3 -m pipx install whatportis
+    pipx install whatportis
     # TODO : FIX : "port": port[1] if port[1] else "---",list index out of range - cli.py
     # echo y | whatportis --update
     add-history whatportis
@@ -127,7 +127,7 @@ function install_ngrok() {
 function install_objectwalker() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing objectwalker"
-    python3 -m pipx install git+https://github.com/p0dalirius/objectwalker
+    pipx install git+https://github.com/p0dalirius/objectwalker
     add-history objectwalker
     add-test-command "objectwalker --help"
     add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
@@ -149,7 +149,7 @@ function install_tig() {
 function install_yt-dlp() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing yt-dlp"
-    python3 -m pipx install git+https://github.com/yt-dlp/yt-dlp
+    pipx install git+https://github.com/yt-dlp/yt-dlp
     add-test-command "yt-dlp --help"
     add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes"
 }
