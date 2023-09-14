@@ -32,8 +32,8 @@ function install_responder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
     cd /opt/tools/Responder
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install pycryptodome six pycryptodomex
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install pycryptodome six pycryptodomex
     fapt python3-netifaces gcc-mingw-w64-x86-64
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
@@ -207,7 +207,7 @@ function install_privexchange() {
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PrivExchange
     cd /opt/tools/PrivExchange
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases privexchange
     add-history privexchange
     add-test-command "privexchange.py --help"
@@ -282,7 +282,7 @@ function install_krbrelayx() {
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/krbrelayx
     cd /opt/tools/krbrelayx
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install dnspython ldap3 impacket dsinternals
+    catch_and_retry ./venv/bin/python3 -m pip install dnspython ldap3 impacket dsinternals
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
     add-history krbrelayx
@@ -343,7 +343,7 @@ function install_zerologon() {
     mkdir /opt/tools/zerologon
     cd /opt/tools/zerologon
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     git -C /opt/tools/zerologon clone --depth 1 https://github.com/SecuraBV/CVE-2020-1472 zerologon-scan
     git -C /opt/tools/zerologon clone --depth 1 https://github.com/dirkjanm/CVE-2020-1472 zerologon-exploit
     add-aliases zerologon
@@ -387,7 +387,7 @@ function install_oaburl() {
     wget -O /opt/tools/OABUrl/oaburl.py "https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py"
     cd /opt/tools/OABUrl/
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install requests
+    catch_and_retry ./venv/bin/python3 -m pip install requests
     add-aliases oaburl
     add-history oaburl
     add-test-command "oaburl.py --help"
@@ -399,7 +399,7 @@ function install_lnkup() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Plazmaz/LNKUp
     cd /opt/tools/LNKUp
     virtualenv --python=/usr/bin/python2 ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
     add-aliases lnkup
     add-history lnkup
     add-test-command "lnk-generate.py --help"
@@ -411,7 +411,7 @@ function install_polenum() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh1t3Fox/polenum
     cd /opt/tools/polenum
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases polenum
     add-history polenum
     add-test-command "polenum.py --help"
@@ -463,7 +463,7 @@ function install_gpp-decrypt() {
     git -C /opt/tools/ clone --depth 1 https://github.com/t0thkr1s/gpp-decrypt
     cd /opt/tools/gpp-decrypt
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install pycrypto colorama
+    catch_and_retry ./venv/bin/python3 -m pip install pycrypto colorama
     add-aliases gpp-decrypt
     add-history gpp-decrypt
     add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
@@ -511,7 +511,7 @@ function install_pygpoabuse() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Hackndo/pyGPOAbuse
     cd /opt/tools/pyGPOAbuse
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pygpoabuse
     add-history pygpoabuse
     add-test-command "pygpoabuse --help"
@@ -531,7 +531,7 @@ function install_bloodhound-quickwin() {
     git -C /opt/tools/ clone --depth 1 https://github.com/kaluche/bloodhound-quickwin
     cd /opt/tools/bloodhound-quickwin
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install py2neo pandas prettytable
+    catch_and_retry ./venv/bin/python3 -m pip install py2neo pandas prettytable
     add-aliases bloodhound-quickwin
     add-history bloodhound-quickwin
     add-test-command "bloodhound-quickwin --help"
@@ -543,7 +543,7 @@ function install_ldapsearch-ad() {
     git -C /opt/tools/ clone --depth 1 https://github.com/yaap7/ldapsearch-ad
     cd /opt/tools/ldapsearch-ad
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ldapsearch-ad
     add-history ldapsearch-ad
     add-test-command "ldapsearch-ad --version"
@@ -555,12 +555,12 @@ function install_petitpotam() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ly4k/PetitPotam
     cd /opt/tools/PetitPotam
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     mv /opt/tools/PetitPotam /opt/tools/PetitPotam_alt
     git -C /opt/tools/ clone --depth 1 https://github.com/topotam/PetitPotam
     cd /opt/tools/PetitPotam
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases petitpotam
     add-history petitpotam
     add-test-command "petitpotam.py --help"
@@ -572,7 +572,7 @@ function install_dfscoerce() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh04m1001/DFSCoerce
     cd /opt/tools/DFSCoerce
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases dfscoerce
     add-history dfscoerce
     add-test-command "dfscoerce.py --help"
@@ -593,7 +593,7 @@ function install_pkinittools() {
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PKINITtools
     cd /opt/tools/PKINITtools
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pkinittools
     add-history pkinittools
     add-test-command "gettgtpkinit.py --help"
@@ -605,7 +605,7 @@ function install_pywhisker() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
     cd /opt/tools/pywhisker
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pywhisker
     add-history pywhisker
     add-test-command "pywhisker.py --help"
@@ -617,7 +617,7 @@ function install_manspider() {
     git -C /opt/tools clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER.git
     cd /opt/tools/MANSPIDER
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install .
+    catch_and_retry ./venv/bin/python3 -m pip install .
     touch ./man_spider/lib/init.py
     sed -i "s#from .lib import#from lib import##" man_spider/manspider.py
     add-aliases manspider
@@ -631,7 +631,7 @@ function install_targetedKerberoast() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
     cd /opt/tools/targetedKerberoast
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases targetedkerberoast
     add-history targetedkerberoast
     add-test-command "targetedKerberoast.py --help"
@@ -644,8 +644,8 @@ function install_pcredz() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/PCredz
     cd /opt/tools/PCredz
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install Cython
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install python-libpcap
+    catch_and_retry ./venv/bin/python3 -m pip install Cython
+    catch_and_retry ./venv/bin/python3 -m pip install python-libpcap
     add-aliases pcredz
     add-history pcredz
     add-test-command "PCredz --help"
@@ -657,7 +657,7 @@ function install_pywsus() {
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
     cd /opt/tools/pywsus
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r ./requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r ./requirements.txt
     add-aliases pywsus
     add-history pywsus
     add-test-command "pywsus.py --help"
@@ -697,7 +697,7 @@ function install_shadowcoerce() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/ShadowCoerce
     cd /opt/tools/ShadowCoerce
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases shadowcoerce
     add-history shadowcoerce
     add-test-command "shadowcoerce.py --help"
@@ -709,7 +709,7 @@ function install_gmsadumper() {
     git -C /opt/tools/ clone --depth 1 https://github.com/micahvandeusen/gMSADumper
     cd /opt/tools/gMSADumper
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases gmsadumper
     add-history gmsadumper
     add-test-command "gMSADumper.py --help"
@@ -721,7 +721,7 @@ function install_pylaps() {
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLAPS
     cd /opt/tools/pyLAPS
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases pylaps
     add-history pylaps
     add-test-command "pyLAPS.py --help"
@@ -733,7 +733,7 @@ function install_finduncommonshares() {
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/FindUncommonShares
     cd /opt/tools/FindUncommonShares/
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases finduncommonshares
     add-history finduncommonshares
     add-test-command "FindUncommonShares.py --help"
@@ -745,7 +745,7 @@ function install_ldaprelayscan() {
     git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/LdapRelayScan
     cd /opt/tools/LdapRelayScan
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ldaprelayscan
     add-history ldaprelayscan
     add-test-command "LdapRelayScan.py --help"
@@ -768,7 +768,7 @@ function install_crackhound() {
     PRS="6"
     for PR in $PRS; do git fetch origin pull/$PR/head:pull/$PR && git merge --strategy-option theirs --no-edit pull/$PR; done
     python3 -m venv ./venv/
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases crackhound
     add-history crackhound
     add-test-command "crackhound.py --help"
@@ -869,7 +869,7 @@ function install_PassTheCert() {
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
     cd /opt/tools/PassTheCert/Python/
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install impacket
+    catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases PassTheCert
     add-history PassTheCert
     add-test-command "passthecert.py --help"
@@ -911,7 +911,7 @@ function install_noPac() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Ridter/noPac
     cd /opt/tools/noPac
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases noPac
     add-history noPac
     add-test-command "noPac --help"
@@ -932,7 +932,7 @@ function install_teamsphisher() {
     git -C /opt/tools clone --depth 1 https://github.com/Octoberfest7/TeamsPhisher
     cd /opt/tools/TeamsPhisher
     python3 -m venv ./venv
-    catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install msal colorama requests
+    catch_and_retry ./venv/bin/python3 -m pip install msal colorama requests
     add-aliases teamsphisher
     add-history teamsphisher
     add-test-command "teamsphisher.py --help"
@@ -944,7 +944,7 @@ function install_GPOddity() {
   git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/GPOddity
   cd /opt/tools/GPOddity
   python3 -m venv ./venv
-  catch_and_retry catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+  catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
   add-aliases GPOddity
   add-history GPOddity
   add-test-command "gpoddity.py --help"
