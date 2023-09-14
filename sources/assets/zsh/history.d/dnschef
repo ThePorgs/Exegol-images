@@ -1,1 +1,1 @@
-dnschef --fakeip 127.0.0.1 -q
+dnschef.py --fakeip 127.0.0.1 -q

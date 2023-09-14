@@ -1,1 +1,1 @@
-oneforall --target $TARGET run
+oneforall.py --target $TARGET run

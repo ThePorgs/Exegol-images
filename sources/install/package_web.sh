@@ -115,7 +115,7 @@ function install_ssrfmap() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ssrfmap
     add-history ssrfmap
-    add-test-command "ssrfmap --help"
+    add-test-command "ssrfmap.py --help"
     add-to-list "ssrfmap,https://github.com/swisskyrepo/SSRFmap,a tool for testing SSRF vulnerabilities."
 }
 
@@ -127,7 +127,7 @@ function install_gopherus() {
     ./venv/bin/python2 -m pip install argparse requests
     add-aliases gopherus
     add-history gopherus
-    add-test-command "gopherus --help"
+    add-test-command "gopherus.py --help"
     add-to-list "gopherus,https://github.com/tarunkant/Gopherus,Gopherus is a simple command line tool for exploiting vulnerable Gopher servers."
 }
 
@@ -142,7 +142,7 @@ function install_nosqlmap() {
     ./venv/bin/python2 -m pip install certifi==2018.10.15
     add-aliases nosqlmap
     add-history nosqlmap
-    add-test-command "nosqlmap --help"
+    add-test-command "nosqlmap.py --help"
     add-to-list "nosqlmap,https://github.com/codingo/NoSQLMap,a Python tool for testing NoSQL databases for security vulnerabilities."
 }
 
@@ -154,7 +154,7 @@ function install_xsstrike() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases xsstrike
     add-history xsstrike
-    add-test-command "XSStrike --help"
+    add-test-command "xsstrike.py --help"
     add-to-list "xsstrike,https://github.com/s0md3v/XSStrike,a Python tool for detecting and exploiting XSS vulnerabilities."
 }
 
@@ -198,7 +198,7 @@ function install_bolt() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases bolt
     add-history bolt
-    add-test-command "bolt --help"
+    add-test-command "bolt.py --help"
     add-to-list "bolt,https://github.com/s0md3v/bolt,Bolt crawls the target website to the specified depth and stores all the HTML forms found in a database for further processing."
 }
 
@@ -223,7 +223,7 @@ function install_fuxploider() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases fuxploider
     add-history fuxploider
-    add-test-command "fuxploider --help"
+    add-test-command "fuxploider.py --help"
     add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
 }
 
@@ -236,7 +236,7 @@ function install_patator() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases patator
     add-history patator
-    add-test-command "patator ftp_login --help"
+    add-test-command "patator.py ftp_login --help"
     add-to-list "patator,https://github.com/lanjelot/patator,Login scanner."
 }
 
@@ -301,7 +301,7 @@ function install_moodlescan() {
     ./venv/bin/python3 moodlescan.py -a
     add-aliases moodlescan
     add-history moodlescan
-    add-test-command "moodlescan --help"
+    add-test-command "moodlescan.py --help"
     add-to-list "moodlescan,https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities."
 }
 
@@ -312,7 +312,7 @@ function install_testssl() {
     git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
     add-aliases testssl
     add-history testssl
-    add-test-command "testssl --help"
+    add-test-command "testssl.sh --help"
     add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
 }
 
@@ -351,7 +351,7 @@ function install_eyewitness() {
     deactivate
     add-aliases eyewitness
     add-history eyewitness
-    add-test-command "eyewitness --help"
+    add-test-command "EyeWitness.py --help"
     add-to-list "eyewitness,https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites / provide some server header info / and identify default credentials if possible."
 }
 
@@ -363,7 +363,7 @@ function install_oneforall() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases oneforall
     add-history oneforall
-    add-test-command "oneforall version"
+    add-test-command "oneforall.py version"
     add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
 }
 
@@ -384,7 +384,7 @@ function install_corscanner() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases corscanner
     add-history corscanner
-    add-test-command "corscanner --help"
+    add-test-command "cors_scan.py --help"
     add-to-list "corscanner,https://github.com/chenjj/CORScanner,a Python script for finding CORS misconfigurations."
 }
 
@@ -415,7 +415,7 @@ function install_linkfinder() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases linkfinder
     add-history linkfinder
-    add-test-command "linkfinder --help"
+    add-test-command "linkfinder.py --help"
     add-to-list "linkfinder,https://github.com/GerbenJavado/LinkFinder,a Python script that finds endpoints and their parameters in JavaScript files."
 }
 
@@ -447,7 +447,7 @@ function install_jwt_tool() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases jwt_tool
     add-history jwt_tool
-    add-test-command "jwt_tool --help"
+    add-test-command "jwt_tool.py --help"
     add-to-list "jwt,https://github.com/ticarpi/jwt_tool,a command-line tool for working with JSON Web Tokens (JWTs)"
 }
 
@@ -476,9 +476,9 @@ function install_gittools() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases gittools
     add-history gittools
-    add-test-command "extractor --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
-    add-test-command "gitdumper --help|& grep 'USAGE: http://target.tld/.git/'"
-    add-test-command "gitfinder -h"
+    add-test-command "extractor.sh --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
+    add-test-command "gitdumper.sh --help|& grep 'USAGE: http://target.tld/.git/'"
+    add-test-command "gitfinder.py -h"
     add-to-list "gittools,https://github.com/internetwache/GitTools,A collection of Git tools including a powerful Dumper for dumping Git repositories."
 }
 
@@ -527,7 +527,7 @@ function install_httpmethods() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases httpmethods
     add-history httpmethods
-    add-test-command "httpmethods --help"
+    add-test-command "httpmethods.py --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
 }
 
@@ -539,7 +539,7 @@ function install_h2csmuggler() {
     ./venv/bin/python3 -m pip install h2
     add-aliases h2csmuggler
     add-history h2csmuggler
-    add-test-command "h2csmuggler --help"
+    add-test-command "h2csmuggler.py --help"
     add-to-list "h2csmuggler,https://github.com/BishopFox/h2csmuggler,HTTP Request Smuggling tool using H2C upgrade"
 }
 
@@ -573,7 +573,7 @@ function install_tomcatwardeployer() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases tomcatwardeployer
     add-history tomcatwardeployer
-    add-test-command "tomcatWarDeployer --help"
+    add-test-command "tomcatWarDeployer.py --help"
     add-to-list "tomcatwardeployer,https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat."
 }
 
@@ -585,7 +585,7 @@ function install_clusterd() {
     ./venv/bin/python2 -m pip install -r requirements.txt
     add-aliases clusterd
     add-history clusterd
-    add-test-command "clusterd --help"
+    add-test-command "clusterd.py --help"
     add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents."
 }
 
@@ -705,7 +705,7 @@ function install_php_filter_chain_generator() {
     git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/php_filter_chain_generator.git
     add-aliases php_filter_chain_generator
     add-history php_filter_chain_generator
-    add-test-command "php_filter_chain_generator --help"
+    add-test-command "php_filter_chain_generator.py --help"
     add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,A CLI to generate PHP filters chain / get your RCE without uploading a file if you control entirely the parameter passed to a require or an include in PHP!"
 }
 

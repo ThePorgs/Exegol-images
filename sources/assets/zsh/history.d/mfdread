@@ -1,1 +1,1 @@
-mfdread original.dmp
+mfdread.py original.dmp

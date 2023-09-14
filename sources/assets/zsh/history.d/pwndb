@@ -1,1 +1,1 @@
-pwndb --target @example.com --output txt
+pwndb.py --target @example.com --output txt

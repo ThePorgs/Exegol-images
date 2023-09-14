@@ -1,1 +1,1 @@
-vulny-code-static-analysis --dir ./
+vulny-code-static-analysis.py --dir ./

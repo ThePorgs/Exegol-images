@@ -239,7 +239,7 @@ function install_gf() {
     rm -r /opt/tools/Gf-Patterns
     add-history gf
     add-test-command "gf --list"
-    add-test-command "ls ~/.gf | grep 'redirect.json'"
+    add-test-command "ls ~/.gf |& grep 'redirect.json'"
     add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 

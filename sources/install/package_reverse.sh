@@ -71,7 +71,7 @@ function install_checksec-py() {
     ./venv/bin/python3 -m pip install --upgrade lief
     add-aliases checksec
     add-history checksec
-    add-test-command "checksec --help"
+    add-test-command "checksec.py --help"
     add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
 

@@ -65,7 +65,7 @@ function install_mfdread() {
     ./venv/bin/python3 -m pip install bitstring
     add-aliases mfdread
     add-history mfdread
-    add-test-command "mfdread /opt/tools/mfdread/dump.mfd"
+    add-test-command "mfdread.py /opt/tools/mfdread/dump.mfd"
     add-to-list "mfdread,https://github.com/zhovner/mfdread,Tool for reading/writing Mifare RFID tags"
 }
 

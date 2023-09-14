@@ -1,1 +1,1 @@
-alias XSStrike='/opt/tools/XSStrike/venv/bin/python3 /opt/tools/XSStrike/xsstrike.py'
+alias xsstrike.py='/opt/tools/XSStrike/venv/bin/python3 /opt/tools/XSStrike/xsstrike.py'

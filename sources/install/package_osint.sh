@@ -108,7 +108,7 @@ function install_simplyemail() {
     ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
     add-aliases simplyemail
     add-history simplyemail
-    add-test-command "SimplyEmail -l"
+    add-test-command "SimplyEmail.py -l"
     add-to-list "simplyemail,https://github.com/SimplySecurity/SimplyEmail,a scriptable command line tool for sending emails"
 }
 
@@ -342,7 +342,7 @@ function install_pwndb() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pwndb
     add-history pwndb
-    add-test-command "pwndb --help"
+    add-test-command "pwndb.py --help"
     add-to-list "pwndb,https://github.com/davidtavarez/pwndb,A command-line tool for searching the pwndb database of compromised credentials."
 }
 

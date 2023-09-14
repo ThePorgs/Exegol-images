@@ -1,1 +1,1 @@
-corscanner -i urls.txt -t 100
+cors_scan.py -i urls.txt -t 100

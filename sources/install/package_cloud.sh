@@ -95,7 +95,7 @@ function install_cloudmapper() {
     ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases cloudmapper
     add-history cloudmapper
-    add-test-command 'cloudmapper --help |& grep "usage"'
+    add-test-command 'cloudmapper.py --help |& grep "usage"'
     add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
 }
 

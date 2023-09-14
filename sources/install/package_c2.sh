@@ -36,12 +36,12 @@ function install_metasploit() {
 }
 
 function install_routersploit() {
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing RouterSploit"
     python3 -m pipx install routersploit
     python3 -m pipx inject routersploit colorama
     add-aliases routersploit
-    add-history routersploit
-    add-test-command "which rsf.py"
+    add-test-command "routersploit --help"
     add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
 }
 
