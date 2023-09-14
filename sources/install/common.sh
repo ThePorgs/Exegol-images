@@ -164,10 +164,13 @@ function catch_and_retry() {
   # 5th retry: 2×4^5 = 2×1024 = 2048 seconds
   local max_wait_time=600
   local command="$@"
+  # escaping characters that could mess with the sh execution
+  local escaped_command=$(printf '%q ' $command)
   for ((i=1; i<=retries; i++)); do
     # sh -c is used instead of an "eval" in order to avoid an infinite loop
     #  for instance, with an "eval", "wget" would point to the "wget" function defined with define_retry_function()
-    sh -c "$command"
+    echo "[EXEGOL DEBUG] sh -c \"$escaped_command\""
+    sh -c "$escaped_command"
     # If command exits successfully, no need for more retries
     if [[ $? -eq 0 ]]; then
       return 0
