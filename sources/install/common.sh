@@ -80,7 +80,8 @@ function catch_and_retry() {
   local command="$*"
   # escaping characters that could mess with the sh execution
   local escaped_command
-  escaped_command=$(printf '%q ' "$command")
+  # not double-quoting $command as it would escape spaces inside the command and we don't want that
+  escaped_command=$(printf '%q ' $command)
   for ((i=1; i<=retries; i++)); do
     # sh -c is used instead of an "eval" in order to avoid an infinite loop
     #  for instance, with an "eval", "wget" would point to the "wget" function defined with define_retry_function()
