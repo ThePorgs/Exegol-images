@@ -59,10 +59,6 @@ def run_command(command):
                     for line in e.output.decode().split("\n"):
                         f.write(f"    {line}\n")
                     f.write(f"{clear}")
-                f.write(f"{red}Standard error:\n")
-                for line in e.stderr.decode().split("\n"):
-                    f.write(f"    {line}\n")
-                f.write(f"{clear}")
         except subprocess.CalledProcessError as e:
             # If the command fails, store it in the list of failed commands
             failed_commands.append(command)

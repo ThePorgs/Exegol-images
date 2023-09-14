@@ -96,10 +96,16 @@ function install_trilium() {
     git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
     zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild"
     mkdir -p /root/.local/share/trilium-data
-    cp -v /root/sources/assets/trilium/* /root/.local/share/trilium-data
+    # config.ini contains the exposition port and host
+    cp -v /root/sources/assets/trilium/config.ini /root/.local/share/trilium-data
+    cp -v /root/sources/assets/trilium/trilium-manager.sh /opt/tools/trilium/trilium-manager.sh
+    chmod +x /opt/tools/trilium/trilium-manager.sh
+    zsh /opt/tools/trilium/trilium-manager.sh start
+    zsh /opt/tools/trilium/trilium-manager.sh configure
+    zsh /opt/tools/trilium/trilium-manager.sh stop
     add-aliases trilium
     add-history trilium
-    add-test-command "trilium-start;sleep 20;trilium-stop"
+    add-test-command "trilium-test"
     add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
 }
 
