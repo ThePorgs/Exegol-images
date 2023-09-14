@@ -110,7 +110,7 @@ function install_firefox() {
     fapt firefox-esr
     mkdir /opt/tools/firefox
     mv /root/sources/assets/firefox/* /opt/tools/firefox/
-    python3 -m pip install -r /opt/tools/firefox/requirements.txt
+    pip3 install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/setup.py
     add-history firefox
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
@@ -163,7 +163,7 @@ function install_ohmyzsh() {
 function install_pipx() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing pipx"
-    python3 -m pip install pipx
+    pip3 install pipx
     pipx ensurepath
     add-test-command "pipx --version"
 }
@@ -304,14 +304,14 @@ function package_base() {
 
     ln -fs /usr/bin/python2.7 /usr/bin/python # Default python is set to 2.7
     install_python-pip                                  # Pip. Should we set pip2 to default?
-    python3 -m pip install --upgrade pip
+    pip3 install --upgrade pip
     filesystem
     install_go                                          # Golang language
     set_go_env
     install_locales
     install_ohmyzsh                                     # Awesome shell
     install_fzf                                         # Fuzzy finder
-    python3 -m pip install wheel
+    pip3 install wheel
     python -m pip install wheel
     install_pipx
     add-history curl
@@ -365,6 +365,8 @@ function package_base() {
 # TODO MOVE THIS IN ANOTHER SEPARATE FILE
 function package_base_debug() {
     update
+    # TODO remove this, it's a test made to fail to test catch&retry functions
+    wget -O /tmp/go.tar.gz https://go.dev/dl/gdo1.20.linux-amd64.tar.gz
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
     /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast

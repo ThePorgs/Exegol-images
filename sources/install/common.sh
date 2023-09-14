@@ -1,13 +1,15 @@
 #!/bin/bash
 # Author: The Exegol Project
 
+# Functions and commands that will be retried multiple times to counter random network issues when building
+CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "git" "apt-get" "nvm" "pipx" "pip2" "pip3")
+
 export RED='\033[1;31m'
 export BLUE='\033[1;34m'
 export GREEN='\033[1;32m'
 export NOCOLOR='\033[0m'
 
-
-### Support functions
+### Echo functions
 
 function colorecho () {
     echo -e "${BLUE}[EXEGOL] $*${NOCOLOR}"
@@ -21,6 +23,8 @@ function criticalecho () {
 function criticalecho-noexit () {
     echo -e "${RED}[EXEGOL ERROR] $*${NOCOLOR}" 2>&1
 }
+
+### Support functions
 
 function add-to-list() {
   echo $1 >> "/.exegol/installed_tools.csv"
@@ -45,7 +49,7 @@ function add-test-command() {
 
 function fapt() {
     colorecho "Installing apt package(s): $*"
-    /usr/local/sbin/apt-fast install -y --no-install-recommends "$@"
+    apt-fast install -y --no-install-recommends "$@"
 }
 
 function fapt-noexit() {
@@ -91,7 +95,7 @@ function set_ruby_env() {
 
 function install_pipx_git_tool() {
     colorecho "Installing $2 with pipx"
-    python3 -m pipx install $1
+    pipx install $1
     if [ "$3" ]
     then
         add-test-command $3
@@ -117,7 +121,7 @@ function install_go_tool() {
 
 function install_pipx_tool() {
     colorecho "Installing $1 with pipx"
-    python3 -m pipx install $1
+    pipx install $1
     if [ "$2" ]
     then
         add-test-command $2
@@ -145,3 +149,56 @@ function install_apt_tool() {
         add-aliases $1
     fi
 }
+
+### Catch & retry definitions
+
+function catch_and_retry() {
+  local retries=5
+  # wait time = scale_factor x (base_exponent ^ retry)
+  local scale_factor=2  # scaling factor
+  local base_exponent=4 # base of the exponent
+  # 1st retry: 2×4^1 = 2×4    = 8 seconds
+  # 2nd retry: 2×4^2 = 2×16   = 32 seconds
+  # 3rd retry: 2×4^3 = 2×64   = 128 seconds
+  # 4th retry: 2×4^4 = 2×256  = 512 seconds
+  # 5th retry: 2×4^5 = 2×1024 = 2048 seconds
+  local max_wait_time=600
+  local command="$@"
+  # escaping characters that could mess with the sh execution
+  local escaped_command=$(printf '%q ' $command)
+  for ((i=1; i<=retries; i++)); do
+    # sh -c is used instead of an "eval" in order to avoid an infinite loop
+    #  for instance, with an "eval", "wget" would point to the "wget" function defined with define_retry_function()
+    # TODO : there is a limitation to this approach. It escapes metachars as well (like &&, ;, ||,)
+    #  it means commands like "cmd1 && cmd2" won't work and will be interpreted as "cmd1 \&\& cmd2"
+    echo "[EXEGOL DEBUG] sh -c \"$escaped_command\""
+    sh -c "$escaped_command"
+    # If command exits successfully, no need for more retries
+    if [[ $? -eq 0 ]]; then
+      return 0
+    fi
+    # Calculate the exponential backoff time
+    local wait_time=$((scale_factor * (base_exponent ** i)))
+    # Cap it at max_wait_time
+    wait_time=$(( wait_time > max_wait_time ? max_wait_time : wait_time ))
+    criticalecho-noexit "Command failed (attempt $i/$retries). Retrying in $wait_time seconds..."
+    sleep "$wait_time"
+  done
+  criticalecho-noexit "Command failed definitively after $retries attempts."
+  return 1
+}
+
+function define_retry_function() {
+  local original_command=$1
+  eval "
+  function $original_command() {
+    colorecho 'Catch & retry function for: $1'
+    catch_and_retry \"$original_command \$@\"
+  }
+  "
+}
+
+# Dynamically create wrappers
+for cmd in "${CATCH_AND_RETRY_COMMANDS[@]}"; do
+  define_retry_function "$cmd"
+done

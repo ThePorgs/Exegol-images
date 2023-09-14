@@ -108,7 +108,7 @@ function deploy_python3() {
   ##### Install custom PIP3 packages
   if [ -d "$MY_SETUP_PATH/python3" ]; then
     # Install every pip3 packages listed in the requirements.txt file
-    python3 -m pip install -r "$MY_SETUP_PATH/python3/requirements.txt"
+    pip3 install -r "$MY_SETUP_PATH/python3/requirements.txt"
   else
     # Import file template
     mkdir "$MY_SETUP_PATH/python3" && chmod 770 "$MY_SETUP_PATH/python3"
