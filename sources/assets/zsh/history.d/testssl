@@ -1,1 +1,1 @@
-testssl $TARGET
+testssl.sh $TARGET

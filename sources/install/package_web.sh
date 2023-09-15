@@ -46,7 +46,7 @@ function install_wfuzz() {
     colorecho "Installing wfuzz"
     apt --purge remove python3-pycurl -y
     fapt libcurl4-openssl-dev libssl-dev
-    python3 -m pip install pycurl wfuzz
+    pip3 install pycurl wfuzz
     add-history wfuzz
     add-test-command "wfuzz --help"
     add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
@@ -101,7 +101,7 @@ function install_ffuf() {
 function install_dirsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    python3 -m pipx install git+https://github.com/maurosoria/dirsearch
+    pipx install git+https://github.com/maurosoria/dirsearch
     add-history dirsearch
     add-test-command "dirsearch --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
@@ -112,10 +112,10 @@ function install_ssrfmap() {
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ssrfmap
     add-history ssrfmap
-    add-test-command "ssrfmap --help"
+    add-test-command "ssrfmap.py --help"
     add-to-list "ssrfmap,https://github.com/swisskyrepo/SSRFmap,a tool for testing SSRF vulnerabilities."
 }
 
@@ -124,10 +124,10 @@ function install_gopherus() {
     git -C /opt/tools/ clone --depth 1 https://github.com/tarunkant/Gopherus
     cd /opt/tools/Gopherus
     virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install argparse requests
+    catch_and_retry ./venv/bin/python2 -m pip install argparse requests
     add-aliases gopherus
     add-history gopherus
-    add-test-command "gopherus --help"
+    add-test-command "gopherus.py --help"
     add-to-list "gopherus,https://github.com/tarunkant/Gopherus,Gopherus is a simple command line tool for exploiting vulnerable Gopher servers."
 }
 
@@ -136,13 +136,13 @@ function install_nosqlmap() {
     git -C /opt/tools clone --depth 1 https://github.com/codingo/NoSQLMap.git
     cd /opt/tools/NoSQLMap
     virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 setup.py install
+    catch_and_retry ./venv/bin/python2 setup.py install
     # https://github.com/codingo/NoSQLMap/issues/126
     rm -rf venv/lib/python2.7/site-packages/certifi-2023.5.7-py2.7.egg
-    ./venv/bin/python2 -m pip install certifi==2018.10.15
+    catch_and_retry ./venv/bin/python2 -m pip install certifi==2018.10.15
     add-aliases nosqlmap
     add-history nosqlmap
-    add-test-command "nosqlmap --help"
+    add-test-command "nosqlmap.py --help"
     add-to-list "nosqlmap,https://github.com/codingo/NoSQLMap,a Python tool for testing NoSQL databases for security vulnerabilities."
 }
 
@@ -151,10 +151,10 @@ function install_xsstrike() {
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/XSStrike.git
     cd /opt/tools/XSStrike
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases xsstrike
     add-history xsstrike
-    add-test-command "XSStrike --help"
+    add-test-command "xsstrike.py --help"
     add-to-list "xsstrike,https://github.com/s0md3v/XSStrike,a Python tool for detecting and exploiting XSS vulnerabilities."
 }
 
@@ -174,7 +174,7 @@ function install_xsser() {
     git -C /opt/tools clone --depth 1 https://github.com/epsylon/xsser.git
     cd /opt/tools/xsser
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install pycurl bs4 pygeoip gobject cairocffi selenium
+    catch_and_retry ./venv/bin/python3 -m pip install pycurl bs4 pygeoip gobject cairocffi selenium
     add-aliases xsser
     add-history xsser
     add-test-command "xsser --help"
@@ -184,7 +184,7 @@ function install_xsser() {
 function install_xsrfprobe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing XSRFProbe"
-    python3 -m pipx install git+https://github.com/0xInfection/XSRFProbe
+    pipx install git+https://github.com/0xInfection/XSRFProbe
     add-history xsrfprobe
     add-test-command "xsrfprobe --help"
     add-to-list "xsrfprobe,https://github.com/0xInfection/XSRFProbe,a tool for detecting and exploiting Cross-Site Request Forgery (CSRF) vulnerabilities"
@@ -195,10 +195,10 @@ function install_bolt() {
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/Bolt.git
     cd /opt/tools/Bolt
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases bolt
     add-history bolt
-    add-test-command "bolt --help"
+    add-test-command "bolt.py --help"
     add-to-list "bolt,https://github.com/s0md3v/bolt,Bolt crawls the target website to the specified depth and stores all the HTML forms found in a database for further processing."
 }
 
@@ -220,10 +220,10 @@ function install_fuxploider() {
     git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
     cd /opt/tools/fuxploider
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases fuxploider
     add-history fuxploider
-    add-test-command "fuxploider --help"
+    add-test-command "fuxploider.py --help"
     add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
 }
 
@@ -233,10 +233,10 @@ function install_patator() {
     git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
     cd /opt/tools/patator
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases patator
     add-history patator
-    add-test-command "patator ftp_login --help"
+    add-test-command "patator.py ftp_login --help"
     add-to-list "patator,https://github.com/lanjelot/patator,Login scanner."
 }
 
@@ -263,7 +263,7 @@ function install_wpscan() {
 function install_droopescan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing droopescan"
-    python3 -m pipx install git+https://github.com/droope/droopescan.git
+    pipx install git+https://github.com/droope/droopescan.git
     add-history droopescan
     add-test-command "droopescan --help"
     add-to-list "droopescan,https://github.com/droope/droopescan,Scan Drupal websites for vulnerabilities."
@@ -272,7 +272,7 @@ function install_droopescan() {
 function install_drupwn() {
     colorecho "Installing drupwn"
     git -C /opt/tools/ clone --depth 1 https://github.com/immunIT/drupwn
-    python3 -m pipx install git+https://github.com/immunIT/drupwn
+    pipx install git+https://github.com/immunIT/drupwn
     add-aliases drupwn
     add-history drupwn
     add-test-command "drupwn --help"
@@ -282,7 +282,7 @@ function install_drupwn() {
 function install_cmsmap() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing CMSmap"
-    python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
+    pipx install git+https://github.com/Dionach/CMSmap.git
     # TODO: Config ?
     # exploit-db path is required (misc package -> searchsploit)
     # cmsmap -U PC
@@ -296,12 +296,12 @@ function install_moodlescan() {
     git -C /opt/tools/ clone --depth 1 https://github.com/inc0d3/moodlescan.git
     cd /opt/tools/moodlescan
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     cd /opt/tools/moodlescan
-    ./venv/bin/python3 moodlescan.py -a
+    catch_and_retry ./venv/bin/python3 moodlescan.py -a
     add-aliases moodlescan
     add-history moodlescan
-    add-test-command "moodlescan --help"
+    add-test-command "moodlescan.py --help"
     add-to-list "moodlescan,https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities."
 }
 
@@ -312,7 +312,7 @@ function install_testssl() {
     git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
     add-aliases testssl
     add-history testssl
-    add-test-command "testssl --help"
+    add-test-command "testssl.sh --help"
     add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
 }
 
@@ -334,7 +334,7 @@ function install_cloudfail() {
     git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
     cd /opt/tools/CloudFail
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases cloudfail
     add-history cloudfail
     add-test-command "cloudfail.py --help"
@@ -351,7 +351,7 @@ function install_eyewitness() {
     deactivate
     add-aliases eyewitness
     add-history eyewitness
-    add-test-command "eyewitness --help"
+    add-test-command "EyeWitness.py --help"
     add-to-list "eyewitness,https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites / provide some server header info / and identify default credentials if possible."
 }
 
@@ -360,17 +360,17 @@ function install_oneforall() {
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git 
     cd /opt/tools/OneForAll
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases oneforall
     add-history oneforall
-    add-test-command "oneforall version"
+    add-test-command "oneforall.py version"
     add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
 }
 
 function install_wafw00f() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wafw00f"
-    python3 -m pipx install wafw00F
+    pipx install wafw00F
     add-history wafw00f
     add-test-command "wafw00f --help"
     add-to-list "wafw00f,https://github.com/EnableSecurity/wafw00f,a Python tool that helps to identify and fingerprint web application firewall (WAF) products."
@@ -381,10 +381,10 @@ function install_corscanner() {
     git -C /opt/tools/ clone --depth 1 https://github.com/chenjj/CORScanner.git
     cd /opt/tools/CORScanner
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases corscanner
     add-history corscanner
-    add-test-command "corscanner --help"
+    add-test-command "cors_scan.py --help"
     add-to-list "corscanner,https://github.com/chenjj/CORScanner,a Python script for finding CORS misconfigurations."
 }
 
@@ -412,10 +412,10 @@ function install_linkfinder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/GerbenJavado/LinkFinder.git
     cd /opt/tools/LinkFinder
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases linkfinder
     add-history linkfinder
-    add-test-command "linkfinder --help"
+    add-test-command "linkfinder.py --help"
     add-to-list "linkfinder,https://github.com/GerbenJavado/LinkFinder,a Python script that finds endpoints and their parameters in JavaScript files."
 }
 
@@ -433,7 +433,7 @@ function install_timing_attack() {
 function install_updog() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing updog"
-    python3 -m pipx install updog
+    pipx install updog
     add-history updog
     add-test-command "updog --help"
     add-to-list "updog,https://github.com/sc0tfree/updog,Simple replacement for Python's SimpleHTTPServer."
@@ -444,10 +444,10 @@ function install_jwt_tool() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ticarpi/jwt_tool
     cd /opt/tools/jwt_tool
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases jwt_tool
     add-history jwt_tool
-    add-test-command "jwt_tool --help"
+    add-test-command "jwt_tool.py --help"
     add-to-list "jwt,https://github.com/ticarpi/jwt_tool,a command-line tool for working with JSON Web Tokens (JWTs)"
 }
 
@@ -462,7 +462,7 @@ function install_wuzz() {
 
 function install_git-dumper() {
     colorecho "Installing git-dumper"
-    python3 -m pipx install git-dumper
+    pipx install git-dumper
     add-history git-dumper
     add-test-command "git-dumper --help"
     add-to-list "git-dumper,https://github.com/arthaud/git-dumper,Small script to dump a Git repository from a website."
@@ -473,12 +473,12 @@ function install_gittools() {
     git -C /opt/tools/ clone --depth 1 https://github.com/internetwache/GitTools.git
     cd /opt/tools/GitTools/Finder
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases gittools
     add-history gittools
-    add-test-command "extractor --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
-    add-test-command "gitdumper --help|& grep 'USAGE: http://target.tld/.git/'"
-    add-test-command "gitfinder -h"
+    add-test-command "extractor.sh --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
+    add-test-command "gitdumper.sh --help|& grep 'USAGE: http://target.tld/.git/'"
+    add-test-command "gitfinder.py -h"
     add-to-list "gittools,https://github.com/internetwache/GitTools,A collection of Git tools including a powerful Dumper for dumping Git repositories."
 }
 
@@ -525,10 +525,10 @@ function install_httpmethods() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
     cd /opt/tools/httpmethods
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases httpmethods
     add-history httpmethods
-    add-test-command "httpmethods --help"
+    add-test-command "httpmethods.py --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
 }
 
@@ -537,10 +537,10 @@ function install_h2csmuggler() {
     git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/h2csmuggler
     cd /opt/tools/h2csmuggler
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install h2
+    catch_and_retry ./venv/bin/python3 -m pip install h2
     add-aliases h2csmuggler
     add-history h2csmuggler
-    add-test-command "h2csmuggler --help"
+    add-test-command "h2csmuggler.py --help"
     add-to-list "h2csmuggler,https://github.com/BishopFox/h2csmuggler,HTTP Request Smuggling tool using H2C upgrade"
 }
 
@@ -557,7 +557,9 @@ function install_feroxbuster() {
     colorecho "Installing feroxbuster"
     mkdir /opt/tools/feroxbuster
     cd /opt/tools/feroxbuster
-    curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh | bash
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh -o /tmp/install-feroxbuster.sh
+    bash /tmp/install-feroxbuster.sh
     # Adding a symbolic link in order for autorecon to be able to find the Feroxbuster binary
     ln -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
     add-aliases feroxbuster
@@ -571,10 +573,10 @@ function install_tomcatwardeployer() {
     git -C /opt/tools/ clone --depth 1 https://github.com/mgeeky/tomcatWarDeployer.git
     cd /opt/tools/tomcatWarDeployer
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases tomcatwardeployer
     add-history tomcatwardeployer
-    add-test-command "tomcatWarDeployer --help"
+    add-test-command "tomcatWarDeployer.py --help"
     add-to-list "tomcatwardeployer,https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat."
 }
 
@@ -583,17 +585,17 @@ function install_clusterd() {
     git -C /opt/tools/ clone --depth 1 https://github.com/hatRiot/clusterd.git
     cd /opt/tools/clusterd
     virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
     add-aliases clusterd
     add-history clusterd
-    add-test-command "clusterd --help"
+    add-test-command "clusterd.py --help"
     add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents."
 }
 
 function install_arjun() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing arjun"
-    python3 -m pipx install arjun
+    pipx install arjun
     add-history arjun
     add-test-command "arjun --help"
     add-to-list "arjun,https://github.com/s0md3v/Arjun,HTTP parameter discovery suite."
@@ -657,7 +659,7 @@ function install_anew() {
 function install_robotstester() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Robotstester"
-    python3 -m pipx install git+https://github.com/p0dalirius/robotstester
+    pipx install git+https://github.com/p0dalirius/robotstester
     add-history robotstester
     add-test-command "robotstester --help"
     add-to-list "robotstester,https://github.com/p0dalirius/robotstester,Utility for testing whether a website's robots.txt file is correctly configured."
@@ -677,7 +679,8 @@ function install_naabu() {
 function install_burpsuite() {
     colorecho "Installing Burp"
     mkdir /opt/tools/BurpSuiteCommunity
-    burp_version=$(curl -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
+    # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
+    burp_version=$($(which curl) -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
     wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
     # TODO: two lines below should set up dark theme as default, does it work?
     mkdir -p /root/.BurpSuite/
@@ -706,7 +709,7 @@ function install_php_filter_chain_generator() {
     git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/php_filter_chain_generator.git
     add-aliases php_filter_chain_generator
     add-history php_filter_chain_generator
-    add-test-command "php_filter_chain_generator --help"
+    add-test-command "php_filter_chain_generator.py --help"
     add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,A CLI to generate PHP filters chain / get your RCE without uploading a file if you control entirely the parameter passed to a require or an include in PHP!"
 }
 
@@ -715,7 +718,7 @@ function install_kraken() {
     git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
     cd /opt/tools/Kraken
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases kraken
     add-history kraken
     add-test-command "kraken.py -h"

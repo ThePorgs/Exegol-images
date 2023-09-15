@@ -6,9 +6,9 @@ source common.sh
 function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwncat"
-    python3 -m pipx install pwncat-cs
+    pipx install pwncat-cs
     # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
-    python3 -m pipx inject pwncat-cs cryptography==36.0.2
+    pipx inject pwncat-cs cryptography==36.0.2
     add-history pwncat
     add-test-command "pwncat-cs --version"
     add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
@@ -31,12 +31,12 @@ function install_metasploit() {
 }
 
 function install_routersploit() {
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing RouterSploit"
-    python3 -m pipx install routersploit
-    python3 -m pipx inject routersploit colorama
+    pipx install routersploit
+    pipx inject routersploit colorama
     add-aliases routersploit
-    add-history routersploit
-    add-test-command "which rsf.py"
+    add-test-command "routersploit --help"
     add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
 }
 

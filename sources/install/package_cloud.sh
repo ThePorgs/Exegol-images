@@ -9,14 +9,15 @@ function install_kubectl() {
     mkdir -p /opt/tools/kubectl
     cd /opt/tools/kubectl
     if [[ $(uname -m) = 'x86_64' ]]
+    # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
     then
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
     elif [[ $(uname -m) = 'armv7l' ]]
     then
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
@@ -52,7 +53,7 @@ function install_awscli() {
 function install_scout() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ScoutSuite"
-    python3 -m pipx install scoutsuite
+    pipx install scoutsuite
     add-history scout
     add-test-command "scout --help"
     add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool which enables security posture assessment of cloud environments."
@@ -61,7 +62,7 @@ function install_scout() {
 function install_cloudsplaining() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Cloudsplaining"
-    python3 -m pipx install cloudsplaining
+    pipx install cloudsplaining
     add-history cloudsplaining
     add-test-command "cloudsplaining --help"
     add-to-list "cloudsplaining,https://github.com/salesforce/cloudsplaining,AWS IAM Security Assessment tool that identifies violations of least privilege and generates a risk-prioritized report."
@@ -80,7 +81,7 @@ function install_cloudsploit() {
 function install_prowler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Prowler"
-    python3 -m pipx install prowler
+    pipx install prowler
     add-history prowler
     add-test-command "prowler -h"
     add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness."
@@ -93,18 +94,20 @@ function install_cloudmapper() {
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install wheel
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install wheel
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases cloudmapper
     add-history cloudmapper
-    add-test-command 'cloudmapper --help |& grep "usage"'
+    add-test-command 'cloudmapper.py --help |& grep "usage"'
     add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
 }
 
 function install_azure_cli() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Azure-cli"
-    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash | true
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://aka.ms/InstallAzureCLIDeb -o /tmp/azure-cli-install.sh
+    bash /tmp/azure-cli-install.sh
     fapt azure-cli
     add-history azure-cli
     add-test-command "az --help"

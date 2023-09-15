@@ -1,1 +1,1 @@
-jwt_tool $JWT
+jwt_tool.py $JWT

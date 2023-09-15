@@ -1,2 +1,2 @@
-wifite --kill
-wifite --dict passwords.txt
+Wifite.py --kill
+Wifite.py --dict passwords.txt

@@ -1,1 +1,1 @@
-alias dnschef='/opt/tools/dnschef/venv/bin/python3 /opt/tools/dnschef/dnschef.py'
+alias dnschef.py='/opt/tools/dnschef/venv/bin/python3 /opt/tools/dnschef/dnschef.py'

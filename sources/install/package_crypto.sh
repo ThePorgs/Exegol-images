@@ -21,10 +21,10 @@ function install_rsactftool() {
     git -C /opt/tools clone --depth 1 https://github.com/RsaCtfTool/RsaCtfTool
     cd /opt/tools/RsaCtfTool
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases rsactftool
     add-history rsactftool
-    add-test-command "rsactftool --help"
+    add-test-command "RsaCtfTool.py --help"
     add-to-list "rsactftool,https://github.com/RsaCtfTool/RsaCtfTool,The rsactftool tool is used for RSA cryptographic operations and analysis."
 }
 

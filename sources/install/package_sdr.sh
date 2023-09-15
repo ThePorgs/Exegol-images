@@ -30,7 +30,7 @@ function install_mousejack() {
     git submodule update
     cd nrf-research-firmware
     make
-    python2 -m pip install libusb pyusb
+    pip2 install libusb pyusb
     add-aliases mousejack
     add-history mousejack
     add-test-command "nrf24-scanner.py --help"
@@ -42,7 +42,7 @@ function install_mousejack() {
 function install_jackit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jackit"
-    python3 -m pipx install git+https://github.com/insecurityofthings/jackit
+    pipx install git+https://github.com/insecurityofthings/jackit
     add-history jackit
     add-test-command "jackit --help"
     add-to-list "jackit,https://github.com/insecurityofthings/jackit,Exploit to take over a wireless mouse and keyboard"

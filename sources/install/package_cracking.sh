@@ -37,7 +37,7 @@ function install_john() {
 
 function install_name-that-hash() {
     colorecho "Installing Name-That-Hash"
-    python3 -m pipx install name-that-hash
+    pipx install name-that-hash
     add-history name-that-hash
     add-test-command "nth --help"
     add-to-list "name-that-hash,https://github.com/HashPals/Name-That-Hash,Online tool for identifying hashes."
@@ -57,7 +57,7 @@ function install_haiti() {
 function install_geowordlists() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GeoWordlists"
-    python3 -m pipx install git+https://github.com/p0dalirius/GeoWordlists
+    pipx install git+https://github.com/p0dalirius/GeoWordlists
     add-history geowordlists
     add-test-command "geowordlists --help"
     add-to-list "geowordlists,https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city."

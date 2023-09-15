@@ -37,7 +37,7 @@ function install_osint_apt_tools() {
 function install_youtubedl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing youtube-dl"
-    python3 -m pipx install youtube-dl
+    pipx install youtube-dl
     add-history youtube-dl
     add-test-command "youtube-dl --version"
     add-to-list "youtubedl,https://github.com/ytdl-org/youtube-dl,Download videos from YouTube and other sites."
@@ -46,7 +46,7 @@ function install_youtubedl() {
 function install_sublist3r() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sublist3r"
-    python3 -m pipx install git+https://github.com/aboul3la/Sublist3r
+    pipx install git+https://github.com/aboul3la/Sublist3r
     add-history sublist3r
     add-test-command "sublist3r --help"
     add-to-list "sublist3r,https://github.com/aboul3la/Sublist3r,a Python tool designed to enumerate subdomains of websites."
@@ -93,7 +93,7 @@ function install_findomain() {
 function install_holehe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing holehe"
-    python3 -m pipx install holehe
+    pipx install holehe
     add-history holehe
     add-test-command "holehe --help"
     add-to-list "holehe,https://github.com/megadose/holehe,Exploit a vulnerable Samba service to gain root access."
@@ -105,10 +105,10 @@ function install_simplyemail() {
     cd /opt/tools/SimplyEmail/
     fapt antiword odt2txt libxml2-dev libxslt1-dev
     virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
+    catch_and_retry ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
     add-aliases simplyemail
     add-history simplyemail
-    add-test-command "SimplyEmail -l"
+    add-test-command "SimplyEmail.py -l"
     add-to-list "simplyemail,https://github.com/SimplySecurity/SimplyEmail,a scriptable command line tool for sending emails"
 }
 
@@ -117,7 +117,7 @@ function install_theharvester() {
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     # The tool needs access to the proxies.yaml file in the folder.
     ln -s /opt/tools/theHarvester /usr/local/etc/
     add-aliases theharvester
@@ -129,7 +129,7 @@ function install_theharvester() {
 function install_h8mail() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing h8mail"
-    python3 -m pipx install h8mail
+    pipx install h8mail
     add-history h8mail
     add-test-command "h8mail --help"
     add-to-list "h8mail,https://github.com/khast3x/h8mail,Email OSINT and breach hunting."
@@ -141,7 +141,7 @@ function install_infoga() {
     find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
     cd /opt/tools/Infoga
     python2 -m virtualenv ./venv
-    ./venv/bin/python2 -m pip install .
+    catch_and_retry ./venv/bin/python2 -m pip install .
     add-aliases infoga
     add-history infoga
     add-test-command "infoga.py --help"
@@ -171,7 +171,7 @@ function install_pwnedornot() {
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
     cd /opt/tools/pwnedOrNot
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install requests html2text
+    catch_and_retry ./venv/bin/python3 -m pip install requests html2text
     mkdir -p "$HOME/.config/pwnedornot"
     cp config.json "$HOME/.config/pwnedornot/config.json"
     add-aliases pwnedornot
@@ -202,7 +202,7 @@ function install_phoneinfoga() {
 function install_maigret() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing maigret"
-    python3 -m pipx install git+https://github.com/soxoj/maigret.git
+    pipx install git+https://github.com/soxoj/maigret.git
     add-history maigret
     add-test-command "maigret --help"
     add-to-list "maigret,https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results"
@@ -213,7 +213,7 @@ function install_linkedin2username() {
     git -C /opt/tools/ clone --depth 1 https://github.com/initstring/linkedin2username
     cd /opt/tools/linkedin2username
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases linkedin2username
     add-history linkedin2username
     add-test-command "linkedin2username.py --help"
@@ -223,7 +223,7 @@ function install_linkedin2username() {
 function install_toutatis() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing toutatis"
-    python3 -m pipx install git+https://github.com/megadose/toutatis
+    pipx install git+https://github.com/megadose/toutatis
     add-history toutatis
     add-test-command "toutatis --help"
     add-to-list "toutatis,https://github.com/megadose/Toutatis,Toutatis is a tool that allows you to extract information from instagrams accounts such as e-mails / phone numbers and more."
@@ -243,7 +243,7 @@ function install_carbon14() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
     cd /opt/tools/Carbon14
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases carbon14
     add-history carbon14
     add-test-command "carbon14.py --help"
@@ -255,7 +255,7 @@ function install_photon() {
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/photon
     cd /opt/tools/photon
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases photon
     add-history photon
     add-test-command "photon.py --help"
@@ -305,7 +305,7 @@ function install_spiderfoot() {
     git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases spiderfoot
     add-history spiderfoot
     add-test-command "spiderfoot --help"
@@ -318,7 +318,7 @@ function install_finalrecon() {
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases finalrecon
     add-history finalrecon
     add-test-command "finalrecon.py --help"
@@ -328,9 +328,9 @@ function install_finalrecon() {
 function install_osrframework() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing osrframework"
-    python3 -m pipx install osrframework
-    python3 -m pipx inject osrframework 'urllib3<2'
-    python3 -m pipx inject osrframework 'pip==21.2'
+    pipx install osrframework
+    pipx inject osrframework 'urllib3<2'
+    pipx inject osrframework 'pip==21.2'
     add-history osrframework
     add-test-command "osrframework-cli --help"
     add-to-list "osrframework,https://github.com/i3visio/osrframework,Include references to a bunch of different applications related to username checking / DNS lookups / information leaks research / deep web search / regular expressions extraction and many others."
@@ -341,10 +341,10 @@ function install_pwndb() {
     git -C /opt/tools/ clone --depth 1 https://github.com/davidtavarez/pwndb.git
     cd /opt/tools/pwndb
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pwndb
     add-history pwndb
-    add-test-command "pwndb --help"
+    add-test-command "pwndb.py --help"
     add-to-list "pwndb,https://github.com/davidtavarez/pwndb,A command-line tool for searching the pwndb database of compromised credentials."
 }
 
@@ -363,7 +363,7 @@ function install_recondog() {
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/ReconDog
     cd /opt/tools/ReconDog/
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases recondog
     add-history recondog
     add-test-command "recondog --help"
@@ -382,7 +382,7 @@ function install_gron() {
 function install_ignorant() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ignorant"
-    python3 -m pipx install git+https://github.com/megadose/ignorant
+    pipx install git+https://github.com/megadose/ignorant
     add-history ignorant
     add-test-command "ignorant --help"
     add-to-list "ignorant,https://github.com/megadose/ignorant,holehe but for phone numbers."
@@ -395,7 +395,7 @@ function install_trevorspray() {
     cd /opt/tools/TREVORspray
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27
     sed -i "s/1.0.5/1.0.4/" pyproject.toml
-    python3 -m pipx install .
+    pipx install .
     add-history trevorspray
     add-test-command "trevorspray --help"
     add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules / and more"
@@ -405,7 +405,7 @@ function install_gitfive() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     # GitFive only works with Python 3.10+.
     colorecho "Installing GitFive"
-    python3 -m pipx install git+https://github.com/mxrch/GitFive
+    pipx install git+https://github.com/mxrch/GitFive
     add-test-command "gitfive --help"
     add-to-list "GitFive,https://github.com/mxrch/GitFive,GitFive is an OSINT tool to investigate GitHub profiles."
 }
@@ -416,7 +416,7 @@ function install_geopincer() {
     cd /opt/tools/GeoPincer
     sed -i "s#regions.txt#/opt/tools/GeoPincer/regions.txt##" GeoPincer.py
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases geopincer
     add-history geopincer
     add-test-command "geopincer.py --help"
@@ -440,7 +440,7 @@ function install_murmurhash() {
     git -C /opt/tools clone --depth 1 https://github.com/QU35T-code/MurMurHash
     cd /opt/tools/MurMurHash
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases MurMurHash
     add-history MurMurHash
     add-test-command "MurMurHash.py"
@@ -454,7 +454,7 @@ function install_blackbird() {
     sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
     sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases blackbird
     add-history blackbird
     add-test-command "blackbird.py --help"
@@ -466,7 +466,7 @@ function install_sherlock() {
     git -C /opt/tools/ clone --depth 1 https://github.com/sherlock-project/sherlock
     cd /opt/tools/sherlock
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases sherlock
     add-history sherlock
     add-test-command "sherlock.py --help"
@@ -476,7 +476,7 @@ function install_sherlock() {
 function install_censys() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Censys"
-    python3 -m pipx install censys
+    pipx install censys
     add-history censys
     add-test-command "censys --help"
     add-to-list "Censys,https://github.com/censys/censys-python,An easy-to-use and lightweight API wrapper for Censys APIs"

@@ -8,7 +8,7 @@ function install_vulny-code-static-analysis() {
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
     add-aliases vulny-code-static-analysis
     add-history vulny-code-static-analysis
-    add-test-command "vulny-code-static-analysis --help"
+    add-test-command "vulny-code-static-analysis.py --help"
     add-to-list "vulny-code-static-analysis,https://github.com/swisskyrepo/Vulny-Code-Static-Analysis,Static analysis tool for C code"
 }
 
@@ -26,7 +26,7 @@ function install_brakeman() {
 function install_semgrep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing semgrep"
-    python3 -m pipx install semgrep
+    pipx install semgrep
     add-history semgrep
     add-test-command "semgrep --help"
     add-to-list "semgrep,https://github.com/returntocorp/semgrep/,Static analysis tool that supports multiple languages and can find a variety of vulnerabilities and coding errors."

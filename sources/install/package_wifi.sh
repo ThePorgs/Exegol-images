@@ -31,7 +31,7 @@ function install_pyrit() {
     cd /opt/tools/Pyrit
     fapt libpq-dev
     virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install psycopg2-binary scapy
+    catch_and_retry ./venv/bin/python2 -m pip install psycopg2-binary scapy
     # https://github.com/JPaulMora/Pyrit/issues/591
     cp -v /root/sources/assets/patches/undefined-symbol-aesni-key.patch undefined-symbol-aesni-key.patch
     git apply --verbose undefined-symbol-aesni-key.patch
@@ -51,10 +51,10 @@ function install_wifite2() {
     git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
     cd /opt/tools/wifite2
     python3 -m venv ./venv
-    ./venv/bin/python3 setup.py install
+    catch_and_retry ./venv/bin/python3 setup.py install
     add-aliases wifite
     add-history wifite
-    add-test-command "wifite --help"
+    add-test-command "Wifite.py --help"
     add-to-list "wifite2,https://github.com/derv82/wifite2,Script for auditing wireless networks."
 }
 

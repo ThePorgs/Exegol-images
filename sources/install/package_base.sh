@@ -30,7 +30,9 @@ function install_exegol-history() {
 function install_rust_cargo() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing rustc, cargo, rustup"
-    curl https://sh.rustup.rs -sSf | sh -s -- -y
+    # splitting curl | sh to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
+    cat /tmp/rustup.sh | sh -s -- -y
     source "$HOME/.cargo/env"
     add-test-command "cargo --version"
 }
@@ -135,7 +137,7 @@ function install_firefox() {
     fapt firefox-esr
     mkdir /opt/tools/firefox
     mv /root/sources/assets/firefox/* /opt/tools/firefox/
-    python3 -m pip install -r /opt/tools/firefox/requirements.txt
+    pip3 install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/setup.py
     add-history firefox
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
@@ -146,9 +148,13 @@ function install_firefox() {
 function install_rvm() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing rvm"
-    gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-    { command -v gpgconf > /dev/null && gpgconf --kill all || :; } # kill all gpg processes
-    curl -sSL https://get.rvm.io | bash -s stable --ruby=3.2.2
+    # allow to fetch keys when behind a firewall (https://serverfault.com/questions/168826/how-to-install-gpg-keys-from-behind-a-firewall)
+    gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+    # kill all gpg processes
+    { command -v gpgconf > /dev/null && gpgconf --kill all || :; }
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sSL https://get.rvm.io -o /tmp/rvm.sh
+    bash /tmp/rvm.sh --ruby="3.2.2" stable
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
@@ -176,7 +182,9 @@ function install_ohmyzsh() {
         return
     fi
     colorecho "Installing oh-my-zsh, config, history, aliases"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    # splitting wget and sh to avoid having additional logs put in curl output being executed because of catch_and_retry
+    wget -O /tmp/ohmyzsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    sh /tmp/ohmyzsh.sh
     cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
@@ -189,7 +197,7 @@ function install_ohmyzsh() {
 function install_pipx() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing pipx"
-    python3 -m pip install pipx
+    pip3 install pipx
     pipx ensurepath
     add-test-command "pipx --version"
 }
@@ -197,7 +205,10 @@ function install_pipx() {
 function install_yarn() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing yarn"
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+    wget -O /tmp/yarn.gpg.armored https://dl.yarnpkg.com/debian/pubkey.gpg
+    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
+    gpg --dearmor --output /etc/apt/trusted.gpg.d/yarn.gpg /tmp/yarn.gpg.armored
+    chmod 644 /etc/apt/trusted.gpg.d/yarn.gpg
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
     apt-get update
     fapt yarn
@@ -266,7 +277,7 @@ function install_gf() {
     rm -r /opt/tools/Gf-Patterns
     add-history gf
     add-test-command "gf --list"
-    add-test-command "ls ~/.gf | grep 'redirect.json'"
+    add-test-command "ls ~/.gf |& grep 'redirect.json'"
     add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
@@ -329,7 +340,9 @@ function package_base() {
     update
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
-    /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
+    bash /tmp/apt-fast-install.sh
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
@@ -342,17 +355,31 @@ function package_base() {
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
-    nim perl libwww-perl openjdk-17-jre openjdk-17-jdk-headless openjdk-17-jdk openvpn openresolv logrotate tmux tldr bat python3-pyftpdlib libxml2-utils \
-    virtualenv chromium libsasl2-dev libldap2-dev libssl-dev isc-dhcp-client sqlite3 tk-dev libssl-dev
+    nim perl libwww-perl openjdk-17-jre openjdk-17-jdk-headless openjdk-17-jdk openvpn openresolv \
+    logrotate tmux tldr bat python3-pyftpdlib libxml2-utils virtualenv chromium libsasl2-dev \
+    libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils tk-dev samba ssh snmp faketime php \
+    python3 grc emacs-nox xsel
+    
     install_python2
     install_pip2
     python2 -m pip install --no-cache-dir virtualenv
+    
+    # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
+    rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 
-    rm /usr/lib/python3.*/EXTERNALLY-MANAGED # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
     chsh -s /bin/zsh
 
-    fapt-history dnsutils samba ssh snmp faketime
-    fapt-aliases php python3 grc emacs-nox xsel
+    add-history dnsutils
+    add-history samba
+    add-history ssh
+    add-history snmp
+    add-history faketime
+
+    add-aliases php
+    add-aliases python3
+    add-aliases grc
+    add-aliases emacs-nox
+    add-aliases xsel
     add-aliases pyftpdlib
 
     install_rust_cargo
@@ -366,15 +393,16 @@ function package_base() {
     ln -fs -v /usr/local/bin/python /usr/bin/python2.7
     ln -fs -v /usr/local/bin/python /usr/bin/python2
     ln -fs -v /usr/bin/python3 /usr/bin/python
-    python3 -m pip install --upgrade pip
+
+    pip3 install --upgrade pip
     filesystem
     install_go                                          # Golang language
     set_go_env
     install_locales
     install_ohmyzsh                                     # Awesome shell
     install_fzf                                         # Fuzzy finder
-    python3 -m pip install wheel
-    python2 -m pip install wheel
+    pip3 install wheel
+    pip2 -m pip install wheel
     install_pipx
     add-history curl
     install_yarn
@@ -385,7 +413,6 @@ function package_base() {
     add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
-    fapt-noexit rar                                     # rar (Only AMD)
     install_firefox
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
@@ -427,9 +454,13 @@ function package_base() {
 # TODO MOVE THIS IN ANOTHER SEPARATE FILE
 function package_base_debug() {
     update
+    # TODO remove this, it's a test made to fail to test catch&retry functions
+    wget -O /tmp/go.tar.gz https://go.dev/dl/gdo1.20.linux-amd64.tar.gz
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
-    /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
+    bash /tmp/apt-fast-install.sh
     deploy_exegol
     install_exegol-history
     fapt software-properties-common

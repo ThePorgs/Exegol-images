@@ -34,8 +34,8 @@ function install_pwntools() {
     python -m pip install pwntools
     # Downgrade pyelftools version because : https://github.com/Gallopsled/pwntools/issues/2260
     python -m pip install pathlib2 pyelftools==0.29
-    python3 -m pip install pwntools
-    python3 -m pip install pyelftools==0.29
+    pip3 install pwntools
+    pip3 install pyelftools==0.29
     add-test-command "python -c 'import pwn'"
     add-test-command "python3 -c 'import pwn'"
     add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
@@ -57,7 +57,7 @@ function install_angr() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing angr"
     fapt libffi-dev
-    python3 -m pip install angr
+    pip3 install angr
     add-test-command "python3 -c 'import angr'"
     add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework"
 }
@@ -67,11 +67,11 @@ function install_checksec-py() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
     cd /opt/tools/checksec.py
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install .
-    ./venv/bin/python3 -m pip install --upgrade lief
+    catch_and_retry ./venv/bin/python3 -m pip install .
+    catch_and_retry ./venv/bin/python3 -m pip install --upgrade lief
     add-aliases checksec
     add-history checksec
-    add-test-command "checksec --help"
+    add-test-command "checksec.py --help"
     add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
 

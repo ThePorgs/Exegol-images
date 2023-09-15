@@ -1,1 +1,1 @@
-moodlescan -r -u "http://$TARGET/"
+moodlescan.py -r -u "http://$TARGET/"
