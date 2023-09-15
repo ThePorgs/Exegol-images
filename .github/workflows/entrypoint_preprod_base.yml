@@ -142,22 +142,9 @@ jobs:
     steps:
       - name: List docker images
         run: docker image ls
-      - name: Checking if local image exists
-        id: check_local_image
-        if: always()
-        run: |
-          echo "docker image inspect ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-${{ matrix.arch }}"
-          if docker manifest inspect ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-${{ matrix.arch }}; then
-            echo "Image exists"
-            echo "image_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "Image does not exist"
-            echo "image_exists=false" >> $GITHUB_OUTPUT
-          fi
-          cat $GITHUB_OUTPUT
       - name: Remove local image
-        # always removing image if it exists, no need to keep it on the runner
-        if: steps.check_local_image.outputs.image_exists == 'true'
+        # always removing image, no need to keep it on the runner
+        if: always()
         # ex: docker rmi nwodtuhs/exegol-builds:base-1.2.3-arm64
         run: docker rmi ${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}:${{ env.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-${{ matrix.arch }}
 
