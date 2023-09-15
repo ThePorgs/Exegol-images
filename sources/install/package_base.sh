@@ -122,6 +122,7 @@ function install_python2() {
 }
 
 function install_pip2() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing python-pip (for Python2.7)"
     PYTHON_PIP_VERSION=20.0.2
     PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/23.2.1/public/2.7/get-pip.py
@@ -282,7 +283,7 @@ function install_gf() {
 }
 
 function install_java11() {
-    # CODE-CHECK-WHITELIST=add-history,add-aliases
+    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
     colorecho "Installing java 11"
     mkdir -p /tmp/java
     cp -r /root/source/assets/java/java11 /tmp/java
