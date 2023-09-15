@@ -147,7 +147,7 @@ jobs:
   clean_runners:
     name: Clean runner
     needs: [ init, publish ]
-    if: always()
+    if: always() && github.event.label.name == 'base success'
     # even if this job fails, it won't affect the success/fail status of the whole workflow
     continue-on-error: true
     strategy:

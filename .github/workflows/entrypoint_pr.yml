@@ -114,6 +114,8 @@ jobs:
     name: Clean runner
     needs: [ init, build ]
     if: always()
+    # even if this job fails, it won't affect the success/fail status of the whole workflow
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
