@@ -9,14 +9,15 @@ function install_kubectl() {
     mkdir -p /opt/tools/kubectl
     cd /opt/tools/kubectl
     if [[ $(uname -m) = 'x86_64' ]]
+    # using $(command -v curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
     then
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(command -v curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(command -v curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
     elif [[ $(uname -m) = 'armv7l' ]]
     then
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(command -v curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
@@ -102,7 +103,9 @@ function install_cloudmapper() {
 function install_azure_cli() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Azure-cli"
-    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash | true
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://aka.ms/InstallAzureCLIDeb -o /tmp/azure-cli-install.sh
+    bash /tmp/azure-cli-install.sh
     fapt azure-cli
     add-history azure-cli
     add-test-command "az --help"

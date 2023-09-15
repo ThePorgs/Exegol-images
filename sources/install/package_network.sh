@@ -187,8 +187,11 @@ function install_shuffledns() {
 
 function install_tailscale() {
     colorecho "Installing tailscale"
-    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
-    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+    wget -O /tmp/tailscale.gpg.armored https://pkgs.tailscale.com/stable/ubuntu/focal.gpg
+    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
+    gpg --dearmor --output /etc/apt/trusted.gpg.d/tailscale.gpg /tmp/tailscale.gpg.armored
+    chmod 644 /etc/apt/trusted.gpg.d/tailscale.gpg
+    wget -O /etc/apt/sources.list.d/tailscale.list https://pkgs.tailscale.com/stable/ubuntu/focal.list
     apt-get update
     fapt tailscale
     add-aliases tailscale

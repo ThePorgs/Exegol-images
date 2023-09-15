@@ -556,7 +556,9 @@ function install_feroxbuster() {
     colorecho "Installing feroxbuster"
     mkdir /opt/tools/feroxbuster
     cd /opt/tools/feroxbuster
-    curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh | bash
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh -o /tmp/install-feroxbuster.sh
+    bash /tmp/install-feroxbuster.sh
     # Adding a symbolic link in order for autorecon to be able to find the Feroxbuster binary
     ln -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
     add-aliases feroxbuster
@@ -676,7 +678,8 @@ function install_naabu() {
 function install_burpsuite() {
     colorecho "Installing Burp"
     mkdir /opt/tools/BurpSuiteCommunity
-    burp_version=$(curl -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
+    # using $(command -v curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
+    burp_version=$($(command -v curl) -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
     wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
     # TODO: two lines below should set up dark theme as default, does it work?
     mkdir -p /root/.BurpSuite/

@@ -30,7 +30,9 @@ function install_exegol-history() {
 function install_rust_cargo() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing rustc, cargo, rustup"
-    curl https://sh.rustup.rs -sSf | sh -s -- -y
+    # splitting curl | sh to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
+    cat /tmp/rustup.sh | sh -s -- -y
     source "$HOME/.cargo/env"
     add-test-command "cargo --version"
 }
@@ -123,7 +125,9 @@ function install_rvm() {
     colorecho "Installing rvm"
     # allow to fetch keys when behind a firewall (https://serverfault.com/questions/168826/how-to-install-gpg-keys-from-behind-a-firewall)
     gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-    curl -sSL https://get.rvm.io | bash -s stable --ruby
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sSL https://get.rvm.io -o /tmp/rvm.sh
+    bash /tmp/rvm.sh -s stable --ruby
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
@@ -150,7 +154,9 @@ function install_ohmyzsh() {
         return
     fi
     colorecho "Installing oh-my-zsh, config, history, aliases"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    # splitting wget and sh to avoid having additional logs put in curl output being executed because of catch_and_retry
+    wget -O /tmp/ohmyzsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    sh /tmp/ohmyzsh.sh
     cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
@@ -171,7 +177,10 @@ function install_pipx() {
 function install_yarn() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing yarn"
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+    wget -O /tmp/yarn.gpg.armored https://dl.yarnpkg.com/debian/pubkey.gpg
+    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
+    gpg --dearmor --output /etc/apt/trusted.gpg.d/yarn.gpg /tmp/yarn.gpg.armored
+    chmod 644 /etc/apt/trusted.gpg.d/yarn.gpg
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
     apt-get update
     fapt yarn
@@ -272,7 +281,9 @@ function package_base() {
     update
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
-    /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
+    bash /tmp/apt-fast-install.sh
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
@@ -379,7 +390,9 @@ function package_base_debug() {
     wget -O /tmp/go.tar.gz https://go.dev/dl/gdo1.20.linux-amd64.tar.gz
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
-    /bin/bash -c "$(curl -sL https://git.io/vokNn)" # Install apt-fast
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
+    bash /tmp/apt-fast-install.sh
     deploy_exegol
     install_exegol-history
     fapt software-properties-common

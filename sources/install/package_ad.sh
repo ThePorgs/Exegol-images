@@ -889,7 +889,10 @@ function install_bqm() {
 
 function install_neo4j() {
     colorecho "Installing neo4j"
-    wget -O - https://debian.neo4j.com/neotechnology.gpg.key | apt-key add -
+    wget -O /tmp/neo4j.gpg.armored https://debian.neo4j.com/neotechnology.gpg.key
+    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
+    gpg --dearmor --output /etc/apt/trusted.gpg.d/neo4j.gpg /tmp/neo4j.gpg.armored
+    chmod 644 /etc/apt/trusted.gpg.d/neo4j.gpg
     # TODO: temporary fix => rollback to 4.4 stable until perf issue is fix on neo4j 5.x
     #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
     echo 'deb https://debian.neo4j.com stable 4.4' | tee /etc/apt/sources.list.d/neo4j.list
