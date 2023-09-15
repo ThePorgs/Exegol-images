@@ -9,15 +9,15 @@ function install_kubectl() {
     mkdir -p /opt/tools/kubectl
     cd /opt/tools/kubectl
     if [[ $(uname -m) = 'x86_64' ]]
-    # using $(command -v curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
+    # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
     then
-        curl -LO "https://dl.k8s.io/release/$($(command -v curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -LO "https://dl.k8s.io/release/$($(command -v curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
     elif [[ $(uname -m) = 'armv7l' ]]
     then
-        curl -LO "https://dl.k8s.io/release/$($(command -v curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
+        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
