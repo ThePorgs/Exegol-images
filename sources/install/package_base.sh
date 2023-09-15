@@ -127,7 +127,7 @@ function install_rvm() {
     gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl -sSL https://get.rvm.io -o /tmp/rvm.sh
-    bash /tmp/rvm.sh -s stable --ruby
+    bash /tmp/rvm.sh --ruby stable
     source /usr/local/rvm/scripts/rvm
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
