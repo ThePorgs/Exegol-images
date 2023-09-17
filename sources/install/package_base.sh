@@ -99,7 +99,6 @@ function install_locales() {
 }
 
 function install_python2() {
-    PYTHONIOENCODING=UTF-8
     PYTHON_VERSION=2.7.18
     fapt gir1.2-rsvg-2.0 libdb5.3-dev libdjvulibre-dev libdjvulibre-text libdjvulibre21 libevent-extra-2.1-7 libevent-openssl-2.1-7 libevent-pthreads-2.1-7  libexif-dev libimath-3-1-29 \
     libimath-dev liblcms2-dev liblqr-1-0-dev libltdl-dev libmagickcore-6-arch-config libmagickcore-6-headers  libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev libmagickwand-6-headers \
@@ -109,16 +108,14 @@ function install_python2() {
     mkdir -p /usr/src/python 
     tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz
     rm python.tar.xz
-    cd /usr/src/python 
+    cd /usr/src/python
     gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" 
     ./configure --build="$gnuArch" --enable-optimizations --enable-option-checking=fatal --enable-shared --enable-unicode=ucs4 
-    # make -j "$(nproc)" PROFILE_TASK='-m test.regrtest --pgo test_array test_base64 test_binascii test_binhex test_binop test_bytes test_c_locale_coercion test_class test_cmath test_codecs test_compile test_complex test_csv test_decimal test_dict test_float test_fstring test_hashlib test_io test_iter test_json test_long test_math test_memoryview test_pickle test_re test_set test_slice test_struct test_threading test_time test_traceback test_unicode ' 
     make -j "$(nproc)" PROFILE_TASK=''
     make install 
-    ldconfig 
+    ldconfig
     rm -rf /usr/src/python
     add-test-command "python2 --version"
-    cd /root/sources/install
 }
 
 function install_pip2() {
@@ -152,7 +149,12 @@ function install_rvm() {
     # allow to fetch keys when behind a firewall (https://serverfault.com/questions/168826/how-to-install-gpg-keys-from-behind-a-firewall)
     gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     # kill all gpg processes
-    { command -v gpgconf > /dev/null && gpgconf --kill all || :; }
+    # make sure gpgconf exists
+    if command -v gpgconf > /dev/null; then
+        gpgconf --kill all
+    else
+        :  # Do nothing, and return true
+    fi
     # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl -sSL https://get.rvm.io -o /tmp/rvm.sh
     bash /tmp/rvm.sh --ruby="3.2.2" stable
@@ -285,14 +287,21 @@ function install_gf() {
 function install_java11() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
     colorecho "Installing java 11"
-    mkdir -p /tmp/java
-    cp -r /root/source/assets/java/java11 /tmp/java
-    cd /tmp/java/java11
-    dpkg -i openjdk-11-jre-headless_11.0.20+8-1\~deb11u1_amd64.deb
-    dpkg -i openjdk-11-jdk-headless_11.0.20+8-1\~deb11u1_amd64.deb
-    dpkg -i openjdk-11-jre_11.0.20+8-1\~deb11u1_amd64.deb
-    dpkg -i openjdk-11-jdk_11.0.20+8-1\~deb11u1_amd64.deb
-    rm -rf /tmp/java
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local ARCH="x64"
+
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local ARCH="aarch64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    JDK_URL=$(curl --location --silent "https://api.github.com/repos/adoptium/temurin11-binaries/releases/latest" | grep 'browser_download_url.*jdk_'$ARCH'_linux.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/openjdk11-jdk.tar.gz "$JDK_URL"
+    tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
+    mkdir -p "/usr/lib/jvm"
+    mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
@@ -356,7 +365,7 @@ function package_base() {
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
-    nim perl libwww-perl openjdk-17-jre openjdk-17-jdk-headless openjdk-17-jdk openvpn openresolv \
+    nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
     logrotate tmux tldr bat python3-pyftpdlib libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils tk-dev samba ssh snmp faketime php \
     python3 grc emacs-nox xsel
@@ -388,7 +397,6 @@ function package_base() {
     install_java11
 
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
-    ln -s -v /usr/lib/jvm/java-11-openjdk-* /usr/lib/jvm/java-11-openjdk    # To avoid determining the correct path based on the architecture
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
     ln -fs -v /usr/local/bin/python /usr/bin/python2.7
