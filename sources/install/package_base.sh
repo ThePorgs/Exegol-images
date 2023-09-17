@@ -99,13 +99,15 @@ function install_locales() {
 }
 
 function install_python2() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
+    colorecho "Installing Python2"
     PYTHON_VERSION=2.7.18
     fapt gir1.2-rsvg-2.0 libdb5.3-dev libdjvulibre-dev libdjvulibre-text libdjvulibre21 libevent-extra-2.1-7 libevent-openssl-2.1-7 libevent-pthreads-2.1-7  libexif-dev libimath-3-1-29 \
     libimath-dev liblcms2-dev liblqr-1-0-dev libltdl-dev libmagickcore-6-arch-config libmagickcore-6-headers  libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev libmagickwand-6-headers \
     libmagickwand-6.q16-dev libmariadb-dev-compat libopenexr-3-1-30 libopenexr-dev libopenjp2-7-dev librsvg2-dev libwmf-0.2-7 libwmf-dev libwmflite-0.2-7 libsqlite3-dev \
     default-libmysqlclient-dev libdb-dev libevent-dev libmagickcore-dev libmagickwand-dev libmaxminddb-dev libncursesw5-dev
-    wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"
-    mkdir -p /usr/src/python 
+    wget -O python.tar.xz "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz"
+    mkdir -p /usr/src/python
     tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz
     rm python.tar.xz
     cd /usr/src/python
