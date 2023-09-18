@@ -392,7 +392,7 @@ function package_base() {
     rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     pip3 install --upgrade pip
     pip3 install wheel
-    pip2 -m pip install wheel
+    pip2 install wheel
     install_pipx
 
 
