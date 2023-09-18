@@ -387,13 +387,15 @@ function package_base() {
     # removing pip being default to pip2, pip will now be /usr/bin/pip which is pip3
     rm /usr/local/bin/pip
     python2 -m pip install --no-cache-dir virtualenv
+    # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
+    # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
+    rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     pip3 install --upgrade pip
     pip3 install wheel
     pip2 -m pip install wheel
     install_pipx
 
-    # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
-    rm /usr/lib/python3.*/EXTERNALLY-MANAGED
+
 
     chsh -s /bin/zsh
 
