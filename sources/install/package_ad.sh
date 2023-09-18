@@ -435,7 +435,6 @@ function install_smbmap() {
     colorecho "Installing smbmap"
     git -C /opt/tools clone --depth 1 https://github.com/ShawnDEvans/smbmap
     cd /opt/tools/smbmap || exit
-    cp -v /root/sources/assets/patches/smbmap.patch smbmap.patch
     python3 -m pipx install .
     add-history smbmap
     add-test-command "smbmap --help"
