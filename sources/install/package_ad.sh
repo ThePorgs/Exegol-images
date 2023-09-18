@@ -410,7 +410,7 @@ function install_lnkup() {
     colorecho "Installing LNKUp"
     git -C /opt/tools/ clone --depth 1 https://github.com/Plazmaz/LNKUp
     cd /opt/tools/LNKUp
-    virtualenv --python=/usr/bin/python2 ./venv
+    virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
     add-aliases lnkup
     add-history lnkup

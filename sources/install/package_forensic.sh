@@ -33,7 +33,7 @@ function install_volatility2() {
     fapt pcregrep yara libjpeg-dev zlib1g-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
     cd /opt/tools/volatility
-    virtualenv -p /usr/bin/python2 ./venv
+    virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install pycryptodome distorm3 pillow openpyxl
     catch_and_retry ./venv/bin/python2 -m pip install ujson --no-use-pep517
     source ./venv/bin/activate

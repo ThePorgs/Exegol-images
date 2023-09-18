@@ -104,7 +104,7 @@ function install_simplyemail() {
     git -C /opt/tools/ clone --branch master --depth 1 https://github.com/killswitch-GUI/SimplyEmail.git
     cd /opt/tools/SimplyEmail/
     fapt antiword odt2txt libxml2-dev libxslt1-dev
-    virtualenv -p /usr/bin/python2 ./venv
+    virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
     add-aliases simplyemail
     add-history simplyemail

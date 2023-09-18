@@ -123,7 +123,7 @@ function install_gopherus() {
     colorecho "Installing gopherus"
     git -C /opt/tools/ clone --depth 1 https://github.com/tarunkant/Gopherus
     cd /opt/tools/Gopherus
-    virtualenv -p /usr/bin/python2 ./venv
+    virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install argparse requests
     add-aliases gopherus
     add-history gopherus
@@ -135,7 +135,7 @@ function install_nosqlmap() {
     colorecho "Installing NoSQLMap"
     git -C /opt/tools clone --depth 1 https://github.com/codingo/NoSQLMap.git
     cd /opt/tools/NoSQLMap
-    virtualenv -p /usr/bin/python2 ./venv
+    virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 setup.py install
     # https://github.com/codingo/NoSQLMap/issues/126
     rm -rf venv/lib/python2.7/site-packages/certifi-2023.5.7-py2.7.egg
@@ -584,7 +584,7 @@ function install_clusterd() {
     colorecho "Installing clusterd"
     git -C /opt/tools/ clone --depth 1 https://github.com/hatRiot/clusterd.git
     cd /opt/tools/clusterd
-    virtualenv -p /usr/bin/python2 ./venv
+    virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
     add-aliases clusterd
     add-history clusterd
