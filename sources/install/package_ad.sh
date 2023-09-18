@@ -30,7 +30,7 @@ function install_ad_apt_tools() {
 function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
-    cd /opt/tools/Responder
+    cd /opt/tools/Responder || exit
     cp -v /root/sources/assets/patches/responder.patch responder.patch
     git apply --verbose responder.patch # https://stackoverflow.com/questions/70870041/cannot-import-name-mutablemapping-from-collections
     python3 -m venv ./venv
@@ -207,7 +207,7 @@ function install_lsassy() {
 function install_privexchange() {
     colorecho "Installing privexchange"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PrivExchange
-    cd /opt/tools/PrivExchange
+    cd /opt/tools/PrivExchange || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases privexchange
@@ -250,8 +250,8 @@ function install_amber() {
     colorecho "Installing amber"
     # Installing keystone requirement
     git -C /opt/tools/ clone --depth 1 https://github.com/EgeBalci/keystone
-    cd /opt/tools/keystone
-    mkdir build && cd build
+    cd /opt/tools/keystone || exit
+    mkdir build && cd build || exit
     ../make-lib.sh
     cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;X86" -G "Unix Makefiles" ..
     make -j8
@@ -292,7 +292,7 @@ function install_powershell() {
 function install_krbrelayx() {
     colorecho "Installing krbrelayx"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/krbrelayx
-    cd /opt/tools/krbrelayx
+    cd /opt/tools/krbrelayx || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install dnspython ldap3 impacket dsinternals
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
@@ -353,7 +353,7 @@ function install_enum4linux-ng() {
 function install_zerologon() {
     colorecho "Pulling CVE-2020-1472 exploit and scan scripts"
     mkdir /opt/tools/zerologon
-    cd /opt/tools/zerologon
+    cd /opt/tools/zerologon || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     git -C /opt/tools/zerologon clone --depth 1 https://github.com/SecuraBV/CVE-2020-1472 zerologon-scan
@@ -367,7 +367,7 @@ function install_zerologon() {
 function install_libmspack() {
     colorecho "Installing libmspack"
     git -C /opt/tools/ clone --depth 1 https://github.com/kyz/libmspack.git
-    cd /opt/tools/libmspack/libmspack
+    cd /opt/tools/libmspack/libmspack || exit
     ./rebuild.sh
     ./configure
     make
@@ -381,11 +381,11 @@ function install_windapsearch-go() {
     colorecho "Installing Go windapsearch"
     # Install mage dependency
     git -C /opt/tools/ clone --depth 1 https://github.com/magefile/mage
-    cd /opt/tools/mage
+    cd /opt/tools/mage || exit
     go run bootstrap.go
     # Install windapsearch tool
     git -C /opt/tools/ clone --depth 1 https://github.com/ropnop/go-windapsearch
-    cd /opt/tools/go-windapsearch
+    cd /opt/tools/go-windapsearch || exit
     /root/go/bin/mage build
     add-aliases windapsearch
     add-history windapsearch
@@ -397,7 +397,7 @@ function install_oaburl() {
     colorecho "Downloading oaburl.py"
     mkdir /opt/tools/OABUrl
     wget -O /opt/tools/OABUrl/oaburl.py "https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py"
-    cd /opt/tools/OABUrl/
+    cd /opt/tools/OABUrl/ || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install requests
     add-aliases oaburl
@@ -409,7 +409,7 @@ function install_oaburl() {
 function install_lnkup() {
     colorecho "Installing LNKUp"
     git -C /opt/tools/ clone --depth 1 https://github.com/Plazmaz/LNKUp
-    cd /opt/tools/LNKUp
+    cd /opt/tools/LNKUp || exit
     virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
     add-aliases lnkup
@@ -421,7 +421,7 @@ function install_lnkup() {
 function install_polenum() {
     colorecho "Installing polenum"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh1t3Fox/polenum
-    cd /opt/tools/polenum
+    cd /opt/tools/polenum || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases polenum
@@ -434,7 +434,7 @@ function install_smbmap() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smbmap"
     git -C /opt/tools clone --depth 1 https://github.com/ShawnDEvans/smbmap
-    cd /opt/tools/smbmap
+    cd /opt/tools/smbmap || exit
     cp -v /root/sources/assets/patches/smbmap.patch smbmap.patch
     python3 -m pipx install .
     add-history smbmap
@@ -476,7 +476,7 @@ function install_smtp-user-enum() {
 function install_gpp-decrypt() {
     colorecho "Installing gpp-decrypt"
     git -C /opt/tools/ clone --depth 1 https://github.com/t0thkr1s/gpp-decrypt
-    cd /opt/tools/gpp-decrypt
+    cd /opt/tools/gpp-decrypt || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install pycryptodome colorama
     add-aliases gpp-decrypt
@@ -524,7 +524,7 @@ function install_adidnsdump() {
 function install_pygpoabuse() {
     colorecho "Installing pyGPOabuse"
     git -C /opt/tools/ clone --depth 1 https://github.com/Hackndo/pyGPOAbuse
-    cd /opt/tools/pyGPOAbuse
+    cd /opt/tools/pyGPOAbuse || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pygpoabuse
@@ -544,7 +544,7 @@ function install_bloodhound-import() {
 function install_bloodhound-quickwin() {
     colorecho "Installing bloodhound-quickwin"
     git -C /opt/tools/ clone --depth 1 https://github.com/kaluche/bloodhound-quickwin
-    cd /opt/tools/bloodhound-quickwin
+    cd /opt/tools/bloodhound-quickwin || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install py2neo pandas prettytable
     add-aliases bloodhound-quickwin
@@ -556,7 +556,7 @@ function install_bloodhound-quickwin() {
 function install_ldapsearch-ad() {
     colorecho "Installing ldapsearch-ad"
     git -C /opt/tools/ clone --depth 1 https://github.com/yaap7/ldapsearch-ad
-    cd /opt/tools/ldapsearch-ad
+    cd /opt/tools/ldapsearch-ad || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ldapsearch-ad
@@ -568,12 +568,12 @@ function install_ldapsearch-ad() {
 function install_petitpotam() {
     colorecho "Installing PetitPotam"
     git -C /opt/tools/ clone --depth 1 https://github.com/ly4k/PetitPotam
-    cd /opt/tools/PetitPotam
+    cd /opt/tools/PetitPotam || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     mv /opt/tools/PetitPotam /opt/tools/PetitPotam_alt
     git -C /opt/tools/ clone --depth 1 https://github.com/topotam/PetitPotam
-    cd /opt/tools/PetitPotam
+    cd /opt/tools/PetitPotam || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases petitpotam
@@ -585,7 +585,7 @@ function install_petitpotam() {
 function install_dfscoerce() {
     colorecho "Installing DfsCoerce"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh04m1001/DFSCoerce
-    cd /opt/tools/DFSCoerce
+    cd /opt/tools/DFSCoerce || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases dfscoerce
@@ -606,7 +606,7 @@ function install_coercer() {
 function install_pkinittools() {
     colorecho "Installing PKINITtools"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PKINITtools
-    cd /opt/tools/PKINITtools
+    cd /opt/tools/PKINITtools || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pkinittools
@@ -618,7 +618,7 @@ function install_pkinittools() {
 function install_pywhisker() {
     colorecho "Installing pyWhisker"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
-    cd /opt/tools/pywhisker
+    cd /opt/tools/pywhisker || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pywhisker
@@ -630,7 +630,7 @@ function install_pywhisker() {
 function install_manspider() {
     colorecho "Installing Manspider"
     git -C /opt/tools clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER.git
-    cd /opt/tools/MANSPIDER
+    cd /opt/tools/MANSPIDER || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install .
     touch ./man_spider/lib/init.py
@@ -644,7 +644,7 @@ function install_manspider() {
 function install_targetedKerberoast() {
     colorecho "Installing targetedKerberoast"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
-    cd /opt/tools/targetedKerberoast
+    cd /opt/tools/targetedKerberoast || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases targetedkerberoast
@@ -657,7 +657,7 @@ function install_pcredz() {
     colorecho "Installing PCredz"
     fapt libpcap-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/PCredz
-    cd /opt/tools/PCredz
+    cd /opt/tools/PCredz || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install Cython
     catch_and_retry ./venv/bin/python3 -m pip install python-libpcap
@@ -670,7 +670,7 @@ function install_pcredz() {
 function install_pywsus() {
     colorecho "Installing pywsus"
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
-    cd /opt/tools/pywsus
+    cd /opt/tools/pywsus || exit
     python3 -m venv ./venv/
     # https://github.com/GoSecure/pywsus/pull/12
     echo -e "beautifulsoup4==4.9.1\nlxml==4.9.1\nsoupsieve==2.0.1" > requirements.txt
@@ -712,7 +712,7 @@ function install_certipy() {
 function install_shadowcoerce() {
     colorecho "Installing ShadowCoerce PoC"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/ShadowCoerce
-    cd /opt/tools/ShadowCoerce
+    cd /opt/tools/ShadowCoerce || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases shadowcoerce
@@ -724,7 +724,7 @@ function install_shadowcoerce() {
 function install_gmsadumper() {
     colorecho "Installing gMSADumper"
     git -C /opt/tools/ clone --depth 1 https://github.com/micahvandeusen/gMSADumper
-    cd /opt/tools/gMSADumper
+    cd /opt/tools/gMSADumper || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases gmsadumper
@@ -736,7 +736,7 @@ function install_gmsadumper() {
 function install_pylaps() {
     colorecho "Installing pyLAPS"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLAPS
-    cd /opt/tools/pyLAPS
+    cd /opt/tools/pyLAPS || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases pylaps
@@ -748,7 +748,7 @@ function install_pylaps() {
 function install_finduncommonshares() {
     colorecho "Installing FindUncommonShares"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/FindUncommonShares
-    cd /opt/tools/FindUncommonShares/
+    cd /opt/tools/FindUncommonShares/ || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases finduncommonshares
@@ -760,7 +760,7 @@ function install_finduncommonshares() {
 function install_ldaprelayscan() {
     colorecho "Installing LdapRelayScan"
     git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/LdapRelayScan
-    cd /opt/tools/LdapRelayScan
+    cd /opt/tools/LdapRelayScan || exit
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ldaprelayscan
@@ -781,7 +781,7 @@ function install_goldencopy() {
 function install_crackhound() {
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
-    cd /opt/tools/CrackHound
+    cd /opt/tools/CrackHound || exit
     PRS="6"
     for PR in $PRS; do git fetch origin pull/$PR/head:pull/$PR && git merge --strategy-option theirs --no-edit pull/$PR; done
     python3 -m venv ./venv/
@@ -815,7 +815,7 @@ function install_rusthound() {
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
     git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
-    cd /opt/tools/RustHound
+    cd /opt/tools/RustHound || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     cargo build --release
@@ -884,7 +884,7 @@ function install_roastinthemiddle() {
 function install_PassTheCert() {
     colorecho "Installing PassTheCert"
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
-    cd /opt/tools/PassTheCert/Python/
+    cd /opt/tools/PassTheCert/Python/ || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install impacket
     add-aliases PassTheCert
@@ -929,7 +929,7 @@ function install_neo4j() {
 function install_noPac() {
     colorecho "Installing noPac"
     git -C /opt/tools/ clone --depth 1 https://github.com/Ridter/noPac
-    cd /opt/tools/noPac
+    cd /opt/tools/noPac || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases noPac
@@ -950,7 +950,7 @@ function install_roadtools() {
 function install_teamsphisher() {
     colorecho "Installing TeamsPhisher"
     git -C /opt/tools clone --depth 1 https://github.com/Octoberfest7/TeamsPhisher
-    cd /opt/tools/TeamsPhisher
+    cd /opt/tools/TeamsPhisher || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install msal colorama requests
     add-aliases teamsphisher
@@ -962,7 +962,7 @@ function install_teamsphisher() {
 function install_GPOddity() {
   colorecho "Installing GPOddity"
   git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/GPOddity
-  cd /opt/tools/GPOddity
+  cd /opt/tools/GPOddity || exit
   python3 -m venv ./venv
   catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
   add-aliases GPOddity
