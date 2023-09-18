@@ -15,16 +15,18 @@ function install_exegol-history() {
     # todo : below is something basic. A nice tool being created for faster and smoother workflow
     mkdir -p /opt/tools/Exegol-history
     rm -rf /opt/tools/Exegol-history/profile.sh
-    echo "#export INTERFACE='eth0'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export DOMAIN='DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export USER='someuser'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export PASSWORD='somepassword'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export NT_HASH='c1c635aa12ae60b7fe39e28456a7bac6'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export DC_IP='192.168.56.101'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export DC_HOST='DC01.DOMAIN.LOCAL'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export TARGET='192.168.56.69'" >> /opt/tools/Exegol-history/profile.sh
-    echo "#export ATTACKER_IP='192.168.56.1'" >> /opt/tools/Exegol-history/profile.sh
+    {
+      echo "#export INTERFACE='eth0'"
+      echo "#export DOMAIN='DOMAIN.LOCAL'"
+      echo "#export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'"
+      echo "#export USER='someuser'"
+      echo "#export PASSWORD='somepassword'"
+      echo "#export NT_HASH='c1c635aa12ae60b7fe39e28456a7bac6'"
+      echo "#export DC_IP='192.168.56.101'"
+      echo "#export DC_HOST='DC01.DOMAIN.LOCAL'"
+      echo "#export TARGET='192.168.56.69'"
+      echo "#export ATTACKER_IP='192.168.56.1'"
+    } >> /opt/tools/Exegol-history/profile.sh
 }
 
 function install_rust_cargo() {
@@ -32,7 +34,7 @@ function install_rust_cargo() {
     colorecho "Installing rustc, cargo, rustup"
     # splitting curl | sh to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
-    cat /tmp/rustup.sh | sh -s -- -y
+    sh /tmp/rustup.sh -y
     source "$HOME/.cargo/env"
     add-test-command "cargo --version"
 }
@@ -101,21 +103,23 @@ function install_locales() {
 function install_python2() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing Python2"
-    PYTHON_VERSION=2.7.18
+    local PYTHON_VERSION=2.7.18
     fapt gir1.2-rsvg-2.0 libdb5.3-dev libdjvulibre-dev libdjvulibre-text libdjvulibre21 libevent-extra-2.1-7 libevent-openssl-2.1-7 libevent-pthreads-2.1-7  libexif-dev libimath-3-1-29 \
     libimath-dev liblcms2-dev liblqr-1-0-dev libltdl-dev libmagickcore-6-arch-config libmagickcore-6-headers  libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev libmagickwand-6-headers \
     libmagickwand-6.q16-dev libmariadb-dev-compat libopenexr-3-1-30 libopenexr-dev libopenjp2-7-dev librsvg2-dev libwmf-0.2-7 libwmf-dev libwmflite-0.2-7 libsqlite3-dev \
-    default-libmysqlclient-dev libdb-dev libevent-dev libmagickcore-dev libmagickwand-dev libmaxminddb-dev libncursesw5-dev
-    wget -O python.tar.xz "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz"
+    default-libmysqlclient-dev libdb-dev libevent-dev libmagickcore-dev libmagickwand-dev libmaxminddb-dev libncursesw5-dev xz-utils dpkg-dev build-essential libssl-dev tk-dev libreadline-dev libgdbm-dev \
+
+    wget -O /tmp/python.tar.xz "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz"
     mkdir -p /usr/src/python
-    tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz
-    rm python.tar.xz
-    cd /usr/src/python
-    gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" 
-    ./configure --build="$gnuArch" --enable-optimizations --enable-option-checking=fatal --enable-shared --enable-unicode=ucs4 
+    tar -xJC /usr/src/python --strip-components=1 -f /tmp/python.tar.xz
+    cd /usr/src/python || exit
+    local GNUARCH
+    GNUARCH="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"
+    ./configure --build="$GNUARCH" --enable-optimizations --enable-option-checking=fatal --enable-shared --enable-unicode=ucs4
     make -j "$(nproc)" PROFILE_TASK=''
     make install 
     ldconfig
+    cd || exit
     rm -rf /usr/src/python
     add-test-command "python2 --version"
 }
@@ -123,11 +127,10 @@ function install_python2() {
 function install_pip2() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing python-pip (for Python2.7)"
-    PYTHON_PIP_VERSION=20.0.2
-    PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/23.2.1/public/2.7/get-pip.py
-    wget -O get-pip.py "$PYTHON_GET_PIP_URL"
-    python2 get-pip.py "pip==$PYTHON_PIP_VERSION" --disable-pip-version-check --no-cache-dir
-    rm -f get-pip.py
+    local PYTHON_PIP_VERSION=20.0.2
+    local PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/23.2.1/public/2.7/get-pip.py
+    wget -O /tmp/get-pip.py "$PYTHON_GET_PIP_URL"
+    python2 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" --disable-pip-version-check --no-cache-dir
     add-test-command "pip2 --version"
 }
 
@@ -247,10 +250,10 @@ function install_neovim() {
         # Build take ~5min
         fapt gettext
         git clone https://github.com/neovim/neovim.git
-        cd neovim
+        cd neovim || exit
         make CMAKE_BUILD_TYPE=RelWithDebInfo
         make install
-        cd ..
+        cd .. || exit
         rm -rf ./neovim
     fi
     add-test-command "nvim --version"
@@ -273,6 +276,7 @@ function install_gf() {
     # A wrapper around grep, to help you grep for things
     go install -v github.com/tomnomnom/gf@latest
     # Enable autocompletion
+    # shellcheck disable=SC2016
     echo 'source $GOPATH/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh' >> ~/.zshrc
     cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
     # Add patterns from 1ndianl33t
@@ -299,6 +303,7 @@ function install_java11() {
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
+    local JDK_URL
     JDK_URL=$(curl --location --silent "https://api.github.com/repos/adoptium/temurin11-binaries/releases/latest" | grep 'browser_download_url.*jdk_'$ARCH'_linux.*tar.gz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/openjdk11-jdk.tar.gz "$JDK_URL"
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
@@ -307,12 +312,12 @@ function install_java11() {
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
-function add-repository() {
+function add_debian_repository_components() {
     # add non-free non-free-firmware contrib repository 
     # adding at the end of the line start with Components of the repository to add
     colorecho "add non-free non-free-firmware contrib repository"
-    source_file="/etc/apt/sources.list.d/debian.sources"
-    out_file="/etc/apt/sources.list.d/debian2.sources"
+    local source_file="/etc/apt/sources.list.d/debian.sources"
+    local out_file="/etc/apt/sources.list.d/debian2.sources"
 
     while IFS= read -r line; do
       if [[ "$line" == "Components"* ]]; then
@@ -337,7 +342,7 @@ function post_install() {
         echo "Listening processes detected"
         ss -lnpt
         echo "Kill processes"
-        kill -9 $LISTENING_PROCESSES
+        kill -9 "$LISTENING_PROCESSES"
     fi
     add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
     colorecho "Sorting tools list"
@@ -358,7 +363,7 @@ function package_base() {
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
-    add-repository
+    add_debian_repository_components
     apt-get update
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
@@ -369,13 +374,24 @@ function package_base() {
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
     nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
     logrotate tmux tldr bat python3-pyftpdlib libxml2-utils virtualenv chromium libsasl2-dev \
-    libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils tk-dev samba ssh snmp faketime php \
+    libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
     python3 grc emacs-nox xsel
-    
+
+    # Python2.7, Python3 as default, pip2
     install_python2
+    # removing python (2.7) symbolic links, and set python3 as default
+    unlink /usr/local/bin/python
+    unlink /usr/local/bin/python-config
+    ln -fs -v "python3" /usr/bin/python
     install_pip2
+    # removing pip being default to pip2, pip will now be /usr/bin/pip which is pip3
+    rm /usr/local/bin/pip
     python2 -m pip install --no-cache-dir virtualenv
-    
+    pip3 install --upgrade pip
+    pip3 install wheel
+    pip2 -m pip install wheel
+    install_pipx
+
     # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
     rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 
@@ -394,27 +410,21 @@ function package_base() {
     add-aliases xsel
     add-aliases pyftpdlib
 
+    # Rust, Cargo, rvm
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
-    install_java11
 
+    # java11 install, and java17 as default
+    install_java11
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
-    ln -fs -v /usr/local/bin/python /usr/bin/python2.7
-    ln -fs -v /usr/local/bin/python /usr/bin/python2
-    ln -fs -v /usr/bin/python3 /usr/bin/python
-
-    pip3 install --upgrade pip
     filesystem
     install_go                                          # Golang language
     set_go_env
     install_locales
     install_ohmyzsh                                     # Awesome shell
     install_fzf                                         # Fuzzy finder
-    pip3 install wheel
-    pip2 -m pip install wheel
-    install_pipx
     add-history curl
     install_yarn
     install_ultimate_vimrc                              # Make vim usable OOFB
@@ -431,12 +441,13 @@ function package_base() {
     # openvpn
     # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
     LINE=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i ${LINE}'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+    sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
 
     LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i ${LINE}'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
-    LINE=$(($LINE + 1))
-    sed -i ${LINE}'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+    # shellcheck disable=SC2016
+    sed -i "${LINE}"'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+    ((LINE++))
+    sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
     add-test-command "openvpn --version"
 
     # logrotate
@@ -475,7 +486,7 @@ function package_base_debug() {
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
-    add-repository
+    add_debian_repository_components
     apt-get update
     colorecho "Starting main programs install"
     fapt sudo git curl zsh asciinema zip wget ncat dnsutils python3 python3-setuptools python3-pip vim nano procps automake autoconf make bundler mlocate tk-dev gnupg2 gcc g++ libssl-dev
