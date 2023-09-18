@@ -102,7 +102,7 @@ function install_holehe() {
 function install_simplyemail() {
     colorecho "Installing SimplyEmail"
     git -C /opt/tools/ clone --branch master --depth 1 https://github.com/killswitch-GUI/SimplyEmail.git
-    cd /opt/tools/SimplyEmail/
+    cd /opt/tools/SimplyEmail/ || exit
     fapt antiword odt2txt libxml2-dev libxslt1-dev
     virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
@@ -115,7 +115,7 @@ function install_simplyemail() {
 function install_theharvester() {
     colorecho "Installing theHarvester"
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
-    cd /opt/tools/theHarvester
+    cd /opt/tools/theHarvester || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     # The tool needs access to the proxies.yaml file in the folder.
@@ -139,7 +139,7 @@ function install_infoga() {
     colorecho "Installing infoga"
     git -C /opt/tools/ clone --depth 1 https://github.com/m4ll0k/Infoga
     find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
-    cd /opt/tools/Infoga
+    cd /opt/tools/Infoga || exit
     python2 -m virtualenv ./venv
     catch_and_retry ./venv/bin/python2 -m pip install .
     add-aliases infoga
@@ -152,7 +152,7 @@ function install_buster() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing buster"
     git -C /opt/tools clone --depth 1 https://github.com/sham00n/buster
-    cd /opt/tools/buster
+    cd /opt/tools/buster || exit
     python3 -m venv ./venv
     source ./venv/bin/activate
     python3 -m pip install cython Cython
@@ -169,7 +169,7 @@ function install_buster() {
 function install_pwnedornot() {
     colorecho "Installing pwnedornot"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
-    cd /opt/tools/pwnedOrNot
+    cd /opt/tools/pwnedOrNot || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install requests html2text
     mkdir -p "$HOME/.config/pwnedornot"
@@ -211,7 +211,7 @@ function install_maigret() {
 function install_linkedin2username() {
     colorecho "Installing linkedin2username"
     git -C /opt/tools/ clone --depth 1 https://github.com/initstring/linkedin2username
-    cd /opt/tools/linkedin2username
+    cd /opt/tools/linkedin2username || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases linkedin2username
@@ -241,7 +241,7 @@ function install_waybackurls() {
 function install_carbon14() {
     colorecho "Installing Carbon14"
     git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
-    cd /opt/tools/Carbon14
+    cd /opt/tools/Carbon14 || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases carbon14
@@ -253,7 +253,7 @@ function install_carbon14() {
 function install_photon() {
     colorecho "Installing photon"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/photon
-    cd /opt/tools/photon
+    cd /opt/tools/photon || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases photon
@@ -303,7 +303,7 @@ function install_maltego() {
 function install_spiderfoot() {
     colorecho "Installing Spiderfoot"
     git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
-    cd /opt/tools/spiderfoot
+    cd /opt/tools/spiderfoot || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases spiderfoot
@@ -316,7 +316,7 @@ function install_spiderfoot() {
 function install_finalrecon() {
     colorecho "Installing FinalRecon"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
-    cd /opt/tools/FinalRecon
+    cd /opt/tools/FinalRecon || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases finalrecon
@@ -339,7 +339,7 @@ function install_osrframework() {
 function install_pwndb() {
     colorecho "Installing pwndb"
     git -C /opt/tools/ clone --depth 1 https://github.com/davidtavarez/pwndb.git
-    cd /opt/tools/pwndb
+    cd /opt/tools/pwndb || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases pwndb
@@ -361,7 +361,7 @@ function install_githubemail() {
 function install_recondog() {
     colorecho "Installing ReconDog"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/ReconDog
-    cd /opt/tools/ReconDog/
+    cd /opt/tools/ReconDog/ || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases recondog
@@ -392,7 +392,7 @@ function install_trevorspray() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing trevorspray"
     git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/TREVORspray
-    cd /opt/tools/TREVORspray
+    cd /opt/tools/TREVORspray || exit
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27
     sed -i "s/1.0.5/1.0.4/" pyproject.toml
     pipx install .
@@ -413,7 +413,7 @@ function install_gitfive() {
 function install_geopincer() {
     colorecho "Installing GeoPincer"
     git -C /opt/tools clone --depth 1 https://github.com/tloja/GeoPincer.git
-    cd /opt/tools/GeoPincer
+    cd /opt/tools/GeoPincer || exit
     sed -i "s#regions.txt#/opt/tools/GeoPincer/regions.txt##" GeoPincer.py
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
@@ -427,7 +427,7 @@ function install_yalis() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Yalis"
     git -C /opt/tools clone --depth 1 https://github.com/EatonChips/yalis
-    cd /opt/tools/yalis
+    cd /opt/tools/yalis || exit
     go build .
     mv ./yalis /opt/tools/bin/
     add-history yalis
@@ -438,7 +438,7 @@ function install_yalis() {
 function install_murmurhash() {
     colorecho "Installing MurMurHash"
     git -C /opt/tools clone --depth 1 https://github.com/QU35T-code/MurMurHash
-    cd /opt/tools/MurMurHash
+    cd /opt/tools/MurMurHash || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases MurMurHash
@@ -450,7 +450,7 @@ function install_murmurhash() {
 function install_blackbird() {
     colorecho "Installing Blackbird"
     git -C /opt/tools clone --depth 1 https://github.com/p1ngul1n0/blackbird
-    cd /opt/tools/blackbird
+    cd /opt/tools/blackbird || exit
     sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
     sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
     python3 -m venv ./venv
@@ -464,7 +464,7 @@ function install_blackbird() {
 function install_sherlock() {
     colorecho "Installing Sherlock"
     git -C /opt/tools/ clone --depth 1 https://github.com/sherlock-project/sherlock
-    cd /opt/tools/sherlock
+    cd /opt/tools/sherlock || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases sherlock
@@ -486,7 +486,7 @@ function install_gomapenum() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoMapEnum"
     git -C /opt/tools clone --depth 1 https://github.com/nodauf/GoMapEnum
-    cd /opt/tools/GoMapEnum/src
+    cd /opt/tools/GoMapEnum/src || exit
     go build .
     mv ./src /opt/tools/bin/gomapenum
     add-history gomapenum
@@ -508,7 +508,7 @@ function package_osint() {
     install_simplyemail             # Gather emails
     install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
-    install_infoga                  # Gathering email accounts informations
+    # install_infoga                  # Gathering email accounts informations TODO : 404, it seems the repo has been removed
     install_buster                  # An advanced tool for email reconnaissance
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     # install_ghunt                 # Investigate Google Accounts with emails FIXME: Need python3.10 -> https://github.com/mxrch/GHunt/issues/398
