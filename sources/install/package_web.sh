@@ -65,7 +65,7 @@ function install_kiterunner() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kiterunner (kr)"
     git -C /opt/tools/ clone --depth 1 https://github.com/assetnote/kiterunner.git
-    cd /opt/tools/kiterunner
+    cd /opt/tools/kiterunner || exit
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-large.kite.tar.gz
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-small.kite.tar.gz
     make build
@@ -88,7 +88,7 @@ function install_ffuf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ffuf"
     git -C /opt/tools clone --depth 1 https://github.com/ffuf/ffuf.git
-    cd /opt/tools/ffuf
+    cd /opt/tools/ffuf || exit
     go build .
     mv ./ffuf /opt/tools/bin/
     # https://github.com/ffuf/ffuf/issues/681
@@ -110,7 +110,7 @@ function install_dirsearch() {
 function install_ssrfmap() {
     colorecho "Installing SSRFmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
-    cd /opt/tools/SSRFmap
+    cd /opt/tools/SSRFmap || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases ssrfmap
@@ -122,7 +122,7 @@ function install_ssrfmap() {
 function install_gopherus() {
     colorecho "Installing gopherus"
     git -C /opt/tools/ clone --depth 1 https://github.com/tarunkant/Gopherus
-    cd /opt/tools/Gopherus
+    cd /opt/tools/Gopherus || exit
     virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install argparse requests
     add-aliases gopherus
@@ -134,7 +134,7 @@ function install_gopherus() {
 function install_nosqlmap() {
     colorecho "Installing NoSQLMap"
     git -C /opt/tools clone --depth 1 https://github.com/codingo/NoSQLMap.git
-    cd /opt/tools/NoSQLMap
+    cd /opt/tools/NoSQLMap || exit
     virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 setup.py install
     # https://github.com/codingo/NoSQLMap/issues/126
@@ -149,7 +149,7 @@ function install_nosqlmap() {
 function install_xsstrike() {
     colorecho "Installing XSStrike"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/XSStrike.git
-    cd /opt/tools/XSStrike
+    cd /opt/tools/XSStrike || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases xsstrike
@@ -172,7 +172,7 @@ function install_xspear() {
 function install_xsser() {
     colorecho "Installing xsser"
     git -C /opt/tools clone --depth 1 https://github.com/epsylon/xsser.git
-    cd /opt/tools/xsser
+    cd /opt/tools/xsser || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install pycurl bs4 pygeoip gobject cairocffi selenium
     add-aliases xsser
@@ -193,7 +193,7 @@ function install_xsrfprobe() {
 function install_bolt() {
     colorecho "Installing Bolt"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/Bolt.git
-    cd /opt/tools/Bolt
+    cd /opt/tools/Bolt || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases bolt
@@ -207,7 +207,7 @@ function install_kadimus() {
     # TODO : Check if deps are already installed
     fapt libcurl4-openssl-dev libpcre3-dev libssh-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/P0cL4bs/Kadimus
-    cd /opt/tools/Kadimus
+    cd /opt/tools/Kadimus || exit
     make
     add-aliases kadimus
     add-history kadimus
@@ -218,7 +218,7 @@ function install_kadimus() {
 function install_fuxploider() {
     colorecho "Installing fuxploider"
     git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
-    cd /opt/tools/fuxploider
+    cd /opt/tools/fuxploider || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases fuxploider
@@ -231,7 +231,7 @@ function install_patator() {
     colorecho "Installing patator"
     fapt libmariadb-dev
     git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
-    cd /opt/tools/patator
+    cd /opt/tools/patator || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases patator
@@ -294,10 +294,10 @@ function install_cmsmap() {
 function install_moodlescan() {
     colorecho "Installing moodlescan"
     git -C /opt/tools/ clone --depth 1 https://github.com/inc0d3/moodlescan.git
-    cd /opt/tools/moodlescan
+    cd /opt/tools/moodlescan || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
-    cd /opt/tools/moodlescan
+    cd /opt/tools/moodlescan || exit
     catch_and_retry ./venv/bin/python3 moodlescan.py -a
     add-aliases moodlescan
     add-history moodlescan
@@ -320,7 +320,7 @@ function install_tls-scanner() {
     colorecho "Installing TLS-Scanner"
     fapt maven
     git -C /opt/tools/ clone --depth 1 https://github.com/tls-attacker/TLS-Scanner
-    cd /opt/tools/TLS-Scanner
+    cd /opt/tools/TLS-Scanner || exit
     git submodule update --init --recursive
     mvn clean package -DskipTests=true
     add-aliases tls-scanner
@@ -332,7 +332,7 @@ function install_tls-scanner() {
 function install_cloudfail() {
     colorecho "Installing CloudFail"
     git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
-    cd /opt/tools/CloudFail
+    cd /opt/tools/CloudFail || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases cloudfail
@@ -344,7 +344,7 @@ function install_cloudfail() {
 function install_eyewitness() {
     colorecho "Installing EyeWitness"
     git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
-    cd /opt/tools/EyeWitness
+    cd /opt/tools/EyeWitness || exit
     python3 -m venv ./venv
     source ./venv/bin/activate
     ./Python/setup/setup.sh
@@ -386,7 +386,7 @@ function install_wafw00f() {
 function install_corscanner() {
     colorecho "Installing CORScanner"
     git -C /opt/tools/ clone --depth 1 https://github.com/chenjj/CORScanner.git
-    cd /opt/tools/CORScanner
+    cd /opt/tools/CORScanner || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases corscanner
@@ -417,7 +417,7 @@ function install_gowitness() {
 function install_linkfinder() {
     colorecho "Installing LinkFinder"
     git -C /opt/tools/ clone --depth 1 https://github.com/GerbenJavado/LinkFinder.git
-    cd /opt/tools/LinkFinder
+    cd /opt/tools/LinkFinder || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases linkfinder
@@ -449,7 +449,7 @@ function install_updog() {
 function install_jwt_tool() {
     colorecho "Installing JWT tool"
     git -C /opt/tools/ clone --depth 1 https://github.com/ticarpi/jwt_tool
-    cd /opt/tools/jwt_tool
+    cd /opt/tools/jwt_tool || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases jwt_tool
@@ -478,7 +478,7 @@ function install_git-dumper() {
 function install_gittools() {
     colorecho "Installing GitTools"
     git -C /opt/tools/ clone --depth 1 https://github.com/internetwache/GitTools.git
-    cd /opt/tools/GitTools/Finder
+    cd /opt/tools/GitTools/Finder || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases gittools
@@ -530,7 +530,7 @@ function install_jdwp_shellifier(){
 function install_httpmethods() {
     colorecho "Installing httpmethods"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
-    cd /opt/tools/httpmethods
+    cd /opt/tools/httpmethods || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases httpmethods
@@ -542,7 +542,7 @@ function install_httpmethods() {
 function install_h2csmuggler() {
     colorecho "Installing h2csmuggler"
     git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/h2csmuggler
-    cd /opt/tools/h2csmuggler
+    cd /opt/tools/h2csmuggler || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install h2
     add-aliases h2csmuggler
@@ -563,7 +563,7 @@ function install_byp4xx() {
 function install_feroxbuster() {
     colorecho "Installing feroxbuster"
     mkdir /opt/tools/feroxbuster
-    cd /opt/tools/feroxbuster
+    cd /opt/tools/feroxbuster || exit
     # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh -o /tmp/install-feroxbuster.sh
     bash /tmp/install-feroxbuster.sh
@@ -578,7 +578,7 @@ function install_feroxbuster() {
 function install_tomcatwardeployer() {
     colorecho "Installing tomcatWarDeployer"
     git -C /opt/tools/ clone --depth 1 https://github.com/mgeeky/tomcatWarDeployer.git
-    cd /opt/tools/tomcatWarDeployer
+    cd /opt/tools/tomcatWarDeployer || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases tomcatwardeployer
@@ -590,7 +590,7 @@ function install_tomcatwardeployer() {
 function install_clusterd() {
     colorecho "Installing clusterd"
     git -C /opt/tools/ clone --depth 1 https://github.com/hatRiot/clusterd.git
-    cd /opt/tools/clusterd
+    cd /opt/tools/clusterd || exit
     virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
     add-aliases clusterd
@@ -703,7 +703,7 @@ function install_burpsuite() {
 function install_smuggler() {
     colorecho "Installing smuggler.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/defparam/smuggler.git
-    cd /opt/tools/smuggler
+    cd /opt/tools/smuggler || exit
     python3 -m venv ./venv
     add-aliases smuggler
     add-history smuggler
@@ -723,7 +723,7 @@ function install_php_filter_chain_generator() {
 function install_kraken() {
     colorecho "Installing Kraken"
     git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
-    cd /opt/tools/Kraken
+    cd /opt/tools/Kraken || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases kraken
