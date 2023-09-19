@@ -228,10 +228,25 @@ function install_ruler() {
 function install_upx-ucl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing upx-ucl"
-    git -C /opt/tools clone --depth 1 https://github.com/ferseiti/upx-ucl.git
-    ln -v -s /opt/tools/upx-ucl/debian/upx-ucl/usr/bin/upx-ucl /opt/tools/bin/upx-ucl
-    add-test-command "upx-ucl --help"
-    add-to-list "upx-ucl,https://github.com/ferseiti/upx-ucl.git,UPX is an advanced executable file compressor."
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local ARCH="amd64"
+
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local ARCH="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    local UPX_URL
+    UPX_URL=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'$ARCH'.*tar.xz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/upx.tar.xz "$UPX_URL"
+    tar -xzf /tmp/upx.tar.xz --directory /tmp
+    rm /tmp/upx.tar.xz
+    mv /tmp/upx* /opt/tools/upx
+    ln -v -s /opt/tools/upx/upx /opt/tools/bin/upx
+    add-test-command "upx --help"
+    add-to-list "upx,https://github.com/upx/upx,UPX is an advanced executable packer"
 }
 
 function install_darkarmour() {
