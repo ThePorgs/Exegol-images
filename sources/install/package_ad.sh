@@ -796,8 +796,13 @@ function install_crackhound() {
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
     cd /opt/tools/CrackHound || exit
-    PRS="6"
-    for PR in $PRS; do git fetch origin pull/$PR/head:pull/$PR && git merge --strategy-option theirs --no-edit pull/$PR; done
+    local TEMP_FIX_LIMIT="2023-10-20" # 20 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      local PRS="6"
+      for PR in $PRS; do git fetch origin pull/$PR/head:pull/$PR && git merge --strategy-option theirs --no-edit pull/$PR; done
+    fi
     python3 -m venv ./venv/
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases crackhound
