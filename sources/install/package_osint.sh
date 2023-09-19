@@ -135,19 +135,6 @@ function install_h8mail() {
     add-to-list "h8mail,https://github.com/khast3x/h8mail,Email OSINT and breach hunting."
 }
 
-function install_infoga() {
-    colorecho "Installing infoga"
-    git -C /opt/tools/ clone --depth 1 https://github.com/m4ll0k/Infoga
-    find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
-    cd /opt/tools/Infoga
-    python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install .
-    add-aliases infoga
-    add-history infoga
-    add-test-command "infoga.py --help"
-    add-to-list "infoga,https://github.com/m4ll0k/Infoga,Information gathering tool for hacking."
-}
-
 function install_buster() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing buster"
@@ -506,7 +493,6 @@ function package_osint() {
     install_simplyemail             # Gather emails
     install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
-    install_infoga                  # Gathering email accounts informations
     install_buster                  # An advanced tool for email reconnaissance
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     # install_ghunt                 # Investigate Google Accounts with emails FIXME: Need python3.10 -> https://github.com/mxrch/GHunt/issues/398
