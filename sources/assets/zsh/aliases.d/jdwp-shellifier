@@ -1,1 +1,1 @@
-alias jdwp-shellifier.py='/opt/tools/jdwp-shellifier/jdwp-shellifier.py'
+alias jdwp-shellifier.py='python2 /opt/tools/jdwp-shellifier/jdwp-shellifier.py'
