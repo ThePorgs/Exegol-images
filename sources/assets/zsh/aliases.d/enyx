@@ -1,1 +1,1 @@
-alias enyx.py='python /opt/tools/Enyx/enyx.py'
+alias enyx.py='python2 /opt/tools/Enyx/enyx.py'
