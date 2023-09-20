@@ -125,6 +125,14 @@ function install_pyenv() {
     #  --> python3.6 points to 3.6
     #  --> python2 points to latest python2
     pyenv global 3 3.6 2
+    add-test-command "python --version"
+    add-test-command "python2 --version"
+    add-test-command "python3 --version"
+    add-test-command "python3.6 --version"
+    add-test-command "pip --version"
+    add-test-command "pip2 --version"
+    add-test-command "pip3 --version"
+    add-test-command "pip3.6 --version"
 }
 
 function install_firefox() {
