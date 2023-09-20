@@ -98,40 +98,33 @@ function install_locales() {
     fapt locales
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
     locale-gen
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US.UTF-8
 }
 
-function install_python2() {
+function install_pyenv() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing Python2"
-    local PYTHON_VERSION=2.7.18
-    fapt gir1.2-rsvg-2.0 libdb5.3-dev libdjvulibre-dev libdjvulibre-text libdjvulibre21 libevent-extra-2.1-7 libevent-openssl-2.1-7 libevent-pthreads-2.1-7  libexif-dev libimath-3-1-29 \
-    libimath-dev liblcms2-dev liblqr-1-0-dev libltdl-dev libmagickcore-6-arch-config libmagickcore-6-headers  libmagickcore-6.q16-6-extra libmagickcore-6.q16-dev libmagickwand-6-headers \
-    libmagickwand-6.q16-dev libmariadb-dev-compat libopenexr-3-1-30 libopenexr-dev libopenjp2-7-dev librsvg2-dev libwmf-0.2-7 libwmf-dev libwmflite-0.2-7 libsqlite3-dev \
-    default-libmysqlclient-dev libdb-dev libevent-dev libmagickcore-dev libmagickwand-dev libmaxminddb-dev libncursesw5-dev xz-utils dpkg-dev build-essential libssl-dev tk-dev libreadline-dev libgdbm-dev \
-
-    wget -O /tmp/python.tar.xz "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz"
-    mkdir -p /usr/src/python
-    tar -xJC /usr/src/python --strip-components=1 -f /tmp/python.tar.xz
-    cd /usr/src/python || exit
-    local GNUARCH
-    GNUARCH="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"
-    ./configure --build="$GNUARCH" --enable-optimizations --enable-option-checking=fatal --enable-shared --enable-unicode=ucs4
-    make -j "$(nproc)" PROFILE_TASK=''
-    make install 
-    ldconfig
-    cd || exit
-    rm -rf /usr/src/python
-    add-test-command "python2 --version"
-}
-
-function install_pip2() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing python-pip (for Python2.7)"
-    local PYTHON_PIP_VERSION=20.0.2
-    local PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/23.2.1/public/2.7/get-pip.py
-    wget -O /tmp/get-pip.py "$PYTHON_GET_PIP_URL"
-    python2 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" --disable-pip-version-check --no-cache-dir
-    add-test-command "pip2 --version"
+    colorecho "Installing pyenv"
+    fapt git curl git build-essential
+    curl -o /tmp/pyenv.run https://pyenv.run
+    bash /tmp/pyenv.run
+    export PATH="/root/.pyenv/bin:$PATH"
+    eval "$(pyenv init --path)"
+    colorecho "Installing python2 (latest)"
+    fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
+    # apt install xz-utils tk-dev
+    pyenv install 2
+    colorecho "Installing python3.6"
+    pyenv install 3.6
+    colorecho "Installing python3 (latest)"
+    pyenv install 3
+    # allowing python2, python3 and python3.6 to be found
+    #  --> python points to latest python3
+    #  --> python3 points to latest python3
+    #  --> python3.6 points to 3.6
+    #  --> python2 points to latest python2
+    pyenv global 3 3.6 2
 }
 
 function install_firefox() {
@@ -377,26 +370,22 @@ function package_base() {
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
     python3 grc emacs-nox xsel
 
-    # Python2.7, Python3 as default, pip2
-    install_python2
-    # removing python (2.7) symbolic links, and set python3 as default
-    unlink /usr/local/bin/python
-    unlink /usr/local/bin/python-config
-    ln -fs -v "python3" /usr/bin/python
-    install_pip2
-    # removing pip being default to pip2, pip will now be /usr/bin/pip which is pip3
-    rm /usr/local/bin/pip
+    filesystem
+    install_locales
+
+    # setup Python environment
+    install_pyenv
     python2 -m pip install --no-cache-dir virtualenv
     # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
     # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
-    rm /usr/lib/python3.*/EXTERNALLY-MANAGED
+    # with pyenv, not sure the command below is needed anymore
+    # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     pip3 install --upgrade pip
     pip3 install wheel
     pip2 install wheel
     install_pipx
 
-
-
+    # change default shell
     chsh -s /bin/zsh
 
     add-history dnsutils
@@ -421,10 +410,8 @@ function package_base() {
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
-    filesystem
     install_go                                          # Golang language
     set_go_env
-    install_locales
     install_ohmyzsh                                     # Awesome shell
     install_fzf                                         # Fuzzy finder
     add-history curl
