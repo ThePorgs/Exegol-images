@@ -253,7 +253,7 @@ function install_upx() {
 function install_darkarmour() {
     colorecho "Installing darkarmour"
     fapt mingw-w64-tools mingw-w64-common g++-mingw-w64 gcc-mingw-w64 osslsigncode
-    install_upx-ucl
+    install_upx
     git -C /opt/tools/ clone --depth 1 https://github.com/bats3c/darkarmour
     add-aliases darkarmour
     add-history darkarmour
