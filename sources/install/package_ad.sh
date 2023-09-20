@@ -225,9 +225,9 @@ function install_ruler() {
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
 }
 
-function install_upx-ucl() {
+function install_upx() {
     # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing upx-ucl"
+    colorecho "Installing upx"
     if [[ $(uname -m) = 'x86_64' ]]
     then
         local ARCH="amd64"
@@ -241,10 +241,11 @@ function install_upx-ucl() {
     local UPX_URL
     UPX_URL=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'$ARCH'.*tar.xz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/upx.tar.xz "$UPX_URL"
-    tar -xzf /tmp/upx.tar.xz --directory /tmp
+    tar -xf /tmp/upx.tar.xz --directory /tmp
     rm /tmp/upx.tar.xz
     mv /tmp/upx* /opt/tools/upx
     ln -v -s /opt/tools/upx/upx /opt/tools/bin/upx
+    ln -v -s upx /opt/tools/bin/upx-ucl
     add-test-command "upx --help"
     add-to-list "upx,https://github.com/upx/upx,UPX is an advanced executable packer"
 }
