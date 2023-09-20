@@ -226,7 +226,7 @@ function install_ruler() {
 }
 
 function install_upx() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing upx"
     if [[ $(uname -m) = 'x86_64' ]]
     then
