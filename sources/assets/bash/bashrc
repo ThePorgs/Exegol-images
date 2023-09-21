@@ -4,6 +4,10 @@ umask 0007
 # Automatically exit the shell when receiving SIGTERM (when the container is stopping)
 trap exit TERM
 
+# fzf
+export FZF_BASE=/opt/tools/fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 # rvm
 source /usr/local/rvm/scripts/rvm
 

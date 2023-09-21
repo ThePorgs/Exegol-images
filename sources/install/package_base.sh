@@ -277,6 +277,7 @@ function install_gf() {
     # A wrapper around grep, to help you grep for things
     go install -v github.com/tomnomnom/gf@latest
     # Enable autocompletion
+    echo '# Enable gf autocompletion' >> ~/.zshrc
     # shellcheck disable=SC2016
     echo 'source $GOPATH/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh' >> ~/.zshrc
     cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
