@@ -6,25 +6,34 @@ source common.sh
 function install_web_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing web apt tools"
-    fapt dirb sslscan weevely prips swaks
+    fapt dirb sslscan prips swaks
   
     add-history dirb
     add-history sslscan
-    add-history weevely
     add-history prips
     add-history swaks
   
     add-test-command "dirb | grep '<username:password>'" # Web fuzzer
     add-test-command "sslscan --version"                 # SSL/TLS scanner
-    add-test-command "weevely --help"                    # Awesome secure and light PHP webshell
     add-test-command "prips --help"                      # Print the IP addresses in a given range
     add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 
     add-to-list "dirb,https://github.com/v0re/dirb,Web Content Scanner"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
-    add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
     add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
     add-to-list "swaks,https://github.com/jetmore/swaks,Swaks is a featureful flexible scriptable transaction-oriented SMTP test tool."
+}
+
+function install_weevely() {
+    colorecho "Installing weevely"
+    git -C /opt/tools clone --depth 1 https://github.com/epinna/weevely3
+    cd /opt/tools/weevely3 || exit
+    python3 -m venv ./venv
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    add-alias weevely
+    add-history weevely
+    add-test-command "weevely --help"
+    add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
 }
 
 function install_whatweb() {
@@ -761,6 +770,7 @@ function package_web() {
     set_go_env
     set_ruby_env
     set_python_env
+    install_weevely                 # Weaponized web shell
     install_whatweb                 # Recognises web technologies including content management
     install_wfuzz                   # Web fuzzer (second favorites)
     install_gobuster                # Web fuzzer (pretty good for several extensions)
