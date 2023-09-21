@@ -153,12 +153,11 @@ function install_buster() {
     colorecho "Installing buster"
     git -C /opt/tools clone --depth 1 https://github.com/sham00n/buster
     cd /opt/tools/buster || exit
-    python3 -m venv ./venv
+    fapt libxml2-dev libxslt-dev
+    python3.6 -m venv ./venv
     source ./venv/bin/activate
-    python3 -m pip install cython Cython
-    python3 -m pip install cchardet
-    python3 -m pip install requests beautifulsoup4 PyYaml lxml grequests gevent twint
-    python3 setup.py install
+    python3.6 -m pip install cython cchardet requests beautifulsoup4 PyYaml lxml grequests gevent twint
+    python3.6 setup.py install
     deactivate
     ln -s /opt/tools/buster/venv/bin/buster /opt/tools/bin
     add-history buster

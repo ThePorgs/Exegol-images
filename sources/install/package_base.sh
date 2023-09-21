@@ -115,6 +115,7 @@ function install_pyenv() {
     eval "$(pyenv init --path)"
     colorecho "Installing python2 (latest)"
     fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
+    # Don't think it's needed, but if something fails, use command below
     # apt install xz-utils tk-dev
     pyenv install 2
     colorecho "Installing python3.6"
@@ -386,13 +387,16 @@ function package_base() {
 
     # setup Python environment
     install_pyenv
-    python2 -m pip install --no-cache-dir virtualenv
+    pip2 install --no-cache-dir virtualenv
     # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
     # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
     # with pyenv, not sure the command below is needed anymore
     # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     pip3 install --upgrade pip
+    pip3.6 install --upgrade pip
+    pip2 install --upgrade pip
     pip3 install wheel
+    pip3.6 install wheel
     pip2 install wheel
     install_pipx
 
