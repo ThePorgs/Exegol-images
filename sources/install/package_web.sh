@@ -229,7 +229,7 @@ function install_fuxploider() {
 
 function install_patator() {
     colorecho "Installing patator"
-    fapt libmariadb-dev
+    fapt libmariadb-dev libcurl4-openssl-dev  libssl-dev ldap-utils libmariadbclient-dev libpq-dev ike-scan unzip default-jdk libsqlite3-dev libsqlcipher-dev
     git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
     cd /opt/tools/patator || exit
     python3 -m venv ./venv
