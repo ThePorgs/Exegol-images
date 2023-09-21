@@ -757,7 +757,8 @@ function install_sqlmap() {
 function package_web() {
     install_web_apt_tools
     set_go_env
-    set_ruby_envset_python_env
+    set_ruby_env
+    set_python_env
     install_whatweb                 # Recognises web technologies including content management
     install_wfuzz                   # Web fuzzer (second favorites)
     install_gobuster                # Web fuzzer (pretty good for several extensions)

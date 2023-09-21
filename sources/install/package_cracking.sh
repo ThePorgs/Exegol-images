@@ -80,7 +80,8 @@ function install_pkcrack() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
-    set_ruby_envset_python_env
+    set_ruby_env
+    set_python_env
     install_cracking_apt_tools
     install_john                    # Password cracker
     install_name-that-hash          # Name-That-Hash, the hash identifier tool

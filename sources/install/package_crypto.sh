@@ -40,7 +40,8 @@ function install_rsacracker() {
 
 # Package dedicated to attack crypto
 function package_crypto() {
-    set_ruby_envset_python_env
+    set_ruby_env
+    set_python_env
     install_rsactftool              # attack rsa
     install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
     install_rsacracker              # Powerful RSA cracker for CTFs. Supports RSA, X509, OPENSSH in PEM and DER formats.

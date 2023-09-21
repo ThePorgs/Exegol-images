@@ -92,7 +92,8 @@ function install_androguard() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
-    set_ruby_envset_python_env
+    set_ruby_env
+    set_python_env
     install_mobile_apt_tools
     install_scrpy
     install_smali

@@ -497,7 +497,8 @@ function install_gomapenum() {
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
     set_go_env
-    set_ruby_envset_python_env
+    set_ruby_env
+    set_python_env
     install_osint_apt_tools
     install_youtubedl               # Command-line program to download videos from YouTube.com and other video sites
     install_sublist3r               # Fast subdomains enumeration tool
