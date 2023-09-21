@@ -244,7 +244,7 @@ function install_rustscan() {
 # Package dedicated to network pentest tools
 function package_network() {
     set_go_env
-    set_ruby_env
+    set_ruby_envset_python_env
     install_network_apt_tools
     install_proxychains             # Network tool
     install_nmap                    # Port scanner

@@ -109,7 +109,9 @@ function install_pyenv() {
     fapt git curl git build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
+    # add pyenv to PATH
     export PATH="/root/.pyenv/bin:$PATH"
+    # add python commands (pyenv shims) to PATH
     eval "$(pyenv init --path)"
     colorecho "Installing python2 (latest)"
     fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
