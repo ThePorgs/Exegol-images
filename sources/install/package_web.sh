@@ -30,7 +30,7 @@ function install_weevely() {
     cd /opt/tools/weevely3 || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
-    add-alias weevely
+    add-aliases weevely
     add-history weevely
     add-test-command "weevely --help"
     add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
