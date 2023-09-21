@@ -363,8 +363,10 @@ function install_oneforall() {
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      local PRS="340"
-      for PR in $PRS; do git fetch origin pull/$PR/head:pull/$PR && git merge --strategy-option theirs --no-edit pull/$PR; done
+      git config --local user.email "local"
+      git config --local user.name "local"
+      local PRS=("340")
+      for PR in "${PRS[@]}"; do git fetch origin "pull/$PR/head:pull/$PR" && git merge --strategy-option theirs --no-edit "pull/$PR"; done
     fi
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
