@@ -43,6 +43,7 @@ function install_responder() {
     fi
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    # following requirements needed by MultiRelay.py
     catch_and_retry ./venv/bin/python3 -m pip install pycryptodome pycryptodomex six
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
@@ -51,7 +52,6 @@ function install_responder() {
     sed -i 's/certs\/responder.key/\/opt\/tools\/Responder\/certs\/responder.key/g' /opt/tools/Responder/Responder.conf
     x86_64-w64-mingw32-gcc /opt/tools/Responder/tools/MultiRelay/bin/Runas.c -o /opt/tools/Responder/tools/MultiRelay/bin/Runas.exe -municode -lwtsapi32 -luserenv
     x86_64-w64-mingw32-gcc /opt/tools/Responder/tools/MultiRelay/bin/Syssvc.c -o /opt/tools/Responder/tools/MultiRelay/bin/Syssvc.exe -municode
-    cd /opt/tools/Responder || exit
     /opt/tools/Responder/certs/gen-self-signed-cert.sh
     add-aliases responder
     add-history responder
