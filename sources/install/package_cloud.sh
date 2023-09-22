@@ -89,8 +89,10 @@ function install_prowler() {
 
 function install_cloudmapper() {
     colorecho "Installing Cloudmapper"
-    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git
+    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git 
     cd /opt/tools/cloudmapper
+    cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
+    git apply --verbose cloudmapper.patch
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install wheel
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
@@ -115,6 +117,7 @@ function install_azure_cli() {
 # Package dedicated to cloud tools
 function package_cloud() {
     set_ruby_env
+    set_python_env
     install_kubectl
     install_awscli
     install_scout           # Multi-Cloud Security Auditing Tool

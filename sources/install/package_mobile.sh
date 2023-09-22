@@ -6,24 +6,38 @@ source common.sh
 function install_mobile_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mobile apt tools"
-    fapt android-tools-adb zipalign apksigner apktool scrcpy
+    fapt android-tools-adb zipalign apksigner apktool
 
     add-history adb
     add-history zipalign
     add-history apksigner
     add-history apktool
-    add-history scrcpy
 
     add-test-command "adb --help"
     add-test-command "zipalign --help |& grep 'verbose output'"
     add-test-command "apksigner --version"
     add-test-command "apktool --version"
-    add-test-command "scrcpy --version"
 
     add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications"
     add-to-list "zipalign,https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file"
     add-to-list "apksigner,https://source.android.com/security/apksigning,arguably the most important step to optimize your APK file"
     add-to-list "apktool,https://github.com/iBotPeaches/Apktool,It is a tool for reverse engineering 3rd party / closed / binary Android apps."
+}
+
+function install_scrpy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing scrcpy"
+    fapt ffmpeg libsdl2-2.0-0 adb \
+                 meson ninja-build libsdl2-dev \
+                 libavcodec-dev libavdevice-dev libavformat-dev libavutil-dev \
+                 libswresample-dev libusb-1.0-0 libusb-1.0-0-dev
+    git clone https://github.com/Genymobile/scrcpy
+    cd scrcpy
+    ./install_release.sh
+    cd ..
+    rm -rf ./scrcpy
+    add-history scrcpy
+    add-test-command "scrcpy --version"
     add-to-list "scrcpy,https://github.com/Genymobile/scrcpy,Display and control your Android device."
 }
 
@@ -79,7 +93,9 @@ function install_androguard() {
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
     set_ruby_env
+    set_python_env
     install_mobile_apt_tools
+    install_scrpy
     install_smali
     install_dex2jar
     install_frida

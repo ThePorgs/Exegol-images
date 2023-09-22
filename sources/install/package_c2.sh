@@ -15,20 +15,16 @@ function install_pwncat() {
 }
 
 function install_metasploit() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
-    mkdir /tmp/metasploit_install
-    cd /tmp/metasploit_install
-    curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb -o msfinstall
-    chmod +x msfinstall
-    rvm use 3.0.0@metasploit --create
-    ./msfinstall
-    cd /tmp
-    rm -rf /tmp/metasploit_install
-    bundle install --gemfile /opt/metasploit-framework/embedded/framework/Gemfile
-    rvm use 3.0.0@default
-    # https://github.com/ruby/fileutils/issues/22 -> Warnings
+    git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
+    cd /opt/tools/metasploit-framework
+    rvm use 3.2.2@metasploit --create
+    gem install bundler
+    bundle install --path /opt/tools/metasploit-framework/vendor
+    rvm use 3.2.2@default
+    add-aliases metasploit
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
@@ -61,6 +57,7 @@ function install_sliver() {
 function package_c2() {
     set_go_env
     set_ruby_env
+    set_python_env
     # install_empire                # Exploit framework FIXME
     # install_starkiller            # GUI for Empire, commenting while Empire install is not fixed
     install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too

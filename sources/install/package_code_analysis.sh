@@ -14,9 +14,9 @@ function install_vulny-code-static-analysis() {
 
 function install_brakeman() {
     colorecho "Installing Brakeman"
-    rvm use 3.0.0@brakeman --create
+    rvm use 3.2.2@brakeman --create
     gem install brakeman
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases brakeman
     add-history brakeman
     add-test-command "brakeman --help"
@@ -47,6 +47,7 @@ function install_pp-finder() {
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
     set_ruby_env
+    set_python_env
     install_vulny-code-static-analysis
     install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
     install_semgrep                     # Static analysis engine for finding bugs and vulnerabilities

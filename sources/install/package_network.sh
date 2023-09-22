@@ -9,7 +9,9 @@ function install_network_apt_tools() {
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
-    fapt remmina remmina-plugin-rdp remmina-plugin-secret remmina-plugin-spice
+    fapt remmina remmina-plugin-rdp remmina-plugin-secret
+    # remmina-plugin-spice need build ?
+    # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
 
     add-history wireshark
     add-history tshark
@@ -63,7 +65,7 @@ function install_network_apt_tools() {
 function install_proxychains() {
     colorecho "Installing proxychains"
     git -C /opt/tools/ clone --depth 1 https://github.com/rofl0r/proxychains-ng
-    cd /opt/tools/proxychains-ng
+    cd /opt/tools/proxychains-ng || exit
     ./configure --prefix=/usr --sysconfdir=/etc
     make
     make install
@@ -80,9 +82,10 @@ function install_proxychains() {
 
 function install_nmap() {
     colorecho "Installing nmap"
-    echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+    # echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+    # nmap in main repo is a latest version
     apt-get update
-    fapt nmap/bullseye-backports
+    fapt nmap
     add-aliases nmap
     add-history nmap
     add-test-command "nmap --version"
@@ -108,7 +111,7 @@ function install_autorecon() {
 function install_dnschef() {
     colorecho "Installing DNSChef"
     git -C /opt/tools/ clone --depth 1 https://github.com/iphelix/dnschef
-    cd /opt/tools/dnschef
+    cd /opt/tools/dnschef || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases dnschef
@@ -148,7 +151,7 @@ function install_sshuttle() {
 function install_eaphammer() {
     colorecho "Installing eaphammer"
     git -C /opt/tools clone --depth 1 https://github.com/s0lst1c3/eaphammer.git
-    cd /opt/tools/eaphammer
+    cd /opt/tools/eaphammer || exit
     xargs apt install -y < kali-dependencies.txt
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r pip.req
@@ -226,7 +229,7 @@ function install_rustscan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustScan"
     git -C /opt/tools/ clone --depth 1 https://github.com/RustScan/RustScan.git
-    cd /opt/tools/RustScan
+    cd /opt/tools/RustScan || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     cargo build --release
@@ -242,6 +245,7 @@ function install_rustscan() {
 function package_network() {
     set_go_env
     set_ruby_env
+    set_python_env
     install_network_apt_tools
     install_proxychains             # Network tool
     install_nmap                    # Port scanner

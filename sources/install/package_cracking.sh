@@ -45,9 +45,9 @@ function install_name-that-hash() {
 
 function install_haiti() {
     colorecho "Installing haiti"
-    rvm use 3.0.0@haiti --create
+    rvm use 3.2.2@haiti --create
     gem install haiti-hash
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases haiti
     add-history haiti
     add-test-command "haiti --help"
@@ -81,6 +81,7 @@ function install_pkcrack() {
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
     set_ruby_env
+    set_python_env
     install_cracking_apt_tools
     install_john                    # Password cracker
     install_name-that-hash          # Name-That-Hash, the hash identifier tool

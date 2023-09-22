@@ -5,9 +5,9 @@ source common.sh
 
 function install_tls-map() {
     colorecho "Installing TLS map"
-    rvm use 3.0.0@tls-map --create
+    rvm use 3.2.2@tls-map --create
     gem install tls-map
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases tls-map
     add-history tls-map
     add-test-command "tls-map --help"
@@ -41,6 +41,7 @@ function install_rsacracker() {
 # Package dedicated to attack crypto
 function package_crypto() {
     set_ruby_env
+    set_python_env
     install_rsactftool              # attack rsa
     install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
     install_rsacracker              # Powerful RSA cracker for CTFs. Supports RSA, X509, OPENSSH in PEM and DER formats.

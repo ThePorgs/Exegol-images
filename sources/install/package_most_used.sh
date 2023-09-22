@@ -54,6 +54,7 @@ function install_most_used_apt_tools() {
 function package_most_used() {
     set_go_env
     set_ruby_env
+    set_python_env
     install_most_used_apt_tools
     install_metasploit              # Offensive framework
     install_nmap                    # Port scanner

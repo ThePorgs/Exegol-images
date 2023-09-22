@@ -94,7 +94,7 @@ function install_trilium() {
     # TODO : apt install in a second step
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
-    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild"
+    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild && npm run webpack"
     mkdir -p /root/.local/share/trilium-data
     # config.ini contains the exposition port and host
     cp -v /root/sources/assets/trilium/config.ini /root/.local/share/trilium-data
@@ -165,6 +165,7 @@ function install_yt-dlp() {
 function package_misc() {
     set_go_env
     set_ruby_env
+    set_python_env
     install_misc_apt_tools
     install_goshs           # Web uploader/downloader page
     install_searchsploit    # Exploitdb local search engine

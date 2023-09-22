@@ -30,7 +30,7 @@ function install_pyrit() {
     git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
     cd /opt/tools/Pyrit
     fapt libpq-dev
-    virtualenv -p /usr/bin/python2 ./venv
+    virtualenv --python python2 ./venv
     catch_and_retry ./venv/bin/python2 -m pip install psycopg2-binary scapy
     # https://github.com/JPaulMora/Pyrit/issues/591
     cp -v /root/sources/assets/patches/undefined-symbol-aesni-key.patch undefined-symbol-aesni-key.patch
@@ -77,12 +77,8 @@ function install_hcxtools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxtools"
     fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
-    # git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools  # Depth 1 must be removed because of the git checkout
-    git -C /opt/tools/ clone https://github.com/ZerBea/hcxtools
+    git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools
     cd /opt/tools/hcxtools
-    # Checking out to specific commit is a temporary fix to the project no compiling anymore.
-    # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxtools/issues/233) => Need to upgrade to the Debian 12 release
-    git checkout 5937d2ad9d021f3b5e2edd55d79439b8485d3222
     make install PREFIX=/opt/tools
     ln -s /opt/tools/bin/hcxpcapngtool /opt/tools/bin/hcxpcaptool
     add-history hcxtools
@@ -94,13 +90,10 @@ function install_hcxtools() {
 function install_hcxdumptool() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxdumptool"
-    fapt libcurl4-openssl-dev libssl-dev
-    # git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool  # Depth 1 must be removed because of the git checkout
-    git -C /opt/tools/ clone https://github.com/ZerBea/hcxdumptool
+    fapt libcurl4-openssl-dev
+    git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool
     cd /opt/tools/hcxdumptool
-    # Checking out to specific commit is a temporary fix to the project no compiling anymore.
-    # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232) => upgrade to debian 12
-    git checkout 56d078de4d6f5cef07b378707ab478fde03168c0
+    make
     make install PREFIX=/opt/tools
     add-history hcxdumptool
     add-test-command "hcxdumptool --version"
@@ -111,6 +104,7 @@ function install_hcxdumptool() {
 function package_wifi() {
     set_go_env
     set_ruby_env
+    set_python_env
     install_wifi_apt_tools
     install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
     install_wifite2                 # Retrieving password of a wireless access point (router)

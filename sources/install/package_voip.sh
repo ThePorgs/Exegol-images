@@ -15,5 +15,6 @@ function install_sipvicious() {
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
     set_ruby_env
+    set_python_env
     install_sipvicious              # Set of tools for auditing SIP based VOIP systems
 }

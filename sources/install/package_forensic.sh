@@ -30,11 +30,11 @@ function install_forensic_apt_tools() {
 
 function install_volatility2() {
     colorecho "Installing volatility"
-    fapt pcregrep libpcre++-dev yara libjpeg-dev zlib1g-dev
+    fapt pcregrep yara libjpeg-dev zlib1g-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
     cd /opt/tools/volatility
-    virtualenv -p /usr/bin/python2 ./venv
-    catch_and_retry ./venv/bin/python2 -m pip install pycrypto distorm3 pillow openpyxl
+    virtualenv --python python2 ./venv
+    catch_and_retry ./venv/bin/python2 -m pip install pycryptodome distorm3 pillow openpyxl
     catch_and_retry ./venv/bin/python2 -m pip install ujson --no-use-pep517
     source ./venv/bin/activate
     python2 setup.py install
@@ -114,6 +114,7 @@ function install_chainsaw() {
 # Package dedicated to forensic tools
 function package_forensic() {
     set_ruby_env
+    set_python_env
     install_forensic_apt_tools
     install_volatility2             # Memory analysis tool
     install_volatility3             # Memory analysis tool v2

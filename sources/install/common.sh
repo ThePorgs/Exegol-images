@@ -54,14 +54,22 @@ function fapt() {
 
 function set_go_env() {
     colorecho "Setting golang environment variables for installation"
-    export GO111MODULE=on
+    export GO111MODULE=auto
     export PATH=$PATH:/usr/local/go/bin:/root/.local/bin
 }
 
 function set_ruby_env() {
     colorecho "Setting ruby environment variables for installation"
     source /usr/local/rvm/scripts/rvm
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
+}
+
+function set_python_env() {
+    colorecho "Setting pyenv environment variables for installation"
+    # add pyenv to PATH
+    export PATH="/root/.pyenv/bin:$PATH"
+    # add python commands (pyenv shims) to PATH
+    eval "$(pyenv init --path)"
 }
 
 ### Catch & retry definitions
