@@ -363,6 +363,7 @@ function install_enyx() {
 }
 
 function install_enum4linux-ng() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing enum4linux-ng"
     pipx install git+https://github.com/cddmp/enum4linux-ng
     add-history enum4linux-ng
