@@ -43,10 +43,13 @@ function install_routersploit() {
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sliver"
-    git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/sliver.git
+    # Deletion of --depth 1 due to installation of stable branch
+    git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
     cd /opt/tools/sliver
-    make
-    mv sliver-* /opt/tools/bin
+    git checkout tags/v1.5.39
+    make linux
+    ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
+    ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
