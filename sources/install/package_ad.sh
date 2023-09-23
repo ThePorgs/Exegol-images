@@ -1008,6 +1008,18 @@ function install_netexec() {
     add-to-list "netexec,https://github.com/Pennyw0rth/NetExec,Network scanner (Crackmapexec updated)."
 }
 
+function install_extractbitlockerkeys() {
+    colorecho "Installing ExtractBitlockerKeys"
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/ExtractBitlockerKeys
+    cd /opt/tools/ExtractBitlockerKeys
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases extractbitlockerkeys
+    add-history extractbitlockerkeys
+    add-test-command "extractbitlockerkeys.py|& grep 'usage: ExtractBitlockerKeys.py'"
+    add-to-list "ExtractBitlockerKeys,https://github.com/p0dalirius/ExtractBitlockerKeys,A system administration or post-exploitation script to automatically extract the bitlocker recovery keys from a domain."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1094,4 +1106,5 @@ function package_ad() {
     install_teamsphisher           # TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications.
     install_GPOddity
     install_netexec                # Crackmapexec repo
+    install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
 }
