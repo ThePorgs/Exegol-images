@@ -205,21 +205,11 @@ function install_tailscale() {
 
 function install_ligolo-ng() {
     colorecho "Installing ligolo-ng"
-    # Waiting for the issue to be resolved
-    # https://github.com/nicocha30/ligolo-ng/issues/32
-    mkdir /tmp/ligolo
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_proxy_0.4.4_linux_amd64.tar.gz"
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_proxy_0.4.4_linux_arm64.tar.gz"
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-    tar -xvf /tmp/ligolo/proxy.tar.gz -C /tmp/ligolo
-    mv /tmp/ligolo/proxy /opt/tools/bin/ligolo-ng
-    rm -rf /tmp/ligolo
+    git -C /opt/tools clone --depth 1 https://github.com/nicocha30/ligolo-ng.git
+    cd /opt/tools/ligolo-ng
+    go build -o agent cmd/agent/main.go
+    go build -o proxy cmd/proxy/main.go
+    ln -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-ng
     add-history ligolo-ng
     add-test-command "ligolo-ng --help"
     add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."
