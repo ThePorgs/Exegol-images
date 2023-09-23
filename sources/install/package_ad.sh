@@ -986,11 +986,12 @@ function install_teamsphisher() {
 }
 
 function install_GPOddity() {
-  colorecho "Installing GPOddity"
-  pipx install git+https://github.com/synacktiv/GPOddity
-  add-history GPOddity
-  add-test-command "gpoddity --help"
-  add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing GPOddity"
+    pipx install git+https://github.com/synacktiv/GPOddity
+    add-history GPOddity
+    add-test-command "gpoddity --help"
+    add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
 }
 
 function install_netexec() {
