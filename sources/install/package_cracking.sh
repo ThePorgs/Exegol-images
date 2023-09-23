@@ -36,6 +36,7 @@ function install_john() {
 }
 
 function install_name-that-hash() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Name-That-Hash"
     pipx install name-that-hash
     add-history name-that-hash

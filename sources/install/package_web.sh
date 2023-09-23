@@ -484,6 +484,7 @@ function install_wuzz() {
 }
 
 function install_git-dumper() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing git-dumper"
     pipx install git-dumper
     add-history git-dumper

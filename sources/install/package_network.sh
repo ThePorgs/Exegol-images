@@ -204,6 +204,7 @@ function install_tailscale() {
 }
 
 function install_ligolo-ng() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ligolo-ng"
     git -C /opt/tools clone --depth 1 https://github.com/nicocha30/ligolo-ng.git
     cd /opt/tools/ligolo-ng || exit

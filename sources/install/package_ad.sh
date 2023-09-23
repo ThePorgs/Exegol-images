@@ -485,6 +485,7 @@ function install_pth-tools() {
 }
 
 function install_smtp-user-enum() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smtp-user-enum"
     pipx install smtp-user-enum
     add-history smtp-user-enum
@@ -553,6 +554,7 @@ function install_pygpoabuse() {
 }
 
 function install_bloodhound-import() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing bloodhound-import"
     pipx install bloodhound-import
     add-history bloodhound-import
