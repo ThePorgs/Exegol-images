@@ -47,7 +47,7 @@ function install_sliver() {
     git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
     cd /opt/tools/sliver || exit
     git checkout tags/v1.5.39
-    make linux
+    make
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
     ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
     add-history sliver
