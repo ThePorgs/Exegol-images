@@ -206,7 +206,7 @@ function install_tailscale() {
 function install_ligolo-ng() {
     colorecho "Installing ligolo-ng"
     git -C /opt/tools clone --depth 1 https://github.com/nicocha30/ligolo-ng.git
-    cd /opt/tools/ligolo-ng
+    cd /opt/tools/ligolo-ng || exit
     go build -o agent cmd/agent/main.go
     go build -o proxy cmd/proxy/main.go
     ln -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-ng

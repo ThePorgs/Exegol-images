@@ -45,7 +45,7 @@ function install_sliver() {
     colorecho "Installing Sliver"
     # Deletion of --depth 1 due to installation of stable branch
     git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
-    cd /opt/tools/sliver
+    cd /opt/tools/sliver || exit
     git checkout tags/v1.5.39
     make linux
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server

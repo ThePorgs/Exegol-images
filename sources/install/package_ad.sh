@@ -1001,7 +1001,6 @@ function install_netexec() {
     mkdir -p ~/.nxc
     [ -f ~/.nxc/nxc.conf ] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
-    # below is for having the ability to check the source code when working with modules and so on
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec
     add-history netexec
@@ -1012,9 +1011,9 @@ function install_netexec() {
 function install_extractbitlockerkeys() {
     colorecho "Installing ExtractBitlockerKeys"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/ExtractBitlockerKeys
-    cd /opt/tools/ExtractBitlockerKeys
+    cd /opt/tools/ExtractBitlockerKeys || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
     add-aliases extractbitlockerkeys
     add-history extractbitlockerkeys
     add-test-command "extractbitlockerkeys.py|& grep 'usage: ExtractBitlockerKeys.py'"

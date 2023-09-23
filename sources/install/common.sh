@@ -54,7 +54,7 @@ function fapt() {
 
 function set_cargo_env() {
     colorecho "Setting cargo environment variables for installation"
-    source /root/.zshrc || true
+    source /root/.zshrc
 }
 
 function set_go_env() {
