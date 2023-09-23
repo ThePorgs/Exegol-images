@@ -24,7 +24,7 @@ def get_functions_with_content(filename):
     with open(filename, 'r') as file:
         content = file.read()
     # Regex to retrieve function name and content
-    pattern = r'function\s+(install_[A-Za-z_-]+)\(\)\s+({[^}]*\n})'
+    pattern = r'function\s+(install_\S+)\(\)\s+({[^}]*\n})'
     return re.findall(pattern, content, re.DOTALL)
 
 
