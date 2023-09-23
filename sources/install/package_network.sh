@@ -243,6 +243,7 @@ function install_rustscan() {
 
 # Package dedicated to network pentest tools
 function package_network() {
+    set_cargo_env
     set_go_env
     set_ruby_env
     set_python_env

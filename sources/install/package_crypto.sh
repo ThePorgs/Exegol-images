@@ -40,6 +40,7 @@ function install_rsacracker() {
 
 # Package dedicated to attack crypto
 function package_crypto() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_rsactftool              # attack rsa

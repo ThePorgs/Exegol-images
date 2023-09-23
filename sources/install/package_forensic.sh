@@ -113,6 +113,7 @@ function install_chainsaw() {
 
 # Package dedicated to forensic tools
 function package_forensic() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_forensic_apt_tools

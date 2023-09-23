@@ -87,6 +87,7 @@ function install_proxmark3() {
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_rfid_apt_tools

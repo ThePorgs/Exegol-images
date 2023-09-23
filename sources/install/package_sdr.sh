@@ -50,6 +50,7 @@ function install_jackit() {
 
 # Package dedicated to SDR
 function package_sdr() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_sdr_apt_tools

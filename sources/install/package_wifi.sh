@@ -102,6 +102,7 @@ function install_hcxdumptool() {
 
 # Package dedicated to wifi pentest tools
 function package_wifi() {
+    set_cargo_env
     set_go_env
     set_ruby_env
     set_python_env

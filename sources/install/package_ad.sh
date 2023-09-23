@@ -90,9 +90,6 @@ function install_ldapdomaindump() {
 
 function install_crackmapexec() {
     colorecho "Installing CrackMapExec"
-    # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
-    # TODO: Optimize so that the PATH is always up to date
-    source /root/.zshrc || true
     git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
     pipx install /opt/tools/CrackMapExec/
     mkdir -p ~/.cme
@@ -1000,9 +997,25 @@ function install_GPOddity() {
   add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
 }
 
+function install_netexec() {
+    colorecho "Installing netexec"
+    git -C /opt/tools/ clone --depth 1 https://github.com/Pennyw0rth/NetExec
+    pipx install /opt/tools/NetExec/
+    mkdir -p ~/.nxc
+    [ -f ~/.nxc/nxc.conf ] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
+    cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
+    # below is for having the ability to check the source code when working with modules and so on
+    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
+    add-aliases netexec
+    add-history netexec
+    add-test-command "netexec --help"
+    add-to-list "netexec,https://github.com/Pennyw0rth/NetExec,Network scanner (Crackmapexec updated)."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
+    set_cargo_env
     set_go_env
     set_ruby_env
     set_python_env
@@ -1084,4 +1097,5 @@ function package_ad() {
     install_roadtools              # Rogue Office 365 and Azure (active) Directory tools
     install_teamsphisher           # TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications.
     install_GPOddity
+    install_netexec                # Crackmapexec repo
 }
