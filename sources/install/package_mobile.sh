@@ -91,13 +91,14 @@ function install_androguard() {
 }
 
 function install_mobsf(){
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf
     git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF
-    python3 -m pipx install /opt/tools/Mobile-Security-Framework-MobSF/
+    pipx install /opt/tools/Mobile-Security-Framework-MobSF/
     add-history mobsf
     add-test-command "/root/.local/pipx/venvs/mobsf/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
-    add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated, all-in-one mobile application (Android/iOS/Windows) pen-testing, malware analysis and security assessment framework"
+    add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated and all-in-one mobile application (Android/iOS/Windows) pen-testing malware analysis and security assessment framework"
 }
 
 # Package dedicated to mobile apps pentest tools
