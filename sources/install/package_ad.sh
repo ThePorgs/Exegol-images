@@ -987,13 +987,9 @@ function install_teamsphisher() {
 
 function install_GPOddity() {
   colorecho "Installing GPOddity"
-  git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/GPOddity
-  cd /opt/tools/GPOddity || exit
-  python3 -m venv ./venv
-  catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
-  add-aliases GPOddity
+  pipx install git+https://github.com/synacktiv/GPOddity
   add-history GPOddity
-  add-test-command "gpoddity.py --help"
+  add-test-command "gpoddity --help"
   add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
 }
 
