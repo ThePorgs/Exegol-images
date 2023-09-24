@@ -47,13 +47,15 @@ function deploy_tmux() {
 }
 
 function deploy_vim() {
+
+  local lpath
   ##### VIM deployment
   if [ -d "$MY_SETUP_PATH/vim" ]; then
     # Copy vim/vimrc to ~/.vimrc
     [ -f "$MY_SETUP_PATH/vim/vimrc" ] && cp "$MY_SETUP_PATH/vim/vimrc" ~/.vimrc
     # Copy every subdir configs to ~/.vim directory
-    for PATH in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
-      [ "$(ls -A "$PATH")" ] && mkdir -p ~/.vim && cp -rf "$PATH" ~/.vim
+    for lpath in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
+      [ "$(ls -A "$lpath")" ] && mkdir -p ~/.vim && cp -rf "$lpath" ~/.vim
     done
   else
     # Create supported directories struct
