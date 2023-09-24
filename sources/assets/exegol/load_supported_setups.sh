@@ -12,22 +12,22 @@ fi
 
 function init() {
   # Deploying the /opt/my-resources/ folder if not already there
-  if [ -d "$MY_ROOT_PATH" ]; then
+  if [[ -d "$MY_ROOT_PATH" ]]; then
     # Setup basic structure
-    [ -d "$MY_SETUP_PATH" ] || (mkdir "$MY_SETUP_PATH" && chmod 770 "$MY_SETUP_PATH")
-    [ -d "$MY_ROOT_PATH/bin" ] || (mkdir "$MY_ROOT_PATH/bin" && chmod 770 "$MY_ROOT_PATH/bin")
+    [[ -d "$MY_SETUP_PATH" ]] || (mkdir "$MY_SETUP_PATH" && chmod 770 "$MY_SETUP_PATH")
+    [[ -d "$MY_ROOT_PATH/bin" ]] || (mkdir "$MY_ROOT_PATH/bin" && chmod 770 "$MY_ROOT_PATH/bin")
   else
     echo "Exiting, 'my-resources' is disabled"
     exit 1
   fi
 
   # Copying README.md to /opt/my-resources/ (first use)
-  [ -f "$MY_SETUP_PATH/README.md" ] || cp --preserve=mode /.exegol/skel/README.md "$MY_SETUP_PATH/README.md"
+  [[ -f "$MY_SETUP_PATH/README.md" ]] || cp --preserve=mode /.exegol/skel/README.md "$MY_SETUP_PATH/README.md"
 }
 
 function deploy_zsh() {
   ##### ZSH deployment
-  if [ -d "$MY_SETUP_PATH/zsh" ]; then
+  if [[ -d "$MY_SETUP_PATH/zsh" ]]; then
     # TODO remove fallback 'cp' command
     grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/zsh/history" >> ~/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_SETUP_PATH/zsh/history"
   else
@@ -38,9 +38,9 @@ function deploy_zsh() {
 
 function deploy_tmux() {
   ##### TMUX deployment
-  if [ -d "$MY_SETUP_PATH/tmux" ]; then
+  if [[ -d "$MY_SETUP_PATH/tmux" ]]; then
     # copy tmux/tmux.conf to ~/.tmux.conf
-    [ -f "$MY_SETUP_PATH/tmux/tmux.conf" ] && cp "$MY_SETUP_PATH/tmux/tmux.conf" ~/.tmux.conf
+    [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]] && cp "$MY_SETUP_PATH/tmux/tmux.conf" ~/.tmux.conf
   else
     mkdir "$MY_SETUP_PATH/tmux" && chmod 770 "$MY_SETUP_PATH/tmux"
   fi
@@ -50,12 +50,12 @@ function deploy_vim() {
 
   local lpath
   ##### VIM deployment
-  if [ -d "$MY_SETUP_PATH/vim" ]; then
+  if [[ -d "$MY_SETUP_PATH/vim" ]]; then
     # Copy vim/vimrc to ~/.vimrc
-    [ -f "$MY_SETUP_PATH/vim/vimrc" ] && cp "$MY_SETUP_PATH/vim/vimrc" ~/.vimrc
+    [[ -f "$MY_SETUP_PATH/vim/vimrc" ]] && cp "$MY_SETUP_PATH/vim/vimrc" ~/.vimrc
     # Copy every subdir configs to ~/.vim directory
     for lpath in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
-      [ "$(ls -A "$lpath")" ] && mkdir -p ~/.vim && cp -rf "$lpath" ~/.vim
+      [[ "$(ls -A "$lpath")" ]] && mkdir -p ~/.vim && cp -rf "$lpath" ~/.vim
     done
   else
     # Create supported directories struct
@@ -66,7 +66,7 @@ function deploy_vim() {
 
 function deploy_nvim () {
   #### neovim deployment
-  if [ -d "$MY_SETUP_PATH/nvim" ]; then
+  if [[ -d "$MY_SETUP_PATH/nvim" ]]; then
     mkdir -p ~/.config/
     cp -r "$MY_SETUP_PATH/nvim/" ~/.config
   else 
@@ -76,7 +76,7 @@ function deploy_nvim () {
 
 function deploy_apt() {
   ##### Install custom APT packages
-  if [ -d "$MY_SETUP_PATH/apt" ]; then
+  if [[ -d "$MY_SETUP_PATH/apt" ]]; then
     # Deploy custom apt repository
     cp "$MY_SETUP_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
     # Register custom repo's GPG keys
@@ -84,7 +84,7 @@ function deploy_apt() {
     grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r KEY_URL; do
       wget -nv "$KEY_URL" -O "/tmp/aptkeys/$(echo "$KEY_URL" | md5sum | cut -d ' ' -f1).key"
     done
-    if [ "$(ls /tmp/aptkeys/*.key 2>/dev/null)" ]; then
+    if [[ "$(ls /tmp/aptkeys/*.key 2>/dev/null)" ]]; then
       gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key &&
         gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
@@ -92,7 +92,7 @@ function deploy_apt() {
     rm -r /tmp/aptkeys
     INSTALL_LIST=$(grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/apt/packages.list" | tr "\n" " ")
     # Test if there is some package to install
-    if [ -n "$INSTALL_LIST" ]; then
+    if [[ -n "$INSTALL_LIST" ]]; then
       # Update package list from repos (only if there is some package to install
       apt-get update
       # Install every packages listed in the file
@@ -108,7 +108,7 @@ function deploy_apt() {
 
 function deploy_python3() {
   ##### Install custom PIP3 packages
-  if [ -d "$MY_SETUP_PATH/python3" ]; then
+  if [[ -d "$MY_SETUP_PATH/python3" ]]; then
     # Install every pip3 packages listed in the requirements.txt file
     pip3 install -r "$MY_SETUP_PATH/python3/requirements.txt"
   else
@@ -120,28 +120,28 @@ function deploy_python3() {
 
 function run_user_setup() {
   # Executing user setup (or create the file)
-  if [ -f "$MY_SETUP_PATH/load_user_setup.sh" ]; then
-    echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading user setup ($MY_SETUP_PATH/load_user_setup.sh) ===="
-    echo "[Exegol] Installing [green]my-resources[/green] user's defined custom setup ..."
+  if [[ -f "$MY_SETUP_PATH/load_user_setup.sh" ]]; then
+    echo "[[$(date +'%d-%m-%Y_%H-%M-%S')]] ==== Loading user setup ($MY_SETUP_PATH/load_user_setup.sh) ===="
+    echo "[[Exegol]] Installing [[green]]my-resources[[/green]] user's defined custom setup ..."
     "$MY_SETUP_PATH"/load_user_setup.sh
   else
-    echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh) ===="
+    echo "[[$(date +'%d-%m-%Y_%H-%M-%S')]] ==== User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh) ===="
     cp /.exegol/skel/load_user_setup.sh "$MY_SETUP_PATH/load_user_setup.sh"
     chmod 760 "$MY_SETUP_PATH/load_user_setup.sh"
   fi
 
-  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== End of custom setups loading ===="
+  echo "[[$(date +'%d-%m-%Y_%H-%M-%S')]] ==== End of custom setups loading ===="
 }
 
 function deploy_firefox_addons() {
   ##### firefox custom addons deployment
-  if [ -d "$MY_SETUP_PATH/firefox/" ]; then
-    if [ -d "$MY_SETUP_PATH/firefox/addons" ]; then
+  if [[ -d "$MY_SETUP_PATH/firefox/" ]]; then
+    if [[ -d "$MY_SETUP_PATH/firefox/addons" ]]; then
       ADDON_FOLDER="-D $MY_SETUP_PATH/firefox/addons"
     else
       mkdir "$MY_SETUP_PATH/firefox/addons" && chmod 770 "$MY_SETUP_PATH/firefox/addons"
     fi
-    if [ -f "$MY_SETUP_PATH/firefox/addons.txt" ]; then
+    if [[ -f "$MY_SETUP_PATH/firefox/addons.txt" ]]; then
       ADDON_LIST="-L $MY_SETUP_PATH/firefox/addons.txt"
     else
       cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
@@ -207,7 +207,7 @@ function deploy_bloodhound() {
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
 echo "This log file is the result of the execution of the official and personal customization script"
-echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
+echo "[[$(date +'%d-%m-%Y_%H-%M-%S')]] ==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
 
 # Root my-resources PATH
 MY_ROOT_PATH="/opt/my-resources"
