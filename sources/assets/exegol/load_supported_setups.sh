@@ -122,16 +122,16 @@ function deploy_python3() {
 function run_user_setup() {
   # Executing user setup (or create the file)
   if [[ -f "$MY_SETUP_PATH/load_user_setup.sh" ]]; then
-    echo "[[$(date +'%d-%m-%Y_%H-%M-%S')]] ==== Loading user setup ($MY_SETUP_PATH/load_user_setup.sh) ===="
-    echo "[[Exegol]] Installing [[green]]my-resources[[/green]] user's defined custom setup ..."
+    echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading user setup ($MY_SETUP_PATH/load_user_setup.sh) ===="
+    echo "[Exegol] Installing [green]my-resources[/green] user's defined custom setup ..."
     "$MY_SETUP_PATH"/load_user_setup.sh
   else
-    echo "[[$(date +'%d-%m-%Y_%H-%M-%S')]] ==== User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh) ===="
+    echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh) ===="
     cp /.exegol/skel/load_user_setup.sh "$MY_SETUP_PATH/load_user_setup.sh"
     chmod 760 "$MY_SETUP_PATH/load_user_setup.sh"
   fi
 
-  echo "[[$(date +'%d-%m-%Y_%H-%M-%S')]] ==== End of custom setups loading ===="
+  echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== End of custom setups loading ===="
 }
 
 function deploy_firefox_addons() {
@@ -210,7 +210,7 @@ function deploy_bloodhound() {
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
 echo "This log file is the result of the execution of the official and personal customization script"
-echo "[[$(date +'%d-%m-%Y_%H-%M-%S')]] ==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
+echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
 
 # Root my-resources PATH
 MY_ROOT_PATH="/opt/my-resources"
