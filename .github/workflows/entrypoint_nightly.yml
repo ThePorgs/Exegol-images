@@ -23,7 +23,7 @@ env:
   # final image parameters
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol"
   IMAGE_TAG: "nightly"
-  DOCKERFILE: "./Dockerfile"
+  DOCKERFILE: "./sources/dockerfiles/Dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists
   DOCS_TARGET_BRANCH: "main"

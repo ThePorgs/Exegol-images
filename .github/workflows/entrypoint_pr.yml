@@ -19,7 +19,7 @@ env:
 
   # final image parameters
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
-  DOCKERFILE: "./Dockerfile"
+  DOCKERFILE: "./sources/dockerfiles/Dockerfile"
 
 
 # creating a separate concurrency group for each PR

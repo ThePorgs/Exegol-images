@@ -20,7 +20,7 @@ env:
   # final image parameters
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   IMAGE_TAG: "osint"
-  DOCKERFILE: "./osint.dockerfile"
+  DOCKERFILE: "./sources/dockerfiles/osint.dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists export
   DOCS_TARGET_BRANCH: "dev-images"

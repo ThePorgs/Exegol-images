@@ -20,7 +20,7 @@ env:
   # final image parameters
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   IMAGE_TAG: "full"
-  DOCKERFILE: "./Dockerfile"
+  DOCKERFILE: "./sources/dockerfiles/Dockerfile"
 
   # ThePorgs/Exegol-docs branch for tools lists export
   DOCS_TARGET_BRANCH: "dev-images"

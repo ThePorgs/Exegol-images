@@ -1,6 +1,9 @@
 # Author: The Exegol Project
 
-FROM debian:12-slim
+ARG BASE_IMAGE_REGISTRY="nwodtuhs/exegol-misc"
+ARG BASE_IMAGE_NAME="base"
+
+FROM ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
 
 # ARGs need to be placed after the FROM instruction. As per https://docs.docker.com/engine/reference/builder/#arg. As per https://docs.docker.com/engine/reference/builder/#arg.
 # If they are placed before, they will be overwritten somehow, and the LABELs below will be filled with empty ARGs
@@ -23,7 +26,7 @@ WORKDIR /root/sources/install
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
-RUN ./entrypoint.sh package_base
+RUN apt-get update
 RUN ./entrypoint.sh package_desktop
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_c2

@@ -1,8 +1,11 @@
 # Author: The Exegol Project
 
-FROM debian:11-slim
+ARG BASE_IMAGE_REGISTRY="nwodtuhs/exegol-misc"
+ARG BASE_IMAGE_NAME="base"
 
-# ARGs need to be placed after the FROM instruction. As per https://docs.docker.com/engine/reference/builder/#arg. As per https://docs.docker.com/engine/reference/builder/#arg.
+FROM ${BASE_IMAGE_REGISTRY}:${BASE_IMAGE_NAME}
+
+# ARGs need to be placed after the FROM instruction. As per https://docs.docker.com/engine/reference/builder/#arg.
 # If they are placed before, they will be overwritten somehow, and the LABELs below will be filled with empty ARGs
 ARG TAG="local"
 ARG VERSION="local"
@@ -23,28 +26,10 @@ WORKDIR /root/sources/install
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
-RUN ./entrypoint.sh package_base_debug
+RUN apt-get update
 RUN ./entrypoint.sh package_desktop
 RUN ./entrypoint.sh package_misc
-RUN ./entrypoint.sh package_c2
-RUN ./entrypoint.sh package_wordlists
-RUN ./entrypoint.sh package_cracking
 RUN ./entrypoint.sh package_osint
-RUN ./entrypoint.sh package_web
-RUN ./entrypoint.sh package_ad
-RUN ./entrypoint.sh package_mobile
-RUN ./entrypoint.sh package_iot
-RUN ./entrypoint.sh package_rfid
-RUN ./entrypoint.sh package_voip
-RUN ./entrypoint.sh package_sdr
-RUN ./entrypoint.sh package_network
-RUN ./entrypoint.sh package_wifi
-RUN ./entrypoint.sh package_forensic
-RUN ./entrypoint.sh package_cloud
-RUN ./entrypoint.sh package_steganography
-RUN ./entrypoint.sh package_reverse
-RUN ./entrypoint.sh package_crypto
-RUN ./entrypoint.sh package_code_analysis
 RUN ./entrypoint.sh post_install
 
 WORKDIR /workspace
