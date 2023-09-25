@@ -76,20 +76,20 @@ function deploy_apt() {
   ##### Install custom APT packages
   local key_url
   local install_list
+  local tmpaptkeys=$(mktemp -d)
   if [[ -d "$MY_SETUP_PATH/apt" ]]; then
     # Deploy custom apt repository
     cp "$MY_SETUP_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
     # Register custom repo's GPG keys
-    [[ ! -d "/tmp/aptkeys" ]] && mkdir -p /tmp/aptkeys
     grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r key_url; do
-      wget -nv "$key_url" -O "/tmp/aptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
+      wget -nv "$key_url" -O "$tmpaptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
-    if [[ -n $(find "/tmp/aptkeys/" -type f -name "*.key") ]]; then
-      gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key &&
-        gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
+    if [[ -n $(find "$tmpaptkeys" -type f -name "*.key") ]]; then
+      gpg --no-default-keyring --keyring=$tmpaptkeys/user_custom.gpg --batch --import $tmpaptkeys/*.key &&
+        gpg --no-default-keyring --keyring=$tmpaptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
     fi
-    rm -rf /tmp/aptkeys
+    rm -rf "$tmpaptkeys"
 
     install_list=$(grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/apt/packages.list" | tr "\n" " ")
     # Test if there is some package to install
@@ -171,7 +171,10 @@ function deploy_bloodhound_customqueries_merge() {
     [[ -f "$bh_config_homedir/customqueries.json" ]] && \
     [[ -n $(find "$cq_merge_directory" -type f -name "*.json") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_homedir/customqueries.json"
-      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_homedir/customqueries.json"
+      if [[ -f "$bqm_output_file" ]]; then
+        mv "$bqm_output_file" "$bh_config_homedir/customqueries.json" &&
+        echo "$bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
+      fi
   fi
 }
 
@@ -190,15 +193,13 @@ function deploy_bloodhound_customqueries_replacement() {
 function deploy_bloodhound() {
   local bh_config_homedir=~/.config/bloodhound
   local my_setup_bh_path="$MY_SETUP_PATH/bloodhound"
-  local bqm_output_file="$bh_config_homedir/customqueries.json.bqm"
+  # Use the dry-run flag to not create the file as bqm prompts if it already exists, hence it only generates a random filename
+  local bqm_output_file=$(mktemp --dry-run)
 
   [[ ! -d "$bh_config_homedir" ]] && mkdir -p "$bh_config_homedir"
   [[ ! -d "$my_setup_bh_path" ]] && cp -r /.exegol/skel/bloodhound "$my_setup_bh_path"
 
   deploy_bloodhound_config
-
-  # Clean up any unlikely pre-existing file to avoid bqm prompts
-  [[ -f "$bqm_output_file" ]] && rm -f "$bqm_output_file"
 
   # If a user places Bloodhound json files in both folders merge and replacement,
   # replacement must be executed last to only keep the output of replacement.
