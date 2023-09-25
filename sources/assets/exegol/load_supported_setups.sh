@@ -203,7 +203,7 @@ function deploy_bloodhound() {
 
   if [[ -f "$bqm_output_file" ]]; then
     mv "$bqm_output_file" "$bh_config_homedir/customqueries.json" &&
-    echo "[+] $bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
+    echo "[Exegol] $bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
   fi
 }
 
