@@ -171,10 +171,6 @@ function deploy_bloodhound_customqueries_merge() {
     [[ -f "$bh_config_homedir/customqueries.json" ]] && \
     [[ -n $(find "$cq_merge_directory" -type f -name "*.json") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_homedir/customqueries.json"
-      if [[ -f "$bqm_output_file" ]]; then
-        mv "$bqm_output_file" "$bh_config_homedir/customqueries.json" &&
-        echo "$bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
-      fi
   fi
 }
 
@@ -186,7 +182,6 @@ function deploy_bloodhound_customqueries_replacement() {
 
   if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_replacement_directory"
-      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_homedir/customqueries.json"
   fi
 }
 
@@ -205,6 +200,11 @@ function deploy_bloodhound() {
   # replacement must be executed last to only keep the output of replacement.
   deploy_bloodhound_customqueries_merge
   deploy_bloodhound_customqueries_replacement
+
+  if [[ -f "$bqm_output_file" ]]; then
+    mv "$bqm_output_file" "$bh_config_homedir/customqueries.json" &&
+    echo "[+] $bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
+  fi
 }
 
 # Starting
