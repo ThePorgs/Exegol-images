@@ -47,14 +47,14 @@ function deploy_tmux() {
 }
 
 function deploy_vim() {
-  local lpath
+  local vpath
   ##### VIM deployment
   if [[ -d "$MY_SETUP_PATH/vim" ]]; then
     # Copy vim/vimrc to ~/.vimrc
     [[ -f "$MY_SETUP_PATH/vim/vimrc" ]] && cp "$MY_SETUP_PATH/vim/vimrc" ~/.vimrc
     # Copy every subdir configs to ~/.vim directory
-    for lpath in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
-      [[ "$(ls -A "$lpath")" ]] && mkdir -p ~/.vim && cp -rf "$lpath" ~/.vim
+    for vpath in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
+      [[ "$(ls -A "$vpath")" ]] && mkdir -p ~/.vim && cp -rf "$vpath" ~/.vim
     done
   else
     # Create supported directories struct
@@ -74,16 +74,16 @@ function deploy_nvim () {
 }
 
 function deploy_apt() {
-  local lkey_url
-  local linstall_list
+  local key_url
+  local install_list
   ##### Install custom APT packages
   if [[ -d "$MY_SETUP_PATH/apt" ]]; then
     # Deploy custom apt repository
     cp "$MY_SETUP_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
     # Register custom repo's GPG keys
     mkdir /tmp/aptkeys
-    grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r lkey_url; do
-      wget -nv "$lkey_url" -O "/tmp/aptkeys/$(echo "$lkey_url" | md5sum | cut -d ' ' -f1).key"
+    grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r key_url; do
+      wget -nv "$key_url" -O "/tmp/aptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
     if [[ "$(ls /tmp/aptkeys/*.key 2>/dev/null)" ]]; then
       gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key &&
@@ -91,14 +91,14 @@ function deploy_apt() {
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
     fi
     rm -r /tmp/aptkeys
-    linstall_list=$(grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/apt/packages.list" | tr "\n" " ")
+    install_list=$(grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/apt/packages.list" | tr "\n" " ")
     # Test if there is some package to install
-    if [[ -n "$linstall_list" ]]; then
+    if [[ -n "$install_list" ]]; then
       # Update package list from repos (only if there is some package to install
       apt-get update
       # Install every packages listed in the file
       # shellcheck disable=SC2086
-      apt-get install -y $linstall_list
+      apt-get install -y $install_list
     fi
   else
     # Import file template
@@ -135,22 +135,22 @@ function run_user_setup() {
 }
 
 function deploy_firefox_addons() {
-  local laddon_folder
-  local laddon_list
+  local addon_folder
+  local addon_list
   ##### firefox custom addons deployment
   if [[ -d "$MY_SETUP_PATH/firefox/" ]]; then
     if [[ -d "$MY_SETUP_PATH/firefox/addons" ]]; then
-      laddon_folder="-D $MY_SETUP_PATH/firefox/addons"
+      addon_folder="-D $MY_SETUP_PATH/firefox/addons"
     else
       mkdir "$MY_SETUP_PATH/firefox/addons" && chmod 770 "$MY_SETUP_PATH/firefox/addons"
     fi
     if [[ -f "$MY_SETUP_PATH/firefox/addons.txt" ]]; then
-      laddon_list="-L $MY_SETUP_PATH/firefox/addons.txt"
+      addon_list="-L $MY_SETUP_PATH/firefox/addons.txt"
     else
       cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
     fi
     # shellcheck disable=SC2086
-    python3 /opt/tools/firefox/user-setup.py $laddon_list $laddon_folder
+    python3 /opt/tools/firefox/user-setup.py $addon_list $addon_folder
   else
     mkdir --parents "$MY_SETUP_PATH/firefox/addons" && chmod 770 -R "$MY_SETUP_PATH/firefox/addons"
     cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
@@ -158,47 +158,47 @@ function deploy_firefox_addons() {
 }
 
 function deploy_bloodhound_config() {
-  [[ -f "$lmy_setup_bh_path/config.json" ]] && cp "$lmy_setup_bh_path/config.json" "$lbh_config_homedir/config.json"
+  [[ -f "$my_setup_bh_path/config.json" ]] && cp "$my_setup_bh_path/config.json" "$bh_config_homedir/config.json"
 }
 
 function deploy_bloodhound_customqueries_merge() {
   # Merge Exegol's customqueries.json file with the ones from my-resources
-  local lcq_merge_directory="$lmy_setup_bh_path/customqueries_merge"
+  local cq_merge_directory="$my_setup_bh_path/customqueries_merge"
 
-  [[ ! -d "$lcq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$lcq_merge_directory"
+  [[ ! -d "$cq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$cq_merge_directory"
 
   if \
-    [[ -f "$lbh_config_homedir/customqueries.json" ]] && \
-    [[ -n $(find "$lcq_merge_directory" -type f -name "*.json") ]]; then
-      bqm --verbose --ignore-default --output-path "$lbqm_output_file" -i "$lcq_merge_directory,$lbh_config_homedir/customqueries.json"
-      [[ -f "$lbqm_output_file" ]] && mv "$lbqm_output_file" "$lbh_config_homedir/customqueries.json"
+    [[ -f "$bh_config_homedir/customqueries.json" ]] && \
+    [[ -n $(find "$cq_merge_directory" -type f -name "*.json") ]]; then
+      bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_homedir/customqueries.json"
+      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_homedir/customqueries.json"
   fi
 }
 
 function deploy_bloodhound_customqueries_replacement() {
   # Replace Exegol's customqueries.json file with the merge of ones from my-resources
-  local lcq_replacement_directory="$lmy_setup_bh_path/customqueries_replacement"
+  local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
 
-  [[ ! -d "$lcq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$lcq_replacement_directory"
+  [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
 
-  if [[ -n $(find "$lcq_replacement_directory" -type f -name "*.json") ]]; then
-      bqm --verbose --ignore-default --output-path "$lbqm_output_file" -i "$lcq_replacement_directory"
-      [[ -f "$lbqm_output_file" ]] && mv "$lbqm_output_file" "$lbh_config_homedir/customqueries.json"
+  if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
+      bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_replacement_directory"
+      [[ -f "$bqm_output_file" ]] && mv "$bqm_output_file" "$bh_config_homedir/customqueries.json"
   fi
 }
 
 function deploy_bloodhound() {
-  local lbh_config_homedir=~/.config/bloodhound
-  local lmy_setup_bh_path="$MY_SETUP_PATH/bloodhound"
-  local lbqm_output_file="$lbh_config_homedir/customqueries.json.bqm"
+  local bh_config_homedir=~/.config/bloodhound
+  local my_setup_bh_path="$MY_SETUP_PATH/bloodhound"
+  local bqm_output_file="$bh_config_homedir/customqueries.json.bqm"
 
-  [[ ! -d "$lbh_config_homedir" ]] && mkdir -p "$lbh_config_homedir"
-  [[ ! -d "$lmy_setup_bh_path" ]] && cp -r /.exegol/skel/bloodhound "$lmy_setup_bh_path"
+  [[ ! -d "$bh_config_homedir" ]] && mkdir -p "$bh_config_homedir"
+  [[ ! -d "$my_setup_bh_path" ]] && cp -r /.exegol/skel/bloodhound "$my_setup_bh_path"
 
   deploy_bloodhound_config
 
   # Clean up any unlikely pre-existing file to avoid bqm prompts
-  [[ -f "$lbqm_output_file" ]] && rm -f "$lbqm_output_file"
+  [[ -f "$bqm_output_file" ]] && rm -f "$bqm_output_file"
 
   # If a user places Bloodhound json files in both folders merge and replacement,
   # replacement must be executed last to only keep the output of replacement.
