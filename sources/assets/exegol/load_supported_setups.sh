@@ -1,9 +1,8 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Expanding aliases. Bugfix #207
 EXEGOL_ALIASES="/opt/.exegol_aliases"
 if [[ -f "$EXEGOL_ALIASES" ]]; then
-  shopt -s expand_aliases
   source "$EXEGOL_ALIASES"
 else
   echo "Exiting, file $EXEGOL_ALIASES is missing"
@@ -47,8 +46,8 @@ function deploy_tmux() {
 }
 
 function deploy_vim() {
-  local vpath
   ##### VIM deployment
+  local vpath
   if [[ -d "$MY_SETUP_PATH/vim" ]]; then
     # Copy vim/vimrc to ~/.vimrc
     [[ -f "$MY_SETUP_PATH/vim/vimrc" ]] && cp "$MY_SETUP_PATH/vim/vimrc" ~/.vimrc
@@ -68,29 +67,30 @@ function deploy_nvim () {
   if [[ -d "$MY_SETUP_PATH/nvim" ]]; then
     mkdir -p ~/.config/
     cp -r "$MY_SETUP_PATH/nvim/" ~/.config
-  else 
+  else
     mkdir -p "$MY_SETUP_PATH/nvim"
   fi
 }
 
 function deploy_apt() {
+  ##### Install custom APT packages
   local key_url
   local install_list
-  ##### Install custom APT packages
   if [[ -d "$MY_SETUP_PATH/apt" ]]; then
     # Deploy custom apt repository
     cp "$MY_SETUP_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
     # Register custom repo's GPG keys
-    mkdir /tmp/aptkeys
+    [[ ! -d "/tmp/aptkeys" ]] && mkdir -p /tmp/aptkeys
     grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r key_url; do
       wget -nv "$key_url" -O "/tmp/aptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
-    if [[ "$(ls /tmp/aptkeys/*.key 2>/dev/null)" ]]; then
+    if [[ -n $(find "/tmp/aptkeys/" -type f -name "*.key") ]]; then
       gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --import /tmp/aptkeys/*.key &&
         gpg --no-default-keyring --keyring=/tmp/aptkeys/user_custom.gpg --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
     fi
-    rm -r /tmp/aptkeys
+    rm -rf /tmp/aptkeys
+
     install_list=$(grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/apt/packages.list" | tr "\n" " ")
     # Test if there is some package to install
     if [[ -n "$install_list" ]]; then
@@ -135,22 +135,22 @@ function run_user_setup() {
 }
 
 function deploy_firefox_addons() {
+  ##### firefox custom addons deployment
   local addon_folder
   local addon_list
-  ##### firefox custom addons deployment
   if [[ -d "$MY_SETUP_PATH/firefox/" ]]; then
     if [[ -d "$MY_SETUP_PATH/firefox/addons" ]]; then
-      addon_folder="-D $MY_SETUP_PATH/firefox/addons"
+      addon_folder="$MY_SETUP_PATH/firefox/addons"
     else
       mkdir "$MY_SETUP_PATH/firefox/addons" && chmod 770 "$MY_SETUP_PATH/firefox/addons"
     fi
     if [[ -f "$MY_SETUP_PATH/firefox/addons.txt" ]]; then
-      addon_list="-L $MY_SETUP_PATH/firefox/addons.txt"
+      addon_list="$MY_SETUP_PATH/firefox/addons.txt"
     else
       cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
     fi
     # shellcheck disable=SC2086
-    python3 /opt/tools/firefox/user-setup.py $addon_list $addon_folder
+    python3 /opt/tools/firefox/user-setup.py -L $addon_list -D $addon_folder
   else
     mkdir --parents "$MY_SETUP_PATH/firefox/addons" && chmod 770 -R "$MY_SETUP_PATH/firefox/addons"
     cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
