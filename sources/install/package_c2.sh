@@ -46,7 +46,16 @@ function install_sliver() {
     # Deletion of --depth 1 due to installation of stable branch
     git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
     cd /opt/tools/sliver || exit
-    git checkout tags/v1.5.39
+    # making the static version checkout a temporary thing
+    # function below will serve as a reminder to update sliver's version regularly
+    # when the pipeline fails because the time limit is reached: update the version and the time limit
+    # or check if it's possible to make this dynamic
+    local TEMP_FIX_LIMIT="2024-02-25"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git checkout tags/v1.5.39
+    fi
     make
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
     ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
