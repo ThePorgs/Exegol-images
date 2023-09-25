@@ -145,7 +145,7 @@ function deploy_firefox_addons() {
       cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
     fi
     # shellcheck disable=SC2086
-    python3 /opt/tools/firefox/user-setup.py $ADDON_LIST $ADDON_FOLDER
+    /usr/bin/env python3 /opt/tools/firefox/user-setup.py $ADDON_LIST $ADDON_FOLDER
   else
     mkdir --parents "$MY_SETUP_PATH/firefox/addons" && chmod 770 -R "$MY_SETUP_PATH/firefox/addons"
     cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
@@ -211,6 +211,9 @@ echo "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading custom setups (/.exegol/load_s
 MY_ROOT_PATH="/opt/my-resources"
 # Setup directory for user customization
 MY_SETUP_PATH="$MY_ROOT_PATH/setup"
+# Add python path
+PYENV_ROOT=$HOME/.pyenv
+PATH=$HOME/.pyenv/shims:$HOME/.pyenv/bin:$PATH
 
 init
 

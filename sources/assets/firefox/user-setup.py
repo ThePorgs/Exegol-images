@@ -5,7 +5,7 @@
 # Date created       : 07 march 2023
 # Python Version     : 3.*
 
-from setup import get_link, download_addon, read_manifest, install_addons, activate_addons
+from setup import get_link, download_addon, get_addon_id, install_addons, activate_addons
 from R2Log import logger
 from pathlib import Path
 from glob import glob
@@ -15,7 +15,7 @@ import subprocess
 import argparse
 
 PATHNAME = "/root/.mozilla/firefox/**.Exegol/"
-re_links = r'^https://addons\.mozilla\.org/fr/firefox/addon/[^/]+/?$'
+re_links = r'^https://addons\.mozilla\.org/[a-z]{2}(\-[A-Z]{2})?/firefox/addon/[^/]+/?$'
 
 def parse_args():
     arg_parser = argparse.ArgumentParser(description="Automatically installs addons from a list or folder containing .xpi files.")
@@ -26,10 +26,12 @@ def parse_args():
 
 if __name__ == "__main__":
 
+    # Initialize variables
     args = parse_args()
     addon_links = args.addon_links
     addon_folder = args.addon_folder
     install_ok = False
+    install_ko = []
 
     # Define a list containing all addons names and ids
     addon_list = []
@@ -47,13 +49,21 @@ if __name__ == "__main__":
                 # Download the addon
                 download_addon(link, addon_name)
                 # Read manifest.json in the archive
-                addon_id = read_manifest("/tmp/" + addon_name)
-                install_addons(addon_name, addon_id, "/tmp/")
-                logger.success(f"{addon_name} installed sucessfully\n")
-                addon_list.append((addon_id, addon_name[0:-4], False))
-                install_ok = True
+                try:
+                    addon_id = get_addon_id("/tmp/" + addon_name)
+                    install_addons(addon_name, addon_id, "/tmp/")
+                    logger.success(f"{addon_name} installed sucessfully\n")
+                    addon_list.append((addon_id, addon_name[0:-4], False))
+                    install_ok = True
+                except:
+                    install_ko.append("- " + addon_name)
+                    logger.error(f"{addon_name} could not be installed\n")
+                    continue
         if install_ok:
-            logger.success("All addons from the list were installed sucessfully\n")
+            if install_ko:
+                logger.info("All addons from the list were installed sucessfully except:\n%s\n" % "\n".join(install_ko))
+            else:
+                logger.success("All addons from the list were installed sucessfully\n")
         else:
             logger.error("No addons were found in the list %s.\n" % addon_links)
 
@@ -61,7 +71,7 @@ if __name__ == "__main__":
         if glob(addon_folder + "/*.xpi"):
             for addon_path in glob(addon_folder + "/*.xpi"):
                 addon_name = addon_path.split("/")[-1]
-                addon_id = read_manifest(addon_path)
+                addon_id = get_addon_id(addon_path)
                 install_addons(addon_name, addon_id, addon_folder)
                 logger.success(f"{addon_name} installed sucessfully\n")
                 addon_list.append((addon_id, addon_name[0:-4], False))
