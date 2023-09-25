@@ -116,6 +116,7 @@ function install_ida() {
 }
 
 function install_jd-gui() {
+    # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing jd-gui"
     mkdir -p /opt/tools/jd-gui && cd /opt/tools/jd-gui || exit
     wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
@@ -139,6 +140,7 @@ function install_pwninit() {
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_reverse_apt_tools

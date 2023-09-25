@@ -81,6 +81,7 @@ function install_genusernames() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_wordlists_apt_tools

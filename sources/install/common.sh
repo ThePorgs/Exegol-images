@@ -52,6 +52,11 @@ function fapt() {
     apt-fast install -y --no-install-recommends "$@"
 }
 
+function set_cargo_env() {
+    colorecho "Setting cargo environment variables for installation"
+    source $HOME/.cargo/env
+}
+
 function set_go_env() {
     colorecho "Setting golang environment variables for installation"
     export GO111MODULE=auto

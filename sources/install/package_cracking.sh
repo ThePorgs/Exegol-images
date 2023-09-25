@@ -36,6 +36,7 @@ function install_john() {
 }
 
 function install_name-that-hash() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Name-That-Hash"
     pipx install name-that-hash
     add-history name-that-hash
@@ -80,6 +81,7 @@ function install_pkcrack() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_cracking_apt_tools

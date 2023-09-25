@@ -163,6 +163,7 @@ function install_yt-dlp() {
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
+    set_cargo_env
     set_go_env
     set_ruby_env
     set_python_env

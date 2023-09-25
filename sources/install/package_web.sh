@@ -56,8 +56,13 @@ function install_wfuzz() {
     apt --purge remove python3-pycurl -y
     fapt libcurl4-openssl-dev libssl-dev
     pip3 install pycurl wfuzz
+    mkdir /usr/share/wfuzz
+    git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
+    mv /tmp/wfuzz/wordlist/* /usr/share/wfuzz
+    rm -rf /tmp/wfuzz
     add-history wfuzz
     add-test-command "wfuzz --help"
+    add-test-command "[ -d '/usr/share/wfuzz/' ] || exit 1"
     add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
 }
 
@@ -479,6 +484,7 @@ function install_wuzz() {
 }
 
 function install_git-dumper() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing git-dumper"
     pipx install git-dumper
     add-history git-dumper
@@ -766,10 +772,11 @@ function install_sqlmap() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
-    install_web_apt_tools
+    set_cargo_env
     set_go_env
     set_ruby_env
     set_python_env
+    install_web_apt_tools
     install_weevely                 # Weaponized web shell
     install_whatweb                 # Recognises web technologies including content management
     install_wfuzz                   # Web fuzzer (second favorites)

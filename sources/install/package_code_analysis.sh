@@ -46,6 +46,7 @@ function install_pp-finder() {
 
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_vulny-code-static-analysis

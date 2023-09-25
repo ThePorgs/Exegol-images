@@ -92,6 +92,7 @@ function install_androguard() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
+    set_cargo_env
     set_ruby_env
     set_python_env
     install_mobile_apt_tools

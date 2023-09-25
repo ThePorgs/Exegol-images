@@ -90,9 +90,6 @@ function install_ldapdomaindump() {
 
 function install_crackmapexec() {
     colorecho "Installing CrackMapExec"
-    # Source bc cme needs cargo PATH (rustc) -> aardwolf dep
-    # TODO: Optimize so that the PATH is always up to date
-    source /root/.zshrc || true
     git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
     pipx install /opt/tools/CrackMapExec/
     mkdir -p ~/.cme
@@ -366,6 +363,7 @@ function install_enyx() {
 }
 
 function install_enum4linux-ng() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing enum4linux-ng"
     pipx install git+https://github.com/cddmp/enum4linux-ng
     add-history enum4linux-ng
@@ -488,6 +486,7 @@ function install_pth-tools() {
 }
 
 function install_smtp-user-enum() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smtp-user-enum"
     pipx install smtp-user-enum
     add-history smtp-user-enum
@@ -556,6 +555,7 @@ function install_pygpoabuse() {
 }
 
 function install_bloodhound-import() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing bloodhound-import"
     pipx install bloodhound-import
     add-history bloodhound-import
@@ -989,20 +989,44 @@ function install_teamsphisher() {
 }
 
 function install_GPOddity() {
-  colorecho "Installing GPOddity"
-  git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/GPOddity
-  cd /opt/tools/GPOddity || exit
-  python3 -m venv ./venv
-  catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
-  add-aliases GPOddity
-  add-history GPOddity
-  add-test-command "gpoddity.py --help"
-  add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing GPOddity"
+    pipx install git+https://github.com/synacktiv/GPOddity
+    add-history GPOddity
+    add-test-command "gpoddity --help"
+    add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
+}
+
+function install_netexec() {
+    colorecho "Installing netexec"
+    git -C /opt/tools/ clone --depth 1 https://github.com/Pennyw0rth/NetExec
+    pipx install /opt/tools/NetExec/
+    mkdir -p ~/.nxc
+    [ -f ~/.nxc/nxc.conf ] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
+    cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
+    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
+    add-aliases netexec
+    add-history netexec
+    add-test-command "netexec --help"
+    add-to-list "netexec,https://github.com/Pennyw0rth/NetExec,Network scanner (Crackmapexec updated)."
+}
+
+function install_extractbitlockerkeys() {
+    colorecho "Installing ExtractBitlockerKeys"
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/ExtractBitlockerKeys
+    cd /opt/tools/ExtractBitlockerKeys || exit
+    python3 -m venv ./venv
+    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    add-aliases extractbitlockerkeys
+    add-history extractbitlockerkeys
+    add-test-command "extractbitlockerkeys.py|& grep 'usage: ExtractBitlockerKeys.py'"
+    add-to-list "ExtractBitlockerKeys,https://github.com/p0dalirius/ExtractBitlockerKeys,A system administration or post-exploitation script to automatically extract the bitlocker recovery keys from a domain."
 }
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
+    set_cargo_env
     set_go_env
     set_ruby_env
     set_python_env
@@ -1084,4 +1108,6 @@ function package_ad() {
     install_roadtools              # Rogue Office 365 and Azure (active) Directory tools
     install_teamsphisher           # TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications.
     install_GPOddity
+    install_netexec                # Crackmapexec repo
+    install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
 }

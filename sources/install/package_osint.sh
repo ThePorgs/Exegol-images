@@ -495,6 +495,7 @@ function install_gomapenum() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
+    set_cargo_env
     set_go_env
     set_ruby_env
     set_python_env

@@ -43,10 +43,22 @@ function install_routersploit() {
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sliver"
-    git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/sliver.git
-    cd /opt/tools/sliver
+    # Deletion of --depth 1 due to installation of stable branch
+    git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
+    cd /opt/tools/sliver || exit
+    # making the static version checkout a temporary thing
+    # function below will serve as a reminder to update sliver's version regularly
+    # when the pipeline fails because the time limit is reached: update the version and the time limit
+    # or check if it's possible to make this dynamic
+    local TEMP_FIX_LIMIT="2024-02-25"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git checkout tags/v1.5.39
+    fi
     make
-    mv sliver-* /opt/tools/bin
+    ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
+    ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
@@ -55,6 +67,7 @@ function install_sliver() {
 
 # Package dedicated to command & control frameworks
 function package_c2() {
+    set_cargo_env
     set_go_env
     set_ruby_env
     set_python_env
