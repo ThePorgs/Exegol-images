@@ -83,8 +83,8 @@ class CommandRunner:
         # Logging the command, its output, and errors to the specified log file
         with open(log_file, 'a') as f:
             f.write(f"COMMAND: {command}\n")
-            if stdout is not None: f.write(f"\tSTDOUT:\n{stdout.decode('utf-8', 'replace')}\n")
-            if stderr is not None: f.write(f"\tSTDERR:\n{stderr.decode('utf-8', 'replace')}\n")
+            if stdout is not None: f.write(f"└── STDOUT:\n{stdout.decode('utf-8', 'replace')}\n")
+            if stderr is not None: f.write(f"└── STDERR:\n{stderr.decode('utf-8', 'replace')}\n")
 
 
 def read_commands(file: str) -> list[str]:
