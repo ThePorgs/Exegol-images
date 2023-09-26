@@ -94,9 +94,10 @@ function install_mobsf(){
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf
-    git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF
-    cd /opt/tools/Mobile-Security-Framework-MobSF || exit
+    git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF MobSF
+    cd /opt/tools/MobSF || exit
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
+    #  in the mean time, switching to manual venv and an alias for mobsf
     local TEMP_FIX_LIMIT="2024-02-01"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
@@ -104,10 +105,10 @@ function install_mobsf(){
       python3 -m venv ./venv
       ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
       ./venv/bin/python3 -m pip install .
-      add-aliases mobsf # alias is only needed with venv
+      add-aliases mobsf # alias is only needed with venv and can be removed when switching back to pipx
     fi
     add-history mobsf
-    add-test-command "/opt/tools/Mobile-Security-Framework-MobSF/venv/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
+    add-test-command "/opt/tools/MobSF/venv/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
     add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated and all-in-one mobile application (Android/iOS/Windows) pen-testing malware analysis and security assessment framework"
 }
 
