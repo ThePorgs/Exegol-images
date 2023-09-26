@@ -383,6 +383,7 @@ function package_base() {
 
     filesystem
     install_locales
+    cp -v /root/sources/assets/exegol/exegol_shells_rc ~/.exegol_shells_rc
     cp -v /root/sources/assets/bash/bashrc ~/.bashrc
 
     # setup Python environment
