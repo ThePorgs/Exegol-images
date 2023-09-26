@@ -314,15 +314,7 @@ function install_spiderfoot() {
 
 function install_finalrecon() {
     colorecho "Installing FinalRecon"
-    # git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
-    # temp fix for https://github.com/thewhiteh4t/FinalRecon/issues/64
-    local TEMP_FIX_LIMIT="2023-10-29"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git -C /opt/tools/ clone https://github.com/thewhiteh4t/FinalRecon
-      git -C /opt/tools/FinalRecon checkout 2f64052c51dc53cbaa8ecf3a17975004f9a51748
-    fi
+    git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
