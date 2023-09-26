@@ -95,7 +95,17 @@ function install_mobsf(){
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf
     git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF
-    pipx install /opt/tools/Mobile-Security-Framework-MobSF/
+    cd /opt/tools/MobSF || exit
+    # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
+    local TEMP_FIX_LIMIT="2024-02-01"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
+    else
+      python3 -m venv ./venv
+      ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
+      ./venv/bin/python3 -m pip install .
+      add-alias mobsf # alias is only needed with venv
+    fi
     add-history mobsf
     add-test-command "/root/.local/pipx/venvs/mobsf/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
     add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated and all-in-one mobile application (Android/iOS/Windows) pen-testing malware analysis and security assessment framework"
