@@ -104,7 +104,7 @@ function install_mobsf(){
       python3 -m venv ./venv
       ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
       ./venv/bin/python3 -m pip install .
-      add-alias mobsf # alias is only needed with venv
+      add-aliases mobsf # alias is only needed with venv
     fi
     add-history mobsf
     add-test-command "/opt/tools/Mobile-Security-Framework-MobSF/venv/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
