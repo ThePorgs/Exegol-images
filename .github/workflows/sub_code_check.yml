@@ -15,3 +15,10 @@ jobs:
       uses: actions/checkout@v3
     - name: Check ${{ matrix.checked_function }}
       run: python3 sources/code_compliance_check.py ${{ matrix.checked_function }}
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
