@@ -25,9 +25,10 @@ env:
 # creating a separate concurrency group for each PR
 # so that our "PR checks" are always running for the latest commit in the PR
 # and as PRs are updated we want to make sure "in progress" jobs are killed so we don't waste resources
-concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: true
+# TODO : re-enable
+#concurrency:
+#  group: ${{ github.ref }}
+#  cancel-in-progress: true
 
 
 jobs:
