@@ -93,10 +93,11 @@ function install_nmap() {
 }
 
 function install_nmap-parse-output() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing nmap-parse-output"
     fapt xsltproc
     git -C /opt/tools/ clone --depth 1 https://github.com/ernw/nmap-parse-output
-    add-aliases nmap-parse-output
+    ln -s /opt/tools/nmap-parse-output/nmap-parse-output /opt/tools/bin/nmap-parse-output
     add-history nmap-parse-output
     # nmap-parse-output always exits with 1 if no argument is passed
     add-test-command "nmap-parse-output | grep -E '^\[v.+\]'"
