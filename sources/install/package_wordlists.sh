@@ -73,8 +73,13 @@ function install_genusernames() {
     mkdir -p /opt/tools/genusernames
     wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
     sed -i 's/genadname/genusernames/g' /opt/tools/genusernames/genusernames.function
-    # shellcheck disable=SC2028
-    echo '\nsource /opt/tools/genusernames/genusernames.function' >> ~/.zshrc
+    {
+      # adding new-line
+      echo ''
+      echo '# genusernames function'
+      # shellcheck disable=SC2016
+      echo 'source /opt/tools/genusernames/genusernames.function'
+    } >> ~/.zshrc
     add-history genusernames
     add-test-command "genusernames 'john doe'"
     add-to-list "genusernames,https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."

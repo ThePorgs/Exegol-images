@@ -280,10 +280,13 @@ function install_gf() {
     # A wrapper around grep, to help you grep for things
     go install -v github.com/tomnomnom/gf@latest
     # Enable autocompletion
-    # shellcheck disable=SC2028
-    echo "\n# Enable gf autocompletion" >> ~/.zshrc
-    # shellcheck disable=SC2016
-    echo 'source $GOPATH/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh' >> ~/.zshrc
+    {
+      # adding new-line
+      echo ''
+      echo '# Enable gf autocompletion'
+      # shellcheck disable=SC2016
+      echo 'source $GOPATH/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh'
+    } >> ~/.zshrc
     cp -r /root/go/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
     # Add patterns from 1ndianl33t
     git -C /opt/tools/ clone --depth 1 https://github.com/1ndianl33t/Gf-Patterns
