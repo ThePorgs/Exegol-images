@@ -1,4 +1,3 @@
-# nmap-parse-output | grep -E '^  [a-z]' | sed -E -e 's/\[([^ ]+)\]/$\1/g' -e 's/\$service-name/$service_name/' | xargs -i sh -c "echo 'nmap-parse-output \$nmap_xml {}'"
 nmap-parse-output /path/to/nmap.xml all-hosts 
 nmap-parse-output /path/to/nmap.xml banner $service_name
 nmap-parse-output /path/to/nmap.xml blocked-ports 
