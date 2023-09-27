@@ -36,6 +36,8 @@ function install_pp-finder() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pp-finder"
     # https://github.com/yeswehack/pp-finder/issues/2
+    # muting shellcheck alert, since the file will appear in the container
+    # shellcheck source=/dev/null
     source ~/.nvm/nvm.sh
     nvm use default
     npm install -g pp-finder

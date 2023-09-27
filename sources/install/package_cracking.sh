@@ -27,7 +27,7 @@ function install_cracking_apt_tools() {
 function install_john() {
     colorecho "Installing john the ripper"
     git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
-    cd /opt/tools/john/src
+    cd /opt/tools/john/src || exit
     ./configure --disable-native-tests && make
     add-aliases john-the-ripper
     add-history john-the-ripper
@@ -69,7 +69,7 @@ function install_pkcrack() {
     colorecho "Installing pkcrack"
     git -C /opt/tools/ clone https://github.com/keyunluo/pkcrack
     mkdir -v /opt/tools/pkcrack/build/
-    cd /opt/tools/pkcrack/build
+    cd /opt/tools/pkcrack/build || exit
     cmake ..
     make
     ln -s /opt/tools/pkcrack/bin/pkcrack /opt/tools/bin

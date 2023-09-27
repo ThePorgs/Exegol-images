@@ -143,7 +143,7 @@ function install_tig() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing tig"
     git -C /opt/tools clone --depth 1 https://github.com/jonas/tig.git
-    cd /opt/tools/tig
+    cd /opt/tools/tig || exit
     make
     make install
     mv /root/bin/tig /opt/tools/bin/tig
