@@ -4,7 +4,7 @@ on: workflow_call
 
 jobs:
   code-check:
-    name: Python check
+    name: Function check
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
