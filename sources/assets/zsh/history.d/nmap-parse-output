@@ -1,0 +1,35 @@
+nmap-parse-output /path/to/nmap.xml all-hosts 
+nmap-parse-output /path/to/nmap.xml banner $service_name
+nmap-parse-output /path/to/nmap.xml blocked-ports 
+nmap-parse-output /path/to/nmap.xml group-by-ports 
+nmap-parse-output /path/to/nmap.xml group-by-product 
+nmap-parse-output /path/to/nmap.xml group-by-service 
+nmap-parse-output /path/to/nmap.xml host-ports-protocol 
+nmap-parse-output /path/to/nmap.xml host-ports 
+nmap-parse-output /path/to/nmap.xml hosts-to-port $port
+nmap-parse-output /path/to/nmap.xml hosts 
+nmap-parse-output /path/to/nmap.xml http-info 
+nmap-parse-output /path/to/nmap.xml http-ports 
+nmap-parse-output /path/to/nmap.xml http-title 
+nmap-parse-output /path/to/nmap.xml nmap-cmdline 
+nmap-parse-output /path/to/nmap.xml port-info $port
+nmap-parse-output /path/to/nmap.xml ports-reachable 
+nmap-parse-output /path/to/nmap.xml ports 
+nmap-parse-output /path/to/nmap.xml product 
+nmap-parse-output /path/to/nmap.xml search-product 
+nmap-parse-output /path/to/nmap.xml service-names 
+nmap-parse-output /path/to/nmap.xml service $service_name
+nmap-parse-output /path/to/nmap.xml show-comments 
+nmap-parse-output /path/to/nmap.xml ssl-common-name 
+nmap-parse-output /path/to/nmap.xml tls-ports 
+nmap-parse-output /path/to/nmap.xml comment-hosts $hosts $comment
+nmap-parse-output /path/to/nmap.xml comment-ports $ports $comment
+nmap-parse-output /path/to/nmap.xml exclude-ports $ports
+nmap-parse-output /path/to/nmap.xml exclude $hosts
+nmap-parse-output /path/to/nmap.xml include-ports $ports
+nmap-parse-output /path/to/nmap.xml include $hosts
+nmap-parse-output /path/to/nmap.xml mark-ports $ports $color
+nmap-parse-output /path/to/nmap.xml reachable 
+nmap-parse-output /path/to/nmap.xml html-bootstrap 
+nmap-parse-output /path/to/nmap.xml html 
+nmap-parse-output /path/to/nmap.xml to-json
