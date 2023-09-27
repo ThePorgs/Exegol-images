@@ -92,6 +92,18 @@ function install_nmap() {
     add-to-list "nmap,https://nmap.org,The Network Mapper - a powerful network discovery and security auditing tool"
 }
 
+function install_nmap-parse-output() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing nmap-parse-output"
+    fapt xsltproc
+    git -C /opt/tools/ clone --depth 1 https://github.com/ernw/nmap-parse-output
+    ln -s /opt/tools/nmap-parse-output/nmap-parse-output /opt/tools/bin/nmap-parse-output
+    add-history nmap-parse-output
+    # nmap-parse-output always exits with 1 if no argument is passed
+    add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
+    add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
+}
+
 function install_autorecon() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing autorecon"
@@ -241,6 +253,7 @@ function package_network() {
     install_network_apt_tools
     install_proxychains             # Network tool
     install_nmap                    # Port scanner
+    install_nmap-parse-output       # Parse nmap XML files
     install_autorecon               # External recon tool
     install_dnschef                 # Python DNS server
     install_divideandscan           # Python project to automate port scanning routine
