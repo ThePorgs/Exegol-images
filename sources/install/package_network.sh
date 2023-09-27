@@ -100,7 +100,7 @@ function install_nmap-parse-output() {
     ln -s /opt/tools/nmap-parse-output/nmap-parse-output /opt/tools/bin/nmap-parse-output
     add-history nmap-parse-output
     # nmap-parse-output always exits with 1 if no argument is passed
-    add-test-command "nmap-parse-output | grep -E '^\[v.+\]'"
+    add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
     add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
 }
 
