@@ -1,0 +1,36 @@
+# nmap-parse-output | grep -E '^  [a-z]' | sed -E -e 's/\[([^ ]+)\]/$\1/g' -e 's/\$service-name/$service_name/' | xargs -i sh -c "echo 'nmap-parse-output \$nmap_xml {}'"
+nmap-parse-output $nmap_xml all-hosts 
+nmap-parse-output $nmap_xml banner $service_name
+nmap-parse-output $nmap_xml blocked-ports 
+nmap-parse-output $nmap_xml group-by-ports 
+nmap-parse-output $nmap_xml group-by-product 
+nmap-parse-output $nmap_xml group-by-service 
+nmap-parse-output $nmap_xml host-ports-protocol 
+nmap-parse-output $nmap_xml host-ports 
+nmap-parse-output $nmap_xml hosts-to-port $port
+nmap-parse-output $nmap_xml hosts 
+nmap-parse-output $nmap_xml http-info 
+nmap-parse-output $nmap_xml http-ports 
+nmap-parse-output $nmap_xml http-title 
+nmap-parse-output $nmap_xml nmap-cmdline 
+nmap-parse-output $nmap_xml port-info $port
+nmap-parse-output $nmap_xml ports-reachable 
+nmap-parse-output $nmap_xml ports 
+nmap-parse-output $nmap_xml product 
+nmap-parse-output $nmap_xml search-product 
+nmap-parse-output $nmap_xml service-names 
+nmap-parse-output $nmap_xml service $service_name
+nmap-parse-output $nmap_xml show-comments 
+nmap-parse-output $nmap_xml ssl-common-name 
+nmap-parse-output $nmap_xml tls-ports 
+nmap-parse-output $nmap_xml comment-hosts $hosts $comment
+nmap-parse-output $nmap_xml comment-ports $ports $comment
+nmap-parse-output $nmap_xml exclude-ports $ports
+nmap-parse-output $nmap_xml exclude $hosts
+nmap-parse-output $nmap_xml include-ports $ports
+nmap-parse-output $nmap_xml include $hosts
+nmap-parse-output $nmap_xml mark-ports $ports $color
+nmap-parse-output $nmap_xml reachable 
+nmap-parse-output $nmap_xml html-bootstrap 
+nmap-parse-output $nmap_xml html 
+nmap-parse-output $nmap_xml to-json
