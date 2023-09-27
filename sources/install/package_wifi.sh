@@ -31,7 +31,9 @@ function install_pyrit() {
     cd /opt/tools/Pyrit
     fapt libpq-dev
     virtualenv --python python2 ./venv
-    catch_and_retry ./venv/bin/python2 -m pip install psycopg2-binary scapy
+    source ./venv/bin/activate
+    pip2 install psycopg2-binary scapy
+    deactivate
     # https://github.com/JPaulMora/Pyrit/issues/591
     cp -v /root/sources/assets/patches/undefined-symbol-aesni-key.patch undefined-symbol-aesni-key.patch
     git apply --verbose undefined-symbol-aesni-key.patch

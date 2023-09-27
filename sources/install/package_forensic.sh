@@ -34,9 +34,9 @@ function install_volatility2() {
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
     cd /opt/tools/volatility
     virtualenv --python python2 ./venv
-    catch_and_retry ./venv/bin/python2 -m pip install pycryptodome distorm3 pillow openpyxl
-    catch_and_retry ./venv/bin/python2 -m pip install ujson --no-use-pep517
     source ./venv/bin/activate
+    pip2 install pycryptodome distorm3 pillow openpyxl
+    pip2 install ujson --no-use-pep517
     python2 setup.py install
     deactivate
     # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161

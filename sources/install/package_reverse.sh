@@ -67,8 +67,10 @@ function install_checksec-py() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
     cd /opt/tools/checksec.py
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install .
-    catch_and_retry ./venv/bin/python3 -m pip install --upgrade lief
+    source ./venv/bin/activate
+    pip3 install .
+    pip3 install --upgrade lief
+    deactivate
     add-aliases checksec
     add-history checksec
     add-test-command "checksec.py --help"
