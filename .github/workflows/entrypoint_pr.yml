@@ -84,7 +84,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [init, code_check, build_base ]
+    needs: [ init, code_check, build_base ]
     # only running build if base_build was a success
     if: needs.build_base.outputs.build == 'success'
     strategy:
