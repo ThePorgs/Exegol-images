@@ -185,7 +185,7 @@ function deploy_bloodhound_config() {
 }
 
 function deploy_bloodhound_customqueries_merge() {
-  colorecho "Deploying BloodHound Custom Queries"
+  colorecho "Merging User Custom Queries with Exegol Custom Queries for BloodHound"
   # Merge Exegol's customqueries.json file with the ones from my-resources
   local cq_merge_directory="$my_setup_bh_path/customqueries_merge"
   [[ ! -d "$cq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$cq_merge_directory"
@@ -197,7 +197,7 @@ function deploy_bloodhound_customqueries_merge() {
 }
 
 function deploy_bloodhound_customqueries_replacement() {
-  colorecho "Merging BloodhHound User Custom Queries with Exegol Custom Queries"
+  colorecho "Merging User Custom Queries for BloodHound, and overwriting Exegol Custom Queries"
   local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
   [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
   if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
