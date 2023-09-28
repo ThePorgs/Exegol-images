@@ -29,7 +29,9 @@ function install_weevely() {
     git -C /opt/tools clone --depth 1 https://github.com/epinna/weevely3
     cd /opt/tools/weevely3 || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases weevely
     add-history weevely
     add-test-command "weevely.py --help"
@@ -126,7 +128,9 @@ function install_ssrfmap() {
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases ssrfmap
     add-history ssrfmap
     add-test-command "ssrfmap.py --help"
@@ -138,7 +142,9 @@ function install_gopherus() {
     git -C /opt/tools/ clone --depth 1 https://github.com/tarunkant/Gopherus
     cd /opt/tools/Gopherus || exit
     virtualenv --python python2 ./venv
-    catch_and_retry ./venv/bin/python2 -m pip install argparse requests
+    source ./venv/bin/activate
+    pip2 install argparse requests
+    deactivate
     add-aliases gopherus
     add-history gopherus
     add-test-command "gopherus.py --help"
@@ -153,7 +159,9 @@ function install_nosqlmap() {
     catch_and_retry ./venv/bin/python2 setup.py install
     # https://github.com/codingo/NoSQLMap/issues/126
     rm -rf venv/lib/python2.7/site-packages/certifi-2023.5.7-py2.7.egg
-    catch_and_retry ./venv/bin/python2 -m pip install certifi==2018.10.15
+    source ./venv/bin/activate
+    pip2 install certifi==2018.10.15
+    deactivate
     add-aliases nosqlmap
     add-history nosqlmap
     add-test-command "nosqlmap.py --help"
@@ -165,7 +173,9 @@ function install_xsstrike() {
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/XSStrike.git
     cd /opt/tools/XSStrike || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases xsstrike
     add-history xsstrike
     add-test-command "xsstrike.py --help"
@@ -188,7 +198,9 @@ function install_xsser() {
     git -C /opt/tools clone --depth 1 https://github.com/epsylon/xsser.git
     cd /opt/tools/xsser || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install pycurl bs4 pygeoip gobject cairocffi selenium
+    source ./venv/bin/activate
+    pip3 install pycurl bs4 pygeoip gobject cairocffi selenium
+    deactivate
     add-aliases xsser
     add-history xsser
     add-test-command "xsser --help"
@@ -209,7 +221,9 @@ function install_bolt() {
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/Bolt.git
     cd /opt/tools/Bolt || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases bolt
     add-history bolt
     add-test-command "bolt.py --help"
@@ -234,7 +248,9 @@ function install_fuxploider() {
     git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
     cd /opt/tools/fuxploider || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases fuxploider
     add-history fuxploider
     add-test-command "fuxploider.py --help"
@@ -247,7 +263,9 @@ function install_patator() {
     git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
     cd /opt/tools/patator || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases patator
     add-history patator
     add-test-command "patator.py ftp_login --help"
@@ -310,8 +328,11 @@ function install_moodlescan() {
     git -C /opt/tools/ clone --depth 1 https://github.com/inc0d3/moodlescan.git
     cd /opt/tools/moodlescan || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     cd /opt/tools/moodlescan || exit
+    # updating moodlescan database
     catch_and_retry ./venv/bin/python3 moodlescan.py -a
     add-aliases moodlescan
     add-history moodlescan
@@ -348,7 +369,9 @@ function install_cloudfail() {
     git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
     cd /opt/tools/CloudFail || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases cloudfail
     add-history cloudfail
     add-test-command "cloudfail.py --help"
@@ -383,7 +406,9 @@ function install_oneforall() {
       for PR in "${PRS[@]}"; do git fetch origin "pull/$PR/head:pull/$PR" && git merge --strategy-option theirs --no-edit "pull/$PR"; done
     fi
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases oneforall
     add-history oneforall
     add-test-command "oneforall.py version"
@@ -404,7 +429,9 @@ function install_corscanner() {
     git -C /opt/tools/ clone --depth 1 https://github.com/chenjj/CORScanner.git
     cd /opt/tools/CORScanner || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases corscanner
     add-history corscanner
     add-test-command "cors_scan.py --help"
@@ -435,7 +462,9 @@ function install_linkfinder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/GerbenJavado/LinkFinder.git
     cd /opt/tools/LinkFinder || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases linkfinder
     add-history linkfinder
     add-test-command "linkfinder.py --help"
@@ -467,7 +496,9 @@ function install_jwt_tool() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ticarpi/jwt_tool
     cd /opt/tools/jwt_tool || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases jwt_tool
     add-history jwt_tool
     add-test-command "jwt_tool.py --help"
@@ -497,7 +528,9 @@ function install_gittools() {
     git -C /opt/tools/ clone --depth 1 https://github.com/internetwache/GitTools.git
     cd /opt/tools/GitTools/Finder || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases gittools
     add-history gittools
     add-test-command "extractor.sh --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
@@ -549,7 +582,9 @@ function install_httpmethods() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
     cd /opt/tools/httpmethods || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases httpmethods
     add-history httpmethods
     add-test-command "httpmethods.py --help"
@@ -561,7 +596,9 @@ function install_h2csmuggler() {
     git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/h2csmuggler
     cd /opt/tools/h2csmuggler || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install h2
+    source ./venv/bin/activate
+    pip3 install h2
+    deactivate
     add-aliases h2csmuggler
     add-history h2csmuggler
     add-test-command "h2csmuggler.py --help"
@@ -597,7 +634,9 @@ function install_tomcatwardeployer() {
     git -C /opt/tools/ clone --depth 1 https://github.com/mgeeky/tomcatWarDeployer.git
     cd /opt/tools/tomcatWarDeployer || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases tomcatwardeployer
     add-history tomcatwardeployer
     add-test-command "tomcatWarDeployer.py --help"
@@ -609,7 +648,9 @@ function install_clusterd() {
     git -C /opt/tools/ clone --depth 1 https://github.com/hatRiot/clusterd.git
     cd /opt/tools/clusterd || exit
     virtualenv --python python2 ./venv
-    catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip2 install -r requirements.txt
+    deactivate
     add-aliases clusterd
     add-history clusterd
     add-test-command "clusterd.py --help"
@@ -742,7 +783,9 @@ function install_kraken() {
     git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
     cd /opt/tools/Kraken || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases kraken
     add-history kraken
     add-test-command "kraken.py -h"

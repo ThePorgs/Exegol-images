@@ -105,7 +105,9 @@ function install_simplyemail() {
     cd /opt/tools/SimplyEmail/ || exit
     fapt antiword odt2txt libxml2-dev libxslt1-dev
     virtualenv --python python2 ./venv
-    catch_and_retry ./venv/bin/python2 -m pip install -r ./setup/requirments.txt
+    source ./venv/bin/activate
+    pip2 install -r ./setup/requirments.txt
+    deactivate
     add-aliases simplyemail
     add-history simplyemail
     add-test-command "SimplyEmail.py -l"
@@ -117,7 +119,9 @@ function install_theharvester() {
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     # The tool needs access to the proxies.yaml file in the folder.
     ln -s /opt/tools/theHarvester /usr/local/etc/
     add-aliases theharvester
@@ -141,7 +145,9 @@ function install_infoga() {
     find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
     cd /opt/tools/Infoga || exit
     python2 -m virtualenv ./venv
-    catch_and_retry ./venv/bin/python2 -m pip install .
+    source ./venv/bin/activate
+    pip2 install .
+    deactivate
     add-aliases infoga
     add-history infoga
     add-test-command "infoga.py --help"
@@ -170,7 +176,9 @@ function install_pwnedornot() {
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
     cd /opt/tools/pwnedOrNot || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install requests html2text
+    source ./venv/bin/activate
+    pip3 install requests html2text
+    deactivate
     mkdir -p "$HOME/.config/pwnedornot"
     cp config.json "$HOME/.config/pwnedornot/config.json"
     add-aliases pwnedornot
@@ -212,7 +220,9 @@ function install_linkedin2username() {
     git -C /opt/tools/ clone --depth 1 https://github.com/initstring/linkedin2username
     cd /opt/tools/linkedin2username || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases linkedin2username
     add-history linkedin2username
     add-test-command "linkedin2username.py --help"
@@ -242,7 +252,9 @@ function install_carbon14() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
     cd /opt/tools/Carbon14 || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases carbon14
     add-history carbon14
     add-test-command "carbon14.py --help"
@@ -254,7 +266,9 @@ function install_photon() {
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/photon
     cd /opt/tools/photon || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases photon
     add-history photon
     add-test-command "photon.py --help"
@@ -304,7 +318,9 @@ function install_spiderfoot() {
     git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases spiderfoot
     add-history spiderfoot
     add-test-command "spiderfoot --help"
@@ -317,7 +333,9 @@ function install_finalrecon() {
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases finalrecon
     add-history finalrecon
     add-test-command "finalrecon.py --help"
@@ -340,7 +358,9 @@ function install_pwndb() {
     git -C /opt/tools/ clone --depth 1 https://github.com/davidtavarez/pwndb.git
     cd /opt/tools/pwndb || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases pwndb
     add-history pwndb
     add-test-command "pwndb.py --help"
@@ -362,7 +382,9 @@ function install_recondog() {
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/ReconDog
     cd /opt/tools/ReconDog/ || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases recondog
     add-history recondog
     add-test-command "recondog --help"
@@ -415,7 +437,9 @@ function install_geopincer() {
     cd /opt/tools/GeoPincer || exit
     sed -i "s#regions.txt#/opt/tools/GeoPincer/regions.txt##" GeoPincer.py
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases geopincer
     add-history geopincer
     add-test-command "geopincer.py --help"
@@ -439,7 +463,9 @@ function install_murmurhash() {
     git -C /opt/tools clone --depth 1 https://github.com/QU35T-code/MurMurHash
     cd /opt/tools/MurMurHash || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases MurMurHash
     add-history MurMurHash
     add-test-command "MurMurHash.py"
@@ -453,7 +479,9 @@ function install_blackbird() {
     sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
     sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases blackbird
     add-history blackbird
     add-test-command "blackbird.py --help"
@@ -465,7 +493,9 @@ function install_sherlock() {
     git -C /opt/tools/ clone --depth 1 https://github.com/sherlock-project/sherlock
     cd /opt/tools/sherlock || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases sherlock
     add-history sherlock
     add-test-command "sherlock.py --help"
