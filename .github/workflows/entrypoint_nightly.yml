@@ -114,7 +114,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [ build_base ]
+    needs: [ init, code_check, build_base ]
     # Can't have always() in the if statement
     # as per https://github.com/orgs/community/discussions/26303
     # and https://github.com/actions/runner/issues/1846
