@@ -247,7 +247,7 @@ function install_upx() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     local UPX_URL
-    UPX_URL=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'$ARCH'.*tar.xz"' | grep -o 'https://[^"]*')
+    UPX_URL=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'"$ARCH"'.*tar.xz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/upx.tar.xz "$UPX_URL"
     tar -xf /tmp/upx.tar.xz --directory /tmp
     rm /tmp/upx.tar.xz

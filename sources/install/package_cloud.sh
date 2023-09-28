@@ -7,7 +7,7 @@ function install_kubectl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kubectl"
     mkdir -p /opt/tools/kubectl
-    cd /opt/tools/kubectl
+    cd /opt/tools/kubectl || exit
     if [[ $(uname -m) = 'x86_64' ]]
     # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
     then
@@ -30,7 +30,7 @@ function install_kubectl() {
 function install_awscli() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing aws cli"
-    cd /tmp
+    cd /tmp || exit
     if [[ $(uname -m) = 'x86_64' ]]
     then
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"

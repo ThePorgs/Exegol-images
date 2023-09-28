@@ -32,7 +32,7 @@ function install_volatility2() {
     colorecho "Installing volatility"
     fapt pcregrep yara libjpeg-dev zlib1g-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
-    cd /opt/tools/volatility
+    cd /opt/tools/volatility || exit
     virtualenv --python python2 ./venv
     source ./venv/bin/activate
     pip2 install pycryptodome distorm3 pillow openpyxl
@@ -63,7 +63,7 @@ function install_volatility3() {
 function install_trid() {
     colorecho "Installing trid"
     mkdir /opt/tools/trid/
-    cd /opt/tools/trid
+    cd /opt/tools/trid || exit
     wget https://mark0.net/download/tridupdate.zip
     wget https://mark0.net/download/triddefs.zip
     wget https://mark0.net/download/trid_linux_64.zip
@@ -92,7 +92,7 @@ function install_jadx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jadx"
     git -C /opt/tools/ clone --depth 1 https://github.com/skylot/jadx.git
-    cd /opt/tools/jadx
+    cd /opt/tools/jadx || exit
     ./gradlew dist
     ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
     ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui

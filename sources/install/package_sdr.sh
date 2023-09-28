@@ -25,10 +25,10 @@ function install_mousejack() {
     colorecho "Installing mousejack"
     fapt sdcc binutils
     git -C /opt/tools/ clone --depth 1 https://github.com/BastilleResearch/mousejack
-    cd /opt/tools/mousejack
+    cd /opt/tools/mousejack || exit
     git submodule init
     git submodule update
-    cd nrf-research-firmware
+    cd nrf-research-firmware || exit
     make
     pip2 install libusb pyusb
     add-aliases mousejack

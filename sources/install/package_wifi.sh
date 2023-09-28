@@ -28,7 +28,7 @@ function install_wifi_apt_tools() {
 function install_pyrit() {
     colorecho "Installing pyrit"
     git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
-    cd /opt/tools/Pyrit
+    cd /opt/tools/Pyrit || exit
     fapt libpq-dev
     virtualenv --python python2 ./venv
     source ./venv/bin/activate
@@ -51,7 +51,7 @@ function install_pyrit() {
 function install_wifite2() {
     colorecho "Installing wifite2"
     git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
-    cd /opt/tools/wifite2
+    cd /opt/tools/wifite2 || exit
     python3 -m venv ./venv
     catch_and_retry ./venv/bin/python3 setup.py install
     add-aliases wifite
@@ -80,7 +80,7 @@ function install_hcxtools() {
     colorecho "Installing hcxtools"
     fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools
-    cd /opt/tools/hcxtools
+    cd /opt/tools/hcxtools || exit
     make install PREFIX=/opt/tools
     ln -s /opt/tools/bin/hcxpcapngtool /opt/tools/bin/hcxpcaptool
     add-history hcxtools
@@ -94,7 +94,7 @@ function install_hcxdumptool() {
     colorecho "Installing hcxdumptool"
     fapt libcurl4-openssl-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool
-    cd /opt/tools/hcxdumptool
+    cd /opt/tools/hcxdumptool || exit
     make
     make install PREFIX=/opt/tools
     add-history hcxdumptool
