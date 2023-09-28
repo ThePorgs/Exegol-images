@@ -197,8 +197,7 @@ function deploy_bloodhound_customqueries_merge() {
 }
 
 function deploy_bloodhound_customqueries_replacement() {
-  colorecho "Replacing BloodHound Exegol Custom Queries"
-  # Replace Exegol's customqueries.json file with the merge of ones from my-resources
+  colorecho "Merging BloodhHound User Custom Queries with Exegol Custom Queries"
   local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
   [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
   if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
@@ -207,7 +206,7 @@ function deploy_bloodhound_customqueries_replacement() {
 }
 
 function deploy_bloodhound() {
-  colorecho "Deplying BloodHound"
+  colorecho "Deploying BloodHound"
   local bh_config_homedir=~/.config/bloodhound
   local my_setup_bh_path="$MY_SETUP_PATH/bloodhound"
   # Use the dry-run flag to not create the file as bqm prompts if it already exists, hence it only generates a random filename
