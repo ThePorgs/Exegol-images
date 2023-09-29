@@ -31,7 +31,6 @@ function criticalecho-noexit () {
 
 function init() {
   colorecho "Initialization"
-  colorecho "Sourcing zshrc"
   colorecho "Checking environment variables"
   env
   colorecho "Deploying /opt/my-resources"
