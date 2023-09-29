@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+# Cannot source from a function
+source "$HOME/.zshrc"
+
 # Root my-resources PATH
 MY_ROOT_PATH="/opt/my-resources"
 
@@ -27,9 +30,8 @@ function criticalecho-noexit () {
 }
 
 function init() {
-  colorecho "Initilization"
+  colorecho "Initialization"
   colorecho "Sourcing zshrc"
-  source "$HOME/.zshrc"
   colorecho "Checking environment variables"
   env
   colorecho "Deploying /opt/my-resources"
@@ -202,6 +204,7 @@ function deploy_bloodhound_customqueries_replacement() {
   [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
   if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_replacement_directory"
+      cq_replacement_done=1
   fi
 }
 
@@ -209,6 +212,7 @@ function deploy_bloodhound() {
   colorecho "Deploying BloodHound"
   local bh_config_homedir=~/.config/bloodhound
   local my_setup_bh_path="$MY_SETUP_PATH/bloodhound"
+  local cq_replacement_done=0
   # Use the dry-run flag to not create the file as bqm prompts if it already exists, hence it only generates a random filename
   local bqm_output_file
   bqm_output_file=$(mktemp --dry-run)
@@ -216,9 +220,9 @@ function deploy_bloodhound() {
   [[ ! -d "$my_setup_bh_path" ]] && cp -r /.exegol/skel/bloodhound "$my_setup_bh_path"
   deploy_bloodhound_config
   # If a user places Bloodhound json files in both folders merge and replacement,
-  # replacement must be executed last to only keep the output of replacement.
-  deploy_bloodhound_customqueries_merge
+  # only process the replacement.
   deploy_bloodhound_customqueries_replacement
+  [[ $cq_replacement_done -eq 0 ]] && deploy_bloodhound_customqueries_merge
   if [[ -f "$bqm_output_file" ]]; then
     mv "$bqm_output_file" "$bh_config_homedir/customqueries.json" &&
     colorecho "$bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
