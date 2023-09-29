@@ -125,7 +125,9 @@ function install_dnschef() {
     git -C /opt/tools/ clone --depth 1 https://github.com/iphelix/dnschef
     cd /opt/tools/dnschef || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases dnschef
     add-history dnschef
     add-test-command "dnschef.py --help"
@@ -166,7 +168,9 @@ function install_eaphammer() {
     cd /opt/tools/eaphammer || exit
     xargs apt install -y < kali-dependencies.txt
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r pip.req
+    source ./venv/bin/activate
+    pip3 install -r pip.req
+    deactivate
     add-aliases eaphammer
     add-history eaphammer
     add-test-command "eaphammer -h"

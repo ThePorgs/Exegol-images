@@ -19,9 +19,11 @@ function install_rsactftool() {
     # This tool uses z3solver, which is very long to build (5 min)
     fapt libmpc-dev
     git -C /opt/tools clone --depth 1 https://github.com/RsaCtfTool/RsaCtfTool
-    cd /opt/tools/RsaCtfTool
+    cd /opt/tools/RsaCtfTool || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases rsactftool
     add-history rsactftool
     add-test-command "RsaCtfTool.py --help"

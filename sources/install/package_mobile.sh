@@ -32,9 +32,11 @@ function install_scrpy() {
                  libavcodec-dev libavdevice-dev libavformat-dev libavutil-dev \
                  libswresample-dev libusb-1.0-0 libusb-1.0-0-dev
     git clone https://github.com/Genymobile/scrcpy
-    cd scrcpy
-    ./install_release.sh
-    cd ..
+    # opening subshell to not have to cd back
+    (
+      cd scrcpy || exit
+      ./install_release.sh
+    )
     rm -rf ./scrcpy
     add-history scrcpy
     add-test-command "scrcpy --version"

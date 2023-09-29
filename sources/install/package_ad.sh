@@ -42,9 +42,11 @@ function install_responder() {
       for PR in "${PRS[@]}"; do git fetch origin "pull/$PR/head:pull/$PR" && git merge --strategy-option theirs --no-edit "pull/$PR"; done
     fi
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
     # following requirements needed by MultiRelay.py
-    catch_and_retry ./venv/bin/python3 -m pip install pycryptodome pycryptodomex six
+    pip3 install pycryptodome pycryptodomex six
+    deactivate
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/BindShell.exe/\/opt\/tools\/Responder\/files\/BindShell.exe/g' /opt/tools/Responder/Responder.conf
@@ -213,7 +215,9 @@ function install_privexchange() {
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PrivExchange
     cd /opt/tools/PrivExchange || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     add-aliases privexchange
     add-history privexchange
     add-test-command "privexchange.py --help"
@@ -243,7 +247,7 @@ function install_upx() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     local UPX_URL
-    UPX_URL=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'$ARCH'.*tar.xz"' | grep -o 'https://[^"]*')
+    UPX_URL=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'"$ARCH"'.*tar.xz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/upx.tar.xz "$UPX_URL"
     tar -xf /tmp/upx.tar.xz --directory /tmp
     rm /tmp/upx.tar.xz
@@ -314,7 +318,9 @@ function install_krbrelayx() {
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/krbrelayx
     cd /opt/tools/krbrelayx || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install dnspython ldap3 impacket dsinternals
+    source ./venv/bin/activate
+    pip3 install dnspython ldap3 impacket dsinternals
+    deactivate
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
     add-history krbrelayx
@@ -376,7 +382,9 @@ function install_zerologon() {
     mkdir /opt/tools/zerologon
     cd /opt/tools/zerologon || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     git -C /opt/tools/zerologon clone --depth 1 https://github.com/SecuraBV/CVE-2020-1472 zerologon-scan
     git -C /opt/tools/zerologon clone --depth 1 https://github.com/dirkjanm/CVE-2020-1472 zerologon-exploit
     add-aliases zerologon
@@ -420,7 +428,9 @@ function install_oaburl() {
     wget -O /opt/tools/OABUrl/oaburl.py "https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py"
     cd /opt/tools/OABUrl/ || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install requests
+    source ./venv/bin/activate
+    pip3 install requests
+    deactivate
     add-aliases oaburl
     add-history oaburl
     add-test-command "oaburl.py --help"
@@ -432,7 +442,9 @@ function install_lnkup() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Plazmaz/LNKUp
     cd /opt/tools/LNKUp || exit
     virtualenv --python python2 ./venv
-    catch_and_retry ./venv/bin/python2 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip2 install -r requirements.txt
+    deactivate
     add-aliases lnkup
     add-history lnkup
     add-test-command "lnk-generate.py --help"
@@ -444,7 +456,9 @@ function install_polenum() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh1t3Fox/polenum
     cd /opt/tools/polenum || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     add-aliases polenum
     add-history polenum
     add-test-command "polenum.py --help"
@@ -499,7 +513,9 @@ function install_gpp-decrypt() {
     git -C /opt/tools/ clone --depth 1 https://github.com/t0thkr1s/gpp-decrypt
     cd /opt/tools/gpp-decrypt || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install pycryptodome colorama
+    source ./venv/bin/activate
+    pip3 install pycryptodome colorama
+    deactivate
     add-aliases gpp-decrypt
     add-history gpp-decrypt
     add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
@@ -547,7 +563,9 @@ function install_pygpoabuse() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Hackndo/pyGPOAbuse
     cd /opt/tools/pyGPOAbuse || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases pygpoabuse
     add-history pygpoabuse
     add-test-command "pygpoabuse.py --help"
@@ -568,7 +586,9 @@ function install_bloodhound-quickwin() {
     git -C /opt/tools/ clone --depth 1 https://github.com/kaluche/bloodhound-quickwin
     cd /opt/tools/bloodhound-quickwin || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install py2neo pandas prettytable
+    source ./venv/bin/activate
+    pip3 install py2neo pandas prettytable
+    deactivate
     add-aliases bloodhound-quickwin
     add-history bloodhound-quickwin
     add-test-command "bloodhound-quickwin --help"
@@ -580,7 +600,9 @@ function install_ldapsearch-ad() {
     git -C /opt/tools/ clone --depth 1 https://github.com/yaap7/ldapsearch-ad
     cd /opt/tools/ldapsearch-ad || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases ldapsearch-ad
     add-history ldapsearch-ad
     add-test-command "ldapsearch-ad.py --version"
@@ -592,12 +614,16 @@ function install_petitpotam() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ly4k/PetitPotam
     cd /opt/tools/PetitPotam || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     mv /opt/tools/PetitPotam /opt/tools/PetitPotam_alt
     git -C /opt/tools/ clone --depth 1 https://github.com/topotam/PetitPotam
     cd /opt/tools/PetitPotam || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     add-aliases petitpotam
     add-history petitpotam
     add-test-command "petitpotam.py --help"
@@ -609,7 +635,9 @@ function install_dfscoerce() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh04m1001/DFSCoerce
     cd /opt/tools/DFSCoerce || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     add-aliases dfscoerce
     add-history dfscoerce
     add-test-command "dfscoerce.py --help"
@@ -630,7 +658,9 @@ function install_pkinittools() {
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PKINITtools
     cd /opt/tools/PKINITtools || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases pkinittools
     add-history pkinittools
     add-test-command "gettgtpkinit.py --help"
@@ -642,7 +672,9 @@ function install_pywhisker() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
     cd /opt/tools/pywhisker || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases pywhisker
     add-history pywhisker
     add-test-command "pywhisker.py --help"
@@ -654,7 +686,9 @@ function install_manspider() {
     git -C /opt/tools clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER.git
     cd /opt/tools/MANSPIDER || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install .
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
     touch ./man_spider/lib/init.py
     sed -i "s#from .lib import#from lib import##" man_spider/manspider.py
     add-aliases manspider
@@ -668,7 +702,9 @@ function install_targetedKerberoast() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
     cd /opt/tools/targetedKerberoast || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases targetedkerberoast
     add-history targetedkerberoast
     add-test-command "targetedKerberoast.py --help"
@@ -681,8 +717,9 @@ function install_pcredz() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/PCredz
     cd /opt/tools/PCredz || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install Cython
-    catch_and_retry ./venv/bin/python3 -m pip install python-libpcap
+    source ./venv/bin/activate
+    pip3 install Cython python-libpcap
+    deactivate
     add-aliases pcredz
     add-history pcredz
     add-test-command "PCredz --help"
@@ -696,7 +733,9 @@ function install_pywsus() {
     python3 -m venv ./venv/
     # https://github.com/GoSecure/pywsus/pull/12
     echo -e "beautifulsoup4==4.9.1\nlxml==4.9.1\nsoupsieve==2.0.1" > requirements.txt
-    catch_and_retry ./venv/bin/python3 -m pip install -r ./requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases pywsus
     add-history pywsus
     add-test-command "pywsus.py --help"
@@ -736,7 +775,9 @@ function install_shadowcoerce() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/ShadowCoerce
     cd /opt/tools/ShadowCoerce || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     add-aliases shadowcoerce
     add-history shadowcoerce
     add-test-command "shadowcoerce.py --help"
@@ -748,7 +789,9 @@ function install_gmsadumper() {
     git -C /opt/tools/ clone --depth 1 https://github.com/micahvandeusen/gMSADumper
     cd /opt/tools/gMSADumper || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases gmsadumper
     add-history gmsadumper
     add-test-command "gMSADumper.py --help"
@@ -760,7 +803,9 @@ function install_pylaps() {
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLAPS
     cd /opt/tools/pyLAPS || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     add-aliases pylaps
     add-history pylaps
     add-test-command "pyLAPS.py --help"
@@ -772,7 +817,9 @@ function install_finduncommonshares() {
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/FindUncommonShares
     cd /opt/tools/FindUncommonShares/ || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases finduncommonshares
     add-history finduncommonshares
     add-test-command "FindUncommonShares.py --help"
@@ -784,7 +831,9 @@ function install_ldaprelayscan() {
     git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/LdapRelayScan
     cd /opt/tools/LdapRelayScan || exit
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases ldaprelayscan
     add-history ldaprelayscan
     add-test-command "LdapRelayScan.py --help"
@@ -814,7 +863,9 @@ function install_crackhound() {
       for PR in "${PRS[@]}"; do git fetch origin "pull/$PR/head:pull/$PR" && git merge --strategy-option theirs --no-edit "pull/$PR"; done
     fi
     python3 -m venv ./venv/
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases crackhound
     add-history crackhound
     add-test-command "crackhound.py --help"
@@ -915,7 +966,9 @@ function install_PassTheCert() {
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
     cd /opt/tools/PassTheCert/Python/ || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install impacket
+    source ./venv/bin/activate
+    pip3 install impacket
+    deactivate
     add-aliases PassTheCert
     add-history PassTheCert
     add-test-command "passthecert.py --help"
@@ -960,7 +1013,9 @@ function install_noPac() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Ridter/noPac
     cd /opt/tools/noPac || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases noPac
     add-history noPac
     add-test-command "noPac.py --help"
@@ -981,7 +1036,9 @@ function install_teamsphisher() {
     git -C /opt/tools clone --depth 1 https://github.com/Octoberfest7/TeamsPhisher
     cd /opt/tools/TeamsPhisher || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install msal colorama requests
+    source ./venv/bin/activate
+    pip3 install msal colorama requests
+    deactivate
     add-aliases teamsphisher
     add-history teamsphisher
     add-test-command "teamsphisher.py --help"
@@ -1016,7 +1073,9 @@ function install_extractbitlockerkeys() {
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/ExtractBitlockerKeys
     cd /opt/tools/ExtractBitlockerKeys || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases extractbitlockerkeys
     add-history extractbitlockerkeys
     add-test-command "extractbitlockerkeys.py|& grep 'usage: ExtractBitlockerKeys.py'"

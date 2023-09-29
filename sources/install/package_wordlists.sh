@@ -35,7 +35,7 @@ function install_seclists() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing seclists"
     git -C /opt clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
-    cd /opt/seclists
+    cd /opt/seclists || exit
     rm -r LICENSE .git* CONTRIBUT* .bin
     mkdir -p /usr/share/wordlists
     ln -v -s /opt/seclists /usr/share/seclists

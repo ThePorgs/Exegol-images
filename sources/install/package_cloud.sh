@@ -7,7 +7,7 @@ function install_kubectl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kubectl"
     mkdir -p /opt/tools/kubectl
-    cd /opt/tools/kubectl
+    cd /opt/tools/kubectl || exit
     if [[ $(uname -m) = 'x86_64' ]]
     # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
     then
@@ -30,7 +30,7 @@ function install_kubectl() {
 function install_awscli() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing aws cli"
-    cd /tmp
+    cd /tmp || exit
     if [[ $(uname -m) = 'x86_64' ]]
     then
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -90,12 +90,14 @@ function install_prowler() {
 function install_cloudmapper() {
     colorecho "Installing Cloudmapper"
     git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git 
-    cd /opt/tools/cloudmapper
+    cd /opt/tools/cloudmapper || exit
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install wheel
-    catch_and_retry ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install wheel
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases cloudmapper
     add-history cloudmapper
     add-test-command 'cloudmapper.py --help |& grep "usage"'

@@ -62,7 +62,9 @@ function install_mfdread() {
     git -C /opt/tools/ clone --depth 1 https://github.com/zhovner/mfdread
     cd /opt/tools/mfdread || exit
     python3 -m venv ./venv
-    catch_and_retry ./venv/bin/python3 -m pip install bitstring
+    source ./venv/bin/activate
+    pip3 install bitstring
+    deactivate
     add-aliases mfdread
     add-history mfdread
     add-test-command "mfdread.py /opt/tools/mfdread/dump.mfd"

@@ -38,6 +38,6 @@ function shell_logging() {
     exit 0
 }
 
-$@ || (echo -e "[!] This version of the image ($(cat /opt/.exegol_version || echo '?')) does not support the $1 feature.\n[*] Please update your image and create a new container with before using this new feature."; exit 1)
+"$@" || (echo -e "[!] This version of the image ($(cat /opt/.exegol_version || echo '?')) does not support the $1 feature.\n[*] Please update your image and create a new container with before using this new feature."; exit 1)
 
 exit 0

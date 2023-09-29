@@ -4,6 +4,8 @@
 find_available_display() {
   # Search for available socket if the X11 socket directory is not available
   if [ -d /tmp/.X11-unix/ ]; then
+    # TODO : shellcheck below probably needs to be fixed instead of muted
+    # shellcheck disable=SC2012
     readarray -t x11_sockets < <(ls -1 "/tmp/.X11-unix/" | cut -d 'X' -f2)
   else
     # X11 not shared, need to check socket

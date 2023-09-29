@@ -54,7 +54,7 @@ function fapt() {
 
 function set_cargo_env() {
     colorecho "Setting cargo environment variables for installation"
-    source $HOME/.cargo/env
+    source "$HOME/.cargo/env"
 }
 
 function set_go_env() {
@@ -94,6 +94,7 @@ function catch_and_retry() {
   # escaping characters that could mess with the sh execution
   local escaped_command
   # not double-quoting $command as it would escape spaces inside the command and we don't want that
+  # shellcheck disable=SC2086
   escaped_command=$(printf '%q ' $command)
   for ((i=1; i<=retries; i++)); do
     # sh -c is used instead of an "eval" in order to avoid an infinite loop
