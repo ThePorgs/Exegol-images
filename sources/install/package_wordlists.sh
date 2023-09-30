@@ -31,6 +31,15 @@ function install_cewl() {
     add-to-list "cewl,https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results"
 }
 
+function install_cewler() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    coloercho "Installing cewler"
+    pipx install cewler
+    add-history cewler
+    add-test-command "cewler --help"
+    add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python"
+}
+
 function install_seclists() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing seclists"
@@ -92,6 +101,7 @@ function package_wordlists() {
     set_python_env
     install_wordlists_apt_tools
     install_cewl                    # Wordlist generator
+    install_cewler                  # cewl alternative in Python
     install_seclists                # Awesome wordlists
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
