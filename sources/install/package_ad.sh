@@ -1082,6 +1082,20 @@ function install_extractbitlockerkeys() {
     add-to-list "ExtractBitlockerKeys,https://github.com/p0dalirius/ExtractBitlockerKeys,A system administration or post-exploitation script to automatically extract the bitlocker recovery keys from a domain."
 }
 
+function install_LDAPWordlistHarvester() {
+    colorecho "Installing LDAPWordlistHarvester"
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/LDAPWordlistHarvester
+    cd /opt/tools/LDAPWordlistHarvester || exit
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases LDAPWordlistHarvester
+    add-history LDAPWordlistHarvester
+    add-test-command "LDAPWordlistHarvester.py --help"
+    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1169,4 +1183,5 @@ function package_ad() {
     install_GPOddity
     install_netexec                # Crackmapexec repo
     install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
+    install_LDAPWordlistHarvester
 }
