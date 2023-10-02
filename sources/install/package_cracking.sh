@@ -27,20 +27,18 @@ function install_cracking_apt_tools() {
 function install_john() {
     colorecho "Installing john the ripper"
     git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
+    cd /opt/tools/john/src || exit
+    ./configure --disable-native-tests && make
     add-aliases john-the-ripper
     add-history john-the-ripper
     add-test-command "john --help"
     add-to-list "john,https://github.com/openwall/john,John the Ripper password cracker."
 }
 
-function configure_john() {
-    cd /opt/tools/john/src
-    ./configure --disable-native-tests && make
-}
-
 function install_name-that-hash() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Name-That-Hash"
-    python3 -m pipx install name-that-hash
+    pipx install name-that-hash
     add-history name-that-hash
     add-test-command "nth --help"
     add-to-list "name-that-hash,https://github.com/HashPals/Name-That-Hash,Online tool for identifying hashes."
@@ -48,9 +46,9 @@ function install_name-that-hash() {
 
 function install_haiti() {
     colorecho "Installing haiti"
-    rvm use 3.0.0@haiti --create
+    rvm use 3.2.2@haiti --create
     gem install haiti-hash
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases haiti
     add-history haiti
     add-test-command "haiti --help"
@@ -60,7 +58,7 @@ function install_haiti() {
 function install_geowordlists() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GeoWordlists"
-    python3 -m pipx install git+https://github.com/p0dalirius/GeoWordlists
+    pipx install git+https://github.com/p0dalirius/GeoWordlists
     add-history geowordlists
     add-test-command "geowordlists --help"
     add-to-list "geowordlists,https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city."
@@ -71,7 +69,7 @@ function install_pkcrack() {
     colorecho "Installing pkcrack"
     git -C /opt/tools/ clone https://github.com/keyunluo/pkcrack
     mkdir -v /opt/tools/pkcrack/build/
-    cd /opt/tools/pkcrack/build
+    cd /opt/tools/pkcrack/build || exit
     cmake ..
     make
     ln -s /opt/tools/pkcrack/bin/pkcrack /opt/tools/bin
@@ -83,15 +81,13 @@ function install_pkcrack() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
+    set_cargo_env
     set_ruby_env
+    set_python_env
     install_cracking_apt_tools
     install_john                    # Password cracker
     install_name-that-hash          # Name-That-Hash, the hash identifier tool
     install_haiti                   # haiti, hash type identifier
     install_geowordlists            # wordlists generator
     install_pkcrack                 # known plaintext ZIP cracker
-}
-
-function package_cracking_configure() {
-    configure_john
 }

@@ -52,8 +52,10 @@ function install_most_used_apt_tools() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
+    set_cargo_env
     set_go_env
     set_ruby_env
+    set_python_env
     install_most_used_apt_tools
     install_metasploit              # Offensive framework
     install_nmap                    # Port scanner
@@ -84,4 +86,5 @@ function package_most_used() {
     install_evilwinrm               # WinRM shell
     install_john                    # Password cracker
     install_sqlmap                  # SQL injection scanner
+    install_netexec                 # Crackmapexec repo
 }

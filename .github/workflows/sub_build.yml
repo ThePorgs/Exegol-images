@@ -63,9 +63,9 @@ jobs:
           platforms: linux/${{ inputs.ARCH }}
           file: ${{ inputs.DOCKERFILE }}
           context: .
+      - name: (dbg) post-build inspect image
+        if: success()
+        run: docker inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
       - name: (dbg) post-build docker info
         if: always()
-        run: |
-          docker image ls -a
-          docker ps
-          docker inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
+        run: docker image ls -a

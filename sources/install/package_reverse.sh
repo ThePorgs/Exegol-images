@@ -32,8 +32,10 @@ function install_pwntools() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing pwntools"
     python -m pip install pwntools
-    python -m pip install pathlib2
-    python3 -m pip install pwntools
+    # Downgrade pyelftools version because : https://github.com/Gallopsled/pwntools/issues/2260
+    python -m pip install pathlib2 pyelftools==0.29
+    pip3 install pwntools
+    pip3 install pyelftools==0.29
     add-test-command "python -c 'import pwn'"
     add-test-command "python3 -c 'import pwn'"
     add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
@@ -42,7 +44,7 @@ function install_pwntools() {
 function install_pwndbg() {
     colorecho "Installing pwndbg"
     git -C /opt/tools/ clone --depth 1 https://github.com/pwndbg/pwndbg
-    cd /opt/tools/pwndbg
+    cd /opt/tools/pwndbg || exit
     ./setup.sh
     echo 'set disassembly-flavor intel' >> ~/.gdbinit
     add-aliases gdb
@@ -55,7 +57,7 @@ function install_angr() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing angr"
     fapt libffi-dev
-    python3 -m pip install angr
+    pip3 install angr
     add-test-command "python3 -c 'import angr'"
     add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework"
 }
@@ -63,13 +65,15 @@ function install_angr() {
 function install_checksec-py() {
     colorecho "Installing checksec.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
-    cd /opt/tools/checksec.py
+    cd /opt/tools/checksec.py || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install .
-    ./venv/bin/python3 -m pip install --upgrade lief
+    source ./venv/bin/activate
+    pip3 install .
+    pip3 install --upgrade lief
+    deactivate
     add-aliases checksec
     add-history checksec
-    add-test-command "checksec --help"
+    add-test-command "checksec.py --help"
     add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
 
@@ -114,6 +118,7 @@ function install_ida() {
 }
 
 function install_jd-gui() {
+    # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing jd-gui"
     mkdir -p /opt/tools/jd-gui && cd /opt/tools/jd-gui || exit
     wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
@@ -137,7 +142,9 @@ function install_pwninit() {
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
+    set_cargo_env
     set_ruby_env
+    set_python_env
     install_reverse_apt_tools
     install_pwntools                # CTF framework and exploit development library
     install_pwndbg                  # Advanced Gnu Debugger

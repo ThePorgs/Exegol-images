@@ -6,7 +6,7 @@ on:
       - dev
       - "*.*.*"
       - "*.*.*b*"
-    paths-ignore:
+    paths-ignore: # not always respected. See https://github.com/actions/runner/issues/2324#issuecomment-1703345084
       - ".github/**"
       - "**.md"
 
@@ -19,7 +19,7 @@ env:
 
   # final image parameters
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
-  DOCKERFILE: "./Dockerfile"
+  DOCKERFILE: "./sources/dockerfiles/Dockerfile"
 
 
 # creating a separate concurrency group for each PR
@@ -84,7 +84,7 @@ jobs:
 
   build:
     name: Final image build
-    needs: [init, code_check, build_base ]
+    needs: [ init, code_check, build_base ]
     # only running build if base_build was a success
     if: needs.build_base.outputs.build == 'success'
     strategy:
@@ -112,8 +112,10 @@ jobs:
 
   clean_runners:
     name: Clean runner
-    needs: [ init, build_base, build ]
-    if: always() && ( needs.build_base.outputs.build == 'success' || needs.build.outputs.build == 'success' )
+    needs: [ init, build ]
+    if: always()
+    # even if this job fails, it won't affect the success/fail status of the whole workflow
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -126,10 +128,12 @@ jobs:
       - name: List docker images
         run: docker image ls
       - name: Remove local base image
-        if: always() && needs.build_base.result == 'success'
+        # always removing image, no need to keep it on the runner
+        if: always()
         # ex: docker rmi nwodtuhs/exegol-local:base-arm64
         run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ env.BASE_IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
       - name: Remove local final image
-        if: always() && needs.build.result == 'success'
+        # always removing image, no need to keep it on the runner
+        if: always()
         # ex: docker rmi nwodtuhs/exegol-local:PR123-arm64
         run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}

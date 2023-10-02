@@ -1,1 +1,1 @@
-peepdf -i file.pdf
+peepdf.py -i file.pdf

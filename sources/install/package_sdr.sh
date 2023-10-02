@@ -25,12 +25,12 @@ function install_mousejack() {
     colorecho "Installing mousejack"
     fapt sdcc binutils
     git -C /opt/tools/ clone --depth 1 https://github.com/BastilleResearch/mousejack
-    cd /opt/tools/mousejack
+    cd /opt/tools/mousejack || exit
     git submodule init
     git submodule update
-    cd nrf-research-firmware
+    cd nrf-research-firmware || exit
     make
-    python2 -m pip install libusb pyusb
+    pip2 install libusb pyusb
     add-aliases mousejack
     add-history mousejack
     add-test-command "nrf24-scanner.py --help"
@@ -42,7 +42,7 @@ function install_mousejack() {
 function install_jackit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jackit"
-    python3 -m pipx install git+https://github.com/insecurityofthings/jackit
+    pipx install git+https://github.com/insecurityofthings/jackit
     add-history jackit
     add-test-command "jackit --help"
     add-to-list "jackit,https://github.com/insecurityofthings/jackit,Exploit to take over a wireless mouse and keyboard"
@@ -50,7 +50,9 @@ function install_jackit() {
 
 # Package dedicated to SDR
 function package_sdr() {
+    set_cargo_env
     set_ruby_env
+    set_python_env
     install_sdr_apt_tools
     install_mousejack               # tools for mousejacking
     install_jackit                  # tools for mousejacking

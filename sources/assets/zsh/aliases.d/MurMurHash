@@ -1,0 +1,1 @@
+alias MurMurHash.py='/opt/tools/MurMurHash/venv/bin/python3 /opt/tools/MurMurHash/MurMurHash.py'

@@ -1,0 +1,2 @@
+geopincer.py "Texas" "Office Depot" "Sam's Club"
+geopincer.py "Texas" "Office Depot" "Sam's Club" --distance 300

@@ -14,7 +14,7 @@ function install_xfce() {
     fapt terminator firefox-esr iproute2
 
     # Dependencies
-    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool
+    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
 
     # Icons
     fapt librsvg2-common papirus-icon-theme
@@ -40,9 +40,9 @@ function install_xfce() {
     sh autogen.sh --prefix=/tmp/
     make
     make install
-    CUSTOM_PATH=`find /usr/lib/ -name "xfce*"|head -n1`
-    mv /tmp/lib/xfce4/panel/plugins/libdocklike.* $CUSTOM_PATH/panel/plugins
-    mv /tmp/share/xfce4/panel/plugins/docklike.desktop /usr/share/xfce4/panel/plugins
+    CUSTOM_PATH=$(find /usr/lib/ -name "xfce*"|head -n1)
+    mv -v /tmp/lib/xfce4/panel/plugins/libdocklike.* "$CUSTOM_PATH/panel/plugins"
+    mv -v /tmp/share/xfce4/panel/plugins/docklike.desktop /usr/share/xfce4/panel/plugins
 
     # Locale
     cp -rv /tmp/share/locale/* /usr/share/locale
@@ -67,12 +67,12 @@ function install_xfce() {
     echo '<html><head><meta http-equiv="refresh" content="0; URL=/vnc.html?resize=remote&path=websockify&autoconnect=true" /></head></html>' > /usr/share/novnc/index.html
 
     # This is the image default password. It will be dynamically changed through the wrapper during the creation of a new container
-    echo 'exegol4thewin' | vncpasswd -f > $HOME/.vnc/passwd
+    echo 'exegol4thewin' | vncpasswd -f > "$HOME/.vnc/passwd"
 
     # Desktop
     touch /root/.Xauthority
     export DISPLAY=":0"
-    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd $HOME/.vnc/passwd :0
+    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd "$HOME/.vnc/passwd" :0
     sleep 10
     xfconf-query -c xsettings -p /Net/ThemeName -s Prof_XFCE_2_1
     xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark

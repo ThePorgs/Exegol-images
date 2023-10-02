@@ -6,34 +6,45 @@ source common.sh
 function install_web_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing web apt tools"
-    fapt dirb sslscan weevely prips swaks
+    fapt dirb sslscan prips swaks
   
     add-history dirb
     add-history sslscan
-    add-history weevely
     add-history prips
     add-history swaks
   
     add-test-command "dirb | grep '<username:password>'" # Web fuzzer
     add-test-command "sslscan --version"                 # SSL/TLS scanner
-    add-test-command "weevely --help"                    # Awesome secure and light PHP webshell
     add-test-command "prips --help"                      # Print the IP addresses in a given range
     add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 
     add-to-list "dirb,https://github.com/v0re/dirb,Web Content Scanner"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
-    add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
     add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
     add-to-list "swaks,https://github.com/jetmore/swaks,Swaks is a featureful flexible scriptable transaction-oriented SMTP test tool."
+}
+
+function install_weevely() {
+    colorecho "Installing weevely"
+    git -C /opt/tools clone --depth 1 https://github.com/epinna/weevely3
+    cd /opt/tools/weevely3 || exit
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases weevely
+    add-history weevely
+    add-test-command "weevely.py --help"
+    add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
 }
 
 function install_whatweb() {
     colorecho "Installing whatweb"
     git -C /opt/tools clone --depth 1 https://github.com/urbanadventurer/WhatWeb.git
-    rvm use 3.0.0@whatweb --create
+    rvm use 3.2.2@whatweb --create
     gem install addressable
     bundle install --gemfile /opt/tools/WhatWeb/Gemfile
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases whatweb
     add-history whatweb
     add-test-command "whatweb --version"
@@ -46,9 +57,14 @@ function install_wfuzz() {
     colorecho "Installing wfuzz"
     apt --purge remove python3-pycurl -y
     fapt libcurl4-openssl-dev libssl-dev
-    python3 -m pip install pycurl wfuzz
+    pip3 install pycurl wfuzz
+    mkdir /usr/share/wfuzz
+    git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
+    mv /tmp/wfuzz/wordlist/* /usr/share/wfuzz
+    rm -rf /tmp/wfuzz
     add-history wfuzz
     add-test-command "wfuzz --help"
+    add-test-command "[ -d '/usr/share/wfuzz/' ] || exit 1"
     add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
 }
 
@@ -65,7 +81,7 @@ function install_kiterunner() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kiterunner (kr)"
     git -C /opt/tools/ clone --depth 1 https://github.com/assetnote/kiterunner.git
-    cd /opt/tools/kiterunner
+    cd /opt/tools/kiterunner || exit
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-large.kite.tar.gz
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-small.kite.tar.gz
     make build
@@ -88,7 +104,7 @@ function install_ffuf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ffuf"
     git -C /opt/tools clone --depth 1 https://github.com/ffuf/ffuf.git
-    cd /opt/tools/ffuf
+    cd /opt/tools/ffuf || exit
     go build .
     mv ./ffuf /opt/tools/bin/
     # https://github.com/ffuf/ffuf/issues/681
@@ -101,7 +117,7 @@ function install_ffuf() {
 function install_dirsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    python3 -m pipx install git+https://github.com/maurosoria/dirsearch
+    pipx install git+https://github.com/maurosoria/dirsearch
     add-history dirsearch
     add-test-command "dirsearch --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
@@ -110,59 +126,67 @@ function install_dirsearch() {
 function install_ssrfmap() {
     colorecho "Installing SSRFmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
-    cd /opt/tools/SSRFmap
+    cd /opt/tools/SSRFmap || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases ssrfmap
     add-history ssrfmap
-    add-test-command "ssrfmap --help"
+    add-test-command "ssrfmap.py --help"
     add-to-list "ssrfmap,https://github.com/swisskyrepo/SSRFmap,a tool for testing SSRF vulnerabilities."
 }
 
 function install_gopherus() {
     colorecho "Installing gopherus"
     git -C /opt/tools/ clone --depth 1 https://github.com/tarunkant/Gopherus
-    cd /opt/tools/Gopherus
-    virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install argparse requests
+    cd /opt/tools/Gopherus || exit
+    virtualenv --python python2 ./venv
+    source ./venv/bin/activate
+    pip2 install argparse requests
+    deactivate
     add-aliases gopherus
     add-history gopherus
-    add-test-command "gopherus --help"
+    add-test-command "gopherus.py --help"
     add-to-list "gopherus,https://github.com/tarunkant/Gopherus,Gopherus is a simple command line tool for exploiting vulnerable Gopher servers."
 }
 
 function install_nosqlmap() {
     colorecho "Installing NoSQLMap"
     git -C /opt/tools clone --depth 1 https://github.com/codingo/NoSQLMap.git
-    cd /opt/tools/NoSQLMap
-    virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 setup.py install
+    cd /opt/tools/NoSQLMap || exit
+    virtualenv --python python2 ./venv
+    catch_and_retry ./venv/bin/python2 setup.py install
     # https://github.com/codingo/NoSQLMap/issues/126
     rm -rf venv/lib/python2.7/site-packages/certifi-2023.5.7-py2.7.egg
-    ./venv/bin/python2 -m pip install certifi==2018.10.15
+    source ./venv/bin/activate
+    pip2 install certifi==2018.10.15
+    deactivate
     add-aliases nosqlmap
     add-history nosqlmap
-    add-test-command "nosqlmap --help"
+    add-test-command "nosqlmap.py --help"
     add-to-list "nosqlmap,https://github.com/codingo/NoSQLMap,a Python tool for testing NoSQL databases for security vulnerabilities."
 }
 
 function install_xsstrike() {
     colorecho "Installing XSStrike"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/XSStrike.git
-    cd /opt/tools/XSStrike
+    cd /opt/tools/XSStrike || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases xsstrike
     add-history xsstrike
-    add-test-command "XSStrike --help"
+    add-test-command "xsstrike.py --help"
     add-to-list "xsstrike,https://github.com/s0md3v/XSStrike,a Python tool for detecting and exploiting XSS vulnerabilities."
 }
 
 function install_xspear() {
     colorecho "Installing XSpear"
-    rvm use 3.0.0@xspear --create
+    rvm use 3.2.2@xspear --create
     gem install XSpear
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases Xspear
     add-history xspear
     add-test-command "XSpear --help"
@@ -172,9 +196,11 @@ function install_xspear() {
 function install_xsser() {
     colorecho "Installing xsser"
     git -C /opt/tools clone --depth 1 https://github.com/epsylon/xsser.git
-    cd /opt/tools/xsser
+    cd /opt/tools/xsser || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install pycurl bs4 pygeoip gobject cairocffi selenium
+    source ./venv/bin/activate
+    pip3 install pycurl bs4 pygeoip gobject cairocffi selenium
+    deactivate
     add-aliases xsser
     add-history xsser
     add-test-command "xsser --help"
@@ -184,7 +210,7 @@ function install_xsser() {
 function install_xsrfprobe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing XSRFProbe"
-    python3 -m pipx install git+https://github.com/0xInfection/XSRFProbe
+    pipx install git+https://github.com/0xInfection/XSRFProbe
     add-history xsrfprobe
     add-test-command "xsrfprobe --help"
     add-to-list "xsrfprobe,https://github.com/0xInfection/XSRFProbe,a tool for detecting and exploiting Cross-Site Request Forgery (CSRF) vulnerabilities"
@@ -193,12 +219,14 @@ function install_xsrfprobe() {
 function install_bolt() {
     colorecho "Installing Bolt"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/Bolt.git
-    cd /opt/tools/Bolt
+    cd /opt/tools/Bolt || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases bolt
     add-history bolt
-    add-test-command "bolt --help"
+    add-test-command "bolt.py --help"
     add-to-list "bolt,https://github.com/s0md3v/bolt,Bolt crawls the target website to the specified depth and stores all the HTML forms found in a database for further processing."
 }
 
@@ -207,7 +235,7 @@ function install_kadimus() {
     # TODO : Check if deps are already installed
     fapt libcurl4-openssl-dev libpcre3-dev libssh-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/P0cL4bs/Kadimus
-    cd /opt/tools/Kadimus
+    cd /opt/tools/Kadimus || exit
     make
     add-aliases kadimus
     add-history kadimus
@@ -218,25 +246,29 @@ function install_kadimus() {
 function install_fuxploider() {
     colorecho "Installing fuxploider"
     git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
-    cd /opt/tools/fuxploider
+    cd /opt/tools/fuxploider || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases fuxploider
     add-history fuxploider
-    add-test-command "fuxploider --help"
+    add-test-command "fuxploider.py --help"
     add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
 }
 
 function install_patator() {
     colorecho "Installing patator"
-    fapt libmariadb-dev
+    fapt libmariadb-dev libcurl4-openssl-dev libssl-dev ldap-utils libpq-dev ike-scan unzip default-jdk libsqlite3-dev libsqlcipher-dev
     git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
-    cd /opt/tools/patator
+    cd /opt/tools/patator || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases patator
     add-history patator
-    add-test-command "patator ftp_login --help"
+    add-test-command "patator.py ftp_login --help"
     add-to-list "patator,https://github.com/lanjelot/patator,Login scanner."
 }
 
@@ -251,9 +283,9 @@ function install_joomscan() {
 
 function install_wpscan() {
     colorecho "Installing wpscan"
-    rvm use 3.0.0@wpscan --create
+    rvm use 3.2.2@wpscan --create
     gem install wpscan
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases wpscan
     add-history wpscan
     add-test-command "wpscan --help"
@@ -263,7 +295,7 @@ function install_wpscan() {
 function install_droopescan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing droopescan"
-    python3 -m pipx install git+https://github.com/droope/droopescan.git
+    pipx install git+https://github.com/droope/droopescan.git
     add-history droopescan
     add-test-command "droopescan --help"
     add-to-list "droopescan,https://github.com/droope/droopescan,Scan Drupal websites for vulnerabilities."
@@ -272,7 +304,7 @@ function install_droopescan() {
 function install_drupwn() {
     colorecho "Installing drupwn"
     git -C /opt/tools/ clone --depth 1 https://github.com/immunIT/drupwn
-    python3 -m pipx install git+https://github.com/immunIT/drupwn
+    pipx install git+https://github.com/immunIT/drupwn
     add-aliases drupwn
     add-history drupwn
     add-test-command "drupwn --help"
@@ -282,7 +314,7 @@ function install_drupwn() {
 function install_cmsmap() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing CMSmap"
-    python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
+    pipx install git+https://github.com/Dionach/CMSmap.git
     # TODO: Config ?
     # exploit-db path is required (misc package -> searchsploit)
     # cmsmap -U PC
@@ -294,18 +326,18 @@ function install_cmsmap() {
 function install_moodlescan() {
     colorecho "Installing moodlescan"
     git -C /opt/tools/ clone --depth 1 https://github.com/inc0d3/moodlescan.git
-    cd /opt/tools/moodlescan
+    cd /opt/tools/moodlescan || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    cd /opt/tools/moodlescan || exit
+    # updating moodlescan database
+    catch_and_retry ./venv/bin/python3 moodlescan.py -a
     add-aliases moodlescan
     add-history moodlescan
-    add-test-command "moodlescan --help"
+    add-test-command "moodlescan.py --help"
     add-to-list "moodlescan,https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities."
-}
-
-function configure_moodlescan() {
-    cd /opt/tools/moodlescan
-    ./venv/bin/python3 moodlescan.py -a
 }
 
 function install_testssl() {
@@ -315,7 +347,7 @@ function install_testssl() {
     git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
     add-aliases testssl
     add-history testssl
-    add-test-command "testssl --help"
+    add-test-command "testssl.sh --help"
     add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
 }
 
@@ -323,7 +355,7 @@ function install_tls-scanner() {
     colorecho "Installing TLS-Scanner"
     fapt maven
     git -C /opt/tools/ clone --depth 1 https://github.com/tls-attacker/TLS-Scanner
-    cd /opt/tools/TLS-Scanner
+    cd /opt/tools/TLS-Scanner || exit
     git submodule update --init --recursive
     mvn clean package -DskipTests=true
     add-aliases tls-scanner
@@ -335,9 +367,11 @@ function install_tls-scanner() {
 function install_cloudfail() {
     colorecho "Installing CloudFail"
     git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
-    cd /opt/tools/CloudFail
+    cd /opt/tools/CloudFail || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases cloudfail
     add-history cloudfail
     add-test-command "cloudfail.py --help"
@@ -347,33 +381,44 @@ function install_cloudfail() {
 function install_eyewitness() {
     colorecho "Installing EyeWitness"
     git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
-    cd /opt/tools/EyeWitness
+    cd /opt/tools/EyeWitness || exit
     python3 -m venv ./venv
     source ./venv/bin/activate
     ./Python/setup/setup.sh
     deactivate
     add-aliases eyewitness
     add-history eyewitness
-    add-test-command "eyewitness --help"
+    add-test-command "EyeWitness.py --help"
     add-to-list "eyewitness,https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites / provide some server header info / and identify default credentials if possible."
 }
 
 function install_oneforall() {
     colorecho "Installing OneForAll"
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
-    cd /opt/tools/OneForAll
+    cd /opt/tools/OneForAll || exit
+    local TEMP_FIX_LIMIT="2023-10-20" # 20 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git config --local user.email "local"
+      git config --local user.name "local"
+      local PRS=("340")
+      for PR in "${PRS[@]}"; do git fetch origin "pull/$PR/head:pull/$PR" && git merge --strategy-option theirs --no-edit "pull/$PR"; done
+    fi
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases oneforall
     add-history oneforall
-    add-test-command "oneforall version"
+    add-test-command "oneforall.py version"
     add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
 }
 
 function install_wafw00f() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wafw00f"
-    python3 -m pipx install wafw00F
+    pipx install wafw00F
     add-history wafw00f
     add-test-command "wafw00f --help"
     add-to-list "wafw00f,https://github.com/EnableSecurity/wafw00f,a Python tool that helps to identify and fingerprint web application firewall (WAF) products."
@@ -382,12 +427,14 @@ function install_wafw00f() {
 function install_corscanner() {
     colorecho "Installing CORScanner"
     git -C /opt/tools/ clone --depth 1 https://github.com/chenjj/CORScanner.git
-    cd /opt/tools/CORScanner
+    cd /opt/tools/CORScanner || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases corscanner
     add-history corscanner
-    add-test-command "corscanner --help"
+    add-test-command "cors_scan.py --help"
     add-to-list "corscanner,https://github.com/chenjj/CORScanner,a Python script for finding CORS misconfigurations."
 }
 
@@ -413,20 +460,22 @@ function install_gowitness() {
 function install_linkfinder() {
     colorecho "Installing LinkFinder"
     git -C /opt/tools/ clone --depth 1 https://github.com/GerbenJavado/LinkFinder.git
-    cd /opt/tools/LinkFinder
+    cd /opt/tools/LinkFinder || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases linkfinder
     add-history linkfinder
-    add-test-command "linkfinder --help"
+    add-test-command "linkfinder.py --help"
     add-to-list "linkfinder,https://github.com/GerbenJavado/LinkFinder,a Python script that finds endpoints and their parameters in JavaScript files."
 }
 
 function install_timing_attack() {
     colorecho "Installing timing_attack"
-    rvm use 3.0.0@timing_attack --create
+    rvm use 3.2.2@timing_attack --create
     gem install timing_attack
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases timing_attack
     add-history timing_attack
     add-test-command "timing_attack --help"
@@ -436,7 +485,7 @@ function install_timing_attack() {
 function install_updog() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing updog"
-    python3 -m pipx install updog
+    pipx install updog
     add-history updog
     add-test-command "updog --help"
     add-to-list "updog,https://github.com/sc0tfree/updog,Simple replacement for Python's SimpleHTTPServer."
@@ -445,12 +494,14 @@ function install_updog() {
 function install_jwt_tool() {
     colorecho "Installing JWT tool"
     git -C /opt/tools/ clone --depth 1 https://github.com/ticarpi/jwt_tool
-    cd /opt/tools/jwt_tool
+    cd /opt/tools/jwt_tool || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases jwt_tool
     add-history jwt_tool
-    add-test-command "jwt_tool --help"
+    add-test-command "jwt_tool.py --help"
     add-to-list "jwt,https://github.com/ticarpi/jwt_tool,a command-line tool for working with JSON Web Tokens (JWTs)"
 }
 
@@ -464,8 +515,9 @@ function install_wuzz() {
 }
 
 function install_git-dumper() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing git-dumper"
-    python3 -m pipx install git-dumper
+    pipx install git-dumper
     add-history git-dumper
     add-test-command "git-dumper --help"
     add-to-list "git-dumper,https://github.com/arthaud/git-dumper,Small script to dump a Git repository from a website."
@@ -474,14 +526,16 @@ function install_git-dumper() {
 function install_gittools() {
     colorecho "Installing GitTools"
     git -C /opt/tools/ clone --depth 1 https://github.com/internetwache/GitTools.git
-    cd /opt/tools/GitTools/Finder
+    cd /opt/tools/GitTools/Finder || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases gittools
     add-history gittools
-    add-test-command "extractor --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
-    add-test-command "gitdumper --help|& grep 'USAGE: http://target.tld/.git/'"
-    add-test-command "gitfinder -h"
+    add-test-command "extractor.sh --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
+    add-test-command "gitdumper.sh --help|& grep 'USAGE: http://target.tld/.git/'"
+    add-test-command "gitfinder.py -h"
     add-to-list "gittools,https://github.com/internetwache/GitTools,A collection of Git tools including a powerful Dumper for dumping Git repositories."
 }
 
@@ -492,6 +546,7 @@ function install_ysoserial() {
     add-aliases ysoserial
     add-history ysoserial
     add-test-command "ysoserial --help|& grep 'spring-core:4.1.4.RELEASE'"
+    add-test-command "ysoserial CommonsCollections4 'whoami'"
     add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
 }
 
@@ -525,24 +580,28 @@ function install_jdwp_shellifier(){
 function install_httpmethods() {
     colorecho "Installing httpmethods"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
-    cd /opt/tools/httpmethods
+    cd /opt/tools/httpmethods || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases httpmethods
     add-history httpmethods
-    add-test-command "httpmethods --help"
+    add-test-command "httpmethods.py --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
 }
 
 function install_h2csmuggler() {
     colorecho "Installing h2csmuggler"
     git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/h2csmuggler
-    cd /opt/tools/h2csmuggler
+    cd /opt/tools/h2csmuggler || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install h2
+    source ./venv/bin/activate
+    pip3 install h2
+    deactivate
     add-aliases h2csmuggler
     add-history h2csmuggler
-    add-test-command "h2csmuggler --help"
+    add-test-command "h2csmuggler.py --help"
     add-to-list "h2csmuggler,https://github.com/BishopFox/h2csmuggler,HTTP Request Smuggling tool using H2C upgrade"
 }
 
@@ -558,8 +617,10 @@ function install_byp4xx() {
 function install_feroxbuster() {
     colorecho "Installing feroxbuster"
     mkdir /opt/tools/feroxbuster
-    cd /opt/tools/feroxbuster
-    curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh | bash
+    cd /opt/tools/feroxbuster || exit
+    # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
+    curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh -o /tmp/install-feroxbuster.sh
+    bash /tmp/install-feroxbuster.sh
     # Adding a symbolic link in order for autorecon to be able to find the Feroxbuster binary
     ln -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
     add-aliases feroxbuster
@@ -571,31 +632,35 @@ function install_feroxbuster() {
 function install_tomcatwardeployer() {
     colorecho "Installing tomcatWarDeployer"
     git -C /opt/tools/ clone --depth 1 https://github.com/mgeeky/tomcatWarDeployer.git
-    cd /opt/tools/tomcatWarDeployer
+    cd /opt/tools/tomcatWarDeployer || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases tomcatwardeployer
     add-history tomcatwardeployer
-    add-test-command "tomcatWarDeployer --help"
+    add-test-command "tomcatWarDeployer.py --help"
     add-to-list "tomcatwardeployer,https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat."
 }
 
 function install_clusterd() {
     colorecho "Installing clusterd"
     git -C /opt/tools/ clone --depth 1 https://github.com/hatRiot/clusterd.git
-    cd /opt/tools/clusterd
-    virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install -r requirements.txt
+    cd /opt/tools/clusterd || exit
+    virtualenv --python python2 ./venv
+    source ./venv/bin/activate
+    pip2 install -r requirements.txt
+    deactivate
     add-aliases clusterd
     add-history clusterd
-    add-test-command "clusterd --help"
+    add-test-command "clusterd.py --help"
     add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents."
 }
 
 function install_arjun() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing arjun"
-    python3 -m pipx install arjun
+    pipx install arjun
     add-history arjun
     add-test-command "arjun --help"
     add-to-list "arjun,https://github.com/s0md3v/Arjun,HTTP parameter discovery suite."
@@ -605,13 +670,10 @@ function install_nuclei() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Nuclei"
     go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+    /root/go/bin/nuclei -update-templates
     add-history nuclei
     add-test-command "nuclei --version"
     add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues / including XSS / SQL injection / and misconfigured servers."
-}
-
-function configure_nuclei() {
-    /root/go/bin/nuclei -update-templates
 }
 
 function install_gau() {
@@ -662,7 +724,7 @@ function install_anew() {
 function install_robotstester() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Robotstester"
-    python3 -m pipx install git+https://github.com/p0dalirius/robotstester
+    pipx install git+https://github.com/p0dalirius/robotstester
     add-history robotstester
     add-test-command "robotstester --help"
     add-to-list "robotstester,https://github.com/p0dalirius/robotstester,Utility for testing whether a website's robots.txt file is correctly configured."
@@ -682,9 +744,12 @@ function install_naabu() {
 function install_burpsuite() {
     colorecho "Installing Burp"
     mkdir /opt/tools/BurpSuiteCommunity
-    burp_version=$(curl -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
+    # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
+    burp_version=$($(which curl) -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
     wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
-    # FIXME: set up the dark theme right away?
+    # TODO: two lines below should set up dark theme as default, does it work?
+    mkdir -p /root/.BurpSuite/
+    cp -v /root/sources/assets/burpsuite/UserConfigCommunity.json /root/.BurpSuite/UserConfigCommunity.json
     # FIXME: add burp certificate to embedded firefox and chrome?
     # TODO: change Burp config to allow built-in browser to run
     add-aliases burpsuite
@@ -696,7 +761,7 @@ function install_burpsuite() {
 function install_smuggler() {
     colorecho "Installing smuggler.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/defparam/smuggler.git
-    cd /opt/tools/smuggler
+    cd /opt/tools/smuggler || exit
     python3 -m venv ./venv
     add-aliases smuggler
     add-history smuggler
@@ -709,16 +774,18 @@ function install_php_filter_chain_generator() {
     git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/php_filter_chain_generator.git
     add-aliases php_filter_chain_generator
     add-history php_filter_chain_generator
-    add-test-command "php_filter_chain_generator --help"
+    add-test-command "php_filter_chain_generator.py --help"
     add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,A CLI to generate PHP filters chain / get your RCE without uploading a file if you control entirely the parameter passed to a require or an include in PHP!"
 }
 
 function install_kraken() {
     colorecho "Installing Kraken"
     git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
-    cd /opt/tools/Kraken
+    cd /opt/tools/Kraken || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases kraken
     add-history kraken
     add-test-command "kraken.py -h"
@@ -748,9 +815,12 @@ function install_sqlmap() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
-    install_web_apt_tools
+    set_cargo_env
     set_go_env
     set_ruby_env
+    set_python_env
+    install_web_apt_tools
+    install_weevely                 # Weaponized web shell
     install_whatweb                 # Recognises web technologies including content management
     install_wfuzz                   # Web fuzzer (second favorites)
     install_gobuster                # Web fuzzer (pretty good for several extensions)
@@ -818,11 +888,4 @@ function package_web() {
     install_kraken                  # Kraken is a modular multi-language webshell.
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
-}
-
-function package_web_configure() {
-    set_go_env
-    set_ruby_env
-    configure_nuclei
-    configure_moodlescan
 }

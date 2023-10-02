@@ -1,1 +1,1 @@
-eyewitness -f urls.txt --web
+EyeWitness.py -f urls.txt --web
