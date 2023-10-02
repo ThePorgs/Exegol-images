@@ -1246,5 +1246,11 @@ function package_ad() {
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
     install_noPac
+    install_roadtools              # Rogue Office 365 and Azure (active) Directory tools
+    install_teamsphisher           # TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications.
+    install_GPOddity
+    install_netexec                # Crackmapexec repo
+    install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
+    install_LDAPWordlistHarvester
     install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
 }
