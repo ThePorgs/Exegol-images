@@ -119,6 +119,23 @@ function install_bloodhound() {
     git -C /opt/tools/ clone --depth 1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
     zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux && nvm use default"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        ln -s /opt/tools/BloodHound4/BloodHound-linux-x64/BloodHound /opt/tools/BloodHound4/BloodHound
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        fapt libgbm1
+        ln -s /opt/tools/BloodHound4/BloodHound-linux-arm64/BloodHound /opt/tools/BloodHound4/BloodHound
+    elif [[ $(uname -m) = 'armv7l' ]]
+    then
+        fapt libgbm1
+        ln -s /opt/tools/BloodHound4/BloodHound-linux-armv7l/BloodHound /opt/tools/BloodHound4/BloodHound
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    mkdir -p ~/.config/bloodhound
+    cp -v /root/sources/assets/bloodhound/config.json ~/.config/bloodhound/config.json
+    cp -v /root/sources/assets/bloodhound/customqueries.json ~/.config/bloodhound/customqueries.json
     add-aliases bloodhound
     add-history bloodhound
     add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
