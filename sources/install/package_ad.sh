@@ -149,7 +149,7 @@ function install_bloodhound-ce() {
     # Installing & Configuring the database
     fapt postgresql postgresql-client
     service postgresql start
-    cd /tmp
+    cd /tmp || exit
     sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'bloodhoundcommunityedition';"
     sudo -u postgres psql -c "CREATE DATABASE bloodhound;"
     sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bloodhound TO bloodhound;"
@@ -157,15 +157,15 @@ function install_bloodhound-ce() {
 
     # Build BloodHound-CE
     git -C /opt/tools/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git BloodHound-CE-build
-    cd /opt/tools/BloodHound-CE-build
+    cd /opt/tools/BloodHound-CE-build || exit
     # python3 -m venv ./venv
-    cd ./packages/javascript/bh-shared-ui
+    cd ./packages/javascript/bh-shared-ui || exit
     colorecho "DEBUG : Node version"
     node -v
     zsh -c "source ~/.zshrc && nvm use default && yarn install && yarn build"
     colorecho "DEBUG : Check directory"
     ls -la /opt/tools/BloodHound-CE-build/packages/javascript/bh-shared-ui/node_modules/rollup/dist/bin/
-    cd /opt/tools/BloodHound-CE-build
+    cd /opt/tools/BloodHound-CE-build || exit
     colorecho "DEBUG : Python version"
     python3 --version
     python3 ./packages/python/beagle/main.py build bh-ui -v -c
@@ -175,11 +175,11 @@ function install_bloodhound-ce() {
     wget https://github.com/BloodHoundAD/SharpHound/releases/download/v2.0.0/SharpHound-v2.0.0.zip -O sharphound-v2.0.0.zip
     sha256sum sharphound-v2.0.0.zip > sharphound-v2.0.0.zip.sha256
     mkdir ./azurehound
-    cd ./azurehound
+    cd ./azurehound || exit
     wget \
     https://github.com/BloodHoundAD/AzureHound/releases/download/v2.0.5/azurehound-linux-amd64.zip \
     https://github.com/BloodHoundAD/AzureHound/releases/download/v2.0.5/azurehound-linux-arm64.zip
-    cd /opt/tools/BloodHound-CE-build
+    cd /opt/tools/BloodHound-CE-build || exit
 
 
     # Move files
@@ -197,7 +197,7 @@ function install_bloodhound-ce() {
     service postgresql stop
 
     # Configuration
-    cd /opt/tools/BloodHound-CE/
+    cd /opt/tools/BloodHound-CE/ || exit
     sed -i "s#app-db#127.0.0.1##" bloodhound.config.json
     sed -i "s#graph-db#127.0.0.1##" bloodhound.config.json
     sed -i "s#8080#1030##" bloodhound.config.json
