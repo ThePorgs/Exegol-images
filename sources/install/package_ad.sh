@@ -1096,6 +1096,16 @@ function install_LDAPWordlistHarvester() {
     add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
 }
 
+function install_freeipscanner() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing freeipscanner"
+    wget -O /opt/tools/bin/freeipscanner.sh https://raw.githubusercontent.com/scrt/freeipscanner/master/freeipscanner.sh
+    chmod +x /opt/tools/bin/freeipscanner.sh
+    add-history freeipscanner
+    add-test-command "freeipscanner.sh --help"
+    add-to-list "freeipscanner,https://github.com/scrt/freeipscanner,A simple bash script to enumerate stale ADIDNS entries"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1184,4 +1194,5 @@ function package_ad() {
     install_netexec                # Crackmapexec repo
     install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
     install_LDAPWordlistHarvester
+    install_freeipscanner
 }
