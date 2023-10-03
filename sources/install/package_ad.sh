@@ -1106,6 +1106,15 @@ function install_freeipscanner() {
     add-to-list "freeipscanner,https://github.com/scrt/freeipscanner,A simple bash script to enumerate stale ADIDNS entries"
 }
 
+function install_scrtdnsdump() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing scrtdnsdump"
+    pipx install git+https://github.com/scrt/scrtdnsdump
+    add-history scrtdnsdump
+    add-test-command "scrtdnsdump --help"
+    add-to-list "scrtdnsdump,https://github.com/scrt/scrtdnsdump,Enumeration and exporting of all DNS records in the zone for recon purposes of internal networks"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1195,4 +1204,5 @@ function package_ad() {
     install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
     install_LDAPWordlistHarvester
     install_freeipscanner
+    install_scrtdnsdump
 }
