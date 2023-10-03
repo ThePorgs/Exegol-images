@@ -1096,6 +1096,15 @@ function install_LDAPWordlistHarvester() {
     add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
 }
 
+function install_pywerview() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing pywerview"
+    pipx install git+https://github.com/the-useless-one/pywerview
+    add-history pywerview
+    add-test-command "pywerview --help"
+    add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1184,4 +1193,5 @@ function package_ad() {
     install_netexec                # Crackmapexec repo
     install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
     install_LDAPWordlistHarvester
+    install_pywerview
 }

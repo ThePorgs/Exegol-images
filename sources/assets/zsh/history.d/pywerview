@@ -1,0 +1,5 @@
+pywerview get-netcomputer -t $TARGET -u $USERNAME -k
+pywerview get-localdisks --computername $COMPUTER -u $USERNAME -k
+pywerview get-netuser -w contoso.com --dc-ip $DC_IP --cert cert.crt --key cert.key --username $USERNAME --attributes distinguishedname useraccountcontrol --tls
+pywerview get-adserviceaccount -t $TARGET -u $USERNAME --hashes $NT_HASH --resolve-sids
+pywerview get-adserviceaccount -t $TARGET -u $USERNAME --hashes $NT_HASH --resolve-sids --tls
