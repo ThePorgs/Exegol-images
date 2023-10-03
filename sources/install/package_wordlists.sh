@@ -33,7 +33,7 @@ function install_cewl() {
 
 function install_cewler() {
     # CODE-CHECK-WHITELIST=add-aliases
-    coloercho "Installing cewler"
+    colorecho "Installing cewler"
     pipx install cewler
     # https://github.com/roys/cewler/issues/1
     local TEMP_FIX_LIMIT="2024-10-01"
