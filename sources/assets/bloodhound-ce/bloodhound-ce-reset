@@ -3,8 +3,4 @@
 sudo -u postgres psql -c "DROP database bloodhound"
 sudo -u postgres psql -c "CREATE DATABASE bloodhound;"
 
-if pg_isready -q; then
-    service postgresql stop
-fi
-
-pkill bloodhound
+bloodhound-ce-stop

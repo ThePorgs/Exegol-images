@@ -146,6 +146,8 @@ function install_bloodhound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing BloodHound-CE"
 
+    # TODO: Add catch and retry
+
     # Installing & Configuring the database
     fapt postgresql postgresql-client
     service postgresql start
@@ -168,8 +170,11 @@ function install_bloodhound-ce() {
     cd /opt/tools/BloodHound-CE-build || exit
     colorecho "DEBUG : Python version"
     python3 --version
+    python3 -m venv ./venv
+    source ./venv/bin/activate
     python3 ./packages/python/beagle/main.py build bh-ui -v -c
     python3 ./packages/python/beagle/main.py build bh -v -d -c
+    deactivate
 
     # Need to move in Exegol-Resources
     wget https://github.com/BloodHoundAD/SharpHound/releases/download/v2.0.0/SharpHound-v2.0.0.zip -O sharphound-v2.0.0.zip
@@ -187,10 +192,10 @@ function install_bloodhound-ce() {
     mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound/
     mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound/
     mkdir /opt/tools/BloodHound-CE/work
-    cp ./dist/bhapi /opt/tools/BloodHound-CE/bloodhound
-    cp -r ./sharphound-v2.0.0.zip* /opt/tools/BloodHound-CE/collectors/sharphound/
-    cp -r ./azurehound/azurehound-linux-a* /opt/tools/BloodHound-CE/collectors/azurehound/
-    cp ./dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
+    cp -v ./dist/bhapi /opt/tools/BloodHound-CE/bloodhound
+    cp -rv ./sharphound-v2.0.0.zip* /opt/tools/BloodHound-CE/collectors/sharphound/
+    cp -rv ./azurehound/azurehound-linux-a* /opt/tools/BloodHound-CE/collectors/azurehound/
+    cp -v ./dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
     
     # Clean build folder
     rm -rf /opt/tools/BloodHound-CE-build/
@@ -204,7 +209,7 @@ function install_bloodhound-ce() {
     sed -i "s#neo4j:bloodhoundcommunityedition#neo4j:exegol4thewin##" bloodhound.config.json
     sed -i "s#/etc/bloodhound/collectors#/opt/tools/BloodHound-CE/collectors##" bloodhound.config.json
     sed -i "s#/opt/bloodhound/work#/opt/tools/BloodHound-CE/work##" bloodhound.config.json
-    cp /root/sources/assets/bloodhound-ce/*.sh /opt/tools/bin/
+    cp -v /root/sources/assets/bloodhound-ce/*.sh /opt/tools/bin/
     chmod +x /opt/tools/bin/bloodhound*
     add-test-command "bloodhound-ce --help"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
