@@ -1,5 +1,5 @@
-pywerview get-netcomputer -t "$TARGET" --user "$USERNAME" -k
-pywerview get-localdisks --computername "$COMPUTER" --user "$USERNAME" -k
-pywerview get-netuser --workgroup "$WORKGROUP" --dc-ip "$DC_IP" --cert cert.crt --key cert.key --username "$USERNAME" --attributes distinguishedname useraccountcontrol --tls
-pywerview get-netgmsa -t "$TARGET" --user "$USERNAME" --hashes "$NT_HASH" --resolve-sids
-pywerview get-netgmsa -t "$TARGET" --user "$USERNAME" --hashes "$NT_HASH" --resolve-sids --tls
+KRB5CCNAME="ticket.ccache" pywerview get-netcomputer -k --dc-ip "$DC_IP" -u "$USERNAME "
+KRB5CCNAME="ticket.ccache" pywerview get-localdisks -k --computername $COMPUTER -u "$USERNAME"
+pywerview get-netuser --workgroup "$DOMAIN" --dc-ip "$DC_IP" --tls --cert cert.crt --key cert.key --username "$USERNAME" --attributes distinguishedname useraccountcontrol 
+pywerview get-adserviceaccount --dc-ip "$DC_IP" -u "$USERNAME" --hashes "$NT_HASH" --resolve-sids
+pywerview get-adserviceaccount --dc-ip "$DC_IP" --tls -u "$USERNAME" --hashes "$NT_HASH" --resolve-sids 
