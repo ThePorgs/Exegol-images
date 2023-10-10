@@ -26,7 +26,7 @@ function install_metasploit() {
     rvm use 3.2.2@default
     add-aliases metasploit
     add-test-command "msfconsole --help"
-    add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
+    add-test-command "msfvenom --payload windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=1337 --format exe"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 
