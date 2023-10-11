@@ -199,6 +199,16 @@ function install_gf() {
     add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
+function install_cyberchef() {
+    colorecho "Installing CyberChef"
+    mkdir /opt/tools/CyberChef
+    LAST_VERSION=$(wget https://github.com/gchq/CyberChef/releases/latest/download/CyberChef.zip 2>&1 | grep Location: | grep -E -o 'v.*' | cut -d '/' -f 1)
+    wget https://github.com/gchq/CyberChef/releases/download/$LAST_VERSION/CyberChef_$LAST_VERSION.zip -O /tmp/CyberChef.zip
+    unzip /tmp/CyberChef.zip -d /opt/tools/CyberChef/
+    add-test-command "file /opt/tools/CyberChef/CyberChef*.html"
+    add-to-list "CyberChef,https://github.com/gchq/CyberChef/r,The Cyber Swiss Army Knife"
+}
+
 function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
