@@ -84,15 +84,3 @@ else
   [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
   cp /.exegol/skel/zsh/zshrc /opt/my-resources/setup/zsh/zshrc
 fi
-
-fzf-haiti () {
-    haiti -e "$1" | fzf --ansi | grep -E -o ' [0-9]*]' | cut -d ']' -f 1 | cut -d ' ' -f 2
-}
-
-hashcat2 () {
-    hash="$1"
-    shift 1
-    hashcat -m `fzf-haiti "$hash"` "$hash" `fzf-wordlists` "$@"
-}
-
-alias hcat='hashcat2'
