@@ -38,9 +38,9 @@ find_available_display() {
 }
 
 
-mode=${DESKTOP_PROTO:-"http"}
-host=${DESKTOP_HOST:-"localhost"}
-port=${DESKTOP_PORT:-"6336"}
+mode=${EXEGOL_DESKTOP_PROTO:-"http"}
+host=${EXEGOL_DESKTOP_HOST:-"localhost"}
+port=${EXEGOL_DESKTOP_PORT:-"6336"}
 
 echo "Starting Exegol desktop with $mode"
 
