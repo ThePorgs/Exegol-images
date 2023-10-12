@@ -209,7 +209,8 @@ function install_cyberchef() {
         wget https://github.com/gchq/CyberChef/releases/download/$last_version/CyberChef_$last_version.zip -O /tmp/CyberChef.zip
         unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
         rm /tmp/CyberChef.zip
-        add-test-command "file /opt/tools/CyberChef/CyberChef*.html"
+        mv /opt/tools/CyberChef/CyberChef_$last_version.html /opt/tools/CyberChef/CyberChef.html
+        add-test-command "file /opt/tools/CyberChef/CyberChef.html"
         add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
     fi
 }
