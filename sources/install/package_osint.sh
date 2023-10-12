@@ -347,10 +347,16 @@ function install_finalrecon() {
     colorecho "Installing FinalRecon"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon || exit
-    python3 -m venv ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
+    # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
+    local TEMP_FIX_LIMIT="2024-04-30"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+        criticalecho "Temp fix expired. Exiting."
+    else
+        python3.11 -m venv ./venv
+        source ./venv/bin/activate
+        pip3 install -r requirements.txt
+        deactivate
+    fi
     add-aliases finalrecon
     add-history finalrecon
     add-test-command "finalrecon.py --help"
