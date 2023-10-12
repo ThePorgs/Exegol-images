@@ -454,6 +454,7 @@ function install_gitfive() {
 
 function install_geopincer() {
     colorecho "Installing GeoPincer"
+    fapt libgeos-dev
     git -C /opt/tools clone --depth 1 https://github.com/tloja/GeoPincer.git
     cd /opt/tools/GeoPincer || exit
     sed -i "s#regions.txt#/opt/tools/GeoPincer/regions.txt##" GeoPincer.py
