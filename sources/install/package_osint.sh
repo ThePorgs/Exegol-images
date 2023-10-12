@@ -215,7 +215,15 @@ function install_phoneinfoga() {
 function install_maigret() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing maigret"
-    pipx install git+https://github.com/soxoj/maigret.git
+    fapt libxml2-dev libxslt-dev
+    # pipx install git+https://github.com/soxoj/maigret.git
+    # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
+    local TEMP_FIX_LIMIT="2024-04-31"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+        criticalecho "Temp fix expired. Exiting."
+    else
+        pipx install --python python3.11 git+https://github.com/soxoj/maigret.git
+    fi
     add-history maigret
     add-test-command "maigret --help"
     add-to-list "maigret,https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results"
