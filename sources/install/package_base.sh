@@ -201,12 +201,17 @@ function install_gf() {
 
 function install_cyberchef() {
     colorecho "Installing CyberChef"
-    mkdir /opt/tools/CyberChef
-    LAST_VERSION=$(wget https://github.com/gchq/CyberChef/releases/latest/download/CyberChef.zip 2>&1 | grep Location: | grep -E -o 'v.*' | cut -d '/' -f 1)
-    wget https://github.com/gchq/CyberChef/releases/download/$LAST_VERSION/CyberChef_$LAST_VERSION.zip -O /tmp/CyberChef.zip
-    unzip /tmp/CyberChef.zip -d /opt/tools/CyberChef/
-    add-test-command "file /opt/tools/CyberChef/CyberChef*.html"
-    add-to-list "CyberChef,https://github.com/gchq/CyberChef/r,The Cyber Swiss Army Knife"
+    local last_version
+    last_version=$(wget https://github.com/gchq/CyberChef/releases/latest/download/CyberChef.zip 2>&1 | grep Location: | grep -E -o 'v.*' | cut -d '/' -f 1)
+
+    if [ ! -z "$last_version" ]; then
+        mkdir /opt/tools/CyberChef
+        wget https://github.com/gchq/CyberChef/releases/download/$last_version/CyberChef_$last_version.zip -O /tmp/CyberChef.zip
+        unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
+        rm /tmp/CyberChef.zip
+        add-test-command "file /opt/tools/CyberChef/CyberChef*.html"
+        add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
+    fi
 }
 
 function post_install() {
@@ -275,7 +280,8 @@ function package_base() {
     install_gf                                          # wrapper around grep
     fapt-noexit rar                                     # rar (Only AMD)
     install_firefox
-
+    install_cyberchef
+    
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
     # openvpn
