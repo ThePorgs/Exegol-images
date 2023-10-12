@@ -118,10 +118,16 @@ function install_theharvester() {
     colorecho "Installing theHarvester"
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester || exit
-    python3 -m venv ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
+    # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
+    local TEMP_FIX_LIMIT="2024-04-31"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+        criticalecho "Temp fix expired. Exiting."
+    else
+        python3.11 -m venv ./venv
+        source ./venv/bin/activate
+        pip3 install -r requirements.txt
+        deactivate
+    fi
     # The tool needs access to the proxies.yaml file in the folder.
     ln -s /opt/tools/theHarvester /usr/local/etc/
     add-aliases theharvester
