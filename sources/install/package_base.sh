@@ -106,7 +106,7 @@ function install_locales() {
 function install_pyenv() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing pyenv"
-    fapt git curl git build-essential
+    fapt git curl build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
     # add pyenv to PATH
@@ -117,25 +117,22 @@ function install_pyenv() {
     fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
     # Don't think it's needed, but if something fails, use command below
     # apt install xz-utils tk-dev
-    pyenv install 2
-    colorecho "Installing python3.6"
-    pyenv install 3.6
-    colorecho "Installing python3 (latest)"
-    pyenv install 3
+    for v in $PYTHON_VERSIONS; do
+        colorecho "Installing python${v}"
+        pyenv install $v
+    done
     # allowing python2, python3 and python3.6 to be found
     #  --> python points to latest python3
     #  --> python3 points to latest python3
     #  --> python3.6 points to 3.6
     #  --> python2 points to latest python2
-    pyenv global 3 3.6 2
+    pyenv global $PYTHON_VERSIONS
     add-test-command "python --version"
-    add-test-command "python2 --version"
-    add-test-command "python3 --version"
-    add-test-command "python3.6 --version"
     add-test-command "pip --version"
-    add-test-command "pip2 --version"
-    add-test-command "pip3 --version"
-    add-test-command "pip3.6 --version"
+    for v in $PYTHON_VERSIONS; do
+        add-test-command "python${v} --version"
+        add-test-command "pip${v} --version"
+    done
 }
 
 function install_firefox() {
@@ -391,18 +388,18 @@ function package_base() {
     cp -v /root/sources/assets/bash/bashrc ~/.bashrc
 
     # setup Python environment
+    # the order matters (if 2 is before 3, `python` will point to Python 2)
+    PYTHON_VERSIONS="3 3.11 3.6 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
     # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
     # with pyenv, not sure the command below is needed anymore
     # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
-    pip3 install --upgrade pip
-    pip3.6 install --upgrade pip
-    pip2 install --upgrade pip
-    pip3 install wheel
-    pip3.6 install wheel
-    pip2 install wheel
+    for v in $PYTHON_VERSIONS; do
+        pip${v} install --upgrade pip
+        pip${v} install wheel
+    done
     install_pipx
 
     # change default shell
