@@ -500,10 +500,16 @@ function install_blackbird() {
     cd /opt/tools/blackbird || exit
     sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
     sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
-    python3 -m venv ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
+    # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
+    local TEMP_FIX_LIMIT="2024-04-30"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+        criticalecho "Temp fix expired. Exiting."
+    else
+        python3.11 -m venv ./venv
+        source ./venv/bin/activate
+        pip3 install -r requirements.txt
+        deactivate
+    fi
     add-aliases blackbird
     add-history blackbird
     add-test-command "blackbird.py --help"
