@@ -331,6 +331,7 @@ function install_spiderfoot() {
     colorecho "Installing Spiderfoot"
     git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot || exit
+    fapt libjpeg-dev
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
