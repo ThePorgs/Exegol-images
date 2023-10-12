@@ -119,7 +119,7 @@ function install_theharvester() {
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester || exit
     # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
-    local TEMP_FIX_LIMIT="2024-04-31"
+    local TEMP_FIX_LIMIT="2024-04-30"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
         criticalecho "Temp fix expired. Exiting."
     else
@@ -218,7 +218,7 @@ function install_maigret() {
     fapt libxml2-dev libxslt-dev
     # pipx install git+https://github.com/soxoj/maigret.git
     # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
-    local TEMP_FIX_LIMIT="2024-04-31"
+    local TEMP_FIX_LIMIT="2024-04-30"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
         criticalecho "Temp fix expired. Exiting."
     else
