@@ -850,7 +850,20 @@ function install_ldaprelayscan() {
 function install_goldencopy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
-    pipx install goldencopy
+    # https://github.com/Dramelac/GoldenCopy/issues/1
+    local TEMP_FIX_LIMIT="2023-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
+      cd /opt/tools/GoldenCopy || exit
+      python3 -m venv ./venv/
+      source ./venv/bin/activate
+      pip3 install --no-deps .
+      pip3 install git+https://github.com/elena/py2neo
+      deactivate
+      ln -v -s /opt/tools/GoldenCopy/venv/bin/goldencopy /opt/tools/bin/goldencopy
+    fi
     add-history goldencopy
     add-test-command "goldencopy --help"
     add-to-list "goldencopy,https://github.com/0x09AL/golden_copy.git,A tool to copy data from Golden Ticket and Silver Ticket"
@@ -1170,16 +1183,7 @@ function package_ad() {
     install_pylaps
     install_finduncommonshares
     install_ldaprelayscan
-    # same issue as in https://github.com/kaluche/bloodhound-quickwin/issues/2
-    local TEMP_FIX_LIMIT="2024-12-15"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      # do nothing
-      sleep 0.1
-      # commenting install_goldencopy install while issue isn't fixed
-      # install_goldencopy
-    fi
+    install_goldencopy
     install_crackhound
     install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
     install_ldeep
