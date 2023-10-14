@@ -1144,7 +1144,16 @@ function package_ad() {
     install_adidnsdump              # enumerate DNS records in Domain or Forest DNS zones
     install_pygpoabuse
     install_bloodhound-import
-    install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
+    # https://github.com/kaluche/bloodhound-quickwin/issues/2
+    local TEMP_FIX_LIMIT="2024-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      # do nothing
+      sleep 0.1
+      # commenting install_bloodhound-quickwin install while issue isn't fixed
+      # install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
+    fi
     install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
     install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
     install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
