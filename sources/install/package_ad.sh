@@ -1172,7 +1172,16 @@ function package_ad() {
     install_pylaps
     install_finduncommonshares
     install_ldaprelayscan
-    install_goldencopy
+    # same issue as in https://github.com/kaluche/bloodhound-quickwin/issues/2
+    local TEMP_FIX_LIMIT="2024-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      # do nothing
+      sleep 0.1
+      # commenting install_goldencopy install while issue isn't fixed
+      # install_goldencopy
+    fi
     install_crackhound
     install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
     install_ldeep
