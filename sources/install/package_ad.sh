@@ -904,6 +904,7 @@ function install_kerbrute() {
 function install_ldeep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldeep"
+    fapt libkrb5-dev krb5-config
     pipx install ldeep
     add-history ldeep
     add-test-command "ldeep --help"
