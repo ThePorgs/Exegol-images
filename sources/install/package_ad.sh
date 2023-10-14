@@ -587,7 +587,14 @@ function install_bloodhound-quickwin() {
     cd /opt/tools/bloodhound-quickwin || exit
     python3 -m venv ./venv/
     source ./venv/bin/activate
-    pip3 install py2neo pandas prettytable
+    # https://github.com/kaluche/bloodhound-quickwin/issues/2
+    local TEMP_FIX_LIMIT="2023-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install git+https://github.com/elena/py2neo
+    fi
+    pip3 install -r requirements.txt
     deactivate
     add-aliases bloodhound-quickwin
     add-history bloodhound-quickwin
@@ -1144,16 +1151,7 @@ function package_ad() {
     install_adidnsdump              # enumerate DNS records in Domain or Forest DNS zones
     install_pygpoabuse
     install_bloodhound-import
-    # https://github.com/kaluche/bloodhound-quickwin/issues/2
-    local TEMP_FIX_LIMIT="2024-12-15"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      # do nothing
-      sleep 0.1
-      # commenting install_bloodhound-quickwin install while issue isn't fixed
-      # install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
-    fi
+    install_bloodhound-quickwin     # Python script to find quickwins from BH data in a neo4j db
     install_ldapsearch-ad           # Python script to find quickwins from basic ldap enum
     install_petitpotam              # Python script to coerce auth through MS-EFSR abuse
     install_dfscoerce               # Python script to coerce auth through NetrDfsRemoveStdRoot and NetrDfsAddStdRoot abuse
