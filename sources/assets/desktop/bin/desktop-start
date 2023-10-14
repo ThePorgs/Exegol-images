@@ -38,7 +38,7 @@ find_available_display() {
 
 mode=${EXEGOL_DESKTOP_PROTO:-"http"}
 # By default if no env are provided, exegol will select the eth0
-host=${EXEGOL_DESKTOP_HOST:-"$( (ip addr show eth0 2>/dev/null || echo "inet 0.0.0.0") | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)"}
+host=${EXEGOL_DESKTOP_HOST:-"$HOSTNAME"}
 port=${EXEGOL_DESKTOP_PORT:-"6336"}
 
 echo "Starting Exegol desktop with $mode"
