@@ -345,7 +345,22 @@ function install_evilwinrm() {
 function install_pypykatz() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
-    pipx install pypykatz
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
+      cd /opt/tools/pypykatz || exit
+      python3 -m venv ./venv/
+      source ./venv/bin/activate
+      pip3 install .
+      pip3 install --force "oscrypto @ git+https://github.com/wbond/oscrypto.git"
+      ln -v -s /opt/tools/pypykatz/venv/bin/pypykatz /opt/tools/bin/pypykatz
+      deactivate
+    fi
+    # pipx install pypykatz
     add-history pypykatz
     add-test-command "pypykatz version"
     add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
@@ -565,6 +580,14 @@ function install_pygpoabuse() {
     python3 -m venv ./venv/
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force "oscrypto @ git+https://github.com/wbond/oscrypto.git"
+    fi
     deactivate
     add-aliases pygpoabuse
     add-history pygpoabuse
@@ -667,6 +690,14 @@ function install_pkinittools() {
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force "oscrypto @ git+https://github.com/wbond/oscrypto.git"
+    fi
     deactivate
     add-aliases pkinittools
     add-history pkinittools
@@ -840,6 +871,14 @@ function install_ldaprelayscan() {
     python3 -m venv ./venv/
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force "oscrypto @ git+https://github.com/wbond/oscrypto.git"
+    fi
     deactivate
     add-aliases ldaprelayscan
     add-history ldaprelayscan
