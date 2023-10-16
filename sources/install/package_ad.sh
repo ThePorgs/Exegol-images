@@ -356,7 +356,7 @@ function install_pypykatz() {
       python3 -m venv ./venv/
       source ./venv/bin/activate
       pip3 install .
-      pip3 install --force "oscrypto @ git+https://github.com/wbond/oscrypto.git"
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
       ln -v -s /opt/tools/pypykatz/venv/bin/pypykatz /opt/tools/bin/pypykatz
       deactivate
     fi
@@ -586,7 +586,7 @@ function install_pygpoabuse() {
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      pip3 install --force "oscrypto @ git+https://github.com/wbond/oscrypto.git"
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
     deactivate
     add-aliases pygpoabuse
@@ -696,7 +696,7 @@ function install_pkinittools() {
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      pip3 install --force "oscrypto @ git+https://github.com/wbond/oscrypto.git"
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
     deactivate
     add-aliases pkinittools
@@ -877,7 +877,7 @@ function install_ldaprelayscan() {
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      pip3 install --force "oscrypto @ git+https://github.com/wbond/oscrypto.git"
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
     deactivate
     add-aliases ldaprelayscan
