@@ -556,9 +556,10 @@ function install_phpggc() {
       criticalecho "Temp fix expired. Exiting."
     else
       git -C /opt/tools clone https://github.com/ambionics/phpggc.git
+      cd /opt/tools/phpggc || exit
       git config --local user.email "local"
       git config --local user.name "local"
-      git -C /opt/tools/phpggc revert 5ace552e612cd457a4557abee1331e517337bccf
+      git revert 5ace552e612cd457a4557abee1331e517337bccf
     fi
     add-aliases phpggc
     add-history phpggc
