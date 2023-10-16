@@ -549,7 +549,17 @@ function install_ysoserial() {
 
 function install_phpggc() {
     colorecho "Installing phpggc"
-    git -C /opt/tools clone --depth 1 https://github.com/ambionics/phpggc.git
+    # git -C /opt/tools clone --depth 1 https://github.com/ambionics/phpggc.git
+    # https://github.com/ambionics/phpggc/issues/163
+    local TEMP_FIX_LIMIT="2023-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools clone https://github.com/ambionics/phpggc.git
+      git config --local user.email "local"
+      git config --local user.name "local"
+      git -C /opt/tools/phpggc revert 5ace552e612cd457a4557abee1331e517337bccf
+    fi
     add-aliases phpggc
     add-history phpggc
     add-test-command "phpggc --help"
