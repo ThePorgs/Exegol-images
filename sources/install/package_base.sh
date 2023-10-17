@@ -81,8 +81,8 @@ function deploy_exegol() {
     chown -Rv _apt:root /opt/packages
     rm -rf /.exegol || true
     cp -r /root/sources/assets/exegol /.exegol
-    cp -v /root/sources/assets/zsh/history ~/.zsh_history
-    cp -v /root/sources/assets/zsh/aliases /opt/.exegol_aliases
+    cp -v /root/sources/assets/shells/history.d/_init ~/.zsh_history
+    cp -v /root/sources/assets/shells/aliases.d/_init /opt/.exegol_aliases
     # Moving supported custom configurations in /opt
     mv /.exegol/skel/supported_setups.md /opt/
     mkdir -p /var/log/exegol
@@ -197,7 +197,7 @@ function install_ohmyzsh() {
     # splitting wget and sh to avoid having additional logs put in curl output being executed because of catch_and_retry
     wget -O /tmp/ohmyzsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
     sh /tmp/ohmyzsh.sh
-    cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
+    cp -v /root/sources/assets/shells/zshrc ~/.zshrc
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-completions
@@ -358,7 +358,9 @@ function post_install() {
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
     colorecho "Adding end-of-preset in zsh_history"
-    echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
+    echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
+    cp /opt/.exegol_history ~/.zsh_history
+    cp /opt/.exegol_history ~/.bash_history
 }
 
 # Package dedicated to the basic things the env needs
@@ -387,8 +389,8 @@ function package_base() {
 
     filesystem
     install_locales
-    cp -v /root/sources/assets/exegol/exegol_shells_rc ~/.exegol_shells_rc
-    cp -v /root/sources/assets/bash/bashrc ~/.bashrc
+    cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
+    cp -v /root/sources/assets/shells/bashrc ~/.bashrc
 
     # setup Python environment
     install_pyenv
@@ -464,7 +466,7 @@ function package_base() {
     chmod 644 /etc/logrotate.d/*
 
     # tmux
-    cp -v /root/sources/assets/tmux/tmux.conf ~/.tmux.conf
+    cp -v /root/sources/assets/shells/tmux.conf ~/.tmux.conf
     touch ~/.hushlogin
 
     # TLDR
