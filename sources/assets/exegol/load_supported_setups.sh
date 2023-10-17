@@ -110,19 +110,32 @@ function deploy_apt() {
       wget -nv "$key_url" -O "$tmpaptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
     if [[ -n $(find "$tmpaptkeys" -type f -name "*.key") ]]; then
-      gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --import "$tmpaptkeys/*.key" &&
+      gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --import "$tmpaptkeys"/*.key &&
         gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
     fi
     rm -rf "$tmpaptkeys"
-    install_list=$(grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/apt/packages.list" | tr "\n" " ")
-    # Test if there is some package to install
-    if [[ -n "$install_list" ]]; then
-      # Update package list from repos (only if there is some package to install
-      apt-get update
-      # Install every packages listed in the file
-      # shellcheck disable=SC2086
-      apt-get install -y $install_list
+    # Create a package array
+    install_list=()
+    # Read the my-resource package.list file
+    while IFS= read -r ligne
+    do
+        # Exclude comment line start by "#"
+        if [[ "$ligne" =~ ^\#.* ]]; then
+            continue
+        fi
+        # Add packages to the list
+        # shellcheck disable=SC2191
+        install_list+=( $=ligne )
+    done < "$MY_SETUP_PATH/apt/packages.list"
+    # Check if there is some package to install
+    if [[ ${#install_list[@]} -gt 0 ]]; then
+        # Update package list from repos (only if there is some package to install
+        apt-get update
+        # Install every packages listed in the file
+        apt-get install -y "${install_list[@]}"
+    else
+        colorecho "No APT package to install."
     fi
   else
     # Import file template
