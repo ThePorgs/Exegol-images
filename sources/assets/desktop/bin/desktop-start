@@ -4,9 +4,7 @@
 find_available_display() {
   # Search for available socket if the X11 socket directory is not available
   if [ -d /tmp/.X11-unix/ ]; then
-    # TODO : shellcheck below probably needs to be fixed instead of muted
-    # shellcheck disable=SC2012
-    readarray -t x11_sockets < <(ls -1 "/tmp/.X11-unix/" | cut -d 'X' -f2)
+    readarray -t x11_sockets < <(find "/tmp/.X11-unix/" -type s -printf "%f\n" | cut -d 'X' -f2)
   else
     # X11 not shared, need to check socket
     readarray -t x11_sockets < <(ss -x | grep X11| cut -d 'X' -f3 | cut -d ' ' -f 1 | sort -u)
@@ -38,9 +36,10 @@ find_available_display() {
 }
 
 
-mode=${DESKTOP_PROTO:-"http"}
-host=${DESKTOP_HOST:-"localhost"}
-port=${DESKTOP_PORT:-"6336"}
+mode=${EXEGOL_DESKTOP_PROTO:-"http"}
+# By default if no env are provided, exegol will select the eth0
+host=${EXEGOL_DESKTOP_HOST:-"$HOSTNAME"}
+port=${EXEGOL_DESKTOP_PORT:-"6336"}
 
 echo "Starting Exegol desktop with $mode"
 

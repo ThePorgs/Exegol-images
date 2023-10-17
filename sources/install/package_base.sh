@@ -121,7 +121,7 @@ function install_pyenv() {
     colorecho "Installing python3.6"
     pyenv install 3.6
     colorecho "Installing python3 (latest)"
-    pyenv install 3
+    pyenv install 3.11
     # allowing python2, python3 and python3.6 to be found
     #  --> python points to latest python3
     #  --> python3 points to latest python3

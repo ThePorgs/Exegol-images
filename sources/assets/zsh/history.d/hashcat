@@ -6,3 +6,5 @@ hashcat --hash-type 2100 --attack-mode 0 '$DCC2$10240#user#bb38628253e7681553b72
 hashcat --hash-type 1000 --attack-mode 0 --username "$DOMAIN".ntds `fzf-wordlists`
 hashcat --hash-type 13100 --attack-mode 0 Kerberoastables.txt `fzf-wordlists`
 hashcat --hash-type 18200 --attack-mode 0 ASREProastables.txt `fzf-wordlists`
+hcat '$DCC2$10240#user#bb38628253e7681553b72e7da3adf305'
+hcat Kerberoastables.txt

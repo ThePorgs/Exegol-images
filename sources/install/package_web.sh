@@ -6,20 +6,17 @@ source common.sh
 function install_web_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing web apt tools"
-    fapt dirb sslscan prips swaks
+    fapt dirb prips swaks
   
     add-history dirb
-    add-history sslscan
     add-history prips
     add-history swaks
   
     add-test-command "dirb | grep '<username:password>'" # Web fuzzer
-    add-test-command "sslscan --version"                 # SSL/TLS scanner
     add-test-command "prips --help"                      # Print the IP addresses in a given range
     add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 
     add-to-list "dirb,https://github.com/v0re/dirb,Web Content Scanner"
-    add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
     add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
     add-to-list "swaks,https://github.com/jetmore/swaks,Swaks is a featureful flexible scriptable transaction-oriented SMTP test tool."
 }
@@ -552,7 +549,18 @@ function install_ysoserial() {
 
 function install_phpggc() {
     colorecho "Installing phpggc"
-    git -C /opt/tools clone --depth 1 https://github.com/ambionics/phpggc.git
+    # git -C /opt/tools clone --depth 1 https://github.com/ambionics/phpggc.git
+    # https://github.com/ambionics/phpggc/issues/163
+    local TEMP_FIX_LIMIT="2023-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools clone https://github.com/ambionics/phpggc.git
+      cd /opt/tools/phpggc || exit
+      git config --local user.email "local"
+      git config --local user.name "local"
+      git revert 5ace552e612cd457a4557abee1331e517337bccf
+    fi
     add-aliases phpggc
     add-history phpggc
     add-test-command "phpggc --help"
@@ -813,6 +821,18 @@ function install_sqlmap() {
     add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
 }
 
+function install_sslscan() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing sslscan"
+    git -C /opt/tools clone --depth 1 https://github.com/rbsec/sslscan.git
+    cd /opt/tools/sslscan || exit
+    make static
+    ln -s /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
+    add-history sslscan
+    add-test-command "sslscan --version"
+    add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_cargo_env
@@ -888,4 +908,5 @@ function package_web() {
     install_kraken                  # Kraken is a modular multi-language webshell.
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
+    install_sslscan                 # SSL/TLS scanner
 }
