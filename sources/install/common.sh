@@ -2,7 +2,7 @@
 # Author: The Exegol Project
 
 # Functions and commands that will be retried multiple times to counter random network issues when building
-CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "git" "apt-get" "nvm" "pipx" "pip2" "pip3")
+CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "apt-get" "nvm" "pipx" "pip2" "pip3")
 
 export RED='\033[1;31m'
 export BLUE='\033[1;34m'
@@ -103,10 +103,7 @@ function catch_and_retry() {
     #  it means commands like "cmd1 && cmd2" won't work and will be interpreted as "cmd1 \&\& cmd2"
     echo "[EXEGOL DEBUG] sh -c \"$escaped_command\""
     # If command exits successfully, no need for more retries
-    if sh -c "$escaped_command"
-    then
-      return 0
-    fi
+    sh -c "$escaped_command" && return 0
     # Calculate the exponential backoff time
     local wait_time=$((scale_factor * (base_exponent ** i)))
     # Cap it at max_wait_time

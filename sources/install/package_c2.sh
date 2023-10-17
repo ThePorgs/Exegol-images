@@ -22,11 +22,18 @@ function install_metasploit() {
     cd /opt/tools/metasploit-framework || exit
     rvm use 3.2.2@metasploit --create
     gem install bundler
-    bundle install --path /opt/tools/metasploit-framework/vendor
+    bundle install
+    # fixes 'You have already activated timeout 0.3.1, but your Gemfile requires timeout 0.4.0. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
+    local TEMP_FIX_LIMIT="2024-02-25"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      gem update timeout
+    fi
     rvm use 3.2.2@default
     add-aliases metasploit
     add-test-command "msfconsole --help"
-    add-test-command "msfvenom --help|&grep 'Metasploit standalone payload generator'"
+    add-test-command "msfvenom --list platforms"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 

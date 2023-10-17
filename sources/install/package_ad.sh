@@ -345,7 +345,22 @@ function install_evilwinrm() {
 function install_pypykatz() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
-    pipx install pypykatz
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
+      cd /opt/tools/pypykatz || exit
+      python3 -m venv ./venv/
+      source ./venv/bin/activate
+      pip3 install .
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
+      ln -v -s /opt/tools/pypykatz/venv/bin/pypykatz /opt/tools/bin/pypykatz
+      deactivate
+    fi
+    # pipx install pypykatz
     add-history pypykatz
     add-test-command "pypykatz version"
     add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
@@ -565,6 +580,14 @@ function install_pygpoabuse() {
     python3 -m venv ./venv/
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
+    fi
     deactivate
     add-aliases pygpoabuse
     add-history pygpoabuse
@@ -587,7 +610,14 @@ function install_bloodhound-quickwin() {
     cd /opt/tools/bloodhound-quickwin || exit
     python3 -m venv ./venv/
     source ./venv/bin/activate
-    pip3 install py2neo pandas prettytable
+    # https://github.com/kaluche/bloodhound-quickwin/issues/2
+    local TEMP_FIX_LIMIT="2023-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install git+https://github.com/elena/py2neo
+    fi
+    pip3 install -r requirements.txt
     deactivate
     add-aliases bloodhound-quickwin
     add-history bloodhound-quickwin
@@ -660,6 +690,14 @@ function install_pkinittools() {
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
+    fi
     deactivate
     add-aliases pkinittools
     add-history pkinittools
@@ -833,6 +871,14 @@ function install_ldaprelayscan() {
     python3 -m venv ./venv/
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
+    fi
     deactivate
     add-aliases ldaprelayscan
     add-history ldaprelayscan
@@ -843,7 +889,20 @@ function install_ldaprelayscan() {
 function install_goldencopy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
-    pipx install goldencopy
+    # https://github.com/Dramelac/GoldenCopy/issues/1
+    local TEMP_FIX_LIMIT="2023-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
+      cd /opt/tools/GoldenCopy || exit
+      python3 -m venv ./venv/
+      source ./venv/bin/activate
+      pip3 install --no-deps .
+      pip3 install git+https://github.com/elena/py2neo
+      deactivate
+      ln -v -s /opt/tools/GoldenCopy/venv/bin/goldencopy /opt/tools/bin/goldencopy
+    fi
     add-history goldencopy
     add-test-command "goldencopy --help"
     add-to-list "goldencopy,https://github.com/0x09AL/golden_copy.git,A tool to copy data from Golden Ticket and Silver Ticket"
@@ -884,6 +943,7 @@ function install_kerbrute() {
 function install_ldeep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldeep"
+    fapt libkrb5-dev krb5-config
     pipx install ldeep
     add-history ldeep
     add-test-command "ldeep --help"
