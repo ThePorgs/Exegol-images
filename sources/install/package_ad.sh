@@ -102,7 +102,7 @@ function install_crackmapexec() {
     add-aliases crackmapexec
     add-history crackmapexec
     add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/mpgn/CrackMapExec,Network scanner."
+    add-to-list "crackmapexec,https://github.com/Porchetta-Industries/CrackMapExec,Network scanner."
 }
 
 function install_bloodhound-py() {
@@ -905,7 +905,7 @@ function install_goldencopy() {
     fi
     add-history goldencopy
     add-test-command "goldencopy --help"
-    add-to-list "goldencopy,https://github.com/0x09AL/golden_copy.git,A tool to copy data from Golden Ticket and Silver Ticket"
+    add-to-list "goldencopy,https://github.com/Dramelac/GoldenCopy,Copy the properties and groups of a user from neo4j (bloodhound) to create an identical golden ticket"
 }
 
 function install_crackhound() {
@@ -928,7 +928,7 @@ function install_crackhound() {
     add-aliases crackhound
     add-history crackhound
     add-test-command "crackhound.py --help"
-    add-to-list "crackhound,https://github.com/trustedsec/crackhound.git,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
+    add-to-list "crackhound,https://github.com/trustedsec/crackhound,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
 }
 
 function install_kerbrute() {
