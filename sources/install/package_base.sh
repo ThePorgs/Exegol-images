@@ -119,14 +119,14 @@ function install_pyenv() {
     # apt install xz-utils tk-dev
     for v in $PYTHON_VERSIONS; do
         colorecho "Installing python${v}"
-        pyenv install $v
+        pyenv install "$v"
     done
     # allowing python2, python3 and python3.6 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
     #  --> python3.6 points to 3.6
     #  --> python2 points to latest python2
-    pyenv global $PYTHON_VERSIONS
+    pyenv global "$PYTHON_VERSIONS"
     add-test-command "python --version"
     add-test-command "pip --version"
     add-test-command "python3 --version"
@@ -401,7 +401,9 @@ function package_base() {
     # with pyenv, not sure the command below is needed anymore
     # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     for v in $PYTHON_VERSIONS; do
+        # shellcheck disable=SC2086
         pip${v} install --upgrade pip
+        # shellcheck disable=SC2086
         pip${v} install wheel
     done
     install_pipx
