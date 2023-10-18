@@ -126,7 +126,8 @@ function install_pyenv() {
     #  --> python3 points to python3.11
     #  --> python3.6 points to 3.6
     #  --> python2 points to latest python2
-    pyenv global "$PYTHON_VERSIONS"
+    # shellcheck disable=SC2086
+    pyenv global $PYTHON_VERSIONS
     add-test-command "python --version"
     add-test-command "pip --version"
     add-test-command "python3 --version"
