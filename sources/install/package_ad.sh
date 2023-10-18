@@ -829,6 +829,7 @@ function install_gmsadumper() {
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    pip3 install pycryptodome
     deactivate
     add-aliases gmsadumper
     add-history gmsadumper
@@ -945,6 +946,7 @@ function install_ldeep() {
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
     pipx install ldeep
+    pipx inject ldeep pycryptodome
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
