@@ -1,0 +1,2 @@
+cewler --output cewler.txt "$TARGET"
+cewler --output cewler.txt --depth 5 --lowercase --min-word-length 2 --without-numbers "$TARGET"
