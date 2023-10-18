@@ -97,6 +97,7 @@ function install_empire() {
       criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     deactivate
+    # TODO : use mysql instead, need to configure that
     sed -i 's/use: mysql/use: sqlite/g' empire/server/config.yaml
     sed -i 's/password: password123/password: exegol4thewin/g' empire/server/config.yaml
     cp -r -v ./empire/server/data/Invoke-Obfuscation /opt/tools/powershell/7/Modules/
