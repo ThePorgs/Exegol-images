@@ -102,7 +102,7 @@ function install_crackmapexec() {
     add-aliases crackmapexec
     add-history crackmapexec
     add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/mpgn/CrackMapExec,Network scanner."
+    add-to-list "crackmapexec,https://github.com/Porchetta-Industries/CrackMapExec,Network scanner."
 }
 
 function install_bloodhound-py() {
@@ -345,7 +345,22 @@ function install_evilwinrm() {
 function install_pypykatz() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
-    pipx install pypykatz
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
+      cd /opt/tools/pypykatz || exit
+      python3 -m venv ./venv/
+      source ./venv/bin/activate
+      pip3 install .
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
+      ln -v -s /opt/tools/pypykatz/venv/bin/pypykatz /opt/tools/bin/pypykatz
+      deactivate
+    fi
+    # pipx install pypykatz
     add-history pypykatz
     add-test-command "pypykatz version"
     add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
@@ -565,6 +580,14 @@ function install_pygpoabuse() {
     python3 -m venv ./venv/
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
+    fi
     deactivate
     add-aliases pygpoabuse
     add-history pygpoabuse
@@ -587,7 +610,14 @@ function install_bloodhound-quickwin() {
     cd /opt/tools/bloodhound-quickwin || exit
     python3 -m venv ./venv/
     source ./venv/bin/activate
-    pip3 install py2neo pandas prettytable
+    # https://github.com/kaluche/bloodhound-quickwin/issues/2
+    local TEMP_FIX_LIMIT="2023-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install git+https://github.com/elena/py2neo
+    fi
+    pip3 install -r requirements.txt
     deactivate
     add-aliases bloodhound-quickwin
     add-history bloodhound-quickwin
@@ -660,6 +690,14 @@ function install_pkinittools() {
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
+    fi
     deactivate
     add-aliases pkinittools
     add-history pkinittools
@@ -791,6 +829,13 @@ function install_gmsadumper() {
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # same as https://github.com/franc-pentest/ldeep/issues/41
+    local TEMP_FIX_LIMIT="2023-11-18"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install pycryptodome
+    fi
     deactivate
     add-aliases gmsadumper
     add-history gmsadumper
@@ -833,6 +878,14 @@ function install_ldaprelayscan() {
     python3 -m venv ./venv/
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
+    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
+    fi
     deactivate
     add-aliases ldaprelayscan
     add-history ldaprelayscan
@@ -843,10 +896,23 @@ function install_ldaprelayscan() {
 function install_goldencopy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
-    pipx install goldencopy
+    # https://github.com/Dramelac/GoldenCopy/issues/1
+    local TEMP_FIX_LIMIT="2023-12-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
+      cd /opt/tools/GoldenCopy || exit
+      python3 -m venv ./venv/
+      source ./venv/bin/activate
+      pip3 install --no-deps .
+      pip3 install git+https://github.com/elena/py2neo
+      deactivate
+      ln -v -s /opt/tools/GoldenCopy/venv/bin/goldencopy /opt/tools/bin/goldencopy
+    fi
     add-history goldencopy
     add-test-command "goldencopy --help"
-    add-to-list "goldencopy,https://github.com/0x09AL/golden_copy.git,A tool to copy data from Golden Ticket and Silver Ticket"
+    add-to-list "goldencopy,https://github.com/Dramelac/GoldenCopy,Copy the properties and groups of a user from neo4j (bloodhound) to create an identical golden ticket"
 }
 
 function install_crackhound() {
@@ -869,7 +935,7 @@ function install_crackhound() {
     add-aliases crackhound
     add-history crackhound
     add-test-command "crackhound.py --help"
-    add-to-list "crackhound,https://github.com/trustedsec/crackhound.git,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
+    add-to-list "crackhound,https://github.com/trustedsec/crackhound,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
 }
 
 function install_kerbrute() {
@@ -884,7 +950,15 @@ function install_kerbrute() {
 function install_ldeep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldeep"
+    fapt libkrb5-dev krb5-config
     pipx install ldeep
+    # https://github.com/franc-pentest/ldeep/issues/41
+    local TEMP_FIX_LIMIT="2023-11-18"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pipx inject ldeep pycryptodome
+    fi
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
@@ -1096,6 +1170,35 @@ function install_LDAPWordlistHarvester() {
     add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
 }
 
+function install_pywerview() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing pywerview"
+    pipx install git+https://github.com/the-useless-one/pywerview
+    add-history pywerview
+    add-test-command "pywerview --help"
+    add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
+}
+
+function install_freeipscanner() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing freeipscanner"
+    fapt arping
+    wget -O /opt/tools/bin/freeipscanner.sh https://raw.githubusercontent.com/scrt/freeipscanner/master/freeipscanner.sh
+    chmod +x /opt/tools/bin/freeipscanner.sh
+    add-history freeipscanner
+    add-test-command "freeipscanner.sh --help"
+    add-to-list "freeipscanner,https://github.com/scrt/freeipscanner,A simple bash script to enumerate stale ADIDNS entries"
+}
+
+function install_scrtdnsdump() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing scrtdnsdump"
+    pipx install git+https://github.com/scrt/scrtdnsdump
+    add-history scrtdnsdump
+    add-test-command "scrtdnsdump --help"
+    add-to-list "scrtdnsdump,https://github.com/scrt/scrtdnsdump,Enumeration and exporting of all DNS records in the zone for recon purposes of internal networks"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1184,4 +1287,7 @@ function package_ad() {
     install_netexec                # Crackmapexec repo
     install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
     install_LDAPWordlistHarvester
+    install_pywerview
+    install_freeipscanner
+    # install_scrtdnsdump          # This tool is a fork of adidnsdump (https://github.com/dirkjanm/adidnsdump). We are currently waiting to see if a PR will be made.
 }

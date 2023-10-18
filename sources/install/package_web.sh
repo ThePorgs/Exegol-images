@@ -786,7 +786,7 @@ function install_kraken() {
     add-aliases kraken
     add-history kraken
     add-test-command "kraken.py -h"
-    add-to-list "Kraken,https://github.com/kraken-ng/Kraken.git,Kraken is a modular multi-language webshell focused on web post-exploitation and defense evasion. It supports three technologies (PHP / JSP and ASPX) and is core is developed in Python."
+    add-to-list "Kraken,https://github.com/kraken-ng/Kraken,Kraken is a modular multi-language webshell focused on web post-exploitation and defense evasion. It supports three technologies (PHP / JSP and ASPX) and is core is developed in Python."
 }
 
 function install_soapui() {

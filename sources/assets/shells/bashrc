@@ -1,5 +1,5 @@
 # sourcing exegol custom .rc source file
-source ~/.exegol_shells_rc
+source /opt/.exegol_shells_rc
 
 # fzf
 export FZF_BASE=/opt/tools/fzf
