@@ -118,16 +118,10 @@ function install_theharvester() {
     colorecho "Installing theHarvester"
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester || exit
-    # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
-    local TEMP_FIX_LIMIT="2024-04-30"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-        criticalecho "Temp fix expired. Exiting."
-    else
-        python3.11 -m venv ./venv
-        source ./venv/bin/activate
-        pip3 install -r requirements.txt
-        deactivate
-    fi
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     # The tool needs access to the proxies.yaml file in the folder.
     ln -s /opt/tools/theHarvester /usr/local/etc/
     add-aliases theharvester
@@ -215,15 +209,7 @@ function install_phoneinfoga() {
 function install_maigret() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing maigret"
-    fapt libxml2-dev libxslt-dev
-    # pipx install git+https://github.com/soxoj/maigret.git
-    # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
-    local TEMP_FIX_LIMIT="2024-04-30"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-        criticalecho "Temp fix expired. Exiting."
-    else
-        pipx install --python python3.11 git+https://github.com/soxoj/maigret.git
-    fi
+    pipx install git+https://github.com/soxoj/maigret.git
     add-history maigret
     add-test-command "maigret --help"
     add-to-list "maigret,https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results"
@@ -331,7 +317,6 @@ function install_spiderfoot() {
     colorecho "Installing Spiderfoot"
     git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot || exit
-    fapt libjpeg-dev
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
@@ -347,16 +332,10 @@ function install_finalrecon() {
     colorecho "Installing FinalRecon"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon || exit
-    # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
-    local TEMP_FIX_LIMIT="2024-04-30"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-        criticalecho "Temp fix expired. Exiting."
-    else
-        python3.11 -m venv ./venv
-        source ./venv/bin/activate
-        pip3 install -r requirements.txt
-        deactivate
-    fi
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases finalrecon
     add-history finalrecon
     add-test-command "finalrecon.py --help"
@@ -454,7 +433,6 @@ function install_gitfive() {
 
 function install_geopincer() {
     colorecho "Installing GeoPincer"
-    fapt libgeos-dev
     git -C /opt/tools clone --depth 1 https://github.com/tloja/GeoPincer.git
     cd /opt/tools/GeoPincer || exit
     sed -i "s#regions.txt#/opt/tools/GeoPincer/regions.txt##" GeoPincer.py
@@ -500,16 +478,10 @@ function install_blackbird() {
     cd /opt/tools/blackbird || exit
     sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
     sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
-    # dependency aiohttp does not (yet) support Python 3.12 (https://github.com/aio-libs/aiohttp/issues/7646)
-    local TEMP_FIX_LIMIT="2024-04-30"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-        criticalecho "Temp fix expired. Exiting."
-    else
-        python3.11 -m venv ./venv
-        source ./venv/bin/activate
-        pip3 install -r requirements.txt
-        deactivate
-    fi
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases blackbird
     add-history blackbird
     add-test-command "blackbird.py --help"
