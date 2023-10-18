@@ -1168,6 +1168,7 @@ function install_pywerview() {
 function install_freeipscanner() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing freeipscanner"
+    fapt arping
     wget -O /opt/tools/bin/freeipscanner.sh https://raw.githubusercontent.com/scrt/freeipscanner/master/freeipscanner.sh
     chmod +x /opt/tools/bin/freeipscanner.sh
     add-history freeipscanner
