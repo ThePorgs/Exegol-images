@@ -829,7 +829,7 @@ function install_gmsadumper() {
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
-    # https://github.com/franc-pentest/ldeep/issues/41
+    # same as https://github.com/franc-pentest/ldeep/issues/41
     local TEMP_FIX_LIMIT="2023-11-18"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
