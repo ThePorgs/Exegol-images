@@ -1,0 +1,2 @@
+proxychains scrtdnsdump --dns-tcp -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --print-zones "$TARGET"
+scrtdnsdump -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --print-zones "$TARGET"
