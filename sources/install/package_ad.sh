@@ -172,7 +172,8 @@ function install_bloodhound-ce() {
     python3 --version
     python3 -m venv ./venv
     source ./venv/bin/activate
-    sed -i 's#git_version(path=project_root, default_label="v0.0.0")#"v0.0.0"#' /opt/tools/BloodHound-CE-build/packages/python/beagle/beagle/project/project.py
+    export VERSION=v0.0.0
+    # sed -i 's#git_version(path=project_root, default_label="v0.0.0")#"v0.0.0"#' /opt/tools/BloodHound-CE-build/packages/python/beagle/beagle/project/project.py
     python3 ./packages/python/beagle/main.py build bh-ui -v -c
     python3 ./packages/python/beagle/main.py build bh -v -d -c
     deactivate
