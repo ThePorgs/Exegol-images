@@ -81,8 +81,8 @@ function deploy_exegol() {
     chown -Rv _apt:root /opt/packages
     rm -rf /.exegol || true
     cp -r /root/sources/assets/exegol /.exegol
-    cp -v /root/sources/assets/zsh/history ~/.zsh_history
-    cp -v /root/sources/assets/zsh/aliases /opt/.exegol_aliases
+    cp -v /root/sources/assets/shells/history.d/_init ~/.zsh_history
+    cp -v /root/sources/assets/shells/aliases.d/_init /opt/.exegol_aliases
     # Moving supported custom configurations in /opt
     mv /.exegol/skel/supported_setups.md /opt/
     mkdir -p /var/log/exegol
@@ -106,7 +106,7 @@ function install_locales() {
 function install_pyenv() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing pyenv"
-    fapt git curl git build-essential
+    fapt git curl build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
     # add pyenv to PATH
@@ -117,25 +117,25 @@ function install_pyenv() {
     fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
     # Don't think it's needed, but if something fails, use command below
     # apt install xz-utils tk-dev
-    pyenv install 2
-    colorecho "Installing python3.6"
-    pyenv install 3.6
-    colorecho "Installing python3 (latest)"
-    pyenv install 3.11
+    for v in $PYTHON_VERSIONS; do
+        colorecho "Installing python${v}"
+        pyenv install "$v"
+    done
     # allowing python2, python3 and python3.6 to be found
-    #  --> python points to latest python3
-    #  --> python3 points to latest python3
+    #  --> python points to python3
+    #  --> python3 points to python3.11
     #  --> python3.6 points to 3.6
     #  --> python2 points to latest python2
-    pyenv global 3 3.6 2
+    # shellcheck disable=SC2086
+    pyenv global $PYTHON_VERSIONS
     add-test-command "python --version"
-    add-test-command "python2 --version"
-    add-test-command "python3 --version"
-    add-test-command "python3.6 --version"
     add-test-command "pip --version"
-    add-test-command "pip2 --version"
+    add-test-command "python3 --version"
     add-test-command "pip3 --version"
-    add-test-command "pip3.6 --version"
+    for v in $PYTHON_VERSIONS; do
+        add-test-command "python${v} --version"
+        add-test-command "pip${v} --version"
+    done
 }
 
 function install_firefox() {
@@ -197,7 +197,7 @@ function install_ohmyzsh() {
     # splitting wget and sh to avoid having additional logs put in curl output being executed because of catch_and_retry
     wget -O /tmp/ohmyzsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
     sh /tmp/ohmyzsh.sh
-    cp -v /root/sources/assets/zsh/zshrc ~/.zshrc
+    cp -v /root/sources/assets/shells/zshrc ~/.zshrc
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-completions
@@ -358,7 +358,9 @@ function post_install() {
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
     colorecho "Adding end-of-preset in zsh_history"
-    echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> ~/.zsh_history
+    echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
+    cp /opt/.exegol_history ~/.zsh_history
+    cp /opt/.exegol_history ~/.bash_history
 }
 
 # Package dedicated to the basic things the env needs
@@ -387,22 +389,24 @@ function package_base() {
 
     filesystem
     install_locales
-    cp -v /root/sources/assets/exegol/exegol_shells_rc ~/.exegol_shells_rc
-    cp -v /root/sources/assets/bash/bashrc ~/.bashrc
+    cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
+    cp -v /root/sources/assets/shells/bashrc ~/.bashrc
 
     # setup Python environment
+    # the order matters (if 2 is before 3, `python` will point to Python 2)
+    PYTHON_VERSIONS="3.11 3.6 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
     # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
     # with pyenv, not sure the command below is needed anymore
     # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
-    pip3 install --upgrade pip
-    pip3.6 install --upgrade pip
-    pip2 install --upgrade pip
-    pip3 install wheel
-    pip3.6 install wheel
-    pip2 install wheel
+    for v in $PYTHON_VERSIONS; do
+        # shellcheck disable=SC2086
+        pip${v} install --upgrade pip
+        # shellcheck disable=SC2086
+        pip${v} install wheel
+    done
     install_pipx
 
     # change default shell
@@ -464,7 +468,7 @@ function package_base() {
     chmod 644 /etc/logrotate.d/*
 
     # tmux
-    cp -v /root/sources/assets/tmux/tmux.conf ~/.tmux.conf
+    cp -v /root/sources/assets/shells/tmux.conf ~/.tmux.conf
     touch ~/.hushlogin
 
     # TLDR

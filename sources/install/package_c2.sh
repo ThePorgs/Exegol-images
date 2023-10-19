@@ -69,7 +69,7 @@ function install_sliver() {
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
-    add-to-list "sliver,https://github.com/BishopFox/sliver.git,Open source / cross-platform and extensible C2 framework"
+    add-to-list "sliver,https://github.com/BishopFox/sliver,Open source / cross-platform and extensible C2 framework"
 }
 
 # Package dedicated to command & control frameworks

@@ -23,6 +23,7 @@ env:
 jobs:
   # https://github.com/orgs/community/discussions/26671, "can’t pass ENV variables to the reusable workflow"
   init:
+    if: ${{ startsWith(github.event.pull_request.title, 'Release') }}
     name: Initialize
     runs-on: self-hosted
     outputs:
@@ -57,7 +58,9 @@ jobs:
           fi
           cat $GITHUB_OUTPUT
 
+
   code_check:
+    if: ${{ startsWith(github.event.pull_request.title, 'Release') }}
     name: Code compliance check
     uses: ./.github/workflows/sub_code_check.yml
 
@@ -128,7 +131,7 @@ jobs:
   clean_runners:
     name: Clean runner
     needs: [ init, publish ]
-    if: always()
+    if: always() && ${{ startsWith(github.event.pull_request.title, 'Release') }}
     # even if this job fails, it won't affect the success/fail status of the whole workflow
     continue-on-error: true
     strategy:
@@ -166,11 +169,12 @@ jobs:
           HUB_TOKEN=$(curl --silent --header "Content-Type: application/json" --request POST --data "{\"username\": \"${{ secrets.DOCKER_USERNAME }}\", \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl --fail-with-body --include --request DELETE -H "Accept: application/json" --header "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/${{ env.INTERMEDIATE_IMAGES_BUILDS_REGISTRY }}/tags/${{ env.IMAGE_TAG }}-${{ needs.init.outputs.IMAGE_VERSION }}-${{ matrix.arch }}/
 
+
   add_label:
     name: Trigger image builds
     needs: [ init, clean_registries ]
     # running either if publish and clean_registries were a success, or if the image already existed on remote
-    if: always() && ( needs.clean_registries.result == 'success' || needs.init.outputs.image_exists == 'true' )
+    if: always() && ${{ startsWith(github.event.pull_request.title, 'Release') }} && ( needs.clean_registries.result == 'success' || needs.init.outputs.image_exists == 'true' )
     runs-on: ubuntu-latest
     # Cannot use secrets.GITHUB_TOKEN as it is the default "github-actions bot" token, and "An action in a workflow run can’t trigger a new workflow run."
     # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#about-workflow-events

@@ -102,7 +102,7 @@ function install_crackmapexec() {
     add-aliases crackmapexec
     add-history crackmapexec
     add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/mpgn/CrackMapExec,Network scanner."
+    add-to-list "crackmapexec,https://github.com/Porchetta-Industries/CrackMapExec,Network scanner."
 }
 
 function install_bloodhound-py() {
@@ -904,6 +904,13 @@ function install_gmsadumper() {
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # same as https://github.com/franc-pentest/ldeep/issues/41
+    local TEMP_FIX_LIMIT="2023-11-18"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install pycryptodome
+    fi
     deactivate
     add-aliases gmsadumper
     add-history gmsadumper
@@ -980,7 +987,7 @@ function install_goldencopy() {
     fi
     add-history goldencopy
     add-test-command "goldencopy --help"
-    add-to-list "goldencopy,https://github.com/0x09AL/golden_copy.git,A tool to copy data from Golden Ticket and Silver Ticket"
+    add-to-list "goldencopy,https://github.com/Dramelac/GoldenCopy,Copy the properties and groups of a user from neo4j (bloodhound) to create an identical golden ticket"
 }
 
 function install_crackhound() {
@@ -1003,7 +1010,7 @@ function install_crackhound() {
     add-aliases crackhound
     add-history crackhound
     add-test-command "crackhound.py --help"
-    add-to-list "crackhound,https://github.com/trustedsec/crackhound.git,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
+    add-to-list "crackhound,https://github.com/trustedsec/crackhound,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
 }
 
 function install_kerbrute() {
@@ -1020,6 +1027,13 @@ function install_ldeep() {
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
     pipx install ldeep
+    # https://github.com/franc-pentest/ldeep/issues/41
+    local TEMP_FIX_LIMIT="2023-11-18"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pipx inject ldeep pycryptodome
+    fi
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
@@ -1240,6 +1254,26 @@ function install_pywerview() {
     add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
 }
 
+function install_freeipscanner() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing freeipscanner"
+    fapt arping
+    wget -O /opt/tools/bin/freeipscanner.sh https://raw.githubusercontent.com/scrt/freeipscanner/master/freeipscanner.sh
+    chmod +x /opt/tools/bin/freeipscanner.sh
+    add-history freeipscanner
+    add-test-command "freeipscanner.sh --help"
+    add-to-list "freeipscanner,https://github.com/scrt/freeipscanner,A simple bash script to enumerate stale ADIDNS entries"
+}
+
+function install_scrtdnsdump() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing scrtdnsdump"
+    pipx install git+https://github.com/scrt/scrtdnsdump
+    add-history scrtdnsdump
+    add-test-command "scrtdnsdump --help"
+    add-to-list "scrtdnsdump,https://github.com/scrt/scrtdnsdump,Enumeration and exporting of all DNS records in the zone for recon purposes of internal networks"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1329,5 +1363,7 @@ function package_ad() {
     install_extractbitlockerkeys   # Extract Bitlocker recovery keys from all the computers of the domain
     install_LDAPWordlistHarvester
     install_pywerview
+    install_freeipscanner
+    # install_scrtdnsdump          # This tool is a fork of adidnsdump (https://github.com/dirkjanm/adidnsdump). We are currently waiting to see if a PR will be made.
     install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
 }

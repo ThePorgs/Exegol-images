@@ -29,9 +29,11 @@ function install_john() {
     git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
     cd /opt/tools/john/src || exit
     ./configure --disable-native-tests && make
+    yes|cpan install Compress::Raw::Lzma
     add-aliases john-the-ripper
     add-history john-the-ripper
     add-test-command "john --help"
+    add-test-command "7z2john.pl|& grep 'Usage'"
     add-to-list "john,https://github.com/openwall/john,John the Ripper password cracker."
 }
 
