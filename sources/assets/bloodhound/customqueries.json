@@ -85,7 +85,7 @@
             }]
         },
         {
-            "name": "Can a user from domain ‘A‘ do anything to any computer in domain ‘B’ (Warning: VERY Heavy)",
+            "name": "Can a user from domain A do anything to any computer in domain B (Warning: VERY Heavy)",
             "category": "Domains/Forests",
             "queryList": [{
                 "final": false,
