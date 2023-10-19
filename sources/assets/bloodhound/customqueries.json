@@ -85,25 +85,24 @@
             }]
         },
         {
-            "name": "Can a user from domain ‘A ‘ do anything to any computer in domain ‘B’ (Warning: VERY Heavy)",
+            "name": "Can a user from domain ‘A‘ do anything to any computer in domain ‘B’ (Warning: VERY Heavy)",
             "category": "Domains/Forests",
             "queryList": [{
-                    "final": false,
-                    "title": "Select source domain...",
-                    "query": "MATCH (n:Domain) RETURN n.name ORDER BY n.name DESC"
-                },
-                {
-                    "final": false,
-                    "title": "Select destination domain...",
-                    "query": "MATCH (n:Domain) RETURN n.name ORDER BY n.name DESC"
-                },
-                {
-                    "final": true,
-                    "query": "MATCH (n:User {domain: {result}}) MATCH (m:Computer {domain: {}}) MATCH p=allShortestPaths((n)-[r:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|CanRDP|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin*1..]->(m)) RETURN p",
-                    "startNode": "{}",
-                    "allowCollapse": false
-                }
-            ]
+                "final": false,
+                "title": "Select source domain...",
+                "query": "MATCH (n:Domain) RETURN n.name ORDER BY n.name DESC"
+              },
+              {
+                "final": false,
+                "title": "Select destination domain...",
+                "query": "MATCH (n:Domain) RETURN $result + '=>' + n.name ORDER BY n.name DESC"
+              },
+              {
+                "final": true,
+                "query": "WITH split($result, \"=>\") as selectedDomains WITH selectedDomains[0] as sourceDomain, selectedDomains[1] as destDomain MATCH (n:User {domain: sourceDomain}) MATCH (m:Computer {domain: destDomain}) MATCH p=allShortestPaths((n)-[r:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|CanRDP|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin*1..]->(m)) RETURN p",
+                "startNode": "{}",
+                "allowCollapse": false
+            }]
         },
         {
             "name": "Kerberoastable users with a path to DA",
