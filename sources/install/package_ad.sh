@@ -146,6 +146,9 @@ function install_bloodhound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing BloodHound-CE"
 
+    SHARPHOUND_VERSION=v2.0.1
+    AZUREHOUND_VERSION=v2.1.3
+
     # TODO: Add catch and retry
 
     # Installing & Configuring the database
@@ -154,38 +157,29 @@ function install_bloodhound-ce() {
     cd /tmp || exit
     sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'bloodhoundcommunityedition';"
     sudo -u postgres psql -c "CREATE DATABASE bloodhound;"
+    # sudo -u postgres psql -c "REVOKE ALL ON DATABASE bloodhound FROM PUBLIC;"
     sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bloodhound TO bloodhound;"
     service postgresql restart
 
     # Build BloodHound-CE
     git -C /opt/tools/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git BloodHound-CE-build
+    cd /opt/tools/BloodHound-CE-build/packages/javascript/bh-shared-ui || exit
+    nvm install 18
+    zsh -c "source ~/.zshrc && nvm use 18 && yarn install --immutable && yarn build"
     cd /opt/tools/BloodHound-CE-build || exit
-    # python3 -m venv ./venv
-    cd ./packages/javascript/bh-shared-ui || exit
-    colorecho "DEBUG : Node version"
-    node -v
-    zsh -c "source ~/.zshrc && nvm use default && yarn install && yarn build"
-    colorecho "DEBUG : Check directory"
-    ls -la /opt/tools/BloodHound-CE-build/packages/javascript/bh-shared-ui/node_modules/rollup/dist/bin/
-    cd /opt/tools/BloodHound-CE-build || exit
-    colorecho "DEBUG : Python version"
-    python3 --version
-    python3 -m venv ./venv
-    source ./venv/bin/activate
-    export VERSION=v0.0.0
-    # sed -i 's#git_version(path=project_root, default_label="v0.0.0")#"v0.0.0"#' /opt/tools/BloodHound-CE-build/packages/python/beagle/beagle/project/project.py
+    export VERSION=v999.999.999
+    export CHECKOUT_HASH=""
     python3 ./packages/python/beagle/main.py build bh-ui -v -c
-    python3 ./packages/python/beagle/main.py build bh -v -d -c
-    deactivate
+    python3 ./packages/python/beagle/main.py build bh -v -c
 
     # Need to move in Exegol-Resources
-    wget https://github.com/BloodHoundAD/SharpHound/releases/download/v2.0.0/SharpHound-v2.0.0.zip -O sharphound-v2.0.0.zip
-    sha256sum sharphound-v2.0.0.zip > sharphound-v2.0.0.zip.sha256
+    wget "https://github.com/BloodHoundAD/SharpHound/releases/download/${SHARPHOUND_VERSION}/SharpHound-${SHARPHOUND_VERSION}.zip" -O sharphound-${SHARPHOUND_VERSION}.zip
+    sha256sum sharphound-${SHARPHOUND_VERSION}.zip > sharphound-${SHARPHOUND_VERSION}.zip.sha256
     mkdir ./azurehound
     cd ./azurehound || exit
     wget \
-    https://github.com/BloodHoundAD/AzureHound/releases/download/v2.0.5/azurehound-linux-amd64.zip \
-    https://github.com/BloodHoundAD/AzureHound/releases/download/v2.0.5/azurehound-linux-arm64.zip
+    "https://github.com/BloodHoundAD/AzureHound/releases/download/${AZUREHOUND_VERSION}/azurehound-linux-amd64.zip" \
+    "https://github.com/BloodHoundAD/AzureHound/releases/download/${AZUREHOUND_VERSION}/azurehound-linux-arm64.zip"
     cd /opt/tools/BloodHound-CE-build || exit
 
 
@@ -195,16 +189,16 @@ function install_bloodhound-ce() {
     mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound/
     mkdir /opt/tools/BloodHound-CE/work
     cp -v ./dist/bhapi /opt/tools/BloodHound-CE/bloodhound
-    cp -rv ./sharphound-v2.0.0.zip* /opt/tools/BloodHound-CE/collectors/sharphound/
+    cp -rv ./sharphound-${SHARPHOUND_VERSION}.zip* /opt/tools/BloodHound-CE/collectors/sharphound/
     cp -rv ./azurehound/azurehound-linux-a* /opt/tools/BloodHound-CE/collectors/azurehound/
     cp -v ./dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
     
     # Clean build folder
-    rm -rf /opt/tools/BloodHound-CE-build/
-    service postgresql stop
+    cd /opt/tools/BloodHound-CE || exit
+    # rm -rf /opt/tools/BloodHound-CE-build/
+    # service postgresql stop
 
     # Configuration
-    cd /opt/tools/BloodHound-CE/ || exit
     sed -i "s#app-db#127.0.0.1##" bloodhound.config.json
     sed -i "s#graph-db#127.0.0.1##" bloodhound.config.json
     sed -i "s#8080#1030##" bloodhound.config.json

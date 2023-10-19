@@ -4,5 +4,8 @@ if ! pg_isready -q; then
     service postgresql start
 fi
 
+# TODO : Check if neo4j is running
+# neo4j start
+
 /opt/tools/BloodHound-CE/bloodhound -configfile /opt/tools/BloodHound-CE/bloodhound.config.json
 
