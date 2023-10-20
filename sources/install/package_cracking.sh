@@ -25,6 +25,7 @@ function install_cracking_apt_tools() {
 function install_john() {
     colorecho "Installing john the ripper"
     git -C /opt/tools/ clone --depth 1 https://github.com/openwall/john
+    apt install libcompress-raw-lzma-perl # Necessary to make 7z2john work, https://github.com/openwall/john/blob/b8b5d164d0b3bb15401d837cd4577905b6214ad0/run/7z2john.pl#L33
     add-aliases john-the-ripper
     add-history john-the-ripper
     add-test-command "john --help"
