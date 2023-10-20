@@ -952,13 +952,6 @@ function install_ldeep() {
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
     pipx install ldeep
-    # https://github.com/franc-pentest/ldeep/issues/41
-    local TEMP_FIX_LIMIT="2023-11-18"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx inject ldeep pycryptodome
-    fi
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
