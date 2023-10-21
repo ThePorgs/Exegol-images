@@ -108,6 +108,13 @@ function install_crackmapexec() {
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install git+https://github.com/fox-it/BloodHound.py
+    # https://github.com/dirkjanm/BloodHound.py/pull/146
+    local TEMP_FIX_LIMIT="2024-02-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pipx inject bloodhound pycryptodome
+    fi
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
