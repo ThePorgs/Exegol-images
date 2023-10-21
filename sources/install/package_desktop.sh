@@ -69,7 +69,7 @@ function install_xfce() {
     # Desktop
     touch /root/.Xauthority
     export DISPLAY=":0"
-    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd "$HOME/.vnc/passwd" :0
+    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes Plain :0
     sleep 10
     xfconf-query -c xsettings -p /Net/ThemeName -s Prof_XFCE_2_1
     xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
