@@ -66,9 +66,6 @@ function install_xfce() {
     # NoVNC index redirection
     echo '<html><head><meta http-equiv="refresh" content="0; URL=/vnc.html?resize=remote&path=websockify&autoconnect=true" /></head></html>' > /usr/share/novnc/index.html
 
-    # This is the image default password. It will be dynamically changed through the wrapper during the creation of a new container
-    echo 'exegol4thewin' | vncpasswd -f > "$HOME/.vnc/passwd"
-
     # Desktop
     touch /root/.Xauthority
     export DISPLAY=":0"
