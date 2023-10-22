@@ -926,7 +926,8 @@ function install_crackhound() {
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
     cd /opt/tools/CrackHound || exit
-    local TEMP_FIX_LIMIT="2023-10-20" # 20 Oct. 2023
+    # https://github.com/trustedsec/CrackHound/pull/6
+    local TEMP_FIX_LIMIT="2024-01-20"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
