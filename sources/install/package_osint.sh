@@ -96,7 +96,7 @@ function install_holehe() {
     pipx install holehe
     add-history holehe
     add-test-command "holehe --help"
-    add-to-list "holehe,https://github.com/megadose/holehe,Exploit a vulnerable Samba service to gain root access."
+    add-to-list "holehe,https://github.com/megadose/holehe,mail osint tool finding out if it is used on websites."
 }
 
 function install_simplyemail() {
