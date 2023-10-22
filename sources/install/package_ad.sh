@@ -32,7 +32,9 @@ function install_responder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
     cd /opt/tools/Responder || exit
     fapt gcc-mingw-w64-x86-64
-    local TEMP_FIX_LIMIT="2023-10-21" # 21 Oct. 2023
+    # https://github.com/lgandx/Responder/pull/249
+    # https://github.com/lgandx/Responder/pull/250
+    local TEMP_FIX_LIMIT="2024-01-20"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
