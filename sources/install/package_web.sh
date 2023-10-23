@@ -393,7 +393,8 @@ function install_oneforall() {
     colorecho "Installing OneForAll"
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
-    local TEMP_FIX_LIMIT="2023-10-20" # 20 Oct. 2023
+    # https://github.com/shmilylty/OneForAll/pull/340
+    local TEMP_FIX_LIMIT="2024-01-20"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else

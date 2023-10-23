@@ -32,7 +32,9 @@ function install_responder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
     cd /opt/tools/Responder || exit
     fapt gcc-mingw-w64-x86-64
-    local TEMP_FIX_LIMIT="2023-10-21" # 21 Oct. 2023
+    # https://github.com/lgandx/Responder/pull/249
+    # https://github.com/lgandx/Responder/pull/250
+    local TEMP_FIX_LIMIT="2024-01-20"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -108,6 +110,13 @@ function install_crackmapexec() {
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install git+https://github.com/fox-it/BloodHound.py
+    # https://github.com/dirkjanm/BloodHound.py/pull/146
+    local TEMP_FIX_LIMIT="2024-02-15"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pipx inject bloodhound pycryptodome
+    fi
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
@@ -919,7 +928,8 @@ function install_crackhound() {
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
     cd /opt/tools/CrackHound || exit
-    local TEMP_FIX_LIMIT="2023-10-20" # 20 Oct. 2023
+    # https://github.com/trustedsec/CrackHound/pull/6
+    local TEMP_FIX_LIMIT="2024-01-20"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -952,13 +962,6 @@ function install_ldeep() {
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
     pipx install ldeep
-    # https://github.com/franc-pentest/ldeep/issues/41
-    local TEMP_FIX_LIMIT="2023-11-18"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx inject ldeep pycryptodome
-    fi
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
