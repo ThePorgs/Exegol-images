@@ -1,0 +1,1 @@
+cors_scan.py -i urls.txt -t 100

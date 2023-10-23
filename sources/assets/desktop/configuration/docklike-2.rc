@@ -1,0 +1,10 @@
+[user]
+indicatorStyle=0
+indicatorColor=rgb(76,166,230)
+pinned=/usr/share/applications/xfce-settings-manager.desktop;/usr/share/applications/terminator.desktop;/usr/share/applications/thunar.desktop;/usr/share/applications/firefox-esr.desktop;/usr/share/applications/xfce4-appfinder.desktop;
+indicatorOrientation=1
+inactiveIndicatorStyle=0
+inactiveColor=rgb(26,95,180)
+indicatorColorFromTheme=false
+forceIconSize=true
+iconSize=32

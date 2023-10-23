@@ -1,0 +1,1 @@
+alias pwnedornot.py='/opt/tools/pwnedOrNot/venv/bin/python3 /opt/tools/pwnedOrNot/pwnedornot.py'

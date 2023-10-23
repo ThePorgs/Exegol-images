@@ -1,1 +1,0 @@
-certipy find -u "$USER@$DOMAIN" -p "$PASSWORD" -old-bloodhound

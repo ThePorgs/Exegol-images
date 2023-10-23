@@ -1,0 +1,4 @@
+rtl-433 -C si
+rtl_433 -f 868M -s 1024k
+rtl_433 -M hires -M level
+rtl_433 -R 1 -R 8 -R 43

@@ -1,0 +1,5 @@
+cloudmapper.py configure add-account --config-file config.json --name parent --id XXX --default true
+cloudmapper.py configure discover-organization-accounts
+cloudmapper.py collect --account parent --profile parent
+cloudmapper.py report --account parent
+cloudmapper.py webserver

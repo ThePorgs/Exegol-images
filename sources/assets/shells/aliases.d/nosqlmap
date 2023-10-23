@@ -1,0 +1,1 @@
+alias nosqlmap.py='/opt/tools/NoSQLMap/venv/bin/python2 /opt/tools/NoSQLMap/nosqlmap.py'

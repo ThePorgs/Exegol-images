@@ -1,0 +1,1 @@
+alias ldapsearch-ad.py='/opt/tools/ldapsearch-ad/venv/bin/python3 /opt/tools/ldapsearch-ad/ldapsearch-ad.py'

@@ -1,0 +1,1 @@
+darkarmour.py -f /data/beacon.exe --encrypt xor --jmp --loop 7 -o /data/legit.exe

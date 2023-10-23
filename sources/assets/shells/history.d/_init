@@ -1,0 +1,3 @@
+mount -o domain="$DOMAIN" -o username="$USER" -o password="$PASSWORD" -t cifs "//$DC_HOST/SYSVOL" /tmp/mnttarget/
+screen /dev/ttyACM0 115200
+python3 -m smtpd -n -c DebuggingServer 127.0.0.1:25

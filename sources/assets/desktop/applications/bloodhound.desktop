@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Bloodhound
+Comment=Schema Analyser
+Exec=/opt/tools/BloodHound4/BloodHound --no-sandbox --disable-dev-shm-usage
+Icon=/opt/tools/BloodHound4/docs/images/bloodhound-logo.png
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;AD;
+MimeType=text/plain;

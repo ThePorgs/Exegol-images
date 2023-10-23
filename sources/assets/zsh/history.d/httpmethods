@@ -1,1 +1,0 @@
-httpmethods --threads 40 --location "http://$TARGET/"

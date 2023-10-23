@@ -1,0 +1,3 @@
+pwncat-cs -lp $PORT
+pwncat-cs $TARGET:$PORT
+pwncat-cs ssh://$USER:$PASSWORD@$TARGET

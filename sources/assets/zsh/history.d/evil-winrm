@@ -1,2 +1,0 @@
-evil-winrm -u "$USER" -H "$NT_HASH" -i "$TARGET"
-evil-winrm -u "$USER" -p "$PASSWORD" -i "$TARGET"

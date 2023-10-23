@@ -1,0 +1,2 @@
+proxychains -q
+proxychains -f config.conf

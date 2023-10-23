@@ -1,2 +1,0 @@
-alias vulny-code-static-analysis='python3 /opt/tools/Vulny-Code-Static-Analysis/index.py'
-alias php-code-analysis='python3 /opt/tools/Vulny-Code-Static-Analysis/index.py'

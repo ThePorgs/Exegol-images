@@ -1,1 +1,0 @@
-rusthound -d "$DOMAIN" -u "$USER"@"$DOMAIN" -p "$PASSWORD" -o /workspace/ --zip

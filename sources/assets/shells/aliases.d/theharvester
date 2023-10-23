@@ -1,0 +1,1 @@
+alias theHarvester.py='/opt/tools/theHarvester/venv/bin/python3 /opt/tools/theHarvester/theHarvester.py'

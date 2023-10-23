@@ -1,0 +1,2 @@
+sipvicious_svcrack -u100 -d dictionary.txt udp://$TARGET:$PORT
+sipvicious_svcrack -u100 -r1-9999 -z4 $TARGET

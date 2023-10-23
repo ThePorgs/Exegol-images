@@ -1,0 +1,1 @@
+alias linkfinder.py='/opt/tools/LinkFinder/venv/bin/python3 /opt/tools/LinkFinder/linkfinder.py'

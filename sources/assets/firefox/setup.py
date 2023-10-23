@@ -17,16 +17,18 @@ from pathlib import Path
 from time import sleep
 from R2Log import logger
 from glob import glob
+from cryptography.hazmat.primitives.serialization import pkcs7
+from cryptography.x509.oid import NameOID
 
 PATHNAME = "/root/.mozilla/firefox/**.Exegol/"
 
 # Define addons urls
 urls = [
-    "https://addons.mozilla.org/fr/firefox/addon/foxyproxy-standard/",
-    "https://addons.mozilla.org/fr/firefox/addon/darkreader/",
-    "https://addons.mozilla.org/fr/firefox/addon/uaswitcher/",
-    "https://addons.mozilla.org/fr/firefox/addon/cookie-editor/",
-    "https://addons.mozilla.org/fr/firefox/addon/wappalyzer/"
+    "https://addons.mozilla.org/en-US/firefox/addon/foxyproxy-standard/",
+    "https://addons.mozilla.org/en-US/firefox/addon/darkreader/",
+    "https://addons.mozilla.org/en-US/firefox/addon/uaswitcher/",
+    "https://addons.mozilla.org/en-US/firefox/addon/cookie-editor/",
+    "https://addons.mozilla.org/en-US/firefox/addon/wappalyzer/"
 ]
 
 # Define regex
@@ -53,11 +55,19 @@ def download_addon(link, addon_name):
         addon_file.write(addon_dl.content)
 
 
-def read_manifest(addon_path):
+def get_addon_id(addon_path):
     archive = zipfile.ZipFile(addon_path, 'r')
     manifest = archive.read('manifest.json').decode()
-    # Read the id in the manifest
-    addon_id = re.search(reid, manifest).group(1)
+    try:
+        # Read the id in the manifest
+        addon_id = re.search(reid, manifest).group(1)
+    except:
+        # Read the id in the mozilla.rsa file
+        cert = archive.read('META-INF/mozilla.rsa')
+        der_cert = pkcs7.load_der_pkcs7_certificates(cert)
+        extension_cert = der_cert[0]
+        ext_cert_name = extension_cert.subject
+        addon_id = ext_cert_name.get_attributes_for_oid(NameOID.COMMON_NAME)[0].value
     return addon_id
 
 
@@ -106,9 +116,14 @@ def activate_addons(addon_list):
 
 def adjust_ui():
     with open(Path(glob("%s" % PATHNAME)[0] + "/prefs.js"), 'r+') as pref_js:
+        # removing import-button
         new_pref = re.sub(r'\\"import-button\\",', '', pref_js.read())
+        # removing save-to-pocket button
         new_pref = re.sub(r'\\"save-to-pocket-button\\",', '', new_pref)
+        # switching active theme to firefox-compact-dark
         new_pref = re.sub('"extensions.activeThemeID", "default-theme@mozilla.org"', '"extensions.activeThemeID", "firefox-compact-dark@mozilla.org"', new_pref)
+        # removing title bar
+        new_pref = re.sub('"browser.tabs.inTitlebar", 1', '"browser.tabs.inTitlebar", 0', new_pref)
         pref_js.seek(0)
         pref_js.write(new_pref)
         pref_js.truncate()
@@ -124,6 +139,9 @@ def import_bookmarks():
     src.close()
 
 if __name__ == "__main__":
+
+    # Initialize variables
+    install_ko = []
 
     # Create firefox profile Exegol
     logger.info("Creating Firefox profile")
@@ -144,13 +162,20 @@ if __name__ == "__main__":
         link, addon_name = get_link(url)
         # Download the addon
         download_addon(link, addon_name)
-        # Read manifest.json in the archive
-        addon_id = read_manifest("/tmp/" + addon_name)
-        install_addons(addon_name, addon_id, "/tmp/")
-        logger.success(f"{addon_name} installed sucessfully\n")
-        addon_list.append((addon_id, addon_name[0:-4], False))
-
-    logger.success("All addons were installed sucessfully\n")
+        try:
+            # Read manifest.json in the archive
+            addon_id = get_addon_id("/tmp/" + addon_name)
+            install_addons(addon_name, addon_id, "/tmp/")
+            logger.success(f"{addon_name} installed sucessfully\n")
+            addon_list.append((addon_id, addon_name[0:-4], False))
+        except:
+            install_ko.append("- " + addon_name)
+            logger.error(f"{addon_name} could not be installed\n")
+            continue
+    if install_ko:
+        logger.info("All addons from the list were installed sucessfully except:\n%s\n" % "\n".join(install_ko))
+    else:
+        logger.success("All addons from the list were installed sucessfully\n")
 
     # Run firefox to initialise profile
     logger.info("Initialising Firefox profile")

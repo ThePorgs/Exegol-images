@@ -1,0 +1,1 @@
+alias passthecert.py="/opt/tools/PassTheCert/Python/venv/bin/python3 /opt/tools/PassTheCert/Python/passthecert.py"

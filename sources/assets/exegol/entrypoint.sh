@@ -1,4 +1,12 @@
 #!/bin/bash
+
+# This file is the default entrypoint for the exegol docker image.
+
+# !!!!!!!!!!!!! #
+# This file is no longer up-to-date because in the later version, the wrapper upload it's own entrypoint to the container.
+# This default file is kept here for backward compatibility purpose.
+# !!!!!!!!!!!!! #
+
 trap shutdown SIGTERM
 
 # Function specific
@@ -16,6 +24,7 @@ function endless() {
   # Start action / endless
   # Entrypoint for the container, in order to have a process hanging, to keep the container alive
   # Alternative to running bash/zsh/whatever as entrypoint, which is longer to start and to stop and to very clean
+  # shellcheck disable=SC2162
   read -u 2
 }
 
@@ -34,8 +43,8 @@ function shutdown() {
   # shellcheck disable=SC2046
   kill $(pgrep -x -f -- -bash) 2>/dev/null
   # Wait for every active process to exit (e.g: shell logging compression, VPN closing)
-  wait_list="$(pgrep -f "(.log|start.sh)" | grep -vE '^1$')"
-  for i in $wait_list; do
+  WAIT_LIST="$(pgrep -f "(.log|start.sh)" | grep -vE '^1$')"
+  for i in $WAIT_LIST; do
     # Waiting for: $i PID process to exit
     tail --pid="$i" -f /dev/null
   done
@@ -44,10 +53,10 @@ function shutdown() {
 
 function resolv_docker_host() {
   # On docker desktop host, resolving the host.docker.internal before starting a VPN connection for GUI applications
-  docker_ip=$(getent hosts host.docker.internal | head -n1 | awk '{ print $1 }')
-  if [ "$docker_ip" ]; then
+  DOCKER_IP=$(getent hosts host.docker.internal | head -n1 | awk '{ print $1 }')
+  if [ "$DOCKER_IP" ]; then
     # Add docker internal host resolution to the hosts file to preserve access to the X server
-    echo "$docker_ip        host.docker.internal" >>/etc/hosts
+    echo "$DOCKER_IP        host.docker.internal" >>/etc/hosts
   fi
 }
 
@@ -75,7 +84,7 @@ function cmd() {
 function compatibility() {
   # Older versions of exegol wrapper launch the container with the 'bash' command
   # This command is now interpreted by the custom entrypoint
-  echo "Your version of Exegol wrapper is not up-to-date!"
+  echo "Your version of Exegol wrapper is not up-to-date!" | tee -a ~/banner.txt
   # If the command is bash, redirect to endless. Otherwise execute the command as job to keep the shutdown procedure available
   if [ "$*" != "bash" ]; then
     echo "Executing command in backwards compatibility mode"
@@ -85,15 +94,18 @@ function compatibility() {
   endless
 }
 
+echo "Your version of Exegol wrapper is not up-to-date!" | tee ~/banner.txt
+
 # Default action is "default"
-func_name="${1:-default}"
+FUNC_NAME="${1:-default}"
 
 # Older versions of exegol wrapper launch the container with the 'bash' command
 # This command is now interpreted by the custom entrypoint. Redirect execution to the raw execution for backward compatibility.
-[ "$func_name" == "bash" ] || [ "$func_name" == "zsh" ] && compatibility $@
+# shellcheck disable=SC2068
+[ "$FUNC_NAME" == "bash" ] || [ "$FUNC_NAME" == "zsh" ] && compatibility $@
 
 # Dynamic execution
-$func_name "$@" || (
-  echo "An error occurred executing the '$func_name' action. Your image version is probably out of date for this feature. Please update your image."
+$FUNC_NAME "$@" || (
+  echo "An error occurred executing the '$FUNC_NAME' action. Your exegol (wrapper / image) version might be out of date to use this feature. Please update your wrapper and image."  | tee -a ~/banner.txt
   exit 1
 )

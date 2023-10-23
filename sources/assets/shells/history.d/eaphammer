@@ -1,0 +1,1 @@
+eaphammer -i eth0 --channel 4 --auth wpa-eap --essid $ESSID --creds

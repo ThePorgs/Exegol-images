@@ -1,0 +1,2 @@
+alias gpp-decrypt='/opt/tools/gpp-decrypt/venv/bin/python3 /opt/tools/gpp-decrypt/gpp-decrypt.py -c'
+alias gpp-decrypt.py='/opt/tools/gpp-decrypt/venv/bin/python3 /opt/tools/gpp-decrypt/gpp-decrypt.py'

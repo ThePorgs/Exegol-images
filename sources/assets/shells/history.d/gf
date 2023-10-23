@@ -1,0 +1,2 @@
+gf php-sources
+gf -save php-serialized -HnrE '(a:[0-9]+:{|O:[0-9]+:"|s:[0-9]+:")'

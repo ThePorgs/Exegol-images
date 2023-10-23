@@ -1,0 +1,1 @@
+manspider.py --threads 50 192.168.56.0/24 -d "$DOMAIN" -u "$USER" -H "$NT_HASH" --content administrateur
