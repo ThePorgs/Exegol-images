@@ -2,6 +2,8 @@
 # Author: The Exegol Project
 
 source common.sh
+# sourcing package_ad.sh for the install_powershell() function
+source package_ad.sh
 
 function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
@@ -81,7 +83,7 @@ function install_empire() {
     wget -O /tmp/dotnet-install.sh https://dot.net/v1/dotnet-install.sh
     chmod +x /tmp/dotnet-install.sh
     /tmp/dotnet-install.sh --channel 6.0
-    # Powershell is required, but should be installed in package_ad.sh already
+    install_powershell
     git -C /opt/tools/ clone --recursive https://github.com/BC-SECURITY/Empire
     cd /opt/tools/Empire || exit
     python3 -m venv ./venv
