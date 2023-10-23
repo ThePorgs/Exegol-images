@@ -299,7 +299,7 @@ function install_amber() {
 function install_powershell() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powershell"
-    if powershell -Version; then
+    if /opt/tools/bin/powershell -Version; then
       colorecho "powershell seems already installed, skipping..."
       return
     else
