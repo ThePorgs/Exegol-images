@@ -257,11 +257,11 @@ function trust_ca_burp_in_firefox() {
     # Edit configuration file to listen on the available port found
     sed -i "s/\"listener_port\":[0-9]\+/\"listener_port\":$BURP_PORT/g" /opt/tools/BurpSuiteCommunity/conf.json
     # Start Burp with "y" to accept policy and generate CA, keep its PID to kill it when done
-    echo y|java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json &>/tmp/burp_logs &
+    echo y|java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json 2>&1 /dev/null &
     # pull the latest process's ID
     local BURP_PID=$!
     # Let time to Burp to init CA
-    while ! [[ $(tail /tmp/burp_logs) =~ .*y/n.* ]]
+    while [[ -z $(netstat -lnt|grep -Eo "127.0.0.1:$BURP_PORT") ]]
     do
         sleep 0.5
     done
@@ -271,7 +271,6 @@ function trust_ca_burp_in_firefox() {
     wget "http://127.0.0.1:$BURP_PORT/cert" -O "$BURP_CA_PATH"
     kill "$BURP_PID"
     _trust_ca_cert_in_firefox "$BURP_CA_PATH" "$BURP_CA_NAME"
-    rm -r /tmp/burp*
   fi
 }
 
