@@ -24,24 +24,23 @@ source package_cracking.sh
 source package_c2.sh
 
 function install_most_used_apt_tools() {
-    fapt hydra sslscan weevely smbclient hashcat fcrackzip
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing most used apt tools"
+    fapt hydra weevely smbclient hashcat fcrackzip
 
     add-history hydra
-    add-history sslscan
     add-history weevely
     add-history smbclient
     add-history hashcat
     add-history fcrackzip
 
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
-    add-test-command "sslscan --version"                            # SSL/TLS scanner
     add-test-command "weevely --help"                               # Awesome secure and light PHP webshell
     add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
     add-test-command "hashcat --help"                               # Password cracker
     add-test-command "fcrackzip --help"                             # Zip cracker
 
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
-    add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
     add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
     add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
     add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery"
@@ -50,10 +49,11 @@ function install_most_used_apt_tools() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
+    set_cargo_env
     set_go_env
     set_ruby_env
+    set_python_env
     install_most_used_apt_tools
-    install_searchsploit            # Exploitdb local search engine
     install_metasploit              # Offensive framework
     install_nmap                    # Port scanner
     install_seclists                # Awesome wordlists
@@ -83,4 +83,6 @@ function package_most_used() {
     install_evilwinrm               # WinRM shell
     install_john                    # Password cracker
     install_sqlmap                  # SQL injection scanner
+    install_netexec                 # Crackmapexec repo
+    install_sslscan                 # SSL/TLS scanner
 }

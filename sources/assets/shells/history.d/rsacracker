@@ -1,0 +1,7 @@
+rsacracker --key public.pem -c 0xdeadbeef
+rsacracker -c 0xdeadbeef -n 323 -e 65537
+rsacracker -c 0xdeadbeef -n 323 -e 65537 --phi 123 --dp 123 --dq 123 --qinv 123 --pinv 123
+rsacracker --key public.pem -f secret.txt.enc
+rsacracker --key public.pem --private
+rsacracker --key private.pem --password R54Cr4ck3R --private
+rsacracker -n 323 --factors

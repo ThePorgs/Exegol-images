@@ -1,0 +1,1 @@
+httpmethods.py --threads 40 --location "http://$TARGET/"

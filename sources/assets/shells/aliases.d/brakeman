@@ -1,0 +1,1 @@
+alias brakeman='/usr/local/rvm/gems/ruby-3.2.2@brakeman/wrappers/ruby /usr/local/rvm/gems/ruby-3.2.2@brakeman/bin/brakeman'

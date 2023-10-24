@@ -1,0 +1,3 @@
+alias gitdumper.sh='/opt/tools/GitTools/Dumper/gitdumper.sh'
+alias extractor.sh='/opt/tools/GitTools/Extractor/extractor.sh'
+alias gitfinder.py='/opt/tools/GitTools/Finder/venv/bin/python3 /opt/tools/GitTools/Finder/gitfinder.py'

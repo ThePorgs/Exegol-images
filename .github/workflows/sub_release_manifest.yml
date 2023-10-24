@@ -28,20 +28,19 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Inspect preprod manifest
+      - name: (dbg) inspect preprod manifest
         id: inspect_manifest
         run: |
           DIGESTS=$(docker manifest inspect ${{ inputs.PREPROD_MANIFEST_LIST }} | jq -r '.manifests[].digest' | while read digest; do echo ${{ inputs.DOCKER_PREPROD_REPO }}@$digest ; done | tr '\n' ' ')
           echo "DIGESTS=$(echo $DIGESTS)" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
       - name: Create manifest
+        id: create_manifest
         if: success()
-        run: |
-          docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}
-      - name: Push manifest to prod
+        run: docker manifest create ${{ inputs.PROD_MANIFEST_LIST }} ${{ steps.inspect_manifest.outputs.DIGESTS }}
+      - name: Push manifest to production
         if: success()
-        run: |
-          docker manifest push ${{ inputs.PROD_MANIFEST_LIST }}
+        run: docker manifest push ${{ inputs.PROD_MANIFEST_LIST }}
       - name: Remove local manifest
-        if: always()
-        run: |
-          docker manifest rm ${{ inputs.PROD_MANIFEST_LIST }}
+        if: always() && steps.create_manifest.outcome == 'success'
+        run: docker manifest rm ${{ inputs.PROD_MANIFEST_LIST }}

@@ -1,5 +1,0 @@
-cloudmapper configure add-account --config-file config.json --name parent --id XXX --default true
-cloudmapper configure discover-organization-accounts
-cloudmapper collect --account parent --profile parent
-cloudmapper report --account parent
-cloudmapper webserver

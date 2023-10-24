@@ -1,0 +1,5 @@
+KRB5CCNAME="ticket.ccache" pywerview get-netcomputer -k --dc-ip "$DC_IP" --user "$USERNAME "
+KRB5CCNAME="ticket.ccache" pywerview get-localdisks -k --computername $COMPUTER --user "$USERNAME"
+pywerview get-netuser --workgroup "$DOMAIN" --dc-ip "$DC_IP" --tls --cert cert.crt --key cert.key --username "$USERNAME" --attributes distinguishedname useraccountcontrol 
+pywerview get-netgmsa --dc-ip "$DC_IP" --user "$USERNAME" --hashes "$NT_HASH" --resolve-sids
+pywerview get-netgmsa --dc-ip "$DC_IP" --tls --user "$USERNAME" --hashes "$NT_HASH" --resolve-sids 

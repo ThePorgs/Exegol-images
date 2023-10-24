@@ -1,0 +1,4 @@
+zip "kown_plaintext" "unencrypted.zip"
+pkcrack -C "encrypted.zip" -c "path/to/cipher" -P "unencrypted.zip" -p "kown_plaintext"
+pkcrack -C "encrypted.zip" -c "path/to/cipher" -P "unencrypted.zip" -p "kown_plaintext" -d "decrypted.zip" -a
+zipdecrypt "key0" "key1" "key2" "encrypted.zip" "decrypted.zip"

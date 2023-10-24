@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Burpsuite
+Comment=TODO
+Exec=java -jar -Xmx4g /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
+Icon=/usr/share/icons/Papirus/16x16/apps/kali-burpsuite.svg
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;Web;
+MimeType=text/plain;

@@ -1,0 +1,39 @@
+# sourcing exegol custom .rc source file
+source /opt/.exegol_shells_rc
+
+# ZSH setup
+export ZSH="/root/.oh-my-zsh"
+ZSH_THEME="gentoo"
+
+# fzf
+export FZF_BASE=/opt/tools/fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm)
+
+# oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+TIME_="%{$fg[white]%}[%{$fg[red]%}%D{%b %d, %Y - %T (%Z)}%{$fg[white]%}]%{$reset_color%}"
+PROMPT="$LOGGING$TIME_%{$FX[bold]$FG[013]%} $EXEGOL_HOSTNAME %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_char)%{$reset_color%} "
+
+# zsh history config
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000000
+export HISTTIMEFORMAT="[%F %T] "
+setopt INC_APPEND_HISTORY
+setopt EXTENDED_HISTORY
+setopt HIST_FIND_NO_DUPS
+
+# Color correction for zsh-syntax-highlighting
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
+ZSH_HIGHLIGHT_STYLES[comment]='fg=#888888'
+
+# At the end, loads user-defined zshrc post-routines if the file exists otherwise creates a default file if my-resources is enabled in the container
+if [ -f /opt/my-resources/setup/zsh/zshrc ]
+then
+  source /opt/my-resources/setup/zsh/zshrc
+else
+  [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
+  cp /.exegol/skel/zsh/zshrc /opt/my-resources/setup/zsh/zshrc
+fi

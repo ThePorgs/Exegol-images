@@ -1,0 +1,1 @@
+alias checksec.py='/opt/tools/checksec.py/venv/bin/python3 -m checksec'

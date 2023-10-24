@@ -4,6 +4,8 @@
 source common.sh
 
 function install_forensic_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing forensic apt tools"
     fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
     
     add-history binwalk
@@ -28,13 +30,13 @@ function install_forensic_apt_tools() {
 
 function install_volatility2() {
     colorecho "Installing volatility"
-    fapt pcregrep libpcre++-dev yara libjpeg-dev zlib1g-dev
+    fapt pcregrep yara libjpeg-dev zlib1g-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
-    cd /opt/tools/volatility
-    virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install pycrypto distorm3 pillow openpyxl
-    ./venv/bin/python2 -m pip install ujson --no-use-pep517
+    cd /opt/tools/volatility || exit
+    virtualenv --python python2 ./venv
     source ./venv/bin/activate
+    pip2 install pycryptodome distorm3 pillow openpyxl
+    pip2 install ujson --no-use-pep517
     python2 setup.py install
     deactivate
     # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161
@@ -48,7 +50,10 @@ function install_volatility2() {
 
 function install_volatility3() {
     colorecho "Installing volatility3"
-    python3 -m pipx install git+https://github.com/volatilityfoundation/volatility3
+    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
+    pipx install /opt/tools/volatility3
+    # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
+    pipx inject volatility3 yara-python capstone pycryptodome
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
@@ -58,7 +63,7 @@ function install_volatility3() {
 function install_trid() {
     colorecho "Installing trid"
     mkdir /opt/tools/trid/
-    cd /opt/tools/trid
+    cd /opt/tools/trid || exit
     wget https://mark0.net/download/tridupdate.zip
     wget https://mark0.net/download/triddefs.zip
     wget https://mark0.net/download/trid_linux_64.zip
@@ -79,14 +84,15 @@ function install_peepdf() {
     git -C /opt/tools clone --depth 1 https://github.com/jesparza/peepdf
     add-aliases peepdf
     add-history peepdf
-    add-test-command "peepdf --help"
+    add-test-command "peepdf.py --help"
     add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
 } 
 
 function install_jadx() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jadx"
     git -C /opt/tools/ clone --depth 1 https://github.com/skylot/jadx.git
-    cd /opt/tools/jadx
+    cd /opt/tools/jadx || exit
     ./gradlew dist
     ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
     ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
@@ -95,13 +101,26 @@ function install_jadx() {
     add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler"
 }
 
+function install_chainsaw() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing chainsaw"
+    source "$HOME/.cargo/env"
+    cargo install chainsaw
+    add-history chainsaw
+    add-test-command "chainsaw --help"
+    add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
+}
+
 # Package dedicated to forensic tools
 function package_forensic() {
+    set_cargo_env
     set_ruby_env
+    set_python_env
     install_forensic_apt_tools
     install_volatility2             # Memory analysis tool
     install_volatility3             # Memory analysis tool v2
     install_trid                    # filetype detection tool
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
+    install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
 }

@@ -1,0 +1,1 @@
+linkfinder.py -i $TARGET -o cli

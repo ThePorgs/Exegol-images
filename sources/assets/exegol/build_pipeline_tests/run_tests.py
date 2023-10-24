@@ -1,89 +1,120 @@
-import subprocess
-import threading
+"""
+Unit Test Script to Run Multiple Commands Concurrently
+======================================================
+
+This script reads a list of commands from a file and executes them concurrently in separate subprocesses.
+Each command is run in a Zsh shell with a set timeout.
+The script logs the standard output and standard error of each command to separate log files based on the outcome of the command (success, failure, or timeout).
+
+Run this script using an asyncio capable Python interpreter (Python 3.7+ recommended).
+This script requires `asyncio` and `tempfile` libraries.
+
+Author: Shutdown
+"""
+
+import asyncio
 import tempfile
+import subprocess
+from concurrent.futures import TimeoutError as FuturesTimeoutError
 
-# The file containing the list of commands
-commands_file = "/.exegol/build_pipeline_tests/all_commands.sorted.txt"
+# File paths for command input and logging
+COMMANDS_FILE = "/.exegol/build_pipeline_tests/all_commands.sorted.txt"
+FAIL_LOG_FILE = "/.exegol/build_pipeline_tests/failed_commands.log"
+TIMEOUT_LOG_FILE = "/.exegol/build_pipeline_tests/timedout_commands.log"
+SUCCESS_LOG_FILE = "/.exegol/build_pipeline_tests/success_commands.log"
 
-# The file to store the logs of commands
-fail_log_file = "/.exegol/build_pipeline_tests/failed_commands.log"
-success_log_file = "/.exegol/build_pipeline_tests/success_commands.log"
+# ANSI Color Codes for colored output
+RED = "\033[1;31m"
+GREEN = "\033[1;32m"
+YELLOW = "\033[33m"
+RESET = "\033[0m"
 
-# Read the commands from the file
-with open(commands_file) as f:
-    commands = f.readlines()
+# Configuration constants
+COMMAND_TIMEOUT = 20
+CONCURRENT_TASKS = 5
 
-# Remove the newline characters from the commands
-commands = [x.strip() for x in commands]
+class CommandRunner:
+    def __init__(self, parallel_tasks: int = 20):
+        # Semaphore to limit the number of concurrent tasks
+        self.sem = asyncio.Semaphore(parallel_tasks)
+        # Lists to store commands that failed or timed out
+        self.failed_commands = []
+        self.timedout_commands = []
 
-# Initialize the variable to store the failed commands
-failed_commands = []
+    async def run(self, commands: list[str]) -> None:
+        # Running all commands concurrently
+        await asyncio.gather(*(self._run_command(command) for command in commands))
 
+    async def _run_command(self, command: str) -> None:
+        async with self.sem:
+            # Using a temporary file to store and run the command
+            with tempfile.NamedTemporaryFile(mode='w') as temp:
+                temp.write(command)
+                temp.flush()
+                # Constructing the command to run in a Zsh shell
+                zsh_command = f"zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; . {temp.name}'"
+                loop = asyncio.get_running_loop()
+                try:
+                    # Running the command as a subprocess and capturing the output
+                    proc, stdout, stderr = await loop.run_in_executor(None, self._run_subprocess, zsh_command, COMMAND_TIMEOUT)
+                    if proc.returncode == 0:
+                        print(f"{GREEN}SUCCESS{RESET} - Running command: {command}")
+                        self._log_command(log_file=SUCCESS_LOG_FILE, command=command, stdout=stdout, stderr=stderr)
+                    else:
+                        self.failed_commands.append(command)
+                        print(f"{RED}FAILURE{RESET} - Running command: {command}")
+                        self._log_command(log_file=FAIL_LOG_FILE, command=command, stdout=stdout, stderr=stderr)
+                except asyncio.exceptions.TimeoutError:
+                    self.timedout_commands.append(command)
+                    print(f"{YELLOW}TIMEOUT{RESET} - Running command: {command}")
+                    self._log_command(log_file=TIMEOUT_LOG_FILE, command=command)
 
-# Define a function to run a single command
-def run_command(command):
-    # Create a temporary file for the command
-    with tempfile.NamedTemporaryFile(mode="w") as temp:
-        # Write the command to the temporary file
-        temp.write(command)
-        temp.flush()
-
+    @staticmethod
+    def _run_subprocess(zsh_command: str, timeout: int) -> tuple:
+        # Running the command in a subprocess with a specified timeout
         try:
-            # Try to run the command in a zsh context
-            zsh_command = f"zsh -c 'autoload -Uz compinit; compinit; source ~/.zshrc; . {temp.name}'"
-            output = subprocess.check_output(zsh_command, shell=True, stderr=subprocess.PIPE, timeout=120)
-            print(f"\033[1;32mSUCCESS\033[0m - Running command: {command}")
+            proc = subprocess.run(zsh_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
+            return proc, proc.stdout, proc.stderr
+        except subprocess.TimeoutExpired:
+            raise FuturesTimeoutError() from None
 
-            # Write the output of the successful command to the log file
-            with open(success_log_file, "a") as f:
-                f.write(f"\033[1;34mCommand: {command}\n\033[0m")
-                f.write("\033[33mStandard output:\n")
-                for line in output.decode().split("\n"):
-                    f.write(f"    {line}\n")
-                f.write("\033[0m")
-        except subprocess.TimeoutExpired as e:
-            # If the command timeout, store it in the list of failed commands
-            failed_commands.append(command)
-            print(f"\033[1;31mTIMEOUT\033[0m - Running command: {command}")
-        except subprocess.CalledProcessError as e:
-            # If the command fails, store it in the list of failed commands
-            failed_commands.append(command)
-            print(f"\033[1;31mFAILURE\033[0m - Running command: {command}")
-
-            # Write the output of the failed command to the log file
-            with open(fail_log_file, "a") as f:
-                f.write(f"\033[1;34mFailed command: {command}\n\033[0m")
-                if e.output:
-                    f.write("\033[33mStandard output:\n")
-                    for line in e.output.decode().split("\n"):
-                        f.write(f"    {line}\n")
-                    f.write("\033[0m")
-                f.write("\033[31mStandard error:\n")
-                for line in e.stderr.decode().split("\n"):
-                    f.write(f"    {line}\n")
-                f.write("\033[0m")
+    @staticmethod
+    def _log_command(log_file: str, command: str, stdout: bytes = None, stderr: bytes = None) -> None:
+        # Logging the command, its output, and errors to the specified log file
+        with open(log_file, 'a') as f:
+            f.write(f"COMMAND: {command}\n")
+            if stdout is not None: f.write(f"└── STDOUT:\n{stdout.decode('utf-8', 'replace')}\n")
+            if stderr is not None: f.write(f"└── STDERR:\n{stderr.decode('utf-8', 'replace')}\n")
 
 
-# Create a list of threads
-threads = [threading.Thread(target=run_command, args=(command,)) for command in commands]
+def read_commands(file: str) -> list[str]:
+    # Reading commands from the specified file
+    with open(file, 'r') as f:
+        return [cmd.strip() for cmd in f.readlines()]
 
-# Start the threads
-for thread in threads:
-    thread.start()
 
-# Wait for the threads to finish
-for thread in threads:
-    thread.join()
+async def main():
+    runner = CommandRunner(parallel_tasks=CONCURRENT_TASKS)
+    commands = read_commands(COMMANDS_FILE)
+    await runner.run(commands)
 
-# Check if any of the commands failed
-if failed_commands:
-    print("\033[33mThe following commands failed:\033[0m")
-    for command in failed_commands:
-        print(f"    {command}")
-    print(f"\033[33mLogs of failed commands are stored in\033[0m {fail_log_file}")
-    print(f"\033[33mLogs of success commands are stored in\033[0m {success_log_file}")
-    exit(1)
-else:
-    print("All commands succeeded.")
-    print(f"\033[33mLogs of success commands are stored in\033[0m {success_log_file}")
-    exit(0)
+    # Displaying summary of the results and log locations
+    if runner.failed_commands or runner.timedout_commands:
+        if runner.failed_commands:
+            print(f"{YELLOW}The following commands failed:{RESET}")
+            for command in runner.failed_commands:
+                print(f"    {command}")
+        if runner.timedout_commands:
+            print(f"{YELLOW}The following commands timed out:{RESET}")
+            for command in runner.timedout_commands:
+                print(f"    {command}")
+        print(f"{YELLOW}Logs of failed commands are stored in{RESET} {FAIL_LOG_FILE}")
+        print(f"{YELLOW}Logs of timedout commands are stored in{RESET} {TIMEOUT_LOG_FILE}")
+        print(f"{YELLOW}Logs of success commands are stored in{RESET} {SUCCESS_LOG_FILE}")
+        exit(1)
+    else:
+        print("All commands succeeded.")
+        print(f"{YELLOW}Logs of success commands are stored in{RESET} {SUCCESS_LOG_FILE}")
+
+# Running the main coroutine
+asyncio.run(main())

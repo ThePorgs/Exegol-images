@@ -1,0 +1,1 @@
+alias cors_scan.py='/opt/tools/CORScanner/venv/bin/python3 /opt/tools/CORScanner/cors_scan.py'

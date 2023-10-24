@@ -4,6 +4,8 @@
 source common.sh
 
 function install_iot_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing IOT apt tools"
     fapt avrdude minicom
 
     add-history avrdude
@@ -18,6 +20,8 @@ function install_iot_apt_tools() {
 
 # Package dedicated to IoT tools
 function package_iot() {
+    set_cargo_env
     set_ruby_env
+    set_python_env
     install_iot_apt_tools
 }

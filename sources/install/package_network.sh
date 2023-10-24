@@ -4,10 +4,14 @@
 source common.sh
 
 function install_network_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
-    fapt remmina remmina-plugin-rdp remmina-plugin-secret remmina-plugin-spice
+    fapt remmina remmina-plugin-rdp remmina-plugin-secret
+    # remmina-plugin-spice need build ?
+    # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
 
     add-history wireshark
     add-history tshark
@@ -61,7 +65,7 @@ function install_network_apt_tools() {
 function install_proxychains() {
     colorecho "Installing proxychains"
     git -C /opt/tools/ clone --depth 1 https://github.com/rofl0r/proxychains-ng
-    cd /opt/tools/proxychains-ng
+    cd /opt/tools/proxychains-ng || exit
     ./configure --prefix=/usr --sysconfdir=/etc
     make
     make install
@@ -78,23 +82,37 @@ function install_proxychains() {
 
 function install_nmap() {
     colorecho "Installing nmap"
-    echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+    # echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
+    # nmap in main repo is a latest version
     apt-get update
-    fapt nmap/bullseye-backports
+    fapt nmap
     add-aliases nmap
     add-history nmap
     add-test-command "nmap --version"
     add-to-list "nmap,https://nmap.org,The Network Mapper - a powerful network discovery and security auditing tool"
 }
 
+function install_nmap-parse-output() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing nmap-parse-output"
+    fapt xsltproc
+    git -C /opt/tools/ clone --depth 1 https://github.com/ernw/nmap-parse-output
+    ln -s /opt/tools/nmap-parse-output/nmap-parse-output /opt/tools/bin/nmap-parse-output
+    add-history nmap-parse-output
+    # nmap-parse-output always exits with 1 if no argument is passed
+    add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
+    add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
+}
+
 function install_autorecon() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing autorecon"
     git -C /opt/tools/ clone --depth 1 https://gitlab.com/kalilinux/packages/oscanner.git
     ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
     git -C /opt/tools clone --depth 1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
     ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
     fapt dnsrecon wkhtmltopdf
-    python3 -m pipx install git+https://github.com/Tib3rius/AutoRecon
+    pipx install git+https://github.com/Tib3rius/AutoRecon
     add-history autorecon
     # test below cannot work because test runner cannot have a valid display
     # add-test-command "autorecon --version"
@@ -105,24 +123,28 @@ function install_autorecon() {
 function install_dnschef() {
     colorecho "Installing DNSChef"
     git -C /opt/tools/ clone --depth 1 https://github.com/iphelix/dnschef
-    cd /opt/tools/dnschef
+    cd /opt/tools/dnschef || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r requirements.txt
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases dnschef
     add-history dnschef
-    add-test-command "dnschef --help"
+    add-test-command "dnschef.py --help"
     add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
 }
 
 function install_divideandscan() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DivideAndScan"
-    python3 -m pipx install git+https://github.com/snovvcrash/DivideAndScan
+    pipx install git+https://github.com/snovvcrash/DivideAndScan
     add-history divideandscan
     add-test-command "divideandscan --help"
     add-to-list "divideandscan,https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
 }
 
 function install_chisel() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing chisel"
     go install -v github.com/jpillora/chisel@latest
     # TODO: add windows pre-compiled binaries in /opt/ressources/windows ?
@@ -132,8 +154,9 @@ function install_chisel() {
 }
 
 function install_sshuttle() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sshtuttle"
-    python3 -m pipx install git+https://github.com/sshuttle/sshuttle.git
+    pipx install git+https://github.com/sshuttle/sshuttle.git
     add-history sshuttle
     add-test-command "sshuttle --version"
     add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
@@ -142,10 +165,12 @@ function install_sshuttle() {
 function install_eaphammer() {
     colorecho "Installing eaphammer"
     git -C /opt/tools clone --depth 1 https://github.com/s0lst1c3/eaphammer.git
-    cd /opt/tools/eaphammer
+    cd /opt/tools/eaphammer || exit
     xargs apt install -y < kali-dependencies.txt
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install -r pip.req
+    source ./venv/bin/activate
+    pip3 install -r pip.req
+    deactivate
     add-aliases eaphammer
     add-history eaphammer
     add-test-command "eaphammer -h"
@@ -153,14 +178,16 @@ function install_eaphammer() {
 }
 
 function install_fierce() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing fierce"
-    python3 -m pipx install git+https://github.com/mschwager/fierce
+    pipx install git+https://github.com/mschwager/fierce
     add-history fierce
     add-test-command "fierce --help"
     add-to-list "fierce,https://github.com/mschwager/fierce,A DNS reconnaissance tool for locating non-contiguous IP space"
 }
 
 function install_dnsx() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dnsx"
     go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
     add-history dnsx
@@ -169,6 +196,7 @@ function install_dnsx() {
 }
 
 function install_shuffledns() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing shuffledns"
     go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
     add-history shuffledns
@@ -178,8 +206,11 @@ function install_shuffledns() {
 
 function install_tailscale() {
     colorecho "Installing tailscale"
-    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -
-    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+    wget -O /tmp/tailscale.gpg.armored https://pkgs.tailscale.com/stable/ubuntu/focal.gpg
+    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
+    gpg --dearmor --output /etc/apt/trusted.gpg.d/tailscale.gpg /tmp/tailscale.gpg.armored
+    chmod 644 /etc/apt/trusted.gpg.d/tailscale.gpg
+    wget -O /etc/apt/sources.list.d/tailscale.list https://pkgs.tailscale.com/stable/ubuntu/focal.list
     apt-get update
     fapt tailscale
     add-aliases tailscale
@@ -189,34 +220,44 @@ function install_tailscale() {
 }
 
 function install_ligolo-ng() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ligolo-ng"
-    # Waiting for the issue to be resolved
-    # https://github.com/nicocha30/ligolo-ng/issues/32
-    mkdir /tmp/ligolo
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_proxy_0.4.4_linux_amd64.tar.gz"
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        wget -O /tmp/ligolo/proxy.tar.gz "https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_proxy_0.4.4_linux_arm64.tar.gz"
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-    tar -xvf /tmp/ligolo/proxy.tar.gz -C /tmp/ligolo
-    mv /tmp/ligolo/proxy /opt/tools/bin/ligolo-ng
-    rm -rf /tmp/ligolo
+    git -C /opt/tools clone --depth 1 https://github.com/nicocha30/ligolo-ng.git
+    cd /opt/tools/ligolo-ng || exit
+    go build -o agent cmd/agent/main.go
+    go build -o proxy cmd/proxy/main.go
+    ln -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-ng
     add-history ligolo-ng
     add-test-command "ligolo-ng --help"
     add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."
 }
 
+function install_rustscan() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing RustScan"
+    git -C /opt/tools/ clone --depth 1 https://github.com/RustScan/RustScan.git
+    cd /opt/tools/RustScan || exit
+    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+    source "$HOME/.cargo/env"
+    cargo build --release
+    # Clean dependencies used to build the binary
+    rm -rf target/release/{deps,build,.fingerprint}
+    ln -s /opt/tools/RustScan/target/release/rustscan /opt/tools/bin/rustscan
+    add-history rustscan
+    add-test-command "rustscan --help"
+    add-to-list "rustscan,https://github.com/RustScan/RustScan,The Modern Port Scanner"
+}
+
 # Package dedicated to network pentest tools
 function package_network() {
+    set_cargo_env
     set_go_env
     set_ruby_env
+    set_python_env
     install_network_apt_tools
     install_proxychains             # Network tool
     install_nmap                    # Port scanner
+    install_nmap-parse-output       # Parse nmap XML files
     install_autorecon               # External recon tool
     install_dnschef                 # Python DNS server
     install_divideandscan           # Python project to automate port scanning routine
@@ -229,4 +270,5 @@ function package_network() {
     install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
     install_tailscale               # Zero config VPN for building secure networks
     install_ligolo-ng               # Tunneling tool that uses a TUN interface
+    install_rustscan
 }

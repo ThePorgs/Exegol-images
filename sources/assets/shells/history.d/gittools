@@ -1,0 +1,3 @@
+extractor.sh ./git-repo/ ./clean-git-repo/
+gitdumper.sh $TARGET/.git ./git-dump/
+gitfinder.py -i urls.txt
