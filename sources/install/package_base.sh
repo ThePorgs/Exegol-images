@@ -300,6 +300,8 @@ function install_gf() {
 }
 
 function install_cyberchef() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing CyberChef"
     local last_version
     last_version=$(wget https://github.com/gchq/CyberChef/releases/latest/download/CyberChef.zip 2>&1 | grep Location: | grep -E -o 'v.*' | cut -d '/' -f 1)
