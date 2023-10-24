@@ -241,39 +241,6 @@ function deploy_bloodhound() {
   fi
 }
 
-function trust_ca_burp_in_firefox() {
-  colorecho "Generating Burp CA and trusting in Firefox"
-  if [ -d "/opt/tools/BurpSuiteCommunity/" ]; then
-    # Find an available port for Burp to listen
-    local BURP_PORT=8080
-    # TODO : add the dynamic port finder
-    # TODO : when dynamic port finder used, remove the code below that iterates on 8080++ until it finds one
-    local LISTENING_PORTS
-    LISTENING_PORTS=$(netstat -lnt|grep -Eo '(127.0.0.1|0.0.0.0):[0-9]{1,5}'|cut -d ':' -f 2)
-    while [[ $LISTENING_PORTS =~ .*$BURP_PORT.* ]]
-    do
-      BURP_PORT=$((BURP_PORT+1))
-    done
-    # Edit configuration file to listen on the available port found
-    sed -i "s/\"listener_port\":[0-9]\+/\"listener_port\":$BURP_PORT/g" /opt/tools/BurpSuiteCommunity/conf.json
-    # Start Burp with "y" to accept policy and generate CA, keep its PID to kill it when done
-    echo y|java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json 2>&1 /dev/null &
-    # pull the latest process's ID
-    local BURP_PID=$!
-    # Let time to Burp to init CA
-    while [[ -z $(netstat -lnt|grep -Eo "127.0.0.1:$BURP_PORT") ]]
-    do
-        sleep 0.5
-    done
-    # Download the CA to /tmp and update the CA path
-    local BURP_CA_PATH="/tmp/cacert.der"
-    local BURP_CA_NAME="PortSwigger CA"
-    wget "http://127.0.0.1:$BURP_PORT/cert" -O "$BURP_CA_PATH"
-    kill "$BURP_PID"
-    _trust_ca_cert_in_firefox "$BURP_CA_PATH" "$BURP_CA_NAME"
-  fi
-}
-
 function trust_ca_certs_in_firefox() {
   colorecho "Trusting user CA certificates in Firefox"
   if [[ -d "$MY_SETUP_PATH/firefox/certs" ]]; then
@@ -318,7 +285,6 @@ deploy_apt
 deploy_python3
 deploy_firefox_addons
 deploy_bloodhound
-trust_ca_burp_in_firefox
 trust_ca_certs_in_firefox
 
 run_user_setup

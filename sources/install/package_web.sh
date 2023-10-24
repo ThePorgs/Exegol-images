@@ -751,8 +751,9 @@ function install_burpsuite() {
     cp -v /root/sources/assets/burpsuite/conf.json /opt/tools/BurpSuiteCommunity/
     # user config for burpsuite (dark theme)
     cp -v /root/sources/assets/burpsuite/UserConfigCommunity.json /root/.BurpSuite/UserConfigCommunity.json
-    # FIXME: add burp certificate to embedded firefox and chrome?
-    # TODO: change Burp config to allow built-in browser to run
+    # script to trust burp CA
+    cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
+    ln -s "/opt/tools/BurpSuiteCommunity/trust-ca-burp.sh" /opt/tools/bin/trust-ca-burp
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"
