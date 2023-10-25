@@ -448,8 +448,7 @@ function package_base() {
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
     install_firefox
-    install_cyberchef
-    
+ 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
     # openvpn
