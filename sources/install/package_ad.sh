@@ -299,27 +299,32 @@ function install_amber() {
 function install_powershell() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powershell"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-x64.tar.gz
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm64.tar.gz
-    elif [[ $(uname -m) = 'armv7l' ]]
-    then
-        curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm32.tar.gz
+    if /opt/tools/bin/powershell -Version; then
+      colorecho "powershell seems already installed, skipping..."
+      return
     else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+      if [[ $(uname -m) = 'x86_64' ]]
+      then
+          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-x64.tar.gz
+      elif [[ $(uname -m) = 'aarch64' ]]
+      then
+          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm64.tar.gz
+      elif [[ $(uname -m) = 'armv7l' ]]
+      then
+          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm32.tar.gz
+      else
+          criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+      fi
+      mkdir -v -p /opt/tools/powershell/7
+      tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
+      chmod -v +x /opt/tools/powershell/7/pwsh
+      rm -v /tmp/powershell.tar.gz
+      ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
+      ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
+      add-history powershell
+      add-test-command "powershell -Version"
+      add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
     fi
-    mkdir -v -p /opt/tools/powershell/7
-    tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
-    chmod -v +x /opt/tools/powershell/7/pwsh
-    rm -v /tmp/powershell.tar.gz
-    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
-    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
-    add-history powershell
-    add-test-command "powershell -Version"
-    add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
 }
 
 function install_krbrelayx() {
