@@ -35,13 +35,6 @@ function install_cewler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing cewler"
     pipx install cewler
-    # https://github.com/roys/cewler/issues/1
-    local TEMP_FIX_LIMIT="2024-10-01"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx inject cewler Twisted==22.10.0
-    fi
     add-history cewler
     add-test-command "cewler --output cewler.txt https://thehacker.recipes/"
     add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python"
