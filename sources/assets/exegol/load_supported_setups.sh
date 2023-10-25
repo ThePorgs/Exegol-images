@@ -109,7 +109,7 @@ function deploy_apt() {
     grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r key_url; do
       wget -nv "$key_url" -O "$tmpaptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
-    if [[ -n $(find -type f -name "*.key" "$tmpaptkeys") ]]; then
+    if [[ -n $(find "$tmpaptkeys" -type f -name "*.key") ]]; then
       gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --import "$tmpaptkeys"/*.key &&
         gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
@@ -205,7 +205,7 @@ function deploy_bloodhound_customqueries_merge() {
   [[ ! -d "$cq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$cq_merge_directory"
   if \
     [[ -f "$bh_config_homedir/customqueries.json" ]] && \
-    [[ -n $(find -type f -name "*.json" "$cq_merge_directory") ]]; then
+    [[ -n $(find "$cq_merge_directory" -type f -name "*.json") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_homedir/customqueries.json"
   fi
 }
