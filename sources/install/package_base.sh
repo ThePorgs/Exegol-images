@@ -299,25 +299,6 @@ function install_gf() {
     add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
-function install_cyberchef() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Installing CyberChef"
-    local last_version
-    last_version=$(wget https://github.com/gchq/CyberChef/releases/latest/download/CyberChef.zip 2>&1 | grep Location: | grep -E -o 'v.*' | cut -d '/' -f 1)
-
-    if [ -z "$last_version" ]; then
-        criticalecho-noexit "Latest version not found" && return
-    fi
-
-    mkdir /opt/tools/CyberChef
-    wget https://github.com/gchq/CyberChef/releases/download/"$last_version"/CyberChef_"$last_version".zip -O /tmp/CyberChef.zip
-    unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
-    rm /tmp/CyberChef.zip
-    mv /opt/tools/CyberChef/CyberChef_"$last_version".html /opt/tools/CyberChef/CyberChef.html
-    add-test-command "file /opt/tools/CyberChef/CyberChef.html"
-    add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
-}
-
 function install_java11() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
     colorecho "Installing java 11"
