@@ -109,7 +109,7 @@ function deploy_apt() {
     grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r key_url; do
       wget -nv "$key_url" -O "$tmpaptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
-    if [[ -n $(find "$tmpaptkeys" -type f -name "*.key") ]]; then
+    if [[ -n $(find -type f -name "*.key" "$tmpaptkeys") ]]; then
       gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --import "$tmpaptkeys"/*.key &&
         gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
@@ -205,7 +205,7 @@ function deploy_bloodhound_customqueries_merge() {
   [[ ! -d "$cq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$cq_merge_directory"
   if \
     [[ -f "$bh_config_homedir/customqueries.json" ]] && \
-    [[ -n $(find "$cq_merge_directory" -type f -name "*.json") ]]; then
+    [[ -n $(find -type f -name "*.json" "$cq_merge_directory") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_merge_directory,$bh_config_homedir/customqueries.json"
   fi
 }
@@ -214,7 +214,7 @@ function deploy_bloodhound_customqueries_replacement() {
   colorecho "Merging User Custom Queries for BloodHound, and overwriting Exegol Custom Queries"
   local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
   [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
-  if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
+  if [[ -n $(find -type f -name "*.json" "$cq_replacement_directory") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_replacement_directory"
       cq_replacement_done=1
   fi
@@ -244,7 +244,7 @@ function deploy_bloodhound() {
 function trust_ca_certs_in_firefox() {
   colorecho "Trusting user CA certificates in Firefox"
   if [[ -d "$MY_SETUP_PATH/firefox/certs" ]]; then
-    for file in "$MY_SETUP_PATH/firefox/certs"/*; do
+    for file in $(find -type f "$MY_SETUP_PATH/firefox/certs"); do
       if [[ -f "$file" ]]; then
         if [[ "$file" == *.[dD][eE][rR] ]]; then
           local base_filename_without_extension
