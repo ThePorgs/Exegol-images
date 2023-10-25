@@ -99,7 +99,7 @@
               },
               {
                 "final": true,
-                "query": "WITH split($result, \"=>\") as selectedDomains WITH selectedDomains[0] as sourceDomain, selectedDomains[1] as destDomain MATCH (n:User {domain: sourceDomain}) MATCH (m:Computer {domain: destDomain}) MATCH p=allShortestPaths((n)-[r:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|CanRDP|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin*1..]->(m)) RETURN p",
+                "query": "WITH split($result, \"=>\") as selectedDomains WITH selectedDomains[0] as sourceDomain, selectedDomains[1] as destDomain MATCH (n:User {domain: sourceDomain}) MATCH (m:Computer {domain: destDomain}) MATCH p=allShortestPaths((n)-[r:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|CanRDP|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin*1..]->(m)) WHERE NOT n = m RETURN p",
                 "startNode": "{}",
                 "allowCollapse": false
             }]
