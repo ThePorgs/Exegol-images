@@ -194,4 +194,5 @@ function package_misc() {
     install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory
     install_tig             # ncurses-based text-mode interface for git
     install_yt-dlp          # A youtube-dl fork with additional features and fixes
+    install_cyberchef       # A web based toolbox
 }
