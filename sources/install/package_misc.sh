@@ -161,7 +161,7 @@ function install_cyberchef() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing CyberChef"
     local last_version
-    last_version=$(wget https://github.com/gchq/CyberChef/releases/latest/download/CyberChef.zip 2>&1 | grep Location: | grep -E -o 'v.*' | cut -d '/' -f 1)
+    last_version=$(git ls-remote --tags --sort='v:refname' https://github.com/gchq/CyberChef.git | tail -n 1 | cut -d '/' -f 3 | cut -d '^' -f 1)
 
     if [ -z "$last_version" ]; then
         criticalecho-noexit "Latest version not found" && return
