@@ -82,7 +82,7 @@ function install_kiterunner() {
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-large.kite.tar.gz
     wget https://wordlists-cdn.assetnote.io/data/kiterunner/routes-small.kite.tar.gz
     make build
-    ln -s "$(pwd)/dist/kr" /opt/tools/bin/kr
+    ln -v -s "$(pwd)/dist/kr" /opt/tools/bin/kr
     add-history kiterunner
     add-test-command "kr --help"
     add-to-list "kiterunner,https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments."
@@ -620,7 +620,7 @@ function install_feroxbuster() {
     curl -sL https://raw.githubusercontent.com/epi052/feroxbuster/master/install-nix.sh -o /tmp/install-feroxbuster.sh
     bash /tmp/install-feroxbuster.sh
     # Adding a symbolic link in order for autorecon to be able to find the Feroxbuster binary
-    ln -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
+    ln -v -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
     add-aliases feroxbuster
     add-history feroxbuster
     add-test-command "feroxbuster --help"
@@ -747,9 +747,14 @@ function install_burpsuite() {
     wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
     # TODO: two lines below should set up dark theme as default, does it work?
     mkdir -p /root/.BurpSuite/
+    # proxy (server) config for burpsuite
+    cp -v /root/sources/assets/burpsuite/conf.json /opt/tools/BurpSuiteCommunity/
+    # user config for burpsuite (dark theme)
     cp -v /root/sources/assets/burpsuite/UserConfigCommunity.json /root/.BurpSuite/UserConfigCommunity.json
-    # FIXME: add burp certificate to embedded firefox and chrome?
-    # TODO: change Burp config to allow built-in browser to run
+    # script to trust burp CA
+    cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
+    chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
+    ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"

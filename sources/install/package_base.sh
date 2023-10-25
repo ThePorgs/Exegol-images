@@ -385,7 +385,7 @@ function package_base() {
     nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
     logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 grc emacs-nox xsel xxd
+    python3 grc emacs-nox xsel xxd libnss3-tools
 
     filesystem
     install_locales
