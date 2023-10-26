@@ -214,7 +214,7 @@ function deploy_bloodhound_customqueries_replacement() {
   colorecho "Merging User Custom Queries for BloodHound, and overwriting Exegol Custom Queries"
   local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
   [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
-  if [[ -n $(find -type f -name "*.json" "$cq_replacement_directory") ]]; then
+  if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
       bqm --verbose --ignore-default --output-path "$bqm_output_file" -i "$cq_replacement_directory"
       cq_replacement_done=1
   fi
