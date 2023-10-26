@@ -157,6 +157,24 @@ function install_yt-dlp() {
     add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes"
 }
 
+function install_cyberchef() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing CyberChef"
+    local last_version
+    last_version=$(git ls-remote --tags --sort='v:refname' https://github.com/gchq/CyberChef.git | tail -n 1 | cut -d '/' -f 3 | cut -d '^' -f 1)
+
+    if [ -z "$last_version" ]; then
+        criticalecho-noexit "Latest version not found" && return
+    fi
+
+    mkdir /opt/tools/CyberChef
+    wget https://github.com/gchq/CyberChef/releases/download/"$last_version"/CyberChef_"$last_version".zip -O /tmp/CyberChef.zip
+    unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
+    rm /tmp/CyberChef.zip
+    mv /opt/tools/CyberChef/CyberChef_"$last_version".html /opt/tools/CyberChef/CyberChef.html
+    add-test-command "file /opt/tools/CyberChef/CyberChef.html"
+    add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
+}
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
@@ -176,4 +194,5 @@ function package_misc() {
     install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory
     install_tig             # ncurses-based text-mode interface for git
     install_yt-dlp          # A youtube-dl fork with additional features and fixes
+    install_cyberchef       # A web based toolbox
 }

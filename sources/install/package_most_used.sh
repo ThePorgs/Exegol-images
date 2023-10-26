@@ -85,4 +85,5 @@ function package_most_used() {
     install_sqlmap                  # SQL injection scanner
     install_netexec                 # Crackmapexec repo
     install_sslscan                 # SSL/TLS scanner
+    install_cyberchef               # A web based toolbox
 }
