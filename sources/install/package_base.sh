@@ -304,17 +304,17 @@ function install_java11() {
     colorecho "Installing java 11"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        local ARCH="x64"
+        local arch="x64"
 
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        local ARCH="aarch64"
+        local arch="aarch64"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    local JDK_URL
-    JDK_URL=$(curl --location --silent "https://api.github.com/repos/adoptium/temurin11-binaries/releases/latest" | grep 'browser_download_url.*jdk_'"$ARCH"'_linux.*tar.gz"' | grep -o 'https://[^"]*')
-    curl --location -o /tmp/openjdk11-jdk.tar.gz "$JDK_URL"
+    local jdk_url
+    jdk_url=$(curl --location --silent "https://api.github.com/repos/adoptium/temurin11-binaries/releases/latest" | grep 'browser_download_url.*jdk_'"$arch"'_linux.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/openjdk11-jdk.tar.gz "$jdk_url"
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
@@ -322,7 +322,7 @@ function install_java11() {
 }
 
 function add_debian_repository_components() {
-    # add non-free non-free-firmware contrib repository 
+    # add non-free non-free-firmware contrib repository
     # adding at the end of the line start with Components of the repository to add
     colorecho "add non-free non-free-firmware contrib repository"
     local source_file="/etc/apt/sources.list.d/debian.sources"
@@ -448,7 +448,7 @@ function package_base() {
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
     install_firefox
- 
+
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
     # openvpn

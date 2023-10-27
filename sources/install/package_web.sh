@@ -7,11 +7,11 @@ function install_web_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing web apt tools"
     fapt dirb prips swaks
-  
+
     add-history dirb
     add-history prips
     add-history swaks
-  
+
     add-test-command "dirb | grep '<username:password>'" # Web fuzzer
     add-test-command "prips --help"                      # Print the IP addresses in a given range
     add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
@@ -394,14 +394,15 @@ function install_oneforall() {
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
     # https://github.com/shmilylty/OneForAll/pull/340
-    local TEMP_FIX_LIMIT="2024-01-20"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+    local temp_fix_limit="2024-01-20"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
       git config --local user.email "local"
       git config --local user.name "local"
-      local PRS=("340")
-      for PR in "${PRS[@]}"; do git fetch origin "pull/$PR/head:pull/$PR" && git merge --strategy-option theirs --no-edit "pull/$PR"; done
+      local prs=("340")
+      local pr
+      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit "pull/$pr"; done
     fi
     python3 -m venv ./venv
     source ./venv/bin/activate
