@@ -22,7 +22,7 @@ function errorecho () {
 
 function trust_ca_burp_in_firefox() {
   infoecho "Generating Burp CA and trusting in Firefox"
-  if [ -d "/opt/tools/BurpSuiteCommunity/" ]; then
+  if [[ -d "/opt/tools/BurpSuiteCommunity/" ]]; then
     infoecho 'Looking for available port'
     # Find an available port for Burp to listen
     local burp_port=8080

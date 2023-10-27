@@ -58,7 +58,7 @@ function install_xfce() {
     sed -i "s#novnc-icon.svg#exegol_logo.png#" /usr/share/novnc/vnc.html
     sed -i "s#svg+xml#png#" /usr/share/novnc/vnc.html
     echo '<link rel="icon" sizes="any" type="image/png" href="app/images/icons/exegol_logo.png">' >> /usr/share/novnc/vnc.html
-    
+
     # NoVNC title bar
     sed -i "s#<title>noVNC</title>#<title>Exegol</title>#" /usr/share/novnc/vnc.html
     sed -i 's#document.title = e.detail.name + " - noVNC";#document.title = "Exegol (" + e.detail.name.split(":")[0].replace("exegol-", "") + ")";#' /usr/share/novnc/app/ui.js
@@ -93,7 +93,7 @@ function install_xfce() {
     # Stopping VNC server used for config
     vncserver -kill :0
     sleep 6
-    [ -d "/root/.config/xfce4/" ] || echo "Directory /root/.config/xfce4/ does not exist."
+    [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
 
     # Binaries
     cp /root/sources/assets/desktop/bin/* /usr/sbin/

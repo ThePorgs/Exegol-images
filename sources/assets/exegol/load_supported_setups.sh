@@ -243,6 +243,7 @@ function deploy_bloodhound() {
 
 function trust_ca_certs_in_firefox() {
   colorecho "Trusting user CA certificates in Firefox"
+  local file
   if [[ -d "$MY_SETUP_PATH/firefox/certs" ]]; then
     for file in $(find "$MY_SETUP_PATH/firefox/certs" -type f); do
       if [[ -f "$file" ]]; then

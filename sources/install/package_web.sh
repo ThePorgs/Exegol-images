@@ -61,7 +61,7 @@ function install_wfuzz() {
     rm -rf /tmp/wfuzz
     add-history wfuzz
     add-test-command "wfuzz --help"
-    add-test-command "[ -d '/usr/share/wfuzz/' ] || exit 1"
+    add-test-command "[[ -d '/usr/share/wfuzz/' ]] || exit 1"
     add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
 }
 
@@ -395,7 +395,7 @@ function install_oneforall() {
     cd /opt/tools/OneForAll || exit
     # https://github.com/shmilylty/OneForAll/pull/340
     local temp_fix_limit="2024-01-20"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       git config --local user.email "local"

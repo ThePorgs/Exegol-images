@@ -12,8 +12,8 @@ trap shutdown SIGTERM
 # Function specific
 function load_setups() {
   # Load custom setups (supported setups, and user setup)
-  [ -d /var/log/exegol ] || mkdir -p /var/log/exegol
-  if [[ ! -f /.exegol/.setup.lock ]]; then
+  [[ -d "/var/log/exegol" ]] || mkdir -p /var/log/exegol
+  if [[ ! -f "/.exegol/.setup.lock" ]]; then
     # Execute initial setup if lock file doesn't exist
     echo >/.exegol/.setup.lock
     /.exegol/load_supported_setups.sh &>>/var/log/exegol/load_setups.log && gzip /var/log/exegol/load_setups.log
@@ -54,7 +54,7 @@ function shutdown() {
 function resolv_docker_host() {
   # On docker desktop host, resolving the host.docker.internal before starting a VPN connection for GUI applications
   DOCKER_IP=$(getent hosts host.docker.internal | head -n1 | awk '{ print $1 }')
-  if [ "$DOCKER_IP" ]; then
+  if [[ "$DOCKER_IP" ]]; then
     # Add docker internal host resolution to the hosts file to preserve access to the X server
     echo "$DOCKER_IP        host.docker.internal" >>/etc/hosts
   fi
@@ -86,7 +86,7 @@ function compatibility() {
   # This command is now interpreted by the custom entrypoint
   echo "Your version of Exegol wrapper is not up-to-date!" | tee -a ~/banner.txt
   # If the command is bash, redirect to endless. Otherwise execute the command as job to keep the shutdown procedure available
-  if [ "$*" != "bash" ]; then
+  if [[ "$*" != "bash" ]]; then
     echo "Executing command in backwards compatibility mode"
     echo "$1 -c '${*:3}'"
     $1 -c "${*:3}" &
@@ -102,7 +102,7 @@ FUNC_NAME="${1:-default}"
 # Older versions of exegol wrapper launch the container with the 'bash' command
 # This command is now interpreted by the custom entrypoint. Redirect execution to the raw execution for backward compatibility.
 # shellcheck disable=SC2068
-[ "$FUNC_NAME" == "bash" ] || [ "$FUNC_NAME" == "zsh" ] && compatibility $@
+[[ "$FUNC_NAME" == "bash" ]] || [[ "$FUNC_NAME" == "zsh" ]] && compatibility $@
 
 # Dynamic execution
 $FUNC_NAME "$@" || (

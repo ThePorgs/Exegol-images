@@ -35,7 +35,7 @@ function install_responder() {
     # https://github.com/lgandx/Responder/pull/249
     # https://github.com/lgandx/Responder/pull/250
     local temp_fix_limit="2024-01-20"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       git config --local user.email "local"
@@ -98,7 +98,7 @@ function install_crackmapexec() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
     pipx install /opt/tools/CrackMapExec/
     mkdir -p ~/.cme
-    [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
+    [[ -f "~/.cme/cme.conf" ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
@@ -113,7 +113,7 @@ function install_bloodhound-py() {
     pipx install git+https://github.com/fox-it/BloodHound.py
     # https://github.com/dirkjanm/BloodHound.py/pull/146
     local temp_fix_limit="2024-02-15"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pipx inject bloodhound pycryptodome
@@ -363,7 +363,7 @@ function install_pypykatz() {
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
     local temp_fix_limit="2023-12-15" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
@@ -598,7 +598,7 @@ function install_pygpoabuse() {
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
     local temp_fix_limit="2023-12-15" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
@@ -627,7 +627,7 @@ function install_bloodhound-quickwin() {
     source ./venv/bin/activate
     # https://github.com/kaluche/bloodhound-quickwin/issues/2
     local temp_fix_limit="2023-12-15"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install git+https://github.com/elena/py2neo
@@ -708,7 +708,7 @@ function install_pkinittools() {
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
     local temp_fix_limit="2023-12-15" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
@@ -846,7 +846,7 @@ function install_gmsadumper() {
     pip3 install -r requirements.txt
     # same as https://github.com/franc-pentest/ldeep/issues/41
     local temp_fix_limit="2023-11-18"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install pycryptodome
@@ -896,7 +896,7 @@ function install_ldaprelayscan() {
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
     local temp_fix_limit="2023-12-15" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
@@ -913,7 +913,7 @@ function install_goldencopy() {
     colorecho "Installing GoldenCopy"
     # https://github.com/Dramelac/GoldenCopy/issues/1
     local temp_fix_limit="2023-12-15"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
@@ -936,7 +936,7 @@ function install_crackhound() {
     cd /opt/tools/CrackHound || exit
     # https://github.com/trustedsec/CrackHound/pull/6
     local temp_fix_limit="2024-01-20"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       git config --local user.email "local"
@@ -1143,7 +1143,7 @@ function install_netexec() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Pennyw0rth/NetExec
     pipx install /opt/tools/NetExec/
     mkdir -p ~/.nxc
-    [ -f ~/.nxc/nxc.conf ] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
+    [[ -f "~/.nxc/nxc.conf" ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec

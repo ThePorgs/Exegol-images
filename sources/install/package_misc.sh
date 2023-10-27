@@ -71,7 +71,7 @@ function install_whatportis() {
 function install_searchsploit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing searchsploit"
-    if [ ! -d /opt/tools/exploitdb ]
+    if [[ ! -d "/opt/tools/exploitdb" ]]
     then
         git -C /opt/tools/ clone --depth 1 https://gitlab.com/exploit-database/exploitdb
         add-history searchsploit
@@ -163,7 +163,7 @@ function install_cyberchef() {
     local last_version
     last_version=$(git ls-remote --tags --sort='v:refname' https://github.com/gchq/CyberChef.git | tail -n 1 | cut -d '/' -f 3 | cut -d '^' -f 1)
 
-    if [ -z "$last_version" ]; then
+    if [[ -z "$last_version" ]]; then
         criticalecho-noexit "Latest version not found" && return
     fi
 

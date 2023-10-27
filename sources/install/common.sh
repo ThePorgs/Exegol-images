@@ -81,6 +81,7 @@ function set_python_env() {
 
 function catch_and_retry() {
   local retries=5
+  local i
   # wait time = scale_factor x (base_exponent ^ retry)
   local scale_factor=2  # scaling factor
   local base_exponent=4 # base of the exponent
@@ -126,6 +127,6 @@ function define_retry_function() {
 }
 
 # Dynamically create wrappers
-for cmd in "${CATCH_AND_RETRY_COMMANDS[@]}"; do
-  define_retry_function "$cmd"
+for CMD in "${CATCH_AND_RETRY_COMMANDS[@]}"; do
+  define_retry_function "$CMD"
 done
