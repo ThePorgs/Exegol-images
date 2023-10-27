@@ -218,14 +218,6 @@
             }]
         },
         {
-            "name": "Find computers admin to other computers",
-            "category": "Admins",
-            "queryList": [{
-                "final": true,
-                "query": "MATCH p = (c1:Computer)-[r1:AdminTo]->(c2:Computer) RETURN p UNION ALL MATCH p = (c3:Computer)-[r2:MemberOf*1..]->(g:Group)-[r3:AdminTo]->(c4:Computer) RETURN p"
-            }]
-        },
-        {
             "name": "Logged in Admins",
             "category": "Admins",
             "queryList": [{
@@ -247,7 +239,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User)-[:MemberOf]->(g:Group) WHERE g.objectid ENDS WITH '-512' MATCH p = (c:Computer)-[:HasSession]->(n) return p"
+                "query": "MATCH (n:User)-[:MemberOf]->(g:Group) WHERE g.objectid ENDS WITH '-512' MATCH p = (c:Computer)-[:HasSession]->(n) RETURN p"
             }]
         },
         {
@@ -259,11 +251,11 @@
             }]
         },
         {
-            "name": "Objects with the AddAllowedToAct or WriteAccountRestrictions right on a computer",
+            "name": "Enabled users members of high value groups, not sensitive and not Protected Users",
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(g)-[:AddAllowedToAct|WriteAccountRestrictions]->(c:Computer) RETURN p"
+                "query": "MATCH (u:User)-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '(?i)S-1-5-.*-525' WITH COLLECT (u.name) as protectedUsers MATCH p=(u2:User {enabled: TRUE} )-[:MemberOf*1..]->(g2:Group {highvalue: TRUE}) WHERE u2.sensitive=false AND NOT u2.name IN protectedUsers RETURN p"
             }]
         },
         {
@@ -866,6 +858,72 @@
 					"allowCollapse": true
 				}
 			]
-		}
+		},
+        {
+            "name":"Between enabled users (max 200)",
+            "category":"Weak ACLs",
+            "queryList":[
+                {
+                    "final":true,
+                    "query":"MATCH p=(u1:User { enabled: TRUE } )-[:AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|AddSelf|WriteSPN|AddKeyCredentialLink*1..]->(u2:User { enabled: TRUE }) WHERE NOT(u1.name STARTS WITH 'MSOL_') RETURN p LIMIT 200"
+                }
+            ]
+        },
+        {
+            "name":"Between enabled computers (max 200)",
+            "category":"Weak ACLs",
+            "queryList":[
+                {
+                    "final":true,
+                    "query":"MATCH p=(c1:Computer {enabled: TRUE})-[:AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|AddSelf|WriteSPN|AddKeyCredentialLink*1..]->(c2:Computer {enabled: TRUE}) WHERE NOT(c1.name STARTS WITH 'MSOL_') RETURN p LIMIT 200"
+                }
+            ]
+        },
+        {
+            "name": "Find computers admin to other computers",
+            "category": "Weak ACLs",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p = (c1:Computer)-[r1:AdminTo]->(c2:Computer) RETURN p UNION ALL MATCH p = (c3:Computer)-[r2:MemberOf*1..]->(g:Group)-[r3:AdminTo]->(c4:Computer) RETURN p"
+            }]
+        },
+        {
+            "name":"Between enabled users and computers (max 200)",
+            "category":"Weak ACLs",
+            "queryList":[
+                {
+                    "final":true,
+                    "query":"MATCH p=(u:User {enabled: TRUE})-[:AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|AddSelf|WriteSPN|AddKeyCredentialLink*1..]->(c:Computer {enabled: TRUE}) WHERE NOT(u.name STARTS WITH 'MSOL_') RETURN p LIMIT 200"
+                }
+            ]
+        },
+        {
+            "name":"Between enabled computers and users (max 200)",
+            "category":"Weak ACLs",
+            "queryList":[
+                {
+                    "final":true,
+                    "query":"MATCH p=(c:Computer {enabled: TRUE})-[:AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|AddSelf|WriteSPN|AddKeyCredentialLink*1..]->(u:User {enabled: TRUE}) WHERE NOT(u.name STARTS WITH 'MSOL_') RETURN p LIMIT 200"
+                }
+            ]
+        },
+        {
+            "name": "Objects with the AddAllowedToAct or WriteAccountRestrictions right on an enabled computer",
+            "category": "Weak ACLs",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p=(g {enabled: TRUE})-[:AddAllowedToAct|WriteAccountRestrictions]->(c:Computer {enabled: TRUE}) RETURN p"
+            }]
+        },
+        {
+            "name":"Miscellaneous direct ACLs (max 200)",
+            "category":"Weak ACLs",
+            "queryList":[
+                {
+                    "final":true,
+                    "query":"MATCH p=(u1)-[:AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|AddSelf|WriteSPN|AddKeyCredentialLink*1..]->(u2) WHERE NOT(u1.name STARTS WITH 'MSOL_') AND NOT(u2.name STARTS WITH 'MSOL_') AND NOT(u1.name CONTAINS 'ADMIN') AND NOT(u2.name CONTAINS 'ADMIN') RETURN p LIMIT 200"
+                }
+            ]
+        }
     ]
 }
