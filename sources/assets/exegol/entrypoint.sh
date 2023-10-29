@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# This file is the default entrypoint for the exegol docker image.
-
 # !!!!!!!!!!!!! #
-# This file is no longer up-to-date because in the later version, the wrapper upload it's own entrypoint to the container.
-# This default file is kept here for backward compatibility purpose.
+# This file was the default entrypoint for the exegol docker image.
+# This file is no longer up-to-date because in the later version, the wrapper uploads it's own entrypoint.sh and spawn.sh to the container to keep the wrapper and image features in sync.
+# This default file is kept here for backward compatibility. No upcoming development expected here.
 # !!!!!!!!!!!!! #
 
 trap shutdown SIGTERM
