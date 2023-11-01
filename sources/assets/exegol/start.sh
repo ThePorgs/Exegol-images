@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# !!!!!!!!!!!!! #
+# This file is no longer up-to-date because in the later version, the wrapper uploads it's own entrypoint.sh and spawn.sh to the container to keep the wrapper and image features in sync.
+# This default file is kept here for backward compatibility. No upcoming development expected here.
+# !!!!!!!!!!!!! #
+
 function shell_logging() {
     # First parameter is the method to use for shell logging (default to script)
     local method=$1
