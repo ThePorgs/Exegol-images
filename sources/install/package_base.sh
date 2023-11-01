@@ -109,6 +109,7 @@ function install_pyenv() {
     fapt git curl build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
+    local v
     # add pyenv to PATH
     export PATH="/root/.pyenv/bin:$PATH"
     # add python commands (pyenv shims) to PATH
@@ -190,7 +191,7 @@ function install_fzf() {
 
 function install_ohmyzsh() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
-    if [ -d /root/.oh-my-zsh ]; then
+    if [[ -d "/root/.oh-my-zsh" ]]; then
         return
     fi
     colorecho "Installing oh-my-zsh, config, history, aliases"
@@ -229,7 +230,7 @@ function install_yarn() {
 
 function install_ultimate_vimrc() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
-    if [ -d /root/.vim_runtime ]; then
+    if [[ -d "/root/.vim_runtime" ]]; then
         return
     fi
     colorecho "Installing The Ultimate vimrc"
@@ -304,17 +305,17 @@ function install_java11() {
     colorecho "Installing java 11"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        local ARCH="x64"
+        local arch="x64"
 
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        local ARCH="aarch64"
+        local arch="aarch64"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    local JDK_URL
-    JDK_URL=$(curl --location --silent "https://api.github.com/repos/adoptium/temurin11-binaries/releases/latest" | grep 'browser_download_url.*jdk_'"$ARCH"'_linux.*tar.gz"' | grep -o 'https://[^"]*')
-    curl --location -o /tmp/openjdk11-jdk.tar.gz "$JDK_URL"
+    local jdk_url
+    jdk_url=$(curl --location --silent "https://api.github.com/repos/adoptium/temurin11-binaries/releases/latest" | grep 'browser_download_url.*jdk_'"$arch"'_linux.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/openjdk11-jdk.tar.gz "$jdk_url"
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
@@ -322,7 +323,7 @@ function install_java11() {
 }
 
 function add_debian_repository_components() {
-    # add non-free non-free-firmware contrib repository 
+    # add non-free non-free-firmware contrib repository
     # adding at the end of the line start with Components of the repository to add
     colorecho "add non-free non-free-firmware contrib repository"
     local source_file="/etc/apt/sources.list.d/debian.sources"
@@ -341,17 +342,18 @@ function add_debian_repository_components() {
 function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
+    local listening_processes
     updatedb
     rm -rfv /tmp/*
     rm -rfv /var/lib/apt/lists/*
     rm -rfv /root/sources
     colorecho "Stop listening processes"
-    LISTENING_PROCESSES=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
-    if [[ -n $LISTENING_PROCESSES ]]; then
+    listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
+    if [[ -n $listening_processes ]]; then
         echo "Listening processes detected"
         ss -lnpt
         echo "Kill processes"
-        kill -9 "$LISTENING_PROCESSES"
+        kill -9 "$listening_processes"
     fi
     add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
     colorecho "Sorting tools list"
@@ -397,6 +399,7 @@ function package_base() {
     PYTHON_VERSIONS="3.11 3.6 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
+    local v
     # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
     # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
     # with pyenv, not sure the command below is needed anymore
@@ -448,7 +451,7 @@ function package_base() {
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
     install_firefox
- 
+
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
     # openvpn
