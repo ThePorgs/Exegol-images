@@ -12,7 +12,8 @@ function shell_logging() {
 
     umask 007
     mkdir -p /workspace/logs/
-    local filelog="/workspace/logs/$(date +%d-%m-%Y_%H-%M-%S)_shell.${method}"
+    local filelog
+    filelog="/workspace/logs/$(date +%d-%m-%Y_%H-%M-%S)_shell.${method}"
 
     case $method in
       "asciinema")

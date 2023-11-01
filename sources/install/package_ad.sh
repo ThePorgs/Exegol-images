@@ -98,7 +98,7 @@ function install_crackmapexec() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
     pipx install /opt/tools/CrackMapExec/
     mkdir -p ~/.cme
-    [[ -f "~/.cme/cme.conf" ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
+    [[ -f ~/.cme/cme.conf ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
@@ -1143,7 +1143,7 @@ function install_netexec() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Pennyw0rth/NetExec
     pipx install /opt/tools/NetExec/
     mkdir -p ~/.nxc
-    [[ -f "~/.nxc/nxc.conf" ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
+    [[ -f ~/.nxc/nxc.conf ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec
