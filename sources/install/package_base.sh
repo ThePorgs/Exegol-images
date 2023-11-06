@@ -353,7 +353,8 @@ function post_install() {
         echo "Listening processes detected"
         ss -lnpt
         echo "Kill processes"
-        kill -9 "$listening_processes"
+        # shellcheck disable=SC2086
+        kill -9 $listening_processes
     fi
     add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
     colorecho "Sorting tools list"
