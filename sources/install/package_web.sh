@@ -272,9 +272,7 @@ function install_drupwn() {
 function install_cmsmap() {
     colorecho "Installing CMSmap"
     python3 -m pipx install git+https://github.com/Dionach/CMSmap.git
-    # TODO: Config ?
-    # exploit-db path is required (misc package -> searchsploit)
-    # cmsmap -U PC
+    sed -i 's|/usr/share/exploitdb/|/opt/tools/exploitdb/|g' /root/.local/pipx/venvs/cmsmap/lib/python3.9/site-packages/cmsmap/cmsmap.conf
     add-history cmsmap
     add-test-command "cmsmap --help; cmsmap --help |& grep 'Post Exploitation'"
     add-to-list "cmsmap,https://github.com/Dionach/CMSmap,Tool for security audit of web content management systems."
