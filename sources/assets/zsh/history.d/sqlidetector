@@ -1,0 +1,2 @@
+sqlidetector -f valid-url.txt
+echo $DOMAIN | waybackurls > wayback.log ; sqlidetector -f wayback.log

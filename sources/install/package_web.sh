@@ -734,6 +734,18 @@ function install_sqlisniper() {
     add-to-list "sqlisniper,https://github.com/danialhalo/SqliSniper, SqliSniper is Advanced Time-based Blind SQL Injection fuzzer for HTTP Headers "
 }
 
+
+function install_sqlidetector() {
+    colorecho "Installing SQLiDetector"
+    git -C /opt/tools/ clone --depth 1 https://github.com/eslam3kl/SQLiDetector.git
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    ln -s "/opt/tools/SQLiDetector/sqlidetector.py" /opt/tools/bin/sqlidetector
+    add-history sqlidetector
+    add-test-command "sqlidetector -h"
+    add-to-list "sqlidetector,https://github.com/eslam3kl/SQLiDetector, SQLiDetector that helps you to detect SQL injection "Error based" by sending multiple requests with 14 payloads and checking for 152 regex patterns for different databases."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     install_web_apt_tools
@@ -807,6 +819,7 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sqlisniper              # Advanced Time-based Blind SQL Injection fuzzer for HTTP Headers 
+    install_sqlidetector            # Detect SQL injection "Error based" 
 }
 
 function package_web_configure() {

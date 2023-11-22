@@ -1,3 +1,2 @@
-sqlidetector -f valid-url.txt
-cat valid-url.txt | sqlisniper -p
-echo $DOMAIN | waybackurls > wayback.log ; sqlidetector -f wayback.log
+cat valid-url.txt | sqlisniper -p --proxy socks5://127.0.0.1:9015
+subfinder -silent -d $DOMAIN | sort -u | httpx -silent | sqlisniper -p

