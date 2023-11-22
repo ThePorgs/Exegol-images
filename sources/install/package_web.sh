@@ -723,6 +723,17 @@ function install_sqlmap() {
     add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
 }
 
+function install_sqlisniper() {
+    colorecho "Installing SqliSniper"
+    git -C /opt/tools/ clone --depth 1 https://github.com/danialhalo/SqliSniper.git
+    python3 -m venv ./venv
+    ./venv/bin/python3 -m pip install -r requirements.txt
+    ln -s "/opt/tools/SqliSniper/sqlisniper.py" /opt/tools/bin/sqlisniper
+    add-history sqlisniper
+    add-test-command "sqlisniper -h"
+    add-to-list "sqlisniper,https://github.com/danialhalo/SqliSniper, SqliSniper is Advanced Time-based Blind SQL Injection fuzzer for HTTP Headers "
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     install_web_apt_tools
@@ -795,6 +806,7 @@ function package_web() {
     install_kraken                  # Kraken is a modular multi-language webshell.
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
+    install_sqlisniper              # Advanced Time-based Blind SQL Injection fuzzer for HTTP Headers 
 }
 
 function package_web_configure() {
