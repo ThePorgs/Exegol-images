@@ -378,6 +378,7 @@ function install_pypykatz() {
     # pipx install pypykatz
     add-history pypykatz
     add-test-command "pypykatz version"
+    add-test-command "pypykatz crypto nt 'exegol4thewin'"
     add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
 }
 
