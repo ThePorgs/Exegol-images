@@ -77,8 +77,8 @@ function deploy_exegol() {
     colorecho "Installing Exegol things"
     # Moving exegol files to /
     # It's copied and not moved for caching and updating purposes (reusing exegol_base to create exegol_base)
-    mkdir -p /opt/packages
-    chown -Rv _apt:root /opt/packages
+    # mkdir -p /opt/packages
+    # chown -Rv _apt:root /opt/packages
     rm -rf /.exegol || true
     cp -r /root/sources/assets/exegol /.exegol
     cp -v /root/sources/assets/shells/history.d/_init ~/.zsh_history
