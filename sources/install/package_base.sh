@@ -364,6 +364,8 @@ function post_install() {
     echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
     cp /opt/.exegol_history ~/.zsh_history
     cp /opt/.exegol_history ~/.bash_history
+    colorecho "Removing desktop icons"
+    rm -r ~/Desktop
 }
 
 # Package dedicated to the basic things the env needs
