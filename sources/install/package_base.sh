@@ -365,7 +365,7 @@ function post_install() {
     cp /opt/.exegol_history ~/.zsh_history
     cp /opt/.exegol_history ~/.bash_history
     colorecho "Removing desktop icons"
-    rm -r ~/Desktop
+    if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
 }
 
 # Package dedicated to the basic things the env needs
