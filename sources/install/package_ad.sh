@@ -146,11 +146,6 @@ function install_bloodhound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing BloodHound-CE"
 
-    SHARPHOUND_VERSION=v2.0.1
-    AZUREHOUND_VERSION=v2.1.3
-
-    # TODO: Add catch and retry
-
     # Installing & Configuring the database
     fapt postgresql postgresql-client
     service postgresql start
@@ -162,41 +157,39 @@ function install_bloodhound-ce() {
     service postgresql stop
 
     # Build BloodHound-CE
-    git -C /opt/tools/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git BloodHound-CE-build
-    cd /opt/tools/BloodHound-CE-build/packages/javascript/bh-shared-ui || exit
+    mkdir -p /opt/tools/BloodHound-CE/
+    git -C /opt/tools/BloodHound-CE/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git src
+    cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
     nvm install 18
     zsh -c "source ~/.zshrc && nvm use 18 && yarn install --immutable && yarn build"
-    cd /opt/tools/BloodHound-CE-build || exit
-    export VERSION=v999.999.999
-    export CHECKOUT_HASH=""
-    python3 ./packages/python/beagle/main.py build bh-ui -v -c
-    python3 ./packages/python/beagle/main.py build bh -v -c
+    cd /opt/tools/BloodHound-CE/src/ || exit
+    catch_and_retry python3 ./packages/python/beagle/main.py build --verbose --ci
 
-    # Need to move in Exegol-Resources
-    wget "https://github.com/BloodHoundAD/SharpHound/releases/download/${SHARPHOUND_VERSION}/SharpHound-${SHARPHOUND_VERSION}.zip" -O sharphound-${SHARPHOUND_VERSION}.zip
-    sha256sum sharphound-${SHARPHOUND_VERSION}.zip > sharphound-${SHARPHOUND_VERSION}.zip.sha256
-    mkdir ./azurehound
-    cd ./azurehound || exit
-    wget \
-    "https://github.com/BloodHoundAD/AzureHound/releases/download/${AZUREHOUND_VERSION}/azurehound-linux-amd64.zip" \
-    "https://github.com/BloodHoundAD/AzureHound/releases/download/${AZUREHOUND_VERSION}/azurehound-linux-arm64.zip"
-    cd /opt/tools/BloodHound-CE-build || exit
+    # Collectors
+    mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound
+    mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound
+    ## SharpHound
+    local SHARPHOUND_URL
+    SHARPHOUND_URL=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep 'SharpHound-.*.zip' | grep -v 'debug' | grep -o 'https://[^"]*')
+    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/sharphound/ "$SHARPHOUND_URL"
+    local SHARPHOUND_NAME
+    SHARPHOUND_NAME=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep -o 'SharpHound-.*.zip' | grep -v debug | uniq)
+    sha256sum "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME" > "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME.sha256"
+    ## AzureHound
+    local AZUREHOUND_URL_AMD64
+    local AZUREHOUND_URL_ARM64
+    AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
+    AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
+    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_AMD64"
+    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_ARM64"
 
-
-    # Move files
-    mkdir /opt/tools/BloodHound-CE/
-    mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound/
-    mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound/
+    # Files and directories
+    # work directory required by bloodhound
     mkdir /opt/tools/BloodHound-CE/work
-    cp -v ./dist/bhapi /opt/tools/BloodHound-CE/bloodhound
-    cp -rv ./sharphound-${SHARPHOUND_VERSION}.zip* /opt/tools/BloodHound-CE/collectors/sharphound/
-    cp -rv ./azurehound/azurehound-linux-a* /opt/tools/BloodHound-CE/collectors/azurehound/
-    cp -v ./dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
-    
-    # Clean build folder
-    cd /opt/tools/BloodHound-CE || exit
-    # rm -rf /opt/tools/BloodHound-CE-build/
-    # service postgresql stop
+    ln -v -s /opt/tools/BloodHound-CE/src/artifacts/bhapi /opt/tools/BloodHound-CE/bloodhound
+    cp -v /opt/tools/BloodHound-CE/src/dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
+    cp -v /root/sources/assets/bloodhound-ce/*.sh /opt/tools/bin/
+    chmod +x /opt/tools/bin/bloodhound*
 
     # Configuration
     sed -i "s#app-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
