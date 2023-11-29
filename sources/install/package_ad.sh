@@ -154,12 +154,12 @@ function install_bloodhound-ce() {
     # Installing & Configuring the database
     fapt postgresql postgresql-client
     service postgresql start
+    # avoid permissions issues when impersonating postgres
     cd /tmp || exit
-    sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'bloodhoundcommunityedition';"
+    sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'exegol4thewin';"
     sudo -u postgres psql -c "CREATE DATABASE bloodhound;"
-    # sudo -u postgres psql -c "REVOKE ALL ON DATABASE bloodhound FROM PUBLIC;"
-    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bloodhound TO bloodhound;"
-    service postgresql restart
+    sudo -u postgres psql -c "ALTER DATABASE bloodhound OWNER TO bloodhound;"
+    service postgresql stop
 
     # Build BloodHound-CE
     git -C /opt/tools/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git BloodHound-CE-build
@@ -199,14 +199,16 @@ function install_bloodhound-ce() {
     # service postgresql stop
 
     # Configuration
-    sed -i "s#app-db#127.0.0.1##" bloodhound.config.json
-    sed -i "s#graph-db#127.0.0.1##" bloodhound.config.json
-    sed -i "s#8080#1030##" bloodhound.config.json
-    sed -i "s#neo4j:bloodhoundcommunityedition#neo4j:exegol4thewin##" bloodhound.config.json
-    sed -i "s#/etc/bloodhound/collectors#/opt/tools/BloodHound-CE/collectors##" bloodhound.config.json
-    sed -i "s#/opt/bloodhound/work#/opt/tools/BloodHound-CE/work##" bloodhound.config.json
-    cp -v /root/sources/assets/bloodhound-ce/*.sh /opt/tools/bin/
-    chmod +x /opt/tools/bin/bloodhound*
+    sed -i "s#app-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#graph-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#8080#1030##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#0.0.0.0#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#neo4j:bloodhoundcommunityedition#neo4j:exegol4thewin##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#user=bloodhound password=bloodhoundcommunityedition#user=bloodhound password=exegol4thewin##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#/etc/bloodhound/collectors#/opt/tools/BloodHound-CE/collectors##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#/opt/bloodhound/work#/opt/tools/BloodHound-CE/work##" /opt/tools/BloodHound-CE/bloodhound.config.json
+
+    # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
     add-test-command "bloodhound-ce --help"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
 }

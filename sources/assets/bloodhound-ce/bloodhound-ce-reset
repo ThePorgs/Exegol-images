@@ -2,5 +2,6 @@
 
 sudo -u postgres psql -c "DROP database bloodhound"
 sudo -u postgres psql -c "CREATE DATABASE bloodhound;"
+sudo -u postgres psql -c "ALTER DATABASE bloodhound OWNER TO bloodhound;"
 
 bloodhound-ce-stop
