@@ -58,7 +58,7 @@ function install_xfce() {
     sed -i "s#novnc-icon.svg#exegol_logo.png#" /usr/share/novnc/vnc.html
     sed -i "s#svg+xml#png#" /usr/share/novnc/vnc.html
     echo '<link rel="icon" sizes="any" type="image/png" href="app/images/icons/exegol_logo.png">' >> /usr/share/novnc/vnc.html
-    
+
     # NoVNC title bar
     sed -i "s#<title>noVNC</title>#<title>Exegol</title>#" /usr/share/novnc/vnc.html
     sed -i 's#document.title = e.detail.name + " - noVNC";#document.title = "Exegol (" + e.detail.name.split(":")[0].replace("exegol-", "") + ")";#' /usr/share/novnc/app/ui.js
@@ -66,13 +66,10 @@ function install_xfce() {
     # NoVNC index redirection
     echo '<html><head><meta http-equiv="refresh" content="0; URL=/vnc.html?resize=remote&path=websockify&autoconnect=true" /></head></html>' > /usr/share/novnc/index.html
 
-    # This is the image default password. It will be dynamically changed through the wrapper during the creation of a new container
-    echo 'exegol4thewin' | vncpasswd -f > "$HOME/.vnc/passwd"
-
     # Desktop
     touch /root/.Xauthority
     export DISPLAY=":0"
-    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes VncAuth -passwd "$HOME/.vnc/passwd" :0
+    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes Plain :0
     sleep 10
     xfconf-query -c xsettings -p /Net/ThemeName -s Prof_XFCE_2_1
     xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
@@ -96,7 +93,7 @@ function install_xfce() {
     # Stopping VNC server used for config
     vncserver -kill :0
     sleep 6
-    [ -d "/root/.config/xfce4/" ] || echo "Directory /root/.config/xfce4/ does not exist."
+    [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
 
     # Binaries
     cp /root/sources/assets/desktop/bin/* /usr/sbin/

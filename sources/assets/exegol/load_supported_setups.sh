@@ -241,6 +241,35 @@ function deploy_bloodhound() {
   fi
 }
 
+function trust_ca_certs_in_firefox() {
+  colorecho "Trusting user CA certificates in Firefox"
+  local file
+  if [[ -d "$MY_SETUP_PATH/firefox/certs" ]]; then
+    for file in $(find "$MY_SETUP_PATH/firefox/certs" -type f); do
+      if [[ -f "$file" ]]; then
+        if [[ "$file" == *.[dD][eE][rR] ]]; then
+          local base_filename_without_extension
+          base_filename_without_extension=$(basename "$file" | rev | cut -d. -f2- | rev)
+          _trust_ca_cert_in_firefox "$file" "$base_filename_without_extension"
+        else
+          criticalecho-noexit "Error: File $file does not have a .der or .DER extension and will not be trusted. Not supported by Exegol's my-resources yet"
+        fi
+      fi
+    done
+  else
+    mkdir --parents "$MY_SETUP_PATH/firefox/certs/" && chmod 770 -R "$MY_SETUP_PATH/firefox/certs/"
+  fi
+}
+
+function _trust_ca_cert_in_firefox() {
+  # internal function to trust a CA cert (.DER) given the path and the name to set
+  colorecho "Trusting cert $2 ($1) in Firefox"
+  # -n : name of the cert
+  # -t : attributes
+  #   TC : trusted CA to issue client & server certs
+  certutil -A -n "$2" -t "TC" -i "$1" -d ~/.mozilla/firefox/*.Exegol
+}
+
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
@@ -257,6 +286,7 @@ deploy_apt
 deploy_python3
 deploy_firefox_addons
 deploy_bloodhound
+trust_ca_certs_in_firefox
 
 run_user_setup
 

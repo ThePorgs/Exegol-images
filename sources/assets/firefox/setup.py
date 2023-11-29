@@ -130,7 +130,7 @@ def adjust_ui():
 
 def import_bookmarks():
     dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, './places.sqlite')
+    filename = os.path.join(dirname, 'places.sqlite')
     src = sqlite3.connect(filename)
     dst = sqlite3.connect(glob("%s" % PATHNAME)[0] + "places.sqlite")
     with dst:

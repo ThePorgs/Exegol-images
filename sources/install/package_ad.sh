@@ -32,15 +32,6 @@ function install_responder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
     cd /opt/tools/Responder || exit
     fapt gcc-mingw-w64-x86-64
-    local TEMP_FIX_LIMIT="2023-10-21" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git config --local user.email "local"
-      git config --local user.name "local"
-      local PRS=("249" "250")
-      for PR in "${PRS[@]}"; do git fetch origin "pull/$PR/head:pull/$PR" && git merge --strategy-option theirs --no-edit "pull/$PR"; done
-    fi
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
@@ -95,7 +86,7 @@ function install_crackmapexec() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
     pipx install /opt/tools/CrackMapExec/
     mkdir -p ~/.cme
-    [ -f ~/.cme/cme.conf ] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
+    [[ -f ~/.cme/cme.conf ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
     # below is for having the ability to check the source code when working with modules and so on
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
@@ -108,6 +99,13 @@ function install_crackmapexec() {
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install git+https://github.com/fox-it/BloodHound.py
+    # https://github.com/dirkjanm/BloodHound.py/pull/146
+    local temp_fix_limit="2024-02-15"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pipx inject bloodhound pycryptodome
+    fi
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
@@ -302,17 +300,17 @@ function install_upx() {
     colorecho "Installing upx"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        local ARCH="amd64"
+        local arch="amd64"
 
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        local ARCH="arm64"
+        local arch="arm64"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    local UPX_URL
-    UPX_URL=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'"$ARCH"'.*tar.xz"' | grep -o 'https://[^"]*')
-    curl --location -o /tmp/upx.tar.xz "$UPX_URL"
+    local upx_url
+    upx_url=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'"$arch"'.*tar.xz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/upx.tar.xz "$upx_url"
     tar -xf /tmp/upx.tar.xz --directory /tmp
     rm /tmp/upx.tar.xz
     mv /tmp/upx* /opt/tools/upx
@@ -354,27 +352,32 @@ function install_amber() {
 function install_powershell() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powershell"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-x64.tar.gz
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm64.tar.gz
-    elif [[ $(uname -m) = 'armv7l' ]]
-    then
-        curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm32.tar.gz
+    if /opt/tools/bin/powershell -Version; then
+      colorecho "powershell seems already installed, skipping..."
+      return
     else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+      if [[ $(uname -m) = 'x86_64' ]]
+      then
+          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-x64.tar.gz
+      elif [[ $(uname -m) = 'aarch64' ]]
+      then
+          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm64.tar.gz
+      elif [[ $(uname -m) = 'armv7l' ]]
+      then
+          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm32.tar.gz
+      else
+          criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+      fi
+      mkdir -v -p /opt/tools/powershell/7
+      tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
+      chmod -v +x /opt/tools/powershell/7/pwsh
+      rm -v /tmp/powershell.tar.gz
+      ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
+      ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
+      add-history powershell
+      add-test-command "powershell -Version"
+      add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
     fi
-    mkdir -v -p /opt/tools/powershell/7
-    tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
-    chmod -v +x /opt/tools/powershell/7/pwsh
-    rm -v /tmp/powershell.tar.gz
-    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
-    ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
-    add-history powershell
-    add-test-command "powershell -Version"
-    add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
 }
 
 function install_krbrelayx() {
@@ -383,7 +386,7 @@ function install_krbrelayx() {
     cd /opt/tools/krbrelayx || exit
     python3 -m venv ./venv
     source ./venv/bin/activate
-    pip3 install dnspython ldap3 impacket dsinternals
+    pip3 install dnspython ldap3 impacket dsinternals pycryptodome
     deactivate
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
@@ -411,8 +414,8 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+    local temp_fix_limit="2023-12-15" # 21 Oct. 2023
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
@@ -427,6 +430,7 @@ function install_pypykatz() {
     # pipx install pypykatz
     add-history pypykatz
     add-test-command "pypykatz version"
+    add-test-command "pypykatz crypto nt 'exegol4thewin'"
     add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
 }
 
@@ -632,6 +636,7 @@ function install_adidnsdump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing adidnsdump"
     pipx install git+https://github.com/dirkjanm/adidnsdump
+    pipx inject adidnsdump pycryptodome
     add-history adidnsdump
     add-test-command "adidnsdump --help"
     add-to-list "adidnsdump,https://github.com/dirkjanm/adidnsdump,Active Directory Integrated DNS dump utility"
@@ -646,8 +651,8 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+    local temp_fix_limit="2023-12-15" # 21 Oct. 2023
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
@@ -675,8 +680,8 @@ function install_bloodhound-quickwin() {
     python3 -m venv ./venv/
     source ./venv/bin/activate
     # https://github.com/kaluche/bloodhound-quickwin/issues/2
-    local TEMP_FIX_LIMIT="2023-12-15"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+    local temp_fix_limit="2023-12-15"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install git+https://github.com/elena/py2neo
@@ -756,8 +761,8 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+    local temp_fix_limit="2023-12-15" # 21 Oct. 2023
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
@@ -894,8 +899,8 @@ function install_gmsadumper() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # same as https://github.com/franc-pentest/ldeep/issues/41
-    local TEMP_FIX_LIMIT="2023-11-18"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+    local temp_fix_limit="2023-12-18"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install pycryptodome
@@ -944,8 +949,8 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local TEMP_FIX_LIMIT="2023-12-15" # 21 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+    local temp_fix_limit="2023-12-15" # 21 Oct. 2023
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
@@ -961,8 +966,8 @@ function install_goldencopy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
     # https://github.com/Dramelac/GoldenCopy/issues/1
-    local TEMP_FIX_LIMIT="2023-12-15"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
+    local temp_fix_limit="2023-12-15"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
       git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
@@ -983,15 +988,6 @@ function install_crackhound() {
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
     cd /opt/tools/CrackHound || exit
-    local TEMP_FIX_LIMIT="2023-10-20" # 20 Oct. 2023
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git config --local user.email "local"
-      git config --local user.name "local"
-      local PRS=("6")
-      for PR in "${PRS[@]}"; do git fetch origin "pull/$PR/head:pull/$PR" && git merge --strategy-option theirs --no-edit "pull/$PR"; done
-    fi
     python3 -m venv ./venv/
     source ./venv/bin/activate
     pip3 install -r requirements.txt
@@ -1016,13 +1012,6 @@ function install_ldeep() {
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
     pipx install ldeep
-    # https://github.com/franc-pentest/ldeep/issues/41
-    local TEMP_FIX_LIMIT="2023-11-18"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx inject ldeep pycryptodome
-    fi
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
@@ -1197,7 +1186,7 @@ function install_netexec() {
     git -C /opt/tools/ clone --depth 1 https://github.com/Pennyw0rth/NetExec
     pipx install /opt/tools/NetExec/
     mkdir -p ~/.nxc
-    [ -f ~/.nxc/nxc.conf ] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
+    [[ -f ~/.nxc/nxc.conf ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec

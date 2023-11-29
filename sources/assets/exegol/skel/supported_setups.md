@@ -36,6 +36,11 @@ To automatically overwrite the `~/.tmux.conf` configuration file, simply create 
 
 The `/opt/my-resources/setup/python3/requirements.txt` file allows the user to list a set of packages to install with constraints just like a classic **requirements.txt** file.
 
+### firefox
+
+The `/opt/my-resources/setup/firefox/addons.txt` file allows the user to list addons to install from online sources. It must be filled with their links in Mozilla's shop (for example https://addons.mozilla.org/fr/firefox/addon/foxyproxy-standard/ ).
+The `.xpi` files in `/opt/my-resources/setup/firefox/addons/` folder will be installed as well.
+The `.der` files in `/opt/my-resources/setup/firefox/certs/` folder will be trusted.
 
 ## Advanced customizations
 

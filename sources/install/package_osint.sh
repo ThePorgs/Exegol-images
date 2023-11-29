@@ -96,7 +96,7 @@ function install_holehe() {
     pipx install holehe
     add-history holehe
     add-test-command "holehe --help"
-    add-to-list "holehe,https://github.com/megadose/holehe,Exploit a vulnerable Samba service to gain root access."
+    add-to-list "holehe,https://github.com/megadose/holehe,mail osint tool finding out if it is used on websites."
 }
 
 function install_simplyemail() {
@@ -523,6 +523,23 @@ function install_gomapenum() {
     add-to-list "GoMapEnum,https://github.com/nodauf/GoMapEnum,Nothing new but existing techniques are brought together in one tool."
 }
 
+function install_pymeta() {
+  # CODE-CHECK-WHITELIST=add-aliases
+  colorecho "Installing pymeta"
+  fapt exiftool
+  git -C /opt/tools clone --depth 1 https://github.com/m8sec/pymeta
+  cd /opt/tools/pymeta || exit
+  python3 -m venv ./venv
+  source ./venv/bin/activate
+  pip3 install .
+  pip3 install -r requirements.txt
+  deactivate
+  ln -v -s /opt/tools/pymeta/venv/bin/pymeta /opt/tools/bin/
+  add-history pymeta
+  add-test-command "pymeta -h"
+  add-to-list "pymeta,https://github.com/m8sec/pymeta,Google and Bing scraping osint tool"
+}
+
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
     set_cargo_env
@@ -572,4 +589,5 @@ function package_osint() {
     install_sherlock                # Hunt down social media accounts by username across social networks
     install_censys                  # An easy-to-use and lightweight API wrapper for Censys APIs
     install_gomapenum               # Nothing new but existing techniques are brought together in one tool.
+    install_pymeta
 }

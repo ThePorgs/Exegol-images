@@ -6,7 +6,7 @@ source common.sh
 function install_wordlists_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wordlists apt tools"
-    fapt crunch cupp 
+    fapt crunch cupp
 
     add-history cupp
     add-history crunch
@@ -35,13 +35,6 @@ function install_cewler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing cewler"
     pipx install cewler
-    # https://github.com/roys/cewler/issues/1
-    local TEMP_FIX_LIMIT="2024-10-01"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $TEMP_FIX_LIMIT +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx inject cewler Twisted==22.10.0
-    fi
     add-history cewler
     add-test-command "cewler --output cewler.txt https://thehacker.recipes/"
     add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python"
@@ -58,8 +51,8 @@ function install_seclists() {
     ln -v -s /opt/seclists /usr/share/wordlists/seclists
     tar -xvf /opt/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/
     ln -v -s /opt/rockyou.txt /usr/share/wordlists/rockyou.txt
-    add-test-command "[ -f '/usr/share/wordlists/rockyou.txt' ]"
-    add-test-command "[ -d '/opt/seclists/Discovery/' ]"
+    add-test-command "[[ -f '/usr/share/wordlists/rockyou.txt' ]]"
+    add-test-command "[[ -d '/opt/seclists/Discovery/' ]]"
     add-to-list "seclists,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
 }
 
