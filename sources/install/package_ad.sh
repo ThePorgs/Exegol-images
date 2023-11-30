@@ -160,10 +160,9 @@ function install_bloodhound-ce() {
     mkdir -p /opt/tools/BloodHound-CE/
     git -C /opt/tools/BloodHound-CE/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git src
     cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
-    nvm install 18
-    zsh -c "source ~/.zshrc && nvm use 18 && yarn install --immutable && yarn build"
+    zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
     cd /opt/tools/BloodHound-CE/src/ || exit
-    catch_and_retry python3 ./packages/python/beagle/main.py build --verbose --ci
+    catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     # Collectors
     mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound
@@ -188,7 +187,7 @@ function install_bloodhound-ce() {
     mkdir /opt/tools/BloodHound-CE/work
     ln -v -s /opt/tools/BloodHound-CE/src/artifacts/bhapi /opt/tools/BloodHound-CE/bloodhound
     cp -v /opt/tools/BloodHound-CE/src/dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
-    cp -v /root/sources/assets/bloodhound-ce/*.sh /opt/tools/bin/
+    cp -v /root/sources/assets/bloodhound-ce/* /opt/tools/bin/
     chmod +x /opt/tools/bin/bloodhound*
 
     # Configuration
@@ -837,6 +836,7 @@ function install_pcredz() {
 
 function install_pywsus() {
     colorecho "Installing pywsus"
+    fapt libxml2-dev libxslt-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
     cd /opt/tools/pywsus || exit
     python3 -m venv ./venv/
