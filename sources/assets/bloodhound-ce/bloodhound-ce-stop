@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if pg_isready -q; then
+    service postgresql stop
+fi
+
+pkill bloodhound

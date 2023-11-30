@@ -482,7 +482,7 @@ function package_base() {
     tldr -u
 
     # NVM (install in conctext)
-    zsh -c "source ~/.zshrc && nvm install node"
+    zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/

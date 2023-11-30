@@ -116,7 +116,7 @@ function install_bloodhound() {
     colorecho "Installing BloodHound from sources"
     git -C /opt/tools/ clone --depth 1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
-    zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux"
+    zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux && nvm use default"
     if [[ $(uname -m) = 'x86_64' ]]
     then
         ln -s /opt/tools/BloodHound4/BloodHound-linux-x64/BloodHound /opt/tools/BloodHound4/BloodHound
@@ -138,6 +138,71 @@ function install_bloodhound() {
     add-history bloodhound
     add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
     add-to-list "bloodhound,https://github.com/BloodHoundAD/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments."
+}
+
+function install_bloodhound-ce() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing BloodHound-CE"
+
+    # Installing & Configuring the database
+    fapt postgresql postgresql-client
+    # only expose postgresql on localhost
+    sed -i 's/#listen_addresse/listen_addresse/' /etc/postgresql/15/main/postgresql.conf
+    service postgresql start
+    # avoid permissions issues when impersonating postgres
+    cd /tmp || exit
+    sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'exegol4thewin';"
+    sudo -u postgres psql -c "CREATE DATABASE bloodhound;"
+    sudo -u postgres psql -c "ALTER DATABASE bloodhound OWNER TO bloodhound;"
+    service postgresql stop
+
+    # Build BloodHound-CE
+    mkdir -p /opt/tools/BloodHound-CE/
+    git -C /opt/tools/BloodHound-CE/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git src
+    cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
+    zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
+    cd /opt/tools/BloodHound-CE/src/ || exit
+    catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
+
+    # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
+    mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound
+    mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound
+    ## SharpHound
+    local SHARPHOUND_URL
+    SHARPHOUND_URL=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep 'SharpHound-.*.zip' | grep -v 'debug' | grep -o 'https://[^"]*')
+    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/sharphound/ "$SHARPHOUND_URL"
+    local SHARPHOUND_NAME
+    SHARPHOUND_NAME=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep -o 'SharpHound-.*.zip' | grep -v debug | uniq)
+    sha256sum "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME" > "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME.sha256"
+    ## AzureHound
+    local AZUREHOUND_URL_AMD64
+    local AZUREHOUND_URL_ARM64
+    AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
+    AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
+    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_AMD64"
+    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_ARM64"
+
+    # Files and directories
+    # work directory required by bloodhound
+    mkdir /opt/tools/BloodHound-CE/work
+    ln -v -s /opt/tools/BloodHound-CE/src/artifacts/bhapi /opt/tools/BloodHound-CE/bloodhound
+    cp -v /opt/tools/BloodHound-CE/src/dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
+    cp -v /root/sources/assets/bloodhound-ce/* /opt/tools/bin/
+    chmod +x /opt/tools/bin/bloodhound*
+
+    # Configuration
+    sed -i "s#app-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#graph-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#8080#1030##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#0.0.0.0#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#neo4j:bloodhoundcommunityedition#neo4j:exegol4thewin##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#user=bloodhound password=bloodhoundcommunityedition#user=bloodhound password=exegol4thewin##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#/etc/bloodhound/collectors#/opt/tools/BloodHound-CE/collectors##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    sed -i "s#/opt/bloodhound/work#/opt/tools/BloodHound-CE/work##" /opt/tools/BloodHound-CE/bloodhound.config.json
+
+    # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
+    add-test-command "/opt/tools/BloodHound-CE/bloodhound -version"
+    add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
 }
 
 function install_cypheroth() {
@@ -771,6 +836,7 @@ function install_pcredz() {
 
 function install_pywsus() {
     colorecho "Installing pywsus"
+    fapt libxml2-dev libxslt-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
     cd /opt/tools/pywsus || exit
     python3 -m venv ./venv/
@@ -1279,4 +1345,5 @@ function package_ad() {
     install_pywerview
     install_freeipscanner
     # install_scrtdnsdump          # This tool is a fork of adidnsdump (https://github.com/dirkjanm/adidnsdump). We are currently waiting to see if a PR will be made.
+    install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
 }
