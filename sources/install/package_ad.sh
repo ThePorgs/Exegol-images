@@ -164,7 +164,7 @@ function install_bloodhound-ce() {
     cd /opt/tools/BloodHound-CE/src/ || exit
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
-    # Collectors
+    # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
     mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound
     mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound
     ## SharpHound
