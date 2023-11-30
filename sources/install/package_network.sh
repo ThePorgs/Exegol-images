@@ -248,6 +248,22 @@ function install_rustscan() {
     add-to-list "rustscan,https://github.com/RustScan/RustScan,The Modern Port Scanner"
 }
 
+function install_legba() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing legba"
+    git -C /opt/tools/ clone --depth 1 https://github.com/evilsocket/legba
+    cd /opt/tools/legba || exit
+    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+    source "$HOME/.cargo/env"
+    cargo build --release
+    # Clean dependencies used to build the binary
+    rm -rf target/release/{deps,build,.fingerprint}
+    ln -s /opt/tools/legba/target/release/legba /opt/tools/bin/legba
+    add-history legba
+    add-test-command "legba --help"
+    add-to-list "legba,https://github.com/evilsocket/legba,a multiprotocol credentials bruteforcer / password sprayer and enumerator built with Rust"
+}
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_cargo_env
@@ -271,4 +287,5 @@ function package_network() {
     install_tailscale               # Zero config VPN for building secure networks
     install_ligolo-ng               # Tunneling tool that uses a TUN interface
     install_rustscan
+    install_legba                   # Login Scanner
 }
