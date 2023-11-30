@@ -146,6 +146,8 @@ function install_bloodhound-ce() {
 
     # Installing & Configuring the database
     fapt postgresql postgresql-client
+    # only expose postgresql on localhost
+    sed -i 's/#listen_addresse/listen_addresse/' /etc/postgresql/15/main/postgresql.conf
     service postgresql start
     # avoid permissions issues when impersonating postgres
     cd /tmp || exit
