@@ -201,7 +201,7 @@ function install_bloodhound-ce() {
     sed -i "s#/opt/bloodhound/work#/opt/tools/BloodHound-CE/work##" /opt/tools/BloodHound-CE/bloodhound.config.json
 
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
-    add-test-command "bloodhound-ce --help"
+    add-test-command "/opt/tools/BloodHound-CE/bloodhound -version"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
 }
 
