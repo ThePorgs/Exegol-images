@@ -95,7 +95,8 @@ function install_empire() {
     elif [[ $(uname -m) = 'aarch64' ]]
     then
       # for ARM64, pip install doesn't work because of donut-shellcode not supporting this arch (https://github.com/TheWover/donut/issues/139)
-      criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+#      criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+      pip3 install .
     else
       criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
