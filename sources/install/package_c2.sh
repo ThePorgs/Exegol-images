@@ -110,6 +110,8 @@ function install_empire() {
     add-test-command "ps-empire server --help"
     add-test-command "ps-empire client --help"
     add-to-list "empire,https://github.com/BC-SECURITY/Empire,post-exploitation and adversary emulation framework"
+    # exit the Empire workdir, since it sets the python version to 3.12 and could mess up later installs
+    cd || exit
 }
 
 # Package dedicated to command & control frameworks
