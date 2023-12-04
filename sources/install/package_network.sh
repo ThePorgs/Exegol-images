@@ -253,8 +253,6 @@ function install_legba() {
     colorecho "Installing legba"
     git -C /opt/tools/ clone --depth 1 https://github.com/evilsocket/legba
     cd /opt/tools/legba || exit
-    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-    source "$HOME/.cargo/env"
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build,.fingerprint}
