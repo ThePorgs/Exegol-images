@@ -1,7 +1,7 @@
 diff --git a/requirements.txt b/requirements.txt
 index 3e5bce8..4bcad03 100644
 --- a/requirements.txt
-+++ b/requirements-new.txt
++++ b/requirements.txt
 @@ -23,7 +23,7 @@ mccabe==0.6.1
  mock==4.0.3
  netaddr==0.8.0
