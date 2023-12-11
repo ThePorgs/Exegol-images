@@ -399,7 +399,7 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.12 3.6 2"
+    PYTHON_VERSIONS="3.11 3.12 3.10 3.6 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v

@@ -114,6 +114,40 @@ function install_empire() {
     cd || exit
 }
 
+function install_havoc() {
+    colorecho "Installing Havoc"
+    git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
+    # Building Team Server
+    cd /opt/tools/Havoc/teamserver || exit
+    go mod download golang.org/x/sys
+    go mod download github.com/ugorji/go
+    cd /opt/tools/Havoc || exit
+    make ts-build
+    # ln -v -s /opt/tools/Havoc/havoc /opt/tools/bin/havoc
+    # Symbolic link above not needed because Havoc relies on absolute links, the user needs be changed directory when running havoc
+    # Building Client
+    fapt qtmultimedia5-dev libqt5websockets5-dev
+    make client-build
+    add-aliases havoc
+    add-history havoc
+    add-test-command "havoc "
+    add-to-list "Havoc,https://github.com/HavocFramework/Havoc,Command & Control Framework"
+}
+
+function install_villain() {
+    colorecho "Installing Villain"
+    git -C /opt/tools/ clone --depth 1 https://github.com/t3l3machus/Villain
+    cd /opt/tools/Villain || exit
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r ./requirements.txt
+    deactivate
+    add-aliases villain
+    add-history villain
+    add-test-command "Villain.py -h"
+    add-to-list "Villain,https://github.com/t3l3machus/Villain,Command & Control Framework"
+}
+
 # Package dedicated to command & control frameworks
 function package_c2() {
     set_cargo_env
@@ -125,4 +159,6 @@ function package_c2() {
     install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
+    install_havoc                   # C2 in Go
+    install_villain                 # C2 using hoaxShell in Python
 }
