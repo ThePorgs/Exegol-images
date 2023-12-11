@@ -99,17 +99,26 @@ function install_crackmapexec() {
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install git+https://github.com/fox-it/BloodHound.py
-    # https://github.com/dirkjanm/BloodHound.py/pull/146
-    local temp_fix_limit="2024-02-15"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx inject bloodhound pycryptodome
-    fi
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
     add-to-list "bloodhound.py,https://github.com/fox-it/BloodHound.py,BloodHound ingestor in Python."
+}
+
+
+function install_bloodhound-ce-py() {
+    colorecho "Installing and Python ingestor for BloodHound-CE"
+    git -C /opt/tools/ clone https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
+    cd /opt/tools/BloodHound-CE.py || exit
+    git checkout bloodhound-ce
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    add-aliases bloodhound-ce-py
+    add-history bloodhound-ce-py
+    add-test-command "bloodhound-ce.py --help"
+    add-to-list "bloodhound-ce.py,https://github.com/fox-it/BloodHound.py,BloodHound-CE ingestor in Python."
 }
 
 function install_bloodhound() {
@@ -554,7 +563,7 @@ function install_smbmap() {
     colorecho "Installing smbmap"
     git -C /opt/tools clone --depth 1 https://github.com/ShawnDEvans/smbmap
     cd /opt/tools/smbmap || exit
-    python3 -m pipx install .
+    pipx install .
     add-history smbmap
     add-test-command "smbmap --help"
     add-to-list "smbmap,https://github.com/ShawnDEvans/smbmap,A tool to enumerate SMB shares and check for null sessions"
@@ -1266,7 +1275,8 @@ function package_ad() {
     install_crackmapexec            # Network scanner
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
-    install_bloodhound-py           # AD cartographer
+    install_bloodhound-py           # ingestor for legacy BloodHound
+    install_bloodhound-ce-py           # ingestor for legacy BloodHound
     install_bloodhound
     install_cypheroth               # Bloodhound dependency
     # install_mitm6_sources         # Install mitm6 from sources
