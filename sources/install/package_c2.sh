@@ -127,7 +127,7 @@ function install_havoc() {
     # Symbolic link above not needed because Havoc relies on absolute links, the user needs be changed directory when running havoc
     # Building Client
     fapt qtmultimedia5-dev libqt5websockets5-dev
-    make client-build
+    make client-build || cat /opt/tools/Havoc/client/Build/CMakeFiles/CMakeOutput.log
     add-aliases havoc
     add-history havoc
     add-test-command "havoc "
