@@ -27,6 +27,7 @@ WORKDIR /root/sources/install
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
 RUN apt-get update
+RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_wordlists
 RUN ./entrypoint.sh package_cracking
 RUN ./entrypoint.sh package_osint

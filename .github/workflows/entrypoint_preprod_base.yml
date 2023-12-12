@@ -58,6 +58,7 @@ jobs:
           fi
           cat $GITHUB_OUTPUT
       - name: Check changes
+        # not sure this does what we want. It seems to determine the changes in the whole PR, not the in the latest commit.
         uses: dorny/paths-filter@v2
         id: changes
         with:
