@@ -26,10 +26,9 @@ source package_c2.sh
 function install_most_used_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing most used apt tools"
-    fapt hydra weevely smbclient hashcat fcrackzip
+    fapt hydra smbclient hashcat fcrackzip
 
     add-history hydra
-    add-history weevely
     add-history smbclient
     add-history hashcat
     add-history fcrackzip
@@ -82,6 +81,7 @@ function package_most_used() {
     install_nuclei                  # Vulnerability scanner
     install_evilwinrm               # WinRM shell
     install_john                    # Password cracker
+    install_weevely                 # Weaponized web shell
     install_sqlmap                  # SQL injection scanner
     install_netexec                 # Crackmapexec repo
     install_sslscan                 # SSL/TLS scanner

@@ -57,6 +57,32 @@ jobs:
             echo "image_exists=false" >> $GITHUB_OUTPUT
           fi
           cat $GITHUB_OUTPUT
+      - name: Check changes
+        # not sure this does what we want. It seems to determine the changes in the whole PR, not the in the latest commit.
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            base:
+              - 'sources/install/package_base.sh'
+              - 'sources/install/package_misc.sh'
+              - 'sources/install/package_desktop.sh'
+              - 'sources/install/post_install.sh'
+            package_base:
+              - 'sources/install/package_base.sh'
+            package_misc:
+              - 'sources/install/package_misc.sh'
+            package_desktop:
+              - 'sources/install/package_desktop.sh'
+            post_install:
+              - 'sources/install/post_install.sh'
+      - name: (debug) Check changes results
+        run: |
+          echo ${{steps.changes.outputs.base}}
+          echo ${{steps.changes.outputs.package_base}}
+          echo ${{steps.changes.outputs.package_misc}}
+          echo ${{steps.changes.outputs.package_desktop}}
+          echo ${{steps.changes.outputs.post_install}}
 
 
   code_check:

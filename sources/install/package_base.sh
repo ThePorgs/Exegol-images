@@ -56,13 +56,13 @@ function install_go() {
     cd /tmp/ || exit
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-amd64.tar.gz
+        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-arm64.tar.gz
+        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-arm64.tar.gz
     elif [[ $(uname -m) = 'armv7l' ]]
     then
-        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.20.linux-armv6l.tar.gz
+        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
@@ -364,6 +364,8 @@ function post_install() {
     echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
     cp /opt/.exegol_history ~/.zsh_history
     cp /opt/.exegol_history ~/.bash_history
+    colorecho "Removing desktop icons"
+    if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
 }
 
 # Package dedicated to the basic things the env needs
@@ -397,7 +399,7 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.6 2"
+    PYTHON_VERSIONS="3.11 3.12 3.10 3.6 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
@@ -480,7 +482,7 @@ function package_base() {
     tldr -u
 
     # NVM (install in conctext)
-    zsh -c "source ~/.zshrc && nvm install node"
+    zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/
