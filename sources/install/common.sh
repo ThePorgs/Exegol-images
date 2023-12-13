@@ -77,6 +77,11 @@ function set_python_env() {
     eval "$(pyenv init --path)"
 }
 
+function set_asdf_env() {
+    colorecho "Setting env for asdf"
+    source "$HOME/.asdf/asdf.sh"
+}
+
 ### Catch & retry definitions
 
 function catch_and_retry() {

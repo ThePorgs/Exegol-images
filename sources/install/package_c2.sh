@@ -52,6 +52,7 @@ function install_routersploit() {
 
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
+    asdf local golang 1.19
     colorecho "Installing Sliver"
     # Deletion of --depth 1 due to installation of stable branch
     git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
@@ -64,7 +65,7 @@ function install_sliver() {
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      git checkout tags/v1.5.39
+      git checkout tags/v1.5.41
     fi
     make
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
@@ -154,6 +155,7 @@ function package_c2() {
     set_go_env
     set_ruby_env
     set_python_env
+    set_asdf_env
     install_empire                  # Post-ex and adversary simulation framework
     install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
     install_metasploit              # Offensive framework

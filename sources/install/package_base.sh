@@ -49,27 +49,32 @@ function filesystem() {
 
 function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
-    if command -v /usr/local/go/bin/go &>/dev/null; then
-        return
-    fi
-    colorecho "Installing go (Golang)"
-    cd /tmp/ || exit
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-arm64.tar.gz
-    elif [[ $(uname -m) = 'armv7l' ]]
-    then
-        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-    rm -rf /usr/local/go
-    tar -C /usr/local -xzf /tmp/go.tar.gz
-    rm -rf /tmp/go.tar.gz
-    export PATH=$PATH:/usr/local/go/bin
+    asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
+    asdf install golang latest
+    # 1.19 needed by sliver
+    asdf install golang 1.19
+    asdf global golang latest
+#    if command -v /usr/local/go/bin/go &>/dev/null; then
+#        return
+#    fi
+#    colorecho "Installing go (Golang)"
+#    cd /tmp/ || exit
+#    if [[ $(uname -m) = 'x86_64' ]]
+#    then
+#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+#    elif [[ $(uname -m) = 'aarch64' ]]
+#    then
+#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-arm64.tar.gz
+#    elif [[ $(uname -m) = 'armv7l' ]]
+#    then
+#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz
+#    else
+#        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+#    fi
+#    rm -rf /usr/local/go
+#    tar -C /usr/local -xzf /tmp/go.tar.gz
+#    rm -rf /tmp/go.tar.gz
+#    export PATH=$PATH:/usr/local/go/bin
     add-test-command "go version"
 }
 
@@ -368,6 +373,15 @@ function post_install() {
     if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
 }
 
+function install_asdf() {
+    colorecho "Install asdf"
+    # creates ~/.asdf/
+    git -C "$HOME" clone --depth 1 --branch v0.13.1 https://github.com/asdf-vm/asdf .asdf
+    source "$HOME/.asdf/asdf.sh"
+    # completions file
+    source "$HOME/.asdf/completions/asdf.bash"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
     update
@@ -396,6 +410,8 @@ function package_base() {
     install_locales
     cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
     cp -v /root/sources/assets/shells/bashrc ~/.bashrc
+
+    install_asdf
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
