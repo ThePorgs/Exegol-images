@@ -471,6 +471,7 @@ function package_base() {
     add-aliases bat
     add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
+    set_asdf_env
     install_gf                                          # wrapper around grep
     install_firefox
 
