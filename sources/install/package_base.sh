@@ -374,12 +374,15 @@ function post_install() {
 }
 
 function install_asdf() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Install asdf"
     # creates ~/.asdf/
     git -C "$HOME" clone --depth 1 --branch v0.13.1 https://github.com/asdf-vm/asdf .asdf
     source "$HOME/.asdf/asdf.sh"
     # completions file
     source "$HOME/.asdf/completions/asdf.bash"
+    add-history "asdf version"
+    add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
 
 # Package dedicated to the basic things the env needs
