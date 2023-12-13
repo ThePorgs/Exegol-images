@@ -49,6 +49,7 @@ function filesystem() {
 
 function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
+    colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
     asdf install golang latest
     # 1.19 needed by sliver
@@ -57,7 +58,6 @@ function install_go() {
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
 #        return
 #    fi
-#    colorecho "Installing go (Golang)"
 #    cd /tmp/ || exit
 #    if [[ $(uname -m) = 'x86_64' ]]
 #    then
@@ -374,14 +374,14 @@ function post_install() {
 }
 
 function install_asdf() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Install asdf"
     # creates ~/.asdf/
     git -C "$HOME" clone --depth 1 --branch v0.13.1 https://github.com/asdf-vm/asdf .asdf
     source "$HOME/.asdf/asdf.sh"
     # completions file
     source "$HOME/.asdf/completions/asdf.bash"
-    add-history "asdf version"
+    add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
 
