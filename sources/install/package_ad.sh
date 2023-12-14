@@ -1046,6 +1046,23 @@ function install_rusthound() {
     add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,BloodHound ingestor in Rust."
 }
 
+function install_rusthound-ce() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing RustHound for BloodHound-CE"
+    fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
+    git -C /opt/tools/ clone --depth 1 --branch v2 https://github.com/OPENCYBER-FR/RustHound RustHound-CE
+    cd /opt/tools/RustHound-CE || exit
+    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
+    source "$HOME/.cargo/env"
+    cargo build --release
+    # Clean dependencies used to build the binary
+    rm -rf target/release/{deps,build}
+    ln -v -s /opt/tools/RustHound-CE/target/release/rusthound /opt/tools/bin/rusthound-ce
+    add-history rusthound-ce
+    add-test-command "rusthound-ce --help"
+    add-to-list "rusthound (v2),https://github.com/OPENCYBER-FR/RustHound,BloodHound-CE ingestor in Rust."
+}
+
 function install_certsync() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing certsync"
@@ -1348,6 +1365,7 @@ function package_ad() {
     install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
     install_ldeep
     install_rusthound
+    install_rusthound-ce
     install_certsync
     install_keepwn
     install_pre2k

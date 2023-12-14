@@ -1,0 +1,4 @@
+rustscan-ce --addresses "$TARGET" --scripts custom --ulimit 5000
+rustscan-ce --addresses "$TARGET" --greppable
+rustscan-ce --addresses "$TARGET" --ports 80,443,8080
+rustscan-ce --addresses "$TARGET" --top
