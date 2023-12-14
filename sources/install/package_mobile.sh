@@ -116,9 +116,7 @@ function install_mobsf(){
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
-    set_cargo_env
-    set_ruby_env
-    set_python_env
+    set_env
     install_mobile_apt_tools
     install_scrpy
     install_smali

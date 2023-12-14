@@ -113,9 +113,7 @@ function install_chainsaw() {
 
 # Package dedicated to forensic tools
 function package_forensic() {
-    set_cargo_env
-    set_ruby_env
-    set_python_env
+    set_env
     install_forensic_apt_tools
     install_volatility2             # Memory analysis tool
     install_volatility3             # Memory analysis tool v2

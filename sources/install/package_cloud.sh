@@ -120,9 +120,7 @@ function install_azure_cli() {
 
 # Package dedicated to cloud tools
 function package_cloud() {
-    set_cargo_env
-    set_ruby_env
-    set_python_env
+    set_env
     install_kubectl
     install_awscli
     install_scout           # Multi-Cloud Security Auditing Tool

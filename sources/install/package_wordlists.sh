@@ -96,9 +96,7 @@ function install_genusernames() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
-    set_cargo_env
-    set_ruby_env
-    set_python_env
+    set_env
     install_wordlists_apt_tools
     install_cewl                    # Wordlist generator
     install_cewler                  # cewl alternative in Python

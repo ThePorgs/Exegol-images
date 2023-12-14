@@ -831,10 +831,7 @@ function install_sslscan() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
-    set_cargo_env
-    set_go_env
-    set_ruby_env
-    set_python_env
+    set_env
     install_web_apt_tools
     install_weevely                 # Weaponized web shell
     install_whatweb                 # Recognises web technologies including content management

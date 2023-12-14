@@ -82,6 +82,15 @@ function set_asdf_env() {
     source "$HOME/.asdf/asdf.sh"
 }
 
+function set_env() {
+    colorecho "Setting env (caller)"
+    set_cargo_env
+    set_go_env
+    set_ruby_env
+    set_python_env
+    set_asdf_env
+}
+
 ### Catch & retry definitions
 
 function catch_and_retry() {

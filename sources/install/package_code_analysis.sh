@@ -46,9 +46,7 @@ function install_pp-finder() {
 
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
-    set_cargo_env
-    set_ruby_env
-    set_python_env
+    set_env
     install_vulny-code-static-analysis
     install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
     install_semgrep                     # Static analysis engine for finding bugs and vulnerabilities

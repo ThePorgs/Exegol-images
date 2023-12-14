@@ -151,11 +151,7 @@ function install_villain() {
 
 # Package dedicated to command & control frameworks
 function package_c2() {
-    set_cargo_env
-    set_go_env
-    set_ruby_env
-    set_python_env
-    set_asdf_env
+    set_env
     install_empire                  # Post-ex and adversary simulation framework
     install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
     install_metasploit              # Offensive framework
