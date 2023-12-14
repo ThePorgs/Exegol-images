@@ -64,7 +64,8 @@ function install_bettercap() {
     colorecho "Installing Bettercap"
     fapt libpcap-dev libusb-1.0-0-dev libnetfilter-queue-dev
     go install -v github.com/bettercap/bettercap@latest
-    /root/go/bin/bettercap -eval "caplets.update; ui.update; q"
+    asdf reshim golang
+    bettercap -eval "caplets.update; ui.update; q"
     sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/http-ui.cap
     sed -i 's/set api.rest.password pass/set api.rest.password exegol4thewin/g' /usr/local/share/bettercap/caplets/http-ui.cap
     sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/https-ui.cap

@@ -25,6 +25,7 @@ function install_goshs() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing goshs"
     go install -v github.com/patrickhener/goshs@latest
+    asdf reshim golang
     add-history goshs
     add-test-command "goshs -v"
     add-to-list "goshs,https://github.com/patrickhener/goshs,Goshs is a replacement for Python's SimpleHTTPServer. It allows uploading and downloading via HTTP/S with either self-signed certificate or user provided certificate and you can use HTTP basic auth."

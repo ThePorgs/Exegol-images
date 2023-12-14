@@ -300,7 +300,8 @@ function install_privexchange() {
 function install_ruler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
-    go install github.com/sensepost/ruler@latest
+    go install -v github.com/sensepost/ruler@latest
+    asdf reshim golang
     add-history ruler
     add-test-command "ruler --version"
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
@@ -355,6 +356,7 @@ function install_amber() {
     make install && ldconfig
     # Installing amber
     go install -v github.com/EgeBalci/amber@latest
+    asdf reshim golang
     add-history amber
     add-test-command "amber --help"
     add-to-list "amber,https://github.com/EgeBalci/amber,Forensic tool to recover browser history / cookies and credentials"
@@ -638,6 +640,7 @@ function install_gosecretsdump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gosecretsdump"
     go install -v github.com/C-Sto/gosecretsdump@latest
+    asdf reshim golang
     add-history gosecretsdump
     add-test-command "gosecretsdump -version"
     add-to-list "gosecretsdump,https://github.com/c-sto/gosecretsdump,Implements NTLMSSP network authentication protocol in Go"
@@ -1014,6 +1017,7 @@ function install_kerbrute() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Kerbrute"
     go install -v github.com/ropnop/kerbrute@latest
+    asdf reshim golang
     add-history kerbrute
     add-test-command "kerbrute --help"
     add-to-list "kerbrute,https://github.com/ropnop/kerbrute,A tool to perform Kerberos pre-auth bruteforcing"

@@ -56,6 +56,7 @@ function install_assetfinder() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing assetfinder"
     go install -v github.com/tomnomnom/assetfinder@latest
+    asdf reshim golang
     add-history assetfinder
     add-test-command "assetfinder thehacker.recipes"
     add-to-list "assetfinder,https://github.com/tomnomnom/assetfinder,Tool to find subdomains and IP addresses associated with a domain."
@@ -65,6 +66,7 @@ function install_subfinder() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing subfinder"
     go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+    asdf reshim golang
     add-history subfinder
     add-test-command "subfinder -version"
     add-to-list "subfinder,https://github.com/projectdiscovery/subfinder,Tool to find subdomains associated with a domain."
@@ -242,6 +244,7 @@ function install_waybackurls() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing waybackurls"
     go install -v github.com/tomnomnom/waybackurls@latest
+    asdf reshim golang
     add-history waybackurls
     add-test-command "waybackurls -h"
     add-to-list "waybackurls,https://github.com/tomnomnom/waybackurls,Fetch all the URLs that the Wayback Machine knows about for a domain."
@@ -395,6 +398,7 @@ function install_gron() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gron"
     go install -v github.com/tomnomnom/gron@latest
+    asdf reshim golang
     add-history gron
     add-test-command "gron --help"
     add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!"

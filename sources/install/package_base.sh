@@ -285,6 +285,7 @@ function install_gf() {
     colorecho "Installing gf"
     # A wrapper around grep, to help you grep for things
     go install -v github.com/tomnomnom/gf@latest
+    asdf reshim golang
     # Enable autocompletion
     {
       # adding new-line

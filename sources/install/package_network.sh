@@ -147,6 +147,7 @@ function install_chisel() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing chisel"
     go install -v github.com/jpillora/chisel@latest
+    asdf reshim golang
     # TODO: add windows pre-compiled binaries in /opt/ressources/windows ?
     add-history chisel
     add-test-command "chisel --help"
@@ -190,6 +191,7 @@ function install_dnsx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dnsx"
     go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+    asdf reshim golang
     add-history dnsx
     add-test-command "dnsx --help"
     add-to-list "dnsx,https://github.com/projectdiscovery/dnsx,A tool for DNS reconnaissance that can help identify subdomains and other related domains."
@@ -199,6 +201,7 @@ function install_shuffledns() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing shuffledns"
     go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+    asdf reshim golang
     add-history shuffledns
     add-test-command "shuffledns --help"
     add-to-list "shuffledns,https://github.com/projectdiscovery/shuffledns,A fast and customizable DNS resolver that can be used for subdomain enumeration and other tasks."

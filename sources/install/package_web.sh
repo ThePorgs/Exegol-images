@@ -69,6 +69,7 @@ function install_gobuster() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gobuster"
     go install -v github.com/OJ/gobuster/v3@latest
+    asdf reshim golang
     add-history gobuster
     add-test-command "gobuster --help"
     add-to-list "gobuster,https://github.com/OJ/gobuster,Tool to discover hidden files and directories."
@@ -92,6 +93,7 @@ function install_amass() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Amass"
     go install -v github.com/owasp-amass/amass/v3/...@master
+    asdf reshim golang
     add-history amass
     add-test-command "amass -version"
     add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration / attack surface mapping & external assets discovery tool"
@@ -441,6 +443,7 @@ function install_hakrawler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hakrawler"
     go install -v github.com/hakluke/hakrawler@latest
+    asdf reshim golang
     add-history hakrawler
     add-test-command "hakrawler --help"
     add-to-list "hakrawler,https://github.com/hakluke/hakrawler,a fast web crawler for gathering URLs and other information from websites"
@@ -450,6 +453,7 @@ function install_gowitness() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gowitness"
     go install -v github.com/sensepost/gowitness@latest
+    asdf reshim golang
     add-history gowitness
     add-test-command "gowitness --help"
     add-test-command "gowitness single https://exegol.readthedocs.io" # check the chromium dependency
@@ -508,6 +512,7 @@ function install_wuzz() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wuzz"
     go install -v github.com/asciimoo/wuzz@latest
+    asdf reshim golang
     add-history wuzz
     add-test-command "wuzz --help"
     add-to-list "wuzz,https://github.com/asciimoo/wuzz,a command-line tool for interacting with HTTP(S) web services"
@@ -608,6 +613,7 @@ function install_byp4xx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing byp4xx"
     go install -v github.com/lobuhi/byp4xx@latest
+    asdf reshim golang
     add-history byp4xx
     add-test-command byp4xx
     add-to-list "byp4xx,https://github.com/lobuhi/byp4xx,A Swiss Army knife for bypassing web application firewalls and filters."
@@ -669,7 +675,8 @@ function install_nuclei() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Nuclei"
     go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
-    /root/go/bin/nuclei -update-templates
+    asdf reshim golang
+    nuclei -update-templates
     add-history nuclei
     add-test-command "nuclei --version"
     add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues / including XSS / SQL injection / and misconfigured servers."
@@ -688,6 +695,7 @@ function install_hakrevdns() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Hakrevdns"
     go install -v github.com/hakluke/hakrevdns@latest
+    asdf reshim golang
     add-history hakrevdns
     add-test-command "hakrevdns --help|& grep 'Protocol to use for lookups'"
     add-to-list "hakrevdns,https://github.com/hakluke/hakrevdns,Reverse DNS lookup utility that can help with discovering subdomains and other information."
@@ -697,6 +705,7 @@ function install_httprobe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httprobe"
     go install -v github.com/tomnomnom/httprobe@latest
+    asdf reshim golang
     add-history httprobe
     add-test-command "httprobe --help"
     add-to-list "httprobe,https://github.com/tomnomnom/httprobe,A simple utility for enumerating HTTP and HTTPS servers."
@@ -706,6 +715,7 @@ function install_httpx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httpx"
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+    asdf reshim golang
     add-history httpx
     add-test-command "httpx --help"
     add-to-list "httpx,https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities / including outdated software versions and weak encryption protocols."
@@ -715,6 +725,7 @@ function install_anew() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing anew"
     go install -v github.com/tomnomnom/anew@latest
+    asdf reshim golang
     add-history anew
     add-test-command "anew --help"
     add-to-list "anew,https://github.com/tomnomnom/anew,A simple tool for filtering and manipulating text data / such as log files and other outputs."
@@ -732,9 +743,9 @@ function install_robotstester() {
 function install_naabu() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing naabu"
-    # TODO: Check if deps is already installed
     fapt libpcap-dev
     go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
+    asdf reshim golang
     add-history naabu
     add-test-command "naabu --help"
     add-to-list "naabu,https://github.com/projectdiscovery/naabu,A fast and reliable port scanner that can detect open ports and services."
