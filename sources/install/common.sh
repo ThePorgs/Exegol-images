@@ -53,24 +53,18 @@ function fapt() {
 }
 
 function set_cargo_env() {
-    colorecho "Setting cargo environment variables for installation"
+    colorecho "Setting cargo environment"
     source "$HOME/.cargo/env"
 }
 
-function set_go_env() {
-    colorecho "Setting golang environment variables for installation"
-    export GO111MODULE=auto
-    export PATH=$PATH:/usr/local/go/bin:/root/.local/bin
-}
-
 function set_ruby_env() {
-    colorecho "Setting ruby environment variables for installation"
+    colorecho "Setting ruby environment"
     source /usr/local/rvm/scripts/rvm
     rvm use 3.2.2@default
 }
 
 function set_python_env() {
-    colorecho "Setting pyenv environment variables for installation"
+    colorecho "Setting pyenv environment"
     # add pyenv to PATH
     export PATH="/root/.pyenv/bin:$PATH"
     # add python commands (pyenv shims) to PATH
@@ -85,7 +79,6 @@ function set_asdf_env() {
 function set_env() {
     colorecho "Setting env (caller)"
     set_cargo_env
-    set_go_env
     set_ruby_env
     set_python_env
     set_asdf_env

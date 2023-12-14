@@ -18,10 +18,6 @@ export PATH=/opt/tools/bin:$PATH
 export JOHN=/opt/tools/john/run
 export PATH=$JOHN:$PATH
 
-# Adding GO to PATH
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
-
 # aliases
 source /opt/.exegol_aliases
 # Loads user-defined aliases if the file exists otherwise creates a default file if my-resources is enabled in the container
