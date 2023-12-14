@@ -52,11 +52,11 @@ function install_routersploit() {
 
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
-    asdf local golang 1.19
     colorecho "Installing Sliver"
     # Deletion of --depth 1 due to installation of stable branch
     git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
     cd /opt/tools/sliver || exit
+    asdf local golang 1.19
     # making the static version checkout a temporary thing
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
