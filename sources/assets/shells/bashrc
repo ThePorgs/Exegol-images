@@ -8,5 +8,6 @@ export FZF_BASE=/opt/tools/fzf
 # asdf
 source "$HOME/.asdf/asdf.sh"
 source "$HOME/.asdf/completions/asdf.bash"
+export GOPATH=$(go env GOPATH)
 
 PS1="\[\e[37m\][\[\e[33m\]\D{%b %d, %Y - %T (%Z)}\[\e[37m\]]\[\e[m\]${LOGGING}\[\e[1;38;5;13m\] \h \[\e[1;34m\]\w $(prompt_char)\[\e[m\] "

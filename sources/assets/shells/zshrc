@@ -9,10 +9,12 @@ ZSH_THEME="gentoo"
 export FZF_BASE=/opt/tools/fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm asdf)
-
 # asdf
 source ~/.asdf/plugins/golang/set-env.zsh
+# GOPATH is not set when sourcing asdf's set-env.zsh
+export GOPATH=$(go env GOPATH)
+
+plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm asdf)
 
 # oh-my-zsh
 source $ZSH/oh-my-zsh.sh
