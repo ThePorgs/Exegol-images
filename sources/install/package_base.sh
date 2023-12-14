@@ -460,7 +460,6 @@ function package_base() {
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
     install_go                                          # Golang language
-    set_go_env
     install_ohmyzsh                                     # Awesome shell
     install_fzf                                         # Fuzzy finder
     add-history curl
@@ -471,7 +470,6 @@ function package_base() {
     add-aliases bat
     add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
-    set_asdf_env
     install_gf                                          # wrapper around grep
     install_firefox
 
