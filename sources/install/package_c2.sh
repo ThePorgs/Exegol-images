@@ -123,6 +123,7 @@ function install_havoc() {
     go mod download golang.org/x/sys
     go mod download github.com/ugorji/go
     cd /opt/tools/Havoc || exit
+    sed -i 's/golang-go//' teamserver/Install.sh
     make ts-build
     # ln -v -s /opt/tools/Havoc/havoc /opt/tools/bin/havoc
     # Symbolic link above not needed because Havoc relies on absolute links, the user needs be changed directory when running havoc

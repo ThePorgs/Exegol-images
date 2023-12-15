@@ -163,11 +163,9 @@ function install_cyberchef() {
     colorecho "Installing CyberChef"
     local last_version
     last_version=$(git ls-remote --tags --sort='v:refname' https://github.com/gchq/CyberChef.git | tail -n 1 | cut -d '/' -f 3 | cut -d '^' -f 1)
-
     if [[ -z "$last_version" ]]; then
         criticalecho-noexit "Latest version not found" && return
     fi
-
     mkdir /opt/tools/CyberChef
     wget https://github.com/gchq/CyberChef/releases/download/"$last_version"/CyberChef_"$last_version".zip -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/

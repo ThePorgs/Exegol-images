@@ -292,7 +292,7 @@ function install_gf() {
       echo ''
       echo '# Enable gf autocompletion'
       # shellcheck disable=SC2016
-      echo 'source $(sh -c "go env GOPATH")/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh'
+      echo 'source "$GOPATH"/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh'
     } >> ~/.zshrc
     cp -r "$(sh -c "go env GOPATH")"/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
     # Add patterns from 1ndianl33t
