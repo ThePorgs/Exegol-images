@@ -58,31 +58,26 @@ jobs:
           fi
           cat $GITHUB_OUTPUT
       - name: Check changes
-        # not sure this does what we want. It seems to determine the changes in the whole PR, not the in the latest commit.
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            base:
-              - 'sources/install/package_base.sh'
-              - 'sources/install/package_misc.sh'
-              - 'sources/install/package_desktop.sh'
-              - 'sources/install/post_install.sh'
-            package_base:
-              - 'sources/install/package_base.sh'
-            package_misc:
-              - 'sources/install/package_misc.sh'
-            package_desktop:
-              - 'sources/install/package_desktop.sh'
-            post_install:
-              - 'sources/install/post_install.sh'
-      - name: (debug) Check changes results
+        id: check_changes
         run: |
-          echo ${{steps.changes.outputs.base}}
-          echo ${{steps.changes.outputs.package_base}}
-          echo ${{steps.changes.outputs.package_misc}}
-          echo ${{steps.changes.outputs.package_desktop}}
-          echo ${{steps.changes.outputs.post_install}}
+          file_list=$(git diff --name-only HEAD HEAD~1)
+          files_to_check=(
+              "sources/install/package_base.sh"
+              "sources/install/entrypoint.sh"
+              "sources/install/package_desktop.sh"
+              "sources/install/post_install.sh"
+          )
+          for file_to_check in "${files_to_check[@]}"; do
+              if [[ $file_list =~ $file_to_check ]]; then
+                  echo "Base layer must be compiled"
+                  echo "base_changed=true" >> $GITHUB_OUTPUT
+                  break
+              fi
+          done
+      - name: (dbg) print changes
+        run: git diff --name-only HEAD HEAD~1
+      - name: (dbg) print result
+        run: echo ${{ steps.check_changes.outputs.base_changed }}
 
 
   code_check:
