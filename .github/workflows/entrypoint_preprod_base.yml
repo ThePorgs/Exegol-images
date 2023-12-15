@@ -62,6 +62,7 @@ jobs:
       - name: Check changes
         id: check_changes
         run: |
+          # we get all changes in the PR, need only the most recent
           file_list=$(git diff --name-only HEAD HEAD~1)
           files_to_check=(
               "sources/install/package_base.sh"
