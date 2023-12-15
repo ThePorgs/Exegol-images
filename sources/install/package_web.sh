@@ -843,6 +843,9 @@ function install_sslscan() {
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_web_apt_tools
     install_weevely                 # Weaponized web shell
     install_whatweb                 # Recognises web technologies including content management
@@ -913,4 +916,7 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package web completed in $elapsed_time seconds."
 }

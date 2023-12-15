@@ -49,6 +49,9 @@ function install_most_used_apt_tools() {
 # Package dedicated to most used offensive tools
 function package_most_used() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_most_used_apt_tools
     install_metasploit              # Offensive framework
     install_nmap                    # Port scanner
@@ -83,4 +86,7 @@ function package_most_used() {
     install_netexec                 # Crackmapexec repo
     install_sslscan                 # SSL/TLS scanner
     install_cyberchef               # A web based toolbox
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package most_used completed in $elapsed_time seconds."
 }

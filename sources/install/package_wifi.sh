@@ -106,6 +106,9 @@ function install_hcxdumptool() {
 # Package dedicated to wifi pentest tools
 function package_wifi() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_wifi_apt_tools
     install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
     install_wifite2                 # Retrieving password of a wireless access point (router)
@@ -113,4 +116,7 @@ function package_wifi() {
     install_bettercap               # MiTM tool
     install_hcxtools                # Tools for PMKID and other wifi attacks
     install_hcxdumptool             # Small tool to capture packets from wlan devices
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package wifi completed in $elapsed_time seconds."
 }

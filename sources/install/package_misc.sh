@@ -180,6 +180,9 @@ function install_cyberchef() {
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_misc_apt_tools
     install_goshs           # Web uploader/downloader page
     install_searchsploit    # Exploitdb local search engine
@@ -193,4 +196,7 @@ function package_misc() {
     install_tig             # ncurses-based text-mode interface for git
     install_yt-dlp          # A youtube-dl fork with additional features and fixes
     install_cyberchef       # A web based toolbox
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package misc completed in $elapsed_time seconds."
 }

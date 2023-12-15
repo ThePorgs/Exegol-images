@@ -268,6 +268,9 @@ function install_legba() {
 # Package dedicated to network pentest tools
 function package_network() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_network_apt_tools
     install_proxychains             # Network tool
     install_nmap                    # Port scanner
@@ -286,4 +289,7 @@ function package_network() {
     install_ligolo-ng               # Tunneling tool that uses a TUN interface
     install_rustscan
     install_legba                   # Login Scanner
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package network completed in $elapsed_time seconds."
 }

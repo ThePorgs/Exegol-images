@@ -152,6 +152,9 @@ function install_villain() {
 # Package dedicated to command & control frameworks
 function package_c2() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_empire                  # Post-ex and adversary simulation framework
     install_pwncat                  # netcat and rlwrap on steroids to handle revshells, automates a few things too
     install_metasploit              # Offensive framework
@@ -159,4 +162,7 @@ function package_c2() {
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
     install_havoc                   # C2 in Go
     install_villain                 # C2 using hoaxShell in Python
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package c2 completed in $elapsed_time seconds."
 }

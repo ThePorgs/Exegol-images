@@ -143,6 +143,9 @@ function install_pwninit() {
 # Package dedicated to reverse engineering tools
 function package_reverse() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_reverse_apt_tools
     install_pwntools                # CTF framework and exploit development library
     install_pwndbg                  # Advanced Gnu Debugger
@@ -153,4 +156,7 @@ function package_reverse() {
     install_ida
     install_jd-gui                  # Java decompiler
     install_pwninit                 # Tool for automating starting binary exploit
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package reverse completed in $elapsed_time seconds."
 }

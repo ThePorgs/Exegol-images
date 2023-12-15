@@ -547,6 +547,9 @@ function install_pymeta() {
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_osint_apt_tools
     install_youtubedl               # Command-line program to download videos from YouTube.com and other video sites
     install_sublist3r               # Fast subdomains enumeration tool
@@ -591,4 +594,7 @@ function package_osint() {
     install_censys                  # An easy-to-use and lightweight API wrapper for Censys APIs
     install_gomapenum               # Nothing new but existing techniques are brought together in one tool.
     install_pymeta
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package osint completed in $elapsed_time seconds."
 }

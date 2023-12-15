@@ -121,6 +121,9 @@ function install_azure_cli() {
 # Package dedicated to cloud tools
 function package_cloud() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_kubectl
     install_awscli
     install_scout           # Multi-Cloud Security Auditing Tool
@@ -129,4 +132,7 @@ function package_cloud() {
     install_prowler
     install_cloudmapper
     install_azure_cli       # Command line for Azure
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package cloud completed in $elapsed_time seconds."
 }

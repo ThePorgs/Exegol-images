@@ -114,6 +114,9 @@ function install_chainsaw() {
 # Package dedicated to forensic tools
 function package_forensic() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_forensic_apt_tools
     install_volatility2             # Memory analysis tool
     install_volatility3             # Memory analysis tool v2
@@ -121,4 +124,7 @@ function package_forensic() {
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package forensic completed in $elapsed_time seconds."
 }

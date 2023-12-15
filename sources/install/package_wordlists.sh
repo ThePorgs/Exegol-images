@@ -97,6 +97,9 @@ function install_genusernames() {
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_wordlists_apt_tools
     install_cewl                    # Wordlist generator
     install_cewler                  # cewl alternative in Python
@@ -104,4 +107,7 @@ function package_wordlists() {
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package wordlists completed in $elapsed_time seconds."
 }

@@ -1303,8 +1303,11 @@ function install_ntlm_theft() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
-    install_ad_apt_tools
     set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
+    install_ad_apt_tools
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
     install_crackmapexec            # Network scanner
@@ -1393,4 +1396,7 @@ function package_ad() {
     # install_scrtdnsdump          # This tool is a fork of adidnsdump (https://github.com/dirkjanm/adidnsdump). We are currently waiting to see if a PR will be made.
     install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
     install_ntlm_theft
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package ad completed in $elapsed_time seconds."
 }
