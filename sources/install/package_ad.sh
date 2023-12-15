@@ -503,16 +503,18 @@ function install_libmspack() {
 }
 
 function install_windapsearch-go() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Go windapsearch"
     # Install mage dependency
     git -C /opt/tools/ clone --depth 1 https://github.com/magefile/mage
     cd /opt/tools/mage || exit
     go run bootstrap.go
+    asdf reshim golang
     # Install windapsearch tool
     git -C /opt/tools/ clone --depth 1 https://github.com/ropnop/go-windapsearch
     cd /opt/tools/go-windapsearch || exit
-    /root/go/bin/mage build
-    add-aliases windapsearch
+    mage build
+    ln -v -s /opt/tools/go-windapsearch/windapsearch /opt/tools/bin/windapsearch
     add-history windapsearch
     add-test-command "windapsearch --version"
     add-to-list "windapsearch-go,https://github.com/ropnop/go-windapsearch/,Active Directory enumeration tool."
