@@ -77,7 +77,7 @@ jobs:
               fi
           done
       - name: (dbg) print changes
-        run: git diff --name-only HEAD HEAD~1
+        run: git diff --name-only HEAD^1 HEAD
       - name: (dbg) print result
         run: echo ${{ steps.check_changes.outputs.base_changed }}
 
