@@ -667,7 +667,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2023-12-15" # 21 Oct. 2023
+    local temp_fix_limit="2024-01-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -695,13 +695,6 @@ function install_bloodhound-quickwin() {
     cd /opt/tools/bloodhound-quickwin || exit
     python3 -m venv ./venv/
     source ./venv/bin/activate
-    # https://github.com/kaluche/bloodhound-quickwin/issues/2
-    local temp_fix_limit="2023-12-15"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pip3 install git+https://github.com/elena/py2neo
-    fi
     pip3 install -r requirements.txt
     deactivate
     add-aliases bloodhound-quickwin
@@ -777,7 +770,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2023-12-15" # 21 Oct. 2023
+    local temp_fix_limit="2024-01-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -966,7 +959,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2023-12-15" # 21 Oct. 2023
+    local temp_fix_limit="2024-01-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -982,20 +975,13 @@ function install_ldaprelayscan() {
 function install_goldencopy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
-    # https://github.com/Dramelac/GoldenCopy/issues/1
-    local temp_fix_limit="2023-12-15"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
-      cd /opt/tools/GoldenCopy || exit
-      python3 -m venv ./venv/
-      source ./venv/bin/activate
-      pip3 install --no-deps .
-      pip3 install git+https://github.com/elena/py2neo
-      deactivate
-      ln -v -s /opt/tools/GoldenCopy/venv/bin/goldencopy /opt/tools/bin/goldencopy
-    fi
+    git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
+    cd /opt/tools/GoldenCopy || exit
+    python3 -m venv ./venv/
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    ln -v -s /opt/tools/GoldenCopy/venv/bin/goldencopy /opt/tools/bin/goldencopy
     add-history goldencopy
     add-test-command "goldencopy --help"
     add-to-list "goldencopy,https://github.com/Dramelac/GoldenCopy,Copy the properties and groups of a user from neo4j (bloodhound) to create an identical golden ticket"
