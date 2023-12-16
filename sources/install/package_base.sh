@@ -291,7 +291,6 @@ function install_gf() {
       # adding new-line
       echo ''
       echo '# Enable gf autocompletion'
-      # shellcheck disable=SC2016
       # FIXME GOPATH not set
 #      echo 'source "$GOPATH"/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh'
     } >> ~/.zshrc
