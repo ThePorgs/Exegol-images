@@ -12,10 +12,9 @@ export FZF_BASE=/opt/tools/fzf
 plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm asdf)
 
 # asdf
+source "$HOME/.asdf/asdf.sh"
 source ~/.asdf/plugins/golang/set-env.zsh
-# GOPATH is not set when sourcing asdf's set-env.zsh
-# FIXME go not found
-# export GOPATH=$(go env GOPATH)
+export GOPATH=$(go env GOPATH)
 
 # oh-my-zsh
 source $ZSH/oh-my-zsh.sh
