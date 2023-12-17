@@ -34,7 +34,6 @@ function install_most_used_apt_tools() {
     add-history fcrackzip
 
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
-    add-test-command "weevely --help"                               # Awesome secure and light PHP webshell
     add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
     add-test-command "hashcat --help"                               # Password cracker
     add-test-command "fcrackzip --help"                             # Zip cracker
