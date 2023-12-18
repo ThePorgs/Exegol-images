@@ -52,14 +52,14 @@ case "$mode" in
   vnc)
     if [[ "$host" == "127.0.0.1" || "$host" == "localhost" ]]; then
         # In network host mode, vncserver can directly be accessed on localhost interface
-        vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "Plain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+        vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
     elif [[ "$host" == "0.0.0.0" ]]; then
         # When opening VNC on every interface, vncserver can be exposed directly
-        vncserver -localhost "no" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "Plain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+        vncserver -localhost "no" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
     else
         # When a specific interface is supplied, socat must be used to expose the service on a single IP
         vnc_port=$(comm -23 <(seq 49152 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1)  # Find a random available port
-        vncserver -localhost "yes" -rfbport "$vnc_port" -geometry "1920x1080" -SecurityTypes "Plain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+        vncserver -localhost "yes" -rfbport "$vnc_port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
         socat TCP4-LISTEN:"$port",fork,bind="$host" TCP4:127.0.0.1:"$vnc_port" &
     fi
 
