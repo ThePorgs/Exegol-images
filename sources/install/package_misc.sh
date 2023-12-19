@@ -112,17 +112,17 @@ function install_ngrok() {
     colorecho "Installing ngrok"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+        wget -O /tmp/ngrok.tgz https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm64.zip
+        wget -O /tmp/ngrok.tgz https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm64.tgz
     elif [[ $(uname -m) = 'armv7l' ]]
     then
-        wget -O /tmp/ngrok.zip https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip
+        wget -O /tmp/ngrok.tgz https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm.tgz
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    unzip -d /opt/tools/bin/ /tmp/ngrok.zip
+    tar xvzf /tmp/ngrok.tgz -C /opt/tools/bin
     add-history ngrok
     add-test-command "ngrok version"
     add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet"
