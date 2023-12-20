@@ -254,6 +254,7 @@ function install_rustscan() {
 function install_legba() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing legba"
+    fapt libsmbclient-dev libsmbclient
     git -C /opt/tools/ clone --depth 1 https://github.com/evilsocket/legba
     cd /opt/tools/legba || exit
     cargo build --release
