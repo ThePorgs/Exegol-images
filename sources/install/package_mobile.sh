@@ -56,9 +56,9 @@ function install_smali() {
 function install_dex2jar() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dex2jar"
-    wget https://github.com/pxb1988/dex2jar/releases/download/v2.3/dex2jar-v2.zip -O /tmp/dex2jar.zip
+    wget https://github.com/pxb1988/dex2jar/releases/download/v2.4/dex-tools-v2.4.zip -O /tmp/dex2jar.zip
     unzip /tmp/dex2jar.zip -d /opt/tools/
-    mv /opt/tools/dex2jar-v2.3/ /opt/tools/dex2jar
+    mv -v /opt/tools/dex-tools-v2.4/ /opt/tools/dex2jar
     find /opt/tools/dex2jar -type f -name "*.sh" -exec ln -s '{}' /opt/tools/bin ';'
     add-history dex2jar
     add-test-command "d2j-dex2jar.sh --help"

@@ -493,6 +493,7 @@ function install_blackbird() {
 }
 
 function install_sherlock() {
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Sherlock"
     git -C /opt/tools/ clone --depth 1 https://github.com/sherlock-project/sherlock
     cd /opt/tools/sherlock || exit
@@ -501,7 +502,6 @@ function install_sherlock() {
     pip3 install -r requirements.txt
     deactivate
     add-aliases sherlock
-    add-history sherlock
     add-test-command "sherlock.py --help"
     add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks."
 }

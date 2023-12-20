@@ -61,7 +61,7 @@ function install_wfuzz() {
     rm -rf /tmp/wfuzz
     add-history wfuzz
     add-test-command "wfuzz --help"
-    add-test-command "[[ -d '/usr/share/wfuzz/' ]] || exit 1"
+    add-test-command "test -d '/usr/share/wfuzz/' || exit 1"
     add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
 }
 
@@ -151,6 +151,7 @@ function install_gopherus() {
 }
 
 function install_nosqlmap() {
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing NoSQLMap"
     git -C /opt/tools clone --depth 1 https://github.com/codingo/NoSQLMap.git
     cd /opt/tools/NoSQLMap || exit
@@ -162,7 +163,6 @@ function install_nosqlmap() {
     pip2 install certifi==2018.10.15
     deactivate
     add-aliases nosqlmap
-    add-history nosqlmap
     add-test-command "nosqlmap.py --help"
     add-to-list "nosqlmap,https://github.com/codingo/NoSQLMap,a Python tool for testing NoSQL databases for security vulnerabilities."
 }

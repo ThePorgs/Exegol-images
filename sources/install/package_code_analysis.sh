@@ -3,15 +3,6 @@
 
 source common.sh
 
-function install_vulny-code-static-analysis() {
-    colorecho "Installing Vulny Code Static Analysis"
-    git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/Vulny-Code-Static-Analysis
-    add-aliases vulny-code-static-analysis
-    add-history vulny-code-static-analysis
-    add-test-command "vulny-code-static-analysis.py --help"
-    add-to-list "vulny-code-static-analysis,https://github.com/swisskyrepo/Vulny-Code-Static-Analysis,Static analysis tool for C code"
-}
-
 function install_brakeman() {
     colorecho "Installing Brakeman"
     rvm use 3.2.2@brakeman --create
@@ -50,7 +41,6 @@ function package_code_analysis() {
     local start_time
     local end_time
     start_time=$(date +%s)
-    install_vulny-code-static-analysis
     install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
     install_semgrep                     # Static analysis engine for finding bugs and vulnerabilities
     install_pp-finder                   # Prototype pollution finder tool for javascript

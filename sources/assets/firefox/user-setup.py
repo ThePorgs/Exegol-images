@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
         # Iterate through addons
         for url in urls:
-            if re.findall(re_links, url):
+            if re.findall(pattern=re_links, string=url, flags=re.IGNORECASE):
                 # Make a request to the URL
                 link, addon_name = get_link(url)
                 # Download the addon

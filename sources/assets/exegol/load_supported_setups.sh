@@ -244,8 +244,8 @@ function deploy_bloodhound() {
 function trust_ca_certs_in_firefox() {
   colorecho "Trusting user CA certificates in Firefox"
   local file
-  if [[ -d "$MY_SETUP_PATH/firefox/certs" ]]; then
-    for file in $(find "$MY_SETUP_PATH/firefox/certs" -type f); do
+  if [[ -d "$MY_SETUP_PATH/firefox/CA" ]]; then
+    for file in $(find "$MY_SETUP_PATH/firefox/CA" -type f); do
       if [[ -f "$file" ]]; then
         if [[ "$file" == *.[dD][eE][rR] ]]; then
           local base_filename_without_extension
@@ -257,7 +257,7 @@ function trust_ca_certs_in_firefox() {
       fi
     done
   else
-    mkdir --parents "$MY_SETUP_PATH/firefox/certs/" && chmod 770 -R "$MY_SETUP_PATH/firefox/certs/"
+    mkdir --parents "$MY_SETUP_PATH/firefox/CA/" && chmod 770 -R "$MY_SETUP_PATH/firefox/CA/"
   fi
 }
 

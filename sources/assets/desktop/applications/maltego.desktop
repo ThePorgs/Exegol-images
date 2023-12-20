@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Maltego
-Comment=TODO
+Comment=Link analysis software used for open-source intelligence
 Exec=/usr/bin/maltego
 Icon=/usr/share/pixmaps/maltego.png
 Terminal=false
