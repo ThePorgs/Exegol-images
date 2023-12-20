@@ -31,7 +31,8 @@ For more information, the online documentation can be consulted: https://exegol.
 ### neovim
  To automatically overwriting its neovim configuration to allow all users to use their personal configuration. 
  
- To automatically overwrite the `~/.config/nvim/` configuration, copy your config in `/opt/my-resources/setup/nvim/`
+ - To automatically overwrite the `~/.config/nvim/` configuration, copy your config in `/opt/my-resources/setup/nvim/`
+ - It is possible to install plugins dependencies with the APT customization system (see apt).
 
 ### tmux 
 
