@@ -1,1 +1,1 @@
-alias cloudfail.py='cd /opt/tools/CloudFail/ && echo "[*] changed dir : cd /opt/tools/CloudFail/" && ./venv/bin/python3 cloudfail.py'
+alias cloudfail.py='(cd /opt/tools/CloudFail/ && ./venv/bin/python3 cloudfail.py)'

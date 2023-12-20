@@ -1,1 +1,1 @@
-alias cloudmapper.py='cd /opt/tools/cloudmapper/ && echo "[*] changed dir : cd /opt/tools/cloudmapper/" && ./venv/bin/python3 cloudmapper.py'
+alias cloudmapper.py='(cd /opt/tools/cloudmapper/ && ./venv/bin/python3 cloudmapper.py)'

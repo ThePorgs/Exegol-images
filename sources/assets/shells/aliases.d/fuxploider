@@ -1,1 +1,1 @@
-alias fuxploider.py='cd /opt/tools/fuxploider && echo "[*] changed dir : cd /opt/tools/fuxploider/"  && ./venv/bin/python3 fuxploider.py'
+alias fuxploider.py='(cd /opt/tools/fuxploider && ./venv/bin/python3 fuxploider.py)'
