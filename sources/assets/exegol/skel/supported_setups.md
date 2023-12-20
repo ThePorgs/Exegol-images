@@ -28,6 +28,9 @@ For more information, the online documentation can be consulted: https://exegol.
   - `/opt/my-resources/setup/vim/plugged/*` --> `~/.vim/plugged/`
   - `/opt/my-resources/setup/vim/bundle/*` --> `~/.vim/bundle/`
 
+### neovim
+ To automatically overwriting its neovim configuration to allow all users to use their personal configuration. * To automatically overwrite the `~/.config/nvim/` configuration, copy your config in `/opt/my-resources/setup/nvim/`
+
 ### tmux 
 
 To automatically overwrite the `~/.tmux.conf` configuration file, simply create the file `/opt/my-resources/setup/tmux/tmux.conf`
