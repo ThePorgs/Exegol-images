@@ -1288,8 +1288,9 @@ function install_ntlm_theft() {
 }
 
 function install_abuseACL() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing abuseACL"
-    python3 -m pipx install git+https://github.com/AetherBlack/abuseACL/
+    pipx install git+https://github.com/AetherBlack/abuseACL/
     add-history abuseACL
     add-test-command "abuceACL --help"
     add-to-list "abuseACL,https://github.com/AetherBlack/abuseACL/,A python script to automatically list vulnerable Windows ACEs/ACLs."
