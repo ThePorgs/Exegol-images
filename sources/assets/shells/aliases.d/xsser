@@ -1,1 +1,1 @@
-alias xsser='(cd /opt/tools/xsser/ && ./venv/bin/python3 ./xsser)'
+function xsser { (cd /opt/tools/xsser/ && ./venv/bin/python3 ./xsser "$@") }

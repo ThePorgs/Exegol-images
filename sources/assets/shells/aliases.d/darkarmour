@@ -1,1 +1,1 @@
-alias darkarmour.py='(cd /opt/tools/darkarmour/ && python3 darkarmour.py)'
+function darkarmour.py { (cd /opt/tools/darkarmour/ && python3 darkarmour.py "$@") }

@@ -1,1 +1,1 @@
-alias cloudmapper.py='(cd /opt/tools/cloudmapper/ && ./venv/bin/python3 cloudmapper.py)'
+function cloudmapper.py { (cd /opt/tools/cloudmapper/ && ./venv/bin/python3 cloudmapper.py "$@") }

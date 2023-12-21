@@ -1,1 +1,1 @@
-alias clusterd.py='(cd /opt/tools/clusterd/ && ./venv/bin/python2 clusterd.py)'
+function clusterd.py { (cd /opt/tools/clusterd/ && ./venv/bin/python2 clusterd.py "$@") }
