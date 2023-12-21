@@ -1292,7 +1292,7 @@ function install_abuseACL() {
     colorecho "Installing abuseACL"
     pipx install git+https://github.com/AetherBlack/abuseACL/
     add-history abuseACL
-    add-test-command "abuceACL --help"
+    add-test-command "abuseACL --help"
     add-to-list "abuseACL,https://github.com/AetherBlack/abuseACL/,A python script to automatically list vulnerable Windows ACEs/ACLs."
 }
 
