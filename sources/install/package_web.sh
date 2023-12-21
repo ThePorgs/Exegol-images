@@ -126,7 +126,7 @@ function install_ssrfmap() {
     colorecho "Installing SSRFmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap || exit
-    python3 -m venv ./venv
+    python3 -m venv ./venvX
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -303,7 +303,11 @@ function install_droopescan() {
 function install_drupwn() {
     colorecho "Installing drupwn"
     git -C /opt/tools/ clone --depth 1 https://github.com/immunIT/drupwn
-    pipx install git+https://github.com/immunIT/drupwn
+    cd /opt/tools/drupwn || exit
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r ./requirements.txt
+    deactivate
     add-aliases drupwn
     add-history drupwn
     add-test-command "drupwn --help"
