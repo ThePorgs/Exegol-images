@@ -1,2 +1,2 @@
-alias ghunt.py='(cd /opt/tools/GHunt/ && python3 ghunt.py)'
-alias ghunt-config='(cd /opt/tools/GHunt/ && python3 check_and_gen.py)'
+alias ghunt.py='cd /opt/tools/GHunt/ && python3 ghunt.py'
+alias ghunt-config='cd /opt/tools/GHunt/ && python3 check_and_gen.py'
