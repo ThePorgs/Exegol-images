@@ -1,0 +1,2 @@
+ps-empire server --restport 8765
+ps-empire client

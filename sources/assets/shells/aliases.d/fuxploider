@@ -1,0 +1,1 @@
+function fuxploider.py { (cd /opt/tools/fuxploider && ./venv/bin/python3 fuxploider.py "$@") }

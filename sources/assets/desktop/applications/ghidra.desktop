@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Ghidra
+Comment=Decompiler
+Exec=bash -c "JAVA_HOME=/usr/lib/jvm/java-11-openjdk /opt/tools/ghidra_10.1.2_PUBLIC/ghidraRun"
+Icon=/opt/tools/ghidra_10.1.2_PUBLIC/docs/images/GHIDRA_1.png
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Exegol;Reverse;
+MimeType=text/plain;

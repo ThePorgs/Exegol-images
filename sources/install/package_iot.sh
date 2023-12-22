@@ -4,6 +4,8 @@
 source common.sh
 
 function install_iot_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing IOT apt tools"
     fapt avrdude minicom
 
     add-history avrdude
@@ -18,6 +20,12 @@ function install_iot_apt_tools() {
 
 # Package dedicated to IoT tools
 function package_iot() {
-    set_ruby_env
+    set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_iot_apt_tools
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package iot completed in $elapsed_time seconds."
 }

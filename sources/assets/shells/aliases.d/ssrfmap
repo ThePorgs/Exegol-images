@@ -1,0 +1,1 @@
+function ssrfmap.py { (cd /opt/tools/SSRFmap && ./venv/bin/python3 /opt/tools/SSRFmap/ssrfmap.py "$@") }

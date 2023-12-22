@@ -1,0 +1,1 @@
+function cloudfail.py { (cd /opt/tools/CloudFail/ && ./venv/bin/python3 cloudfail.py "$@") }

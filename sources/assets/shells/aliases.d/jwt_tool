@@ -1,0 +1,1 @@
+alias jwt_tool.py='/opt/tools/jwt_tool/venv/bin/python3 /opt/tools/jwt_tool/jwt_tool.py'

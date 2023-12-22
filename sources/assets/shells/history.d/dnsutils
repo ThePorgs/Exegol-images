@@ -1,0 +1,7 @@
+dig axfr "$DOMAIN" @"$TARGET"
+nslookup -type=srv _gc._tcp."$DOMAIN"
+nslookup -type=srv _kerberos._tcp."$DOMAIN"
+nslookup -type=srv _kpasswd._tcp."$DOMAIN"
+nslookup -type=srv _ldap._tcp."$DOMAIN"
+nslookup -type=srv _ldap._tcp.dc._msdcs."$DOMAIN"
+nslookup -type=srv _ldap._tcp.dc._msdcs."$DOMAIN"

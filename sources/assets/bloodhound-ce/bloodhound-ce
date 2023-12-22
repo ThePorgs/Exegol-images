@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "##### EXEGOL SAYS ##### Listening on http://$(jq -r .bind_addr < /opt/tools/BloodHound-CE/bloodhound.config.json)"
+echo "#####             ##### Don't forget to run neo4j-start"
+echo "#####             ##### Login : admin"
+echo "#####             ##### Password : intial password will only be printed on the first run of bloodhound, it then needs to be changed in the Web UI"
+echo "#####             #####            if you lost the password, run bloodhound-ce-reset."
+
+if ! pg_isready -q; then
+    service postgresql start
+fi
+
+/opt/tools/BloodHound-CE/bloodhound -configfile /opt/tools/BloodHound-CE/bloodhound.config.json
+

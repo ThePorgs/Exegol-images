@@ -1,0 +1,2 @@
+ngrok authtoken AUTHTOKEN:::https://dashboard.ngrok.com/get-started/your-authtoken
+ngrok config add-authtoken https://dashboard.ngrok.com/get-started/your-authtoken

@@ -1,0 +1,2 @@
+havoc server --verbose --debug --profile /opt/tools/Havoc/profiles/havoc.yaotl
+havoc client

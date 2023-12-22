@@ -4,8 +4,9 @@
 source common.sh
 
 function install_sipvicious() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing SIPVicious"
-    python3 -m pipx install git+https://github.com/enablesecurity/sipvicious.git
+    pipx install git+https://github.com/enablesecurity/sipvicious.git
     add-history sipvicious_svcrack
     add-test-command "sipvicious_svcrack --version"
     add-to-list "sipvicious,https://github.com/enablesecurity/sipvicious,Enumeration and MITM tool for SIP devices"
@@ -13,6 +14,12 @@ function install_sipvicious() {
 
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
-    set_ruby_env
+    set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_sipvicious              # Set of tools for auditing SIP based VOIP systems
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package voip completed in $elapsed_time seconds."
 }

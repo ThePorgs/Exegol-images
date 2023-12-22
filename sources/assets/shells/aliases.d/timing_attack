@@ -1,0 +1,1 @@
+alias timing_attack='/usr/local/rvm/gems/ruby-3.2.2@timing_attack/wrappers/ruby /usr/local/rvm/gems/ruby-3.2.2@timing_attack/bin/timing_attack'

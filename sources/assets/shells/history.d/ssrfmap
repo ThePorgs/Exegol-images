@@ -1,0 +1,1 @@
+ssrfmap.py -r request.txt -p id -m readfiles,portscan

@@ -1,0 +1,1 @@
+function ntlm_theft.py { (cd /opt/tools/ntlm_theft/ && /opt/tools/ntlm_theft/venv/bin/python3 /opt/tools/ntlm_theft/ntlm_theft.py "$@") }

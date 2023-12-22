@@ -1,1 +1,0 @@
-alias php_filter_chain_generator="python3 /opt/tools/php_filter_chain_generator/php_filter_chain_generator.py"

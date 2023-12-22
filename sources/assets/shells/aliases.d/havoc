@@ -1,0 +1,1 @@
+function havoc { (cd /opt/tools/Havoc && /opt/tools/Havoc/havoc "$@") }

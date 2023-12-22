@@ -1,1 +1,0 @@
-alias xsser='cd /opt/tools/xsser/ && echo "[*] changed dir : cd /opt/tools/xsser/" && ./venv/bin/python3 ./xsser'

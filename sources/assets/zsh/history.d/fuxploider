@@ -1,1 +1,0 @@
-fuxploider --url $TARGET --not-regex "wrong file type"

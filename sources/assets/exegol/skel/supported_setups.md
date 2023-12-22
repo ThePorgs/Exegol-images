@@ -28,6 +28,13 @@ For more information, the online documentation can be consulted: https://exegol.
   - `/opt/my-resources/setup/vim/plugged/*` --> `~/.vim/plugged/`
   - `/opt/my-resources/setup/vim/bundle/*` --> `~/.vim/bundle/`
 
+### neovim
+
+To automatically overwrite the `neovim` configuration to allow all users to use their own personal config. 
+
+- To automatically overwrite the `~/.config/nvim/` configuration, copy the custom config in `/opt/my-resources/setup/nvim/`
+- It is possible to install plugins dependencies with the APT customization system (see "apt").
+
 ### tmux 
 
 To automatically overwrite the `~/.tmux.conf` configuration file, simply create the file `/opt/my-resources/setup/tmux/tmux.conf`
@@ -36,6 +43,11 @@ To automatically overwrite the `~/.tmux.conf` configuration file, simply create 
 
 The `/opt/my-resources/setup/python3/requirements.txt` file allows the user to list a set of packages to install with constraints just like a classic **requirements.txt** file.
 
+### firefox
+
+The `/opt/my-resources/setup/firefox/addons.txt` file allows the user to list addons to install from online sources. It must be filled with their links in Mozilla's shop (for example https://addons.mozilla.org/fr/firefox/addon/foxyproxy-standard/ ).
+The `.xpi` files in `/opt/my-resources/setup/firefox/addons/` folder will be installed as well.
+The `.der` files in `/opt/my-resources/setup/firefox/CA/` folder will be trusted.
 
 ## Advanced customizations
 

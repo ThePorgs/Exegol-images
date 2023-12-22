@@ -1,0 +1,70 @@
+# exegol custom .rc source file for other shells like bash and zsh
+
+# Basic system config / hardening
+umask 0007
+
+# Automatically exit the shell when receiving SIGTERM (when the container is stopping)
+trap exit TERM
+
+# rvm
+source /usr/local/rvm/scripts/rvm
+
+export GO111MODULE=auto
+
+# Adding exegol bins to PATH
+export PATH=/opt/tools/bin:$PATH
+
+# Adding john to PATH
+export JOHN=/opt/tools/john/run
+export PATH=$JOHN:$PATH
+
+# aliases
+source /opt/.exegol_aliases
+# Loads user-defined aliases if the file exists otherwise creates a default file if my-resources is enabled in the container
+if [ -f /opt/my-resources/setup/zsh/aliases ]
+then
+  source /opt/my-resources/setup/zsh/aliases
+else
+  [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
+  cp /.exegol/skel/zsh/aliases /opt/my-resources/setup/zsh/aliases
+fi
+
+# sourcing exegol-history
+source /opt/tools/Exegol-history/profile.sh
+source $HOME/.cargo/env
+
+# In case pipx ensurepath didn't work, and positioning pipx in priority
+export PATH="/root/.local/bin:$PATH"
+
+# Add my-resources custom tools to PATH if my-resources is activated
+[ -d /opt/my-resources/bin ] && export PATH="$PATH:/opt/my-resources/bin"
+
+# locales
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US:en
+
+[ -f ~/banner.txt ] && cat ~/banner.txt
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+# dotnet
+export DOTNET_ROOT="$HOME/.dotnet"
+export PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools"
+
+function prompt_char {
+  if [ $UID -eq 0 ]; then echo "#"; else echo $; fi
+}
+
+LOGGING=""
+
+parent_command="$(ps -ocommand= $(ps -oppid= $PPID 2>/dev/null | awk '{print $1}') 2>/dev/null)"
+if [[ $(echo $parent_command | awk '{print $1}') = 'script' || $(echo $parent_command | awk '{print $2}') = *'asciinema' ]]; then
+    LOGGING="[🔴]"
+fi
+
+EXEGOL_HOSTNAME="%m"
+[[ -z "${EXEGOL_NAME}" ]] && EXEGOL_HOSTNAME="%m" || EXEGOL_HOSTNAME="$EXEGOL_NAME (%m)"

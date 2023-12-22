@@ -4,6 +4,7 @@
 source common.sh
 
 function install_wifi_apt_tools() {
+    colorecho "Installing wifi apt tools"
     fapt aircrack-ng reaver bully cowpatty
   
     add-aliases aircrack-ng
@@ -27,10 +28,12 @@ function install_wifi_apt_tools() {
 function install_pyrit() {
     colorecho "Installing pyrit"
     git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
-    cd /opt/tools/Pyrit
+    cd /opt/tools/Pyrit || exit
     fapt libpq-dev
-    virtualenv -p /usr/bin/python2 ./venv
-    ./venv/bin/python2 -m pip install psycopg2-binary scapy
+    virtualenv --python python2 ./venv
+    source ./venv/bin/activate
+    pip2 install psycopg2-binary scapy
+    deactivate
     # https://github.com/JPaulMora/Pyrit/issues/591
     cp -v /root/sources/assets/patches/undefined-symbol-aesni-key.patch undefined-symbol-aesni-key.patch
     git apply --verbose undefined-symbol-aesni-key.patch
@@ -48,12 +51,12 @@ function install_pyrit() {
 function install_wifite2() {
     colorecho "Installing wifite2"
     git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
-    cd /opt/tools/wifite2
+    cd /opt/tools/wifite2 || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 setup.py install
+    catch_and_retry ./venv/bin/python3 setup.py install
     add-aliases wifite
     add-history wifite
-    add-test-command "wifite --help"
+    add-test-command "Wifite.py --help"
     add-to-list "wifite2,https://github.com/derv82/wifite2,Script for auditing wireless networks."
 }
 
@@ -61,7 +64,8 @@ function install_bettercap() {
     colorecho "Installing Bettercap"
     fapt libpcap-dev libusb-1.0-0-dev libnetfilter-queue-dev
     go install -v github.com/bettercap/bettercap@latest
-    /root/go/bin/bettercap -eval "caplets.update; ui.update; q"
+    asdf reshim golang
+    bettercap -eval "caplets.update; ui.update; q"
     sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/http-ui.cap
     sed -i 's/set api.rest.password pass/set api.rest.password exegol4thewin/g' /usr/local/share/bettercap/caplets/http-ui.cap
     sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/https-ui.cap
@@ -73,16 +77,13 @@ function install_bettercap() {
 }
 
 function install_hcxtools() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxtools"
     fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
-    # git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools  # Depth 1 must be removed because of the git checkout
-    git -C /opt/tools/ clone https://github.com/ZerBea/hcxtools
-    cd /opt/tools/hcxtools
-    # Checking out to specific commit is a temporary fix to the project no compiling anymore.
-    # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxtools/issues/233) => Need to upgrade to the Debian 12 release
-    git checkout 5937d2ad9d021f3b5e2edd55d79439b8485d3222
-    make
-    make install
+    git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools
+    cd /opt/tools/hcxtools || exit
+    make install PREFIX=/opt/tools
+    ln -s /opt/tools/bin/hcxpcapngtool /opt/tools/bin/hcxpcaptool
     add-history hcxtools
     add-test-command "hcxpcapngtool --version"
     add-test-command "hcxhashtool --version"
@@ -90,17 +91,13 @@ function install_hcxtools() {
 }
 
 function install_hcxdumptool() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxdumptool"
-    fapt libcurl4-openssl-dev libssl-dev
-    # git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool  # Depth 1 must be removed because of the git checkout
-    git -C /opt/tools/ clone https://github.com/ZerBea/hcxdumptool
-    cd /opt/tools/hcxdumptool
-    # Checking out to specific commit is a temporary fix to the project no compiling anymore.
-    # FIXME whenever possible to stay up to date with project (https://github.com/ZerBea/hcxdumptool/issues/232) => upgrade to debian 12
-    git checkout 56d078de4d6f5cef07b378707ab478fde03168c0
+    fapt libcurl4-openssl-dev
+    git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool
+    cd /opt/tools/hcxdumptool || exit
     make
-    make install
-    ln -s /usr/local/bin/hcxpcapngtool /usr/local/bin/hcxpcaptool
+    make install PREFIX=/opt/tools
     add-history hcxdumptool
     add-test-command "hcxdumptool --version"
     add-to-list "hcxdumptool,https://github.com/ZerBea/hcxdumptool,Small tool to capture packets from wlan devices."
@@ -108,8 +105,10 @@ function install_hcxdumptool() {
 
 # Package dedicated to wifi pentest tools
 function package_wifi() {
-    set_go_env
-    set_ruby_env
+    set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_wifi_apt_tools
     install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
     install_wifite2                 # Retrieving password of a wireless access point (router)
@@ -117,4 +116,7 @@ function package_wifi() {
     install_bettercap               # MiTM tool
     install_hcxtools                # Tools for PMKID and other wifi attacks
     install_hcxdumptool             # Small tool to capture packets from wlan devices
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package wifi completed in $elapsed_time seconds."
 }

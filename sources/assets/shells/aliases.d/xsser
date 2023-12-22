@@ -1,0 +1,1 @@
+function xsser { (cd /opt/tools/xsser/ && ./venv/bin/python3 ./xsser "$@") }

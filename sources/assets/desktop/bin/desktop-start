@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Function to find the first available display ID
+find_available_display() {
+  # Search for available socket if the X11 socket directory is not available
+  if [ -d /tmp/.X11-unix/ ]; then
+    readarray -t x11_sockets < <(find "/tmp/.X11-unix/" -type s -printf "%f\n" | cut -d 'X' -f2)
+  else
+    # X11 not shared, need to check socket
+    readarray -t x11_sockets < <(ss -x | grep X11| cut -d 'X' -f3 | cut -d ' ' -f 1 | sort -u)
+  fi
+
+  local max_num=0
+
+  # Find the maximum number
+  for num in "${x11_sockets[@]}"; do
+    if (( num > max_num )); then
+      max_num=$num
+    fi
+  done
+
+  # Search number from 1 to max_num+1 to find the first available DISPLAY id
+  for (( i = 1; i <= max_num + 1; i++ )); do
+    found=0
+    for num in "${x11_sockets[@]}"; do
+      if (( num == i )); then
+        found=1
+        break
+      fi
+    done
+    if (( found == 0 )); then
+      echo "$i"
+      return
+    fi
+  done
+}
+
+
+mode=${EXEGOL_DESKTOP_PROTO:-"http"}
+# By default if no env are provided, exegol will select the eth0
+host=${EXEGOL_DESKTOP_HOST:-"$HOSTNAME"}
+port=${EXEGOL_DESKTOP_PORT:-"6336"}
+username=${EXEGOL_USERNAME:-"root"}
+
+echo "Starting Exegol desktop with $mode"
+
+display_id=$(find_available_display)
+
+echo "Using display :$display_id"
+
+case "$mode" in
+  vnc)
+    if [[ "$host" == "127.0.0.1" || "$host" == "localhost" ]]; then
+        # In network host mode, vncserver can directly be accessed on localhost interface
+        vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+    elif [[ "$host" == "0.0.0.0" ]]; then
+        # When opening VNC on every interface, vncserver can be exposed directly
+        vncserver -localhost "no" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+    else
+        # When a specific interface is supplied, socat must be used to expose the service on a single IP
+        vnc_port=$(comm -23 <(seq 49152 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1)  # Find a random available port
+        vncserver -localhost "yes" -rfbport "$vnc_port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+        socat TCP4-LISTEN:"$port",fork,bind="$host" TCP4:127.0.0.1:"$vnc_port" &
+    fi
+
+    ;;
+  http)
+    random_port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
+    vncserver -localhost "yes" -rfbport "$random_port" -geometry "1920x1080" -SecurityTypes "Plain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id" && \
+      websockify -D --web /usr/share/novnc/ "$host:$port" "localhost:$random_port"
+    ;;
+esac
+
+echo "Desktop is accessible from $mode://$host:$port"

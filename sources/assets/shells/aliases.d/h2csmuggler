@@ -1,0 +1,1 @@
+alias h2csmuggler.py='/opt/tools/h2csmuggler/venv/bin/python3 /opt/tools/h2csmuggler/h2csmuggler.py'

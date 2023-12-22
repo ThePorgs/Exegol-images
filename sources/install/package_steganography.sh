@@ -4,6 +4,8 @@
 source common.sh
 
 function install_steganography_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing steganography apt tools"
     fapt stegosuite steghide exif exiv2 hexedit
 
     add-history stegosuite
@@ -28,9 +30,9 @@ function install_steganography_apt_tools() {
 
 function install_zsteg() {
     colorecho "Installing zsteg"
-    rvm use 3.0.0@zsteg --create
+    rvm use 3.2.2@zsteg --create
     gem install zsteg
-    rvm use 3.0.0@default
+    rvm use 3.2.2@default
     add-aliases zsteg
     add-history zsteg
     add-test-command "zsteg --help"
@@ -38,8 +40,9 @@ function install_zsteg() {
 }
 
 function install_stegolsb() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing stegolsb"
-    python3 -m pipx install stego-lsb
+    pipx install stego-lsb
     add-history stegolsb
     add-test-command "stegolsb --version"
     add-to-list "stegolsb,https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm"
@@ -47,8 +50,14 @@ function install_stegolsb() {
 
 # Package dedicated to steganography tools
 function package_steganography() {
-    set_ruby_env
+    set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_steganography_apt_tools
     install_zsteg                   # Detect stegano-hidden data in PNG & BMP
     install_stegolsb                # (including wavsteg)
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package steganography completed in $elapsed_time seconds."
 }

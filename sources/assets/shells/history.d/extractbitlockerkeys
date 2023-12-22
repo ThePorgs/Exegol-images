@@ -1,0 +1,1 @@
+ExtractBitlockerKeys.py -dc-ip $DC_IP -Username $USERNAME -Password $PASSWORD -ExportToCSV ./keys.csv -ExportToJSON ./keys.json

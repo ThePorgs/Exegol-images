@@ -1,0 +1,1 @@
+fcrackzip -u -v -D -p `fzf-wordlists` file.zip

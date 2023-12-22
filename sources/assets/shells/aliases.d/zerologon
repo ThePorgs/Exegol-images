@@ -1,0 +1,3 @@
+alias zerologon-exploit.py='/opt/tools/zerologon/venv/bin/python3 /opt/tools/zerologon/zerologon-exploit/cve-2020-1472-exploit.py'
+alias zerologon-scan.py='/opt/tools/zerologon/venv/bin/python3 /opt/tools/zerologon/zerologon-scan/zerologon_tester.py'
+alias zerologon-restore.py='/opt/tools/zerologon/venv/bin/python3 /opt/tools/zerologon/zerologon-exploit/restorepassword.py'

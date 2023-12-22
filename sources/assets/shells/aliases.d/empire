@@ -1,0 +1,2 @@
+function empire.py { (cd /opt/tools/Empire && /opt/tools/Empire/venv/bin/python3 /opt/tools/Empire/empire.py "$@") }
+alias ps-empire=empire.py

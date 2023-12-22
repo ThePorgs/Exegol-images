@@ -1,7 +1,9 @@
 # Author: The Exegol Project
 
-FROM debian:11-slim
+FROM debian:12-slim
 
+# ARGs need to be placed after the FROM instruction. As per https://docs.docker.com/engine/reference/builder/#arg.
+# If they are placed before, they will be overwritten somehow, and the LABELs below will be filled with empty ARGs
 ARG TAG="local"
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
@@ -19,24 +21,18 @@ WORKDIR /root/sources/install
 # WARNING: package_most_used can't be used with other functions other than: package_base, post_install
 # ./entrypoint.sh package_most_used
 
-RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version && \
-    chmod +x entrypoint.sh && \
-    ./entrypoint.sh package_base && \
-    ./entrypoint.sh package_misc && \
-    ./entrypoint.sh package_misc_configure && \
-    ./entrypoint.sh package_c2 && \
-    ./entrypoint.sh package_c2_configure && \
-    ./entrypoint.sh package_wordlists && \
-    ./entrypoint.sh package_wordlists_configure && \
-    ./entrypoint.sh package_cracking && \
-    ./entrypoint.sh package_cracking_configure && \
-    ./entrypoint.sh package_web && \
-    ./entrypoint.sh package_web_configure && \
-    ./entrypoint.sh package_ad && \
-    ./entrypoint.sh package_ad_configure && \
-    ./entrypoint.sh package_network && \
-    ./entrypoint.sh post_install && \
-    rm -rf /root/sources /var/lib/apt/lists/*
+RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
+RUN chmod +x entrypoint.sh
+RUN ./entrypoint.sh package_base
+RUN ./entrypoint.sh package_desktop
+RUN ./entrypoint.sh package_misc
+RUN ./entrypoint.sh package_c2
+RUN ./entrypoint.sh package_wordlists
+RUN ./entrypoint.sh package_cracking
+RUN ./entrypoint.sh package_web
+RUN ./entrypoint.sh package_ad
+RUN ./entrypoint.sh package_network
+RUN ./entrypoint.sh post_install
 
 WORKDIR /workspace
 

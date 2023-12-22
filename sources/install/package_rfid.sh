@@ -4,6 +4,8 @@
 source common.sh
 
 function install_rfid_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing rfid apt tools"
     fapt libusb-dev autoconf nfct pcsc-tools pcscd libpcsclite-dev libpcsclite1 libnfc-dev libnfc-bin mfcuk
     
     add-history libnfc
@@ -25,9 +27,10 @@ function install_rfid_apt_tools() {
 }
 
 function install_mfoc() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mfoc"
     git -C /opt/tools/ clone --depth 1 https://github.com/nfc-tools/mfoc
-    cd /opt/tools/mfoc
+    cd /opt/tools/mfoc || exit
     autoreconf -vis
     ./configure
     make
@@ -40,7 +43,7 @@ function install_mfoc() {
 function install_libnfc-crypto1-crack() {
     colorecho "Installing libnfc-crypto1-crack"
     git -C /opt/tools/ clone --depth 1 https://github.com/aczid/crypto1_bs
-    cd /opt/tools/crypto1_bs
+    cd /opt/tools/crypto1_bs || exit
     wget https://github.com/droidnewbie2/acr122uNFC/raw/master/crapto1-v3.3.tar.xz
     wget https://github.com/droidnewbie2/acr122uNFC/raw/master/craptev1-v1.1.tar.xz
     xz -d craptev1-v1.1.tar.xz crapto1-v3.3.tar.xz
@@ -57,22 +60,24 @@ function install_libnfc-crypto1-crack() {
 function install_mfdread() {
     colorecho "Installing mfdread"
     git -C /opt/tools/ clone --depth 1 https://github.com/zhovner/mfdread
-    cd /opt/tools/mfdread
+    cd /opt/tools/mfdread || exit
     python3 -m venv ./venv
-    ./venv/bin/python3 -m pip install bitstring
+    source ./venv/bin/activate
+    pip3 install bitstring
+    deactivate
     add-aliases mfdread
     add-history mfdread
-    add-test-command "mfdread /opt/tools/mfdread/dump.mfd"
+    add-test-command "mfdread.py /opt/tools/mfdread/dump.mfd"
     add-to-list "mfdread,https://github.com/zhovner/mfdread,Tool for reading/writing Mifare RFID tags"
 }
 
 function install_proxmark3() {
     colorecho "Installing proxmark3 client"
     colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3OTHER (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
-    colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmak3/"
+    colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmark3/"
     fapt --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev liblz4-dev
-    git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
-    cd /opt/tools/proxmark3
+     git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
+    cd /opt/tools/proxmark3 || exit
     make clean
     make all PLATFORM=PM3OTHER
     make install PLATFORM=PM3OTHER
@@ -84,10 +89,16 @@ function install_proxmark3() {
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
-    set_ruby_env
+    set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_rfid_apt_tools
     install_mfoc                    # Tool for nested attack on Mifare Classic
     install_libnfc-crypto1-crack    # tool for hardnested attack on Mifare Classic
     install_mfdread                 # Tool to pretty print Mifare 1k/4k dumps
     install_proxmark3               # Proxmark3 scripts
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package rfid completed in $elapsed_time seconds."
 }

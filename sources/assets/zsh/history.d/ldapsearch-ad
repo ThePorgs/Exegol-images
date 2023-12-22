@@ -1,2 +1,0 @@
-ldapsearch-ad --server "$DC_HOST" --domain "$DOMAIN" --username "$USER" --password "$PASSWORD" --type all
-ldapsearch-ad --server "$DC_HOST" --type info

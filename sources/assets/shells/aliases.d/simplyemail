@@ -1,0 +1,1 @@
+function SimplyEmail.py { (cd /opt/tools/SimplyEmail/ && ./venv/bin/python2 SimplyEmail.py "$@") }

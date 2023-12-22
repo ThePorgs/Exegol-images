@@ -1,0 +1,1 @@
+alias manspider.py='/opt/tools/MANSPIDER/venv/bin/python3 /opt/tools/MANSPIDER/man_spider/manspider.py'
