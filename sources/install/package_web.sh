@@ -126,7 +126,7 @@ function install_ssrfmap() {
     colorecho "Installing SSRFmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap || exit
-    python3 -m venv ./venvX
+    python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
