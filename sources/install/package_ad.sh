@@ -27,6 +27,18 @@ function install_ad_apt_tools() {
     add-to-list "ldapsearch,https://wiki.debian.org/LDAP/LDAPUtils,Search for and display entries (ldap)"
 }
 
+function install_pretender() {
+    colorecho "Installing Pretender"
+    git -C /opt/tools clone https://github.com/RedTeamPentesting/pretender
+    cd /opt/tools/Pretender || exit
+    go build -v
+    asdf reshim golang
+    add-aliases pretender
+    add-history pretender
+    add-test-command "pretender -h"
+    add-to-list "pretender,https://github.com/RedTeamPentesting/pretender,a DHCPv6 DNS takeover tool."
+}
+
 function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
