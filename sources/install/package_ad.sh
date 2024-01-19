@@ -30,7 +30,7 @@ function install_ad_apt_tools() {
 function install_pretender() {
     colorecho "Installing Pretender"
     git -C /opt/tools clone https://github.com/RedTeamPentesting/pretender
-    cd /opt/tools/Pretender || exit
+    cd /opt/tools/pretender || exit
     go build -v
     asdf reshim golang
     add-aliases pretender
