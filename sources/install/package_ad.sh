@@ -29,14 +29,11 @@ function install_ad_apt_tools() {
 
 function install_pretender() {
     colorecho "Installing Pretender"
-    git -C /opt/tools clone https://github.com/RedTeamPentesting/pretender
-    cd /opt/tools/pretender || exit
-    go build -v
+    go install -v github.com/RedTeamPentesting/pretender@latest
     asdf reshim golang
-    add-aliases pretender
     add-history pretender
     add-test-command "pretender -h"
-    add-to-list "pretender,https://github.com/RedTeamPentesting/pretender,a DHCPv6 DNS takeover tool."
+    add-to-list "pretender,https://github.com/RedTeamPentesting/pretender,an mitm tool for helping with relay attacks."
 }
 
 function install_responder() {
@@ -1315,6 +1312,7 @@ function package_ad() {
     local end_time
     start_time=$(date +%s)
     install_ad_apt_tools
+    install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
     install_crackmapexec            # Network scanner
