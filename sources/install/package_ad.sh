@@ -27,6 +27,15 @@ function install_ad_apt_tools() {
     add-to-list "ldapsearch,https://wiki.debian.org/LDAP/LDAPUtils,Search for and display entries (ldap)"
 }
 
+function install_pretender() {
+    colorecho "Installing Pretender"
+    go install -v github.com/RedTeamPentesting/pretender@latest
+    asdf reshim golang
+    add-history pretender
+    add-test-command "pretender -h"
+    add-to-list "pretender,https://github.com/RedTeamPentesting/pretender,an mitm tool for helping with relay attacks."
+}
+
 function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
