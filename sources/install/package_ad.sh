@@ -1312,6 +1312,7 @@ function package_ad() {
     local end_time
     start_time=$(date +%s)
     install_ad_apt_tools
+    install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
     install_crackmapexec            # Network scanner
