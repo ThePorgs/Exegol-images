@@ -246,6 +246,12 @@ function install_impacket() {
     colorecho "Installing Impacket scripts"
     pipx install git+https://github.com/ThePorgs/impacket
     pipx inject impacket chardet
+    local temp_fix_limit="2024-03-20"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pipx inject impacket pycryptodome
+    fi
     cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
     cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
     cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
