@@ -1,4 +1,3 @@
-# Pretender History.d
 pretender -i "$INTERFACE" --dry
 pretender -i "$INTERFACE" --dry --no-ra
 pretender -i "$INTERFACE" --dry --no-ra-dns
