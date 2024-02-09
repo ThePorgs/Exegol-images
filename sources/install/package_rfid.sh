@@ -18,6 +18,9 @@ function install_rfid_apt_tools() {
     add-test-command "nfc-scan-device -h"                   # NFC library
     add-test-command "mfcuk -i whatever"                    # Tool for Darkside attack on Mifare Classic
 
+    add-version "autoconf --version | head -n 1 | awk '{print $4}'"
+    add-version "pcsc_scan -V | grep V | awk '{print $2}'"
+
     add-to-list "libusb-dev,https://github.com/libusb/libusb,Library for USB device access"
     add-to-list "autoconf,https://www.gnu.org/software/autoconf/autoconf.html,Tool for producing shell scripts to configure source code packages"
     add-to-list "nfct,https://github.com/grundid/nfctools,Tool for Near Field Communication (NFC) devices"
@@ -36,11 +39,13 @@ function install_mfoc() {
     make
     make install
     add-history mfoc
+    add-version "mfoc -h | grep version | awk '{print substr($5, 1, length($5)-1)}'"
     add-test-command "mfoc -h"
     add-to-list "mfoc,https://github.com/nfc-tools/mfoc,Implementation of 'offline nested' attack by Nethemba"
 }
 
 function install_libnfc-crypto1-crack() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing libnfc-crypto1-crack"
     git -C /opt/tools/ clone --depth 1 https://github.com/aczid/crypto1_bs
     cd /opt/tools/crypto1_bs || exit
@@ -58,6 +63,7 @@ function install_libnfc-crypto1-crack() {
 }
 
 function install_mfdread() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing mfdread"
     git -C /opt/tools/ clone --depth 1 https://github.com/zhovner/mfdread
     cd /opt/tools/mfdread || exit
@@ -72,6 +78,7 @@ function install_mfdread() {
 }
 
 function install_proxmark3() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing proxmark3 client"
     colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3OTHER (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
     colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmark3/"
