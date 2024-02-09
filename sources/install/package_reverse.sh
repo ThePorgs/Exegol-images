@@ -23,13 +23,16 @@ function install_reverse_apt_tools() {
     add-test-command "nasm --version" # Netwide Assembler
     add-test-command "strace --version"
 
+    add-version "nasm --version | awk '{print $3}'"
+    add-version "strace --version | head -n 1 | awk '{print $4}'"
+
     add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity."
     add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm) including assembler and disassembler / a syntax checker / and a binary format validator."
     add-to-list "strace,https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process."
 }
 
 function install_pwntools() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing pwntools"
     python -m pip install pwntools
     # Downgrade pyelftools version because : https://github.com/Gallopsled/pwntools/issues/2260
@@ -42,6 +45,7 @@ function install_pwntools() {
 }
 
 function install_pwndbg() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing pwndbg"
     git -C /opt/tools/ clone --depth 1 https://github.com/pwndbg/pwndbg
     cd /opt/tools/pwndbg || exit
@@ -54,7 +58,7 @@ function install_pwndbg() {
 }
 
 function install_angr() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing angr"
     fapt libffi-dev
     pip3 install angr
@@ -63,6 +67,7 @@ function install_angr() {
 }
 
 function install_checksec-py() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing checksec.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
     cd /opt/tools/checksec.py || exit
@@ -78,7 +83,7 @@ function install_checksec-py() {
 }
 
 function install_radare2() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing radare2"
     git -C /opt/tools/ clone --depth 1 https://github.com/radareorg/radare2
     /opt/tools/radare2/sys/install.sh
@@ -95,12 +100,13 @@ function install_ghidra() {
     rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
     add-aliases ghidra
     add-history ghidra
+    add-version "find /opt/tools/ghidra* | head -n 1 | cut -d '_' -f 2"
     # TODO add-test-command GUI app
     add-to-list "ghidra,https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools."
 }
 
 function install_ida() {
-    # CODE-CHECK-WHITELIST=add-test-command
+    # CODE-CHECK-WHITELIST=add-test-command,add-version
     colorecho "Installing IDA"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -118,7 +124,7 @@ function install_ida() {
 }
 
 function install_jd-gui() {
-    # CODE-CHECK-WHITELIST=add-test-command
+    # CODE-CHECK-WHITELIST=add-test-command,add-version
     colorecho "Installing jd-gui"
     mkdir -p /opt/tools/jd-gui && cd /opt/tools/jd-gui || exit
     wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
@@ -136,6 +142,7 @@ function install_pwninit() {
     source "$HOME/.cargo/env"
     cargo install pwninit
     add-history pwninit
+    add-version "pwninit --version | awk '{print $2}'"
     add-test-command "pwninit --help"
     add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
 }
