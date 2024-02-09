@@ -804,6 +804,7 @@ function install_pywhisker() {
 }
 
 function install_manspider() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing Manspider"
     git -C /opt/tools clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER.git
     cd /opt/tools/MANSPIDER || exit
@@ -820,6 +821,7 @@ function install_manspider() {
 }
 
 function install_targetedKerberoast() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing targetedKerberoast"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
     cd /opt/tools/targetedKerberoast || exit
@@ -844,11 +846,13 @@ function install_pcredz() {
     deactivate
     add-aliases pcredz
     add-history pcredz
+    add-version "PCredz --help | grep Author | awk '{print $2}'"
     add-test-command "PCredz --help"
     add-to-list "pcredz,https://github.com/lgandx/PCredz,PowerShell credential dumper"
 }
 
 function install_pywsus() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing pywsus"
     fapt libxml2-dev libxslt-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
@@ -871,6 +875,7 @@ function install_donpapi() {
     fapt swig
     pipx install git+https://github.com/login-securite/DonPAPI
     add-history donpapi
+    add-version "DonPAPI --help | grep version | awk '{print $3}'"
     add-test-command "DonPAPI --help"
     add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Dumping revelant information on compromised targets without AV detection"
 }
@@ -880,6 +885,7 @@ function install_webclientservicescanner() {
     colorecho "Installing webclientservicescanner"
     pipx install git+https://github.com/Hackndo/WebclientServiceScanner
     add-history webclientservicescanner
+    add-version "webclientservicescanner --help | head -n 1 | awk '{print $4}'"
     add-test-command "webclientservicescanner --help"
     add-to-list "webclientservicescanner,https://github.com/Hackndo/webclientservicescanner,Scans for web service endpoints"
 }
@@ -889,11 +895,13 @@ function install_certipy() {
     colorecho "Installing Certipy"
     pipx install git+https://github.com/ly4k/Certipy
     add-history certipy
+    add-version "certipy --version |& head -n 1 | awk '{print $2}'"
     add-test-command "certipy --version"
     add-to-list "certipy,https://github.com/ly4k/Certipy,Python tool to create and sign certificates"
 }
 
 function install_shadowcoerce() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing ShadowCoerce PoC"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/ShadowCoerce
     cd /opt/tools/ShadowCoerce || exit
@@ -908,6 +916,7 @@ function install_shadowcoerce() {
 }
 
 function install_gmsadumper() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing gMSADumper"
     git -C /opt/tools/ clone --depth 1 https://github.com/micahvandeusen/gMSADumper
     cd /opt/tools/gMSADumper || exit
@@ -938,6 +947,7 @@ function install_pylaps() {
     deactivate
     add-aliases pylaps
     add-history pylaps
+    add-version "pyLAPS.py --help | grep v | head -n 1 | awk '{print $6}'"
     add-test-command "pyLAPS.py --help"
     add-to-list "pylaps,https://github.com/p0dalirius/pylaps,Utility for enumerating and querying LDAP servers."
 }
@@ -952,11 +962,13 @@ function install_finduncommonshares() {
     deactivate
     add-aliases finduncommonshares
     add-history finduncommonshares
+    add-version "FindUncommonShares.py --help | head -n 1 | awk '{print $2}'"
     add-test-command "FindUncommonShares.py --help"
     add-to-list "finduncommonshares,https://github.com/p0dalirius/FindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
 }
 
 function install_ldaprelayscan() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing LdapRelayScan"
     git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/LdapRelayScan
     cd /opt/tools/LdapRelayScan || exit
@@ -989,11 +1001,13 @@ function install_goldencopy() {
     deactivate
     ln -v -s /opt/tools/GoldenCopy/venv/bin/goldencopy /opt/tools/bin/goldencopy
     add-history goldencopy
+    add-version "goldencopy --help | grep GoldenCopy | awk '{print $2}'"
     add-test-command "goldencopy --help"
     add-to-list "goldencopy,https://github.com/Dramelac/GoldenCopy,Copy the properties and groups of a user from neo4j (bloodhound) to create an identical golden ticket"
 }
 
 function install_crackhound() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
     cd /opt/tools/CrackHound || exit
@@ -1013,12 +1027,13 @@ function install_kerbrute() {
     go install -v github.com/ropnop/kerbrute@latest
     asdf reshim golang
     add-history kerbrute
+    add-version "kerbrute --help | grep Version | awk '{print $2}'"
     add-test-command "kerbrute --help"
     add-to-list "kerbrute,https://github.com/ropnop/kerbrute,A tool to perform Kerberos pre-auth bruteforcing"
 }
 
 function install_ldeep() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
     pipx install ldeep
@@ -1040,6 +1055,7 @@ function install_rusthound() {
     rm -rf target/release/{deps,build}
     ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
     add-history rusthound
+    add-version "rusthound --version | grep rusthound | awk '{print $2}'"
     add-test-command "rusthound --help"
     add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,BloodHound ingestor in Rust."
 }
@@ -1057,12 +1073,13 @@ function install_rusthound-ce() {
     rm -rf target/release/{deps,build}
     ln -v -s /opt/tools/RustHound-CE/target/release/rusthound /opt/tools/bin/rusthound-ce
     add-history rusthound-ce
+    add-version "rusthound-ce --version | grep rusthound | awk '{print $2}'"
     add-test-command "rusthound-ce --help"
     add-to-list "rusthound (v2),https://github.com/OPENCYBER-FR/RustHound,BloodHound-CE ingestor in Rust."
 }
 
 function install_certsync() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing certsync"
     pipx install git+https://github.com/zblurx/certsync
     add-history certsync
@@ -1075,12 +1092,13 @@ function install_keepwn() {
     colorecho "Installing KeePwn"
     pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
     add-history keepwn
+    add-version "KeePwn --help | head -n 1 | awk '{print $2}'"
     add-test-command "KeePwn --help"
     add-to-list "KeePwn,https://github.com/Orange-Cyberdefense/KeePwn,KeePwn is a tool that extracts passwords from KeePass 1.x and 2.x databases."
 }
 
 function install_pre2k() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing pre2k"
     pipx install git+https://github.com/garrettfoster13/pre2k
     add-history pre2k
@@ -1089,7 +1107,7 @@ function install_pre2k() {
 }
 
 function install_msprobe() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing msprobe"
     pipx install git+https://github.com/puzzlepeaches/msprobe
     add-history msprobe
@@ -1102,12 +1120,13 @@ function install_masky() {
     colorecho "Installing masky"
     pipx install git+https://github.com/Z4kSec/Masky
     add-history masky
+    add-version "masky --help | grep v | head -n 1 | awk '{print $1}'"
     add-test-command "masky --help"
     add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data / such as credit card numbers / in logs and other files."
 }
 
 function install_roastinthemiddle() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing roastinthemiddle"
     pipx install git+https://github.com/Tw1sm/RITM
     add-history roastinthemiddle
@@ -1116,6 +1135,7 @@ function install_roastinthemiddle() {
 }
 
 function install_PassTheCert() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing PassTheCert"
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
     cd /opt/tools/PassTheCert/Python/ || exit
@@ -1130,6 +1150,7 @@ function install_PassTheCert() {
 }
 
 function install_bqm() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing BQM"
     rvm use 3.2.2@bqm --create
     gem install bqm --no-wrapper
@@ -1158,11 +1179,13 @@ function install_neo4j() {
     touch /usr/share/neo4j/logs/neo4j.log
     add-aliases neo4j
     add-history neo4j
+    add-version "neo4j version | awk '{print $2}'"
     add-test-command "neo4j version"
     add-to-list "neo4j,https://github.com/neo4j/neo4j,Database."
 }
 
 function install_noPac() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing noPac"
     git -C /opt/tools/ clone --depth 1 https://github.com/Ridter/noPac
     cd /opt/tools/noPac || exit
@@ -1177,7 +1200,7 @@ function install_noPac() {
 }
 
 function install_roadtools() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing roadtools"
     pipx install roadrecon
     add-test-command "roadrecon --help"
@@ -1195,12 +1218,13 @@ function install_teamsphisher() {
     deactivate
     add-aliases teamsphisher
     add-history teamsphisher
+    add-version "teamsphisher.py --help | grep developed | awk '{print $1}'"
     add-test-command "teamsphisher.py --help"
     add-to-list "TeamsPhisher,https://github.com/Octoberfest7/TeamsPhisher,TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications."
 }
 
 function install_GPOddity() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing GPOddity"
     pipx install git+https://github.com/synacktiv/GPOddity
     add-history GPOddity
@@ -1218,6 +1242,7 @@ function install_netexec() {
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec
     add-history netexec
+    add-version "netexec --version| grep nxc | awk '{print $1}'"
     add-test-command "netexec --help"
     add-to-list "netexec,https://github.com/Pennyw0rth/NetExec,Network scanner (Crackmapexec updated)."
 }
@@ -1232,7 +1257,8 @@ function install_extractbitlockerkeys() {
     deactivate
     add-aliases extractbitlockerkeys
     add-history extractbitlockerkeys
-    add-test-command "ExtractBitlockerKeys.py|& grep 'usage: ExtractBitlockerKeys.py'"
+    add-version "ExtractBitlockerKeys.py --help | head -n 1 | awk '{print $2}'"
+    add-test-command "ExtractBitlockerKeys.py --help"
     add-to-list "ExtractBitlockerKeys,https://github.com/p0dalirius/ExtractBitlockerKeys,A system administration or post-exploitation script to automatically extract the bitlocker recovery keys from a domain."
 }
 
@@ -1246,21 +1272,22 @@ function install_LDAPWordlistHarvester() {
     deactivate
     add-aliases LDAPWordlistHarvester
     add-history LDAPWordlistHarvester
+    add-version "LDAPWordlistHarvester.py --help | head -n 1 | awk '{print $2}'"
+    add-test-command "pywerview --help"
     add-test-command "LDAPWordlistHarvester.py --help"
     add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
 }
 
 function install_pywerview() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing pywerview"
     pipx install git+https://github.com/the-useless-one/pywerview
     add-history pywerview
-    add-test-command "pywerview --help"
     add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
 }
 
 function install_freeipscanner() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing freeipscanner"
     fapt arping
     wget -O /opt/tools/bin/freeipscanner.sh https://raw.githubusercontent.com/scrt/freeipscanner/master/freeipscanner.sh
@@ -1271,7 +1298,7 @@ function install_freeipscanner() {
 }
 
 function install_scrtdnsdump() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing scrtdnsdump"
     pipx install git+https://github.com/scrt/scrtdnsdump
     add-history scrtdnsdump
@@ -1289,6 +1316,7 @@ function install_ntlm_theft() {
     deactivate
     add-aliases ntlm_theft
     add-history ntlm_theft
+    add-version "ntlm_theft.py --version | awk '{print $2}'"
     add-test-command "ntlm_theft.py --help"
     add-to-list "ntlm_theft,https://github.com/Greenwolf/ntlm_theft,A tool for generating multiple types of NTLMv2 hash theft files"
 }
@@ -1298,6 +1326,7 @@ function install_abuseACL() {
     colorecho "Installing abuseACL"
     pipx install git+https://github.com/AetherBlack/abuseACL
     add-history abuseACL
+    add-version "abuseACL --help | grep by | awk '{print $4}' | tr -d '()'"
     add-test-command "abuseACL --help"
     add-to-list "abuseACL,https://github.com/AetherBlack/abuseACL,A python script to automatically list vulnerable Windows ACEs/ACLs."
 }
