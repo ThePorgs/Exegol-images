@@ -47,6 +47,11 @@ function add-test-command() {
     echo "$*" >> "/.exegol/build_pipeline_tests/all_commands.txt"
 }
 
+function add-version() {
+    colorecho "Adding build pipeline version command: $*"
+    echo "$*" >> "/.exegol/build_pipeline_tests/all_versions.txt"
+}
+
 function fapt() {
     colorecho "Installing apt package(s): $*"
     apt-fast install -y --no-install-recommends "$@"
