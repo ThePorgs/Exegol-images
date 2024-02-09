@@ -20,7 +20,11 @@ function install_steganography_apt_tools() {
     add-test-command "exiv2 --help"                             # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
     add-test-command "hexedit --help|& grep 'usage: hexedit'"   # View and edit files in hexadecimal or in ASCII
     
-    
+    add-version "stegosuite --version | awk '{print $2}'"
+    add-version "steghide --version | awk '{print $3}'"
+    add-version "exif --version"
+    add-version "exiv2 --version | head -n 1 | awk '{print $2}'"
+
     add-to-list "stegosuite,https://github.com/osde8info/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files."
     add-to-list "steghide,https://github.com/StefanoDeVuono/steghide,steghide is a steganography program that is able to hide data in various kinds of image and audio files."
     add-to-list "exif,https://exiftool.org/,Utility to read / write and edit metadata in image / audio and video files"
@@ -29,6 +33,7 @@ function install_steganography_apt_tools() {
 }
 
 function install_zsteg() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing zsteg"
     rvm use 3.2.2@zsteg --create
     gem install zsteg
@@ -44,6 +49,7 @@ function install_stegolsb() {
     colorecho "Installing stegolsb"
     pipx install stego-lsb
     add-history stegolsb
+    add-version "stegolsb --version | awk '{print $3}'"
     add-test-command "stegolsb --version"
     add-to-list "stegolsb,https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm"
 }
