@@ -13,15 +13,18 @@ function install_sdr_apt_tools() {
     add-history rtl-433
 
     add-test-command "hackrf_debug --help"              # tools for hackrf
-    add-test-command "which gqrx"                       # spectrum analyzer for SDR
+    add-test-command "gqrx -h"                          # spectrum analyzer for SDR
     add-test-command "dpkg -l rtl-433 | grep 'rtl-433'" # decode radio transmissions from devices on the ISM bands
   
+    add-version "gqrx -h | grep Gqrx | awk '{print $6}'"
+
     add-to-list "hackrf,https://github.com/mossmann/hackrf,Low cost software defined radio platform"
     add-to-list "gqrx,https://github.com/csete/gqrx,Software defined radio receiver powered by GNU Radio and Qt"
     add-to-list "rtl-433,https://github.com/merbanan/rtl_433,Tool for decoding various wireless protocols/ signals such as those used by weather stations"
 }
 
 function install_mousejack() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing mousejack"
     fapt sdcc binutils
     git -C /opt/tools/ clone --depth 1 https://github.com/BastilleResearch/mousejack
@@ -40,7 +43,7 @@ function install_mousejack() {
 }
 
 function install_jackit() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing jackit"
     pipx install git+https://github.com/insecurityofthings/jackit
     add-history jackit
