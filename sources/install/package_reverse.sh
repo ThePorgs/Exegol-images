@@ -68,8 +68,8 @@ function install_checksec-py() {
     cd /opt/tools/checksec.py || exit
     python3 -m venv ./venv
     source ./venv/bin/activate
-    pip3 install .
-    pip3 install --upgrade lief
+    pip install .
+    pip install --upgrade lief==0.13.2
     deactivate
     add-aliases checksec
     add-history checksec
