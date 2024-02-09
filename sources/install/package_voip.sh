@@ -8,6 +8,7 @@ function install_sipvicious() {
     colorecho "Installing SIPVicious"
     pipx install git+https://github.com/enablesecurity/sipvicious.git
     add-history sipvicious_svcrack
+    add-version "sipvicious_svcrack --version | head -n 1 | awk '{print $2}'"
     add-test-command "sipvicious_svcrack --version"
     add-to-list "sipvicious,https://github.com/enablesecurity/sipvicious,Enumeration and MITM tool for SIP devices"
 }
