@@ -14,6 +14,9 @@ function install_wordlists_apt_tools() {
     add-test-command "crunch --help" # Wordlist generator
     add-test-command "cupp --help"   # User password profiler
 
+    add-version "crunch --version |& grep 'version' | awk '{print $3}'"
+    add-version "cupp --version | grep '\[ cupp.py \]' | awk '{print $NF}'"
+
     add-to-list "crunch,https://github.com/crunchsec/crunch,A wordlist generator where you can specify a standard character set or a character set you specify."
     add-to-list "cupp,https://github.com/Mebus/cupp,Cupp is a tool used to generate personalized password lists based on target information."
 }
@@ -27,6 +30,7 @@ function install_cewl() {
     rvm use 3.2.2@default
     add-aliases cewl
     add-history cewl
+    add-version "cewl -v | head -n1 | awk '{print $2}'"
     add-test-command "cewl --help"
     add-to-list "cewl,https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results"
 }
@@ -36,12 +40,13 @@ function install_cewler() {
     colorecho "Installing cewler"
     pipx install cewler
     add-history cewler
+    add-version "cewler | grep CeWLeR | awk '{print $2}'"
     add-test-command "cewler --output cewler.txt https://thehacker.recipes/"
     add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python"
 }
 
 function install_seclists() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing seclists"
     git -C /opt clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
     cd /opt/seclists || exit
@@ -63,6 +68,7 @@ function install_pass_station() {
     rvm use 3.1.2@default
     add-aliases pass-station
     add-history pass-station
+    add-version "pass-station --version"
     add-test-command "pass-station --help"
     add-to-list "pass,https://github.com/hashcat/hashcat,TODO"
 }
@@ -72,12 +78,13 @@ function install_username-anarchy() {
     git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
     add-aliases username-anarchy
     add-history username-anarchy
+    add-version "username-anarchy | grep Version | awk '{print $NF}'"
     add-test-command "username-anarchy --help"
     add-to-list "username-anarchy,https://github.com/urbanadventurer/username-anarchy,Tools for generating usernames when penetration testing. Usernames are half the password brute force problem."
 }
 
 function install_genusernames() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing genusernames"
     mkdir -p /opt/tools/genusernames
     wget -O /opt/tools/genusernames/genusernames.function https://gitlab.com/-/snippets/2480505/raw/main/bash
