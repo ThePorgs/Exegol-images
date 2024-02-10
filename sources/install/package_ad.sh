@@ -1339,6 +1339,7 @@ function install_pywerview() {
     colorecho "Installing pywerview"
     pipx install git+https://github.com/the-useless-one/pywerview
     add-history pywerview
+    add-test-command "pywerview --help"
     add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
 }
 
