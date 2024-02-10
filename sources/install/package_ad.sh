@@ -20,6 +20,11 @@ function install_ad_apt_tools() {
     add-test-command "nbtscan 127.0.0.1"                            # NetBIOS scanning tool
     add-test-command "ldapsearch --help|& grep 'Search options'"    # Perform queries on a LDAP server
 
+    add-version "samdump2 -h | head -n 1 | awk '{print $2}'"
+    add-version "smbclient --version | awk '{print $2}'"
+    add-version "onesixtyone | head -n 1 | awk '{print $2}'"
+    add-version "nbtscan | grep NBTscan | head -n 1 | awk '{print $3}' | sed 's/\.$//'"
+
     add-to-list "samdump2,https://github.com/azan121468/SAMdump2,A tool to dump Windows NT/2k/XP/Vista password hashes from SAM files"
     add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
     add-to-list "onesixtyone,https://github.com/trailofbits/onesixtyone,onesixtyone is an SNMP scanner which utilizes a sweep technique to achieve very high performance."
@@ -48,6 +53,7 @@ function install_responder() {
     /opt/tools/Responder/certs/gen-self-signed-cert.sh
     add-aliases responder
     add-history responder
+    add-version "Responder.py --version | grep Responder | head -n 1 | awk '{print $6}'"
     add-test-command "Responder.py --version"
     add-test-command "RunFinger.py --help"
     add-test-command "MultiRelay.py --help"
@@ -59,12 +65,13 @@ function install_sprayhound() {
     colorecho "Installing sprayhound"
     pipx install git+https://github.com/Hackndo/sprayhound
     add-history sprayhound
+    add-version "sprayhound --help | grep spraying | head -n 1 | awk '{print $2}'"
     add-test-command "sprayhound --help"
     add-to-list "sprayhound,https://github.com/Hackndo/Sprayhound,Active Directory password audit tool."
 }
 
 function install_smartbrute() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing smartbrute"
     pipx install git+https://github.com/ShutdownRepo/smartbrute
     add-history smartbrute
@@ -73,7 +80,7 @@ function install_smartbrute() {
 }
 
 function install_ldapdomaindump() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing ldapdomaindump"
     pipx install git+https://github.com/dirkjanm/ldapdomaindump
     add-history ldapdomaindump
@@ -92,11 +99,13 @@ function install_crackmapexec() {
     cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases crackmapexec
     add-history crackmapexec
+    add-version "crackmapexec --version | grep - | awk '{print $1}'"
     add-test-command "crackmapexec --help"
     add-to-list "crackmapexec,https://github.com/Porchetta-Industries/CrackMapExec,Network scanner."
 }
 
 function install_bloodhound-py() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install git+https://github.com/fox-it/BloodHound.py
     add-aliases bloodhound-py
@@ -107,7 +116,7 @@ function install_bloodhound-py() {
 
 
 function install_bloodhound-ce-py() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing and Python ingestor for BloodHound-CE"
     git -C /opt/tools/ clone https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
     cd /opt/tools/BloodHound-CE.py || exit
@@ -123,6 +132,7 @@ function install_bloodhound-ce-py() {
 }
 
 function install_bloodhound() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing BloodHound from sources"
     git -C /opt/tools/ clone --depth 1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
@@ -210,12 +220,14 @@ function install_bloodhound-ce() {
     sed -i "s#/etc/bloodhound/collectors#/opt/tools/BloodHound-CE/collectors##" /opt/tools/BloodHound-CE/bloodhound.config.json
     sed -i "s#/opt/bloodhound/work#/opt/tools/BloodHound-CE/work##" /opt/tools/BloodHound-CE/bloodhound.config.json
 
+    add-version "/opt/tools/BloodHound-CE/bloodhound -version | awk '{print $4}'"
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
     add-test-command "/opt/tools/BloodHound-CE/bloodhound -version"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
 }
 
 function install_cypheroth() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing cypheroth"
     git -C /opt/tools/ clone --depth 1 https://github.com/seajaysec/cypheroth
     add-aliases cypheroth
@@ -225,7 +237,7 @@ function install_cypheroth() {
 }
 
 function install_mitm6_pip() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing mitm6 with pip"
     pipx install mitm6
     add-history mitm6
@@ -234,7 +246,7 @@ function install_mitm6_pip() {
 }
 
 function install_aclpwn() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing aclpwn with pip"
     pipx install git+https://github.com/aas-n/aclpwn.py
     add-history aclpwn
@@ -259,6 +271,7 @@ function install_impacket() {
     cp -v /root/sources/assets/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
     add-aliases impacket
     add-history impacket
+    add-version "ntlmrelayx.py --help | head -n 1 | awk '{print $5}'"
     add-test-command "ntlmrelayx.py --help"
     add-test-command "secretsdump.py --help"
     add-test-command "Get-GPPPassword.py --help"
@@ -272,6 +285,7 @@ function install_impacket() {
 }
 
 function install_pykek() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing Python Kernel Exploit Kit (pykek) for MS14-068"
     git -C /opt/tools/ clone --depth 1 https://github.com/preempt/pykek
     add-aliases pykek
@@ -285,11 +299,13 @@ function install_lsassy() {
     colorecho "Installing lsassy"
     pipx install lsassy
     add-history lsassy
+    add-version "lsassy --version | awk '{print $3}' | tr -d ')'"
     add-test-command "lsassy --version"
     add-to-list "lsassy,https://github.com/Hackndo/lsassy,Windows secrets and passwords extraction tool."
 }
 
 function install_privexchange() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing privexchange"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PrivExchange
     cd /opt/tools/PrivExchange || exit
@@ -309,6 +325,7 @@ function install_ruler() {
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
+    add-version "ruler --version | awk '{print $3}'"
     add-test-command "ruler --version"
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
 }
@@ -334,6 +351,7 @@ function install_upx() {
     mv /tmp/upx* /opt/tools/upx
     ln -v -s /opt/tools/upx/upx /opt/tools/bin/upx
     ln -v -s upx /opt/tools/bin/upx-ucl
+    add-version "upx --version | head -n 1 | awk '{print $2}'"
     add-test-command "upx --help"
     add-to-list "upx,https://github.com/upx/upx,UPX is an advanced executable packer"
 }
@@ -345,6 +363,7 @@ function install_darkarmour() {
     git -C /opt/tools/ clone --depth 1 https://github.com/bats3c/darkarmour
     add-aliases darkarmour
     add-history darkarmour
+    add-version "darkarmour.py --help | grep Version | awk '{print $12}'"
     add-test-command "darkarmour.py --help"
     add-to-list "darkarmour,https://github.com/bats3c/darkarmour,a tool to detect and evade common antivirus products"
 }
@@ -364,6 +383,7 @@ function install_amber() {
     go install -v github.com/EgeBalci/amber@latest
     asdf reshim golang
     add-history amber
+    add-version "amber --version | tail -n 1"
     add-test-command "amber --help"
     add-to-list "amber,https://github.com/EgeBalci/amber,Forensic tool to recover browser history / cookies and credentials"
 }
@@ -372,34 +392,36 @@ function install_powershell() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powershell"
     if /opt/tools/bin/powershell -Version; then
-      colorecho "powershell seems already installed, skipping..."
-      return
+        colorecho "powershell seems already installed, skipping..."
+        return
     else
-      if [[ $(uname -m) = 'x86_64' ]]
-      then
-          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-x64.tar.gz
-      elif [[ $(uname -m) = 'aarch64' ]]
-      then
-          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm64.tar.gz
-      elif [[ $(uname -m) = 'armv7l' ]]
-      then
-          curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm32.tar.gz
-      else
-          criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-      fi
-      mkdir -v -p /opt/tools/powershell/7
-      tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
-      chmod -v +x /opt/tools/powershell/7/pwsh
-      rm -v /tmp/powershell.tar.gz
-      ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
-      ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
-      add-history powershell
-      add-test-command "powershell -Version"
-      add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
+        if [[ $(uname -m) = 'x86_64' ]]
+        then
+            curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-x64.tar.gz
+        elif [[ $(uname -m) = 'aarch64' ]]
+        then
+            curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm64.tar.gz
+        elif [[ $(uname -m) = 'armv7l' ]]
+        then
+            curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.3.4/powershell-7.3.4-linux-arm32.tar.gz
+        else
+            criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+        fi
+        mkdir -v -p /opt/tools/powershell/7
+        tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
+        chmod -v +x /opt/tools/powershell/7/pwsh
+        rm -v /tmp/powershell.tar.gz
+        ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
+        ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
+        add-history powershell
+        add-version "powershell -Version | awk '{print $2}'"
+        add-test-command "powershell -Version"
+        add-to-list "powershell,https://github.com/PowerShell/PowerShell,a command-line shell and scripting language designed for system administration and automation"
     fi
 }
 
 function install_krbrelayx() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing krbrelayx"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/krbrelayx
     cd /opt/tools/krbrelayx || exit
@@ -424,6 +446,7 @@ function install_evilwinrm() {
     rvm use 3.2.2@default
     add-aliases evil-winrm
     add-history evil-winrm
+    add-version "evil-winrm --version"
     add-test-command "evil-winrm --help"
     add-to-list "evilwinrm,https://github.com/Hackplayers/evil-winrm,Tool to connect to a remote Windows system with WinRM."
 }
@@ -448,13 +471,14 @@ function install_pypykatz() {
     fi
     # pipx install pypykatz
     add-history pypykatz
+    add-version "pypykatz version"
     add-test-command "pypykatz version"
     add-test-command "pypykatz crypto nt 'exegol4thewin'"
     add-to-list "pypykatz,https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
 }
 
 function install_krbjack() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing krbjack"
     pipx install krbjack
     add-test-command "krbjack --help"
@@ -462,6 +486,7 @@ function install_krbjack() {
 }
 
 function install_enyx() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing enyx"
     git -C /opt/tools/ clone --depth 1 https://github.com/trickster0/Enyx
     add-aliases enyx
@@ -475,11 +500,13 @@ function install_enum4linux-ng() {
     colorecho "Installing enum4linux-ng"
     pipx install git+https://github.com/cddmp/enum4linux-ng
     add-history enum4linux-ng
+    add-version "enum4linux-ng --help | grep ENUM4LINUX | awk '{print $5}' | tr -d '()'"
     add-test-command "enum4linux-ng --help"
     add-to-list "enum4linux-ng,https://github.com/cddmp/enum4linux-ng,Tool for enumerating information from Windows and Samba systems."
 }
 
 function install_zerologon() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Pulling CVE-2020-1472 exploit and scan scripts"
     mkdir /opt/tools/zerologon
     cd /opt/tools/zerologon || exit
@@ -496,6 +523,7 @@ function install_zerologon() {
 }
 
 function install_libmspack() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing libmspack"
     git -C /opt/tools/ clone --depth 1 https://github.com/kyz/libmspack.git
     cd /opt/tools/libmspack/libmspack || exit
@@ -522,11 +550,13 @@ function install_windapsearch-go() {
     mage build
     ln -v -s /opt/tools/go-windapsearch/windapsearch /opt/tools/bin/windapsearch
     add-history windapsearch
+    add-version "windapsearch --version | awk '{print $2}' | sed '$ d'"
     add-test-command "windapsearch --version"
     add-to-list "windapsearch-go,https://github.com/ropnop/go-windapsearch/,Active Directory enumeration tool."
 }
 
 function install_oaburl() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Downloading oaburl.py"
     mkdir /opt/tools/OABUrl
     wget -O /opt/tools/OABUrl/oaburl.py "https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py"
@@ -542,6 +572,7 @@ function install_oaburl() {
 }
 
 function install_lnkup() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing LNKUp"
     git -C /opt/tools/ clone --depth 1 https://github.com/Plazmaz/LNKUp
     cd /opt/tools/LNKUp || exit
@@ -556,6 +587,7 @@ function install_lnkup() {
 }
 
 function install_polenum() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing polenum"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh1t3Fox/polenum
     cd /opt/tools/polenum || exit
@@ -576,6 +608,7 @@ function install_smbmap() {
     cd /opt/tools/smbmap || exit
     pipx install .
     add-history smbmap
+    add-version "smbmap --help | grep Samba | awk '{print $6}'"
     add-test-command "smbmap --help"
     add-to-list "smbmap,https://github.com/ShawnDEvans/smbmap,A tool to enumerate SMB shares and check for null sessions"
 }
@@ -589,6 +622,7 @@ function install_pth-tools() {
         ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /opt/tools/pth-toolkit/lib/libreadline.so.6
         add-aliases pth-tools
         add-history pth-tools
+        add-version "pth-net --version | awk '{print $2}'"
         add-test-command "pth-net --version"
         add-test-command "pth-rpcclient --version"
         add-test-command "pth-smbclient --version"
@@ -608,6 +642,7 @@ function install_smtp-user-enum() {
     colorecho "Installing smtp-user-enum"
     pipx install smtp-user-enum
     add-history smtp-user-enum
+    add-version "smtp-user-enum --version | awk '{print $2}'"
     add-test-command "smtp-user-enum --help"
     add-to-list "smtp-user-enum,https://github.com/pentestmonkey/smtp-user-enum,A tool to enumerate email addresses via SMTP"
 }
@@ -622,11 +657,13 @@ function install_gpp-decrypt() {
     deactivate
     add-aliases gpp-decrypt
     add-history gpp-decrypt
+    add-version "gpp-decrypt.py --version | grep gpp-decrypt | awk '{print $2}'"
     add-test-command "gpp-decrypt.py -f /opt/tools/gpp-decrypt/groups.xml"
     add-to-list "gpp-decrypt,https://github.com/t0thkr1s/gpp-decrypt,A tool to decrypt Group Policy Preferences passwords"
 }
 
 function install_ntlmv1-multi() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing ntlmv1 multi tool"
     git -C /opt/tools clone --depth 1 https://github.com/evilmog/ntlmv1-multi
     add-aliases ntlmv1-multi
@@ -636,7 +673,7 @@ function install_ntlmv1-multi() {
 }
 
 function install_hashonymize() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing hashonymizer"
     pipx install git+https://github.com/ShutdownRepo/hashonymize
     add-history hashonymize
@@ -650,12 +687,13 @@ function install_gosecretsdump() {
     go install -v github.com/C-Sto/gosecretsdump@latest
     asdf reshim golang
     add-history gosecretsdump
+    add-version "gosecretsdump -version | awk '{print $2}'"
     add-test-command "gosecretsdump -version"
     add-to-list "gosecretsdump,https://github.com/c-sto/gosecretsdump,Implements NTLMSSP network authentication protocol in Go"
 }
 
 function install_adidnsdump() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing adidnsdump"
     pipx install git+https://github.com/dirkjanm/adidnsdump
     pipx inject adidnsdump pycryptodome
@@ -665,6 +703,7 @@ function install_adidnsdump() {
 }
 
 function install_pygpoabuse() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing pyGPOabuse"
     git -C /opt/tools/ clone --depth 1 https://github.com/Hackndo/pyGPOAbuse
     cd /opt/tools/pyGPOAbuse || exit
@@ -687,7 +726,7 @@ function install_pygpoabuse() {
 }
 
 function install_bloodhound-import() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing bloodhound-import"
     pipx install bloodhound-import
     add-history bloodhound-import
@@ -696,6 +735,7 @@ function install_bloodhound-import() {
 }
 
 function install_bloodhound-quickwin() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing bloodhound-quickwin"
     git -C /opt/tools/ clone --depth 1 https://github.com/kaluche/bloodhound-quickwin
     cd /opt/tools/bloodhound-quickwin || exit
@@ -719,11 +759,13 @@ function install_ldapsearch-ad() {
     deactivate
     add-aliases ldapsearch-ad
     add-history ldapsearch-ad
+    add-version "ldapsearch-ad.py --version | awk '{print $2}'"
     add-test-command "ldapsearch-ad.py --version"
     add-to-list "ldapsearch-ad,https://github.com/yaap7/ldapsearch-ad,LDAP search utility with AD support"
 }
 
 function install_petitpotam() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing PetitPotam"
     git -C /opt/tools/ clone --depth 1 https://github.com/ly4k/PetitPotam
     cd /opt/tools/PetitPotam || exit
@@ -745,6 +787,7 @@ function install_petitpotam() {
 }
 
 function install_dfscoerce() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing DfsCoerce"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh04m1001/DFSCoerce
     cd /opt/tools/DFSCoerce || exit
@@ -763,11 +806,13 @@ function install_coercer() {
     colorecho "Installing Coercer"
     pipx install git+https://github.com/p0dalirius/Coercer
     add-history coercer
+    add-version "coercer --help | grep v | head -n 1 | awk '{print $11}'"
     add-test-command "coercer --help"
     add-to-list "coercer,https://github.com/p0dalirius/coercer,DFS-R target coercion tool"
 }
 
 function install_pkinittools() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing PKINITtools"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PKINITtools
     cd /opt/tools/PKINITtools || exit
@@ -790,6 +835,7 @@ function install_pkinittools() {
 }
 
 function install_pywhisker() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing pyWhisker"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
     cd /opt/tools/pywhisker || exit
