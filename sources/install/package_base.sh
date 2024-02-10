@@ -44,6 +44,7 @@ function filesystem() {
     colorecho "Preparing filesystem"
     mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/
     touch /.exegol/build_pipeline_tests/all_commands.txt
+    touch /.exegol/build_pipeline_tests/all_versions.txt
     touch /.exegol/installed_tools.csv
     echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
 }
