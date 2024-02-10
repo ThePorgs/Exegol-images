@@ -43,6 +43,24 @@ function install_network_apt_tools() {
     add-test-command "redis-cli --version"                          # Redis protocol
     add-test-command "remmina --help"                          # Redis protocol
 
+    add-version "wireshark --version | head -n 1 | awk '{print $2}'"
+    add-version "tshark --version |& grep TShark | awk '{print $3}'"
+    add-version "hping3 --version | head -n 1 | awk '{print $3}'"
+    add-version "masscan --version | grep version | head -n 1 | awk '{print $3}'"
+    add-version "netdiscover -h | head -n 1 | awk '{print $2}'"
+    add-version "tcpdump --version | head -n 1 | awk '{print $3}'"
+    add-version "iptables --version | awk '{print $2}'"
+    add-version "traceroute --version |& head -n 1 | awk '{print $6}'"
+    add-version "dns2tcpc |& grep dns2tcp | head -n 1 | awk '{print $2}'"
+    add-version "xfreerdp --version | awk '{print $5}'"
+    add-version "rdesktop |& grep Version | awk '{print $2}' | sed 's/\.$//'"
+    add-version "xtightvncviewer --version |& head -n 1 | awk '{print $4}'"
+    add-version "ssh-audit --help | head -n 1 | awk '{print $3}' | tr -d ','"
+    add-version "hydra -h | head -n 1 | awk '{print $2}'"
+    add-version "mariadb --version | awk '{print $3}'"
+    add-version "redis-cli --version | awk '{print $2}'"
+    add-version "remmina --help | grep 'remmina.Remmina' | tail -n 1 | awk '{print $2}'"
+
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
     add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
@@ -63,6 +81,7 @@ function install_network_apt_tools() {
 }
 
 function install_proxychains() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing proxychains"
     git -C /opt/tools/ clone --depth 1 https://github.com/rofl0r/proxychains-ng
     cd /opt/tools/proxychains-ng || exit
@@ -88,6 +107,7 @@ function install_nmap() {
     fapt nmap
     add-aliases nmap
     add-history nmap
+    add-version "nmap --version | head -n 1 | awk '{print $3}'"
     add-test-command "nmap --version"
     add-to-list "nmap,https://nmap.org,The Network Mapper - a powerful network discovery and security auditing tool"
 }
@@ -99,13 +119,14 @@ function install_nmap-parse-output() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ernw/nmap-parse-output
     ln -s /opt/tools/nmap-parse-output/nmap-parse-output /opt/tools/bin/nmap-parse-output
     add-history nmap-parse-output
+    add-version "nmap-parse-output --version | tail -n 1 | tr -d '[]'"
     # nmap-parse-output always exits with 1 if no argument is passed
     add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
     add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
 }
 
 function install_autorecon() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing autorecon"
     git -C /opt/tools/ clone --depth 1 https://gitlab.com/kalilinux/packages/oscanner.git
     ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
@@ -130,6 +151,7 @@ function install_dnschef() {
     deactivate
     add-aliases dnschef
     add-history dnschef
+    add-version "dnschef.py help |& grep version | awk '{print $4}'"
     add-test-command "dnschef.py --help"
     add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
 }
@@ -139,6 +161,7 @@ function install_divideandscan() {
     colorecho "Installing DivideAndScan"
     pipx install git+https://github.com/snovvcrash/DivideAndScan
     add-history divideandscan
+    add-version "divideandscan --help |& grep DivideAndScan | awk '{print $4}' | tr -d '{}'"
     add-test-command "divideandscan --help"
     add-to-list "divideandscan,https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
 }
@@ -150,6 +173,7 @@ function install_chisel() {
     asdf reshim golang
     # TODO: add windows pre-compiled binaries in /opt/ressources/windows ?
     add-history chisel
+    add-version "chisel --version"
     add-test-command "chisel --help"
     add-to-list "chisel,https://github.com/jpillora/chisel,Go based TCP tunnel with authentication and encryption support"
 }
@@ -159,6 +183,7 @@ function install_sshuttle() {
     colorecho "Installing sshtuttle"
     pipx install git+https://github.com/sshuttle/sshuttle.git
     add-history sshuttle
+    add-version "sshuttle --version"
     add-test-command "sshuttle --version"
     add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
 }
@@ -174,12 +199,13 @@ function install_eaphammer() {
     deactivate
     add-aliases eaphammer
     add-history eaphammer
+    add-version "eaphammer --help | grep Version | awk '{print $2}'"
     add-test-command "eaphammer -h"
     add-to-list "eaphammer,https://github.com/s0lst1c3/eaphammer,EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks."
 }
 
 function install_fierce() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing fierce"
     pipx install git+https://github.com/mschwager/fierce
     add-history fierce
@@ -193,6 +219,7 @@ function install_dnsx() {
     go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
     asdf reshim golang
     add-history dnsx
+    add-version "dnsx --version |& grep Version | awk '{print $4}'"
     add-test-command "dnsx --help"
     add-to-list "dnsx,https://github.com/projectdiscovery/dnsx,A tool for DNS reconnaissance that can help identify subdomains and other related domains."
 }
@@ -203,6 +230,7 @@ function install_shuffledns() {
     go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
     asdf reshim golang
     add-history shuffledns
+    add-version "shuffledns --version |& grep Version | awk '{print $4}'"
     add-test-command "shuffledns --help"
     add-to-list "shuffledns,https://github.com/projectdiscovery/shuffledns,A fast and customizable DNS resolver that can be used for subdomain enumeration and other tasks."
 }
@@ -218,12 +246,13 @@ function install_tailscale() {
     fapt tailscale
     add-aliases tailscale
     add-history tailscale
+    add-version "tailscale --version | head -n 1"
     add-test-command "tailscale --help"
     add-to-list "tailscale,https://github.com/tailscale/tailscale,A secure and easy-to-use VPN alternative that is designed for teams and businesses."
 }
 
 function install_ligolo-ng() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing ligolo-ng"
     git -C /opt/tools clone --depth 1 https://github.com/nicocha30/ligolo-ng.git
     cd /opt/tools/ligolo-ng || exit
@@ -247,6 +276,7 @@ function install_rustscan() {
     rm -rf target/release/{deps,build,.fingerprint}
     ln -s /opt/tools/RustScan/target/release/rustscan /opt/tools/bin/rustscan
     add-history rustscan
+    add-version "rustscan --version | awk '{print $2}'"
     add-test-command "rustscan --help"
     add-to-list "rustscan,https://github.com/RustScan/RustScan,The Modern Port Scanner"
 }
@@ -262,6 +292,7 @@ function install_legba() {
     rm -rf target/release/{deps,build,.fingerprint}
     ln -s /opt/tools/legba/target/release/legba /opt/tools/bin/legba
     add-history legba
+    add-version "legba --version | head -n 1 | awk '{print $2}'"
     add-test-command "legba --help"
     add-to-list "legba,https://github.com/evilsocket/legba,a multiprotocol credentials bruteforcer / password sprayer and enumerator built with Rust"
 }
