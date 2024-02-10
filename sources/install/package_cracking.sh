@@ -18,6 +18,11 @@ function install_cracking_apt_tools() {
     add-test-command "pdfcrack --version"                               # PDF cracker
     add-test-command "bruteforce-luks -h |& grep 'Print progress info'" # Find the password of a LUKS encrypted volume
 
+    add-version "hashcat --version"
+    add-version "fcrackzip --version | awk '{print $3}'"
+    add-version "pdfcrack --version | awk '{print $3}'"
+    add-version "bruteforce-luks -h |& grep bruteforce-luks | head -n 1 | awk '{print $2}'"
+
     add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery"
     add-to-list "fcrackzip,https://github.com/hyc/fcrackzip,Password cracker for zip archives."
     add-to-list "pdfcrack,https://github.com/robins/pdfcrack,A tool for cracking password-protected PDF files"
@@ -32,13 +37,14 @@ function install_john() {
     yes|cpan install Compress::Raw::Lzma
     add-aliases john-the-ripper
     add-history john-the-ripper
+    add-version "john --help | head -n 1 | awk '{print $4}'"
     add-test-command "john --help"
     add-test-command "7z2john.pl|& grep 'Usage'"
     add-to-list "john,https://github.com/openwall/john,John the Ripper password cracker."
 }
 
 function install_name-that-hash() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing Name-That-Hash"
     pipx install name-that-hash
     add-history name-that-hash
@@ -53,6 +59,7 @@ function install_haiti() {
     rvm use 3.2.2@default
     add-aliases haiti
     add-history haiti
+    add-version "haiti --version"
     add-test-command "haiti --help"
     add-to-list "haiti,https://github.com/noraj/haiti,haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
 }
@@ -62,12 +69,13 @@ function install_geowordlists() {
     colorecho "Installing GeoWordlists"
     pipx install git+https://github.com/p0dalirius/GeoWordlists
     add-history geowordlists
+    add-version "geowordlists --help | head -n 1 | awk '{print $2}'"
     add-test-command "geowordlists --help"
     add-to-list "geowordlists,https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city."
 }
 
 function install_pkcrack() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing pkcrack"
     git -C /opt/tools/ clone https://github.com/keyunluo/pkcrack
     mkdir -v /opt/tools/pkcrack/build/
