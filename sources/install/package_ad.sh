@@ -27,6 +27,16 @@ function install_ad_apt_tools() {
     add-to-list "ldapsearch,https://wiki.debian.org/LDAP/LDAPUtils,Search for and display entries (ldap)"
 }
 
+function install_pretender() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Pretender"
+    go install -v github.com/RedTeamPentesting/pretender@latest
+    asdf reshim golang
+    add-history pretender
+    add-test-command "pretender -h"
+    add-to-list "pretender,https://github.com/RedTeamPentesting/pretender,an mitm tool for helping with relay attacks."
+}
+
 function install_responder() {
     colorecho "Installing Responder"
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
@@ -1309,6 +1319,7 @@ function package_ad() {
     local end_time
     start_time=$(date +%s)
     install_ad_apt_tools
+    install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
     install_crackmapexec            # Network scanner
