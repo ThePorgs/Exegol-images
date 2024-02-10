@@ -28,6 +28,7 @@ function install_ad_apt_tools() {
 }
 
 function install_pretender() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Pretender"
     go install -v github.com/RedTeamPentesting/pretender@latest
     asdf reshim golang
