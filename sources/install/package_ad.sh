@@ -33,7 +33,7 @@ function install_pretender() {
     go install -v github.com/RedTeamPentesting/pretender@latest
     asdf reshim golang
     add-history pretender
-    add-test-command "pretender -h"
+    add-test-command "pretender --help |& grep pretender"
     add-to-list "pretender,https://github.com/RedTeamPentesting/pretender,an mitm tool for helping with relay attacks."
 }
 
