@@ -16,11 +16,11 @@ function install_sdr_apt_tools() {
     add-test-command "gqrx -h"                          # spectrum analyzer for SDR
     add-test-command "dpkg -l rtl-433 | grep 'rtl-433'" # decode radio transmissions from devices on the ISM bands
   
-    add-version "gqrx -h | grep Gqrx | awk '{print $6}'"
+    local version=$(gqrx -h | grep Gqrx | awk '{print $6}')
 
-    add-to-list "hackrf,https://github.com/mossmann/hackrf,Low cost software defined radio platform"
-    add-to-list "gqrx,https://github.com/csete/gqrx,Software defined radio receiver powered by GNU Radio and Qt"
-    add-to-list "rtl-433,https://github.com/merbanan/rtl_433,Tool for decoding various wireless protocols/ signals such as those used by weather stations"
+    add-to-list "hackrf,https://github.com/mossmann/hackrf,Low cost software defined radio platform,$version"
+    add-to-list "gqrx,https://github.com/csete/gqrx,Software defined radio receiver powered by GNU Radio and Qt,$version"
+    add-to-list "rtl-433,https://github.com/merbanan/rtl_433,Tool for decoding various wireless protocols/ signals such as those used by weather stations,$version"
 }
 
 function install_mousejack() {
@@ -39,7 +39,7 @@ function install_mousejack() {
     add-test-command "nrf24-scanner.py --help"
     add-test-command "nrf24-sniffer.py --help"
     add-test-command "nrf24-network-mapper.py --help"
-    add-to-list "mousejack,https://github.com/BastilleResearch/mousejack,Exploit to take over a wireless mouse and keyboard"
+    add-to-list "mousejack,https://github.com/BastilleResearch/mousejack,Exploit to take over a wireless mouse and keyboard,$version"
 }
 
 function install_jackit() {
@@ -48,7 +48,7 @@ function install_jackit() {
     pipx install git+https://github.com/insecurityofthings/jackit
     add-history jackit
     add-test-command "jackit --help"
-    add-to-list "jackit,https://github.com/insecurityofthings/jackit,Exploit to take over a wireless mouse and keyboard"
+    add-to-list "jackit,https://github.com/insecurityofthings/jackit,Exploit to take over a wireless mouse and keyboard,$version"
 }
 
 # Package dedicated to SDR
