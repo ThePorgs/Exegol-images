@@ -14,8 +14,10 @@ function install_wordlists_apt_tools() {
     add-test-command "crunch --help" # Wordlist generator
     add-test-command "cupp --help"   # User password profiler
 
-    local version=$(crunch --version |& grep 'version' | awk '{print $3}')
-    local version=$(cupp --version | grep '\[ cupp.py \]' | awk '{print $NF}')
+    local version
+    version=$(crunch --version |& grep 'version' | awk '{print $3}')
+    local version
+    version=$(cupp --version | grep '\[ cupp.py \]' | awk '{print $NF}')
 
     add-to-list "crunch,https://github.com/crunchsec/crunch,A wordlist generator where you can specify a standard character set or a character set you specify.,$version"
     add-to-list "cupp,https://github.com/Mebus/cupp,Cupp is a tool used to generate personalized password lists based on target information.,$version"
@@ -30,7 +32,8 @@ function install_cewl() {
     rvm use 3.2.2@default
     add-aliases cewl
     add-history cewl
-    local version=$(cewl -v | head -n1 | awk '{print $2}')
+    local version
+    version=$(cewl -v | head -n1 | awk '{print $2}')
     add-test-command "cewl --help"
     add-to-list "cewl,https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results,$version"
 }
@@ -40,7 +43,8 @@ function install_cewler() {
     colorecho "Installing cewler"
     pipx install cewler
     add-history cewler
-    local version=$(cewler | grep CeWLeR | awk '{print $2}')
+    local version
+    version=$(cewler | grep CeWLeR | awk '{print $2}')
     add-test-command "cewler --output cewler.txt https://thehacker.recipes/"
     add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python,$version"
 }
@@ -68,7 +72,8 @@ function install_pass_station() {
     rvm use 3.1.2@default
     add-aliases pass-station
     add-history pass-station
-    local version=$(pass-station --version)
+    local version
+    version=$(pass-station --version)
     add-test-command "pass-station --help"
     add-to-list "pass,https://github.com/hashcat/hashcat,TODO,$version"
 }
@@ -78,7 +83,8 @@ function install_username-anarchy() {
     git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
     add-aliases username-anarchy
     add-history username-anarchy
-    local version=$(username-anarchy | grep Version | awk '{print $NF}')
+    local version
+    version=$(username-anarchy | grep Version | awk '{print $NF}')
     add-test-command "username-anarchy --help"
     add-to-list "username-anarchy,https://github.com/urbanadventurer/username-anarchy,Tools for generating usernames when penetration testing. Usernames are half the password brute force problem.,$version"
 }

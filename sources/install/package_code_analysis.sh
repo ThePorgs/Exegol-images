@@ -10,7 +10,8 @@ function install_brakeman() {
     rvm use 3.2.2@default
     add-aliases brakeman
     add-history brakeman
-    local version=$(brakeman --version | awk '{print $2}')
+    local version
+    version=$(brakeman --version | awk '{print $2}')
     add-test-command "brakeman --help"
     add-to-list "brakeman,https://github.com/presidentbeef/brakeman,Static analysis tool for Ruby on Rails applications,$version"
 }
@@ -20,7 +21,8 @@ function install_semgrep() {
     colorecho "Installing semgrep"
     pipx install semgrep
     add-history semgrep
-    local version=$(semgrep --version |& tail -n 1)
+    local version
+    version=$(semgrep --version |& tail -n 1)
     add-test-command "semgrep --help"
     add-to-list "semgrep,https://github.com/returntocorp/semgrep/,Static analysis tool that supports multiple languages and can find a variety of vulnerabilities and coding errors.,$version"
 }
@@ -33,7 +35,8 @@ function install_pp-finder() {
     nvm use default
     npm install -g pp-finder
     add-history pp-finder
-    local version=$(npm ls -g | grep pp-finder | cut -d '@' -f2)
+    local version
+    version=$(npm ls -g | grep pp-finder | cut -d '@' -f2)
     add-test-command "npm ls -g|grep pp-finder"
     add-to-list "pp-finder,https://github.com/yeswehack/pp-finder,Prototype pollution finder tool for javascript. pp-finder lets you find prototype pollution candidates in your code.,$version"
 }

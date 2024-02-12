@@ -18,9 +18,12 @@ function install_mobile_apt_tools() {
     add-test-command "apksigner --version"
     add-test-command "apktool --version"
 
-    local version=$(adb --version | head -n 1 | awk '{print $5}')
-    local version=$(apksigner --version)
-    local version=$(apktool --version)
+    local version
+    version=$(adb --version | head -n 1 | awk '{print $5}')
+    local version
+    version=$(apksigner --version)
+    local version
+    version=$(apktool --version)
 
     add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications,$version"
     add-to-list "zipalign,https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file,$version"
@@ -43,7 +46,8 @@ function install_scrpy() {
     )
     rm -rf ./scrcpy
     add-history scrcpy
-    local version=$(scrcpy --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(scrcpy --version | head -n 1 | awk '{print $2}')
     add-test-command "scrcpy --version"
     add-to-list "scrcpy,https://github.com/Genymobile/scrcpy,Display and control your Android device.,$version"
 }
@@ -54,7 +58,8 @@ function install_smali() {
     wget https://bitbucket.org/JesusFreke/smali/downloads/smali-2.5.2.jar -O /opt/tools/smali/smali-2.5.2.jar
     add-aliases smali
     add-history smali
-    local version=$(smali --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(smali --version | head -n 1 | awk '{print $2}')
     add-test-command "smali --version"
     add-to-list "smali,https://github.com/JesusFreke/smali,A tool to disassemble and assemble Android's dex files,$version"
 }
@@ -76,7 +81,8 @@ function install_frida() {
     colorecho "Installing frida"
     pipx install frida-tools
     add-history frida
-    local version=$(frida --version)
+    local version
+    version=$(frida --version)
     add-test-command "frida --version"
     add-to-list "frida,https://github.com/frida/frida,Dynamic instrumentation toolkit,$version"
 }
@@ -86,7 +92,8 @@ function install_objection() {
     colorecho "Installing objection"
     pipx install git+https://github.com/sensepost/objection
     add-history objection
-    local version=$(objection version | awk '{print $2}')
+    local version
+    version=$(objection version | awk '{print $2}')
     add-test-command "objection --help"
     add-to-list "objection,https://github.com/sensepost/objection,Runtime mobile exploration,$version"
 }
@@ -96,7 +103,8 @@ function install_androguard() {
     colorecho "Installing androguard"
     pipx install androguard
     add-history androguard
-    local version=$(androguard --version | awk '{print $3}')
+    local version
+    version=$(androguard --version | awk '{print $3}')
     add-test-command "androguard --version"
     add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications,$version"
 }

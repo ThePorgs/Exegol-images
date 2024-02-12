@@ -18,8 +18,10 @@ function install_rfid_apt_tools() {
     add-test-command "nfc-scan-device -h"                   # NFC library
     add-test-command "mfcuk -i whatever"                    # Tool for Darkside attack on Mifare Classic
 
-    local version=$(autoconf --version | head -n 1 | awk '{print $4}')
-    local version=$(pcsc_scan -V | grep V | awk '{print $2}')
+    local version
+    version=$(autoconf --version | head -n 1 | awk '{print $4}')
+    local version
+    version=$(pcsc_scan -V | grep V | awk '{print $2}')
 
     add-to-list "libusb-dev,https://github.com/libusb/libusb,Library for USB device access,$version"
     add-to-list "autoconf,https://www.gnu.org/software/autoconf/autoconf.html,Tool for producing shell scripts to configure source code packages,$version"
@@ -39,7 +41,8 @@ function install_mfoc() {
     make
     make install
     add-history mfoc
-    local version=$(mfoc -h | grep version | awk '{print substr($5, 1, length($5)-1)}')
+    local version
+    version=$(mfoc -h | grep version | awk '{print substr($5, 1, length($5)-1)}')
     add-test-command "mfoc -h"
     add-to-list "mfoc,https://github.com/nfc-tools/mfoc,Implementation of 'offline nested' attack by Nethemba,$version"
 }

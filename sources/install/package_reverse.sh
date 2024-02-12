@@ -23,8 +23,10 @@ function install_reverse_apt_tools() {
     add-test-command "nasm --version" # Netwide Assembler
     add-test-command "strace --version"
 
-    local version=$(nasm --version | awk '{print $3}')
-    local version=$(strace --version | head -n 1 | awk '{print $4}')
+    local version
+    version=$(nasm --version | awk '{print $3}')
+    local version
+    version=$(strace --version | head -n 1 | awk '{print $4}')
 
     add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity.,$version"
     add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm) including assembler and disassembler / a syntax checker / and a binary format validator.,$version"
@@ -100,7 +102,8 @@ function install_ghidra() {
     rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
     add-aliases ghidra
     add-history ghidra
-    local version=$(find /opt/tools/ghidra* | head -n 1 | cut -d '_' -f 2)
+    local version
+    version=$(find /opt/tools/ghidra* | head -n 1 | cut -d '_' -f 2)
     # TODO add-test-command GUI app
     add-to-list "ghidra,https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools.,$version"
 }
@@ -142,7 +145,8 @@ function install_pwninit() {
     source "$HOME/.cargo/env"
     cargo install pwninit
     add-history pwninit
-    local version=$(pwninit --version | awk '{print $2}')
+    local version
+    version=$(pwninit --version | awk '{print $2}')
     add-test-command "pwninit --help"
     add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges,$version"
 }

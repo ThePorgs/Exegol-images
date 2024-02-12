@@ -16,9 +16,12 @@ function install_web_apt_tools() {
     add-test-command "prips --help"                      # Print the IP addresses in a given range
     add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 
-    local version=$(dirb | grep DIRB | awk '{print $2}')
-    local version=$(prips --version | head -n 1 | awk '{print $2}')
-    local version=$(swaks --version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(dirb | grep DIRB | awk '{print $2}')
+    local version
+    version=$(prips --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(swaks --version | head -n 1 | awk '{print $3}')
 
     add-to-list "dirb,https://github.com/v0re/dirb,Web Content Scanner,$version"
     add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range.,$version"
@@ -35,7 +38,8 @@ function install_weevely() {
     deactivate
     add-aliases weevely
     add-history weevely
-    local version=$(weevely.py --version |& grep weevely | head -n 1 | awk '{print $3}')
+    local version
+    version=$(weevely.py --version |& grep weevely | head -n 1 | awk '{print $3}')
     add-test-command "weevely.py --help"
     add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime.,$version"
 }
@@ -49,7 +53,8 @@ function install_whatweb() {
     rvm use 3.2.2@default
     add-aliases whatweb
     add-history whatweb
-    local version=$(whatweb --version | awk '{print $3}')
+    local version
+    version=$(whatweb --version | awk '{print $3}')
     add-test-command "whatweb --version"
     add-to-list "whatweb,https://github.com/urbanadventurer/WhatWeb,Next generation web scanner that identifies what websites are running.,$version"
 
@@ -66,7 +71,8 @@ function install_wfuzz() {
     mv /tmp/wfuzz/wordlist/* /usr/share/wfuzz
     rm -rf /tmp/wfuzz
     add-history wfuzz
-    local version=$(wfuzz --version)
+    local version
+    version=$(wfuzz --version)
     add-test-command "wfuzz --help"
     add-test-command "test -d '/usr/share/wfuzz/' || exit 1"
     add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques,$version"
@@ -78,7 +84,8 @@ function install_gobuster() {
     go install -v github.com/OJ/gobuster/v3@latest
     asdf reshim golang
     add-history gobuster
-    local version=$(gobuster version)
+    local version
+    version=$(gobuster version)
     add-test-command "gobuster --help"
     add-to-list "gobuster,https://github.com/OJ/gobuster,Tool to discover hidden files and directories.,$version"
 }
@@ -93,7 +100,8 @@ function install_kiterunner() {
     make build
     ln -v -s "$(pwd)/dist/kr" /opt/tools/bin/kr
     add-history kiterunner
-    local version=$(kr version |& grep - | awk '{print $2}')
+    local version
+    version=$(kr version |& grep - | awk '{print $2}')
     add-test-command "kr --help"
     add-to-list "kiterunner,https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments.,$version"
 }
@@ -104,7 +112,8 @@ function install_amass() {
     go install -v github.com/owasp-amass/amass/v3/...@master
     asdf reshim golang
     add-history amass
-    local version=$(amass -version)
+    local version
+    version=$(amass -version)
     add-test-command "amass -version"
     add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration / attack surface mapping & external assets discovery tool,$version"
 }
@@ -119,7 +128,8 @@ function install_ffuf() {
     # https://github.com/ffuf/ffuf/issues/681
     # go install github.com/ffuf/ffuf/v2@latest
     add-history ffuf
-    local version=$(ffuf -h | head -n 1 | awk '{print $6}')
+    local version
+    version=$(ffuf -h | head -n 1 | awk '{print $6}')
     add-test-command "ffuf --help"
     add-to-list "ffuf,https://github.com/ffuf/ffuf,Fast web fuzzer written in Go.,$version"
 }
@@ -129,7 +139,8 @@ function install_dirsearch() {
     colorecho "Installing dirsearch"
     pipx install git+https://github.com/maurosoria/dirsearch
     add-history dirsearch
-    local version=$(dirsearch --version | awk '{print $2}')
+    local version
+    version=$(dirsearch --version | awk '{print $2}')
     add-test-command "dirsearch --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site.,$version"
 }
@@ -191,7 +202,8 @@ function install_xsstrike() {
     deactivate
     add-aliases xsstrike
     add-history xsstrike
-    local version=$(xsstrike.py -h | grep XSStrike | awk '{print $2}')
+    local version
+    version=$(xsstrike.py -h | grep XSStrike | awk '{print $2}')
     add-test-command "xsstrike.py --help"
     add-to-list "xsstrike,https://github.com/s0md3v/XSStrike,a Python tool for detecting and exploiting XSS vulnerabilities.,$version"
 }
@@ -218,7 +230,8 @@ function install_xsser() {
     deactivate
     add-aliases xsser
     add-history xsser
-    local version=$(xsser --version | grep XSSer | awk '{print $2}' | tr -d ':')
+    local version
+    version=$(xsser --version | grep XSSer | awk '{print $2}' | tr -d ':')
     add-test-command "xsser --help"
     add-to-list "xsser,https://github.com/epsylon/xsser,XSS scanner.,$version"
 }
@@ -228,7 +241,8 @@ function install_xsrfprobe() {
     colorecho "Installing XSRFProbe"
     pipx install git+https://github.com/0xInfection/XSRFProbe
     add-history xsrfprobe
-    local version=$(xsrfprobe --version | grep Version | awk '{print $6}')
+    local version
+    version=$(xsrfprobe --version | grep Version | awk '{print $6}')
     add-test-command "xsrfprobe --help"
     add-to-list "xsrfprobe,https://github.com/0xInfection/XSRFProbe,a tool for detecting and exploiting Cross-Site Request Forgery (CSRF) vulnerabilities,$version"
 }
@@ -257,7 +271,8 @@ function install_kadimus() {
     make
     add-aliases kadimus
     add-history kadimus
-    local version=$(kadimus --help | grep v | head -n 1 | awk '{print $1}')
+    local version
+    version=$(kadimus --help | grep v | head -n 1 | awk '{print $1}')
     add-test-command "kadimus --help"
     add-to-list "kadimus,https://github.com/P0cL4bs/Kadimus,a tool for detecting and exploiting file upload vulnerabilities,$version"
 }
@@ -288,7 +303,8 @@ function install_patator() {
     deactivate
     add-aliases patator
     add-history patator
-    local version=$(patator.py --version | grep Patator | awk '{print $2}')
+    local version
+    version=$(patator.py --version | grep Patator | awk '{print $2}')
     add-test-command "patator.py ftp_login --help"
     add-to-list "patator,https://github.com/lanjelot/patator,Login scanner.,$version"
 }
@@ -298,7 +314,8 @@ function install_joomscan() {
     git -C /opt/tools/ clone --depth 1 https://github.com/rezasp/joomscan
     add-aliases joomscan
     add-history joomscan
-    local version=$(joomscan --version | grep Version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(joomscan --version | grep Version | head -n 1 | awk '{print $3}')
     add-test-command "joomscan --version"
     add-to-list "joomscan,https://github.com/rezasp/joomscan,A tool to enumerate Joomla-based websites,$version"
 }
@@ -310,7 +327,8 @@ function install_wpscan() {
     rvm use 3.2.2@default
     add-aliases wpscan
     add-history wpscan
-    local version=$(wpscan --version | grep Version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(wpscan --version | grep Version | head -n 1 | awk '{print $2}')
     add-test-command "wpscan --help"
     add-to-list "wpscan,https://github.com/wpscanteam/wpscan,A tool to enumerate WordPress-based websites,$version"
 }
@@ -347,7 +365,8 @@ function install_cmsmap() {
     # exploit-db path is required (misc package -> searchsploit)
     # cmsmap -U PC
     add-history cmsmap
-    local version=$(cmsmap --help | grep CMSmap | head -n 1 | awk '{print $3}')
+    local version
+    version=$(cmsmap --help | grep CMSmap | head -n 1 | awk '{print $3}')
     add-test-command "cmsmap --help; cmsmap --help |& grep 'Post Exploitation'"
     add-to-list "cmsmap,https://github.com/Dionach/CMSmap,Tool for security audit of web content management systems.,$version"
 }
@@ -365,7 +384,8 @@ function install_moodlescan() {
     catch_and_retry ./venv/bin/python3 moodlescan.py -a
     add-aliases moodlescan
     add-history moodlescan
-    local version=$(moodlescan.py --help | grep Version | awk '{print $2}')
+    local version
+    version=$(moodlescan.py --help | grep Version | awk '{print $2}')
     add-test-command "moodlescan.py --help"
     add-to-list "moodlescan,https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities.,$version"
 }
@@ -377,7 +397,8 @@ function install_testssl() {
     git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
     add-aliases testssl
     add-history testssl
-    local version=$(testssl.sh --version | grep testssl.sh | head -n 1 | awk '{print $2}')
+    local version
+    version=$(testssl.sh --version | grep testssl.sh | head -n 1 | awk '{print $2}')
     add-test-command "testssl.sh --help"
     add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers,$version"
 }
@@ -406,7 +427,8 @@ function install_cloudfail() {
     deactivate
     add-aliases cloudfail
     add-history cloudfail
-    local version=$(cloudfail.py -h | grep v | head -n 1 | awk '{print $1}')
+    local version
+    version=$(cloudfail.py -h | grep v | head -n 1 | awk '{print $1}')
     add-test-command "cloudfail.py --help"
     add-to-list "cloudfail,https://github.com/m0rtem/CloudFail,a reconnaissance tool for identifying misconfigured CloudFront domains.,$version"
 }
@@ -447,7 +469,8 @@ function install_oneforall() {
     deactivate
     add-aliases oneforall
     add-history oneforall
-    local version=$(oneforall.py version | grep "v" | head -n 1 | awk '{print $9}' | tr -d '{')
+    local version
+    version=$(oneforall.py version | grep "v" | head -n 1 | awk '{print $9}' | tr -d '{')
     add-test-command "oneforall.py version"
     add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool.,$version"
 }
@@ -457,7 +480,8 @@ function install_wafw00f() {
     colorecho "Installing wafw00f"
     pipx install wafw00F
     add-history wafw00f
-    local version=$(wafw00f --version | grep version | awk '{print $9}')
+    local version
+    version=$(wafw00f --version | grep version | awk '{print $9}')
     add-test-command "wafw00f --help"
     add-to-list "wafw00f,https://github.com/EnableSecurity/wafw00f,a Python tool that helps to identify and fingerprint web application firewall (WAF) products.,$version"
 }
@@ -520,7 +544,8 @@ function install_timing_attack() {
     rvm use 3.2.2@default
     add-aliases timing_attack
     add-history timing_attack
-    local version=$(timing_attack --version | awk '{print $2}')
+    local version
+    version=$(timing_attack --version | awk '{print $2}')
     add-test-command "timing_attack --help"
     add-to-list "timing,https://github.com/ffleming/timing_attack,Tool to generate a timing profile for a given command.,$version"
 }
@@ -530,7 +555,8 @@ function install_updog() {
     colorecho "Installing updog"
     pipx install updog
     add-history updog
-    local version=$(updog --version | awk '{print $2}')
+    local version
+    version=$(updog --version | awk '{print $2}')
     add-test-command "updog --help"
     add-to-list "updog,https://github.com/sc0tfree/updog,Simple replacement for Python's SimpleHTTPServer.,$version"
 }
@@ -556,7 +582,8 @@ function install_wuzz() {
     go install -v github.com/asciimoo/wuzz@latest
     asdf reshim golang
     add-history wuzz
-    local version=$(wuzz --version | awk '{print $2}')
+    local version
+    version=$(wuzz --version | awk '{print $2}')
     add-test-command "wuzz --help"
     add-to-list "wuzz,https://github.com/asciimoo/wuzz,a command-line tool for interacting with HTTP(S) web services,$version"
 }
@@ -639,7 +666,8 @@ function install_httpmethods() {
     deactivate
     add-aliases httpmethods
     add-history httpmethods
-    local version=$(httpmethods.py --help | head -n 1 | awk '{print $5}')
+    local version
+    version=$(httpmethods.py --help | head -n 1 | awk '{print $5}')
     add-test-command "httpmethods.py --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.),$version"
 }
@@ -680,7 +708,8 @@ function install_feroxbuster() {
     ln -v -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
     add-aliases feroxbuster
     add-history feroxbuster
-    local version=$(feroxbuster --version | awk '{print $2}')
+    local version
+    version=$(feroxbuster --version | awk '{print $2}')
     add-test-command "feroxbuster --help"
     add-to-list "feroxbuster,https://github.com/epi052/feroxbuster,Simple / fast and recursive content discovery tool,$version"
 }
@@ -695,7 +724,8 @@ function install_tomcatwardeployer() {
     deactivate
     add-aliases tomcatwardeployer
     add-history tomcatwardeployer
-    local version=$(tomcatWarDeployer.py --version | awk '{print $3}' | tr -d ')')
+    local version
+    version=$(tomcatWarDeployer.py --version | awk '{print $3}' | tr -d ')')
     add-test-command "tomcatWarDeployer.py --help"
     add-to-list "tomcatwardeployer,https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat.,$version"
 }
@@ -710,7 +740,8 @@ function install_clusterd() {
     deactivate
     add-aliases clusterd
     add-history clusterd
-    local version=$(clusterd.py --help | grep clustered | cut -d / -f 2 | awk '{print $1}')
+    local version
+    version=$(clusterd.py --help | grep clustered | cut -d / -f 2 | awk '{print $1}')
     add-test-command "clusterd.py --help"
     add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents.,$version"
 }
@@ -731,7 +762,8 @@ function install_nuclei() {
     asdf reshim golang
     nuclei -update-templates
     add-history nuclei
-    local version=$(nuclei --version |& awk '{print $5}')
+    local version
+    version=$(nuclei --version |& awk '{print $5}')
     add-test-command "nuclei --version"
     add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues / including XSS / SQL injection / and misconfigured servers.,$version"
 }
@@ -741,7 +773,8 @@ function install_gau() {
     colorecho "Installing gau"
     GO111MODULE=on go install -v github.com/lc/gau@latest
     add-history gau
-    local version=$(gau --version | awk '{print $3}')
+    local version
+    version=$(gau --version | awk '{print $3}')
     add-test-command "gau --help"
     add-to-list "gau,https://github.com/lc/gau,Fast tool for fetching URLs,$version"
 }
@@ -772,7 +805,8 @@ function install_httpx() {
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
     asdf reshim golang
     add-history httpx
-    local version=$(httpx --version |& tail -n 1 | awk '{print $4}')
+    local version
+    version=$(httpx --version |& tail -n 1 | awk '{print $4}')
     add-test-command "httpx --help"
     add-to-list "httpx,https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities / including outdated software versions and weak encryption protocols.,$version"
 }
@@ -803,7 +837,8 @@ function install_naabu() {
     go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
     asdf reshim golang
     add-history naabu
-    local version=$(naabu --version |& tail -n 1 | awk '{print $4}')
+    local version
+    version=$(naabu --version |& tail -n 1 | awk '{print $4}')
     add-test-command "naabu --help"
     add-to-list "naabu,https://github.com/projectdiscovery/naabu,A fast and reliable port scanner that can detect open ports and services.,$version"
 }
@@ -886,7 +921,8 @@ function install_sqlmap() {
     git -C /opt/tools/ clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
     ln -s "/opt/tools/sqlmap/sqlmap.py" /opt/tools/bin/sqlmap
     add-history sqlmap
-    local version=$(sqlmap --version)
+    local version
+    version=$(sqlmap --version)
     add-test-command "sqlmap --version"
     add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws,$version"
 }
@@ -899,7 +935,8 @@ function install_sslscan() {
     make static
     ln -s /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
     add-history sslscan
-    local version=$(sslscan --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(sslscan --version | head -n 1 | awk '{print $2}')
     add-test-command "sslscan --version"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers,$version"
 }

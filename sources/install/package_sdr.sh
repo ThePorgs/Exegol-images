@@ -16,7 +16,8 @@ function install_sdr_apt_tools() {
     add-test-command "gqrx -h"                          # spectrum analyzer for SDR
     add-test-command "dpkg -l rtl-433 | grep 'rtl-433'" # decode radio transmissions from devices on the ISM bands
   
-    local version=$(gqrx -h | grep Gqrx | awk '{print $6}')
+    local version
+    version=$(gqrx -h | grep Gqrx | awk '{print $6}')
 
     add-to-list "hackrf,https://github.com/mossmann/hackrf,Low cost software defined radio platform,$version"
     add-to-list "gqrx,https://github.com/csete/gqrx,Software defined radio receiver powered by GNU Radio and Qt,$version"

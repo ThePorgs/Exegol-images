@@ -20,10 +20,14 @@ function install_steganography_apt_tools() {
     add-test-command "exiv2 --help"                             # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
     add-test-command "hexedit --help|& grep 'usage: hexedit'"   # View and edit files in hexadecimal or in ASCII
     
-    local version=$(stegosuite --version | awk '{print $2}')
-    local version=$(steghide --version | awk '{print $3}')
-    local version=$(exif --version)
-    local version=$(exiv2 --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(stegosuite --version | awk '{print $2}')
+    local version
+    version=$(steghide --version | awk '{print $3}')
+    local version
+    version=$(exif --version)
+    local version
+    version=$(exiv2 --version | head -n 1 | awk '{print $2}')
 
     add-to-list "stegosuite,https://github.com/osde8info/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files.,$version"
     add-to-list "steghide,https://github.com/StefanoDeVuono/steghide,steghide is a steganography program that is able to hide data in various kinds of image and audio files.,$version"
@@ -49,7 +53,8 @@ function install_stegolsb() {
     colorecho "Installing stegolsb"
     pipx install stego-lsb
     add-history stegolsb
-    local version=$(stegolsb --version | awk '{print $3}')
+    local version
+    version=$(stegolsb --version | awk '{print $3}')
     add-test-command "stegolsb --version"
     add-to-list "stegolsb,https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm,$version"
 }

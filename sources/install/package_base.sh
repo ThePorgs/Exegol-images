@@ -36,7 +36,8 @@ function install_rust_cargo() {
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
     sh /tmp/rustup.sh -y
     source "$HOME/.cargo/env"
-    local version=$(cargo --version | awk '{print $2}')
+    local version
+    version=$(cargo --version | awk '{print $2}')
     add-test-command "cargo --version"
 }
 
@@ -77,7 +78,8 @@ function install_go() {
 #    tar -C /usr/local -xzf /tmp/go.tar.gz
 #    rm -rf /tmp/go.tar.gz
 #    export PATH=$PATH:/usr/local/go/bin
-    local version=$(go version | awk '{print $3}')
+    local version
+    version=$(go version | awk '{print $3}')
     add-test-command "go version"
 }
 
@@ -156,7 +158,8 @@ function install_firefox() {
     pip3 install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/setup.py
     add-history firefox
-    local version=$(firefox --version | awk '{print $3}')
+    local version
+    version=$(firefox --version | awk '{print $3}')
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
     add-test-command "firefox --version"
     add-to-list "firefox,https://www.mozilla.org,A web browser,$version"
@@ -184,7 +187,8 @@ function install_rvm() {
     rvm install ruby-3.1.2
     rvm get head
     gem update
-    local version=$(rvm --version |& tail -n 1 | awk '{print $2}')
+    local version
+    version=$(rvm --version |& tail -n 1 | awk '{print $2}')
     add-test-command "rvm --version"
 }
 
@@ -194,7 +198,8 @@ function install_fzf() {
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
     add-aliases fzf
-    local version=$(fzf --version | awk '{print $1}')
+    local version
+    version=$(fzf --version | awk '{print $1}')
     add-test-command "fzf-wordlists --help"
     add-test-command "fzf --help"
     add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder,$version"
@@ -223,7 +228,8 @@ function install_pipx() {
     colorecho "Installing pipx"
     pip3 install pipx
     pipx ensurepath
-    local version=$(pipx --version)
+    local version
+    version=$(pipx --version)
     add-test-command "pipx --version"
 }
 
@@ -237,7 +243,8 @@ function install_yarn() {
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
     apt-get update
     fapt yarn
-    local version=$(yarn --version)
+    local version
+    version=$(yarn --version)
     add-test-command "yarn --help"
 }
 
@@ -274,7 +281,8 @@ function install_neovim() {
         cd .. || exit
         rm -rf ./neovim
     fi
-    local version=$(nvim --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(nvim --version | head -n 1 | awk '{print $2}')
     add-test-command "nvim --version"
     add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor,$version"
 }
@@ -285,7 +293,8 @@ function install_mdcat() {
     source "$HOME/.cargo/env"
     cargo install mdcat
     add-history mdcat
-    local version=$(mdcat --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(mdcat --version | head -n 1 | awk '{print $2}')
     add-test-command "mdcat --version"
     add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown,$version"
 }
@@ -336,7 +345,8 @@ function install_java11() {
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
-    local version=$(/usr/lib/jvm/java-11-openjdk/bin/java --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(/usr/lib/jvm/java-11-openjdk/bin/java --version | head -n 1 | awk '{print $2}')
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
@@ -394,7 +404,8 @@ function install_asdf() {
     source "$HOME/.asdf/asdf.sh"
     # completions file
     source "$HOME/.asdf/completions/asdf.bash"
-    local version=$(asdf version)
+    local version
+    version=$(asdf version)
     add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc,$version"
 }

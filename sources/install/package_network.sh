@@ -43,23 +43,40 @@ function install_network_apt_tools() {
     add-test-command "redis-cli --version"                          # Redis protocol
     add-test-command "remmina --help"                          # Redis protocol
 
-    local version=$(wireshark --version | head -n 1 | awk '{print $2}')
-    local version=$(tshark --version |& grep TShark | awk '{print $3}')
-    local version=$(hping3 --version | head -n 1 | awk '{print $3}')
-    local version=$(masscan --version | grep version | head -n 1 | awk '{print $3}')
-    local version=$(netdiscover -h | head -n 1 | awk '{print $2}')
-    local version=$(tcpdump --version | head -n 1 | awk '{print $3}')
-    local version=$(iptables --version | awk '{print $2}')
-    local version=$(traceroute --version |& head -n 1 | awk '{print $6}')
-    local version=$(dns2tcpc |& grep dns2tcp | head -n 1 | awk '{print $2}')
-    local version=$(xfreerdp --version | awk '{print $5}')
-    local version=$(rdesktop |& grep Version | awk '{print $2}' | sed 's/\.$//')
-    local version=$(xtightvncviewer --version |& head -n 1 | awk '{print $4}')
-    local version=$(ssh-audit --help | head -n 1 | awk '{print $3}' | tr -d ',')
-    local version=$(hydra -h | head -n 1 | awk '{print $2}')
-    local version=$(mariadb --version | awk '{print $3}')
-    local version=$(redis-cli --version | awk '{print $2}')
-    local version=$(remmina --help | grep 'remmina.Remmina' | tail -n 1 | awk '{print $2}')
+    local version
+    version=$(wireshark --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(tshark --version |& grep TShark | awk '{print $3}')
+    local version
+    version=$(hping3 --version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(masscan --version | grep version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(netdiscover -h | head -n 1 | awk '{print $2}')
+    local version
+    version=$(tcpdump --version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(iptables --version | awk '{print $2}')
+    local version
+    version=$(traceroute --version |& head -n 1 | awk '{print $6}')
+    local version
+    version=$(dns2tcpc |& grep dns2tcp | head -n 1 | awk '{print $2}')
+    local version
+    version=$(xfreerdp --version | awk '{print $5}')
+    local version
+    version=$(rdesktop |& grep Version | awk '{print $2}' | sed 's/\.$//')
+    local version
+    version=$(xtightvncviewer --version |& head -n 1 | awk '{print $4}')
+    local version
+    version=$(ssh-audit --help | head -n 1 | awk '{print $3}' | tr -d ',')
+    local version
+    version=$(hydra -h | head -n 1 | awk '{print $2}')
+    local version
+    version=$(mariadb --version | awk '{print $3}')
+    local version
+    version=$(redis-cli --version | awk '{print $2}')
+    local version
+    version=$(remmina --help | grep 'remmina.Remmina' | tail -n 1 | awk '{print $2}')
 
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level.,$version"
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark.,$version"
@@ -107,7 +124,8 @@ function install_nmap() {
     fapt nmap
     add-aliases nmap
     add-history nmap
-    local version=$(nmap --version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(nmap --version | head -n 1 | awk '{print $3}')
     add-test-command "nmap --version"
     add-to-list "nmap,https://nmap.org,The Network Mapper - a powerful network discovery and security auditing tool,$version"
 }
@@ -119,7 +137,8 @@ function install_nmap-parse-output() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ernw/nmap-parse-output
     ln -s /opt/tools/nmap-parse-output/nmap-parse-output /opt/tools/bin/nmap-parse-output
     add-history nmap-parse-output
-    local version=$(nmap-parse-output --version | tail -n 1 | tr -d '[]')
+    local version
+    version=$(nmap-parse-output --version | tail -n 1 | tr -d '[]')
     # nmap-parse-output always exits with 1 if no argument is passed
     add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
     add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output.,$version"
@@ -151,7 +170,8 @@ function install_dnschef() {
     deactivate
     add-aliases dnschef
     add-history dnschef
-    local version=$(dnschef.py help |& grep version | awk '{print $4}')
+    local version
+    version=$(dnschef.py help |& grep version | awk '{print $4}')
     add-test-command "dnschef.py --help"
     add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks,$version"
 }
@@ -161,7 +181,8 @@ function install_divideandscan() {
     colorecho "Installing DivideAndScan"
     pipx install git+https://github.com/snovvcrash/DivideAndScan
     add-history divideandscan
-    local version=$(divideandscan --help |& grep DivideAndScan | awk '{print $4}' | tr -d '{}')
+    local version
+    version=$(divideandscan --help |& grep DivideAndScan | awk '{print $4}' | tr -d '{}')
     add-test-command "divideandscan --help"
     add-to-list "divideandscan,https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner,$version"
 }
@@ -173,7 +194,8 @@ function install_chisel() {
     asdf reshim golang
     # TODO: add windows pre-compiled binaries in /opt/ressources/windows ?
     add-history chisel
-    local version=$(chisel --version)
+    local version
+    version=$(chisel --version)
     add-test-command "chisel --help"
     add-to-list "chisel,https://github.com/jpillora/chisel,Go based TCP tunnel with authentication and encryption support,$version"
 }
@@ -183,7 +205,8 @@ function install_sshuttle() {
     colorecho "Installing sshtuttle"
     pipx install git+https://github.com/sshuttle/sshuttle.git
     add-history sshuttle
-    local version=$(sshuttle --version)
+    local version
+    version=$(sshuttle --version)
     add-test-command "sshuttle --version"
     add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server,$version"
 }
@@ -199,7 +222,8 @@ function install_eaphammer() {
     deactivate
     add-aliases eaphammer
     add-history eaphammer
-    local version=$(eaphammer --help | grep Version | awk '{print $2}')
+    local version
+    version=$(eaphammer --help | grep Version | awk '{print $2}')
     add-test-command "eaphammer -h"
     add-to-list "eaphammer,https://github.com/s0lst1c3/eaphammer,EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks.,$version"
 }
@@ -219,7 +243,8 @@ function install_dnsx() {
     go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
     asdf reshim golang
     add-history dnsx
-    local version=$(dnsx --version |& grep Version | awk '{print $4}')
+    local version
+    version=$(dnsx --version |& grep Version | awk '{print $4}')
     add-test-command "dnsx --help"
     add-to-list "dnsx,https://github.com/projectdiscovery/dnsx,A tool for DNS reconnaissance that can help identify subdomains and other related domains.,$version"
 }
@@ -230,7 +255,8 @@ function install_shuffledns() {
     go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
     asdf reshim golang
     add-history shuffledns
-    local version=$(shuffledns --version |& grep Version | awk '{print $4}')
+    local version
+    version=$(shuffledns --version |& grep Version | awk '{print $4}')
     add-test-command "shuffledns --help"
     add-to-list "shuffledns,https://github.com/projectdiscovery/shuffledns,A fast and customizable DNS resolver that can be used for subdomain enumeration and other tasks.,$version"
 }
@@ -246,7 +272,8 @@ function install_tailscale() {
     fapt tailscale
     add-aliases tailscale
     add-history tailscale
-    local version=$(tailscale --version | head -n 1)
+    local version
+    version=$(tailscale --version | head -n 1)
     add-test-command "tailscale --help"
     add-to-list "tailscale,https://github.com/tailscale/tailscale,A secure and easy-to-use VPN alternative that is designed for teams and businesses.,$version"
 }
@@ -276,7 +303,8 @@ function install_rustscan() {
     rm -rf target/release/{deps,build,.fingerprint}
     ln -s /opt/tools/RustScan/target/release/rustscan /opt/tools/bin/rustscan
     add-history rustscan
-    local version=$(rustscan --version | awk '{print $2}')
+    local version
+    version=$(rustscan --version | awk '{print $2}')
     add-test-command "rustscan --help"
     add-to-list "rustscan,https://github.com/RustScan/RustScan,The Modern Port Scanner,$version"
 }
@@ -292,7 +320,8 @@ function install_legba() {
     rm -rf target/release/{deps,build,.fingerprint}
     ln -s /opt/tools/legba/target/release/legba /opt/tools/bin/legba
     add-history legba
-    local version=$(legba --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(legba --version | head -n 1 | awk '{print $2}')
     add-test-command "legba --help"
     add-to-list "legba,https://github.com/evilsocket/legba,a multiprotocol credentials bruteforcer / password sprayer and enumerator built with Rust,$version"
 }

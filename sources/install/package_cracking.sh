@@ -18,10 +18,14 @@ function install_cracking_apt_tools() {
     add-test-command "pdfcrack --version"                               # PDF cracker
     add-test-command "bruteforce-luks -h |& grep 'Print progress info'" # Find the password of a LUKS encrypted volume
 
-    local version=$(hashcat --version)
-    local version=$(fcrackzip --version | awk '{print $3}')
-    local version=$(pdfcrack --version | awk '{print $3}')
-    local version=$(bruteforce-luks -h |& grep bruteforce-luks | head -n 1 | awk '{print $2}')
+    local version
+    version=$(hashcat --version)
+    local version
+    version=$(fcrackzip --version | awk '{print $3}')
+    local version
+    version=$(pdfcrack --version | awk '{print $3}')
+    local version
+    version=$(bruteforce-luks -h |& grep bruteforce-luks | head -n 1 | awk '{print $2}')
 
     add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery,$version"
     add-to-list "fcrackzip,https://github.com/hyc/fcrackzip,Password cracker for zip archives.,$version"
@@ -37,7 +41,8 @@ function install_john() {
     yes|cpan install Compress::Raw::Lzma
     add-aliases john-the-ripper
     add-history john-the-ripper
-    local version=$(john --help | head -n 1 | awk '{print $4}')
+    local version
+    version=$(john --help | head -n 1 | awk '{print $4}')
     add-test-command "john --help"
     add-test-command "7z2john.pl|& grep 'Usage'"
     add-to-list "john,https://github.com/openwall/john,John the Ripper password cracker.,$version"
@@ -59,7 +64,8 @@ function install_haiti() {
     rvm use 3.2.2@default
     add-aliases haiti
     add-history haiti
-    local version=$(haiti --version)
+    local version
+    version=$(haiti --version)
     add-test-command "haiti --help"
     add-to-list "haiti,https://github.com/noraj/haiti,haiti is a A CLI tool (and library) to identify hash types (hash type identifier).,$version"
 }
@@ -69,7 +75,8 @@ function install_geowordlists() {
     colorecho "Installing GeoWordlists"
     pipx install git+https://github.com/p0dalirius/GeoWordlists
     add-history geowordlists
-    local version=$(geowordlists --help | head -n 1 | awk '{print $2}')
+    local version
+    version=$(geowordlists --help | head -n 1 | awk '{print $2}')
     add-test-command "geowordlists --help"
     add-to-list "geowordlists,https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city.,$version"
 }

@@ -16,9 +16,12 @@ function install_misc_apt_tools() {
     add-test-command "convert -version"                            # Copy, modify, and distribute image
     add-test-command "rsync -h"                                    # File synchronization tool for efficiently copying and updating data between local or remote locations.
 
-    local version=$(rlwrap --version | awk '{print $2}')
-    local version=$(convert -version | head -n 1 | awk '{print $3}')
-    local version=$(rsync --version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(rlwrap --version | awk '{print $2}')
+    local version
+    version=$(convert -version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(rsync --version | head -n 1 | awk '{print $3}')
 
     add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history,$version"
     add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images.,$version"
@@ -31,7 +34,8 @@ function install_goshs() {
     go install -v github.com/patrickhener/goshs@latest
     asdf reshim golang
     add-history goshs
-    local version=$(goshs -v | awk '{print $4}')
+    local version
+    version=$(goshs -v | awk '{print $4}')
     add-test-command "goshs -v"
     add-to-list "goshs,https://github.com/patrickhener/goshs,Goshs is a replacement for Python's SimpleHTTPServer. It allows uploading and downloading via HTTP/S with either self-signed certificate or user provided certificate and you can use HTTP basic auth.,$version"
 }
@@ -59,7 +63,8 @@ function install_arsenal() {
     pipx install git+https://github.com/Orange-Cyberdefense/arsenal
     add-aliases arsenal
     add-history arsenal
-    local version=$(whatportis --version | awk '{print $3}' | tr -d ')')
+    local version
+    version=$(whatportis --version | awk '{print $3}' | tr -d ')')
     add-test-command "arsenal --version"
     add-to-list "arsenal,https://github.com/Orange-Cyberdefense/arsenal,Powerful weapons for penetration testing.,$version"
 }
@@ -71,7 +76,8 @@ function install_whatportis() {
     # TODO : FIX : "port": port[1] if port[1] else "---",list index out of range - cli.py
     # echo y | whatportis --update
     add-history whatportis
-    local version=$(whatportis --version | awk '{print $3}')
+    local version
+    version=$(whatportis --version | awk '{print $3}')
     add-test-command "whatportis --version"
     add-to-list "whatportis,https://github.com/ncrocfer/whatportis,Command-line tool to lookup port information,$version"
 }
@@ -132,7 +138,8 @@ function install_ngrok() {
     fi
     tar xvzf /tmp/ngrok.tgz -C /opt/tools/bin
     add-history ngrok
-    local version=$(ngrok version | awk '{print $3}')
+    local version
+    version=$(ngrok version | awk '{print $3}')
     add-test-command "ngrok version"
     add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet,$version"
 }
@@ -142,7 +149,8 @@ function install_objectwalker() {
     colorecho "Installing objectwalker"
     pipx install git+https://github.com/p0dalirius/objectwalker
     add-history objectwalker
-    local version=$(objectwalker --help | grep v | head -n 1 | awk '{print $22}')
+    local version
+    version=$(objectwalker --help | grep v | head -n 1 | awk '{print $22}')
     add-test-command "objectwalker --help"
     add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory.,$version"
 }
@@ -156,7 +164,8 @@ function install_tig() {
     make install
     mv /root/bin/tig /opt/tools/bin/tig
     # Need add-history ?
-    local version=$(tig --version | head -n 1 | awk '{print $3}')
+    local version
+    version=$(tig --version | head -n 1 | awk '{print $3}')
     add-test-command "tig --help"
     add-to-list "tig,https://github.com/jonas/tig,Tig is an ncurses-based text-mode interface for git.,$version"
 }
@@ -165,7 +174,8 @@ function install_yt-dlp() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing yt-dlp"
     pipx install git+https://github.com/yt-dlp/yt-dlp
-    local version=$(yt-dlp --version)
+    local version
+    version=$(yt-dlp --version)
     add-test-command "yt-dlp --help"
     add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes,$version"
 }

@@ -19,10 +19,14 @@ function install_wifi_apt_tools() {
     add-test-command "bully --version"                                                   # WPS brute force attack
     add-test-command "cowpatty -V"                                                       # WPA2-PSK Cracking
   
-    local version=$(aircrack-ng --help | grep Aircrack-ng | awk '{print $2}')
-    local version=$(reaver --help |& grep Reaver | awk '{print $2}')
-    local version=$(bully --version)
-    local version=$(cowpatty -V | head -n 1 | awk '{print $2}')
+    local version
+    version=$(aircrack-ng --help | grep Aircrack-ng | awk '{print $2}')
+    local version
+    version=$(reaver --help |& grep Reaver | awk '{print $2}')
+    local version
+    version=$(bully --version)
+    local version
+    version=$(cowpatty -V | head -n 1 | awk '{print $2}')
 
     add-to-list "aircrack-ng,https://www.aircrack-ng.org,A suite of tools for wireless penetration testing,$version"
     add-to-list "reaver,https://github.com/t6x/reaver-wps-fork-t6x,reaver is a tool for brute-forcing WPS (Wireless Protected Setup) PINs.,$version"
@@ -49,7 +53,8 @@ function install_pyrit() {
     deactivate
     add-aliases pyrit
     add-history pyrit
-    local version=$(pyrit help | head -n 1 | awk '{print $2}')
+    local version
+    version=$(pyrit help | head -n 1 | awk '{print $2}')
     add-test-command "pyrit help"
     add-to-list "pyrit,https://github.com/JPaulMora/Pyrit,Python-based WPA/WPA2-PSK attack tool.,$version"
 }
@@ -62,7 +67,8 @@ function install_wifite2() {
     catch_and_retry ./venv/bin/python3 setup.py install
     add-aliases wifite
     add-history wifite
-    local version=$(Wifite.py --help|grep wifite | head -n 1 | awk '{print $NF}')
+    local version
+    version=$(Wifite.py --help|grep wifite | head -n 1 | awk '{print $NF}')
     add-test-command "Wifite.py --help"
     add-to-list "wifite2,https://github.com/derv82/wifite2,Script for auditing wireless networks.,$version"
 }
@@ -79,7 +85,8 @@ function install_bettercap() {
     sed -i 's/set api.rest.password pass/set api.rest.password exegol4thewin/g' /usr/local/share/bettercap/caplets/https-ui.cap
     add-aliases bettercap
     add-history bettercap
-    local version=$(bettercap --version | awk '{print $2}')
+    local version
+    version=$(bettercap --version | awk '{print $2}')
     add-test-command "bettercap --version"
     add-to-list "bettercap,https://github.com/bettercap/bettercap,The Swiss Army knife for 802.11 / BLE / and Ethernet networks reconnaissance and MITM attacks.,$version"
 }
@@ -93,7 +100,8 @@ function install_hcxtools() {
     make install PREFIX=/opt/tools
     ln -s /opt/tools/bin/hcxpcapngtool /opt/tools/bin/hcxpcaptool
     add-history hcxtools
-    local version=$(hcxpcapngtool --version | awk '{print $2}')
+    local version
+    version=$(hcxpcapngtool --version | awk '{print $2}')
     add-test-command "hcxpcapngtool --version"
     add-test-command "hcxhashtool --version"
     add-to-list "hcxtools,https://github.com/ZerBea/hcxtools,Tools for capturing and analyzing packets from WLAN devices.,$version"
@@ -108,7 +116,8 @@ function install_hcxdumptool() {
     make
     make install PREFIX=/opt/tools
     add-history hcxdumptool
-    local version=$(hcxdumptool --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(hcxdumptool --version | head -n 1 | awk '{print $2}')
     add-test-command "hcxdumptool --version"
     add-to-list "hcxdumptool,https://github.com/ZerBea/hcxdumptool,Small tool to capture packets from wlan devices.,$version"
 }

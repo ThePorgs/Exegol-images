@@ -26,11 +26,16 @@ function install_osint_apt_tools() {
     add-test-command "whois --help"                                                     # See information about a specific domain name or IP address
     add-test-command "recon-ng --help"                                                  # External recon tool
 
-    local version=$(exifprobe -V | head -n 1 | awk '{print $4}')
-    local version=$(dnsenum --help | head -n 1 | cut -d ":" -f2)
-    local version=$(tor --version | head -n 1 | awk '{print $3}' | sed 's/\.$//')
-    local version=$(whois --version | head -n 1 | awk '{print $2}' | sed 's/\.$//')
-    local version=$(recon-ng --version)
+    local version
+    version=$(exifprobe -V | head -n 1 | awk '{print $4}')
+    local version
+    version=$(dnsenum --help | head -n 1 | cut -d ":" -f2)
+    local version
+    version=$(tor --version | head -n 1 | awk '{print $3}' | sed 's/\.$//')
+    local version
+    version=$(whois --version | head -n 1 | awk '{print $2}' | sed 's/\.$//')
+    local version
+    version=$(recon-ng --version)
 
     add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading / writing and editing meta information in image / audio and video files.,$version"
     add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files.,$version"
@@ -45,7 +50,8 @@ function install_youtubedl() {
     colorecho "Installing youtube-dl"
     pipx install youtube-dl
     add-history youtube-dl
-    local version=$(youtube-dl --version)
+    local version
+    version=$(youtube-dl --version)
     add-test-command "youtube-dl --version"
     add-to-list "youtubedl,https://github.com/ytdl-org/youtube-dl,Download videos from YouTube and other sites.,$version"
 }
@@ -75,7 +81,8 @@ function install_subfinder() {
     go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
     asdf reshim golang
     add-history subfinder
-    local version=$(subfinder -version |& awk '{print $4}')
+    local version
+    version=$(subfinder -version |& awk '{print $4}')
     add-test-command "subfinder -version"
     add-to-list "subfinder,https://github.com/projectdiscovery/subfinder,Tool to find subdomains associated with a domain.,$version"
 }
@@ -96,7 +103,8 @@ function install_findomain() {
     chmod +x /opt/tools/bin/findomain
     rm /tmp/findomain.zip
     add-history findomain
-    local version=$(findomain --version | awk '{print $2}')
+    local version
+    version=$(findomain --version | awk '{print $2}')
     add-test-command "findomain --version"
     add-to-list "findomain,https://github.com/findomain/findomain,The fastest and cross-platform subdomain enumerator.,$version"
 }
@@ -106,7 +114,8 @@ function install_holehe() {
     colorecho "Installing holehe"
     pipx install holehe
     add-history holehe
-    local version=$(holehe --help | grep holehe | tail -n 1 | awk '{print $2}')
+    local version
+    version=$(holehe --help | grep holehe | tail -n 1 | awk '{print $2}')
     add-test-command "holehe --help"
     add-to-list "holehe,https://github.com/megadose/holehe,mail osint tool finding out if it is used on websites.,$version"
 }
@@ -139,7 +148,8 @@ function install_theharvester() {
     ln -s /opt/tools/theHarvester /usr/local/etc/
     add-aliases theharvester
     add-history theharvester
-    local version=$(theHarvester.py --help | grep '* theHarvester' | awk '{print $3}')
+    local version
+    version=$(theHarvester.py --help | grep '* theHarvester' | awk '{print $3}')
     add-test-command "theHarvester.py --help"
     add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts / subdomain names / virtual host / open ports / banners / and employee names from different public sources,$version"
 }
@@ -149,7 +159,8 @@ function install_h8mail() {
     colorecho "Installing h8mail"
     pipx install h8mail
     add-history h8mail
-    local version=$(h8mail --help | grep Version | awk '{print $3}')
+    local version
+    version=$(h8mail --help | grep Version | awk '{print $3}')
     add-test-command "h8mail --help"
     add-to-list "h8mail,https://github.com/khast3x/h8mail,Email OSINT and breach hunting.,$version"
 }
@@ -219,7 +230,8 @@ function install_phoneinfoga() {
     tar xfv /tmp/phoneinfoga.tar.gz -C /opt/tools/bin/
     rm /tmp/phoneinfoga.tar.gz
     add-history phoneinfoga
-    local version=$(phoneinfoga version | awk '{print $2}')
+    local version
+    version=$(phoneinfoga version | awk '{print $2}')
     add-test-command "phoneinfoga help"
     add-to-list "phoneinfoga,https://github.com/sundowndev/PhoneInfoga,Information gathering & OSINT framework for phone numbers.,$version"
 }
@@ -229,7 +241,8 @@ function install_maigret() {
     colorecho "Installing maigret"
     pipx install git+https://github.com/soxoj/maigret.git
     add-history maigret
-    local version=$(maigret --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(maigret --version | head -n 1 | awk '{print $2}')
     add-test-command "maigret --help"
     add-to-list "maigret,https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results,$version"
 }
@@ -293,7 +306,8 @@ function install_photon() {
     deactivate
     add-aliases photon
     add-history photon
-    local version=$(photon.py --help | grep v | head -n 1 | awk '{print $5}')
+    local version
+    version=$(photon.py --help | grep v | head -n 1 | awk '{print $5}')
     add-test-command "photon.py --help"
     add-to-list "photon,https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs / files / intel & endpoints from a target.,$version"
 }
@@ -304,7 +318,8 @@ function install_ipinfo() {
     # TODO: npm venv
     sudo npm install ipinfo-cli --global
     add-history ipinfo
-    local version=$(ipinfo --version)
+    local version
+    version=$(ipinfo --version)
     add-test-command "ipinfo 127.0.0.1"
     add-to-list "ipinfo,https://github.com/ipinfo/cli,Get information about an IP address or hostname.,$version"
 }
@@ -347,7 +362,8 @@ function install_spiderfoot() {
     deactivate
     add-aliases spiderfoot
     add-history spiderfoot
-    local version=$(spiderfoot --version | awk '{print $2}' | tr -d ':')
+    local version
+    version=$(spiderfoot --version | awk '{print $2}' | tr -d ':')
     add-test-command "spiderfoot --help"
     add-test-command "spiderfoot-cli --help"
     add-to-list "spiderfoot,https://github.com/smicallef/spiderfoot,A reconnaissance tool that automatically queries over 100 public data sources,$version"
@@ -363,7 +379,8 @@ function install_finalrecon() {
     deactivate
     add-aliases finalrecon
     add-history finalrecon
-    local version=$(finalrecon.py --help | grep FinalRecon | awk '{print $12}')
+    local version
+    version=$(finalrecon.py --help | grep FinalRecon | awk '{print $12}')
     add-test-command "finalrecon.py --help"
     add-to-list "finalrecon,https://github.com/thewhiteh4t/FinalRecon,A web reconnaissance tool that gathers information about web pages,$version"
 }
@@ -375,7 +392,8 @@ function install_osrframework() {
     pipx inject osrframework 'urllib3<2'
     pipx inject osrframework 'pip==21.2'
     add-history osrframework
-    local version=$(osrframework-cli --version | awk '{print $3}')
+    local version
+    version=$(osrframework-cli --version | awk '{print $3}')
     add-test-command "osrframework-cli --help"
     add-to-list "osrframework,https://github.com/i3visio/osrframework,Include references to a bunch of different applications related to username checking / DNS lookups / information leaks research / deep web search / regular expressions extraction and many others.,$version"
 }
@@ -426,7 +444,8 @@ function install_gron() {
     go install -v github.com/tomnomnom/gron@latest
     asdf reshim golang
     add-history gron
-    local version=$(gron --version | awk '{print $3}')
+    local version
+    version=$(gron --version | awk '{print $3}')
     add-test-command "gron --help"
     add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!,$version"
 }
@@ -436,7 +455,8 @@ function install_ignorant() {
     colorecho "Installing ignorant"
     pipx install git+https://github.com/megadose/ignorant
     add-history ignorant
-    local version=$(ignorant --help | grep ignorant | tail -n 1 | awk '{print $2}')
+    local version
+    version=$(ignorant --help | grep ignorant | tail -n 1 | awk '{print $2}')
     add-test-command "ignorant --help"
     add-to-list "ignorant,https://github.com/megadose/ignorant,holehe but for phone numbers.,$version"
 }
@@ -533,7 +553,8 @@ function install_sherlock() {
     pip3 install -r requirements.txt
     deactivate
     add-aliases sherlock
-    local version=$(sherlock.py --version | head -n 1 | awk '{print $2}')
+    local version
+    version=$(sherlock.py --version | head -n 1 | awk '{print $2}')
     add-test-command "sherlock.py --help"
     add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks.,$version"
 }
@@ -543,7 +564,8 @@ function install_censys() {
     colorecho "Installing Censys"
     pipx install censys
     add-history censys
-    local version=$(censys --version | awk '{print $4}')
+    local version
+    version=$(censys --version | awk '{print $4}')
     add-test-command "censys --help"
     add-to-list "Censys,https://github.com/censys/censys-python,An easy-to-use and lightweight API wrapper for Censys APIs,$version"
 }
