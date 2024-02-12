@@ -429,7 +429,7 @@ function install_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    rvm use 3.2.2@evil-winrm --create
+    rvm use 3.1.2@evil-winrm --create
     gem install evil-winrm
     rvm use 3.2.2@default
     add-aliases evil-winrm
