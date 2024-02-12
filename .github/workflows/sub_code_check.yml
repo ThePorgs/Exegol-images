@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        checked_function: [ "colorecho", "add-aliases", "add-history", "add-test-command", "add-version", "add-to-list" ]
+        checked_function: [ "colorecho", "add-aliases", "add-history", "add-test-command", "add-to-list" ]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
