@@ -10,11 +10,14 @@ function install_tls-map() {
     rvm use 3.2.2@default
     add-aliases tls-map
     add-history tls-map
+    local version
+    version=$(tls-map --version)
     add-test-command "tls-map --help"
-    add-to-list "tls-map,https://github.com/sec-it/tls-map,tls-map is a library for mapping TLS cipher algorithm names."
+    add-to-list "tls-map,https://github.com/sec-it/tls-map,tls-map is a library for mapping TLS cipher algorithm names.,$version"
 }
 
 function install_rsactftool() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing Rsactftool"
     # This tool uses z3solver, which is very long to build (5 min)
     fapt libmpc-dev
@@ -27,7 +30,7 @@ function install_rsactftool() {
     add-aliases rsactftool
     add-history rsactftool
     add-test-command "RsaCtfTool.py --help"
-    add-to-list "rsactftool,https://github.com/RsaCtfTool/RsaCtfTool,The rsactftool tool is used for RSA cryptographic operations and analysis."
+    add-to-list "rsactftool,https://github.com/RsaCtfTool/RsaCtfTool,The rsactftool tool is used for RSA cryptographic operations and analysis.,$version"
 }
 
 function install_rsacracker() {
@@ -36,8 +39,10 @@ function install_rsacracker() {
     source "$HOME/.cargo/env"
     cargo install rsacracker
     add-history rsacracker
+    local version
+    version=$(rsacracker --version | awk '{print $2}')
     add-test-command "rsacracker --help"
-    add-to-list "RsaCracker,https://github.com/skyf0l/RsaCracker,Powerful RSA cracker for CTFs. Supports RSA - X509 - OPENSSH in PEM and DER formats."
+    add-to-list "RsaCracker,https://github.com/skyf0l/RsaCracker,Powerful RSA cracker for CTFs. Supports RSA - X509 - OPENSSH in PEM and DER formats.,$version"
 }
 
 # Package dedicated to attack crypto

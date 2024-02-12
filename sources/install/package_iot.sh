@@ -14,8 +14,13 @@ function install_iot_apt_tools() {
     add-test-command "avrdude '-?'"
     add-test-command "minicom --version; minicom --version |& grep 'This program is free software'"
   
-    add-to-list "avrdude,https://github.com/avrdudes/avrdude,AVRDUDE is a command-line program that allows you to download/upload/manipulate the ROM and EEPROM contents of AVR microcontrollers using the in-system programming technique (ISP)."
-    add-to-list "minicom,https://doc.ubuntu-fr.org/minicom,Minicom is a text-based serial communication program for Unix-like operating systems."
+    local version
+    version=$(avrdude '-?' |& grep version | awk '{print $3}' | tr -d ',')
+    local version
+    version=$(minicom --version | head -n 1 | awk '{print $3}')
+
+    add-to-list "avrdude,https://github.com/avrdudes/avrdude,AVRDUDE is a command-line program that allows you to download/upload/manipulate the ROM and EEPROM contents of AVR microcontrollers using the in-system programming technique (ISP).,$version"
+    add-to-list "minicom,https://doc.ubuntu-fr.org/minicom,Minicom is a text-based serial communication program for Unix-like operating systems.,$version"
 }
 
 # Package dedicated to IoT tools

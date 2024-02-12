@@ -6,7 +6,7 @@ source common.sh
 set -e
 
 function install_xfce() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list,add-version
     colorecho "Installing and configuring xfce desktop"
 
     # DEBUG TOOLS
