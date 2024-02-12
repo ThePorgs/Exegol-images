@@ -23,9 +23,9 @@ function install_kubectl() {
     fi
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
     add-history kubectl
-    add-version "kubectl version | head -n 1 | awk '{print $3}'"
+    local version=$(kubectl version | head -n 1 | awk '{print $3}')
     add-test-command "kubectl --help"
-    add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
+    add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters.,$version"
 }
 
 function install_awscli() {
@@ -47,9 +47,9 @@ function install_awscli() {
     rm awscliv2.zip
     # TODO: improve history : https://www.bluematador.com/learn/aws-cli-cheatsheet
     add-history aws
-    add-version "aws --version | cut -d '/' -f2 | awk '{print $1}'"
+    local version=$(aws --version | cut -d '/' -f2 | awk '{print $1}')
     add-test-command "aws --version"
-    add-to-list "awscli,https://aws.amazon.com/cli/,Command-line interface for Amazon Web Services."
+    add-to-list "awscli,https://aws.amazon.com/cli/,Command-line interface for Amazon Web Services.,$version"
 }
 
 function install_scout() {
@@ -57,9 +57,9 @@ function install_scout() {
     colorecho "Installing ScoutSuite"
     pipx install scoutsuite
     add-history scout
-    add-version "scout --version | awk '{print $3}'"
+    local version=$(scout --version | awk '{print $3}')
     add-test-command "scout --help"
-    add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool which enables security posture assessment of cloud environments."
+    add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool which enables security posture assessment of cloud environments.,$version"
 }
 
 function install_cloudsplaining() {
@@ -67,9 +67,9 @@ function install_cloudsplaining() {
     colorecho "Installing Cloudsplaining"
     pipx install cloudsplaining
     add-history cloudsplaining
-    add-version "cloudsplaining --version | awk '{print $3}'"
+    local version=$(cloudsplaining --version | awk '{print $3}')
     add-test-command "cloudsplaining --help"
-    add-to-list "cloudsplaining,https://github.com/salesforce/cloudsplaining,AWS IAM Security Assessment tool that identifies violations of least privilege and generates a risk-prioritized report."
+    add-to-list "cloudsplaining,https://github.com/salesforce/cloudsplaining,AWS IAM Security Assessment tool that identifies violations of least privilege and generates a risk-prioritized report.,$version"
 }
 
 function install_cloudsploit() {
@@ -80,7 +80,7 @@ function install_cloudsploit() {
     add-aliases cloudsploit
     add-history cloudsploit
     add-test-command "cloudsploit -h"
-    add-to-list "cloudsploit,https://github.com/aquasecurity/cloudsploit,Cloud Security Posture Management"
+    add-to-list "cloudsploit,https://github.com/aquasecurity/cloudsploit,Cloud Security Posture Management,$version"
 }
 
 function install_prowler() {
@@ -89,7 +89,7 @@ function install_prowler() {
     pipx install prowler
     add-history prowler
     add-test-command "prowler -h"
-    add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness."
+    add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness.,$version"
 }
 
 function install_cloudmapper() {
@@ -105,9 +105,9 @@ function install_cloudmapper() {
     deactivate
     add-aliases cloudmapper
     add-history cloudmapper
-    add-version "cloudmapper.py --help | head -n 1 | awk '{print $2}'"
+    local version=$(cloudmapper.py --help | head -n 1 | awk '{print $2}')
     add-test-command 'cloudmapper.py --help |& grep "usage"'
-    add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
+    add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments.,$version"
 }
 
 function install_azure_cli() {
@@ -120,9 +120,9 @@ function install_azure_cli() {
     mv /opt/az/ /opt/tools/az/
     sed -i 's/\/opt/\/opt\/tools/' "$(which az)"
     add-history azure-cli
-    add-version "az version | grep cli | head -n 1 | awk '{print $2}' | tr -d '\",'"
+    local version=$(az version | grep cli | head -n 1 | awk '{print $2}' | tr -d '\",')
     add-test-command "az version"
-    add-to-list "azure-cli,https://github.com/Azure/azure-cli,A great cloud needs great tools; we're excited to introduce Azure CLI our next generation multi-platform command line experience for Azure."
+    add-to-list "azure-cli,https://github.com/Azure/azure-cli,A great cloud needs great tools; we're excited to introduce Azure CLI our next generation multi-platform command line experience for Azure.,$version"
 }
 
 # Package dedicated to cloud tools
