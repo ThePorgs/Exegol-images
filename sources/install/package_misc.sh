@@ -16,13 +16,13 @@ function install_misc_apt_tools() {
     add-test-command "convert -version"                            # Copy, modify, and distribute image
     add-test-command "rsync -h"                                    # File synchronization tool for efficiently copying and updating data between local or remote locations.
 
-    add-version "rlwrap --version | awk '{print $2}'"
-    add-version "convert -version | head -n 1 | awk '{print $3}'"
-    add-version "rsync --version | head -n 1 | awk '{print $3}'"
+    local version=$(rlwrap --version | awk '{print $2}')
+    local version=$(convert -version | head -n 1 | awk '{print $3}')
+    local version=$(rsync --version | head -n 1 | awk '{print $3}')
 
-    add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history"
-    add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images."
-    add-to-list "rsync,https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations"
+    add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history,$version"
+    add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images.,$version"
+    add-to-list "rsync,https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations,$version"
 }
 
 function install_goshs() {
@@ -31,9 +31,9 @@ function install_goshs() {
     go install -v github.com/patrickhener/goshs@latest
     asdf reshim golang
     add-history goshs
-    add-version "goshs -v | awk '{print $4}'"
+    local version=$(goshs -v | awk '{print $4}')
     add-test-command "goshs -v"
-    add-to-list "goshs,https://github.com/patrickhener/goshs,Goshs is a replacement for Python's SimpleHTTPServer. It allows uploading and downloading via HTTP/S with either self-signed certificate or user provided certificate and you can use HTTP basic auth."
+    add-to-list "goshs,https://github.com/patrickhener/goshs,Goshs is a replacement for Python's SimpleHTTPServer. It allows uploading and downloading via HTTP/S with either self-signed certificate or user provided certificate and you can use HTTP basic auth.,$version"
 }
 
 function install_shellerator() {
@@ -42,7 +42,7 @@ function install_shellerator() {
     pipx install git+https://github.com/ShutdownRepo/shellerator
     add-history shellerator
     add-test-command "shellerator --help"
-    add-to-list "shellerator,https://github.com/ShutdownRepo/Shellerator,a simple command-line tool for generating shellcode"
+    add-to-list "shellerator,https://github.com/ShutdownRepo/Shellerator,a simple command-line tool for generating shellcode,$version"
 }
 
 function install_uberfile() {
@@ -51,7 +51,7 @@ function install_uberfile() {
     pipx install git+https://github.com/ShutdownRepo/uberfile
     add-history uberfile
     add-test-command "uberfile --help"
-    add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget / curl / powershell / certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
+    add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget / curl / powershell / certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator.,$version"
 }
 
 function install_arsenal() {
@@ -59,9 +59,9 @@ function install_arsenal() {
     pipx install git+https://github.com/Orange-Cyberdefense/arsenal
     add-aliases arsenal
     add-history arsenal
-    add-version "whatportis --version | awk '{print $3}' | tr -d ')'"
+    local version=$(whatportis --version | awk '{print $3}' | tr -d ')')
     add-test-command "arsenal --version"
-    add-to-list "arsenal,https://github.com/Orange-Cyberdefense/arsenal,Powerful weapons for penetration testing."
+    add-to-list "arsenal,https://github.com/Orange-Cyberdefense/arsenal,Powerful weapons for penetration testing.,$version"
 }
 
 function install_whatportis() {
@@ -71,9 +71,9 @@ function install_whatportis() {
     # TODO : FIX : "port": port[1] if port[1] else "---",list index out of range - cli.py
     # echo y | whatportis --update
     add-history whatportis
-    add-version "whatportis --version | awk '{print $3}'"
+    local version=$(whatportis --version | awk '{print $3}')
     add-test-command "whatportis --version"
-    add-to-list "whatportis,https://github.com/ncrocfer/whatportis,Command-line tool to lookup port information"
+    add-to-list "whatportis,https://github.com/ncrocfer/whatportis,Command-line tool to lookup port information,$version"
 }
 
 function install_searchsploit() {
@@ -84,7 +84,7 @@ function install_searchsploit() {
         git -C /opt/tools/ clone --depth 1 https://gitlab.com/exploit-database/exploitdb
         add-history searchsploit
         add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
-        add-to-list "searchsploit,https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
+        add-to-list "searchsploit,https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB,$version"
     else
         colorecho "Searchsploit is already installed"
     fi
@@ -112,7 +112,7 @@ function install_trilium() {
     add-aliases trilium
     add-history trilium
     add-test-command "trilium-test"
-    add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
+    add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system.,$version"
 }
 
 function install_ngrok() {
@@ -132,9 +132,9 @@ function install_ngrok() {
     fi
     tar xvzf /tmp/ngrok.tgz -C /opt/tools/bin
     add-history ngrok
-    add-version "ngrok version | awk '{print $3}'"
+    local version=$(ngrok version | awk '{print $3}')
     add-test-command "ngrok version"
-    add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet"
+    add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet,$version"
 }
 
 function install_objectwalker() {
@@ -142,9 +142,9 @@ function install_objectwalker() {
     colorecho "Installing objectwalker"
     pipx install git+https://github.com/p0dalirius/objectwalker
     add-history objectwalker
-    add-version "objectwalker --help | grep v | head -n 1 | awk '{print $22}'"
+    local version=$(objectwalker --help | grep v | head -n 1 | awk '{print $22}')
     add-test-command "objectwalker --help"
-    add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
+    add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory.,$version"
 }
 
 function install_tig() {
@@ -156,18 +156,18 @@ function install_tig() {
     make install
     mv /root/bin/tig /opt/tools/bin/tig
     # Need add-history ?
-    add-version "tig --version | head -n 1 | awk '{print $3}'"
+    local version=$(tig --version | head -n 1 | awk '{print $3}')
     add-test-command "tig --help"
-    add-to-list "tig,https://github.com/jonas/tig,Tig is an ncurses-based text-mode interface for git."
+    add-to-list "tig,https://github.com/jonas/tig,Tig is an ncurses-based text-mode interface for git.,$version"
 }
 
 function install_yt-dlp() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing yt-dlp"
     pipx install git+https://github.com/yt-dlp/yt-dlp
-    add-version "yt-dlp --version"
+    local version=$(yt-dlp --version)
     add-test-command "yt-dlp --help"
-    add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes"
+    add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes,$version"
 }
 
 function install_cyberchef() {
@@ -184,7 +184,7 @@ function install_cyberchef() {
     rm /tmp/CyberChef.zip
     mv /opt/tools/CyberChef/CyberChef_"$last_version".html /opt/tools/CyberChef/CyberChef.html
     add-test-command "file /opt/tools/CyberChef/CyberChef.html"
-    add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
+    add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife,$version"
 }
 
 # Package dedicated to offensive miscellaneous tools
