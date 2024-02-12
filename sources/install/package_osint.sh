@@ -149,7 +149,7 @@ function install_theharvester() {
     add-aliases theharvester
     add-history theharvester
     local version
-    version=$(theHarvester.py --help | grep '* theHarvester' | awk '{print $3}')
+    version=$(theHarvester.py --help | grep '\* theHarvester' | awk '{print $3}')
     add-test-command "theHarvester.py --help"
     add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts / subdomain names / virtual host / open ports / banners / and employee names from different public sources,$version"
 }
