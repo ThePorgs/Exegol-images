@@ -1,1 +1,1 @@
-alias evil-winrm='/usr/local/rvm/gems/ruby-3.2.2@evil-winrm/wrappers/ruby /usr/local/rvm/gems/ruby-3.2.2@evil-winrm/bin/evil-winrm'
+alias evil-winrm='/usr/local/rvm/gems/ruby-3.1.2@evil-winrm/wrappers/ruby /usr/local/rvm/gems/ruby-3.1.2@evil-winrm/bin/evil-winrm'
