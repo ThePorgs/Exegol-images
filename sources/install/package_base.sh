@@ -36,7 +36,7 @@ function install_rust_cargo() {
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
     sh /tmp/rustup.sh -y
     source "$HOME/.cargo/env"
-    add-version "cargo --version | awk '{print $2}'"
+    local version=$(cargo --version | awk '{print $2}')
     add-test-command "cargo --version"
 }
 
@@ -77,7 +77,7 @@ function install_go() {
 #    tar -C /usr/local -xzf /tmp/go.tar.gz
 #    rm -rf /tmp/go.tar.gz
 #    export PATH=$PATH:/usr/local/go/bin
-    add-version "go version | awk '{print $3}'"
+    local version=$(go version | awk '{print $3}')
     add-test-command "go version"
 }
 
@@ -156,10 +156,10 @@ function install_firefox() {
     pip3 install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/setup.py
     add-history firefox
-    add-version "firefox --version | awk '{print $3}'"
+    local version=$(firefox --version | awk '{print $3}')
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
     add-test-command "firefox --version"
-    add-to-list "firefox,https://www.mozilla.org,A web browser"
+    add-to-list "firefox,https://www.mozilla.org,A web browser,$version"
 }
 
 function install_rvm() {
@@ -184,7 +184,7 @@ function install_rvm() {
     rvm install ruby-3.1.2
     rvm get head
     gem update
-    add-version "rvm --version |& tail -n 1 | awk '{print $2}'"
+    local version=$(rvm --version |& tail -n 1 | awk '{print $2}')
     add-test-command "rvm --version"
 }
 
@@ -194,10 +194,10 @@ function install_fzf() {
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
     add-aliases fzf
-    add-version "fzf --version | awk '{print $1}'"
+    local version=$(fzf --version | awk '{print $1}')
     add-test-command "fzf-wordlists --help"
     add-test-command "fzf --help"
-    add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
+    add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder,$version"
 }
 
 function install_ohmyzsh() {
@@ -223,7 +223,7 @@ function install_pipx() {
     colorecho "Installing pipx"
     pip3 install pipx
     pipx ensurepath
-    add-version "pipx --version"
+    local version=$(pipx --version)
     add-test-command "pipx --version"
 }
 
@@ -237,7 +237,7 @@ function install_yarn() {
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
     apt-get update
     fapt yarn
-    add-version "yarn --version"
+    local version=$(yarn --version)
     add-test-command "yarn --help"
 }
 
@@ -274,9 +274,9 @@ function install_neovim() {
         cd .. || exit
         rm -rf ./neovim
     fi
-    add-version "nvim --version | head -n 1 | awk '{print $2}'"
+    local version=$(nvim --version | head -n 1 | awk '{print $2}')
     add-test-command "nvim --version"
-    add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
+    add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor,$version"
 }
 
 function install_mdcat() {
@@ -285,9 +285,9 @@ function install_mdcat() {
     source "$HOME/.cargo/env"
     cargo install mdcat
     add-history mdcat
-    add-version "mdcat --version | head -n 1 | awk '{print $2}'"
+    local version=$(mdcat --version | head -n 1 | awk '{print $2}')
     add-test-command "mdcat --version"
-    add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
+    add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown,$version"
 }
 
 function install_gf() {
@@ -314,7 +314,7 @@ function install_gf() {
     add-history gf
     add-test-command "gf --list"
     add-test-command "ls ~/.gf |& grep 'redirect.json'"
-    add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
+    add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns,$version"
 }
 
 function install_java11() {
@@ -336,7 +336,7 @@ function install_java11() {
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
-    add-version "/usr/lib/jvm/java-11-openjdk/bin/java --version | head -n 1 | awk '{print $2}'"
+    local version=$(/usr/lib/jvm/java-11-openjdk/bin/java --version | head -n 1 | awk '{print $2}')
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
@@ -394,9 +394,9 @@ function install_asdf() {
     source "$HOME/.asdf/asdf.sh"
     # completions file
     source "$HOME/.asdf/completions/asdf.bash"
-    add-version "asdf version"
+    local version=$(asdf version)
     add-test-command "asdf version"
-    add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
+    add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc,$version"
 }
 
 # Package dedicated to the basic things the env needs
