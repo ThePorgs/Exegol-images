@@ -167,10 +167,10 @@ function install_cyberchef() {
         criticalecho-noexit "Latest release not found" && return
     fi
     mkdir /opt/tools/CyberChef
-    wget $last_release -O /tmp/CyberChef.zip
+    wget "$last_release" -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
     rm /tmp/CyberChef.zip
-    mv /opt/tools/CyberChef/CyberChef_"$last_version".html /opt/tools/CyberChef/CyberChef.html
+    mv /opt/tools/CyberChef/CyberChef_*.html /opt/tools/CyberChef/CyberChef.html
     add-test-command "file /opt/tools/CyberChef/CyberChef.html"
     add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
 }
