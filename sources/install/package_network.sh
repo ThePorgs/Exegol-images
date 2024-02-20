@@ -8,7 +8,7 @@ function install_network_apt_tools() {
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
-    rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
+    rdesktop xtightvncviewer hydra mariadb-client redis-tools
     fapt remmina remmina-plugin-rdp remmina-plugin-secret
     # remmina-plugin-spice need build ?
     # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
@@ -37,7 +37,6 @@ function install_network_apt_tools() {
     add-test-command "which xfreerdp"
     add-test-command "rdesktop|& grep 'Usage: rdesktop'"
     add-test-command "which xtightvncviewer"
-    add-test-command "ssh-audit --help |& grep 'verbose output'"    # SSH server audit
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
@@ -55,7 +54,6 @@ function install_network_apt_tools() {
     add-to-list "freerdp2-x11,https://github.com/FreeRDP/FreeRDP,FreeRDP is a free implementation of the Remote Desktop Protocol (RDP) released under the Apache license."
     add-to-list "rdesktop,https://github.com/rdesktop/rdesktop,rdesktop is a client for Remote Desktop Protocol (RDP) used in a number of Microsoft products including Windows NT Terminal Server / Windows 2000 Server / Windows XP and Windows 2003 Server."
     add-to-list "xtightvncviewer,https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software."
-    add-to-list "ssh-audit,https://github.com/arthepsy/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
     add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
@@ -266,6 +264,14 @@ function install_legba() {
     add-to-list "legba,https://github.com/evilsocket/legba,a multiprotocol credentials bruteforcer / password sprayer and enumerator built with Rust"
 }
 
+function install_ssh-audit() {
+    colorecho "Installing ssh-audit"
+    pipx install git+https://github.com/jtesta/ssh-audit
+    add-history ssh-audit
+    add-test-command "ssh-audit --help"
+    add-to-list "ssh-audit,https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
+}
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_env
@@ -290,6 +296,7 @@ function package_network() {
     install_ligolo-ng               # Tunneling tool that uses a TUN interface
     install_rustscan
     install_legba                   # Login Scanner
+    install_ssh-audit               # SSH server audit
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package network completed in $elapsed_time seconds."
