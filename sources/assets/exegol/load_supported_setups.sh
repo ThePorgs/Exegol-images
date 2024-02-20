@@ -63,7 +63,7 @@ function deploy_tmux() {
   colorecho "Deploying tmux"
   if [[ -d "$MY_SETUP_PATH/tmux" ]]; then
     # copy tmux/tmux.conf to ~/.tmux.conf
-    [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]] && cp "$MY_SETUP_PATH/tmux/tmux.conf" ~/.tmux.conf
+    [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]] && cp "$MY_SETUP_PATH/tmux/tmux.conf" ~/.tmux.conf && dos2unix ~/.tmux.conf
   else
     mkdir "$MY_SETUP_PATH/tmux" && chmod 770 "$MY_SETUP_PATH/tmux"
   fi
