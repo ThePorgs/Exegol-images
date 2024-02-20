@@ -265,6 +265,7 @@ function install_legba() {
 }
 
 function install_ssh-audit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ssh-audit"
     pipx install git+https://github.com/jtesta/ssh-audit
     add-history ssh-audit
