@@ -924,13 +924,6 @@ function install_gmsadumper() {
     python3 -m venv ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
-    # https://github.com/micahvandeusen/gMSADumper/issues/12
-    local temp_fix_limit="2024-03-20"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pip3 install pycryptodome
-    fi
     deactivate
     add-aliases gmsadumper
     add-history gmsadumper
