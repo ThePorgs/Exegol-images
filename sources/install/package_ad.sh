@@ -432,8 +432,6 @@ function install_evilwinrm() {
     rvm use 3.1.2@evil-winrm --create
     gem install evil-winrm
     rvm use 3.2.2@default
-    # https://forum.hackthebox.com/t/evil-winrm-error-on-connection-to-host/257342
-    cat /root/sources/assets/patches/openssl.patch >> /etc/ssl/openssl.cnf
     add-aliases evil-winrm
     add-history evil-winrm
     add-test-command "evil-winrm --help"
