@@ -161,16 +161,17 @@ function install_yt-dlp() {
 function install_cyberchef() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing CyberChef"
-    local last_version
-    last_version=$(git ls-remote --tags --sort='v:refname' https://github.com/gchq/CyberChef.git | tail -n 1 | cut -d '/' -f 3 | cut -d '^' -f 1)
-    if [[ -z "$last_version" ]]; then
-        criticalecho-noexit "Latest version not found" && return
+    local last_release
+    last_release=$(curl --location --silent "https://api.github.com/repos/gchq/CyberChef/releases/latest"|grep browser_download_url|awk '{print $2}'|tr -d '"')
+    echo "$last_release"
+    if [[ -z "$last_release" ]]; then
+        criticalecho-noexit "Latest release not found" && return
     fi
     mkdir /opt/tools/CyberChef
-    wget https://github.com/gchq/CyberChef/releases/download/"$last_version"/CyberChef_"$last_version".zip -O /tmp/CyberChef.zip
+    wget "$last_release" -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
     rm /tmp/CyberChef.zip
-    mv /opt/tools/CyberChef/CyberChef_"$last_version".html /opt/tools/CyberChef/CyberChef.html
+    mv /opt/tools/CyberChef/CyberChef_*.html /opt/tools/CyberChef/CyberChef.html
     add-test-command "file /opt/tools/CyberChef/CyberChef.html"
     add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
 }
