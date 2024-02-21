@@ -509,5 +509,8 @@ function package_base() {
     # All programs using bundle will store their deps in vendor/
     bundle config path vendor/
 
-    # Remote Graphical Desktop installation
+    # OpenSSL activate legacy support
+    cat /root/sources/assets/patches/openssl.patch >> /etc/ssl/openssl.cnf
+    add-test-command "echo -n '1337' | openssl dgst -md4"
+    add-test-command "python3 -c 'import hashlib;print(hashlib.new(\"md4\", \"1337\".encode()).digest())'"
 }
