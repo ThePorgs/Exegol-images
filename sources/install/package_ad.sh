@@ -662,7 +662,6 @@ function install_adidnsdump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing adidnsdump"
     pipx install git+https://github.com/dirkjanm/adidnsdump
-    pipx inject adidnsdump
     add-history adidnsdump
     add-test-command "adidnsdump --help"
     add-to-list "adidnsdump,https://github.com/dirkjanm/adidnsdump,Active Directory Integrated DNS dump utility"
