@@ -67,7 +67,7 @@ function install_responder() {
 function install_sprayhound() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sprayhound"
-    pipx install git+https://github.com/Hackndo/sprayhound
+    pipx install --system-site-packages git+https://github.com/Hackndo/sprayhound
     add-history sprayhound
     add-test-command "sprayhound --help"
     add-to-list "sprayhound,https://github.com/Hackndo/Sprayhound,Active Directory password audit tool."
@@ -76,7 +76,7 @@ function install_sprayhound() {
 function install_smartbrute() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smartbrute"
-    pipx install git+https://github.com/ShutdownRepo/smartbrute
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/smartbrute
     add-history smartbrute
     add-test-command "smartbrute --help"
     add-to-list "smartbrute,https://github.com/ShutdownRepo/SmartBrute,The smart password spraying and bruteforcing tool for Active Directory Domain Services."
@@ -85,7 +85,7 @@ function install_smartbrute() {
 function install_ldapdomaindump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldapdomaindump"
-    pipx install git+https://github.com/dirkjanm/ldapdomaindump
+    pipx install --system-site-packages git+https://github.com/dirkjanm/ldapdomaindump
     add-history ldapdomaindump
     add-test-command "ldapdomaindump --help"
     add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service"
@@ -94,7 +94,7 @@ function install_ldapdomaindump() {
 function install_crackmapexec() {
     colorecho "Installing CrackMapExec"
     git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
-    pipx install /opt/tools/CrackMapExec/
+    pipx install --system-site-packages /opt/tools/CrackMapExec/
     mkdir -p ~/.cme
     [[ -f ~/.cme/cme.conf ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
     cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
@@ -108,7 +108,7 @@ function install_crackmapexec() {
 
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
-    pipx install git+https://github.com/fox-it/BloodHound.py
+    pipx install --system-site-packages git+https://github.com/fox-it/BloodHound.py
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
@@ -237,7 +237,7 @@ function install_cypheroth() {
 function install_mitm6_pip() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mitm6 with pip"
-    pipx install mitm6
+    pipx install --system-site-packages mitm6
     add-history mitm6
     add-test-command "mitm6 --help"
     add-to-list "mitm6,https://github.com/fox-it/mitm6,Tool to conduct a man-in-the-middle attack against IPv6 protocols."
@@ -246,7 +246,7 @@ function install_mitm6_pip() {
 function install_aclpwn() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing aclpwn with pip"
-    pipx install git+https://github.com/aas-n/aclpwn.py
+    pipx install --system-site-packages git+https://github.com/aas-n/aclpwn.py
     add-history aclpwn
     add-test-command "aclpwn -h"
     add-to-list "aclpwn,https://github.com/aas-n/aclpwn.py,Tool for testing the security of Active Directory access controls."
@@ -254,7 +254,7 @@ function install_aclpwn() {
 
 function install_impacket() {
     colorecho "Installing Impacket scripts"
-    pipx install git+https://github.com/ThePorgs/impacket
+    pipx install --system-site-packages git+https://github.com/ThePorgs/impacket
     pipx inject impacket chardet
     local temp_fix_limit="2024-03-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
@@ -293,7 +293,7 @@ function install_pykek() {
 function install_lsassy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing lsassy"
-    pipx install lsassy
+    pipx install --system-site-packages lsassy
     add-history lsassy
     add-test-command "lsassy --version"
     add-to-list "lsassy,https://github.com/Hackndo/lsassy,Windows secrets and passwords extraction tool."
@@ -456,7 +456,7 @@ function install_pypykatz() {
       ln -v -s /opt/tools/pypykatz/venv/bin/pypykatz /opt/tools/bin/pypykatz
       deactivate
     fi
-    # pipx install pypykatz
+    # pipx install --system-site-packages pypykatz
     add-history pypykatz
     add-test-command "pypykatz version"
     add-test-command "pypykatz crypto nt 'exegol4thewin'"
@@ -466,7 +466,7 @@ function install_pypykatz() {
 function install_krbjack() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing krbjack"
-    pipx install krbjack
+    pipx install --system-site-packages krbjack
     add-test-command "krbjack --help"
     add-to-list "krbjack,https://github.com/almandin/krbjack,A Kerberos AP-REQ hijacking tool with DNS unsecure updates abuse."
 }
@@ -483,7 +483,7 @@ function install_enyx() {
 function install_enum4linux-ng() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing enum4linux-ng"
-    pipx install git+https://github.com/cddmp/enum4linux-ng
+    pipx install --system-site-packages git+https://github.com/cddmp/enum4linux-ng
     add-history enum4linux-ng
     add-test-command "enum4linux-ng --help"
     add-to-list "enum4linux-ng,https://github.com/cddmp/enum4linux-ng,Tool for enumerating information from Windows and Samba systems."
@@ -584,7 +584,7 @@ function install_smbmap() {
     colorecho "Installing smbmap"
     git -C /opt/tools clone --depth 1 https://github.com/ShawnDEvans/smbmap
     cd /opt/tools/smbmap || exit
-    pipx install .
+    pipx install --system-site-packages .
     add-history smbmap
     add-test-command "smbmap --help"
     add-to-list "smbmap,https://github.com/ShawnDEvans/smbmap,A tool to enumerate SMB shares and check for null sessions"
@@ -616,7 +616,7 @@ function install_pth-tools() {
 function install_smtp-user-enum() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smtp-user-enum"
-    pipx install smtp-user-enum
+    pipx install --system-site-packages smtp-user-enum
     add-history smtp-user-enum
     add-test-command "smtp-user-enum --help"
     add-to-list "smtp-user-enum,https://github.com/pentestmonkey/smtp-user-enum,A tool to enumerate email addresses via SMTP"
@@ -648,7 +648,7 @@ function install_ntlmv1-multi() {
 function install_hashonymize() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hashonymizer"
-    pipx install git+https://github.com/ShutdownRepo/hashonymize
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/hashonymize
     add-history hashonymize
     add-test-command "hashonymize --help"
     add-to-list "hashonymize,https://github.com/ShutdownRepo/hashonymize,This small tool is aimed at anonymizing hashes files for offline but online cracking like Google Collab for instance (see https://github.com/ShutdownRepo/google-colab-hashcat)."
@@ -667,7 +667,7 @@ function install_gosecretsdump() {
 function install_adidnsdump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing adidnsdump"
-    pipx install git+https://github.com/dirkjanm/adidnsdump
+    pipx install --system-site-packages git+https://github.com/dirkjanm/adidnsdump
     pipx inject adidnsdump pycryptodome
     add-history adidnsdump
     add-test-command "adidnsdump --help"
@@ -699,7 +699,7 @@ function install_pygpoabuse() {
 function install_bloodhound-import() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing bloodhound-import"
-    pipx install bloodhound-import
+    pipx install --system-site-packages bloodhound-import
     add-history bloodhound-import
     add-test-command "bloodhound-import --help"
     add-to-list "bloodhound-import,https://github.com/fox-it/BloodHound.py,Import data into BloodHound for analyzing active directory trust relationships"
@@ -771,7 +771,7 @@ function install_dfscoerce() {
 function install_coercer() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Coercer"
-    pipx install git+https://github.com/p0dalirius/Coercer
+    pipx install --system-site-packages git+https://github.com/p0dalirius/Coercer
     add-history coercer
     add-test-command "coercer --help"
     add-to-list "coercer,https://github.com/p0dalirius/coercer,DFS-R target coercion tool"
@@ -879,7 +879,7 @@ function install_donpapi() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DonPAPI"
     fapt swig
-    pipx install git+https://github.com/login-securite/DonPAPI
+    pipx install --system-site-packages git+https://github.com/login-securite/DonPAPI
     add-history donpapi
     add-test-command "DonPAPI --help"
     add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Dumping revelant information on compromised targets without AV detection"
@@ -888,7 +888,7 @@ function install_donpapi() {
 function install_webclientservicescanner() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing webclientservicescanner"
-    pipx install git+https://github.com/Hackndo/WebclientServiceScanner
+    pipx install --system-site-packages git+https://github.com/Hackndo/WebclientServiceScanner
     add-history webclientservicescanner
     add-test-command "webclientservicescanner --help"
     add-to-list "webclientservicescanner,https://github.com/Hackndo/webclientservicescanner,Scans for web service endpoints"
@@ -897,7 +897,7 @@ function install_webclientservicescanner() {
 function install_certipy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Certipy"
-    pipx install git+https://github.com/ly4k/Certipy
+    pipx install --system-site-packages git+https://github.com/ly4k/Certipy
     add-history certipy
     add-test-command "certipy --version"
     add-to-list "certipy,https://github.com/ly4k/Certipy,Python tool to create and sign certificates"
@@ -1031,7 +1031,7 @@ function install_ldeep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
-    pipx install ldeep
+    pipx install --system-site-packages ldeep
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
@@ -1074,7 +1074,7 @@ function install_rusthound-ce() {
 function install_certsync() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing certsync"
-    pipx install git+https://github.com/zblurx/certsync
+    pipx install --system-site-packages git+https://github.com/zblurx/certsync
     add-history certsync
     add-test-command "certsync --help"
     add-to-list "certsync,https://github.com/zblurx/certsync,certsync is a tool that helps you synchronize certificates between two directories."
@@ -1083,7 +1083,7 @@ function install_certsync() {
 function install_keepwn() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing KeePwn"
-    pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
+    pipx install --system-site-packages git+https://github.com/Orange-Cyberdefense/KeePwn
     add-history keepwn
     add-test-command "KeePwn --help"
     add-to-list "KeePwn,https://github.com/Orange-Cyberdefense/KeePwn,KeePwn is a tool that extracts passwords from KeePass 1.x and 2.x databases."
@@ -1092,7 +1092,7 @@ function install_keepwn() {
 function install_pre2k() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pre2k"
-    pipx install git+https://github.com/garrettfoster13/pre2k
+    pipx install --system-site-packages git+https://github.com/garrettfoster13/pre2k
     add-history pre2k
     add-test-command "pre2k --help"
     add-to-list "pre2k,https://github.com/garrettfoster13/pre2k,pre2k is a tool to check if a Windows domain has any pre-2000 Windows 2000 logon names still in use."
@@ -1101,7 +1101,7 @@ function install_pre2k() {
 function install_msprobe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing msprobe"
-    pipx install git+https://github.com/puzzlepeaches/msprobe
+    pipx install --system-site-packages git+https://github.com/puzzlepeaches/msprobe
     add-history msprobe
     add-test-command "msprobe --help"
     add-to-list "msprobe,https://github.com/puzzlepeaches/msprobe,msprobe is a tool to identify Microsoft Windows hosts and servers that are running certain services."
@@ -1110,7 +1110,7 @@ function install_msprobe() {
 function install_masky() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing masky"
-    pipx install git+https://github.com/Z4kSec/Masky
+    pipx install --system-site-packages git+https://github.com/Z4kSec/Masky
     add-history masky
     add-test-command "masky --help"
     add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data / such as credit card numbers / in logs and other files."
@@ -1119,7 +1119,7 @@ function install_masky() {
 function install_roastinthemiddle() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing roastinthemiddle"
-    pipx install git+https://github.com/Tw1sm/RITM
+    pipx install --system-site-packages git+https://github.com/Tw1sm/RITM
     add-history roastinthemiddle
     add-test-command "roastinthemiddle --help"
     add-to-list "roastinthemiddle,https://github.com/Tw1sm/RITM,RoastInTheMiddle is a tool to intercept and relay NTLM authentication requests."
@@ -1189,7 +1189,7 @@ function install_noPac() {
 function install_roadtools() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing roadtools"
-    pipx install roadrecon
+    pipx install --system-site-packages roadrecon
     add-test-command "roadrecon --help"
     add-test-command "roadrecon-gui --help"
     add-to-list "ROADtools,https://github.com/dirkjanm/ROADtools,ROADtools is a framework to interact with Azure AD. It consists of a library (roadlib) with common components / the ROADrecon Azure AD exploration tool and the ROADtools Token eXchange (roadtx) tool."
@@ -1212,7 +1212,7 @@ function install_teamsphisher() {
 function install_GPOddity() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GPOddity"
-    pipx install git+https://github.com/synacktiv/GPOddity
+    pipx install --system-site-packages git+https://github.com/synacktiv/GPOddity
     add-history GPOddity
     add-test-command "gpoddity --help"
     add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more)"
@@ -1221,7 +1221,7 @@ function install_GPOddity() {
 function install_netexec() {
     colorecho "Installing netexec"
     git -C /opt/tools/ clone --depth 1 https://github.com/Pennyw0rth/NetExec
-    pipx install /opt/tools/NetExec/
+    pipx install --system-site-packages /opt/tools/NetExec/
     mkdir -p ~/.nxc
     [[ -f ~/.nxc/nxc.conf ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
@@ -1263,7 +1263,7 @@ function install_LDAPWordlistHarvester() {
 function install_pywerview() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pywerview"
-    pipx install git+https://github.com/the-useless-one/pywerview
+    pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview
     add-history pywerview
     add-test-command "pywerview --help"
     add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
@@ -1283,7 +1283,7 @@ function install_freeipscanner() {
 function install_scrtdnsdump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing scrtdnsdump"
-    pipx install git+https://github.com/scrt/scrtdnsdump
+    pipx install --system-site-packages git+https://github.com/scrt/scrtdnsdump
     add-history scrtdnsdump
     add-test-command "scrtdnsdump --help"
     add-to-list "scrtdnsdump,https://github.com/scrt/scrtdnsdump,Enumeration and exporting of all DNS records in the zone for recon purposes of internal networks"
@@ -1306,7 +1306,7 @@ function install_ntlm_theft() {
 function install_abuseACL() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing abuseACL"
-    pipx install git+https://github.com/AetherBlack/abuseACL
+    pipx install --system-site-packages git+https://github.com/AetherBlack/abuseACL
     add-history abuseACL
     add-test-command "abuseACL --help"
     add-to-list "abuseACL,https://github.com/AetherBlack/abuseACL,A python script to automatically list vulnerable Windows ACEs/ACLs."

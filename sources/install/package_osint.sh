@@ -37,7 +37,7 @@ function install_osint_apt_tools() {
 function install_youtubedl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing youtube-dl"
-    pipx install youtube-dl
+    pipx install --system-site-packages youtube-dl
     add-history youtube-dl
     add-test-command "youtube-dl --version"
     add-to-list "youtubedl,https://github.com/ytdl-org/youtube-dl,Download videos from YouTube and other sites."
@@ -46,7 +46,7 @@ function install_youtubedl() {
 function install_sublist3r() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sublist3r"
-    pipx install git+https://github.com/aboul3la/Sublist3r
+    pipx install --system-site-packages git+https://github.com/aboul3la/Sublist3r
     add-history sublist3r
     add-test-command "sublist3r --help"
     add-to-list "sublist3r,https://github.com/aboul3la/Sublist3r,a Python tool designed to enumerate subdomains of websites."
@@ -95,7 +95,7 @@ function install_findomain() {
 function install_holehe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing holehe"
-    pipx install holehe
+    pipx install --system-site-packages holehe
     add-history holehe
     add-test-command "holehe --help"
     add-to-list "holehe,https://github.com/megadose/holehe,mail osint tool finding out if it is used on websites."
@@ -135,7 +135,7 @@ function install_theharvester() {
 function install_h8mail() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing h8mail"
-    pipx install h8mail
+    pipx install --system-site-packages h8mail
     add-history h8mail
     add-test-command "h8mail --help"
     add-to-list "h8mail,https://github.com/khast3x/h8mail,Email OSINT and breach hunting."
@@ -211,7 +211,7 @@ function install_phoneinfoga() {
 function install_maigret() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing maigret"
-    pipx install git+https://github.com/soxoj/maigret.git
+    pipx install --system-site-packages git+https://github.com/soxoj/maigret.git
     add-history maigret
     add-test-command "maigret --help"
     add-to-list "maigret,https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results"
@@ -234,7 +234,7 @@ function install_linkedin2username() {
 function install_toutatis() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing toutatis"
-    pipx install git+https://github.com/megadose/toutatis
+    pipx install --system-site-packages git+https://github.com/megadose/toutatis
     add-history toutatis
     add-test-command "toutatis --help"
     add-to-list "toutatis,https://github.com/megadose/Toutatis,Toutatis is a tool that allows you to extract information from instagrams accounts such as e-mails / phone numbers and more."
@@ -348,7 +348,7 @@ function install_finalrecon() {
 function install_osrframework() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing osrframework"
-    pipx install osrframework
+    pipx install --system-site-packages osrframework
     pipx inject osrframework 'urllib3<2'
     pipx inject osrframework 'pip==21.2'
     add-history osrframework
@@ -407,7 +407,7 @@ function install_gron() {
 function install_ignorant() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ignorant"
-    pipx install git+https://github.com/megadose/ignorant
+    pipx install --system-site-packages git+https://github.com/megadose/ignorant
     add-history ignorant
     add-test-command "ignorant --help"
     add-to-list "ignorant,https://github.com/megadose/ignorant,holehe but for phone numbers."
@@ -420,7 +420,7 @@ function install_trevorspray() {
     cd /opt/tools/TREVORspray || exit
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27
     sed -i "s/1.0.5/1.0.4/" pyproject.toml
-    pipx install .
+    pipx install --system-site-packages .
     add-history trevorspray
     add-test-command "trevorspray --help"
     add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules / and more"
@@ -430,7 +430,7 @@ function install_gitfive() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     # GitFive only works with Python 3.10+.
     colorecho "Installing GitFive"
-    pipx install git+https://github.com/mxrch/GitFive
+    pipx install --system-site-packages git+https://github.com/mxrch/GitFive
     add-test-command "gitfive --help"
     add-to-list "GitFive,https://github.com/mxrch/GitFive,GitFive is an OSINT tool to investigate GitHub profiles."
 }
@@ -509,7 +509,7 @@ function install_sherlock() {
 function install_censys() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Censys"
-    pipx install censys
+    pipx install --system-site-packages censys
     add-history censys
     add-test-command "censys --help"
     add-to-list "Censys,https://github.com/censys/censys-python,An easy-to-use and lightweight API wrapper for Censys APIs"

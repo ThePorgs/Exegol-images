@@ -8,7 +8,7 @@ source package_ad.sh
 function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwncat"
-    pipx install pwncat-cs
+    pipx install --system-site-packages pwncat-cs
     # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
     pipx inject pwncat-cs cryptography==36.0.2
     add-history pwncat
@@ -43,7 +43,7 @@ function install_metasploit() {
 function install_routersploit() {
     # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing RouterSploit"
-    pipx install routersploit
+    pipx install --system-site-packages routersploit
     pipx inject routersploit colorama
     add-aliases routersploit
     add-test-command "routersploit --help"

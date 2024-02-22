@@ -116,7 +116,7 @@ function install_ffuf() {
 function install_dirsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    pipx install git+https://github.com/maurosoria/dirsearch
+    pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
     add-history dirsearch
     add-test-command "dirsearch --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
@@ -209,7 +209,7 @@ function install_xsser() {
 function install_xsrfprobe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing XSRFProbe"
-    pipx install git+https://github.com/0xInfection/XSRFProbe
+    pipx install --system-site-packages git+https://github.com/0xInfection/XSRFProbe
     add-history xsrfprobe
     add-test-command "xsrfprobe --help"
     add-to-list "xsrfprobe,https://github.com/0xInfection/XSRFProbe,a tool for detecting and exploiting Cross-Site Request Forgery (CSRF) vulnerabilities"
@@ -294,7 +294,7 @@ function install_wpscan() {
 function install_droopescan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing droopescan"
-    pipx install git+https://github.com/droope/droopescan.git
+    pipx install --system-site-packages git+https://github.com/droope/droopescan.git
     add-history droopescan
     add-test-command "droopescan --help"
     add-to-list "droopescan,https://github.com/droope/droopescan,Scan Drupal websites for vulnerabilities."
@@ -317,7 +317,7 @@ function install_drupwn() {
 function install_cmsmap() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing CMSmap"
-    pipx install git+https://github.com/Dionach/CMSmap.git
+    pipx install --system-site-packages git+https://github.com/Dionach/CMSmap.git
     # TODO: Config ?
     # exploit-db path is required (misc package -> searchsploit)
     # cmsmap -U PC
@@ -423,7 +423,7 @@ function install_oneforall() {
 function install_wafw00f() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wafw00f"
-    pipx install wafw00F
+    pipx install --system-site-packages wafw00F
     add-history wafw00f
     add-test-command "wafw00f --help"
     add-to-list "wafw00f,https://github.com/EnableSecurity/wafw00f,a Python tool that helps to identify and fingerprint web application firewall (WAF) products."
@@ -492,7 +492,7 @@ function install_timing_attack() {
 function install_updog() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing updog"
-    pipx install updog
+    pipx install --system-site-packages updog
     add-history updog
     add-test-command "updog --help"
     add-to-list "updog,https://github.com/sc0tfree/updog,Simple replacement for Python's SimpleHTTPServer."
@@ -525,7 +525,7 @@ function install_wuzz() {
 function install_git-dumper() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing git-dumper"
-    pipx install git-dumper
+    pipx install --system-site-packages git-dumper
     add-history git-dumper
     add-test-command "git-dumper --help"
     add-to-list "git-dumper,https://github.com/arthaud/git-dumper,Small script to dump a Git repository from a website."
@@ -669,7 +669,7 @@ function install_clusterd() {
 function install_arjun() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing arjun"
-    pipx install arjun
+    pipx install --system-site-packages arjun
     add-history arjun
     add-test-command "arjun --help"
     add-to-list "arjun,https://github.com/s0md3v/Arjun,HTTP parameter discovery suite."
@@ -738,7 +738,7 @@ function install_anew() {
 function install_robotstester() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Robotstester"
-    pipx install git+https://github.com/p0dalirius/robotstester
+    pipx install --system-site-packages git+https://github.com/p0dalirius/robotstester
     add-history robotstester
     add-test-command "robotstester --help"
     add-to-list "robotstester,https://github.com/p0dalirius/robotstester,Utility for testing whether a website's robots.txt file is correctly configured."
