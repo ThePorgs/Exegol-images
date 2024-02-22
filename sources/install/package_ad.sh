@@ -46,7 +46,7 @@ function install_responder() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # following requirements needed by MultiRelay.py
-    pip3 install pycryptodome pycryptodomex six
+    pip3 install pycryptodomex six
     deactivate
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
@@ -256,12 +256,6 @@ function install_impacket() {
     colorecho "Installing Impacket scripts"
     pipx install --system-site-packages git+https://github.com/ThePorgs/impacket
     pipx inject impacket chardet
-    local temp_fix_limit="2024-03-20"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx inject impacket pycryptodome
-    fi
     cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
     cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
     cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
@@ -415,7 +409,7 @@ function install_krbrelayx() {
     cd /opt/tools/krbrelayx || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install dnspython ldap3 impacket dsinternals pycryptodome
+    pip3 install dnspython ldap3 impacket dsinternals
     deactivate
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
@@ -668,7 +662,6 @@ function install_adidnsdump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing adidnsdump"
     pipx install --system-site-packages git+https://github.com/dirkjanm/adidnsdump
-    pipx inject adidnsdump pycryptodome
     add-history adidnsdump
     add-test-command "adidnsdump --help"
     add-to-list "adidnsdump,https://github.com/dirkjanm/adidnsdump,Active Directory Integrated DNS dump utility"
@@ -924,13 +917,6 @@ function install_gmsadumper() {
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
-    # https://github.com/micahvandeusen/gMSADumper/issues/12
-    local temp_fix_limit="2024-03-20"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pip3 install pycryptodome
-    fi
     deactivate
     add-aliases gmsadumper
     add-history gmsadumper

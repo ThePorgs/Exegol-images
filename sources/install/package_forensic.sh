@@ -53,7 +53,8 @@ function install_volatility3() {
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
     pipx install --system-site-packages /opt/tools/volatility3
     # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
-    pipx inject volatility3 yara-python capstone pycryptodome
+    # pipx doesn't support injection of a requirements file : https://github.com/pypa/pipx/issues/934
+    sed -e 's/#.*//' /opt/tools/volatility3/requirements.txt | xargs pipx inject volatility3
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
