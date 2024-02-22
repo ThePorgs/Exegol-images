@@ -35,7 +35,7 @@ function install_volatility2() {
     cd /opt/tools/volatility || exit
     virtualenv --python python2 ./venv
     source ./venv/bin/activate
-    pip2 install pycryptodome distorm3 pillow openpyxl
+    pip2 install distorm3 pillow openpyxl
     pip2 install ujson --no-use-pep517
     python2 setup.py install
     deactivate
@@ -53,7 +53,7 @@ function install_volatility3() {
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
     pipx install /opt/tools/volatility3
     # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
-    pipx inject volatility3 yara-python capstone pycryptodome
+    pipx inject volatility3 yara-python capstone
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"

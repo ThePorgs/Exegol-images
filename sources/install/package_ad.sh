@@ -46,7 +46,7 @@ function install_responder() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # following requirements needed by MultiRelay.py
-    pip3 install pycryptodome pycryptodomex six
+    pip3 install pycryptodomex six
     deactivate
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
@@ -260,7 +260,7 @@ function install_impacket() {
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      pipx inject impacket pycryptodome
+      pipx inject impacket
     fi
     cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
     cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
@@ -415,7 +415,7 @@ function install_krbrelayx() {
     cd /opt/tools/krbrelayx || exit
     python3 -m venv ./venv
     source ./venv/bin/activate
-    pip3 install dnspython ldap3 impacket dsinternals pycryptodome
+    pip3 install dnspython ldap3 impacket dsinternals
     deactivate
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
@@ -628,7 +628,7 @@ function install_gpp-decrypt() {
     cd /opt/tools/gpp-decrypt || exit
     python3 -m venv ./venv/
     source ./venv/bin/activate
-    pip3 install pycryptodome colorama
+    pip3 install colorama
     deactivate
     add-aliases gpp-decrypt
     add-history gpp-decrypt
@@ -668,7 +668,7 @@ function install_adidnsdump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing adidnsdump"
     pipx install git+https://github.com/dirkjanm/adidnsdump
-    pipx inject adidnsdump pycryptodome
+    pipx inject adidnsdump
     add-history adidnsdump
     add-test-command "adidnsdump --help"
     add-to-list "adidnsdump,https://github.com/dirkjanm/adidnsdump,Active Directory Integrated DNS dump utility"
