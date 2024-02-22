@@ -85,6 +85,7 @@ function install_smartbrute() {
 function install_ldapdomaindump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldapdomaindump"
+    # Remove --system-site-packages because the ldapdomaindump package conflicts with the base package
     pipx install git+https://github.com/dirkjanm/ldapdomaindump
     add-history ldapdomaindump
     add-test-command "ldapdomaindump --help"
