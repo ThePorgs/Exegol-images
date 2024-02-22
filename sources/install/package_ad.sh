@@ -42,7 +42,7 @@ function install_responder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
     cd /opt/tools/Responder || exit
     fapt gcc-mingw-w64-x86-64
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # following requirements needed by MultiRelay.py
@@ -122,7 +122,7 @@ function install_bloodhound-ce-py() {
     git -C /opt/tools/ clone https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
     cd /opt/tools/BloodHound-CE.py || exit
     git checkout bloodhound-ce
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .
     deactivate
@@ -303,7 +303,7 @@ function install_privexchange() {
     colorecho "Installing privexchange"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PrivExchange
     cd /opt/tools/PrivExchange || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -413,7 +413,7 @@ function install_krbrelayx() {
     colorecho "Installing krbrelayx"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/krbrelayx
     cd /opt/tools/krbrelayx || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install dnspython ldap3 impacket dsinternals pycryptodome
     deactivate
@@ -449,7 +449,7 @@ function install_pypykatz() {
     else
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
-      python3 -m venv ./venv/
+      python3 -m venv --system-site-packages ./venv
       source ./venv/bin/activate
       pip3 install .
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
@@ -493,7 +493,7 @@ function install_zerologon() {
     colorecho "Pulling CVE-2020-1472 exploit and scan scripts"
     mkdir /opt/tools/zerologon
     cd /opt/tools/zerologon || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -541,7 +541,7 @@ function install_oaburl() {
     mkdir /opt/tools/OABUrl
     wget -O /opt/tools/OABUrl/oaburl.py "https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py"
     cd /opt/tools/OABUrl/ || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install requests
     deactivate
@@ -569,7 +569,7 @@ function install_polenum() {
     colorecho "Installing polenum"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh1t3Fox/polenum
     cd /opt/tools/polenum || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -626,7 +626,7 @@ function install_gpp-decrypt() {
     colorecho "Installing gpp-decrypt"
     git -C /opt/tools/ clone --depth 1 https://github.com/t0thkr1s/gpp-decrypt
     cd /opt/tools/gpp-decrypt || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install pycryptodome colorama
     deactivate
@@ -678,7 +678,7 @@ function install_pygpoabuse() {
     colorecho "Installing pyGPOabuse"
     git -C /opt/tools/ clone --depth 1 https://github.com/Hackndo/pyGPOAbuse
     cd /opt/tools/pyGPOAbuse || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
@@ -709,7 +709,7 @@ function install_bloodhound-quickwin() {
     colorecho "Installing bloodhound-quickwin"
     git -C /opt/tools/ clone --depth 1 https://github.com/kaluche/bloodhound-quickwin
     cd /opt/tools/bloodhound-quickwin || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -723,7 +723,7 @@ function install_ldapsearch-ad() {
     colorecho "Installing ldapsearch-ad"
     git -C /opt/tools/ clone --depth 1 https://github.com/yaap7/ldapsearch-ad
     cd /opt/tools/ldapsearch-ad || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -737,14 +737,14 @@ function install_petitpotam() {
     colorecho "Installing PetitPotam"
     git -C /opt/tools/ clone --depth 1 https://github.com/ly4k/PetitPotam
     cd /opt/tools/PetitPotam || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
     mv /opt/tools/PetitPotam /opt/tools/PetitPotam_alt
     git -C /opt/tools/ clone --depth 1 https://github.com/topotam/PetitPotam
     cd /opt/tools/PetitPotam || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -758,7 +758,7 @@ function install_dfscoerce() {
     colorecho "Installing DfsCoerce"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh04m1001/DFSCoerce
     cd /opt/tools/DFSCoerce || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -781,7 +781,7 @@ function install_pkinittools() {
     colorecho "Installing PKINITtools"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PKINITtools
     cd /opt/tools/PKINITtools || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
@@ -803,7 +803,7 @@ function install_pywhisker() {
     colorecho "Installing pyWhisker"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
     cd /opt/tools/pywhisker || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -817,7 +817,7 @@ function install_manspider() {
     colorecho "Installing Manspider"
     git -C /opt/tools clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER.git
     cd /opt/tools/MANSPIDER || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .
     deactivate
@@ -833,7 +833,7 @@ function install_targetedKerberoast() {
     colorecho "Installing targetedKerberoast"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
     cd /opt/tools/targetedKerberoast || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -848,7 +848,7 @@ function install_pcredz() {
     fapt libpcap-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/PCredz
     cd /opt/tools/PCredz || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install Cython python-libpcap
     deactivate
@@ -863,7 +863,7 @@ function install_pywsus() {
     fapt libxml2-dev libxslt-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
     cd /opt/tools/pywsus || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     # https://github.com/GoSecure/pywsus/pull/12
     echo -e "beautifulsoup4==4.9.1\nlxml==4.9.1\nsoupsieve==2.0.1" > requirements.txt
     source ./venv/bin/activate
@@ -907,7 +907,7 @@ function install_shadowcoerce() {
     colorecho "Installing ShadowCoerce PoC"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/ShadowCoerce
     cd /opt/tools/ShadowCoerce || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -921,7 +921,7 @@ function install_gmsadumper() {
     colorecho "Installing gMSADumper"
     git -C /opt/tools/ clone --depth 1 https://github.com/micahvandeusen/gMSADumper
     cd /opt/tools/gMSADumper || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # https://github.com/micahvandeusen/gMSADumper/issues/12
@@ -942,7 +942,7 @@ function install_pylaps() {
     colorecho "Installing pyLAPS"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLAPS
     cd /opt/tools/pyLAPS || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -956,7 +956,7 @@ function install_finduncommonshares() {
     colorecho "Installing FindUncommonShares"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/FindUncommonShares
     cd /opt/tools/FindUncommonShares/ || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -970,7 +970,7 @@ function install_ldaprelayscan() {
     colorecho "Installing LdapRelayScan"
     git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/LdapRelayScan
     cd /opt/tools/LdapRelayScan || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
@@ -993,7 +993,7 @@ function install_goldencopy() {
     colorecho "Installing GoldenCopy"
     git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
     cd /opt/tools/GoldenCopy || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .
     deactivate
@@ -1007,7 +1007,7 @@ function install_crackhound() {
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
     cd /opt/tools/CrackHound || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1129,7 +1129,7 @@ function install_PassTheCert() {
     colorecho "Installing PassTheCert"
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
     cd /opt/tools/PassTheCert/Python/ || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -1176,7 +1176,7 @@ function install_noPac() {
     colorecho "Installing noPac"
     git -C /opt/tools/ clone --depth 1 https://github.com/Ridter/noPac
     cd /opt/tools/noPac || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1199,7 +1199,7 @@ function install_teamsphisher() {
     colorecho "Installing TeamsPhisher"
     git -C /opt/tools clone --depth 1 https://github.com/Octoberfest7/TeamsPhisher
     cd /opt/tools/TeamsPhisher || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install msal colorama requests
     deactivate
@@ -1236,7 +1236,7 @@ function install_extractbitlockerkeys() {
     colorecho "Installing ExtractBitlockerKeys"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/ExtractBitlockerKeys
     cd /opt/tools/ExtractBitlockerKeys || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1250,7 +1250,7 @@ function install_LDAPWordlistHarvester() {
     colorecho "Installing LDAPWordlistHarvester"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/LDAPWordlistHarvester
     cd /opt/tools/LDAPWordlistHarvester || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1293,7 +1293,7 @@ function install_ntlm_theft() {
     colorecho "Installing ntlm_theft"
     git -C /opt/tools/ clone --depth 1 https://github.com/Greenwolf/ntlm_theft
     cd /opt/tools/ntlm_theft || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install xlsxwriter
     deactivate

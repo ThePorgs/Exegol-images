@@ -120,7 +120,7 @@ function install_theharvester() {
     colorecho "Installing theHarvester"
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -162,7 +162,7 @@ function install_buster() {
     git -C /opt/tools clone --depth 1 https://github.com/sham00n/buster
     cd /opt/tools/buster || exit
     fapt libxml2-dev libxslt-dev
-    python3.6 -m venv ./venv
+    python3.6 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     python3.6 -m pip install cython cchardet requests beautifulsoup4 PyYaml lxml grequests gevent twint
     python3.6 setup.py install
@@ -177,7 +177,7 @@ function install_pwnedornot() {
     colorecho "Installing pwnedornot"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
     cd /opt/tools/pwnedOrNot || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install requests html2text
     deactivate
@@ -221,7 +221,7 @@ function install_linkedin2username() {
     colorecho "Installing linkedin2username"
     git -C /opt/tools/ clone --depth 1 https://github.com/initstring/linkedin2username
     cd /opt/tools/linkedin2username || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -254,7 +254,7 @@ function install_carbon14() {
     colorecho "Installing Carbon14"
     git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
     cd /opt/tools/Carbon14 || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -268,7 +268,7 @@ function install_photon() {
     colorecho "Installing photon"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/photon
     cd /opt/tools/photon || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -320,7 +320,7 @@ function install_spiderfoot() {
     colorecho "Installing Spiderfoot"
     git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -335,7 +335,7 @@ function install_finalrecon() {
     colorecho "Installing FinalRecon"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -360,7 +360,7 @@ function install_pwndb() {
     colorecho "Installing pwndb"
     git -C /opt/tools/ clone --depth 1 https://github.com/davidtavarez/pwndb.git
     cd /opt/tools/pwndb || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -384,7 +384,7 @@ function install_recondog() {
     colorecho "Installing ReconDog"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/ReconDog
     cd /opt/tools/ReconDog/ || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -440,7 +440,7 @@ function install_geopincer() {
     git -C /opt/tools clone --depth 1 https://github.com/tloja/GeoPincer.git
     cd /opt/tools/GeoPincer || exit
     sed -i "s#regions.txt#/opt/tools/GeoPincer/regions.txt##" GeoPincer.py
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -466,7 +466,7 @@ function install_murmurhash() {
     colorecho "Installing MurMurHash"
     git -C /opt/tools clone --depth 1 https://github.com/QU35T-code/MurMurHash
     cd /opt/tools/MurMurHash || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -482,7 +482,7 @@ function install_blackbird() {
     cd /opt/tools/blackbird || exit
     sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
     sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -497,7 +497,7 @@ function install_sherlock() {
     colorecho "Installing Sherlock"
     git -C /opt/tools/ clone --depth 1 https://github.com/sherlock-project/sherlock
     cd /opt/tools/sherlock || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -533,7 +533,7 @@ function install_pymeta() {
   fapt exiftool
   git -C /opt/tools clone --depth 1 https://github.com/m8sec/pymeta
   cd /opt/tools/pymeta || exit
-  python3 -m venv ./venv
+  python3 -m venv --system-site-packages ./venv
   source ./venv/bin/activate
   pip3 install .
   pip3 install -r requirements.txt

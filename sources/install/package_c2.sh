@@ -88,7 +88,7 @@ function install_empire() {
     install_powershell
     git -C /opt/tools/ clone --recursive https://github.com/BC-SECURITY/Empire
     cd /opt/tools/Empire || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -140,7 +140,7 @@ function install_villain() {
     colorecho "Installing Villain"
     git -C /opt/tools/ clone --depth 1 https://github.com/t3l3machus/Villain
     cd /opt/tools/Villain || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r ./requirements.txt
     deactivate

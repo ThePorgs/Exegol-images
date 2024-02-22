@@ -513,4 +513,7 @@ function package_base() {
     cat /root/sources/assets/patches/openssl.patch >> /etc/ssl/openssl.cnf
     add-test-command "echo -n '1337' | openssl dgst -md4"
     add-test-command "python3 -c 'import hashlib;print(hashlib.new(\"md4\", \"1337\".encode()).digest())'"
+
+    # Global python dependencies
+    pip install -r /root/sources/assets/python/requirements.txt
 }

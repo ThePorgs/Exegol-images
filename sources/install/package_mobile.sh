@@ -104,7 +104,7 @@ function install_mobsf(){
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
     else
-      python3 -m venv ./venv
+      python3 -m venv --system-site-packages ./venv
       ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
       ./venv/bin/python3 -m pip install .
       add-aliases mobsf # alias is only needed with venv and can be removed when switching back to pipx

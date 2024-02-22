@@ -25,7 +25,7 @@ function install_weevely() {
     colorecho "Installing weevely"
     git -C /opt/tools clone --depth 1 https://github.com/epinna/weevely3
     cd /opt/tools/weevely3 || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -126,7 +126,7 @@ function install_ssrfmap() {
     colorecho "Installing SSRFmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -171,7 +171,7 @@ function install_xsstrike() {
     colorecho "Installing XSStrike"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/XSStrike.git
     cd /opt/tools/XSStrike || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -196,7 +196,7 @@ function install_xsser() {
     colorecho "Installing xsser"
     git -C /opt/tools clone --depth 1 https://github.com/epsylon/xsser.git
     cd /opt/tools/xsser || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install pycurl bs4 pygeoip gobject cairocffi selenium
     deactivate
@@ -219,7 +219,7 @@ function install_bolt() {
     colorecho "Installing Bolt"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/Bolt.git
     cd /opt/tools/Bolt || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -246,7 +246,7 @@ function install_fuxploider() {
     colorecho "Installing fuxploider"
     git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
     cd /opt/tools/fuxploider || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -261,7 +261,7 @@ function install_patator() {
     fapt libmariadb-dev libcurl4-openssl-dev libssl-dev ldap-utils libpq-dev ike-scan unzip default-jdk libsqlite3-dev libsqlcipher-dev
     git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
     cd /opt/tools/patator || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -304,7 +304,7 @@ function install_drupwn() {
     colorecho "Installing drupwn"
     git -C /opt/tools/ clone --depth 1 https://github.com/immunIT/drupwn
     cd /opt/tools/drupwn || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r ./requirements.txt
     deactivate
@@ -330,7 +330,7 @@ function install_moodlescan() {
     colorecho "Installing moodlescan"
     git -C /opt/tools/ clone --depth 1 https://github.com/inc0d3/moodlescan.git
     cd /opt/tools/moodlescan || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -371,7 +371,7 @@ function install_cloudfail() {
     colorecho "Installing CloudFail"
     git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
     cd /opt/tools/CloudFail || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -385,7 +385,7 @@ function install_eyewitness() {
     colorecho "Installing EyeWitness"
     git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
     cd /opt/tools/EyeWitness || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     ./Python/setup/setup.sh
     deactivate
@@ -410,7 +410,7 @@ function install_oneforall() {
       local pr
       for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit "pull/$pr"; done
     fi
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -433,7 +433,7 @@ function install_corscanner() {
     colorecho "Installing CORScanner"
     git -C /opt/tools/ clone --depth 1 https://github.com/chenjj/CORScanner.git
     cd /opt/tools/CORScanner || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -468,7 +468,7 @@ function install_linkfinder() {
     colorecho "Installing LinkFinder"
     git -C /opt/tools/ clone --depth 1 https://github.com/GerbenJavado/LinkFinder.git
     cd /opt/tools/LinkFinder || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -502,7 +502,7 @@ function install_jwt_tool() {
     colorecho "Installing JWT tool"
     git -C /opt/tools/ clone --depth 1 https://github.com/ticarpi/jwt_tool
     cd /opt/tools/jwt_tool || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -535,7 +535,7 @@ function install_gittools() {
     colorecho "Installing GitTools"
     git -C /opt/tools/ clone --depth 1 https://github.com/internetwache/GitTools.git
     cd /opt/tools/GitTools/Finder || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -589,7 +589,7 @@ function install_httpmethods() {
     colorecho "Installing httpmethods"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
     cd /opt/tools/httpmethods || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -603,7 +603,7 @@ function install_h2csmuggler() {
     colorecho "Installing h2csmuggler"
     git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/h2csmuggler
     cd /opt/tools/h2csmuggler || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install h2
     deactivate
@@ -642,7 +642,7 @@ function install_tomcatwardeployer() {
     colorecho "Installing tomcatWarDeployer"
     git -C /opt/tools/ clone --depth 1 https://github.com/mgeeky/tomcatWarDeployer.git
     cd /opt/tools/tomcatWarDeployer || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -781,7 +781,7 @@ function install_smuggler() {
     colorecho "Installing smuggler.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/defparam/smuggler.git
     cd /opt/tools/smuggler || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     add-aliases smuggler
     add-history smuggler
     add-test-command "smuggler.py --help"
@@ -801,7 +801,7 @@ function install_kraken() {
     colorecho "Installing Kraken"
     git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
     cd /opt/tools/Kraken || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
