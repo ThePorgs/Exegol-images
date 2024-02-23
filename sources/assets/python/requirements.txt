@@ -23,4 +23,3 @@ ldap3
 blinker
 future
 ldapdomaindump
-impacket

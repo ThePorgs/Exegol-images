@@ -255,8 +255,7 @@ function install_aclpwn() {
 
 function install_impacket() {
     colorecho "Installing Impacket scripts"
-    # Remove --system-site-packages because the tests command fails
-    pipx install git+https://github.com/ThePorgs/impacket
+    pipx install --system-site-packages git+https://github.com/ThePorgs/impacket
     pipx inject impacket chardet
     cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
     cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
