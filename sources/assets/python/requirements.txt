@@ -1,3 +1,4 @@
+# The impacket package cannot be added here as it will conflict with install_impacket
 setuptools
 pip
 charset-normalizer
