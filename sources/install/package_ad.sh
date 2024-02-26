@@ -1099,7 +1099,7 @@ function install_masky() {
     pipx install git+https://github.com/Z4kSec/Masky
     add-history masky
     add-test-command "masky --help"
-    add-to-list "masky,https://github.com/Z4kSec/masky,masky is a tool to mask sensitive data / such as credit card numbers / in logs and other files."
+    add-to-list "masky,https://github.com/Z4kSec/Masky,Masky is a python library providing an alternative way to remotely dump domain users' credentials thanks to an ADCS. A command line tool has been built on top of this library in order to easily gather PFX or NT hashes and TGT on a larger scope"
 }
 
 function install_roastinthemiddle() {
