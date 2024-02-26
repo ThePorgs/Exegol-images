@@ -696,20 +696,20 @@
             }]
         },
         {
-            "name": "Top 20 nodes with most first degree object controls",
+            "name": "Top 20 nodes, 5 nested max, not DA, not HVT, most group deleg rights",
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(u)-[r1]->(n) WHERE r1.isacl = true WITH u, count(r1) AS count_ctrl ORDER BY count_ctrl DESC LIMIT 20 RETURN u",
+                "query": "MATCH (daGroup:Group)<-[:MemberOf*1..]-(domainAdmin) WHERE daGroup.objectid ENDS WITH '-512' WITH COLLECT(domainAdmin) AS domainAdmins MATCH (admGroup:Group)<-[:MemberOf*1..]-(domainAdm) WHERE admGroup.objectid ENDS WITH '-544' WITH domainAdmins, COLLECT(domainAdm) AS domainAdms MATCH p=(u)-[r1:MemberOf*1..5]->(g:Group)-[r2]->(n) WHERE r2.isacl=true AND NOT u IN domainAdmins AND NOT u IN domainAdms AND NOT u.highvalue=true WITH u, COUNT(r2) AS count_ctrl ORDER BY count_ctrl DESC LIMIT 20 RETURN u",
                 "allowCollapse": true
             }]
         },
                 {
-            "name": "Top Ten nodes with most group delegated object controls",
+            "name": "Top 10 computers, 5 nested max, not DC, most group deleg rights",
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(u)-[r1:MemberOf*1..]->(g:Group)-[r2]->(n) WHERE r2.isacl=true WITH u, count(r2) AS count_ctrl ORDER BY count_ctrl DESC LIMIT 20 RETURN u",
+                "query": "MATCH (dcGroup:Group)<-[:MemberOf*1..]-(domainControllers) WHERE dcGroup.objectid ENDS WITH '-516' WITH COLLECT(domainControllers) AS domainControllers MATCH p=(u:Computer)-[r1:MemberOf*1..5]->(g:Group)-[r2]->(n) WHERE r2.isacl=true AND NOT u IN domainControllers WITH u, count(r2) AS count_ctrl ORDER BY count_ctrl DESC LIMIT 10 RETURN u",
                 "allowCollapse": true
             }]
         },
