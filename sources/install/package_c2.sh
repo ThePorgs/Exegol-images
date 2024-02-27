@@ -34,6 +34,14 @@ function install_metasploit() {
       gem install timeout --version 0.4.0
     fi
     rvm use 3.2.2@default
+
+    # msfdb setup
+    fapt postgresql
+    cp -r /root/.bundle /var/lib/postgresql
+    chown -R postgres:postgres /var/lib/postgresql/.bundle
+    sudo -u postgres sh -c "cd /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
+    cp -r /var/lib/postgresql/.msf4 /root
+
     add-aliases metasploit
     add-test-command "msfconsole --help"
     add-test-command "msfvenom --list platforms"
@@ -61,7 +69,7 @@ function install_sliver() {
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
     # or check if it's possible to make this dynamic
-    local temp_fix_limit="2024-02-25"
+    local temp_fix_limit="2024-04-25"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
