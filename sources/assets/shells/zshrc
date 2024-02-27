@@ -30,6 +30,9 @@ setopt INC_APPEND_HISTORY
 setopt EXTENDED_HISTORY
 setopt HIST_FIND_NO_DUPS
 
+# TERM to prevent tmux not working with autosuggestion
+export TERM=xterm-256color
+
 # Color correction for zsh-syntax-highlighting
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#626262'
 ZSH_HIGHLIGHT_STYLES[comment]='fg=#888888'
