@@ -34,8 +34,17 @@ function install_metasploit() {
       gem install timeout --version 0.4.0
     fi
     rvm use 3.2.2@default
+
+    # msfdb setup
+    fapt postgresql
+    cp -r /root/.bundle /var/lib/postgresql
+    chown -R postgres:postgres /var/lib/postgresql/.bundle
+    sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && cd /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
+    cp -r /var/lib/postgresql/.msf4 /root
+
     add-aliases metasploit
     add-test-command "msfconsole --help"
+    add-test-command "msfdb --help"
     add-test-command "msfvenom --list platforms"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
