@@ -8,7 +8,7 @@ source package_ad.sh
 function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwncat"
-    pipx install pwncat-cs
+    pipx install --system-site-packages pwncat-cs
     # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
     pipx inject pwncat-cs cryptography==36.0.2
     add-history pwncat
@@ -43,7 +43,7 @@ function install_metasploit() {
 function install_routersploit() {
     # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing RouterSploit"
-    pipx install routersploit
+    pipx install --system-site-packages routersploit
     pipx inject routersploit colorama
     add-aliases routersploit
     add-test-command "routersploit --help"
@@ -88,7 +88,7 @@ function install_empire() {
     install_powershell
     git -C /opt/tools/ clone --recursive https://github.com/BC-SECURITY/Empire
     cd /opt/tools/Empire || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -140,7 +140,7 @@ function install_villain() {
     colorecho "Installing Villain"
     git -C /opt/tools/ clone --depth 1 https://github.com/t3l3machus/Villain
     cd /opt/tools/Villain || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r ./requirements.txt
     deactivate

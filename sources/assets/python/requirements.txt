@@ -1,0 +1,26 @@
+# The impacket package cannot be added here as it will conflict with install_impacket
+setuptools
+pip
+charset-normalizer
+six
+certifi
+idna
+urllib3
+requests
+pycparser
+cffi
+click
+cryptography
+MarkupSafe
+Jinja2
+pyasn1
+dnspython
+Werkzeug
+pyOpenSSL
+itsdangerous
+Flask
+pycryptodomex
+ldap3
+blinker
+future
+ldapdomaindump

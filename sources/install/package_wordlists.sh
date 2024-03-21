@@ -34,7 +34,7 @@ function install_cewl() {
 function install_cewler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing cewler"
-    pipx install cewler
+    pipx install --system-site-packages cewler
     add-history cewler
     add-test-command "cewler --output cewler.txt https://thehacker.recipes/"
     add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python"

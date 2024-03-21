@@ -53,7 +53,7 @@ function install_awscli() {
 function install_scout() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ScoutSuite"
-    pipx install scoutsuite
+    pipx install --system-site-packages scoutsuite
     add-history scout
     add-test-command "scout --help"
     add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool which enables security posture assessment of cloud environments."
@@ -62,7 +62,7 @@ function install_scout() {
 function install_cloudsplaining() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Cloudsplaining"
-    pipx install cloudsplaining
+    pipx install --system-site-packages cloudsplaining
     add-history cloudsplaining
     add-test-command "cloudsplaining --help"
     add-to-list "cloudsplaining,https://github.com/salesforce/cloudsplaining,AWS IAM Security Assessment tool that identifies violations of least privilege and generates a risk-prioritized report."
@@ -81,7 +81,7 @@ function install_cloudsploit() {
 function install_prowler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Prowler"
-    pipx install prowler
+    pipx install --system-site-packages prowler
     add-history prowler
     add-test-command "prowler -h"
     add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness."
@@ -93,7 +93,7 @@ function install_cloudmapper() {
     cd /opt/tools/cloudmapper || exit
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install wheel
     pip3 install -r requirements.txt

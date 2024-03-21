@@ -66,7 +66,7 @@ function install_checksec-py() {
     colorecho "Installing checksec.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
     cd /opt/tools/checksec.py || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip install .
     pip install --upgrade lief==0.13.2
