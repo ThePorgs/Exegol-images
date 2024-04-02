@@ -354,6 +354,8 @@ function post_install() {
     rm -rfv /tmp/*
     rm -rfv /var/lib/apt/lists/*
     rm -rfv /root/sources
+    rm -rfv /root/.cache
+    rm -rfv /root/.gradle/caches
     colorecho "Stop listening processes"
     listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
     if [[ -n $listening_processes ]]; then
@@ -513,4 +515,7 @@ function package_base() {
     cat /root/sources/assets/patches/openssl.patch >> /etc/ssl/openssl.cnf
     add-test-command "echo -n '1337' | openssl dgst -md4"
     add-test-command "python3 -c 'import hashlib;print(hashlib.new(\"md4\", \"1337\".encode()).digest())'"
+
+    # Global python dependencies
+    pip3 install -r /root/sources/assets/python/requirements.txt
 }

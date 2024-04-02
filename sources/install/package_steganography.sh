@@ -42,7 +42,7 @@ function install_zsteg() {
 function install_stegolsb() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing stegolsb"
-    pipx install stego-lsb
+    pipx install --system-site-packages stego-lsb
     add-history stegolsb
     add-test-command "stegolsb --version"
     add-to-list "stegolsb,https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm"

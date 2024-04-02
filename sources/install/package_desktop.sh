@@ -36,6 +36,7 @@ function install_xfce() {
     # Dock
     fapt xfce4-dev-tools libglib2.0-dev libgtk-3-dev libwnck-3-dev libxfce4ui-2-dev libxfce4panel-2.0-dev g++ build-essential
     git -C /tmp clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git
+    git -C /tmp/xfce4-docklike-plugin checkout xfce4-docklike-plugin-0.4.2
     cd /tmp/xfce4-docklike-plugin
     sh autogen.sh --prefix=/tmp/
     make
