@@ -61,7 +61,7 @@ function install_mfdread() {
     colorecho "Installing mfdread"
     git -C /opt/tools/ clone --depth 1 https://github.com/zhovner/mfdread
     cd /opt/tools/mfdread || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install bitstring
     deactivate
