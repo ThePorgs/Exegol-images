@@ -17,7 +17,7 @@ function install_brakeman() {
 function install_semgrep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing semgrep"
-    pipx install semgrep
+    pipx install --system-site-packages semgrep
     add-history semgrep
     add-test-command "semgrep --help"
     add-to-list "semgrep,https://github.com/returntocorp/semgrep/,Static analysis tool that supports multiple languages and can find a variety of vulnerabilities and coding errors."

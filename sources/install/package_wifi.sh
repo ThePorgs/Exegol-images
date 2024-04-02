@@ -52,7 +52,7 @@ function install_wifite2() {
     colorecho "Installing wifite2"
     git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
     cd /opt/tools/wifite2 || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     catch_and_retry ./venv/bin/python3 setup.py install
     add-aliases wifite
     add-history wifite
