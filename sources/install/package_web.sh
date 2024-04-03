@@ -318,7 +318,9 @@ function install_cmsmap() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing CMSmap"
     pipx install --system-site-packages git+https://github.com/Dionach/CMSmap.git
-    # TODO: Config ?
+    sed -i 's/wordlist =  wordlist\/rockyou.txt/wordlist =  \/usr\/share\/wordlists\/rockyou.txt/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
+    sed -i 's/edbpath = \/usr\/share\/exploitdb/edbpath = \/opt\/tools\/exploitdb/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
+    sed -i 's/edbtype = apt/edbtype = git/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
     # exploit-db path is required (misc package -> searchsploit)
     # cmsmap -U PC
     add-history cmsmap
