@@ -1322,8 +1322,9 @@ function install_dploot() {
 #     colorecho "Installing PXEThief"
 #     git -C /opt/tools/ clone --depth 1 https://github.com/MWR-CyberSec/PXEThief
 #     cd /opt/tools/PXEThief || exit
-#     python3 -m venv --system-site-packages ./venv
+#     python3 -m venv ./venv
 #     source ./venv/bin/activate
+# TODO: pywin32 not found
 #     pip3 install -r requirements.txt
 #     deactivate
 #     add-aliases PXEThief
@@ -1459,7 +1460,7 @@ function package_ad() {
     install_abuseACL
     install_bloodyAD               # Active Directory privilege escalation swiss army knife.
     install_dploot                 # Python rewrite of SharpDPAPI written un C#.
-    # install_PXEThief               # PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
+    # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
     install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
     install_sccmwtf                # This code is designed for exploring SCCM in a lab.
     end_time=$(date +%s)
