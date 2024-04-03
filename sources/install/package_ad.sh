@@ -1308,6 +1308,15 @@ function install_bloodyAD() {
     add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
 }
 
+function install_dploot() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing dploot"
+    pipx install --system-site-packages git+https://github.com/zblurx/dploot
+    add-history dploot
+    add-test-command "dploot --help"
+    add-to-list "dploot,https://github.com/zblurx/dploot,dploot is Python rewrite of SharpDPAPI written un C#."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1406,6 +1415,7 @@ function package_ad() {
     install_ntlm_theft
     install_abuseACL
     install_bloodyAD               # Active Directory privilege escalation swiss army knife.
+    install_dploot                 # Python rewrite of SharpDPAPI written un C#.
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."
