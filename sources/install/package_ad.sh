@@ -1299,6 +1299,15 @@ function install_abuseACL() {
     add-to-list "abuseACL,https://github.com/AetherBlack/abuseACL,A python script to automatically list vulnerable Windows ACEs/ACLs."
 }
 
+function install_bloodyAD() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing bloodyAD"
+    pipx install --system-site-packages git+https://github.com/CravateRouge/bloodyAD
+    add-history bloodyAD
+    add-test-command "bloodyAD --help"
+    add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1396,6 +1405,7 @@ function package_ad() {
     install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
     install_ntlm_theft
     install_abuseACL
+    install_bloodyAD               # Active Directory privilege escalation swiss army knife.
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."
