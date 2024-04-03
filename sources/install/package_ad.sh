@@ -1346,6 +1346,20 @@ function install_sccmhunter() {
     add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain."
 }
 
+function install_sccmwtf() {
+    # CODE-CHECK-WHITELIST=add-test-command
+    colorecho "Installing sccmwtf"
+    git -C /opt/tools/ clone --depth 1 https://github.com/xpn/sccmwtf
+    cd /opt/tools/sccmwtf || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases sccmwtf
+    add-history sccmwtf
+    add-to-list "sccmwtf,https://github.com/xpn/sccmwtf,This code is designed for exploring SCCM in a lab."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1446,7 +1460,8 @@ function package_ad() {
     install_bloodyAD               # Active Directory privilege escalation swiss army knife.
     install_dploot                 # Python rewrite of SharpDPAPI written un C#.
     # install_PXEThief               # PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
-    install_sccmhunter              # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
+    install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
+    install_sccmwtf                # This code is designed for exploring SCCM in a lab.
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."
