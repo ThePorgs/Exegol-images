@@ -1317,6 +1317,35 @@ function install_dploot() {
     add-to-list "dploot,https://github.com/zblurx/dploot,dploot is Python rewrite of SharpDPAPI written un C#."
 }
 
+# function install_PXEThief() {
+#     # CODE-CHECK-WHITELIST=
+#     colorecho "Installing PXEThief"
+#     git -C /opt/tools/ clone --depth 1 https://github.com/MWR-CyberSec/PXEThief
+#     cd /opt/tools/PXEThief || exit
+#     python3 -m venv --system-site-packages ./venv
+#     source ./venv/bin/activate
+#     pip3 install -r requirements.txt
+#     deactivate
+#     add-aliases PXEThief
+#     add-history PXEThief
+#     add-test-command "PXEThief --help"
+#     add-to-list "PXEThief,https://github.com/MWR-CyberSec/PXEThief,PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment enabling credential theft from network and task sequence accounts."
+# }
+
+function install_sccmhunter() {
+    colorecho "Installing sccmhunter"
+    git -C /opt/tools/ clone --depth 1 https://github.com/garrettfoster13/sccmhunter
+    cd /opt/tools/sccmhunter || exit
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases sccmhunter
+    add-history sccmhunter
+    add-test-command "sccmhunter --help"
+    add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1416,6 +1445,8 @@ function package_ad() {
     install_abuseACL
     install_bloodyAD               # Active Directory privilege escalation swiss army knife.
     install_dploot                 # Python rewrite of SharpDPAPI written un C#.
+    # install_PXEThief               # PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
+    install_sccmhunter              # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."
