@@ -1337,13 +1337,13 @@ function install_sccmhunter() {
     colorecho "Installing sccmhunter"
     git -C /opt/tools/ clone --depth 1 https://github.com/garrettfoster13/sccmhunter
     cd /opt/tools/sccmhunter || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
     add-aliases sccmhunter
     add-history sccmhunter
-    add-test-command "sccmhunter --help"
+    add-test-command "sccmhunter.py --help"
     add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain."
 }
 
