@@ -164,7 +164,8 @@ function install_buster() {
     fapt libxml2-dev libxslt-dev
     python3.6 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    python3.6 -m pip install cython cchardet requests beautifulsoup4 PyYaml lxml grequests gevent twint
+    # setting static lxml version since buster doesn't support latest one
+    python3.6 -m pip install cython cchardet requests beautifulsoup4 PyYaml lxml==5.1.1 grequests gevent twint
     python3.6 setup.py install
     deactivate
     ln -s /opt/tools/buster/venv/bin/buster /opt/tools/bin

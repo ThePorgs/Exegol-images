@@ -318,7 +318,9 @@ function install_cmsmap() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing CMSmap"
     pipx install --system-site-packages git+https://github.com/Dionach/CMSmap.git
-    # TODO: Config ?
+    sed -i 's/wordlist =  wordlist\/rockyou.txt/wordlist =  \/usr\/share\/wordlists\/rockyou.txt/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
+    sed -i 's/edbpath = \/usr\/share\/exploitdb/edbpath = \/opt\/tools\/exploitdb/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
+    sed -i 's/edbtype = apt/edbtype = git/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
     # exploit-db path is required (misc package -> searchsploit)
     # cmsmap -U PC
     add-history cmsmap
@@ -400,7 +402,7 @@ function install_oneforall() {
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
     # https://github.com/shmilylty/OneForAll/pull/340
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2024-05-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
