@@ -202,7 +202,7 @@
             }]
         },
         {
-            "name": " Kerberoastable enabled users and where they are AdminTo",
+            "name": "Kerberoastable enabled users and where they are AdminTo",
             "category": "Roasting",
             "queryList": [{
                 "final": true,
@@ -730,19 +730,37 @@
             }]
         },
         {
-            "name": "Find enabled machines Domain Users can RDP into",
+            "name": "Find enabled machines Domain Users can RDP to",
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE}) where g.objectid ENDS WITH '-513' RETURN p"
+                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid ENDS WITH '-513' RETURN p2 AS path"
             }]
         },
         {
-            "name": "Find enabled Servers Domain Users can RDP To",
+            "name": "Find enabled servers Domain Users can RDP to",
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE}) WHERE g.objectid ENDS WITH '-519' AND c.operatingsystem CONTAINS 'Server' RETURN p",
+                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid ENDS WITH '-513' AND c2.operatingsystem =~ '(?i).*Server.*' RETURN p2 AS path",
+                "allowCollapse": true
+            }]
+        },
+        {
+            "name": "Find enabled machines Authenticated Users can RDP to",
+            "category": "RDP",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid =~ '(?i).*S-1-5-11$' RETURN p2 AS path",
+                "allowCollapse": true
+            }]
+        },
+        {
+            "name": "Find enabled servers Authenticated Users can RDP to",
+            "category": "RDP",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid =~ '(?i).*S-1-5-11$' AND c2.operatingsystem =~ '(?i).*Server.*' RETURN p2 AS path",
                 "allowCollapse": true
             }]
         },
