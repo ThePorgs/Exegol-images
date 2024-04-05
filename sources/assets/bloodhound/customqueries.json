@@ -163,7 +163,7 @@
               },
               {
                 "final": true,
-                "query": "WITH split($result, \"=>\") as selectedDomains WITH selectedDomains[0] as sourceDomain, selectedDomains[1] as destDomain MATCH (n:User {domain: sourceDomain}) MATCH (m:Computer {domain: destDomain}) MATCH p=allShortestPaths((n)-[r:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|CanRDP|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin*1..]->(m)) WHERE NOT n = m RETURN p",
+                "query": "WITH split($result, \"=>\") AS selectedDomains WITH selectedDomains[0] AS sourceDomain, selectedDomains[1] AS destDomain MATCH (n:User {domain: sourceDomain}) MATCH (m:Computer {domain: destDomain}) MATCH p=allShortestPaths((n)-[r:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|CanRDP|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin*1..]->(m)) WHERE NOT n = m RETURN p",
                 "startNode": "{}",
                 "allowCollapse": false
             }]
@@ -419,7 +419,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) as domainAdmins MATCH p = (c2:Computer {enabled: TRUE})-[:HasSession]->(u2:User {enabled: TRUE}) WHERE u2.objectid IN domainAdmins RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH p = (c2:Computer {enabled: TRUE})-[:HasSession]->(u2:User {enabled: TRUE}) WHERE u2.objectid IN domainAdmins RETURN p"
             }]
         },
         {
@@ -427,7 +427,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) as domainAdmins MATCH (c:Computer {enabled: TRUE})-[:MemberOf*1..]->(g2:Group) WHERE g2.objectid =~ '.*-(516|(?i)S-1-5-9)$' WITH COLLECT(c.objectid) as domainControllers, domainAdmins MATCH p = (c2:Computer {enabled: TRUE})-[:HasSession]->(u2:User {enabled: TRUE}) WHERE u2.objectid IN domainAdmins AND NOT c2.objectid IN domainControllers RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH (c:Computer {enabled: TRUE})-[:MemberOf*1..]->(g2:Group) WHERE g2.objectid =~ '.*-(516|(?i)S-1-5-9)$' WITH COLLECT(c.objectid) AS domainControllers, domainAdmins MATCH p = (c2:Computer {enabled: TRUE})-[:HasSession]->(u2:User {enabled: TRUE}) WHERE u2.objectid IN domainAdmins AND NOT c2.objectid IN domainControllers RETURN p"
             }]
         },
         {
@@ -443,7 +443,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled:TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '(?i)S-1-5-.*-525$' WITH COLLECT (u.objectid) as protectedUsers MATCH p=(u2:User {enabled:TRUE, admincount:TRUE, sensitive:FALSE})-[:MemberOf*1..3]->(g2:Group) WHERE NOT u2.objectid IN protectedUsers RETURN p"
+                "query": "MATCH (u:User {enabled:TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '(?i)S-1-5-.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled:TRUE, admincount:TRUE, sensitive:FALSE})-[:MemberOf*1..3]->(g2:Group) WHERE NOT u2.objectid IN protectedUsers RETURN p"
             }]
         },
         {
@@ -451,7 +451,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT(u.objectid) as protectedUsers MATCH p=(u2:User {enabled: TRUE, admincount: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group) WHERE NOT u2.objectid IN protectedUsers AND g2.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT(u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, admincount: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group) WHERE NOT u2.objectid IN protectedUsers AND g2.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' RETURN p"
             }]
         },
         {
@@ -459,7 +459,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT (u.objectid) as protectedUsers MATCH p=(u2:User {enabled: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group {highvalue: TRUE}) WHERE NOT u2.objectid IN protectedUsers RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group {highvalue: TRUE}) WHERE NOT u2.objectid IN protectedUsers RETURN p"
             }]
         },
         {
@@ -500,7 +500,7 @@
             "category": "Groups",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (c:Computer)-[:MemberOf*1..]->(groupsWithComps:Group) WITH groupsWithComps MATCH (u:User)-[r:MemberOf*1..]->(groupsWithComps) RETURN DISTINCT(groupsWithComps) as groupsWithCompsAndUsers",
+                "query": "MATCH (c:Computer)-[:MemberOf*1..]->(groupsWithComps:Group) WITH groupsWithComps MATCH (u:User)-[r:MemberOf*1..]->(groupsWithComps) RETURN DISTINCT(groupsWithComps) AS groupsWithCompsAndUsers",
                 "allowCollapse": true,
                 "endNode": "{}"
             }]
@@ -662,7 +662,7 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)<-[r:HasSession]-(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, count(r) as rel_count order by rel_count desc LIMIT 10 MATCH p=(m)-[r:HasSession]->(n) RETURN p",
+                "query": "MATCH (n:User),(m:Computer), (n)<-[r:HasSession]-(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)-[r:HasSession]->(n) RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -671,7 +671,7 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)<-[r:HasSession]-(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) as rel_count order by rel_count desc LIMIT 10 MATCH p=(m)-[r:HasSession]->(n) RETURN p",
+                "query": "MATCH (n:User),(m:Computer), (n)<-[r:HasSession]-(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)-[r:HasSession]->(n) RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -680,7 +680,7 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, count(r) as rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN p",
+                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -689,7 +689,7 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) as rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN p",
+                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -698,7 +698,7 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) as rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN m",
+                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN m",
                 "allowCollapse": true
             }]
         },
@@ -707,7 +707,7 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) as rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) SET m.highvalue = true RETURN m",
+                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) SET m.highvalue = true RETURN m",
                 "allowCollapse": true
             }]
         },
@@ -981,7 +981,7 @@
             "category": "AD CS Domain Escalation",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=allShortestPaths((g {owned: TRUE})-[*1..]->(n:GPO {type:'Enrollment Service'})) WHERE g<>n AND NONE(x in relationships(p) WHERE type(x) = 'Enroll' OR type(x) = 'AutoEnroll') RETURN p"
+                "query": "MATCH p=allShortestPaths((g {owned: TRUE})-[*1..]->(n:GPO {type:'Enrollment Service'})) WHERE g<>n AND NONE(x IN relationships(p) WHERE type(x) = 'Enroll' OR type(x) = 'AutoEnroll') RETURN p"
             }]
         },
         {
