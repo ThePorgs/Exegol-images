@@ -1,1 +1,1 @@
-sccmwtf.py fakepc fakepc.$DOMAIN $SCCM_MP_NetBiosName "$DOMAIN\controlledComputer$" "controlledPassword"
+sccmwtf.py fakepc "fakepc.$DOMAIN" "$SCCM_MP_NetBiosName" "$DOMAIN\controlledComputer$" "controlledPassword"
