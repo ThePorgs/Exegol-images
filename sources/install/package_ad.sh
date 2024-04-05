@@ -432,7 +432,7 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2024-05-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -671,7 +671,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2024-05-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -774,7 +774,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2024-05-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -956,7 +956,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2024-05-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1293,6 +1293,68 @@ function install_abuseACL() {
     add-to-list "abuseACL,https://github.com/AetherBlack/abuseACL,A python script to automatically list vulnerable Windows ACEs/ACLs."
 }
 
+function install_bloodyAD() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing bloodyAD"
+    pipx install --system-site-packages git+https://github.com/CravateRouge/bloodyAD
+    add-history bloodyAD
+    add-test-command "bloodyAD --help"
+    add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
+}
+
+function install_dploot() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing dploot"
+    pipx install --system-site-packages git+https://github.com/zblurx/dploot
+    add-history dploot
+    add-test-command "dploot --help"
+    add-to-list "dploot,https://github.com/zblurx/dploot,dploot is Python rewrite of SharpDPAPI written un C#."
+}
+
+# function install_PXEThief() {
+#     # CODE-CHECK-WHITELIST=
+#     colorecho "Installing PXEThief"
+#     git -C /opt/tools/ clone --depth 1 https://github.com/MWR-CyberSec/PXEThief
+#     cd /opt/tools/PXEThief || exit
+#     python3 -m venv ./venv
+#     source ./venv/bin/activate
+# TODO: pywin32 not found
+#     pip3 install -r requirements.txt
+#     deactivate
+#     add-aliases PXEThief
+#     add-history PXEThief
+#     add-test-command "PXEThief --help"
+#     add-to-list "PXEThief,https://github.com/MWR-CyberSec/PXEThief,PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment enabling credential theft from network and task sequence accounts."
+# }
+
+function install_sccmhunter() {
+    colorecho "Installing sccmhunter"
+    git -C /opt/tools/ clone --depth 1 https://github.com/garrettfoster13/sccmhunter
+    cd /opt/tools/sccmhunter || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases sccmhunter
+    add-history sccmhunter
+    add-test-command "sccmhunter.py --help"
+    add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain."
+}
+
+function install_sccmwtf() {
+    # CODE-CHECK-WHITELIST=add-test-command
+    colorecho "Installing sccmwtf"
+    git -C /opt/tools/ clone --depth 1 https://github.com/xpn/sccmwtf
+    cd /opt/tools/sccmwtf || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases sccmwtf
+    add-history sccmwtf
+    add-to-list "sccmwtf,https://github.com/xpn/sccmwtf,This code is designed for exploring SCCM in a lab."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1390,6 +1452,11 @@ function package_ad() {
     install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
     install_ntlm_theft
     install_abuseACL
+    install_bloodyAD               # Active Directory privilege escalation swiss army knife.
+    install_dploot                 # Python rewrite of SharpDPAPI written un C#.
+    # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
+    install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
+    install_sccmwtf                # This code is designed for exploring SCCM in a lab.
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."
