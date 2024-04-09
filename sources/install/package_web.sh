@@ -915,6 +915,7 @@ function package_web() {
     install_git-dumper              # Dump a git repository from a website
     install_gittools                # Dump a git repository from a website
     install_ysoserial               # Deserialization payloads
+    install_ysoserialnet            # Deserialization .NET payloads
     install_phpggc                  # php deserialization payloads
     install_symfony-exploits        # symfony secret fragments exploit
     install_jdwp_shellifier         # exploit java debug
