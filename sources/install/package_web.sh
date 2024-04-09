@@ -569,6 +569,25 @@ function install_phpggc() {
     add-to-list "phpggc,https://github.com/ambionics/phpggc,Exploit generation tool for the PHP platform."
 }
 
+function install_ysoserialnet() {
+    colorecho "Installing ysoserialnet"
+    # Source: https://github.com/pwntester/ysoserial.net/issues/9#issuecomment-790819759
+    mkdir /opt/tools/ysoserialnet/
+    dpkg --add-architecture i386
+    apt update
+    fapt mono-complete wine winetricks wine32:i386
+    wget https://github.com/pwntester/ysoserial.net/releases/download/v1.36/ysoserial-1dba9c4416ba6e79b6b262b758fa75e2ee9008e9.zip -O /opt/tools/ysoserialnet/ysoserialnet.zip
+    unzip -o /opt/tools/ysoserialnet/ysoserialnet.zip -d /opt/tools/ysoserialnet/
+    mv /opt/tools/ysoserialnet/Release/* /opt/tools/ysoserialnet/
+    rm -rf /opt/tools/ysoserialnet/Release/
+    rm /opt/tools/ysoserialnet/ysoserialnet.zip
+    winetricks -q dotnet48
+    add-aliases ysoserialnet
+    add-history ysoserialnet
+    add-test-command "ysoserialnet -h"
+    add-to-list "ysoserialnet,https://github.com/pwntester/ysoserial.net,ysoserial.net is a collection of utilities and property-oriented programming gadget chains discovered in common .NET libraries that can, under the right conditions, exploit .NET applications performing unsafe deserialization of objects."
+}
+
 function install_symfony-exploits(){
     colorecho "Installing symfony-exploits"
     git -C /opt/tools clone --depth 1 https://github.com/ambionics/symfony-exploits
