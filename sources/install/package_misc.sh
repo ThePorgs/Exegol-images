@@ -176,6 +176,16 @@ function install_cyberchef() {
     add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
 }
 
+function install_creds() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing creds"
+    pipx install --system-site-packages git+https://github.com/ihebski/DefaultCreds-cheat-sheet
+    local version=$(creds version | awk '{print $4}')
+    add-history creds
+    add-test-command "creds version"
+    add-to-list "creds,https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement, this document has several products default login/password gathered from multiple sources.,$version"
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -195,6 +205,7 @@ function package_misc() {
     install_tig             # ncurses-based text-mode interface for git
     install_yt-dlp          # A youtube-dl fork with additional features and fixes
     install_cyberchef       # A web based toolbox
+    install_creds           # A default credentials vault
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."
