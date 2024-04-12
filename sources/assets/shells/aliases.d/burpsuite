@@ -1,2 +1,2 @@
-alias BurpSuiteCommunity='java -jar -Xmx4g /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar'
+alias BurpSuiteCommunity='/usr/lib/jvm/java-21-openjdk/bin/java -jar -Xmx4g /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar'
 alias burpsuite=BurpSuiteCommunity
