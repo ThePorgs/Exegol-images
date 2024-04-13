@@ -42,7 +42,7 @@ jobs:
           docker image ls -a
           docker ps
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
       - name: Prepare build
         # Preparing variables used for tagging the image to build
         id: prepare

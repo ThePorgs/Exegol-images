@@ -35,9 +35,9 @@ jobs:
       - ${{ inputs.ARCH }}
     steps:
       - name: Checkout Exegol-images
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
       - name: Checkout Exegol-docs
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
         with:
           repository: 'ThePorgs/Exegol-docs'
           ref: ${{ inputs.DOCS_TARGET_BRANCH }}
