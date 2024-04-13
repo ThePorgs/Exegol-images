@@ -216,7 +216,7 @@ function install_bloodhound-ce() {
 
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
     add-test-command "/opt/tools/BloodHound-CE/bloodhound -version"
-    add-test-command "PGPASSWORD=exegol4thewin psql -U bloodhound -d bloodhound -h localhost -c '\l'"
+    add-test-command "service postgresql start && sleep 5 && PGPASSWORD=exegol4thewin psql -U bloodhound -d bloodhound -h localhost -c '\l' && service postgresql stop"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
 }
 
