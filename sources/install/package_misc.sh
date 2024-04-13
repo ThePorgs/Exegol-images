@@ -180,10 +180,9 @@ function install_creds() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing creds"
     pipx install --system-site-packages git+https://github.com/ihebski/DefaultCreds-cheat-sheet
-    local version=$(creds version | awk '{print $4}')
     add-history creds
     add-test-command "creds version"
-    add-to-list "creds,https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement, this document has several products default login/password gathered from multiple sources.,$version"
+    add-to-list "creds,https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement, this document has several products default login/password gathered from multiple sources."
 }
 
 # Package dedicated to offensive miscellaneous tools
