@@ -27,7 +27,6 @@ function install_wifi_apt_tools() {
 
 function install_pyrit() {
     colorecho "Installing pyrit"
-    # git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
     # can't install with python3/python2 with latest changes.
     # steps to remove temp fix:
     #  1. try to install pyrit with git clone + venv + setup.py install with python2 or 3 (without the git patch)
@@ -36,6 +35,7 @@ function install_pyrit() {
     if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
+      # git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
       git -C /opt/tools/ clone https://github.com/JPaulMora/Pyrit
       git -C /opt/tools/Pyrit checkout f0f1913c645b445dd391fb047b812b5ba511782c
     fi
