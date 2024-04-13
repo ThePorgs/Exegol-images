@@ -212,17 +212,11 @@ function install_bloodhound-ce() {
     chmod +x /opt/tools/bin/bloodhound*
 
     # Configuration
-    sed -i "s#app-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#graph-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#8080#1030##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#0.0.0.0#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#neo4j:bloodhoundcommunityedition#neo4j:exegol4thewin##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#user=bloodhound password=bloodhoundcommunityedition#user=bloodhound password=exegol4thewin##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#/etc/bloodhound/collectors#/opt/tools/BloodHound-CE/collectors##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#/opt/bloodhound/work#/opt/tools/BloodHound-CE/work##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json /opt/tools/BloodHound-CE/
 
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
     add-test-command "/opt/tools/BloodHound-CE/bloodhound -version"
+    add-test-command "service postgresql start && sleep 5 && PGPASSWORD=exegol4thewin psql -U bloodhound -d bloodhound -h localhost -c '\l' && service postgresql stop"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
 }
 

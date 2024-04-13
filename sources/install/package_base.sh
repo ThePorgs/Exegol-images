@@ -329,6 +329,25 @@ function install_java11() {
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
+function install_java21() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
+    colorecho "Installing java 11"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
+
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-aarch64_bin.tar.gz"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    tar -xzf /tmp/openjdk21-jdk.tar.gz --directory /tmp
+    mkdir -p "/usr/lib/jvm"
+    mv /tmp/jdk-21* /usr/lib/jvm/java-21-openjdk
+    add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
+}
+
 function add_debian_repository_components() {
     # add non-free non-free-firmware contrib repository
     # adding at the end of the line start with Components of the repository to add
@@ -461,6 +480,7 @@ function package_base() {
 
     # java11 install, and java17 as default
     install_java11
+    install_java21
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 

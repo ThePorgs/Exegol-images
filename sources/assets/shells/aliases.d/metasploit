@@ -1,6 +1,9 @@
 alias msfconsole='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfconsole'
 alias msfd='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfd'
-alias msfdb='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfdb'
+msfdb_func() {
+    sudo -u postgres sh -c "cd /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb $@"
+}
+alias msfdb='msfdb_func'
 alias msfrpc='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfrpc'
 alias msfrpcd='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfrpcd'
 alias msfupdate='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfupdate'
