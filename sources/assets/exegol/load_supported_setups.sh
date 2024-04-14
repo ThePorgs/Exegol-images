@@ -62,8 +62,13 @@ function deploy_zsh() {
 function deploy_tmux() {
   colorecho "Deploying tmux"
   if [[ -d "$MY_SETUP_PATH/tmux" ]]; then
-    # copy tmux/tmux.conf to ~/.tmux.conf
-    [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]] && cp "$MY_SETUP_PATH/tmux/tmux.conf" ~/.tmux.conf
+    # id define, copy tmux/tmux.conf to ~/.tmux.conf
+    if [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]]; then
+      # This key must always be defined (if redefined later in the file, the user user will take precedence)
+      echo 'set-option -g default-shell /bin/zsh' > ~/.tmux.conf
+      # Adding custom user config
+      cat "$MY_SETUP_PATH/tmux/tmux.conf" >> ~/.tmux.conf
+    fi
   else
     mkdir "$MY_SETUP_PATH/tmux" && chmod 770 "$MY_SETUP_PATH/tmux"
   fi

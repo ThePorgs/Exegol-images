@@ -68,7 +68,7 @@ function install_dex2jar() {
 function install_frida() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing frida"
-    pipx install frida-tools
+    pipx install --system-site-packages frida-tools
     add-history frida
     add-test-command "frida --version"
     add-to-list "frida,https://github.com/frida/frida,Dynamic instrumentation toolkit"
@@ -77,7 +77,7 @@ function install_frida() {
 function install_objection() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing objection"
-    pipx install git+https://github.com/sensepost/objection
+    pipx install --system-site-packages git+https://github.com/sensepost/objection
     add-history objection
     add-test-command "objection --help"
     add-to-list "objection,https://github.com/sensepost/objection,Runtime mobile exploration"
@@ -86,10 +86,20 @@ function install_objection() {
 function install_androguard() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing androguard"
-    pipx install androguard
-    add-history androguard
-    add-test-command "androguard --version"
-    add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications"
+    # androguard not installing on ARM64 (https://github.com/androguard/androguard/issues/1027), skipping temporarily
+    local temp_fix_limit="2024-05-20"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting." # check if issue was resolved by androguard team
+    fi
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        pipx install --system-site-packages androguard
+        add-history androguard
+        add-test-command "androguard --version"
+        add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
 }
 
 function install_mobsf(){
@@ -100,11 +110,11 @@ function install_mobsf(){
     cd /opt/tools/MobSF || exit
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
     #  in the mean time, switching to manual venv and an alias for mobsf
-    local temp_fix_limit="2024-02-01"
+    local temp_fix_limit="2024-05-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
     else
-      python3 -m venv ./venv
+      python3 -m venv --system-site-packages ./venv
       ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
       ./venv/bin/python3 -m pip install .
       add-aliases mobsf # alias is only needed with venv and can be removed when switching back to pipx

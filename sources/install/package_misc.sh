@@ -34,7 +34,7 @@ function install_goshs() {
 function install_shellerator() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing shellerator"
-    pipx install git+https://github.com/ShutdownRepo/shellerator
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/shellerator
     add-history shellerator
     add-test-command "shellerator --help"
     add-to-list "shellerator,https://github.com/ShutdownRepo/Shellerator,a simple command-line tool for generating shellcode"
@@ -43,7 +43,7 @@ function install_shellerator() {
 function install_uberfile() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing uberfile"
-    pipx install git+https://github.com/ShutdownRepo/uberfile
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/uberfile
     add-history uberfile
     add-test-command "uberfile --help"
     add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget / curl / powershell / certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
@@ -51,7 +51,7 @@ function install_uberfile() {
 
 function install_arsenal() {
     colorecho "Installing arsenal"
-    pipx install git+https://github.com/Orange-Cyberdefense/arsenal
+    pipx install --system-site-packages git+https://github.com/Orange-Cyberdefense/arsenal
     add-aliases arsenal
     add-history arsenal
     add-test-command "arsenal --version"
@@ -61,7 +61,7 @@ function install_arsenal() {
 function install_whatportis() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing whatportis"
-    pipx install whatportis
+    pipx install --system-site-packages whatportis
     # TODO : FIX : "port": port[1] if port[1] else "---",list index out of range - cli.py
     # echo y | whatportis --update
     add-history whatportis
@@ -131,7 +131,7 @@ function install_ngrok() {
 function install_objectwalker() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing objectwalker"
-    pipx install git+https://github.com/p0dalirius/objectwalker
+    pipx install --system-site-packages git+https://github.com/p0dalirius/objectwalker
     add-history objectwalker
     add-test-command "objectwalker --help"
     add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
@@ -153,7 +153,7 @@ function install_tig() {
 function install_yt-dlp() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing yt-dlp"
-    pipx install git+https://github.com/yt-dlp/yt-dlp
+    pipx install --system-site-packages git+https://github.com/yt-dlp/yt-dlp
     add-test-command "yt-dlp --help"
     add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes"
 }
@@ -161,16 +161,17 @@ function install_yt-dlp() {
 function install_cyberchef() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing CyberChef"
-    local last_version
-    last_version=$(git ls-remote --tags --sort='v:refname' https://github.com/gchq/CyberChef.git | tail -n 1 | cut -d '/' -f 3 | cut -d '^' -f 1)
-    if [[ -z "$last_version" ]]; then
-        criticalecho-noexit "Latest version not found" && return
+    local last_release
+    last_release=$(curl --location --silent "https://api.github.com/repos/gchq/CyberChef/releases/latest"|grep browser_download_url|awk '{print $2}'|tr -d '"')
+    echo "$last_release"
+    if [[ -z "$last_release" ]]; then
+        criticalecho-noexit "Latest release not found" && return
     fi
     mkdir /opt/tools/CyberChef
-    wget https://github.com/gchq/CyberChef/releases/download/"$last_version"/CyberChef_"$last_version".zip -O /tmp/CyberChef.zip
+    wget "$last_release" -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
     rm /tmp/CyberChef.zip
-    mv /opt/tools/CyberChef/CyberChef_"$last_version".html /opt/tools/CyberChef/CyberChef.html
+    mv /opt/tools/CyberChef/CyberChef_*.html /opt/tools/CyberChef/CyberChef.html
     add-test-command "file /opt/tools/CyberChef/CyberChef.html"
     add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
 }

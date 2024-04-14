@@ -1,0 +1,3 @@
+ssh-audit $TARGET
+ssh-audit -T servers.txt
+ssh-audit -L

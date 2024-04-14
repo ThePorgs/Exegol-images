@@ -1,0 +1,1 @@
+alias sccmwtf.py='/opt/tools/sccmwtf/venv/bin/python3 /opt/tools/sccmwtf/sccmwtf.py'

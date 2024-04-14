@@ -20,7 +20,7 @@ function install_rsactftool() {
     fapt libmpc-dev
     git -C /opt/tools clone --depth 1 https://github.com/RsaCtfTool/RsaCtfTool
     cd /opt/tools/RsaCtfTool || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate

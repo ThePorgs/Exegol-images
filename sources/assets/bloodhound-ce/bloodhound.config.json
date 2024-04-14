@@ -1,0 +1,23 @@
+{
+    "version": 1,
+    "bind_addr": "localhost:1030",
+    "metrics_port": ":2112",
+    "root_url": "http://localhost:1030/",
+    "work_dir": "/opt/tools/BloodHound-CE/work",
+    "log_level": "INFO",
+    "log_path": "bloodhound.log",
+    "features": {
+      "enable_auth": true
+    },
+    "tls": {
+      "cert_file": "",
+      "key_file": ""
+    },
+    "database": {
+      "connection": "user=bloodhound password=exegol4thewin dbname=bloodhound host=localhost"
+    },
+    "neo4j": {
+      "connection": "neo4j://neo4j:exegol4thewin@localhost:7687/"
+    },
+    "collectors_base_path": "/opt/tools/BloodHound-CE/collectors"
+}
