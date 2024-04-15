@@ -120,9 +120,8 @@ function install_bloodhound-py() {
 function install_bloodhound-ce-py() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing and Python ingestor for BloodHound-CE"
-    git -C /opt/tools/ clone https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
+    git -C /opt/tools/ clone --branch bloodhound-ce --depth 1 https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
     cd /opt/tools/BloodHound-CE.py || exit
-    git checkout bloodhound-ce
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .

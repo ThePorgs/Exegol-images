@@ -62,10 +62,6 @@ function install_routersploit() {
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sliver"
-    # Deletion of --depth 1 due to installation of stable branch
-    git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
-    cd /opt/tools/sliver || exit
-    asdf local golang 1.19
     # making the static version checkout a temporary thing
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
@@ -74,8 +70,11 @@ function install_sliver() {
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      git checkout tags/v1.5.41
+      # Add branch v1.5.41 due to installation of stable branch
+      git -C /opt/tools/ clone --branch v1.5.41 --depth 1 https://github.com/BishopFox/sliver.git
+      cd /opt/tools/sliver || exit
     fi
+    asdf local golang 1.19
     make
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
     ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
