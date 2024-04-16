@@ -15,6 +15,14 @@ jobs:
       uses: actions/checkout@main
     - name: Check ${{ matrix.checked_function }}
       run: python3 sources/code_compliance_check.py ${{ matrix.checked_function }}
+  temp-fix:
+    name: Temp-fix check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Check temp-fix
+      run: python3 sources/code_compliance_check.py temp-fix
   shellcheck:
     name: Shell check
     runs-on: ubuntu-latest

@@ -102,7 +102,7 @@ function install_androguard() {
     fi
 }
 
-function install_mobsf(){
+function install_mobsf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf
