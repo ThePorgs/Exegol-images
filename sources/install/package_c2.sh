@@ -25,6 +25,8 @@ function install_metasploit() {
     rvm use 3.2.2@metasploit --create
     gem install bundler
     bundle install
+    # Add this dependency to make the pattern_create.rb script work
+    gem install rex-text
     # fixes 'You have already activated timeout 0.3.1, but your Gemfile requires timeout 0.4.0. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
     # fixes 'You have already activated timeout 0.4.1, but your Gemfile requires timeout 0.4.0. Prepending `bundle exec` to your command may solve this.'
     local temp_fix_limit="2024-04-25"
