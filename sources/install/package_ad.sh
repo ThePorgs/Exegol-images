@@ -1346,7 +1346,7 @@ function install_sccmhunter() {
     add-aliases sccmhunter
     add-history sccmhunter
     add-test-command "sccmhunter.py --help"
-    add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain."
+    add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying profiling and attacking SCCM related assets in an Active Directory domain."
 }
 
 function install_sccmwtf() {

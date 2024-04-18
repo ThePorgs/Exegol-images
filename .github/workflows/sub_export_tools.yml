@@ -57,7 +57,7 @@ jobs:
         run: |
           grep -qE '([^,]*,[^,]*){3,}' installed_tools.csv \
             && (echo '[-] Wrong number of columns on the following lines' \
-            && grep -oE '([^,]*,[^,]*){3,}' installed_tools.csv || exit 1) \
+            && grep -oE '([^,]*,[^,]*){3,}' installed_tools.csv) && exit 1 \
             || (echo '[+] List contains right number of columns' && exit 0)
       - name: Stop the container
         if: always() && steps.image_exists.outcome == 'success'

@@ -182,7 +182,7 @@ function install_creds() {
     pipx install --system-site-packages git+https://github.com/ihebski/DefaultCreds-cheat-sheet
     add-history creds
     add-test-command "creds version"
-    add-to-list "creds,https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement, this document has several products default login/password gathered from multiple sources."
+    add-to-list "creds,https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement. This document has several products default login/password gathered from multiple sources."
 }
 
 # Package dedicated to offensive miscellaneous tools
