@@ -840,7 +840,8 @@ function install_sslscan() {
     git -C /opt/tools clone --depth 1 https://github.com/rbsec/sslscan.git
     cd /opt/tools/sslscan || exit
     make static
-    ln -s /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
+    mv /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
+    make clean
     add-history sslscan
     add-test-command "sslscan --version"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
