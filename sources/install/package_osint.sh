@@ -312,6 +312,7 @@ function install_maltego() {
     colorecho "Installing Maltego"
     wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
     dpkg -i /tmp/maltegov4.3_package.deb
+    rm /tmp/maltegov4.3_package.deb
     add-history maltego
     add-test-command "file /usr/share/maltego/bin/maltego"
     add-to-list "maltego,https://www.paterva.com/web7/downloads.php,A tool used for open-source intelligence and forensics"
