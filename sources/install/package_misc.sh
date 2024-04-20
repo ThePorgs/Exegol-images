@@ -123,6 +123,7 @@ function install_ngrok() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     tar xvzf /tmp/ngrok.tgz -C /opt/tools/bin
+    rm /tmp/ngrok.tgz
     add-history ngrok
     add-test-command "ngrok version"
     add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet"
