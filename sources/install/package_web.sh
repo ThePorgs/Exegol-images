@@ -634,6 +634,7 @@ function install_feroxbuster() {
     bash /tmp/install-feroxbuster.sh
     # Adding a symbolic link in order for autorecon to be able to find the Feroxbuster binary
     ln -v -s /opt/tools/feroxbuster/feroxbuster /opt/tools/bin/feroxbuster
+    rm /tmp/install-feroxbuster.sh
     add-aliases feroxbuster
     add-history feroxbuster
     add-test-command "feroxbuster --help"
@@ -818,6 +819,7 @@ function install_soapui() {
     mkdir -p /opt/tools/SoapUI/
     wget https://dl.eviware.com/soapuios/5.7.0/SoapUI-5.7.0-linux-bin.tar.gz -O /tmp/SoapUI.tar.gz
     tar xvf /tmp/SoapUI.tar.gz -C /opt/tools/SoapUI/ --strip=1
+    rm /tmp/SoapUI.tar.gz
     add-aliases soapui
     add-history soapui
     add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
