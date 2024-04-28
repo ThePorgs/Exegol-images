@@ -680,7 +680,7 @@ function install_arjun() {
 function install_nuclei() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Nuclei"
-    go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+    go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
     asdf reshim golang
     nuclei -update-templates
     add-history nuclei
