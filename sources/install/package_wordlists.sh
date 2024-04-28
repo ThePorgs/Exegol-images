@@ -77,6 +77,9 @@ function install_pass_station() {
 function install_username-anarchy() {
     colorecho "Installing Username-Anarchy"
     git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
+    cd /opt/tools/username-anarchy || exit
+    git fetch origin "pull/3/head:pull/3"
+    git merge --strategy-option theirs --no-edit "pull/3"
     add-aliases username-anarchy
     add-history username-anarchy
     add-test-command "username-anarchy --help"
