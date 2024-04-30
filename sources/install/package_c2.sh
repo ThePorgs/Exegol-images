@@ -29,7 +29,7 @@ function install_metasploit() {
     gem install rex-text
     # fixes 'You have already activated timeout 0.3.1, but your Gemfile requires timeout 0.4.0. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
     # fixes 'You have already activated timeout 0.4.1, but your Gemfile requires timeout 0.4.0. Prepending `bundle exec` to your command may solve this.'
-    local temp_fix_limit="2024-04-25"
+    local temp_fix_limit="2024-08-25"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
