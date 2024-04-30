@@ -409,8 +409,7 @@ function install_oneforall() {
       git config --local user.email "local"
       git config --local user.name "local"
       local prs=("340")
-      local pr
-      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit "pull/$pr"; done
+      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit --allow-unrelated-histories "pull/$pr"; done
     fi
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
@@ -418,7 +417,7 @@ function install_oneforall() {
     deactivate
     add-aliases oneforall
     add-history oneforall
-    add-test-command "oneforall.py version"
+    add-test-command "oneforall.py check"
     add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
 }
 
