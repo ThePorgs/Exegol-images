@@ -27,13 +27,12 @@ function install_metasploit() {
     bundle install
     # Add this dependency to make the pattern_create.rb script work
     gem install rex-text
-    # fixes 'You have already activated timeout 0.3.1, but your Gemfile requires timeout 0.4.0. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    # fixes 'You have already activated timeout 0.4.1, but your Gemfile requires timeout 0.4.0. Prepending `bundle exec` to your command may solve this.'
+    # fixes 'You have already activated timeout 0.3.1, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
     local temp_fix_limit="2024-08-25"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      gem install timeout --version 0.4.0
+      gem install timeout --version 0.4.1
     fi
     rvm use 3.2.2@default
 
