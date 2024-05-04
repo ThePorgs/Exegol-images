@@ -444,7 +444,10 @@ function install_pypykatz() {
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
+      # git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
+      git -C /opt/tools/ clone https://github.com/skelsec/pypykatz
+      # https://github.com/skelsec/pypykatz/issues/153
+      git -C /opt/tools/pypykatz checkout c91dcdc09289ad2e93c475e7c640d0f90906a7c0
       cd /opt/tools/pypykatz || exit
       python3 -m venv --system-site-packages ./venv
       source ./venv/bin/activate
