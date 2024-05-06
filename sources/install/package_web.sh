@@ -409,8 +409,7 @@ function install_oneforall() {
       git config --local user.email "local"
       git config --local user.name "local"
       local prs=("340")
-      local pr
-      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit "pull/$pr"; done
+      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit --allow-unrelated-histories "pull/$pr"; done
     fi
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
@@ -418,7 +417,7 @@ function install_oneforall() {
     deactivate
     add-aliases oneforall
     add-history oneforall
-    add-test-command "oneforall.py version"
+    add-test-command "oneforall.py check"
     add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
 }
 
@@ -680,7 +679,7 @@ function install_arjun() {
 function install_nuclei() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Nuclei"
-    go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+    go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
     asdf reshim golang
     nuclei -update-templates
     add-history nuclei
@@ -840,7 +839,8 @@ function install_sslscan() {
     git -C /opt/tools clone --depth 1 https://github.com/rbsec/sslscan.git
     cd /opt/tools/sslscan || exit
     make static
-    ln -s /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
+    mv /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
+    make clean
     add-history sslscan
     add-test-command "sslscan --version"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"

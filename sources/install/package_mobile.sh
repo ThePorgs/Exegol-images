@@ -31,7 +31,7 @@ function install_scrpy() {
                  meson ninja-build libsdl2-dev \
                  libavcodec-dev libavdevice-dev libavformat-dev libavutil-dev \
                  libswresample-dev libusb-1.0-0 libusb-1.0-0-dev
-    git clone https://github.com/Genymobile/scrcpy
+    git clone --depth 1 https://github.com/Genymobile/scrcpy
     # opening subshell to not have to cd back
     (
       cd scrcpy || exit
@@ -102,7 +102,7 @@ function install_androguard() {
     fi
 }
 
-function install_mobsf(){
+function install_mobsf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf

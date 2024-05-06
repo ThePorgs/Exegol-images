@@ -27,6 +27,15 @@ function install_ad_apt_tools() {
     add-to-list "ldapsearch,https://wiki.debian.org/LDAP/LDAPUtils,Search for and display entries (ldap)"
 }
 
+function install_asrepcatcher() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing ASRepCatcher"
+    pipx install --system-site-packages git+https://github.com/Yaxxine7/ASRepCatcher
+    add-history asrepcatcher
+    add-test-command "ASRepCatcher --help"
+    add-to-list "asrepcatcher,https://github.com/Yaxxine7/ASRepCatcher,Make your VLAN ASREProastable."
+}
+
 function install_pretender() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Pretender"
@@ -120,9 +129,8 @@ function install_bloodhound-py() {
 function install_bloodhound-ce-py() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing and Python ingestor for BloodHound-CE"
-    git -C /opt/tools/ clone https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
+    git -C /opt/tools/ clone --branch bloodhound-ce --depth 1 https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
     cd /opt/tools/BloodHound-CE.py || exit
-    git checkout bloodhound-ce
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .
@@ -436,7 +444,10 @@ function install_pypykatz() {
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
+      # git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
+      git -C /opt/tools/ clone https://github.com/skelsec/pypykatz
+      # https://github.com/skelsec/pypykatz/issues/153
+      git -C /opt/tools/pypykatz checkout c91dcdc09289ad2e93c475e7c640d0f90906a7c0
       cd /opt/tools/pypykatz || exit
       python3 -m venv --system-site-packages ./venv
       source ./venv/bin/activate
@@ -1338,7 +1349,7 @@ function install_sccmhunter() {
     add-aliases sccmhunter
     add-history sccmhunter
     add-test-command "sccmhunter.py --help"
-    add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain."
+    add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying profiling and attacking SCCM related assets in an Active Directory domain."
 }
 
 function install_sccmwtf() {
@@ -1457,6 +1468,7 @@ function package_ad() {
     # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
     install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
     install_sccmwtf                # This code is designed for exploring SCCM in a lab.
+    install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."

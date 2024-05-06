@@ -1,1 +1,1 @@
-nuclei -u https://example.com
+nuclei -u http://$TARGET

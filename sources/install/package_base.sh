@@ -259,7 +259,7 @@ function install_neovim() {
     then
         # Build take ~5min
         fapt gettext
-        git clone https://github.com/neovim/neovim.git
+        git clone --depth 1 https://github.com/neovim/neovim.git
         cd neovim || exit
         make CMAKE_BUILD_TYPE=RelWithDebInfo
         make install
