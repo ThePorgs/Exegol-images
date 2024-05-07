@@ -89,7 +89,7 @@
       }
     ],
 
-    "ExtensionSettings_Comment": "To get the 'ID' of a plugins, type 'about:memory' in Firefox url bar, source: https://stackoverflow.com/questions/48056506/get-add-on-id-of-extensions-in-firefox",
+    "ExtensionSettings_Comment": "To get the 'ID' of a plugins, you can query the extension page and search for the 'guid' field.",
     "ExtensionSettings": {
     },
     
