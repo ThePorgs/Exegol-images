@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Burpsuite
 Comment=Web pentest proxy and audit tool
-Exec=java -jar -Xmx4g /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
+Exec=/usr/lib/jvm/java-21-openjdk/bin/java -jar -Xmx4g /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
 Icon=/usr/share/icons/Papirus/16x16/apps/kali-burpsuite.svg
 Terminal=false
 Type=Application

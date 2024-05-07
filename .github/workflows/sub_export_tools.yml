@@ -35,9 +35,9 @@ jobs:
       - ${{ inputs.ARCH }}
     steps:
       - name: Checkout Exegol-images
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
       - name: Checkout Exegol-docs
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
         with:
           repository: 'ThePorgs/Exegol-docs'
           ref: ${{ inputs.DOCS_TARGET_BRANCH }}
@@ -57,7 +57,7 @@ jobs:
         run: |
           grep -qE '([^,]*,[^,]*){3,}' installed_tools.csv \
             && (echo '[-] Wrong number of columns on the following lines' \
-            && grep -oE '([^,]*,[^,]*){3,}' installed_tools.csv || exit 1) \
+            && grep -oE '([^,]*,[^,]*){3,}' installed_tools.csv) && exit 1 \
             || (echo '[+] List contains right number of columns' && exit 0)
       - name: Stop the container
         if: always() && steps.image_exists.outcome == 'success'
@@ -84,18 +84,18 @@ jobs:
           else
             echo '[*] Moving tools list to (dynamic) imagetag_version_arch.csv'
             mv -v installed_tools.csv source/assets/installed_tools/lists/${{ inputs.IMAGE_TAG }}_${{ inputs.IMAGE_VERSION }}_${{ inputs.ARCH }}.csv
-            echo '[*] Editing releases.csv content so that new tools list appears'
-            echo '[*] Removing occurences of image,version,arch. This is because this workflow runs in the prerelease pipeline, meaning that there is a possibility tools list is pushed to exegol-docs even if the images are not released for some reasons (e.g. imageA prerelease works but not for imageB). Doing this grep -v will ensure that releases.csv does not have duplicates to the same tag, same version and same arch'
-            (head -n 1 source/assets/installed_tools/releases.csv; \
-              echo "${{ inputs.IMAGE_TAG }},${{ inputs.IMAGE_VERSION }},${{ inputs.ARCH }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ inputs.IMAGE_TAG }}_${{ inputs.IMAGE_VERSION }}_${{ inputs.ARCH }}.csv \
+            echo '[*] Editing releases_${{ inputs.ARCH }}.csv content so that new tools list appears'
+            echo '[*] Removing occurences of image,version. This is because this workflow runs in the prerelease pipeline, meaning that there is a possibility tools list is pushed to exegol-docs even if the images are not released for some reasons (e.g. imageA prerelease works but not for imageB). Doing this grep -v will ensure that releases.csv does not have duplicates to the same tag and same version'
+            (head -n 1 source/assets/installed_tools/releases_${{ inputs.ARCH }}.csv; \
+              echo "${{ inputs.IMAGE_TAG }},${{ inputs.IMAGE_VERSION }},$(date -u +"%Y-%m-%dT%H:%M:%SZ"),:download:\`${{ inputs.IMAGE_TAG }}_${{ inputs.IMAGE_VERSION }}_${{ inputs.ARCH }}.csv \
                 </assets/installed_tools/lists/${{ inputs.IMAGE_TAG }}_${{ inputs.IMAGE_VERSION }}_${{ inputs.ARCH }}.csv>\`"; \
               ( \
-                tail -n +2 source/assets/installed_tools/releases.csv | grep -Ev "${{ inputs.IMAGE_TAG }},${{ inputs.IMAGE_VERSION }},${{ inputs.ARCH }}" \
+                tail -n +2 source/assets/installed_tools/releases_${{ inputs.ARCH }}.csv | grep -Ev "${{ inputs.IMAGE_TAG }},${{ inputs.IMAGE_VERSION }}" \
               ) \
             ) | tee source/assets/installed_tools/new_releases.csv
-            mv -v source/assets/installed_tools/new_releases.csv source/assets/installed_tools/releases.csv
+            mv -v source/assets/installed_tools/new_releases.csv source/assets/installed_tools/releases_${{ inputs.ARCH }}.csv
           fi
-      - name: (dbg) print nightly.csv or releases.csv
+      - name: (dbg) print nightly.csv or releases_${{ inputs.ARCH }}.csv
         if: always() && !contains(steps.adding_list.outcome, 'skipped')
         id: final_list_exists
         run: |
@@ -104,8 +104,8 @@ jobs:
             echo '[*] Printing nightly.csv'
             cat source/assets/installed_tools/nightly.csv
           else
-            echo '[*] Printing releases.csv'
-            cat source/assets/installed_tools/releases.csv
+            echo '[*] Printing releases_${{ inputs.ARCH }}.csv'
+            cat source/assets/installed_tools/releases_${{ inputs.ARCH }}.csv
           fi
       - name: Push to Exegol-docs
         if: always() && steps.final_list_exists.outcome == 'success'
@@ -132,7 +132,7 @@ jobs:
           else
             echo '[*] Staging changes (release)'
             git add --verbose source/assets/installed_tools/lists/${{ inputs.IMAGE_TAG }}_${{ inputs.IMAGE_VERSION }}_${{ inputs.ARCH }}.csv
-            git add --verbose source/assets/installed_tools/releases.csv
+            git add --verbose source/assets/installed_tools/releases_${{ inputs.ARCH }}.csv
           fi
           echo '[*] Commiting changes'
           git commit --verbose -m "PIPELINE: tools list for ${{ inputs.IMAGE_TAG }}_${{ inputs.IMAGE_VERSION }}_${{ inputs.ARCH }}"

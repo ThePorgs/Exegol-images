@@ -1,0 +1,36 @@
+# most common dependencies, found with the following commands
+#   1. for pipx:
+#   find ~/.local/share/pipx/ -type d -name "bin" 2>/dev/null | while read venv_path; do venv_bin="${venv_path}/python"; if [[ -x "$venv_bin" ]]; then suffix=$(printf "%04d" $((suffix+1))); "$venv_bin" -m pip list > "/tmp/pipxlibs${suffix}.txt"; fi; done
+#   2. for /opt/tools:
+#   find /opt/tools ~/.local/share/pipx/ -type d -name "venv" 2>/dev/null | while read venv_path; do venv_bin="${venv_path}/bin/python"; if [[ -x "$venv_bin" ]]; then suffix=$(printf "%04d" $((suffix+1))); "$venv_bin" -m pip list > "/tmp/piplibs${suffix}.txt"; fi; done
+#   3. compare
+#   awk 'FNR > 2 {print $1}' /tmp/piplibs*.txt /tmp/pipxlibs*.txt | sort | uniq -c | sort -nr
+
+# The impacket package cannot be added here as it will conflict with install_impacket
+
+setuptools
+pip
+charset-normalizer
+six
+certifi
+idna
+urllib3
+requests
+pycparser
+cffi
+click
+cryptography
+MarkupSafe
+Jinja2
+pyasn1
+dnspython
+Werkzeug
+pyOpenSSL
+itsdangerous
+Flask
+pycryptodomex
+ldap3
+blinker
+future
+ldapdomaindump
+pandas
