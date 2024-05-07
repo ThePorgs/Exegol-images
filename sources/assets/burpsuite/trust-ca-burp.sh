@@ -59,7 +59,7 @@ function trust_ca_burp_in_firefox() {
     done
     # Download the CA to /tmp and update the CA path
     infoecho 'Retrieving CA'
-    local burp_ca_path="/tmp/cacert.der"
+    local burp_ca_path="/opt/tools/firefox/cacert.der"
     local burp_ca_name="PortSwigger CA"
     if ! wget -q "http://127.0.0.1:$burp_port/cert" -O "$burp_ca_path"; then
       kill "$burp_pid"
