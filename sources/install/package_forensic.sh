@@ -27,21 +27,7 @@ function install_forensic_apt_tools() {
 
 function install_binwalk() {
     colorecho "Installing binwalk"
-    fapt binwalk
-
-    # Install 'sasquatch', external needed by binwalk to handle squashfs
-    git clone https://github.com/devttys0/sasquatch
-
-    # https://github.com/devttys0/sasquatch/pull/56
-    local temp_fix_limit="2025-04-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git config --local user.email "local"
-      git config --local user.name "local"
-      local prs=("56")
-      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit "pull/$pr"; done
-    fi
+    fapt squashfs-tools binwalk
 
     add-history binwalk
     add-test-command "binwalk --help"
