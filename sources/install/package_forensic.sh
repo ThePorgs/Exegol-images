@@ -9,6 +9,7 @@ function install_forensic_apt_tools() {
     fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
     
     add-history binwalk
+    add-aliases binwalk
     add-history foremost
     add-history testdisk
     add-history fdisk
