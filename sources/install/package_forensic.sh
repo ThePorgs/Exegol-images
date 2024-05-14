@@ -29,6 +29,7 @@ function install_binwalk() {
     colorecho "Installing binwalk"
     fapt squashfs-tools binwalk
 
+    add-aliases binwalk
     add-history binwalk
     add-test-command "binwalk --help"
     add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
