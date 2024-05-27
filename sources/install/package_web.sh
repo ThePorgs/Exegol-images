@@ -402,7 +402,7 @@ function install_oneforall() {
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
     # https://github.com/shmilylty/OneForAll/pull/340
-    local temp_fix_limit="2024-05-20"
+    local temp_fix_limit="2024-06-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
