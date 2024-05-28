@@ -122,15 +122,6 @@ function catch_and_retry() {
   criticalecho-noexit "Command failed definitively after $retries attempts."
   return 1
 }
-function uploader() {
-    colorecho "Installing Uploader"
-    git clone https://github.com/Frozenka/uploader.git /opt/tools/uploader
-    pip3 install -r /opt/tools/uploader/requirements.txt
-    add-aliases uploader
-    add-history uploader
-    add-test-command "uploader.py --help"
-    add-to-list "uploader,https://github.com/Frozenka/uploader,Tool for quickly downloading files to a remote machine based on the target operating system"
-}
 function define_retry_function() {
   local original_command=$1
   eval "
