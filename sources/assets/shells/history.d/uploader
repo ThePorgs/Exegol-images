@@ -1,0 +1,2 @@
+uploader --port 8081 --d /opt/resources/linux --os linux
+uploader --port 8081 --d /opt/resources/windows --os windows
