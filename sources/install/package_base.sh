@@ -396,6 +396,16 @@ function post_install() {
     if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
 }
 
+function uploader() {
+    colorecho "Installing Uploader"
+    git clone https://github.com/Frozenka/uploader.git /opt/tools/uploader
+    pip3 install -r /opt/tools/uploader/requirements.txt
+    add-aliases uploader
+    add-history uploader
+    add-test-command "uploader.py --help"
+    add-to-list "uploader,https://github.com/Frozenka/uploader,Tool for quickly downloading files to a remote machine based on the target operating system"
+}
+
 function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Install asdf"
