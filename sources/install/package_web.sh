@@ -922,7 +922,22 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
+    install_Postman                 # Postman - API platform for testing APIs
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
+}
+
+function install_Postman() {
+    colorecho "Installing postman"
+    curl -L https://dl.pstmn.io/download/latest/linux_64 -o /tmp/postman.tar.gz
+    tar -xf /tmp/postman.tar.gz --directory /tmp
+    rm /tmp/postman.tar.gz
+    chown -R root:root /tmp/Postman
+    mv /tmp/Postman /opt/tools/Postman
+    ln -s "/opt/tools/Postman/app/Postman" "/opt/tools/bin/postman"
+    apt install libsecret-1-0 -y
+    add-history postman
+    add-test-command "which postman"
+    add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }
