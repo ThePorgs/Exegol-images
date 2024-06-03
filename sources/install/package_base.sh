@@ -398,8 +398,12 @@ function post_install() {
 
 function uploader() {
     colorecho "Installing Uploader"
-    git clone https://github.com/Frozenka/uploader.git /opt/tools/uploader
-    pip3 install -r /opt/tools/uploader/requirements.txt
+    git -C /opt/tools/ clone --depth 1 https://github.com/Frozenka/uploader.git 
+    cd /opt/tools/uploader || exit
+    python3 -m venv --system-site-package ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases uploader
     add-history uploader
     add-test-command "uploader.py --help"
