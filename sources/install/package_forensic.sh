@@ -28,7 +28,6 @@ function install_forensic_apt_tools() {
 function install_binwalk() {
     colorecho "Installing binwalk"
     fapt squashfs-tools binwalk
-
     add-aliases binwalk
     add-history binwalk
     add-test-command "binwalk --help"
