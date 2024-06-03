@@ -406,7 +406,7 @@ function uploader() {
     deactivate
     add-aliases uploader
     add-history uploader
-    add-test-command "uploader.py --help"
+    add-test-command "uploader --help"
     add-to-list "uploader,https://github.com/Frozenka/uploader,Tool for quickly downloading files to a remote machine based on the target operating system"
 }
 
