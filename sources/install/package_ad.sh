@@ -1367,17 +1367,17 @@ function install_sccmwtf() {
 }
 
 function install_smbclientng() {
-    colorecho "Installing smbclientng"
-    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/smbclientng /opt/tools/smbclientng/
-    cd /opt/tools/smbclientng/ || exit
+    colorecho "Installing smbclient-ng"
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/smbclientng /opt/tools/smbclient-ng/
+    cd /opt/tools/smbclient-ng/ || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
-    add-aliases smbclientng
-    add-history smbclientng
+    add-aliases smbclient-ng
+    add-history smbclient-ng
     add-test-command "smbclientng --help"
-    add-to-list "smbclientng,https://github.com/p0dalirius/smbclientng,smbclient-ng, a fast and user friendly way to interact with SMB shares."
+    add-to-list "smbclient-ng,https://github.com/p0dalirius/smbclient-ng,smbclient-ng, a fast and user friendly way to interact with SMB shares."
 }
 
 # Package dedicated to internal Active Directory tools
