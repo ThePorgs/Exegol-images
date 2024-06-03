@@ -1366,6 +1366,20 @@ function install_sccmwtf() {
     add-to-list "sccmwtf,https://github.com/xpn/sccmwtf,This code is designed for exploring SCCM in a lab."
 }
 
+function install_smbclientng() {
+    colorecho "Installing smbclientng"
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/smbclientng /opt/tools/smbclientng/
+    cd /opt/tools/smbclientng/ || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases smbclientng
+    add-history smbclientng
+    add-test-command "smbclientng --help"
+    add-to-list "smbclientng,https://github.com/p0dalirius/smbclientng,smbclient-ng, a fast and user friendly way to interact with SMB shares."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1434,6 +1448,7 @@ function package_ad() {
     install_gmsadumper
     install_pylaps
     install_finduncommonshares
+    install_smbclientng
     install_ldaprelayscan
     install_goldencopy
     install_crackhound
