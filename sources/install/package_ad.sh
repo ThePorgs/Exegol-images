@@ -1368,12 +1368,7 @@ function install_sccmwtf() {
 
 function install_smbclientng() {
     colorecho "Installing smbclient-ng"
-    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/smbclientng /opt/tools/smbclient-ng/
-    cd /opt/tools/smbclient-ng/ || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
+    pipx install git+https://github.com/p0dalirius/smbclient-ng
     add-aliases smbclient-ng
     add-history smbclient-ng
     add-test-command "smbclientng --help"
