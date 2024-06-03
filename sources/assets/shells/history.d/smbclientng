@@ -1,0 +1,2 @@
+smbclientng -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --target "$DC_IP"
+smbng -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --target "$DC_IP"
