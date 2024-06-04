@@ -219,7 +219,7 @@ function package_misc() {
     install_yt-dlp          # A youtube-dl fork with additional features and fixes
     install_cyberchef       # A web based toolbox
     install_creds           # A default credentials vault
-    install_uploader()      # Install Uploader for fast file upload
+    install_uploader        # uploader for fast file upload
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."
