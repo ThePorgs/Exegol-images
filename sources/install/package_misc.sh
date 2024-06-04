@@ -189,9 +189,9 @@ function install_uploader() {
     colorecho "Installing Uploader"
     git -C /opt/tools/ clone --depth 1 https://github.com/Frozenka/uploader.git 
     cd /opt/tools/uploader || exit
-    python -m venv --system-site-package ./venv
+    python3 -m venv --system-site-package ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    pip install -r requirements.txt
     deactivate
     add-aliases uploader
     add-history uploader
