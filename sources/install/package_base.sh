@@ -396,7 +396,6 @@ function post_install() {
     if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
 }
 
-
 function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Install asdf"
