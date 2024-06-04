@@ -922,22 +922,40 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
-    install_Postman                 # Postman - API platform for testing APIs
+    install_postman                 # Postman - API platform for testing APIs
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
 }
 
-function install_Postman() {
-    colorecho "Installing postman"
-    curl -L https://dl.pstmn.io/download/latest/linux_64 -o /tmp/postman.tar.gz
-    tar -xf /tmp/postman.tar.gz --directory /tmp
-    rm /tmp/postman.tar.gz
-    chown -R root:root /tmp/Postman
-    mv /tmp/Postman /opt/tools/Postman
-    ln -s "/opt/tools/Postman/app/Postman" "/opt/tools/bin/postman"
-    apt install libsecret-1-0 -y
-    add-history postman
-    add-test-command "which postman"
-    add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
+function install_postman() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        colorecho "Installing postman"
+        curl -L https://dl.pstmn.io/download/latest/linux_64 -o /tmp/postman.tar.gz
+        tar -xf /tmp/postman.tar.gz --directory /tmp
+        rm /tmp/postman.tar.gz
+        mv /tmp/Postman /opt/tools/Postman
+        ln -s "/opt/tools/Postman/app/Postman" "/opt/tools/bin/postman"
+        fapt libsecret-1-0 -y
+        add-history postman
+        add-test-command "which postman"
+        add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
+    
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        curl -L https://dl.pstmn.io/download/latest/linux_arm64 -o /tmp/postman.tar.gz
+    	tar -xf /tmp/postman.tar.gz --directory /tmp
+    	rm /tmp/postman.tar.gz
+    	mv /tmp/Postman /opt/tools/Postman
+    	ln -s "/opt/tools/Postman/app/Postman" "/opt/tools/bin/postman"
+    	fapt libsecret-1-0 -y
+    	add-history postman
+    	add-test-command "which postman"
+        add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
+	
+    else
+    	criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
 }
