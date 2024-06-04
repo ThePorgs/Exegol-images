@@ -185,7 +185,7 @@ function install_creds() {
     add-to-list "creds,https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement. This document has several products default login/password gathered from multiple sources."
 }
 
-function uploader() {
+function install_uploader() {
     colorecho "Installing Uploader"
     git -C /opt/tools/ clone --depth 1 https://github.com/Frozenka/uploader.git 
     cd /opt/tools/uploader || exit
@@ -219,6 +219,7 @@ function package_misc() {
     install_yt-dlp          # A youtube-dl fork with additional features and fixes
     install_cyberchef       # A web based toolbox
     install_creds           # A default credentials vault
+    install_uploader()      # Install Uploader for fast file upload
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."
