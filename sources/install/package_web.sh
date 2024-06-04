@@ -772,7 +772,6 @@ function install_burpsuite() {
     cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
-    /opt/tools/bin/trust-ca-burp
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"
