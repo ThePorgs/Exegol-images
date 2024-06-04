@@ -1367,6 +1367,7 @@ function install_sccmwtf() {
 }
 
 function install_smbclientng() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smbclient-ng"
     pipx install git+https://github.com/p0dalirius/smbclient-ng
     add-history smbclient-ng
