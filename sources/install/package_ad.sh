@@ -1363,6 +1363,15 @@ function install_sccmwtf() {
     add-to-list "sccmwtf,https://github.com/xpn/sccmwtf,This code is designed for exploring SCCM in a lab."
 }
 
+function install_conpass() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing conpass"
+    pipx install --system-site-packages git+https://github.com/login-securite/conpass
+    add-history conpass
+    add-test-command "conpass --help"
+    add-to-list "conpass,https://github.com/login-securite/conpass,Python tool for continuous password spraying taking into account the password policy."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1466,6 +1475,7 @@ function package_ad() {
     install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
     install_sccmwtf                # This code is designed for exploring SCCM in a lab.
     install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
+    install_conpass                # Python tool for continuous password spraying taking into account the password policy.
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."
