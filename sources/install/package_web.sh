@@ -846,6 +846,16 @@ function install_sslscan() {
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
 }
 
+function install_jsluice() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing jsluice"
+    go install -v github.com/BishopFox/jsluice/cmd/jsluice@latest
+    asdf reshim golang
+    add-history jsluice
+    add-test-command "jsluice --help"
+    add-to-list "jsluice,https://github.com/BishopFox/jsluice,Extract URLs / paths / secrets and other interesting data from JavaScript source code."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -923,6 +933,7 @@ function package_web() {
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
     install_postman                 # Postman - API platform for testing APIs
+    install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
