@@ -846,6 +846,16 @@ function install_sslscan() {
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
 }
 
+function install_katana() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing katana"
+    go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+    asdf reshim golang
+    add-history katana
+    add-test-command "katana --help"
+    add-to-list "katana,https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -922,6 +932,7 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
+    install_katana                  # A next-generation crawling and spidering framework
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
