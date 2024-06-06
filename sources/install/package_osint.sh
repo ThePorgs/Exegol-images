@@ -364,6 +364,7 @@ function install_pwndb() {
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    pip install -U pysocks
     deactivate
     add-aliases pwndb
     add-history pwndb
