@@ -930,32 +930,21 @@ function package_web() {
 
 function install_postman() {
     # CODE-CHECK-WHITELIST=add-aliases
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        colorecho "Installing postman"
-        curl -L https://dl.pstmn.io/download/latest/linux_64 -o /tmp/postman.tar.gz
-        tar -xf /tmp/postman.tar.gz --directory /tmp
-        rm /tmp/postman.tar.gz
-        mv /tmp/Postman /opt/tools/Postman
-        ln -s "/opt/tools/Postman/app/Postman" "/opt/tools/bin/postman"
-        fapt libsecret-1-0 -y
-        add-history postman
-        add-test-command "which postman"
-        add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
-    
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        curl -L https://dl.pstmn.io/download/latest/linux_arm64 -o /tmp/postman.tar.gz
-    	tar -xf /tmp/postman.tar.gz --directory /tmp
-    	rm /tmp/postman.tar.gz
-    	mv /tmp/Postman /opt/tools/Postman
-    	ln -s "/opt/tools/Postman/app/Postman" "/opt/tools/bin/postman"
-    	fapt libsecret-1-0 -y
-    	add-history postman
-    	add-test-command "which postman"
-        add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
-	
-    else
-    	criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    colorecho "Installing Postman"
+    local archive_name
+    if [[ $(uname -m) = 'x86_64' ]]; then
+        archive_name="linux_64"
+    elif [[ $(uname -m) = 'aarch64' ]]; then
+        archive_name="linux_arm64"
     fi
+    curl -L "https://dl.pstmn.io/download/latest/${archive_name}" -o /tmp/postman.tar.gz
+    tar -xf /tmp/postman.tar.gz --directory /tmp
+    rm /tmp/postman.tar.gz
+    mv /tmp/Postman /tmp/postman
+    mv /tmp/postman /opt/tools/postman
+    ln -s /opt/tools/postman/app/Postman /opt/tools/bin/postman
+    fapt libsecret-1-0
+    add-history postman
+    add-test-command "which postman"
+    add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }
