@@ -1372,7 +1372,7 @@ function install_smbclientng() {
     pipx install git+https://github.com/p0dalirius/smbclient-ng
     add-history smbclient-ng
     add-test-command "smbclientng --help"
-    add-to-list "smbclient-ng,https://github.com/p0dalirius/smbclient-ng,smbclient-ng, a fast and user friendly way to interact with SMB shares."
+    add-to-list "smbclient-ng,https://github.com/p0dalirius/smbclient-ng,smbclient-ng is a fast and user friendly way to interact with SMB shares."
 }
 
 # Package dedicated to internal Active Directory tools
