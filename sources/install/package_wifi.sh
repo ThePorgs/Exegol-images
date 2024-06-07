@@ -26,6 +26,7 @@ function install_wifi_apt_tools() {
 }
 
 function install_pyrit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pyrit"
     # can't install with python3/python2 with latest changes.
     # steps to remove temp fix:
