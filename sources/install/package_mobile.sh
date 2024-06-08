@@ -86,20 +86,18 @@ function install_objection() {
 function install_androguard() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing androguard"
-    # androguard not installing on ARM64 (https://github.com/androguard/androguard/issues/1027), skipping temporarily
-    local temp_fix_limit="2024-05-20"
+    pipx install --system-site-packages androguard
+    # https://github.com/androguard/androguard/issues/1060
+    local temp_fix_limit="2024-07-07"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting." # check if issue was resolved by androguard team
-    fi
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        pipx install --system-site-packages androguard
-        add-history androguard
-        add-test-command "androguard --version"
-        add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications"
+      criticalecho "Temp fix expired. Exiting."
     else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+      rm -rf /root/.local/share/pipx/venvs/androguard/lib/python3.*/site-packages/oscrypto*
+      pipx inject androguard git+https://github.com/wbond/oscrypto@master
     fi
+    add-history androguard
+    add-test-command "androguard --version"
+    add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications"
 }
 
 function install_mobsf() {
@@ -110,7 +108,7 @@ function install_mobsf() {
     cd /opt/tools/MobSF || exit
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
     #  in the mean time, switching to manual venv and an alias for mobsf
-    local temp_fix_limit="2024-05-20"
+    local temp_fix_limit="2024-06-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
     else

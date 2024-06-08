@@ -402,7 +402,7 @@ function install_oneforall() {
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
     # https://github.com/shmilylty/OneForAll/pull/340
-    local temp_fix_limit="2024-05-20"
+    local temp_fix_limit="2024-06-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -846,6 +846,47 @@ function install_sslscan() {
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
 }
 
+function install_jsluice() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing jsluice"
+    go install -v github.com/BishopFox/jsluice/cmd/jsluice@latest
+    asdf reshim golang
+    add-history jsluice
+    add-test-command "jsluice --help"
+    add-to-list "jsluice,https://github.com/BishopFox/jsluice,Extract URLs / paths / secrets and other interesting data from JavaScript source code."
+}
+
+function install_katana() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing katana"
+    go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+    asdf reshim golang
+    add-history katana
+    add-test-command "katana --help"
+    add-to-list "katana,https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
+}
+
+function install_postman() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Postman"
+    local archive_name
+    if [[ $(uname -m) = 'x86_64' ]]; then
+        archive_name="linux_64"
+    elif [[ $(uname -m) = 'aarch64' ]]; then
+        archive_name="linux_arm64"
+    fi
+    curl -L "https://dl.pstmn.io/download/latest/${archive_name}" -o /tmp/postman.tar.gz
+    tar -xf /tmp/postman.tar.gz --directory /tmp
+    rm /tmp/postman.tar.gz
+    mv /tmp/Postman /tmp/postman
+    mv /tmp/postman /opt/tools/postman
+    ln -s /opt/tools/postman/app/Postman /opt/tools/bin/postman
+    fapt libsecret-1-0
+    add-history postman
+    add-test-command "which postman"
+    add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -922,29 +963,10 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
+    install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
+    install_katana                  # A next-generation crawling and spidering framework
     install_postman                 # Postman - API platform for testing APIs
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
-}
-
-function install_postman() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing Postman"
-    local archive_name
-    if [[ $(uname -m) = 'x86_64' ]]; then
-        archive_name="linux_64"
-    elif [[ $(uname -m) = 'aarch64' ]]; then
-        archive_name="linux_arm64"
-    fi
-    curl -L "https://dl.pstmn.io/download/latest/${archive_name}" -o /tmp/postman.tar.gz
-    tar -xf /tmp/postman.tar.gz --directory /tmp
-    rm /tmp/postman.tar.gz
-    mv /tmp/Postman /tmp/postman
-    mv /tmp/postman /opt/tools/postman
-    ln -s /opt/tools/postman/app/Postman /opt/tools/bin/postman
-    fapt libsecret-1-0
-    add-history postman
-    add-test-command "which postman"
-    add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }

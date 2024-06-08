@@ -69,7 +69,6 @@ function install_checksec-py() {
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip install .
-    pip install --upgrade lief==0.13.2
     deactivate
     add-aliases checksec
     add-history checksec
