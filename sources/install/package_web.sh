@@ -866,6 +866,27 @@ function install_katana() {
     add-to-list "katana,https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
 }
 
+function install_postman() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Postman"
+    local archive_name
+    if [[ $(uname -m) = 'x86_64' ]]; then
+        archive_name="linux_64"
+    elif [[ $(uname -m) = 'aarch64' ]]; then
+        archive_name="linux_arm64"
+    fi
+    curl -L "https://dl.pstmn.io/download/latest/${archive_name}" -o /tmp/postman.tar.gz
+    tar -xf /tmp/postman.tar.gz --directory /tmp
+    rm /tmp/postman.tar.gz
+    mv /tmp/Postman /tmp/postman
+    mv /tmp/postman /opt/tools/postman
+    ln -s /opt/tools/postman/app/Postman /opt/tools/bin/postman
+    fapt libsecret-1-0
+    add-history postman
+    add-test-command "which postman"
+    add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -944,6 +965,7 @@ function package_web() {
     install_sslscan                 # SSL/TLS scanner
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     install_katana                  # A next-generation crawling and spidering framework
+    install_postman                 # Postman - API platform for testing APIs
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
