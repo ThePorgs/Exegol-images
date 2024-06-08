@@ -402,7 +402,7 @@ function install_oneforall() {
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
     # https://github.com/shmilylty/OneForAll/pull/340
-    local temp_fix_limit="2024-05-20"
+    local temp_fix_limit="2024-06-20"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -846,6 +846,16 @@ function install_sslscan() {
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
 }
 
+function install_katana() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing katana"
+    go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+    asdf reshim golang
+    add-history katana
+    add-test-command "katana --help"
+    add-to-list "katana,https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -922,6 +932,7 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
+    install_katana                  # A next-generation crawling and spidering framework
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."

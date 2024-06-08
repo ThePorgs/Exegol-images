@@ -185,6 +185,20 @@ function install_creds() {
     add-to-list "creds,https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement. This document has several products default login/password gathered from multiple sources."
 }
 
+function install_uploader() {
+    colorecho "Installing Uploader"
+    git -C /opt/tools/ clone --depth 1 https://github.com/Frozenka/uploader.git 
+    cd /opt/tools/uploader || exit
+    python3 -m venv --system-site-package ./venv
+    source ./venv/bin/activate
+    pip install -r requirements.txt
+    deactivate
+    add-aliases uploader
+    add-history uploader
+    add-test-command "uploader --help"
+    add-to-list "uploader,https://github.com/Frozenka/uploader,Tool for quickly downloading files to a remote machine based on the target operating system"
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -205,6 +219,7 @@ function package_misc() {
     install_yt-dlp          # A youtube-dl fork with additional features and fixes
     install_cyberchef       # A web based toolbox
     install_creds           # A default credentials vault
+    install_uploader        # uploader for fast file upload
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."
