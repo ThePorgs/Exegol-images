@@ -856,6 +856,16 @@ function install_jsluice() {
     add-to-list "jsluice,https://github.com/BishopFox/jsluice,Extract URLs / paths / secrets and other interesting data from JavaScript source code."
 }
 
+function install_katana() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing katana"
+    go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+    asdf reshim golang
+    add-history katana
+    add-test-command "katana --help"
+    add-to-list "katana,https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -933,6 +943,7 @@ function package_web() {
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
+    install_katana                  # A next-generation crawling and spidering framework
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."

@@ -6,26 +6,32 @@ source common.sh
 function install_forensic_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing forensic apt tools"
-    fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
+    fapt pst-utils foremost testdisk fdisk sleuthkit
     
-    add-history binwalk
     add-history foremost
     add-history testdisk
     add-history fdisk
     
     add-test-command "pst2ldif -V"      # Reads a PST and prints the tree structure to the console
-    add-test-command "binwalk --help"   # Tool to find embedded files
     add-test-command "foremost -V"      # Alternative to binwalk
     add-test-command "testdisk --help"  # Recover lost partitions
     add-test-command "fdisk --help"     # Creating and manipulating disk partition table
     add-test-command "blkcalc -V"       # Collection of command line tools that allow you to investigate disk images
 
     add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
-    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
     add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers / footers / and internal data structures."
     add-to-list "testdisk,https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
     add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool"
     add-to-list "sleuthkit,https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
+}
+
+function install_binwalk() {
+    colorecho "Installing binwalk"
+    fapt squashfs-tools binwalk
+    add-aliases binwalk
+    add-history binwalk
+    add-test-command "binwalk --help"
+    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
 }
 
 function install_volatility2() {
@@ -119,6 +125,7 @@ function package_forensic() {
     local end_time
     start_time=$(date +%s)
     install_forensic_apt_tools
+    install_binwalk                 # Tool to find embedded files
     install_volatility2             # Memory analysis tool
     install_volatility3             # Memory analysis tool v2
     install_trid                    # filetype detection tool
