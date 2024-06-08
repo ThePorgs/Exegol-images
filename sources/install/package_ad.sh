@@ -1370,6 +1370,7 @@ function install_smbclientng() {
     add-history smbclient-ng
     add-test-command "smbclientng --help"
     add-to-list "smbclient-ng,https://github.com/p0dalirius/smbclient-ng,smbclient-ng is a fast and user friendly way to interact with SMB shares."
+}
 
 function install_conpass() {
     # CODE-CHECK-WHITELIST=add-aliases
