@@ -301,17 +301,6 @@ function install_java() {
     add-test-command "java --version"
 }
 
-function install_java21() {
-    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
-    colorecho "Installing java 11"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
-
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-}
-
 function add_debian_repository_components() {
     # add non-free non-free-firmware contrib repository
     # adding at the end of the line start with Components of the repository to add
@@ -442,7 +431,6 @@ function package_base() {
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
     install_java                                        # Java language
-    # java11 install, and java17 as default
     install_go                                          # Golang language
     install_ohmyzsh                                     # Awesome shell
     install_fzf                                         # Fuzzy finder
