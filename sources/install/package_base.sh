@@ -36,6 +36,7 @@ function install_rust_cargo() {
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
     sh /tmp/rustup.sh -y
     source "$HOME/.cargo/env"
+    rm /tmp/rustup.sh
     add-test-command "cargo --version"
 }
 
@@ -114,6 +115,7 @@ function install_pyenv() {
     fapt git curl build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
+    rm /tmp/pyenv.run
     local v
     # add pyenv to PATH
     export PATH="/root/.pyenv/bin:$PATH"
@@ -180,6 +182,7 @@ function install_rvm() {
     rvm install ruby-3.1.2
     rvm get head
     gem update
+    rm /tmp/rvm.sh
     add-test-command "rvm --version"
 }
 
@@ -210,6 +213,7 @@ function install_ohmyzsh() {
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/agkozak/zsh-z
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
+    rm /tmp/ohmyzsh.sh
 }
 
 function install_pipx() {
@@ -230,6 +234,7 @@ function install_yarn() {
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
     apt-get update
     fapt yarn
+    rm /tmp/yarn.gpg.armored
     add-test-command "yarn --help"
 }
 
@@ -326,6 +331,7 @@ function install_java11() {
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
+    rm /tmp/openjdk11-jdk.tar.gz
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
@@ -345,6 +351,7 @@ function install_java21() {
     tar -xzf /tmp/openjdk21-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-21* /usr/lib/jvm/java-21-openjdk
+    rm /tmp/openjdk21-jdk.tar.gz
     add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
 }
 
@@ -416,6 +423,7 @@ function package_base() {
     # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh
+    rm /tmp/apt-fast-install.sh
     deploy_exegol
     install_exegol-history
     fapt software-properties-common
