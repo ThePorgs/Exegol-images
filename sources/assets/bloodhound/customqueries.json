@@ -1039,7 +1039,7 @@
 			"queryList": [
 				{
 					"final": true,
-					"query": "MATCH p=(u:User {enabled, TRUE, plaintext: TRUE})-[:MemberOf*1..]->(g:Group {highvalue: TRUE}) RETURN p",
+					"query": "MATCH p=(u:User {enabled: TRUE, plaintext: TRUE})-[:MemberOf*1..]->(g:Group {highvalue: TRUE}) RETURN p",
 					"allowCollapse": true
 				}
 			]

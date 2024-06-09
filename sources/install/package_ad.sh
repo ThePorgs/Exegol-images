@@ -1363,6 +1363,24 @@ function install_sccmwtf() {
     add-to-list "sccmwtf,https://github.com/xpn/sccmwtf,This code is designed for exploring SCCM in a lab."
 }
 
+function install_smbclientng() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing smbclient-ng"
+    pipx install git+https://github.com/p0dalirius/smbclient-ng
+    add-history smbclient-ng
+    add-test-command "smbclientng --help"
+    add-to-list "smbclient-ng,https://github.com/p0dalirius/smbclient-ng,smbclient-ng is a fast and user friendly way to interact with SMB shares."
+}
+
+function install_conpass() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing conpass"
+    pipx install --system-site-packages git+https://github.com/login-securite/conpass
+    add-history conpass
+    add-test-command "conpass --help"
+    add-to-list "conpass,https://github.com/login-securite/conpass,Python tool for continuous password spraying taking into account the password policy."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1370,6 +1388,7 @@ function package_ad() {
     local end_time
     start_time=$(date +%s)
     install_ad_apt_tools
+    install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
@@ -1465,7 +1484,8 @@ function package_ad() {
     # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
     install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
     install_sccmwtf                # This code is designed for exploring SCCM in a lab.
-    install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
+    install_smbclientng
+    install_conpass                # Python tool for continuous password spraying taking into account the password policy.
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."

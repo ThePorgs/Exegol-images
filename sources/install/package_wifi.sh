@@ -26,6 +26,7 @@ function install_wifi_apt_tools() {
 }
 
 function install_pyrit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pyrit"
     # can't install with python3/python2 with latest changes.
     # steps to remove temp fix:
@@ -53,7 +54,8 @@ function install_pyrit() {
     python2 setup.py build
     python2 setup.py install
     deactivate
-    add-aliases pyrit
+    # Copy the binary because Wifite can't find it with a symlink - https://github.com/ThePorgs/Development/issues/183
+    cp ./venv/bin/pyrit /opt/tools/bin/
     add-history pyrit
     add-test-command "pyrit help"
     add-to-list "pyrit,https://github.com/JPaulMora/Pyrit,Python-based WPA/WPA2-PSK attack tool."
