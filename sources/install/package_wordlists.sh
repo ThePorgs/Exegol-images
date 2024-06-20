@@ -64,6 +64,7 @@ function install_seclists() {
 }
 
 function install_onelistforall() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing onelistforall"
     cd /opt/seclists/Discovery/Web-Content || exit
     wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallmicro.txt
