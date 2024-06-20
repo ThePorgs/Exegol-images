@@ -63,6 +63,16 @@ function install_seclists() {
     add-to-list "seclists,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
 }
 
+function install_onelistforall() {
+    colorecho "Installing onelistforall"
+    cd /opt/seclists/Discovery/Web-Content || exit
+    wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallmicro.txt
+    wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallshort.txt
+    add-test-command "[[ -f '/opt/seclists/Discovery/Web-Content/onelistforallshort.txt' ]]"
+    add-to-list "onelistforall,https://github.com/six2dez/OneListForAll,Rockyou for web fuzzing"
+}
+
+
 function install_pass_station() {
     colorecho "Installing Pass Station"
     rvm use 3.1.2@pass-station --create # currently does not support a version higher than 3.1.2
@@ -122,6 +132,7 @@ function package_wordlists() {
     install_cewl                    # Wordlist generator
     install_cewler                  # cewl alternative in Python
     install_seclists                # Awesome wordlists
+    install_onelistforall           # Rockyou for web pentest
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
