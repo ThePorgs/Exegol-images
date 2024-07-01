@@ -9,9 +9,6 @@ function install_network_apt_tools() {
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
     rdesktop xtightvncviewer hydra mariadb-client redis-tools
-    fapt remmina remmina-plugin-rdp remmina-plugin-secret
-    # remmina-plugin-spice need build ?
-    # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
 
     add-history wireshark
     add-history tshark
@@ -40,7 +37,6 @@ function install_network_apt_tools() {
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
-    add-test-command "remmina --help"                          # Redis protocol
 
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
@@ -57,7 +53,6 @@ function install_network_apt_tools() {
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
     add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
-    add-to-list "remmina,https://github.com/FreeRDP/Remmina,Remote desktop client."
 }
 
 function install_proxychains() {
@@ -78,11 +73,27 @@ function install_proxychains() {
     add-to-list "proxychains,https://github.com/rofl0r/proxychains,Proxy chains - redirect connections through proxy servers."
 }
 
+function install_remmina() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    fapt remmina remmina-plugin-rdp remmina-plugin-secret
+    # remmina-plugin-spice need build ?
+    # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
+
+    # Create default remmina config
+    mkdir -p /root/.config/remmina
+    # Use the same keymap for RDP than the local client
+    echo "[remmina_pref]
+rdp_use_client_keymap=1" > /root/.config/remmina/remmina.pref
+
+    add-test-command "remmina --help"
+    add-to-list "remmina,https://github.com/FreeRDP/Remmina,Remote desktop client."
+}
+
 function install_nmap() {
     colorecho "Installing nmap"
     # echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
     # nmap in main repo is a latest version
-    apt-get update
+    # apt-get update
     fapt nmap
     add-aliases nmap
     add-history nmap
