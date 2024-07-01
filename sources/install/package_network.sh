@@ -74,6 +74,7 @@ function install_proxychains() {
 }
 
 function install_remmina() {
+    colorecho "Installing remmina"
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     fapt remmina remmina-plugin-rdp remmina-plugin-secret
     # remmina-plugin-spice need build ?
