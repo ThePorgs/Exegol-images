@@ -507,7 +507,7 @@ function package_base() {
 
     LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
     # shellcheck disable=SC2016
-    sed -i "${LINE}"'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+    sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
     ((LINE++))
     sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
     add-test-command "openvpn --version"
@@ -524,7 +524,7 @@ function package_base() {
     mkdir -p ~/.local/share/tldr
     tldr -u
 
-    # NVM (install in conctext)
+    # NVM (install in context)
     zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
     # Set Global config path to vendor
