@@ -887,6 +887,14 @@ function install_postman() {
     add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }
 
+function install_toboggan() {
+    colorecho "Installing Toboggan"
+    pipx install 'git+https://github.com/n3rada/toboggan.git'
+    add-history toboggan
+    add-test-command "toboggan -h"
+    add-to-list "toboggan,https://github.com/n3rada/toboggan, Toboggan is your go-to tool that wraps your remote command execution into a semi-interactive shell"
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -966,6 +974,7 @@ function package_web() {
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     install_katana                  # A next-generation crawling and spidering framework
     install_postman                 # Postman - API platform for testing APIs
+    install_toboggan                # Toboggan is a wrapper to change your remote command execution into a semi-interactive shell
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
