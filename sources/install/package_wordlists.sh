@@ -36,7 +36,7 @@ function install_cewler() {
     colorecho "Installing cewler"
     pipx install --system-site-packages cewler
     # https://github.com/roys/cewler/pull/5
-    local temp_fix_limit="2024-06-20"
+    local temp_fix_limit="2024-09-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
