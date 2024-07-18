@@ -76,7 +76,8 @@ function install_pass_station() {
 
 function install_username-anarchy() {
     colorecho "Installing Username-Anarchy"
-    git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
+    #git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
+    git -C /opt/tools/ clone https://github.com/urbanadventurer/username-anarchy
     cd /opt/tools/username-anarchy || exit
     # https://github.com/urbanadventurer/username-anarchy/pull/3
     local temp_fix_limit="2025-04-01"
