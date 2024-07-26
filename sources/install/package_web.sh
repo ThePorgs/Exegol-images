@@ -54,9 +54,18 @@ function install_wfuzz() {
     colorecho "Installing wfuzz"
     apt --purge remove python3-pycurl -y
     fapt libcurl4-openssl-dev libssl-dev
-    pip3 install pycurl wfuzz
+    #pip3 install pycurl wfuzz  # uncomment when issue is fix
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
+    # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
+    local temp_fix_limit="2024-09-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install pycurl  # remove this line and uncomment the first when issue is fix
+      sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
+      pip3 install /tmp/wfuzz/
+    fi
     mv /tmp/wfuzz/wordlist/* /usr/share/wfuzz
     rm -rf /tmp/wfuzz
     add-history wfuzz
