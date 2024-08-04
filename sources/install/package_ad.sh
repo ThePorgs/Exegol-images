@@ -1065,6 +1065,13 @@ function install_rusthound-ce() {
     cd /opt/tools/RustHound-CE || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
+    # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
+    local temp_fix_limit="2024-09-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      cargo update -p time
+    fi
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
