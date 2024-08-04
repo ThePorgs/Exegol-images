@@ -76,7 +76,15 @@ function install_proxmark3() {
     colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3OTHER (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
     colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmark3/"
     fapt --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev liblz4-dev
-    git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
+    #git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
+    # https://github.com/RfidResearchGroup/proxmark3/issues/2440
+    local temp_fix_limit="2024-09-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone https://github.com/RfidResearchGroup/proxmark3.git
+      git -C /opt/tools/proxmark3 checkout 4e0d4d3ad454285e62fc1a22c2ef3adda508ed01
+    fi
     cd /opt/tools/proxmark3 || exit
     make clean
     make all PLATFORM=PM3OTHER
@@ -84,7 +92,7 @@ function install_proxmark3() {
     add-aliases proxmark3
     add-history proxmark3
     add-test-command "proxmark3 --version"
-    add-to-list "proxmark3,https://github.com/Proxmark/proxmark3,Open source RFID research toolkit."
+    add-to-list "proxmark3,https://github.com/RfidResearchGroup/proxmark3,Open source RFID research toolkit."
 }
 
 # Package dedicated to RFID/NCF pentest tools
