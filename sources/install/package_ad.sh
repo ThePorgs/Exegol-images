@@ -1070,7 +1070,7 @@ function install_rusthound-ce() {
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      cargo update -p time
+      cargo update -p time@0.3.28
     fi
     cargo build --release
     # Clean dependencies used to build the binary
