@@ -20,7 +20,14 @@ function install_metasploit() {
     # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
-    git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
+    #git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
+    # fixes issue where "msfvenom --list platforms" didn't work and raised Error: No options
+    local temp_fix_limit="2024-09-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools clone --depth 1 --branch 6.4.20 https://github.com/rapid7/metasploit-framework.git
+    fi
     cd /opt/tools/metasploit-framework || exit
     rvm use 3.2.2@metasploit --create
     gem install bundler
@@ -44,7 +51,7 @@ function install_metasploit() {
     cp -r /var/lib/postgresql/.msf4 /root
 
     add-aliases metasploit
-    add-test-command "msfconsole --help"
+    add-test-command "msfconsole --version"
     add-test-command "msfdb --help"
     add-test-command "msfvenom --list platforms"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
