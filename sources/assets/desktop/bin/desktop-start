@@ -46,28 +46,28 @@ echo "Starting Exegol desktop with $mode"
 
 display_id=$(find_available_display)
 
-echo "Using display :$display_id"
+echo "Using display :$display_id" | tee -a /var/log/exegol/desktop_vnc.log
 
 case "$mode" in
   vnc)
     if [[ "$host" == "127.0.0.1" || "$host" == "localhost" ]]; then
         # In network host mode, vncserver can directly be accessed on localhost interface
-        vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+        vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id" &>> /var/log/exegol/desktop_vnc.log
     elif [[ "$host" == "0.0.0.0" ]]; then
         # When opening VNC on every interface, vncserver can be exposed directly
-        vncserver -localhost "no" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+        vncserver -localhost "no" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id" &>> /var/log/exegol/desktop_vnc.log
     else
         # When a specific interface is supplied, socat must be used to expose the service on a single IP
         vnc_port=$(comm -23 <(seq 49152 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1)  # Find a random available port
-        vncserver -localhost "yes" -rfbport "$vnc_port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
+        vncserver -localhost "yes" -rfbport "$vnc_port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id" &>> /var/log/exegol/desktop_vnc.log
         socat TCP4-LISTEN:"$port",fork,bind="$host" TCP4:127.0.0.1:"$vnc_port" &
     fi
 
     ;;
   http)
     random_port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
-    vncserver -localhost "yes" -rfbport "$random_port" -geometry "1920x1080" -SecurityTypes "Plain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id" && \
-      websockify -D --web /usr/share/novnc/ "$host:$port" "127.0.0.1:$random_port"
+    vncserver -localhost "yes" -rfbport "$random_port" -geometry "1920x1080" -SecurityTypes "Plain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"  &>> /var/log/exegol/desktop_vnc.log && \
+      websockify -D --web /usr/share/novnc/ "$host:$port" "127.0.0.1:$random_port" &>> /var/log/exegol/desktop_web.log
     ;;
 esac
 
