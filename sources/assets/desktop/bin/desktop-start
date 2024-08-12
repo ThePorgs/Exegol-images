@@ -42,6 +42,12 @@ host=${EXEGOL_DESKTOP_HOST:-"$HOSTNAME"}
 port=${EXEGOL_DESKTOP_PORT:-"6336"}
 username=${EXEGOL_USERNAME:-"root"}
 
+# Clear X11 env from host sharing (if any)
+unset XDG_RUNTIME_DIR
+unset XDG_SESSION_TYPE
+unset DISPLAY
+unset WAYLAND_DISPLAY
+
 echo "Starting Exegol desktop with $mode"
 
 display_id=$(find_available_display)
