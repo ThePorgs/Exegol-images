@@ -420,6 +420,8 @@ function package_base() {
     install_exegol-history
     fapt software-properties-common
     add_debian_repository_components
+    cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
+    cp -v /root/sources/assets/apt/preferences.d/* /etc/apt/preferences.d/
     apt-get update
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
