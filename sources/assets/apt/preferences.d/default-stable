@@ -1,4 +1,12 @@
 Package: *
+Pin: release a=stable-security
+Pin-Priority: 750
+
+Package: *
+Pin: release a=stable-updates
+Pin-Priority: 710
+
+Package: *
 Pin: release a=stable
 Pin-Priority: 700
 
@@ -8,4 +16,4 @@ Pin-Priority: 650
 
 Package: *
 Pin: release a=unstable
-Pin-Priority: 600
+Pin-Priority: 200
