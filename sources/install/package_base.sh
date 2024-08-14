@@ -51,10 +51,19 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    asdf install golang latest
     # 1.19 needed by sliver
     asdf install golang 1.19
-    asdf global golang latest
+    #asdf install golang latest
+    #asdf global golang latest
+    # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
+    local temp_fix_limit="2024-09-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      asdf install golang 1.22.2
+      asdf global golang 1.22.2
+    fi
+
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
 #        return
 #    fi
