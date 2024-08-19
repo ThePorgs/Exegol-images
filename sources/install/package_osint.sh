@@ -499,7 +499,7 @@ function install_blackbird() {
 function install_sherlock() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sherlock"
-    pipx install git+https://github.com/sherlock-project/sherlock
+    pipx install sherlock-project
     add-history sherlock
     add-test-command "sherlock --help"
     add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks."
