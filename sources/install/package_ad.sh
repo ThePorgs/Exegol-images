@@ -1220,7 +1220,6 @@ function install_netexec() {
     mkdir -p ~/.nxc
     [[ -f ~/.nxc/nxc.conf ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec
     add-history netexec
     add-test-command "netexec --help"
