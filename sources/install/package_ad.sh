@@ -36,6 +36,14 @@ function install_asrepcatcher() {
     add-to-list "asrepcatcher,https://github.com/Yaxxine7/ASRepCatcher,Make your VLAN ASREProastable."
 }
 
+function install_adminer() {
+    colorecho "Installing AD_Miner"
+    pipx install --system-site-packages 'git+https://github.com/Mazars-Tech/AD_Miner.git'
+    add-history adminer
+    add-test-command "AD-miner -h"
+    add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner.git,ADMiner is an Active Directory audit tool that leverages cypher queries to crunch data from the BloodHound graph database (neo4j) and gives you a global overview of existing weaknesses."
+}
+
 function install_pretender() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Pretender"
