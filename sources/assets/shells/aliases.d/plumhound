@@ -1,2 +1,6 @@
-alias plumhound.py='/opt/tools/PlumHound/venv/bin/python3 /opt/tools/PlumHound/PlumHound.py'
-
+plumhound.py() {
+    mkdir -p /workspace/plumboundReport
+    cd /opt/tools/PlumHound || exit
+    /opt/tools/PlumHound/venv/bin/python3 /opt/tools/PlumHound/PlumHound.py "$@"
+    cd - || exit
+}
