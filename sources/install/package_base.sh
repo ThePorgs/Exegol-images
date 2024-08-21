@@ -432,7 +432,6 @@ function package_base() {
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
     python3 grc emacs-nox xsel xxd libnss3-tools 
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
-
     filesystem
     install_locales
     cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
