@@ -44,6 +44,20 @@ function install_adminer() {
     add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner.git,ADMiner is an Active Directory audit tool that leverages cypher queries to crunch data from the BloodHound graph database (neo4j) and gives you a global overview of existing weaknesses."
 }
 
+function install_plumhound() {
+    colorecho "Installing PlumHound"
+    git -C /opt/tools/ clone https://github.com/PlumHound/PlumHound.git
+    cd /opt/tools/PlumHound || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt 
+    deactivate
+    add-history plumhound
+    add-aliases plumhound
+    add-test-command "plumhound.py --help"
+    add-to-list "plumhound,https://github.com/PlumHound/PlumHound.git,BloodHoundAD Report Engine for Security Teams"
+}
+
 function install_pretender() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Pretender"
