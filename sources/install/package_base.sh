@@ -422,7 +422,7 @@ function package_base() {
     add_debian_repository_components
     apt-get update
     colorecho "Starting main programs install"
-    fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
+    fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget ripgrep\
     libffi-dev  zsh asciinema npm gem automake autoconf make cmake time gcc g++ file lsof \
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
@@ -430,7 +430,7 @@ function package_base() {
     nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
     logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 grc emacs-nox xsel xxd libnss3-tools
+    python3 grc emacs-nox xsel xxd libnss3-tools 
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem
