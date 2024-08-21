@@ -1,0 +1,1 @@
+PlumHound.py -x /opt/tools/PlumHound/tasks/default.tasks -s "bolt://127.0.0.1:7687" -u "neo4j" -p "xegol4thewin"
