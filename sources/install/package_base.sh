@@ -51,10 +51,19 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    asdf install golang latest
     # 1.19 needed by sliver
     asdf install golang 1.19
-    asdf global golang latest
+    #asdf install golang latest
+    #asdf global golang latest
+    # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
+    local temp_fix_limit="2024-09-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      asdf install golang 1.22.2
+      asdf global golang 1.22.2
+    fi
+
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
 #        return
 #    fi
@@ -420,6 +429,8 @@ function package_base() {
     install_exegol-history
     fapt software-properties-common
     add_debian_repository_components
+    cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
+    cp -v /root/sources/assets/apt/preferences.d/* /etc/apt/preferences.d/
     apt-get update
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget ripgrep\
@@ -506,7 +517,7 @@ function package_base() {
 
     LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
     # shellcheck disable=SC2016
-    sed -i "${LINE}"'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+    sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
     ((LINE++))
     sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
     add-test-command "openvpn --version"
@@ -523,7 +534,7 @@ function package_base() {
     mkdir -p ~/.local/share/tldr
     tldr -u
 
-    # NVM (install in conctext)
+    # NVM (install in context)
     zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
     # Set Global config path to vendor

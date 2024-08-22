@@ -339,6 +339,8 @@ function install_finalrecon() {
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # https://github.com/ThePorgs/Exegol-images/issues/372
+    pip3 install aiodns
     deactivate
     add-aliases finalrecon
     add-history finalrecon
@@ -495,16 +497,11 @@ function install_blackbird() {
 }
 
 function install_sherlock() {
-    # CODE-CHECK-WHITELIST=add-history
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sherlock"
-    git -C /opt/tools/ clone --depth 1 https://github.com/sherlock-project/sherlock
-    cd /opt/tools/sherlock || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases sherlock
-    add-test-command "sherlock.py --help"
+    pipx install git+https://github.com/sherlock-project/sherlock
+    add-history sherlock
+    add-test-command "sherlock --help"
     add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks."
 }
 

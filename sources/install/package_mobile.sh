@@ -88,7 +88,7 @@ function install_androguard() {
     colorecho "Installing androguard"
     pipx install --system-site-packages androguard
     # https://github.com/androguard/androguard/issues/1060
-    local temp_fix_limit="2024-07-07"
+    local temp_fix_limit="2024-09-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -108,7 +108,7 @@ function install_mobsf() {
     cd /opt/tools/MobSF || exit
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
     #  in the mean time, switching to manual venv and an alias for mobsf
-    local temp_fix_limit="2024-06-20"
+    local temp_fix_limit="2024-09-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
     else

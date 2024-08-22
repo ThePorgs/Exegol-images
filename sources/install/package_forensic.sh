@@ -57,10 +57,13 @@ function install_volatility2() {
 function install_volatility3() {
     colorecho "Installing volatility3"
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
-    pipx install --system-site-packages /opt/tools/volatility3
+    cd /opt/tools/volatility3 || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
     # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
-    # pipx doesn't support injection of a requirements file : https://github.com/pypa/pipx/issues/934
-    sed -e '/^#/d' -e '/^-r requirements-minimal.txt/d' /opt/tools/volatility3/requirements.txt | xargs pipx inject volatility3
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"

@@ -36,7 +36,7 @@ function install_cewler() {
     colorecho "Installing cewler"
     pipx install --system-site-packages cewler
     # https://github.com/roys/cewler/pull/5
-    local temp_fix_limit="2024-06-20"
+    local temp_fix_limit="2024-09-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -76,7 +76,8 @@ function install_pass_station() {
 
 function install_username-anarchy() {
     colorecho "Installing Username-Anarchy"
-    git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
+    #git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
+    git -C /opt/tools/ clone https://github.com/urbanadventurer/username-anarchy
     cd /opt/tools/username-anarchy || exit
     # https://github.com/urbanadventurer/username-anarchy/pull/3
     local temp_fix_limit="2025-04-01"
