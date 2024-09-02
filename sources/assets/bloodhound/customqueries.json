@@ -475,7 +475,7 @@
             "category": "Groups",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(m:Group)-[:ForceChangePassword]->(n:User) RETURN DISTINCT m[.]name,  COUNT(m[.]name) ORDER BY COUNT(m[.]name) DESC"
+                "query": "MATCH p=(m:Group)-[:ForceChangePassword]->(n:User) RETURN DISTINCT m.name, COUNT(m.name) ORDER BY COUNT(m.name) DESC"
             }]
         },
         {
@@ -993,7 +993,7 @@
             }]
         },
         {
-            "name": "Find Unsecured Certificate Templates - Domain Escalation (ESC9)",
+            "name": "Find insecure Certificate Templates - Domain Escalation (ESC9)",
             "category": "AD CS Domain Escalation",
             "queryList": [
                 {
@@ -1003,7 +1003,7 @@
             ]
         },
         {
-            "name": "Find Unsecured Certificate Templates - PKI (ESC9)",
+            "name": "Find insecure Certificate Templates - PKI (ESC9)",
             "category": "AD CS Domain Escalation",
             "queryList": [
                 {
