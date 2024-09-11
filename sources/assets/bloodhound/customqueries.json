@@ -33,19 +33,27 @@
             }]
         },
         {
-            "name": "Find objects containing names of some tier 0 software (SCCM, Veeam, ...)",
+            "name": "Find objects containing names/descriptions of some tier 0 software (Azure, SCCM, Veeam, ...)",
             "category": "High Value Targets",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (o) WHERE (o.samaccountname =~ '(?i).*(?:sccm|veeam|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*') RETURN o"
+                "query": "WITH '(?i).*(?:azure|sccm|mecm|veeam|acronis|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*' AS keyword MATCH (o {enabled: TRUE}) WHERE o.samaccountname =~ keyword OR o.description =~ keyword OR o.name =~ keyword RETURN o"
             }]
         },
         {
-            "name": "(Warning: edits the DB) Mark objects containing names of some tier 0 software (SCCM, Veeam, ...) as HVT",
+            "name": "(Warning: edits the DB) Mark objects containing names/descriptions of some tier 0 software (Azure, SCCM, Veeam, ...) as HVT",
             "category": "High Value Targets",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (o) WHERE (o.samaccountname =~ '(?i).*(?:sccm|veeam|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*') SET o.highvalue=TRUE RETURN o"
+                "query": "WITH '(?i).*(?:azure|sccm|mecm|veeam|acronis|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*' AS keyword MATCH (o {enabled: TRUE}) WHERE o.samaccountname =~ keyword OR o.description =~ keyword OR o.name =~ keyword SET o.highvalue=TRUE RETURN o"
+            }]
+        },
+        {
+            "name": "Find enabled computers containing SPNs with some tier 0 software (Azure, SCCM, Veeam, ...) as HVT",
+            "category": "High Value Targets",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH (c:Computer {enabled: TRUE}) WHERE SIZE(c.serviceprincipalnames) > 0 UNWIND [s IN c.serviceprincipalnames WHERE s =~ '(?i).*(?:azure|sccm|mecm|veeam|acronis|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*'] AS spn WITH c, spn WHERE SIZE(spn) > 0 return c"
             }]
         },
         {
