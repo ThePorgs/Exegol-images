@@ -56,7 +56,7 @@ function install_go() {
     #asdf install golang latest
     #asdf global golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
