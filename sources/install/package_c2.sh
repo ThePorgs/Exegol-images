@@ -138,7 +138,15 @@ function install_empire() {
 
 function install_havoc() {
     colorecho "Installing Havoc"
-    git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
+    # git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
+    # https://github.com/HavocFramework/Havoc/issues/516
+    local temp_fix_limit="2024-11-01"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
+      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
+    fi
     # Building Team Server
     cd /opt/tools/Havoc/teamserver || exit
     go mod download golang.org/x/sys
