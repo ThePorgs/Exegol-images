@@ -55,7 +55,7 @@ function install_metasploit() {
     add-test-command "msfdb --help"
     #add-test-command "msfvenom --list platforms"
     # Skipping msfvenom test because its currently broken: https://github.com/rapid7/metasploit-framework/issues/19384
-    local temp_fix_limit="2024-08-25"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     fi
