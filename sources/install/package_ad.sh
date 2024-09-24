@@ -191,6 +191,7 @@ function install_bloodhound-ce() {
     cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
     zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
     cd /opt/tools/BloodHound-CE/src/ || exit
+    asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
