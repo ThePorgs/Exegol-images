@@ -203,6 +203,7 @@ function install_wesng() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wesng"
     pipx install --system-site-packages git+https://github.com/bitsadmin/wesng
+    pipx inject wesng chardet
     add-history wesng
     add-test-command "wes --help"
     add-to-list "wesng,https://github.com/bitsadmin/wesng,WES-NG is a tool based on the output of Windows's systeminfo utility which provides the list of vulnerabilities the OS is vulnerable to including any exploits for these vulnerabilities."
