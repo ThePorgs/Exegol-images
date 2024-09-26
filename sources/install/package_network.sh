@@ -177,7 +177,8 @@ function install_eaphammer() {
     colorecho "Installing eaphammer"
     git -C /opt/tools clone --depth 1 https://github.com/s0lst1c3/eaphammer.git
     cd /opt/tools/eaphammer || exit
-    xargs apt install -y < kali-dependencies.txt
+    grep -v 'python-pywebcopy' kali-dependencies.txt | xargs apt install -y
+    pipx install pywebcopy
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r pip.req
