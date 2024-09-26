@@ -51,7 +51,12 @@ function install_uberfile() {
 
 function install_arsenal() {
     colorecho "Installing arsenal"
-    pipx install --system-site-packages git+https://github.com/Orange-Cyberdefense/arsenal
+    git -C /opt/tools/ clone --depth 1 https://github.com/Orange-Cyberdefense/arsenal
+    cd /opt/tools/arsenal || exit
+    python3 -m venv --system-site-packages ./venv/
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases arsenal
     add-history arsenal
     add-test-command "arsenal --version"
