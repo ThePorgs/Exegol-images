@@ -20,22 +20,19 @@ function install_metasploit() {
     # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
-    #git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
-    # fixes issue where "msfvenom --list platforms" didn't work and raised Error: No options
-    local temp_fix_limit="2024-11-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git -C /opt/tools clone --depth 1 --branch 6.4.20 https://github.com/rapid7/metasploit-framework.git
-    fi
-    cd /opt/tools/metasploit-framework || exit
-    rvm use 3.2.2@metasploit --create
+    git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
+    cd /opt/tools/metasploit-framework || exit  # rvm gemset ruby-3.1.5@metasploit-framework should be auto setup here
+
+    # install dep manager
     gem install bundler
     bundle install
-    # Add this dependency to make the pattern_create.rb script work
+
+    # Add missing deps
+    gem install rex
     gem install rex-text
-    # fixes 'You have already activated timeout 0.3.1, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    local temp_fix_limit="2024-11-01"
+
+    # fixes 'You have already activated timeout 0.2.0, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
+    local temp_fix_limit="2025-06-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -47,18 +44,14 @@ function install_metasploit() {
     fapt postgresql
     cp -r /root/.bundle /var/lib/postgresql
     chown -R postgres:postgres /var/lib/postgresql/.bundle
-    sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && cd /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
+    chmod -R o+rx /opt/tools/metasploit-framework/
+    sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
     cp -r /var/lib/postgresql/.msf4 /root
 
     add-aliases metasploit
     add-test-command "msfconsole --version"
     add-test-command "msfdb --help"
-    #add-test-command "msfvenom --list platforms"
-    # Skipping msfvenom test because its currently broken: https://github.com/rapid7/metasploit-framework/issues/19384
-    local temp_fix_limit="2024-11-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    fi
+    add-test-command "msfvenom --list platforms"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 

@@ -189,7 +189,8 @@ function install_rvm() {
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
-    rvm install ruby-3.1.2
+    rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
+    rvm install ruby-3.1.5  # needed metasploit-framework
     rvm get head
     gem update
     add-test-command "rvm --version"
