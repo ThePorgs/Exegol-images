@@ -101,21 +101,6 @@ function install_ldapdomaindump() {
     add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service"
 }
 
-function install_crackmapexec() {
-    colorecho "Installing CrackMapExec"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
-    pipx install --system-site-packages /opt/tools/CrackMapExec/
-    mkdir -p ~/.cme
-    [[ -f ~/.cme/cme.conf ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
-    cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
-    # below is for having the ability to check the source code when working with modules and so on
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
-    add-aliases crackmapexec
-    add-history crackmapexec
-    add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/Porchetta-Industries/CrackMapExec,Network scanner."
-}
-
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install --system-site-packages git+https://github.com/fox-it/BloodHound.py
@@ -1236,7 +1221,6 @@ function install_netexec() {
     mkdir -p ~/.nxc
     [[ -f ~/.nxc/nxc.conf ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec
     add-history netexec
     add-test-command "netexec --help"
@@ -1403,6 +1387,15 @@ function install_conpass() {
     add-to-list "conpass,https://github.com/login-securite/conpass,Python tool for continuous password spraying taking into account the password policy."
 }
 
+function install_adminer() {
+    colorecho "Installing adminer"
+    pipx install git+https://github.com/Mazars-Tech/AD_Miner
+    add-aliases adminer
+    add-history adminer
+    add-test-command "adminer --help"
+    add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner,Active Directory audit tool that leverages cypher queries."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1414,7 +1407,6 @@ function package_ad() {
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
-    install_crackmapexec            # Network scanner
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
     install_bloodhound-py           # ingestor for legacy BloodHound
@@ -1508,6 +1500,7 @@ function package_ad() {
     install_sccmwtf                # This code is designed for exploring SCCM in a lab.
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
+    install_adminer
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."
