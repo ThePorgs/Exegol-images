@@ -51,10 +51,13 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang
-    asdf install golang latest
     # 1.19 needed by sliver
     asdf install golang 1.19
-    asdf global golang latest
+    # 1.23 needed by BloodHound-CE
+    asdf install golang 1.23.0
+    # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
+    asdf install golang 1.22.2
+    asdf global golang 1.22.2
     add-test-command "go version"
 }
 
@@ -157,7 +160,8 @@ function install_rvm() {
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
-    rvm install ruby-3.1.2
+    rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
+    rvm install ruby-3.1.5  # needed metasploit-framework
     rvm get head
     gem update
     add-test-command "rvm --version"
@@ -373,6 +377,8 @@ function package_base() {
     install_exegol-history
     fapt software-properties-common
     add_debian_repository_components
+    cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
+    cp -v /root/sources/assets/apt/preferences.d/* /etc/apt/preferences.d/
     apt-get update
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
@@ -454,7 +460,7 @@ function package_base() {
 
     LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
     # shellcheck disable=SC2016
-    sed -i "${LINE}"'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+    sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
     ((LINE++))
     sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
     add-test-command "openvpn --version"
@@ -471,7 +477,7 @@ function package_base() {
     mkdir -p ~/.local/share/tldr
     tldr -u
 
-    # NVM (install in conctext)
+    # NVM (install in context)
     zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
     # Set Global config path to vendor
