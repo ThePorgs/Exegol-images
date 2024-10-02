@@ -894,6 +894,19 @@ function install_postman() {
     add-history postman
     add-test-command "which postman"
     add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
+
+function install_zap() {
+    colorecho "Installing ZAP"
+    mkdir /opt/tools/ZAP
+    # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
+    zap_version=$($(which curl) -s "https://www.zaproxy.org/download/" | grep -G -o "ZAP \d+(\.\d+)+" | head -1 | cut -d' ' -f2)
+    wget "https://github.com/zaproxy/zaproxy/releases/download/v${zap_version}/ZAP_${zap_version}_Linux.tar.gz" -O /tmp/zap.tar.gz
+    tar -xf /tmp/zap.tar.gz -C /opt/tools/
+    mv /opt/tools/ZAP_${zap_version} /opt/tools/ZAP/
+    add-aliases zap
+    add-history zap
+    add-test-command "which zap"
+    add-to-list "Zed Attack Proxy,https://www.zaproxy.org,Web application scanner."
 }
 
 # Package dedicated to applicative and active web pentest tools
@@ -975,6 +988,7 @@ function package_web() {
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     install_katana                  # A next-generation crawling and spidering framework
     install_postman                 # Postman - API platform for testing APIs
+    install_zap                     # Web App scanner
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
