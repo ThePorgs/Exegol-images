@@ -846,6 +846,20 @@ function install_sslscan() {
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
 }
 
+function install_zap() {
+    colorecho "Installing ZAP"
+    mkdir /opt/tools/ZAP
+    # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
+    zap_version=$($(which curl) -s "https://www.zaproxy.org/download/" | grep -G -o "ZAP \d+(\.\d+)+" | head -1 | cut -d' ' -f2)
+    wget "https://github.com/zaproxy/zaproxy/releases/download/v${zap_version}/ZAP_${zap_version}_Linux.tar.gz" -O /tmp/zap.tar.gz
+    tar -xf /tmp/zap.tar.gz -C /opt/tools/
+    mv /opt/tools/ZAP_${zap_version} /opt/tools/ZAP/
+    add-aliases zap
+    add-history zap
+    add-test-command "which zap"
+    add-to-list "Zed Attack Proxy,https://www.zaproxy.org,Web application scanner."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -922,6 +936,7 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
+    install_zap                     # Web App scanner
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
