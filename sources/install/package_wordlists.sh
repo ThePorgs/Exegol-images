@@ -106,6 +106,45 @@ function install_genusernames() {
     add-to-list "genusernames,https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."
 }
 
+function install_gensymlinks() {
+    # Create Symlinks of all wordlist on Exegol to /opt/list
+    colorecho "Generate Symlinks"
+    mkdir -p /opt/lists
+    ln -s /usr/share/dirb/wordlists/ /opt/lists
+    ln -s /opt/seclists/* /opt/lists
+    ln -s /usr/share/wfuzz/* /opt/lists
+}
+
+function install_onelistforall() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing onelistforall"
+    wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallmicro.txt   -P /opt/lists
+    wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallshort.txt   -P /opt/lists
+    add-test-command "[[ -f '/opt/lists/onelistforallshort.txt' ]]"
+    add-to-list "onelistforall,https://github.com/six2dez/OneListForAll,Rockyou for web fuzzing"
+}
+
+function install_hashcat_rules(){
+    colorecho "Add Hashcat rules"
+     wget https://github.com/NSAKEY/nsa-rules/blob/master/_NSAKEY.v2.dive.rule  -P /usr/share/hashcat/rules/
+     wget https://github.com/praetorian-inc/Hob0Rules/blob/master/d3adhob0.rule   -P /usr/share/hashcat/rules/
+     wget https://github.com/praetorian-inc/Hob0Rules/blob/master/hob064.rule   -P  /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz    -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz   -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz   -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz  -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.one.royce.rule.gz   -P  /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz  -P  /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.random.royce.rule.gz   -P   /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.one.gz -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.popular.rule.gz -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.random.rule.gz  -P /usr/share/hashcat/rules/
+     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.hybrid.rule.gz -P /usr/share/hashcat/rules/
+}
+
+
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
     set_env
@@ -119,6 +158,9 @@ function package_wordlists() {
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
+    install_gensymlinks
+    install_onelistforall
+    install_hashcat_rules
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package wordlists completed in $elapsed_time seconds."
