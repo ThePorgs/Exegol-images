@@ -1,2 +1,2 @@
-alias tun0='ip a sh dev tun0 | grep -oP "(?:[0-9]{1,3}\.){3}[0-9]{1,3}" | tr -d "\n" | xclip -sel c; tun0ip=$(xsel -ob); echo "\033[1;32m[+]\033[0m Copié avec succès \033[1;32m$tun0ip\033[0m (tun0) dans le presse-papiers !"'
-alias eth0='ip a sh dev eth0 | grep -oP "(?<=inet\s)(?:[0-9]{1,3}\.){3}[0-9]{1,3}" | head -n 1 | xclip -sel c; eth0ip=$(xsel -ob); echo "\033[1;32m[+]\033[0m Copié avec succès \033[1;32m$eth0ip\033[0m (eth0) dans le presse-papiers !"'
+alias tun0='ip a sh dev tun0 | grep -oP "(?:[0-9]{1,3}\.){3}[0-9]{1,3}" | tr -d "\n"'
+alias eth0='ip a sh dev eth0 | grep -oP "(?<=inet\s)(?:[0-9]{1,3}\.){3}[0-9]{1,3}" | head -n 1'
