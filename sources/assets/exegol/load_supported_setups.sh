@@ -275,6 +275,14 @@ function _trust_ca_cert_in_firefox() {
   certutil -A -n "$2" -t "TC" -i "$1" -d ~/.mozilla/firefox/*.Exegol
 }
 
+function deploy_arsenal_cheatsheet () {
+# Function to add custom cheatsheets into arsenal
+  colorecho "Deploying custom arsenal cheatsheet"
+  if [[ ! -d "$MY_SETUP_PATH/arsenal-cheats" ]]; then
+      mkdir -p "$MY_SETUP_PATH/arsenal-cheats"
+  fi
+}
+
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
@@ -292,6 +300,7 @@ deploy_python3
 deploy_firefox_addons
 deploy_bloodhound
 trust_ca_certs_in_firefox
+deploy_arsenal_cheatsheet
 
 run_user_setup
 

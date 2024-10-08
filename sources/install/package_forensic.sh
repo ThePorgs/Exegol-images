@@ -6,26 +6,32 @@ source common.sh
 function install_forensic_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing forensic apt tools"
-    fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
+    fapt pst-utils foremost testdisk fdisk sleuthkit
     
-    add-history binwalk
     add-history foremost
     add-history testdisk
     add-history fdisk
     
     add-test-command "pst2ldif -V"      # Reads a PST and prints the tree structure to the console
-    add-test-command "binwalk --help"   # Tool to find embedded files
     add-test-command "foremost -V"      # Alternative to binwalk
     add-test-command "testdisk --help"  # Recover lost partitions
     add-test-command "fdisk --help"     # Creating and manipulating disk partition table
     add-test-command "blkcalc -V"       # Collection of command line tools that allow you to investigate disk images
 
     add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
-    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
     add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers / footers / and internal data structures."
     add-to-list "testdisk,https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
     add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool"
     add-to-list "sleuthkit,https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
+}
+
+function install_binwalk() {
+    colorecho "Installing binwalk"
+    fapt squashfs-tools binwalk
+    add-aliases binwalk
+    add-history binwalk
+    add-test-command "binwalk --help"
+    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
 }
 
 function install_volatility2() {
@@ -51,10 +57,13 @@ function install_volatility2() {
 function install_volatility3() {
     colorecho "Installing volatility3"
     git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
-    pipx install --system-site-packages /opt/tools/volatility3
+    cd /opt/tools/volatility3 || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
     # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
-    # pipx doesn't support injection of a requirements file : https://github.com/pypa/pipx/issues/934
-    sed -e '/^#/d' -e '/^-r requirements-minimal.txt/d' /opt/tools/volatility3/requirements.txt | xargs pipx inject volatility3
+    pip3 install -r requirements.txt
+    deactivate
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
@@ -119,6 +128,7 @@ function package_forensic() {
     local end_time
     start_time=$(date +%s)
     install_forensic_apt_tools
+    install_binwalk                 # Tool to find embedded files
     install_volatility2             # Memory analysis tool
     install_volatility3             # Memory analysis tool v2
     install_trid                    # filetype detection tool

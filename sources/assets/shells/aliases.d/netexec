@@ -1,2 +1,4 @@
 alias netexec-neo4j-enable='sed -i "s/bh_enabled = False/bh_enabled = True/" ~/.nxc/nxc.conf'
 alias netexec-neo4j-disable='sed -i "s/bh_enabled = True/bh_enabled = False/" ~/.nxc/nxc.conf'
+alias crackmapexec='echo "crackmapexec has been replaced with netexec"'
+alias cme=crackmapexec

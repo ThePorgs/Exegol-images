@@ -101,21 +101,6 @@ function install_ldapdomaindump() {
     add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service"
 }
 
-function install_crackmapexec() {
-    colorecho "Installing CrackMapExec"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
-    pipx install --system-site-packages /opt/tools/CrackMapExec/
-    mkdir -p ~/.cme
-    [[ -f ~/.cme/cme.conf ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
-    cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
-    # below is for having the ability to check the source code when working with modules and so on
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
-    add-aliases crackmapexec
-    add-history crackmapexec
-    add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/Porchetta-Industries/CrackMapExec,Network scanner."
-}
-
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install --system-site-packages git+https://github.com/fox-it/BloodHound.py
@@ -191,6 +176,7 @@ function install_bloodhound-ce() {
     cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
     zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
     cd /opt/tools/BloodHound-CE/src/ || exit
+    asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
@@ -440,14 +426,11 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-05-20"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      # git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
-      git -C /opt/tools/ clone https://github.com/skelsec/pypykatz
-      # https://github.com/skelsec/pypykatz/issues/153
-      git -C /opt/tools/pypykatz checkout c91dcdc09289ad2e93c475e7c640d0f90906a7c0
+       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
       python3 -m venv --system-site-packages ./venv
       source ./venv/bin/activate
@@ -682,7 +665,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-05-20"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -785,7 +768,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-05-20"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -967,7 +950,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-05-20"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1033,34 +1016,55 @@ function install_rusthound() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
+    git -C /opt/tools/ clone --depth 1 https://github.com/NH-RED-TEAM/RustHound
     cd /opt/tools/RustHound || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
+    # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
+    local temp_fix_limit="2024-11-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      cargo update -p time
+    fi
     cargo build --release
+    # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
+    local temp_fix_limit="2024-11-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      cargo update -p time
+    fi
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
     ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
     add-history rusthound
     add-test-command "rusthound --help"
-    add-to-list "rusthound,https://github.com/OPENCYBER-FR/RustHound,BloodHound ingestor in Rust."
+    add-to-list "rusthound,https://github.com/NH-RED-TEAM/RustHound,BloodHound ingestor in Rust."
 }
 
 function install_rusthound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound for BloodHound-CE"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone --depth 1 --branch v2 https://github.com/OPENCYBER-FR/RustHound RustHound-CE
+    git -C /opt/tools/ clone --depth 1 --branch v2 https://github.com/NH-RED-TEAM/RustHound RustHound-CE
     cd /opt/tools/RustHound-CE || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
+    # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
+    local temp_fix_limit="2024-11-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      cargo update -p time@0.3.28
+    fi
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
     ln -v -s /opt/tools/RustHound-CE/target/release/rusthound /opt/tools/bin/rusthound-ce
     add-history rusthound-ce
     add-test-command "rusthound-ce --help"
-    add-to-list "rusthound (v2),https://github.com/OPENCYBER-FR/RustHound,BloodHound-CE ingestor in Rust."
+    add-to-list "rusthound (v2),https://github.com/NH-RED-TEAM/RustHound,BloodHound-CE ingestor in Rust."
 }
 
 function install_certsync() {
@@ -1217,7 +1221,6 @@ function install_netexec() {
     mkdir -p ~/.nxc
     [[ -f ~/.nxc/nxc.conf ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec
     add-history netexec
     add-test-command "netexec --help"
@@ -1366,6 +1369,33 @@ function install_sccmwtf() {
     add-to-list "sccmwtf,https://github.com/xpn/sccmwtf,This code is designed for exploring SCCM in a lab."
 }
 
+function install_smbclientng() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing smbclient-ng"
+    pipx install git+https://github.com/p0dalirius/smbclient-ng
+    add-history smbclient-ng
+    add-test-command "smbclientng --help"
+    add-to-list "smbclient-ng,https://github.com/p0dalirius/smbclient-ng,smbclient-ng is a fast and user friendly way to interact with SMB shares."
+}
+
+function install_conpass() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing conpass"
+    pipx install --system-site-packages git+https://github.com/login-securite/conpass
+    add-history conpass
+    add-test-command "conpass --help"
+    add-to-list "conpass,https://github.com/login-securite/conpass,Python tool for continuous password spraying taking into account the password policy."
+}
+
+function install_adminer() {
+    colorecho "Installing adminer"
+    pipx install git+https://github.com/Mazars-Tech/AD_Miner
+    add-aliases adminer
+    add-history adminer
+    add-test-command "adminer --help"
+    add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner,Active Directory audit tool that leverages cypher queries."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1373,10 +1403,10 @@ function package_ad() {
     local end_time
     start_time=$(date +%s)
     install_ad_apt_tools
+    install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
-    install_crackmapexec            # Network scanner
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
     install_bloodhound-py           # ingestor for legacy BloodHound
@@ -1468,7 +1498,9 @@ function package_ad() {
     # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
     install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
     install_sccmwtf                # This code is designed for exploring SCCM in a lab.
-    install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
+    install_smbclientng
+    install_conpass                # Python tool for continuous password spraying taking into account the password policy.
+    install_adminer
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."

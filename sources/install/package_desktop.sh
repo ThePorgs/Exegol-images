@@ -16,6 +16,15 @@ function install_xfce() {
     # Dependencies
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
 
+    # temp fix to use latest websockify (min 0.12.0 to fix fedora daemon issue) waiting for apt stable repo to be up-to-date
+    local temp_fix_limit="2024-11-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      # Install websockify (min 0.12.0) explicit from sid repo
+      fapt python3-websockify/sid
+    fi
+
     # Icons
     fapt librsvg2-common papirus-icon-theme
 
@@ -93,6 +102,8 @@ function install_xfce() {
     # Stopping VNC server used for config
     vncserver -kill :0
     sleep 6
+    # Remove log files of temp vncserver run ## TODO check if more
+    rm /root/.vnc/*.log /root/.xsession-errors
     [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
 
     # Binaries
