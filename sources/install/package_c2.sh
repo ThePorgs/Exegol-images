@@ -17,11 +17,14 @@ function install_pwncat() {
 }
 
 function install_metasploit() {
-    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
     git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
     cd /opt/tools/metasploit-framework || exit  # rvm gemset ruby-3.1.5@metasploit-framework should be auto setup here
+
+    # Fix msfupdate git config requirements
+    git config user.name "exegol"
+    git config user.email "exegol@localhost"
 
     # install dep manager
     gem install bundler
@@ -49,6 +52,7 @@ function install_metasploit() {
     cp -r /var/lib/postgresql/.msf4 /root
 
     add-aliases metasploit
+    add-history metasploit
     add-test-command "msfconsole --version"
     add-test-command "msfdb --help"
     add-test-command "msfvenom --list platforms"
