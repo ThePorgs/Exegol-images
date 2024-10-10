@@ -783,15 +783,10 @@ function install_pkinittools() {
 
 function install_pywhisker() {
     colorecho "Installing pyWhisker"
-    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
-    cd /opt/tools/pywhisker || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases pywhisker
+    # CODE-CHECK-WHITELIST=add-aliases
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/pywhisker
     add-history pywhisker
-    add-test-command "pywhisker.py --help"
+    add-test-command "pywhisker --help"
     add-to-list "pywhisker,https://github.com/ShutdownRepo/pywhisker,PyWhisker is a Python equivalent of the original Whisker made by Elad Shamir and written in C#. This tool allows users to manipulate the msDS-KeyCredentialLink attribute of a target user/computer to obtain full control over that object. It's based on Impacket and on a Python equivalent of Michael Grafnetter's DSInternals called PyDSInternals made by podalirius."
 }
 
