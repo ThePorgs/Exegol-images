@@ -50,7 +50,6 @@ function install_seclists() {
     ln -v -s /opt/seclists /usr/share/seclists
     ln -v -s /opt/seclists /usr/share/wordlists/seclists
     tar -xvf /opt/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/lists
-    ln -v -s /opt/lists/rockyou.txt /usr/share/wordlists/rockyou.txt
     add-test-command "[[ -f '/usr/share/wordlists/rockyou.txt' ]]"
     add-test-command "[[ -d '/opt/seclists/Discovery/' ]]"
     add-to-list "seclists,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
