@@ -41,6 +41,8 @@ function install_rust_cargo() {
 
 function filesystem() {
     colorecho "Preparing filesystem"
+    mkdir -p /opt/lists
+    mkdir -p /opt/rules
     mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/
     touch /.exegol/build_pipeline_tests/all_commands.txt
     touch /.exegol/installed_tools.csv
