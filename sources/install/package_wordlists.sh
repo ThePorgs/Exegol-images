@@ -117,23 +117,23 @@ function install_onelistforall() {
 }
 
 function install_rules(){
-    colorecho "Add Hashcat rules"
-     wget https://github.com/NSAKEY/nsa-rules/blob/master/_NSAKEY.v2.dive.rule  -P  /opt/rules
-     wget https://github.com/praetorian-inc/Hob0Rules/blob/master/d3adhob0.rule   -P     /opt/rules
-     wget https://github.com/praetorian-inc/Hob0Rules/blob/master/hob064.rule   -P  /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz -P  /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz    -P     /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz -P     /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz   -P   /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz   -P    /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz  -P    /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.one.royce.rule.gz   -P  /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz  -P  /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.random.royce.rule.gz   -P  /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.one.gz -P /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.popular.rule.gz -P  /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.random.rule.gz  -P /opt/rules
-     wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.hybrid.rule.gz -P   /opt/rules
+    colorecho "Add rules"
+    wget https://github.com/NSAKEY/nsa-rules/blob/master/_NSAKEY.v2.dive.rule  -P  /opt/rules
+    wget https://github.com/praetorian-inc/Hob0Rules/blob/master/d3adhob0.rule  -P  /opt/rules
+    wget https://github.com/praetorian-inc/Hob0Rules/blob/master/hob064.rule  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.one.royce.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.hashorg.royce/pantagrule.random.royce.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.one.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.popular.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.random.rule.gz  -P  /opt/rules
+    wget https://github.com/rarecoil/pantagrule/tree/master/rules/private.v5/pantagrule.private.v5.hybrid.rule.gz  -P  /opt/rules
 }
 
 
