@@ -41,6 +41,7 @@ function install_rsacracker() {
 }
 
 function install_sage {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sage"
     fapt sagemath
     add-history sage
