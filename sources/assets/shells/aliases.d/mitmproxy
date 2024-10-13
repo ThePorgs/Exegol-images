@@ -1,2 +1,0 @@
-mitmproxy
-mitmproxy --listen-host $LHOST --listen-port $LPORT
