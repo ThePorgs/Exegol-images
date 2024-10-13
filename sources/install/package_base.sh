@@ -51,10 +51,22 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    asdf install golang latest
     # 1.19 needed by sliver
     asdf install golang 1.19
-    asdf global golang latest
+    #asdf install golang latest
+    #asdf global golang latest
+    # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
+    local temp_fix_limit="2024-11-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      # 1.23 needed by BloodHound-CE
+      asdf install golang 1.23.0
+      # Default GO version: 1.22.2
+      asdf install golang 1.22.2
+      asdf global golang 1.22.2
+    fi
+
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
 #        return
 #    fi
@@ -177,7 +189,8 @@ function install_rvm() {
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
-    rvm install ruby-3.1.2
+    rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
+    rvm install ruby-3.1.5  # needed metasploit-framework
     rvm get head
     gem update
     add-test-command "rvm --version"
@@ -420,6 +433,8 @@ function package_base() {
     install_exegol-history
     fapt software-properties-common
     add_debian_repository_components
+    cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
+    cp -v /root/sources/assets/apt/preferences.d/* /etc/apt/preferences.d/
     apt-get update
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \

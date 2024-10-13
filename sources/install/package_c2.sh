@@ -17,18 +17,25 @@ function install_pwncat() {
 }
 
 function install_metasploit() {
-    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
     git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
-    cd /opt/tools/metasploit-framework || exit
-    rvm use 3.2.2@metasploit --create
+    cd /opt/tools/metasploit-framework || exit  # rvm gemset ruby-3.1.5@metasploit-framework should be auto setup here
+
+    # Fix msfupdate git config requirements
+    git config user.name "exegol"
+    git config user.email "exegol@localhost"
+
+    # install dep manager
     gem install bundler
     bundle install
-    # Add this dependency to make the pattern_create.rb script work
+
+    # Add missing deps
+    gem install rex
     gem install rex-text
-    # fixes 'You have already activated timeout 0.3.1, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    local temp_fix_limit="2024-08-25"
+
+    # fixes 'You have already activated timeout 0.2.0, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
+    local temp_fix_limit="2025-06-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -40,11 +47,13 @@ function install_metasploit() {
     fapt postgresql
     cp -r /root/.bundle /var/lib/postgresql
     chown -R postgres:postgres /var/lib/postgresql/.bundle
-    sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && cd /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
+    chmod -R o+rx /opt/tools/metasploit-framework/
+    sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
     cp -r /var/lib/postgresql/.msf4 /root
 
     add-aliases metasploit
-    add-test-command "msfconsole --help"
+    add-history metasploit
+    add-test-command "msfconsole --version"
     add-test-command "msfdb --help"
     add-test-command "msfvenom --list platforms"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
@@ -67,7 +76,7 @@ function install_sliver() {
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
     # or check if it's possible to make this dynamic
-    local temp_fix_limit="2024-08-25"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -126,7 +135,15 @@ function install_empire() {
 
 function install_havoc() {
     colorecho "Installing Havoc"
-    git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
+    # git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
+    # https://github.com/HavocFramework/Havoc/issues/516
+    local temp_fix_limit="2024-11-01"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
+      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
+    fi
     # Building Team Server
     cd /opt/tools/Havoc/teamserver || exit
     go mod download golang.org/x/sys

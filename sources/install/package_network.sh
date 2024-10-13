@@ -177,7 +177,7 @@ function install_eaphammer() {
     colorecho "Installing eaphammer"
     git -C /opt/tools clone --depth 1 https://github.com/s0lst1c3/eaphammer.git
     cd /opt/tools/eaphammer || exit
-    xargs apt install -y < kali-dependencies.txt
+    fapt apache2 dnsmasq libssl-dev libnfnetlink-dev libnl-3-dev libnl-genl-3-dev libcurl4-openssl-dev zlib1g-dev libpcap-dev
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r pip.req
