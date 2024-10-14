@@ -278,11 +278,12 @@ function _trust_ca_cert_in_firefox() {
 }
 
 function deploy_arsenal_cheatsheet () {
-# Function to add custom cheatsheets into arsenal
+  # Function to add custom cheatsheets into arsenal
   colorecho "Deploying custom arsenal cheatsheet"
   if [[ ! -d "$MY_SETUP_PATH/arsenal-cheats" ]]; then
       mkdir -p "$MY_SETUP_PATH/arsenal-cheats"
   fi
+  # This specific path is fetched by default by arsenal to load custom cheatsheet
 }
 
 # Starting

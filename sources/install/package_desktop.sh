@@ -11,7 +11,7 @@ function install_xfce() {
 
     # DEBUG TOOLS
     # TODO remove
-    fapt terminator firefox-esr iproute2
+    fapt terminator iproute2
 
     # Dependencies
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
