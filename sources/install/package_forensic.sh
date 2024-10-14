@@ -7,11 +7,11 @@ function install_forensic_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing forensic apt tools"
     fapt pst-utils foremost testdisk fdisk sleuthkit
-    
+
     add-history foremost
     add-history testdisk
     add-history fdisk
-    
+
     add-test-command "pst2ldif -V"      # Reads a PST and prints the tree structure to the console
     add-test-command "foremost -V"      # Alternative to binwalk
     add-test-command "testdisk --help"  # Recover lost partitions
@@ -96,7 +96,7 @@ function install_peepdf() {
     add-history peepdf
     add-test-command "peepdf.py --help"
     add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
-} 
+}
 
 function install_jadx() {
     # CODE-CHECK-WHITELIST=add-aliases
@@ -121,6 +121,13 @@ function install_chainsaw() {
     add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
 }
 
+function install_magika() {
+    colorecho "Installing magika"
+    pip install magika
+    add-history magika
+    add-test-command "magika --help"
+    add-to-list"magika,https://github.com/google/magika.git,Magika is a novel AI powered file type detection tool that relies on the recent advance of deep learning to provide accurate detection."
+}
 # Package dedicated to forensic tools
 function package_forensic() {
     set_env
@@ -135,6 +142,7 @@ function package_forensic() {
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
+    install_magika                  # Detect file content types with deep learning
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package forensic completed in $elapsed_time seconds."
