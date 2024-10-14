@@ -247,6 +247,8 @@ function deploy_bloodhound() {
 }
 
 function trust_ca_certs_in_firefox() {
+  colorecho "Trusting Burp CA certificate in Firefox"
+  /opt/tools/bin/trust-ca-burp
   colorecho "Trusting user CA certificates in Firefox"
   local file
   if [[ -d "$MY_SETUP_PATH/firefox/CA" ]]; then
