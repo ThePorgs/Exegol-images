@@ -1,0 +1,2 @@
+alias tun0='ip a sh dev tun0 | grep -oP "(?:[0-9]{1,3}\.){3}[0-9]{1,3}" | tr -d "\n"'
+alias eth0='ip a sh dev eth0 | grep -oP "(?<=inet\s)(?:[0-9]{1,3}\.){3}[0-9]{1,3}" | head -n 1'
