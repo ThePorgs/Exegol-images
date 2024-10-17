@@ -9,3 +9,4 @@ nmap -p 5900 --script=realvnc-auth-bypass "$TARGET"
 nmap -sC -sV -p 139,445,80,21 "$TARGET"
 nmap -sS -n --open -p 88 "$TARGET"
 nmap -sS -p 3268,3269 "$TARGET"
+nmap -sU --min-rate 5000 -p- $TARGET 

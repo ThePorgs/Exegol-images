@@ -1,0 +1,1 @@
+alias uploader='/opt/tools/uploader/venv/bin/python3 /opt/tools/uploader/uploader.py'

@@ -73,7 +73,6 @@ function package_most_used() {
     install_gittools                # Dump a git repository from a website
     install_ysoserial               # Deserialization payloads
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
-    install_crackmapexec            # Network scanner
     install_impacket                # Network protocols scripts
     install_enum4linux-ng           # Active Directory enumeration tool, improved Python alternative to enum4linux
     install_smbmap                  # Allows users to enumerate samba share drives across an entire domain

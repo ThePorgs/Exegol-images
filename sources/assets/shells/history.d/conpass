@@ -1,0 +1,1 @@
+conpass -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -P /tmp/passwords.txt

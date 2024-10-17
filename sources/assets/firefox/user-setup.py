@@ -65,7 +65,7 @@ if __name__ == "__main__":
             else:
                 logger.success("All addons from the list were installed sucessfully\n")
         else:
-            logger.error("No addons were found in the list %s.\n" % addon_links)
+            logger.error("No addons were found in the list %s\n" % addon_links)
 
     if addon_folder is not None:
         if glob(addon_folder + "/*.xpi"):
@@ -78,7 +78,7 @@ if __name__ == "__main__":
                 install_ok = True
             logger.success("All addons from the folder %s were installed sucessfully\n" % addon_folder)
         else:
-            logger.error("No addons were found in the folder %s.\n" % addon_folder)
+            logger.error("No addons were found in the folder %s\n" % addon_folder)
 
     if install_ok:
         # Run firefox to initialise profile

