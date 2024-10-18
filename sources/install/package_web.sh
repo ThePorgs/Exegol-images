@@ -899,7 +899,7 @@ function install_zap() {
     colorecho "Installing ZAP"
     mkdir /opt/tools/ZAP
     # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
-    zap_version=$($(which curl) -s "https://www.zaproxy.org/download/" | grep -G -o "ZAP \d+(\.\d+)+" | head -1 | cut -d' ' -f2)
+    zap_version=$(curl -s "https://www.zaproxy.org/download/" | grep -E -o "ZAP [0-9]+(\.[0-9]+)+" | head -1 | cut -d' ' -f2)
     wget "https://github.com/zaproxy/zaproxy/releases/download/v${zap_version}/ZAP_${zap_version}_Linux.tar.gz" -O /tmp/zap.tar.gz
     tar -xf /tmp/zap.tar.gz -C /opt/tools/
     mv /opt/tools/ZAP_${zap_version} /opt/tools/ZAP/
