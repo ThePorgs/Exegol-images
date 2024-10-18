@@ -84,7 +84,7 @@ function install_proxmark3() {
     add-aliases proxmark3
     add-history proxmark3
     add-test-command "proxmark3 --version"
-    add-to-list "proxmark3,https://github.com/Proxmark/proxmark3,Open source RFID research toolkit."
+    add-to-list "proxmark3,https://github.com/RfidResearchGroup/proxmark3,Open source RFID research toolkit."
 }
 
 # Package dedicated to RFID/NCF pentest tools

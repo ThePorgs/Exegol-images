@@ -33,19 +33,27 @@
             }]
         },
         {
-            "name": "Find objects containing names of some tier 0 software (SCCM, Veeam, ...)",
+            "name": "Find enabled objects containing names/descriptions of some tier 0 software (Azure, SCCM, Veeam, ...)",
             "category": "High Value Targets",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (o) WHERE (o.samaccountname =~ '(?i).*(?:sccm|veeam|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*') RETURN o"
+                "query": "WITH '(?i).*(?:azure|sccm|mecm|veeam|acronis|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*' AS keyword MATCH (o {enabled: TRUE}) WHERE o.samaccountname =~ keyword OR o.description =~ keyword OR o.name =~ keyword RETURN o"
             }]
         },
         {
-            "name": "(Warning: edits the DB) Mark objects containing names of some tier 0 software (SCCM, Veeam, ...) as HVT",
+            "name": "(Warning: edits the DB) Mark enabled objects containing names/descriptions of some tier 0 software (Azure, SCCM, Veeam, ...) as HVT",
             "category": "High Value Targets",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (o) WHERE (o.samaccountname =~ '(?i).*(?:sccm|veeam|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*') SET o.highvalue=TRUE RETURN o"
+                "query": "WITH '(?i).*(?:azure|sccm|mecm|veeam|acronis|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*' AS keyword MATCH (o {enabled: TRUE}) WHERE o.samaccountname =~ keyword OR o.description =~ keyword OR o.name =~ keyword SET o.highvalue=TRUE RETURN o"
+            }]
+        },
+        {
+            "name": "Find enabled computers containing SPNs with some tier 0 software (Azure, SCCM, Veeam, ...) as HVT",
+            "category": "High Value Targets",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH (c:Computer {enabled: TRUE}) WHERE SIZE(c.serviceprincipalnames) > 0 UNWIND [s IN c.serviceprincipalnames WHERE s =~ '(?i).*(?:azure|sccm|mecm|veeam|acronis|boomgar|tivoli|altiris|varonis|vcenter|vsphere|esx).*'] AS spn WITH c, spn WHERE SIZE(spn) > 0 return c"
             }]
         },
         {
@@ -402,16 +410,24 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(c:Computer {enabled: TRUE})-[:HasSession]->(u:User {enabled: TRUE}) WITH c,u MATCH p=shortestPath((u)-[:AdminTo|MemberOf*1..]->(c)) RETURN p",
+                "query": "MATCH shortestPath((u:User {enabled: TRUE})-[:AdminTo|MemberOf*1..]->(c:Computer {enabled: TRUE})) MATCH p=(c)-[:HasSession]->(u) RETURN p",
                 "allowCollapse": true
             }]
         },
         {
-            "name": "Users with local admin rights",
+            "name": "Enabled users (not Domain/Enterprise Admins) with local admin rights",
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(m:User {enabled: TRUE})-[:AdminTo]->(n:Computer {enabled: TRUE}) RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH p=shortestPath((u2:User {enabled: TRUE})-[:MemberOf|AdminTo*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' RETURN p"
+            }]
+        },
+        {
+            "name": "Enabled users (not Domain/Enterprise Admins) with ReadLAPSPassword rights",
+            "category": "Admins",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH shortestPath((u2:User {enabled: TRUE})-[:MemberOf|ReadLAPSPassword*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' RETURN u2"
             }]
         },
         {
@@ -439,7 +455,7 @@
             }]
         },
         {
-            "name": "Users with adminCount, not sensitive for delegation, not members of Protected Users",
+            "name": "Enabled users with adminCount, not sensitive for delegation, not members of Protected Users (3 hops)",
             "category": "Admins",
             "queryList": [{
                 "final": true,
@@ -467,7 +483,7 @@
             "category": "Groups",
             "queryList": [{
                 "final": true,
-                "query": "Match (n:Group) WHERE n.name CONTAINS 'ADMIN' RETURN n"
+                "query": "Match (g:Group) WHERE g.name CONTAINS 'ADMIN' RETURN g"
             }]
         },
         {
@@ -475,7 +491,7 @@
             "category": "Groups",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(m:Group)-[:ForceChangePassword]->(n:User) RETURN DISTINCT m[.]name,  COUNT(m[.]name) ORDER BY COUNT(m[.]name) DESC"
+                "query": "MATCH p=(g:Group)-[:ForceChangePassword]->(u:User) RETURN DISTINCT g.name, COUNT(g.name) ORDER BY COUNT(g.name) DESC"
             }]
         },
         {
@@ -483,7 +499,7 @@
             "category": "Groups",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(n:User)-[:MemberOf*1..]->(m:Group {highvalue:true}) RETURN p"
+                "query": "MATCH p=(u:User)-[:MemberOf*1..]->(g:Group {highvalue:TRUE}) RETURN p"
             }]
         },
         {
@@ -614,7 +630,7 @@
             "category": "Outdated OS",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (c:Computer) WHERE toUpper(c.operatingsystem) CONTAINS 'XP' RETURN c"
+                "query": "MATCH (c:Computer {enabled: TRUE}) WHERE toUpper(c.operatingsystem) CONTAINS 'XP' RETURN c"
             }]
         },
         {
@@ -622,7 +638,7 @@
             "category": "Outdated OS",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (c:Computer) WHERE toUpper(c.operatingsystem) CONTAINS '2000' RETURN c"
+                "query": "MATCH (c:Computer {enabled: TRUE}) WHERE toUpper(c.operatingsystem) CONTAINS '2000' RETURN c"
             }]
         },
         {
@@ -630,7 +646,7 @@
             "category": "Outdated OS",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (c:Computer) WHERE toUpper(c.operatingsystem) CONTAINS '2003' RETURN c"
+                "query": "MATCH (c:Computer {enabled: TRUE}) WHERE toUpper(c.operatingsystem) CONTAINS '2003' RETURN c"
             }]
         },
         {
@@ -638,7 +654,7 @@
             "category": "Outdated OS",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (c:Computer) WHERE toUpper(c.operatingsystem) CONTAINS '2008' RETURN c"
+                "query": "MATCH (c:Computer {enabled: TRUE}) WHERE toUpper(c.operatingsystem) CONTAINS '2008' RETURN c"
             }]
         },
         {
@@ -646,7 +662,7 @@
             "category": "Outdated OS",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (c:Computer) WHERE toUpper(c.operatingsystem) CONTAINS 'VISTA' RETURN c"
+                "query": "MATCH (c:Computer {enabled: TRUE}) WHERE toUpper(c.operatingsystem) CONTAINS 'VISTA' RETURN c"
             }]
         },
         {
@@ -654,7 +670,7 @@
             "category": "Outdated OS",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (c:Computer) WHERE toUpper(c.operatingsystem) CONTAINS '7' RETURN c"
+                "query": "MATCH (c:Computer {enabled: TRUE}) WHERE toUpper(c.operatingsystem) CONTAINS '7' RETURN c"
             }]
         },
         {
@@ -662,7 +678,7 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)<-[r:HasSession]-(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)-[r:HasSession]->(n) RETURN p",
+                "query": "MATCH (n:User {enabled: TRUE})<-[r:HasSession]-(m:Computer {enabled: TRUE}) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, COUNT(r) AS rel_count ORDER BY rel_count DESC LIMIT 10 MATCH p=(m)-[r:HasSession]->(n) RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -671,43 +687,43 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)<-[r:HasSession]-(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)-[r:HasSession]->(n) RETURN p",
+                "query": "MATCH (n:User {enabled: TRUE})<-[r:HasSession]-(m:Computer {enabled: TRUE}) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, COUNT(r) AS rel_count ORDER BY rel_count DESC LIMIT 10 MATCH p=(m)-[:HasSession]->(n) RETURN p",
                 "allowCollapse": true
             }]
         },
         {
-            "name": "Top Ten Users with Most Local Admin Rights",
+            "name": "Top Ten Users (not Domain Admins or Entreprise Admins) with most local admin rights",
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN p",
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH (n:User {enabled: TRUE})-[r:AdminTo]->(m:Computer {enabled: TRUE}) WHERE NOT n.objectid IN domainAdmins AND NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, COUNT(r) AS rel_count ORDER BY rel_count DESC LIMIT 10 MATCH p=(n)-[:AdminTo]->(m:Computer {enabled: TRUE}) RETURN p",
                 "allowCollapse": true
             }]
         },
         {
-            "name": "Top Ten Computers with Most Admins and their admins",
+            "name": "Top Ten Computers with most local admin rights (not Domain Admins or Entreprise Admins) and their admins",
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN p",
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH (n:User {enabled: TRUE})-[r:AdminTo]->(m:Computer {enabled: TRUE}) WHERE NOT n.objectid IN domainAdmins AND NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, COUNT(r) AS rel_count ORDER BY rel_count DESC LIMIT 10 MATCH p=(m)<-[:AdminTo]-(n:User {enabled: TRUE}) RETURN p",
                 "allowCollapse": true
             }]
         },
         {
-            "name": "Top Ten Computers with Most Admins",
+            "name": "Top Ten Computers with most admins (not Domain Admins or Entreprise Admins)",
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN m",
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH (n:User {enabled: TRUE})-[r:AdminTo]->(m:Computer {enabled: TRUE}) WHERE NOT n.objectid IN domainAdmins AND NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, COUNT(r) AS rel_count ORDER BY rel_count DESC LIMIT 10 MATCH (m)<-[:AdminTo]-(o:User {enabled: TRUE}) RETURN m",
                 "allowCollapse": true
             }]
         },
         {
-            "name": "(Warning: edits the DB) Mark Top Ten Computers with Most Admins as HVT",
+            "name": "(Warning: edits the DB) Mark Top Ten Computers with most admins (not Domain Admins or Entreprise Admins) as HVT",
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) AS rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) SET m.highvalue = true RETURN m",
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH (n:User {enabled: TRUE})-[r:AdminTo]->(m:Computer {enabled: TRUE}) WHERE NOT n.objectid IN domainAdmins AND NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, COUNT(r) AS rel_count ORDER BY rel_count DESC LIMIT 10 MATCH (m)<-[:AdminTo]-(o:User {enabled: TRUE}) SET m.highvalue = true RETURN m",
                 "allowCollapse": true
             }]
         },
@@ -734,7 +750,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid ENDS WITH '-513' RETURN p2 AS path"
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' RETURN p"
             }]
         },
         {
@@ -742,16 +758,16 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid ENDS WITH '-513' AND c2.operatingsystem =~ '(?i).*Server.*' RETURN p2 AS path",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p",
                 "allowCollapse": true
             }]
         },
         {
-            "name": "Find enabled machines Authenticated Users can RDP to",
+            "name": "Find enabled computers Authenticated Users can RDP to",
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid =~ '(?i).*S-1-5-11$' RETURN p2 AS path",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -760,7 +776,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid =~ '(?i).*S-1-5-11$' AND c2.operatingsystem =~ '(?i).*Server.*' RETURN p2 AS path",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -769,7 +785,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(m:Group)-[r:CanRDP]->(n:Computer) RETURN p"
+                "query": "MATCH p=(g:Group)-[:CanRDP]->(c:Computer) RETURN p"
             }]
         },
         {
@@ -785,7 +801,7 @@
             "category": "Azure",
             "queryList": [{
                 "final": true,
-                "query": "MATCH  p=(m:User)-[r:AZResetPassword|AZOwns|AZUserAccessAdministrator|AZContributor|AZAddMembers|AZGlobalAdmin|AZVMContributor|AZOwnsAZAvereContributor]->(n) WHERE m.objectid CONTAINS 'S-1-5-21' RETURN p"
+                "query": "MATCH p=(m:User)-[r:AZResetPassword|AZOwns|AZUserAccessAdministrator|AZContributor|AZAddMembers|AZGlobalAdmin|AZVMContributor|AZOwnsAZAvereContributor]->(n) WHERE m.objectid CONTAINS 'S-1-5-21' RETURN p"
             }]
         },
         {
@@ -993,7 +1009,7 @@
             }]
         },
         {
-            "name": "Find Unsecured Certificate Templates - Domain Escalation (ESC9)",
+            "name": "Find insecure Certificate Templates - Domain Escalation (ESC9)",
             "category": "AD CS Domain Escalation",
             "queryList": [
                 {
@@ -1003,7 +1019,7 @@
             ]
         },
         {
-            "name": "Find Unsecured Certificate Templates - PKI (ESC9)",
+            "name": "Find insecure Certificate Templates - PKI (ESC9)",
             "category": "AD CS Domain Escalation",
             "queryList": [
                 {
@@ -1039,7 +1055,7 @@
 			"queryList": [
 				{
 					"final": true,
-					"query": "MATCH p=(u:User {enabled, TRUE, plaintext: TRUE})-[:MemberOf*1..]->(g:Group {highvalue: TRUE}) RETURN p",
+					"query": "MATCH p=(u:User {enabled: TRUE, plaintext: TRUE})-[:MemberOf*1..]->(g:Group {highvalue: TRUE}) RETURN p",
 					"allowCollapse": true
 				}
 			]
