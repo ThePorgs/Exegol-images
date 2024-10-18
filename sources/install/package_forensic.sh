@@ -121,13 +121,6 @@ function install_chainsaw() {
     add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
 }
 
-function install_magika() {
-    colorecho "Installing magika"
-    pip install magika
-    add-history magika
-    add-test-command "magika --help"
-    add-to-list"magika,https://github.com/google/magika.git,Magika is a novel AI powered file type detection tool that relies on the recent advance of deep learning to provide accurate detection."
-}
 # Package dedicated to forensic tools
 function package_forensic() {
     set_env
@@ -142,7 +135,6 @@ function package_forensic() {
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
-    install_magika                  # Detect file content types with deep learning
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package forensic completed in $elapsed_time seconds."
