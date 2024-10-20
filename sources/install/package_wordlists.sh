@@ -117,11 +117,13 @@ function install_onelistforall() {
 }
 
 function install_rules(){
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Add rules"
     wget https://github.com/NSAKEY/nsa-rules/raw/refs/heads/master/_NSAKEY.v1.dive.rule -P /opt/rules/
     wget https://github.com/NSAKEY/nsa-rules/raw/refs/heads/master/_NSAKEY.v2.dive.rule -P /opt/rules/
     wget https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/refs/heads/master/d3adhob0.rule -P /opt/rules/
     wget https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/refs/heads/master/hob064.rule -P /opt/rules/
+    add-test-command "[[ -f '/opt/lists/hob064.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.hashorg.v6.hybrid.rule.gz
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz -P /opt/rules/
@@ -148,6 +150,7 @@ function install_rules(){
     gunzip /opt/rules/pantagrule.private.v5.popular.rule.gz
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.random.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.private.v5.random.rule.gz
+    add-test-command "[[ -f '/opt/lists/pantagrule.private.v5.random.rule' ]]"
 }
 
 
