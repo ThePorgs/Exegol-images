@@ -129,40 +129,40 @@ function install_rules(){
     add-test-command "[[ -f '/opt/lists/hob064.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.hashorg.v6.hybrid.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.hybrid.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.hybrid.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.hashorg.v6.one.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.one.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.one.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.hashorg.v6.popular.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.popular.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.popular.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.hashorg.v6.random.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.random.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.random.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.hashorg.v6.raw1m.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.raw1m.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.hashorg.v6.raw1m.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.popular.royce.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.popular.royce.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.popular.royce.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.hybrid.royce.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.hybrid.royce.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.hybrid.royce.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.hashorg.royce/pantagrule.one.royce.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.one.royce.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.one.royce.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.one.royce.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.hashorg.royce/pantagrule.random.royce.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.random.royce.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.random.royce.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.random.royce.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.hybrid.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.private.v5.hybrid.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.private.v5.hybrid.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.private.v5.hybrid.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.one.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.private.v5.one.gz
-    add-add-test-command "[[ -f 'pantagrule.private.v5.one.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.private.v5.one' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.popular.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.private.v5.popular.rule.gz
-    add-add-test-command "[[ -f 'pantagrule.private.v5.popular.rule.gz' ]]"
+    add-add-test-command "[[ -f 'pantagrule.private.v5.popular.rule' ]]"
     wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.random.rule.gz -P /opt/rules/
     gunzip /opt/rules/pantagrule.private.v5.random.rule.gz
     add-test-command "[[ -f '/opt/lists/pantagrule.private.v5.random.rule' ]]"
