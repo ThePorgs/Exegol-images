@@ -101,21 +101,6 @@ function install_ldapdomaindump() {
     add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service"
 }
 
-function install_crackmapexec() {
-    colorecho "Installing CrackMapExec"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
-    pipx install --system-site-packages /opt/tools/CrackMapExec/
-    mkdir -p ~/.cme
-    [[ -f ~/.cme/cme.conf ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
-    cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
-    # below is for having the ability to check the source code when working with modules and so on
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
-    add-aliases crackmapexec
-    add-history crackmapexec
-    add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/Porchetta-Industries/CrackMapExec,Network scanner."
-}
-
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install --system-site-packages git+https://github.com/fox-it/BloodHound.py
@@ -191,6 +176,7 @@ function install_bloodhound-ce() {
     cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
     zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
     cd /opt/tools/BloodHound-CE/src/ || exit
+    asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
@@ -206,10 +192,14 @@ function install_bloodhound-ce() {
     ## AzureHound
     local AZUREHOUND_URL_AMD64
     local AZUREHOUND_URL_ARM64
+    local AZUREHOUND_VERSION
+    AZUREHOUND_VERSION=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -oP 'v\d+.\d.\d+')
     AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
     AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
     wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_AMD64"
     wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_ARM64"
+    7z a -tzip -mx9 "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-*"
+    sha256sum "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" > "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip.sha256"
 
     # Files and directories
     # work directory required by bloodhound
@@ -440,7 +430,7 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -679,7 +669,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -782,7 +772,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -797,15 +787,10 @@ function install_pkinittools() {
 
 function install_pywhisker() {
     colorecho "Installing pyWhisker"
-    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
-    cd /opt/tools/pywhisker || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases pywhisker
+    # CODE-CHECK-WHITELIST=add-aliases
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/pywhisker
     add-history pywhisker
-    add-test-command "pywhisker.py --help"
+    add-test-command "pywhisker --help"
     add-to-list "pywhisker,https://github.com/ShutdownRepo/pywhisker,PyWhisker is a Python equivalent of the original Whisker made by Elad Shamir and written in C#. This tool allows users to manipulate the msDS-KeyCredentialLink attribute of a target user/computer to obtain full control over that object. It's based on Impacket and on a Python equivalent of Michael Grafnetter's DSInternals called PyDSInternals made by podalirius."
 }
 
@@ -977,7 +962,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1048,7 +1033,7 @@ function install_rusthound() {
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1056,7 +1041,7 @@ function install_rusthound() {
     fi
     cargo build --release
     # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1241,7 +1226,6 @@ function install_netexec() {
     mkdir -p ~/.nxc
     [[ -f ~/.nxc/nxc.conf ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec
     add-history netexec
     add-test-command "netexec --help"
@@ -1408,6 +1392,15 @@ function install_conpass() {
     add-to-list "conpass,https://github.com/login-securite/conpass,Python tool for continuous password spraying taking into account the password policy."
 }
 
+function install_adminer() {
+    colorecho "Installing adminer"
+    pipx install git+https://github.com/Mazars-Tech/AD_Miner
+    add-aliases adminer
+    add-history adminer
+    add-test-command "adminer --help"
+    add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner,Active Directory audit tool that leverages cypher queries."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1419,7 +1412,6 @@ function package_ad() {
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
-    install_crackmapexec            # Network scanner
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
     install_bloodhound-py           # ingestor for legacy BloodHound
@@ -1513,6 +1505,7 @@ function package_ad() {
     install_sccmwtf                # This code is designed for exploring SCCM in a lab.
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
+    install_adminer
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."

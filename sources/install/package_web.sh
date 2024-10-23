@@ -58,7 +58,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -411,7 +411,7 @@ function install_oneforall() {
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
     # https://github.com/shmilylty/OneForAll/pull/340
-    local temp_fix_limit="2024-09-01"
+    local temp_fix_limit="2024-11-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -470,7 +470,7 @@ function install_gowitness() {
     asdf reshim golang
     add-history gowitness
     add-test-command "gowitness --help"
-    add-test-command "gowitness single https://exegol.readthedocs.io" # check the chromium dependency
+    add-test-command "gowitness scan single --url https://exegol.readthedocs.io" # check the chromium dependency
     add-to-list "gowitness,https://github.com/sensepost/gowitness,A website screenshot utility written in Golang."
 }
 
