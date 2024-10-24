@@ -46,7 +46,7 @@ function install_seclists() {
     git -C /opt/lists clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
     cd /opt/lists/seclists|| exit
     rm -r LICENSE .git* CONTRIBUT* .bin
-    tar -xvf /opt/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/lists/
+    tar -xvf /opt/lists/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/lists/
     add-test-command "[[ -f '/opt/lists/rockyou.txt' ]]"
     add-test-command "[[ -d '/opt/lists/seclists/Discovery/' ]]"
     add-to-list "seclists,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
