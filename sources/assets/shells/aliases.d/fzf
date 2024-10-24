@@ -1,4 +1,4 @@
-alias fzf-wordlists='find /opt/rockyou.txt /opt/seclists /usr/share/wordlists /usr/share/wfuzz /usr/share/dirb -type f | fzf'
+alias fzf-wordlists='find /opt/rockyou.txt /opt/lists /usr/share/wordlists /usr/share/wfuzz /usr/share/dirb -type f | fzf'
 alias fzf-rules='find /opt/rules/ /usr/share/hashcat/rules/ -type f | fzf'
 alias fzf-haiti-hashcat='(){ haiti -e $1 | fzf --ansi | grep -E -o " [0-9]*]" | cut -d "]" -f 1 | cut -d " " -f 2 ;}'
 alias fzf-haiti-john='(){ haiti -e $1 | fzf --ansi | grep -E -o "JtR: .*]" | cut -d "]" -f 1 | cut -d " " -f 2 ;}'
