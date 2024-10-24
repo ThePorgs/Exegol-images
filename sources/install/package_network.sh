@@ -8,7 +8,7 @@ function install_network_apt_tools() {
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
-    rdesktop xtightvncviewer hydra mariadb-client redis-tools
+    rdesktop xtightvncviewer hydra mariadb-client redis-tools mitmproxy
 
     add-history wireshark
     add-history tshark
@@ -21,6 +21,7 @@ function install_network_apt_tools() {
     add-history rdesktop
     add-history hydra
     add-history xfreerdp
+    add-history mitmproxy
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
     add-test-command "tshark --version"                             # Tshark packet sniffer
@@ -37,7 +38,8 @@ function install_network_apt_tools() {
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
-
+    add-test-command "mitmproxy --version"                          # MITMProxy
+    
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
     add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
@@ -53,6 +55,7 @@ function install_network_apt_tools() {
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
     add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
+    add-to-list "mitmproxy,https://github.com/mitmproxy/mitmproxy,mitmproxy is an interactive SSL/TLS-capable intercepting proxy with a console interface for HTTP/1 HTTP/2 and WebSockets."
 }
 
 function install_proxychains() {

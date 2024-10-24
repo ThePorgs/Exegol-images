@@ -860,7 +860,20 @@ function install_donpapi() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DonPAPI"
     fapt swig
-    pipx install --system-site-packages git+https://github.com/login-securite/DonPAPI
+    git -C /opt/tools/ clone --depth 1 https://github.com/login-securite/DonPAPI
+    cd /opt/tools/DonPAPI || exit
+    # https://github.com/login-securite/DonPAPI/pull/96
+    local temp_fix_limit="2024-11-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      git config --local user.email "local"
+      git config --local user.name "local"
+      local prs=("96")
+      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit --allow-unrelated-histories "pull/$pr"; done
+    fi
+    pipx install --system-site-packages .
+    # pipx install --system-site-packages git+https://github.com/login-securite/DonPAPI
     add-history donpapi
     add-test-command "DonPAPI --help"
     add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Dumping revelant information on compromised targets without AV detection"
@@ -1046,24 +1059,17 @@ function install_rusthound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound for BloodHound-CE"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone --depth 1 --branch v2 https://github.com/NH-RED-TEAM/RustHound RustHound-CE
+    git -C /opt/tools/ clone --depth 1 https://github.com/g0h4n/RustHound-CE
     cd /opt/tools/RustHound-CE || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
-    # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-11-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      cargo update -p time@0.3.28
-    fi
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
-    ln -v -s /opt/tools/RustHound-CE/target/release/rusthound /opt/tools/bin/rusthound-ce
+    ln -v -s /opt/tools/RustHound-CE/target/release/rusthound-ce /opt/tools/bin/rusthound-ce
     add-history rusthound-ce
     add-test-command "rusthound-ce --help"
-    add-to-list "rusthound (v2),https://github.com/NH-RED-TEAM/RustHound,BloodHound-CE ingestor in Rust."
+    add-to-list "rusthound-ce,https://github.com/g0h4n/RustHound-CE,BloodHound-CE ingestor in Rust."
 }
 
 function install_certsync() {
