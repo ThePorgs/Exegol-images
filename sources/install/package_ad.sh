@@ -158,11 +158,18 @@ function install_bloodhound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing BloodHound-CE"
 
+    local sharphound_path
+    local azurehound_path
+    sharphound_path="/opt/tools/BloodHound-CE/collectors/sharphound/"
+    azurehound_path="/opt/tools/BloodHound-CE/collectors/azurehound/"
+
     # Installing & Configuring the database
     fapt postgresql postgresql-client
+
     # only expose postgresql on localhost
     sed -i 's/#listen_addresse/listen_addresse/' /etc/postgresql/15/main/postgresql.conf
     service postgresql start
+
     # avoid permissions issues when impersonating postgres
     cd /tmp || exit
     sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'exegol4thewin';"
@@ -180,26 +187,45 @@ function install_bloodhound-ce() {
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
-    mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound
-    mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound
+    mkdir -p "${sharphound_path}"
+    mkdir -p "${azurehound_path}"
+
     ## SharpHound
-    local SHARPHOUND_URL
-    SHARPHOUND_URL=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep 'SharpHound-.*.zip' | grep -v 'debug' | grep -o 'https://[^"]*')
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/sharphound/ "$SHARPHOUND_URL"
-    local SHARPHOUND_NAME
-    SHARPHOUND_NAME=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep -o 'SharpHound-.*.zip' | grep -v debug | uniq)
-    sha256sum "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME" > "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME.sha256"
+    local sharphound_latest_tempfile
+    local sharphound_url
+    local sharphound_name
+    sharphound_latest_tempfile=$(mktemp)
+    [[ -f ${sharphound_latest_tempfile} ]] || exit
+    curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" > "${sharphound_latest_tempfile}"
+    sharphound_url=$(jq --raw-output '.assets[].browser_download_url | select(contains("debug") | not)' ${sharphound_latest_tempfile})
+    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/sharphound/ "${sharphound_url}"
+    sharphound_name=$(jq --raw-output '.assets[].name | select(contains("debug") | not)' ${sharphound_latest_tempfile})
+    rm "${sharphound_latest_tempfile}"
+    # Unlike Azurehound, upstream does not provide a sha256 file to check the integrity
+
     ## AzureHound
-    local AZUREHOUND_URL_AMD64
-    local AZUREHOUND_URL_ARM64
-    local AZUREHOUND_VERSION
-    AZUREHOUND_VERSION=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -oP 'v\d+.\d.\d+')
-    AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
-    AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_AMD64"
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_ARM64"
-    7z a -tzip -mx9 "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-*"
-    sha256sum "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" > "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip.sha256"
+    local azurehound_latest_tempfile
+    local azurehound_url_amd64
+    local azurehound_url_amd64_sha256
+    local azurehound_url_arm64
+    local azurehound_url_arm64_sha256
+    local azurehound_version
+
+    azurehound_latest_tempfile=$(mktemp)
+    [[ -f ${azurehound_latest_tempfile} ]] || exit
+    curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" > "${azurehound_latest_tempfile}"
+    azurehound_version=$(jq --raw-output '.tag_name' "${azurehound_latest_tempfile}")
+    azurehound_url_amd64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip"))' ${azurehound_latest_tempfile})
+    azurehound_url_amd64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip.sha256"))' ${azurehound_latest_tempfile})
+    azurehound_url_arm64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip"))' ${azurehound_latest_tempfile})
+    azurehound_url_arm64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.sha256.zip"))' ${azurehound_latest_tempfile})
+    rm ${azurehound_latest_tempfile}
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64}"
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64_sha256}"
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64}"
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64_sha256}"
+    (cd "${azurehound_path}"; sha256sum --check --warn *.sha256) || exit
+    7z a -tzip -mx9 "${azurehound_path}/azurehound-${azurehound_version}.zip" "${azurehound_path}/azurehound-*"
 
     # Files and directories
     # work directory required by bloodhound
