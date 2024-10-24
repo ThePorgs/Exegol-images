@@ -293,6 +293,7 @@ function package_network() {
     start_time=$(date +%s)
     install_network_apt_tools
     install_proxychains             # Network tool
+    install_remmina                 # Remote desktop client
     install_nmap                    # Port scanner
     install_nmap-parse-output       # Parse nmap XML files
     install_autorecon               # External recon tool
