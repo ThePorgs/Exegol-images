@@ -184,7 +184,7 @@ function install_bloodhound-ce() {
     mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound
     ## SharpHound
     local SHARPHOUND_URL
-    SHARPHOUND_URL=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep 'SharpHound-.*.zip' | grep -v 'debug' | grep -o 'https://[^"]*')
+    SHARPHOUND_URL=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep 'SharpHound-.*.zip' | grep -v 'debug' | grep -o 'https://[^"]*' | tr '[:upper:]' '[:lower:]')
     wget --directory-prefix /opt/tools/BloodHound-CE/collectors/sharphound/ "$SHARPHOUND_URL"
     local SHARPHOUND_NAME
     SHARPHOUND_NAME=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep -o 'SharpHound-.*.zip' | grep -v debug | uniq | tr '[:upper:]' '[:lower:]')
@@ -193,9 +193,9 @@ function install_bloodhound-ce() {
     local AZUREHOUND_URL_AMD64
     local AZUREHOUND_URL_ARM64
     local AZUREHOUND_VERSION
-    AZUREHOUND_VERSION=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -oP 'v\d+.\d.\d+')
-    AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
-    AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
+    AZUREHOUND_VERSION=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -oP 'v\d+.\d.\d+' | tr '[:upper:]' '[:lower:]')
+    AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*' | tr '[:upper:]' '[:lower:]')
+    AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*' | tr '[:upper:]' '[:lower:]')
     wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_AMD64"
     wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_ARM64"
     7z a -tzip -mx9 "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-*"
