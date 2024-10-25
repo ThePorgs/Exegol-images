@@ -217,7 +217,7 @@ function install_bloodhound-ce() {
     local azurehound_version
 
     azurehound_latest_tempfile=$(mktemp)
-    [[ -f ${azurehound_latest_tempfile} ]] || exit
+    [[ -f "${azurehound_latest_tempfile}" ]] || exit
     curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" > "${azurehound_latest_tempfile}"
     azurehound_version=$(jq --raw-output '.tag_name' "${azurehound_latest_tempfile}")
     azurehound_url_amd64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip"))' "${azurehound_latest_tempfile}")
