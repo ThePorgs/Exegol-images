@@ -174,7 +174,7 @@ function install_bloodhound-ce() {
     mkdir -p /opt/tools/BloodHound-CE/
     git -C /opt/tools/BloodHound-CE/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git src
     cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
-    catch_and_retry zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
+    zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
     cd /opt/tools/BloodHound-CE/src/ || exit
     asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
