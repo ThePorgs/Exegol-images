@@ -224,7 +224,7 @@ function install_bloodhound-ce() {
     azurehound_url_amd64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip.sha256"))' ${azurehound_latest_tempfile})
     azurehound_url_arm64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip"))' ${azurehound_latest_tempfile})
     azurehound_url_arm64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip.sha256"))' ${azurehound_latest_tempfile})
-    rm ${azurehound_latest_tempfile}
+    rm "${azurehound_latest_tempfile}"
     wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64}"
     [[ -f "${azurehound_path}/azurehound-linux-amd64.zip" ]] || exit
     wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64_sha256}"
