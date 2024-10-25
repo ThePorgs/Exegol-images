@@ -194,13 +194,18 @@ function install_bloodhound-ce() {
     local sharphound_latest_tempfile
     local sharphound_url
     local sharphound_name
+    local sharphound_name_lowercase
     sharphound_latest_tempfile=$(mktemp)
     [[ -f ${sharphound_latest_tempfile} ]] || exit
     curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" > "${sharphound_latest_tempfile}"
     sharphound_url=$(jq --raw-output '.assets[].browser_download_url | select(contains("debug") | not)' ${sharphound_latest_tempfile})
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/sharphound/ "${sharphound_url}"
     sharphound_name=$(jq --raw-output '.assets[].name | select(contains("debug") | not)' ${sharphound_latest_tempfile})
+    # lowercase fix: https://github.com/ThePorgs/Exegol-images/pull/405
+    sharphound_name_lowercase=$(jq --raw-output '.assets[].name | ascii_downcase | select(contains("debug") | not)' ${sharphound_latest_tempfile})
     rm "${sharphound_latest_tempfile}"
+    wget --directory-prefix "${sharphound_path}" "${sharphound_url}"
+    [[ -f "${sharphound_path}/${sharphound_name}" ]] || exit
+    mv "${sharphound_path}/${sharphound_name}" "${sharphound_path}/${sharphound_name_lowercase}"
     # Unlike Azurehound, upstream does not provide a sha256 file to check the integrity
 
     ## AzureHound
@@ -218,12 +223,16 @@ function install_bloodhound-ce() {
     azurehound_url_amd64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip"))' ${azurehound_latest_tempfile})
     azurehound_url_amd64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip.sha256"))' ${azurehound_latest_tempfile})
     azurehound_url_arm64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip"))' ${azurehound_latest_tempfile})
-    azurehound_url_arm64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.sha256.zip"))' ${azurehound_latest_tempfile})
+    azurehound_url_arm64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip.sha256"))' ${azurehound_latest_tempfile})
     rm ${azurehound_latest_tempfile}
     wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64}"
+    [[ -f "${azurehound_path}/azurehound-linux-amd64.zip" ]] || exit
     wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64_sha256}"
+    [[ -f "${azurehound_path}/azurehound-linux-amd64.zip.sha256" ]] || exit
     wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64}"
+    [[ -f "${azurehound_path}/azurehound-linux-arm64.zip" ]] || exit
     wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64_sha256}"
+    [[ -f "${azurehound_path}/azurehound-linux-arm64.zip.sha256" ]] || exit
     (cd "${azurehound_path}"; sha256sum --check --warn *.sha256) || exit
     7z a -tzip -mx9 "${azurehound_path}/azurehound-${azurehound_version}.zip" "${azurehound_path}/azurehound-*"
 
