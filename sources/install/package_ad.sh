@@ -1321,6 +1321,15 @@ function install_bloodyAD() {
     add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
 }
 
+function install_autobloody() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing autobloody"
+    pipx install --system-site-packages git+https://github.com/CravateRouge/autobloody
+    add-history autobloody
+    add-test-command "autobloody --help"
+    add-to-list "autobloody,https://github.com/CravateRouge/autobloody,Automatically exploit Active Directory privilege escalation paths shown by BloodHound."
+}
+
 function install_dploot() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dploot"
@@ -1499,6 +1508,7 @@ function package_ad() {
     install_ntlm_theft
     install_abuseACL
     install_bloodyAD               # Active Directory privilege escalation swiss army knife.
+    install_autobloody             # Automatically exploit Active Directory privilege escalation paths.
     install_dploot                 # Python rewrite of SharpDPAPI written un C#.
     # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
     install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
