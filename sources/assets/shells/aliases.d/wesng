@@ -1,3 +1,0 @@
-wes --update
-wes systeminfo.txt
-wes --impact "Remote Code Execution"
