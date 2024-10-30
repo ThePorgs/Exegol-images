@@ -233,7 +233,7 @@ function install_bloodhound-ce() {
     [[ -f "${azurehound_path}/azurehound-linux-arm64.zip" ]] || exit
     wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64_sha256}"
     [[ -f "${azurehound_path}/azurehound-linux-arm64.zip.sha256" ]] || exit
-    (cd "${azurehound_path}"; sha256sum --check --warn *.sha256) || exit
+    (cd "${azurehound_path}"; sha256sum --check --warn ./*.sha256) || exit
     7z a -tzip -mx9 "${azurehound_path}/azurehound-${azurehound_version}.zip" "${azurehound_path}/azurehound-*"
 
     # Files and directories
