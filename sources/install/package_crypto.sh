@@ -3,6 +3,20 @@
 
 source common.sh
 
+function install_crypto_apt_tools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing crypto apt tools"
+
+    fapt sagemath
+
+    add-history sage
+
+    add-test-command "sage --help"
+
+    add-to-list "sage,https://www.sagemath.org,SageMath is a free open-source mathematics software system licensed under the GPL."
+
+}
+
 function install_tls-map() {
     colorecho "Installing TLS map"
     rvm use 3.2.2@tls-map --create
@@ -40,25 +54,16 @@ function install_rsacracker() {
     add-to-list "RsaCracker,https://github.com/skyf0l/RsaCracker,Powerful RSA cracker for CTFs. Supports RSA - X509 - OPENSSH in PEM and DER formats."
 }
 
-function install_sage {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing Sage"
-    fapt sagemath
-    add-history sage
-    add-test-command "sage --help"
-    add-to-list "sage,https://www.sagemath.org,SageMath is a free open-source mathematics software system licensed under the GPL."
-}
-
 # Package dedicated to attack crypto
 function package_crypto() {
     set_env
     local start_time
     local end_time
     start_time=$(date +%s)
+    install_crypto_apt_tools  
     install_rsactftool              # attack rsa
     install_tls-map                 # CLI & library for mapping TLS cipher algorithm names: IANA, OpenSSL, GnuTLS, NSS
     install_rsacracker              # Powerful RSA cracker for CTFs. Supports RSA, X509, OPENSSH in PEM and DER formats.
-    install_sage                    # SageMath is a free open-source mathematics software system.
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package crypto completed in $elapsed_time seconds."
