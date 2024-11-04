@@ -570,10 +570,11 @@ function install_ysoserial() {
     colorecho "Installing ysoserial"
     mkdir /opt/tools/ysoserial/
     wget -O /opt/tools/ysoserial/ysoserial.jar "https://github.com/frohoff/ysoserial/releases/latest/download/ysoserial-all.jar"
+    asdf local java adoptopenjdk-11.0.0+28
     add-aliases ysoserial
     add-history ysoserial
     add-test-command "ysoserial --help|& grep 'spring-core:4.1.4.RELEASE'"
-    add-test-command "ysoserial CommonsCollections4 'whoami'"
+    add-test-command "ysoserial CommonsCollections4 'whoami'|base64 -w0|grep 'rO0A'"
     add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
 }
 
@@ -790,6 +791,7 @@ function install_burpsuite() {
     cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
+    asdf local java openjdk-22.0.1
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"

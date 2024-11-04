@@ -50,43 +50,14 @@ function filesystem() {
 function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
-    asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
+    asdf plugin add golang
     # 1.19 needed by sliver
     asdf install golang 1.19
-    #asdf install golang latest
-    #asdf global golang latest
+    # 1.23 needed by BloodHound-CE
+    asdf install golang 1.23.0
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2024-11-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      # 1.23 needed by BloodHound-CE
-      asdf install golang 1.23.0
-      # Default GO version: 1.22.2
-      asdf install golang 1.22.2
-      asdf global golang 1.22.2
-    fi
-
-#    if command -v /usr/local/go/bin/go &>/dev/null; then
-#        return
-#    fi
-#    cd /tmp/ || exit
-#    if [[ $(uname -m) = 'x86_64' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
-#    elif [[ $(uname -m) = 'aarch64' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-arm64.tar.gz
-#    elif [[ $(uname -m) = 'armv7l' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz
-#    else
-#        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-#    fi
-#    rm -rf /usr/local/go
-#    tar -C /usr/local -xzf /tmp/go.tar.gz
-#    rm -rf /tmp/go.tar.gz
-#    export PATH=$PATH:/usr/local/go/bin
+    asdf install golang 1.22.2
+    asdf global golang 1.22.2
     add-test-command "go version"
 }
 
@@ -329,45 +300,18 @@ function install_gf() {
     add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
-function install_java11() {
-    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
-    colorecho "Installing java 11"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        local arch="x64"
-
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        local arch="aarch64"
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-    local jdk_url
-    jdk_url=$(curl --location --silent "https://api.github.com/repos/adoptium/temurin11-binaries/releases" | grep 'browser_download_url.*jdk_'"$arch"'_linux.*tar.gz"' | grep -o 'https://[^"]*' | sort | tail -n1)
-    curl --location -o /tmp/openjdk11-jdk.tar.gz "$jdk_url"
-    tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
-    mkdir -p "/usr/lib/jvm"
-    mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
-    add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
-}
-
-function install_java21() {
-    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
-    colorecho "Installing java 11"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
-
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-aarch64_bin.tar.gz"
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-    tar -xzf /tmp/openjdk21-jdk.tar.gz --directory /tmp
-    mkdir -p "/usr/lib/jvm"
-    mv /tmp/jdk-21* /usr/lib/jvm/java-21-openjdk
-    add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
+function install_java() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
+    colorecho "Installing java"
+    asdf plugin-add java
+    # 11 needed by ysoserial
+    asdf install java adoptopenjdk-11.0.0+28
+    # 17 common
+    asdf install java openjdk-17.0.2
+    # 22 latest stable
+    asdf install java openjdk-22.0.1
+    asdf global java openjdk-22.0.1
+    add-test-command "java --version"
 }
 
 function add_debian_repository_components() {
@@ -500,13 +444,7 @@ function package_base() {
     # Rust, Cargo, rvm
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
-
-    # java11 install, and java17 as default
-    install_java11
-    install_java21
-    ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
-    update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
-
+    install_java                                        # Java language
     install_go                                          # Golang language
     install_ohmyzsh                                     # Awesome shell
     install_fzf                                         # Fuzzy finder
