@@ -158,10 +158,9 @@ function install_bloodhound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing BloodHound-CE"
 
-    local sharphound_path
-    local azurehound_path
-    sharphound_path="/opt/tools/BloodHound-CE/collectors/sharphound/"
-    azurehound_path="/opt/tools/BloodHound-CE/collectors/azurehound/"
+    local bloodhoundce_path="/opt/tools/BloodHound-CE/"
+    local sharphound_path="${bloodhoundce_path}/collectors/sharphound/"
+    local azurehound_path="${bloodhoundce_path}/collectors/azurehound/"
 
     # Installing & Configuring the database
     fapt postgresql postgresql-client
@@ -178,11 +177,13 @@ function install_bloodhound-ce() {
     service postgresql stop
 
     # Build BloodHound-CE
-    mkdir -p /opt/tools/BloodHound-CE/
-    git -C /opt/tools/BloodHound-CE/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git src
-    cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
+    mkdir -p "${bloodhoundce_path}"
+    local latestRelease
+    latestRelease=$(curl -s https://api.github.com/repos/SpecterOps/BloodHound/releases | jq -r 'map(.tag_name | select(contains("-rc") | not))[0]')
+    git -C "${bloodhoundce_path}" clone --depth 1 --branch "${latestRelease}" https://github.com/SpecterOps/BloodHound.git src
+    cd "${bloodhoundce_path}/src/packages/javascript/bh-shared-ui" || exit
     zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
-    cd /opt/tools/BloodHound-CE/src/ || exit
+    cd "${bloodhoundce_path}/src/" || exit
     asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
@@ -238,9 +239,9 @@ function install_bloodhound-ce() {
 
     # Files and directories
     # work directory required by bloodhound
-    mkdir /opt/tools/BloodHound-CE/work
-    ln -v -s /opt/tools/BloodHound-CE/src/artifacts/bhapi /opt/tools/BloodHound-CE/bloodhound
-    cp -v /opt/tools/BloodHound-CE/src/dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
+    mkdir "${bloodhoundce_path}/work"
+    ln -v -s "${bloodhoundce_path}/src/artifacts/bhapi" "${bloodhoundce_path}/bloodhound"
+    cp -v "${bloodhoundce_path}/src/dockerfiles/configs/bloodhound.config.json" "${bloodhoundce_path}"
     cp -v /root/sources/assets/bloodhound-ce/* /opt/tools/bin/
     chmod +x /opt/tools/bin/bloodhound*
 
@@ -248,7 +249,7 @@ function install_bloodhound-ce() {
     cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json /opt/tools/BloodHound-CE/
 
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
-    add-test-command "/opt/tools/BloodHound-CE/bloodhound -version"
+    add-test-command "${bloodhoundce_path}/bloodhound -version"
     add-test-command "service postgresql start && sleep 5 && PGPASSWORD=exegol4thewin psql -U bloodhound -d bloodhound -h localhost -c '\l' && service postgresql stop"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
 }
