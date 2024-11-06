@@ -76,7 +76,7 @@ function install_sliver() {
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
     # or check if it's possible to make this dynamic
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -137,7 +137,7 @@ function install_havoc() {
     colorecho "Installing Havoc"
     # git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
     # https://github.com/HavocFramework/Havoc/issues/516
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else
