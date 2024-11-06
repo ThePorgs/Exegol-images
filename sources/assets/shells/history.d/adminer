@@ -1,2 +1,2 @@
-AD-miner -c -cf My_Report u $USERNAME -p $PASSWORD
+AD-miner -c -cf My_Report -u $USERNAME -p $PASSWORD
 adminer -c -cf My_Report -u $USERNAME -p $PASSWORD
