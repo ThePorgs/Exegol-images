@@ -10,6 +10,7 @@ function update() {
 }
 
 function install_exegol-history() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history,add-test-command
     colorecho "Installing Exegol-history"
     #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
     # todo : below is something basic. A nice tool being created for faster and smoother workflow
