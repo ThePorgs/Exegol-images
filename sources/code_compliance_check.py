@@ -22,7 +22,7 @@ def get_functions_with_content(filename):
     """Extract functions and their contents."""
     with open(filename, 'r') as file:
         content = file.read()
-    matches = re.finditer(r'function\s+(install_\S+)\s*\(\)\s*\{', content)
+    matches = re.finditer(r'^(?!\s*#)\s*function\s+(install_\S+)\s*\(\)\s*\{', content, re.MULTILINE)
 
     functions = []
     for match in matches:
