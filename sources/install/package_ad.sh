@@ -1028,7 +1028,7 @@ function install_rusthound() {
     fi
     cargo build --release
     # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-07"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
