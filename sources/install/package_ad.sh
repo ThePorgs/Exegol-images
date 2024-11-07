@@ -166,7 +166,8 @@ function install_bloodhound-ce() {
     mkdir -p "${sharphound_path}"
     mkdir -p "${azurehound_path}"
 
-    local curl_tempfile=$(mktemp)
+    local curl_tempfile
+    curl_tempfile=$(mktemp)
     [[ -f "${curl_tempfile}" ]] || exit
 
     # Installing & Configuring the database
