@@ -43,7 +43,7 @@ def is_code_compliant(check_type, check_function_name=None):
                     if check_type == "temp-fix":
                         # Looks for a temporary fix expiration date within the function content
                         date_found = re.search(r'temp_fix_limit="(\d{4}-\d{2}-\d{2})"', func_content)
-                        if date_found and datetime.datetime.strptime(date_found.group(1), '%Y-%m-%d').date() < today:
+                        if date_found and datetime.datetime.strptime(date_found.group(1), '%Y-%m-%d').date() <= today:
                             print(f"{MAGENTA}File: {file_path}{CLEAR}")
                             print(f"{BLUE}Function: {func_name}{CLEAR}")
                             print(func_content)
