@@ -26,6 +26,8 @@ function install_metasploit() {
     git config user.name "exegol"
     git config user.email "exegol@localhost"
 
+    rvm use 3.1.5@metasploit-framework --create
+
     # install dep manager
     gem install bundler
     bundle install
@@ -48,14 +50,21 @@ function install_metasploit() {
     cp -r /root/.bundle /var/lib/postgresql
     chown -R postgres:postgres /var/lib/postgresql/.bundle
     chmod -R o+rx /opt/tools/metasploit-framework/
+    chmod 444 /opt/tools/metasploit-framework/.git/index # fatal: .git/index: index file open failed: Permission denied
     sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
     cp -r /var/lib/postgresql/.msf4 /root
 
     add-aliases metasploit
     add-history metasploit
+    add-test-command "msfconsole --help"
     add-test-command "msfconsole --version"
+    add-test-command "msfconsole -q -x 'help; quit'|grep 'Credentials Backend Commands'"
+    add-test-command "msfconsole -q -x 'db_status; quit'|grep 'Connected to msf'"
     add-test-command "msfdb --help"
+    add-test-command "msfdb status"
     add-test-command "msfvenom --list platforms"
+    add-test-command "msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f exe > /tmp/test.exe"
+    add-test-command "file /tmp/test.exe|grep 'PE32 executable' && rm /tmp/test.exe"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 
