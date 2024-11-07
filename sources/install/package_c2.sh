@@ -53,7 +53,7 @@ function install_metasploit() {
 
     add-aliases metasploit
     add-history metasploit
-    add-test-command "msfconsole --versions"
+    add-test-command "msfconsole --version"
     add-test-command "msfdb --help"
     add-test-command "msfvenom --list platforms"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"

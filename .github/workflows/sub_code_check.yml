@@ -12,6 +12,7 @@ jobs:
         uses: ThePorgs/Exegol-images-ccc@dev
         with:
           dir_path: "./sources/install"
+          token: ${{ secrets.GITHUB_TOKEN }}
   shellcheck:
     name: Shell check
     runs-on: ubuntu-latest
