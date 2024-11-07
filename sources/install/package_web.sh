@@ -410,16 +410,6 @@ function install_oneforall() {
     colorecho "Installing OneForAll"
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
-    # https://github.com/shmilylty/OneForAll/pull/340
-    local temp_fix_limit="2024-11-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git config --local user.email "local"
-      git config --local user.name "local"
-      local prs=("340")
-      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit --allow-unrelated-histories "pull/$pr"; done
-    fi
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
