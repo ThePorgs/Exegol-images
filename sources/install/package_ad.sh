@@ -158,11 +158,25 @@ function install_bloodhound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing BloodHound-CE"
 
+    # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
+    local bloodhoundce_path="/opt/tools/BloodHound-CE/"
+    local sharphound_path="${bloodhoundce_path}/collectors/sharphound/"
+    local azurehound_path="${bloodhoundce_path}/collectors/azurehound/"
+    mkdir -p "${bloodhoundce_path}"
+    mkdir -p "${sharphound_path}"
+    mkdir -p "${azurehound_path}"
+
+    local curl_tempfile
+    curl_tempfile=$(mktemp)
+    [[ -f "${curl_tempfile}" ]] || exit
+
     # Installing & Configuring the database
     fapt postgresql postgresql-client
+
     # only expose postgresql on localhost
     sed -i 's/#listen_addresse/listen_addresse/' /etc/postgresql/15/main/postgresql.conf
     service postgresql start
+
     # avoid permissions issues when impersonating postgres
     cd /tmp || exit
     sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'exegol4thewin';"
@@ -171,41 +185,60 @@ function install_bloodhound-ce() {
     service postgresql stop
 
     # Build BloodHound-CE
-    mkdir -p /opt/tools/BloodHound-CE/
-    git -C /opt/tools/BloodHound-CE/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git src
-    cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
+    local latestRelease
+    # Had to output into a tempfile as the Exegol's wrapper for curl breaks stdout
+    curl --location --silent "https://api.github.com/repos/SpecterOps/BloodHound/releases" -o "${curl_tempfile}"
+    latestRelease=$(jq --raw-output 'first(.[] | select(.tag_name | contains("-rc") | not) | .tag_name)' "${curl_tempfile}")
+    git -C "${bloodhoundce_path}" clone --depth 1 --branch "${latestRelease}" "https://github.com/SpecterOps/BloodHound.git" src
+    cd "${bloodhoundce_path}/src/packages/javascript/bh-shared-ui" || exit
     zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
-    cd /opt/tools/BloodHound-CE/src/ || exit
+    cd "${bloodhoundce_path}/src/" || exit
     asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
-    # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
-    mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound
-    mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound
     ## SharpHound
-    local SHARPHOUND_URL
-    SHARPHOUND_URL=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep 'SharpHound-.*.zip' | grep -v 'debug' | grep -o 'https://[^"]*')
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/sharphound/ "$SHARPHOUND_URL"
-    local SHARPHOUND_NAME
-    SHARPHOUND_NAME=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep -o 'SharpHound-.*.zip' | grep -v debug | uniq)
-    sha256sum "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME" > "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME.sha256"
+    local sharphound_url
+    local sharphound_name
+    local sharphound_name_lowercase
+    curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" -o "${curl_tempfile}"
+    sharphound_url=$(jq --raw-output '.assets[].browser_download_url | select(contains("debug") | not)' "${curl_tempfile}")
+    sharphound_name=$(jq --raw-output '.assets[].name | select(contains("debug") | not)' "${curl_tempfile}")
+    # lowercase fix: https://github.com/ThePorgs/Exegol-images/pull/405
+    sharphound_name_lowercase=$(jq --raw-output '.assets[].name | ascii_downcase | select(contains("debug") | not)' "${curl_tempfile}")
+    wget --directory-prefix "${sharphound_path}" "${sharphound_url}"
+    [[ -f "${sharphound_path}/${sharphound_name}" ]] || exit
+    mv "${sharphound_path}/${sharphound_name}" "${sharphound_path}/${sharphound_name_lowercase}"
+    # Unlike Azurehound, upstream does not provide a sha256 file to check the integrity
+
     ## AzureHound
-    local AZUREHOUND_URL_AMD64
-    local AZUREHOUND_URL_ARM64
-    local AZUREHOUND_VERSION
-    AZUREHOUND_VERSION=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -oP 'v\d+.\d.\d+')
-    AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
-    AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_AMD64"
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_ARM64"
-    7z a -tzip -mx9 "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-*"
-    sha256sum "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" > "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip.sha256"
+    local azurehound_url_amd64
+    local azurehound_url_amd64_sha256
+    local azurehound_url_arm64
+    local azurehound_url_arm64_sha256
+    local azurehound_version
+    curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" -o "${curl_tempfile}"
+    azurehound_version=$(jq --raw-output '.tag_name' "${curl_tempfile}")
+    azurehound_url_amd64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip"))' "${curl_tempfile}")
+    azurehound_url_amd64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip.sha256"))' "${curl_tempfile}")
+    azurehound_url_arm64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip"))' "${curl_tempfile}")
+    azurehound_url_arm64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip.sha256"))' "${curl_tempfile}")
+    rm "${curl_tempfile}"
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64}"
+    [[ -f "${azurehound_path}/azurehound-linux-amd64.zip" ]] || exit
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64_sha256}"
+    [[ -f "${azurehound_path}/azurehound-linux-amd64.zip.sha256" ]] || exit
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64}"
+    [[ -f "${azurehound_path}/azurehound-linux-arm64.zip" ]] || exit
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64_sha256}"
+    [[ -f "${azurehound_path}/azurehound-linux-arm64.zip.sha256" ]] || exit
+    (cd "${azurehound_path}"; sha256sum --check --warn ./*.sha256) || exit
+    7z a -tzip -mx9 "${azurehound_path}/azurehound-${azurehound_version}.zip" "${azurehound_path}/azurehound-*"
 
     # Files and directories
     # work directory required by bloodhound
-    mkdir /opt/tools/BloodHound-CE/work
-    ln -v -s /opt/tools/BloodHound-CE/src/artifacts/bhapi /opt/tools/BloodHound-CE/bloodhound
-    cp -v /opt/tools/BloodHound-CE/src/dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
+    mkdir -p "${bloodhoundce_path}/work"
+    ln -v -s "${bloodhoundce_path}/src/artifacts/bhapi" "${bloodhoundce_path}/bloodhound"
+    cp -v "${bloodhoundce_path}/src/dockerfiles/configs/bloodhound.config.json" "${bloodhoundce_path}"
     cp -v /root/sources/assets/bloodhound-ce/* /opt/tools/bin/
     chmod +x /opt/tools/bin/bloodhound*
 
@@ -213,7 +246,7 @@ function install_bloodhound-ce() {
     cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json /opt/tools/BloodHound-CE/
 
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
-    add-test-command "/opt/tools/BloodHound-CE/bloodhound -version"
+    add-test-command "${bloodhoundce_path}/bloodhound -version"
     add-test-command "service postgresql start && sleep 5 && PGPASSWORD=exegol4thewin psql -U bloodhound -d bloodhound -h localhost -c '\l' && service postgresql stop"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition)"
 }
