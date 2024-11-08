@@ -26,6 +26,8 @@ function install_metasploit() {
     git config user.name "exegol"
     git config user.email "exegol@localhost"
 
+    rvm use 3.1.5@metasploit-framework --create
+
     # install dep manager
     gem install bundler
     bundle install
@@ -48,14 +50,18 @@ function install_metasploit() {
     cp -r /root/.bundle /var/lib/postgresql
     chown -R postgres:postgres /var/lib/postgresql/.bundle
     chmod -R o+rx /opt/tools/metasploit-framework/
+    chmod 444 /opt/tools/metasploit-framework/.git/index # fatal: .git/index: index file open failed: Permission denied
     sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
     cp -r /var/lib/postgresql/.msf4 /root
 
     add-aliases metasploit
     add-history metasploit
+    add-test-command "msfconsole --help"
     add-test-command "msfconsole --version"
     add-test-command "msfdb --help"
+    add-test-command "msfdb status"
     add-test-command "msfvenom --list platforms"
+    add-test-command "msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f exe > /tmp/test.exe && file /tmp/test.exe|grep 'PE32 executable' && rm /tmp/test.exe"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 
@@ -76,7 +82,7 @@ function install_sliver() {
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
     # or check if it's possible to make this dynamic
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -137,7 +143,7 @@ function install_havoc() {
     colorecho "Installing Havoc"
     # git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
     # https://github.com/HavocFramework/Havoc/issues/516
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
       criticalecho "Temp fix expired. Exiting."
     else

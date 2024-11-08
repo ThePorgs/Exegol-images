@@ -58,7 +58,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -410,16 +410,6 @@ function install_oneforall() {
     colorecho "Installing OneForAll"
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
-    # https://github.com/shmilylty/OneForAll/pull/340
-    local temp_fix_limit="2024-11-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git config --local user.email "local"
-      git config --local user.name "local"
-      local prs=("340")
-      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit --allow-unrelated-histories "pull/$pr"; done
-    fi
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
@@ -515,7 +505,16 @@ function install_jwt_tool() {
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # Running the tool to create the initial configuration and force it to returns 0
+    python3 jwt_tool.py || :
     deactivate
+    
+    # Configuration
+    sed -i 's/^proxy = 127.0.0.1:8080/#proxy = 127.0.0.1:8080/' /root/.jwt_tool/jwtconf.ini
+    sed -i 's|^wordlist = jwt-common.txt|wordlist = /opt/tools/jwt_tool/jwt-common.txt|' /root/.jwt_tool/jwtconf.ini
+    sed -i 's|^commonHeaders = common-headers.txt|commonHeaders = /opt/tools/jwt_tool/common-headers.txt|' /root/.jwt_tool/jwtconf.ini
+    sed -i 's|^commonPayloads = common-payloads.txt|commonPayloads = /opt/tools/jwt_tool/common-payloads.txt|' /root/.jwt_tool/jwtconf.ini
+
     add-aliases jwt_tool
     add-history jwt_tool
     add-test-command "jwt_tool.py --help"
