@@ -430,7 +430,7 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -669,7 +669,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -772,7 +772,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -860,20 +860,7 @@ function install_donpapi() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DonPAPI"
     fapt swig
-    git -C /opt/tools/ clone --depth 1 https://github.com/login-securite/DonPAPI
-    cd /opt/tools/DonPAPI || exit
-    # https://github.com/login-securite/DonPAPI/pull/96
-    local temp_fix_limit="2024-11-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git config --local user.email "local"
-      git config --local user.name "local"
-      local prs=("96")
-      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit --allow-unrelated-histories "pull/$pr"; done
-    fi
-    pipx install --system-site-packages .
-    # pipx install --system-site-packages git+https://github.com/login-securite/DonPAPI
+    pipx install --system-site-packages git+https://github.com/login-securite/DonPAPI
     add-history donpapi
     add-test-command "DonPAPI --help"
     add-to-list "donpapi,https://github.com/login-securite/DonPAPI,Dumping revelant information on compromised targets without AV detection"
@@ -962,7 +949,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1033,7 +1020,7 @@ function install_rusthound() {
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-07"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1041,7 +1028,7 @@ function install_rusthound() {
     fi
     cargo build --release
     # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-07"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
