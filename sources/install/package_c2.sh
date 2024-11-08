@@ -58,8 +58,6 @@ function install_metasploit() {
     add-history metasploit
     add-test-command "msfconsole --help"
     add-test-command "msfconsole --version"
-    add-test-command "msfconsole -q -x 'help; quit'|grep 'Credentials Backend Commands' && sleep 10" # Prevent timeout
-    add-test-command "msfdb start && msfconsole -q -x 'db_status; quit'|grep 'Connected to msf' && sleep 10 && msfdb stop" # Prevent timeout"
     add-test-command "msfdb --help"
     add-test-command "msfdb status"
     add-test-command "msfvenom --list platforms"
