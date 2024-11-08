@@ -192,10 +192,14 @@ function install_bloodhound-ce() {
     ## AzureHound
     local AZUREHOUND_URL_AMD64
     local AZUREHOUND_URL_ARM64
+    local AZUREHOUND_VERSION
+    AZUREHOUND_VERSION=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -oP 'v\d+.\d.\d+')
     AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
     AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
     wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_AMD64"
     wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_ARM64"
+    7z a -tzip -mx9 "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-*"
+    sha256sum "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip" > "/opt/tools/BloodHound-CE/collectors/azurehound/azurehound-$AZUREHOUND_VERSION.zip.sha256"
 
     # Files and directories
     # work directory required by bloodhound
@@ -426,7 +430,7 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -665,7 +669,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -768,7 +772,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -945,7 +949,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1016,7 +1020,7 @@ function install_rusthound() {
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-07"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1024,7 +1028,7 @@ function install_rusthound() {
     fi
     cargo build --release
     # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-07"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1042,24 +1046,17 @@ function install_rusthound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound for BloodHound-CE"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone --depth 1 --branch v2 https://github.com/NH-RED-TEAM/RustHound RustHound-CE
+    git -C /opt/tools/ clone --depth 1 https://github.com/g0h4n/RustHound-CE
     cd /opt/tools/RustHound-CE || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
-    # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2024-11-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      cargo update -p time@0.3.28
-    fi
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
-    ln -v -s /opt/tools/RustHound-CE/target/release/rusthound /opt/tools/bin/rusthound-ce
+    ln -v -s /opt/tools/RustHound-CE/target/release/rusthound-ce /opt/tools/bin/rusthound-ce
     add-history rusthound-ce
     add-test-command "rusthound-ce --help"
-    add-to-list "rusthound (v2),https://github.com/NH-RED-TEAM/RustHound,BloodHound-CE ingestor in Rust."
+    add-to-list "rusthound-ce,https://github.com/g0h4n/RustHound-CE,BloodHound-CE ingestor in Rust."
 }
 
 function install_certsync() {
@@ -1311,6 +1308,15 @@ function install_bloodyAD() {
     add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
 }
 
+function install_autobloody() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing autobloody"
+    pipx install --system-site-packages git+https://github.com/CravateRouge/autobloody
+    add-history autobloody
+    add-test-command "autobloody --help"
+    add-to-list "autobloody,https://github.com/CravateRouge/autobloody,Automatically exploit Active Directory privilege escalation paths shown by BloodHound."
+}
+
 function install_dploot() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dploot"
@@ -1489,6 +1495,7 @@ function package_ad() {
     install_ntlm_theft
     install_abuseACL
     install_bloodyAD               # Active Directory privilege escalation swiss army knife.
+    install_autobloody             # Automatically exploit Active Directory privilege escalation paths.
     install_dploot                 # Python rewrite of SharpDPAPI written un C#.
     # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
     install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.

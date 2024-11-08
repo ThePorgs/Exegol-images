@@ -10,6 +10,7 @@ function update() {
 }
 
 function install_exegol-history() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history,add-test-command
     colorecho "Installing Exegol-history"
     #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
     # todo : below is something basic. A nice tool being created for faster and smoother workflow
@@ -56,7 +57,7 @@ function install_go() {
     #asdf install golang latest
     #asdf global golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2024-12-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -231,6 +232,15 @@ function install_pipx() {
     pip3 install pipx
     pipx ensurepath
     add-test-command "pipx --version"
+}
+
+function install_pyftpdlib() {
+    # CODE-CHECK-WHITELIST=add-history
+    colorecho "Installing pyftpdlib"
+    pip3 install pyftpdlib
+    add-aliases pyftpdlib
+    add-test-command "python3 -c 'import pyftpdlib'"
+    add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
 }
 
 function install_yarn() {
@@ -487,7 +497,6 @@ function package_base() {
     add-aliases grc
     add-aliases emacs-nox
     add-aliases xsel
-    add-aliases pyftpdlib
 
     # Rust, Cargo, rvm
     install_rust_cargo
@@ -504,6 +513,7 @@ function package_base() {
     install_fzf                                         # Fuzzy finder
     add-history curl
     install_yarn
+    install_pyftpdlib
     install_ultimate_vimrc                              # Make vim usable OOFB
     install_neovim
     install_mdcat                                       # cat markdown files
