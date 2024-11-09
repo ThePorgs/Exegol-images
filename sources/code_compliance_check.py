@@ -19,10 +19,30 @@ def is_whitelisted(check_function_name, function_content):
     return False
 
 def get_functions_with_content(filename):
-    """Extract functions starting with 'install_' and their content."""
+    """Extract functions and their contents."""
     with open(filename, 'r') as file:
         content = file.read()
-    return re.findall(r'function\s+(install_\S+)\(\)\s+({[^}]*\n})', content, re.DOTALL)
+    matches = re.finditer(r'^(?!\s*#)\s*function\s+(install_\S+)\s*\(\)\s*\{', content, re.MULTILINE)
+
+    functions = []
+    for match in matches:
+        func_name = match.group(1)
+        start_pos = match.end()
+        
+        brace_count = 1
+        end_pos = start_pos
+        
+        while brace_count > 0 and end_pos < len(content):
+            if content[end_pos] == '{':
+                brace_count += 1
+            elif content[end_pos] == '}':
+                brace_count -= 1
+            end_pos += 1
+        
+        func_content = content[start_pos:end_pos].strip()
+        functions.append((func_name, func_content))
+    
+    return functions
 
 def contains_target_function(function_content, target_function):
     """Check if the function content calls the target function (and that the call is not commented)"""
