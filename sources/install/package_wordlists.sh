@@ -118,6 +118,7 @@ function install_wordlist_via_assetnotes(){
     colorecho "Add assetnotes wordlists"
     mkdir -p /opt/lists/assetnotewordlist
     wget -r --no-parent -R "index.html*" https://wordlists-cdn.assetnote.io/data/ -nH -e robots=off -P /opt/lists/assetnotewordlist
+    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data' ]]"
     add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/automated' ]]"
     add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/kiterunner' ]]"
     add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/manual' ]]"
@@ -178,6 +179,7 @@ function package_wordlists() {
     install_genusernames
     install_onelistforall
     install_rules
+    install_wordlist_via_assetnotes
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package wordlists completed in $elapsed_time seconds."
