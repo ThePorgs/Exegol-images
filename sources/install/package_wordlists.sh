@@ -113,6 +113,16 @@ function install_onelistforall() {
     add-to-list "onelistforall,https://github.com/six2dez/OneListForAll,Rockyou for web fuzzing"
 }
 
+function install_wordlist_via_assetnotes(){
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
+    colorecho "Add assetnotes wordlists"
+    mkdir -p /opt/lists/assetnotewordlist
+    wget -r --no-parent -R "index.html*" https://wordlists-cdn.assetnote.io/data/ -nH -e robots=off -P /opt/lists/assetnotewordlist
+    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/automated' ]]"
+    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/kiterunner' ]]"
+    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/manual' ]]"
+    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/techologies' ]]"
+}
 function install_rules(){
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Add rules"
