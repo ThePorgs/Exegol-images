@@ -896,12 +896,18 @@ function install_postman() {
 
 function install_zap() {
     colorecho "Installing ZAP"
-    zap_version=$(curl -s "https://www.zaproxy.org/download/" | grep -E -o "ZAP [0-9]+(\.[0-9]+)+" | head -1 | cut -d' ' -f2)
-    wget "https://github.com/zaproxy/zaproxy/releases/download/v${zap_version}/ZAP_${zap_version}_Linux.tar.gz" -O /tmp/zap.tar.gz
+    local zap_url
+    local zap_name
+    zap_url=$(curl --silent https://api.github.com/repos/zaproxy/zaproxy/releases/latest | jq --raw-output '.assets[].browser_download_url' | grep Linux)
+    [[ -n "${zap_url}" ]] || exit
+    zap_name=$(echo $zap_url | grep -E -o "ZAP.*" | sed "s/_Linux.tar.gz//g")
+    [[ -n "${zap_name}" ]] || exit
+    wget "$zap_url" -O /tmp/zap.tar.gz
+    [[ -f "/tmp/zap.tar.gz" ]] || exit
     tar -xf /tmp/zap.tar.gz -C /tmp/
-    mv /tmp/ZAP_${zap_version} /opt/tools/ZAP
-    rm -rf /tmp/ZAP_${zap_version}
     rm /tmp/zap.tar.gz
+    [[ -d "/tmp/$zap_name" ]] || exit
+    mv "/tmp/$zap_name" /opt/tools/ZAP
     add-aliases zap
     add-history zap
     add-test-command "which zap"
