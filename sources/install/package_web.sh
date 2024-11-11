@@ -896,9 +896,13 @@ function install_postman() {
 
 function install_zap() {
     colorecho "Installing ZAP"
+    local curl_tempfile
+    curl_tempfile=$(mktemp)
+    [[ -f "${curl_tempfile}" ]] || exit
+    curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" -o ${curl_tempfile}
     local zap_url
     local zap_name
-    zap_url=$(curl --silent https://api.github.com/repos/zaproxy/zaproxy/releases/latest | jq --raw-output '.assets[].browser_download_url' | grep Linux)
+    zap_url=$(jq --raw-output '.assets[].browser_download_url | select (endswith("_Linux.tar.gz"))' "${curl_tempfile}")
     [[ -n "${zap_url}" ]] || exit
     zap_name=$(echo $zap_url | grep -E -o "ZAP.*" | sed "s/_Linux.tar.gz//g")
     [[ -n "${zap_name}" ]] || exit
