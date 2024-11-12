@@ -3,6 +3,7 @@
 
 source common.sh
 # sourcing package_ad.sh for the install_powershell() function
+# Hello
 source package_ad.sh
 
 function install_pwncat() {
