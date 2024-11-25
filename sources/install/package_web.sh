@@ -897,10 +897,8 @@ function install_postman() {
 
 function install_zaproxy() {
     local download_url
-    download_url=$(
-        /usr/bin/curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases" | \
-        jq --raw-output 'first(.[]|select(.prerelease==false))|.assets[]|select(.name|test("ZAP_[0-9.]+_Linux.tar.gz")).browser_download_url'
-    )
+    download_url=$(/usr/bin/curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | \
+        jq '.assets[]|select(.name|test("ZAP_[0-9.]+_Linux.tar.gz")).browser_download_url')
     mkdir /opt/tools/zaproxy
     curl --output-dir /opt/tools/zaproxy --location --remote-name $download_url
     tar --directory /opt/tools/zaproxy --extract --file /opt/tools/zaproxy/ZAP_*
