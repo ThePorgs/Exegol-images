@@ -895,6 +895,23 @@ function install_postman() {
     add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }
 
+function install_zaproxy() {
+    local download_url
+    download_url=$(
+        /usr/bin/curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases" | \
+        jq --raw-output 'first(.[]|select(.prerelease==false))|.assets[]|select(.name|test("ZAP_[0-9.]+_Linux.tar.gz")).browser_download_url'
+    )
+    mkdir /opt/tools/zaproxy
+    curl --output-dir /opt/tools/zaproxy --location --remote-name $download_url
+    tar --directory /opt/tools/zaproxy --extract --file /opt/tools/zaproxy/ZAP_*
+    ln -s /opt/tools/zaproxy/ZAP_*/zap-*.jar /opt/tools/zaproxy/zap.jar
+    /usr/lib/jvm/java-21-openjdk/bin/java -jar /opt/tools/zaproxy/zap.jar -cmd -addonupdate
+    add-aliases zaproxy
+    add-history zaproxy
+    add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java -jar /opt/tools/zaproxy/zap.jar -suppinfo"
+    add-to-list "zaproxy,https://www.zaproxy.org/,Web application security testing tool."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -974,6 +991,7 @@ function package_web() {
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     install_katana                  # A next-generation crawling and spidering framework
     install_postman                 # Postman - API platform for testing APIs
+    install_zaproxy                 # Zed Attack Proxy
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
