@@ -1,1 +1,1 @@
-alias zaproxy='/usr/lib/jvm/java-21-openjdk/bin/java -Xmx4g -jar /opt/tools/zaproxy/zap.jar'
+alias zaproxy='/opt/tools/zaproxy/zap.sh'
