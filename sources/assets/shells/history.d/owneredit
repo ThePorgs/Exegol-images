@@ -1,1 +1,0 @@
-owneredit.py -action write -new-owner "$NEW_OWNER" -target "$TARGET_OBJECT" "$DOMAIN"/"$USERNAME":"$PASSWORD" -dc-ip "$DC_IP"
