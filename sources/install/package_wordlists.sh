@@ -2,6 +2,7 @@
 # Author: The Exegol Project
 
 source common.sh
+# Test
 
 function install_wordlists_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
