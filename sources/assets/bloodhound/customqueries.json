@@ -459,15 +459,15 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled:TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '(?i)S-1-5-.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled:TRUE, admincount:TRUE, sensitive:FALSE})-[:MemberOf*1..3]->(g2:Group) WHERE NOT u2.objectid IN protectedUsers RETURN p"
+                "query": "MATCH (u:User {enabled:TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '(?i)S-1-5-.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled:TRUE, admincount:TRUE, sensitive:FALSE})-[:MemberOf*1..3]->(g2:Group) WHERE (NOT u2.objectid IN protectedUsers OR u2.objectid =~ '.*-500$') RETURN p"
             }]
         },
         {
-            "name": "Enabled Domain/Enterprise Administrators, not sensitive for delegation and not members of Protected Users",
+            "name": "Enabled Domain/Enterprise Administrators, Account/Backup/Print/Server Operators,... not sensitive for delegation and not members of Protected Users",
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT(u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, admincount: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group) WHERE NOT u2.objectid IN protectedUsers AND g2.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT(u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, admincount: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group) WHERE (NOT u2.objectid IN protectedUsers OR u2.objectid =~ '.*-500$') AND g2.objectid =~ '.*-(512|517|518|519|544|548|549|550|551|574|583)$' RETURN p"
             }]
         },
         {
@@ -475,7 +475,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group {highvalue: TRUE}) WHERE NOT u2.objectid IN protectedUsers RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group {highvalue: TRUE}) WHERE (NOT u2.objectid IN protectedUsers OR u2.objectid =~ '.*-500$') RETURN p"
             }]
         },
         {
