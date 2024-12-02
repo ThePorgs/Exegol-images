@@ -463,7 +463,7 @@
             }]
         },
         {
-            "name": "Enabled Domain/Enterprise Administrators, Account/Backup/Print/Server Operators/..., not sensitive for delegation and not members of Protected Users",
+            "name": "Enabled Domain/Enterprise Administrators, Account/Backup/Print/Server Operators,... not sensitive for delegation and not members of Protected Users",
             "category": "Admins",
             "queryList": [{
                 "final": true,
