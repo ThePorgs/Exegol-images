@@ -897,7 +897,7 @@ function install_postman() {
 
 function install_token_exploiter() {
     # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing Token Explorer"
+    colorecho "Installing Token Exploiter"
     pipx install --system-site-packages git+https://github.com/psyray/token-exploiter
     add-history token-exploiter
     add-test-command "token-exploiter --help"
