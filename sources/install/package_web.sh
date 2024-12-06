@@ -895,6 +895,15 @@ function install_postman() {
     add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }
 
+function install_token_exploiter() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Token Explorer"
+    pipx install --system-site-packages git+https://github.com/psyray/token-exploiter
+    add-history token-exploiter
+    add-test-command "token-exploiter --help"
+    add-to-list "token-exploiter,https://github.com/psyray/token-exploiter,Token Exploiter is a tool designed to analyze GitHub Personal Access Tokens."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -974,6 +983,7 @@ function package_web() {
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     install_katana                  # A next-generation crawling and spidering framework
     install_postman                 # Postman - API platform for testing APIs
+    install_token_exploiter         # Github personal token Analyzer
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."
