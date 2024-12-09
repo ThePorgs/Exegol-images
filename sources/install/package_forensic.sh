@@ -56,14 +56,7 @@ function install_volatility2() {
 
 function install_volatility3() {
     colorecho "Installing volatility3"
-    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
-    cd /opt/tools/volatility3 || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
-    pip3 install -r requirements.txt
-    deactivate
+    pipx install --system-site-packages git+https://github.com/volatilityfoundation/volatility3
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
