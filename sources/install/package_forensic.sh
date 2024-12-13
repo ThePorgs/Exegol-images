@@ -55,9 +55,9 @@ function install_volatility2() {
 }
 
 function install_volatility3() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing volatility3"
     pipx install --system-site-packages git+https://github.com/volatilityfoundation/volatility3
-    add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
     add-to-list "volatility3,https://github.com/volatilityfoundation/volatility3,Advanced memory forensics framework"
