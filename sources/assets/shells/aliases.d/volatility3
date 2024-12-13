@@ -1,3 +1,2 @@
-alias vol='/opt/tools/volatility3/venv/bin/python3 /opt/tools/volatility3/venv/bin/vol'
 alias volatility3='vol'
 alias vol3='volatility3'
