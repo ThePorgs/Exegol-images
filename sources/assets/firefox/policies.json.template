@@ -1,0 +1,117 @@
+{
+  "policies": {
+    "DisableTelemetry": true,
+    "DisplayBookmarksToolbar": "always",
+
+    "ManagedBookmarks": [
+      {
+        "toplevel_name": "Exegol Bookmarks"
+      },
+      {
+        "url": "https://exegol.readthedocs.io/en/latest/",
+        "name": "Exegol Doc"
+      },
+      {
+        "name": "References / Guides",
+        "children": [
+          {
+            "url": "https://www.thehacker.recipes/",
+            "name": "THR"
+          },
+          {
+            "url": "https://tools.thehacker.recipes/",
+            "name": "THR Tools"
+          },
+          {
+            "url": "https://book.hacktricks.xyz/welcome/readme",
+            "name": "HackTricks"
+          },
+          {
+            "url": "https://github.com/swisskyrepo/PayloadsAllTheThings",
+            "name": "PayloadAllTheThings"
+          },
+          {
+            "url": "https://www.ired.team/",
+            "name": "RedTeam Notes"
+          },
+          {
+            "url": "https://orange-cyberdefense.github.io/ocd-mindmaps/img/pentest_ad_dark_2023_02.svg",
+            "name": "OCD AD Mindmap"
+          },
+          {
+            "url": "https://portswigger.net/web-security/cross-site-scripting/cheat-sheet",
+            "name": "Portswigger XSS Cheatsheet"
+          },
+          {
+            "url": "https://lolol.farm/",
+            "name": "LOLOL Farm"
+          }
+        ]
+      },
+      {
+        "name": "Tools",
+        "children": [
+          {
+            "url": "file:///opt/tools/CyberChef/CyberChef.html",
+            "name": "CyberChef"
+          },
+          {
+            "url": "https://regex101.com/",
+            "name": "Regex101"
+          },
+          {
+            "url": "https://macvendors.com/",
+            "name": "MA:CV:en:do:rs"
+          },
+          {
+            "url": "https://www.revshells.com/",
+            "name": "Reverse Shell Generator"
+          }
+        ]
+      },
+      {
+        "name": "Services",
+        "children": [
+          {
+            "url": "http://127.0.0.1:1991/login",
+            "name": "Trillium"
+          },
+          {
+            "url": "http://127.0.0.1:1030/login",
+            "name": "BloodHound-CE"
+          }
+        ]
+      },
+      {
+        "name": "CTF",
+        "children": [
+          {
+            "url": "https://www.hackthebox.com/",
+            "name": "HackTheBox"
+          },
+          {
+            "url": "https://www.root-me.org/",
+            "name": "RootMe"
+          }
+        ]
+      }
+    ],
+
+    "ExtensionSettings_Comment": "To get the 'ID' of a plugins, you can query the extension page and search for the 'guid' field in the HTML source code.",
+    "ExtensionSettings": {
+    },
+    
+    "UserMessaging": {
+      "WhatsNew": false,
+      "ExtensionRecommendations": false,
+      "FeatureRecommendations": false,
+      "UrlbarInterventions": false,
+      "SkipOnboarding": true,
+      "MoreFromMozilla": false
+    },
+
+    "Certificates": {
+      "Install": ["/opt/tools/firefox/cacert.der"]
+    }
+  }
+}

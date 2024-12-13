@@ -176,25 +176,10 @@ function run_user_setup() {
   colorecho "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== End of custom setups loading ===="
 }
 
-function deploy_firefox_addons() {
-  colorecho "Deploying Firefox Add-Ons"
-  local addon_folder
-  local addon_list
-  if [[ -d "$MY_SETUP_PATH/firefox/" ]]; then
-    if [[ -d "$MY_SETUP_PATH/firefox/addons" ]]; then
-      addon_folder="$MY_SETUP_PATH/firefox/addons"
-    else
-      mkdir "$MY_SETUP_PATH/firefox/addons" && chmod 770 "$MY_SETUP_PATH/firefox/addons"
-    fi
-    if [[ -f "$MY_SETUP_PATH/firefox/addons.txt" ]]; then
-      addon_list="$MY_SETUP_PATH/firefox/addons.txt"
-    else
-      cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
-    fi
-    python3 /opt/tools/firefox/user-setup.py -L "$addon_list" -D "$addon_folder"
-  else
-    mkdir --parents "$MY_SETUP_PATH/firefox/addons" && chmod 770 -R "$MY_SETUP_PATH/firefox/addons"
-    cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
+function deploy_firefox_policy() {
+  colorecho "Deploying Firefox Policy"
+  if [[ -f "$MY_SETUP_PATH/firefox/policies.json" ]]; then
+    cp --preserve=mode "$MY_SETUP_PATH/firefox/policies.json" /usr/lib/firefox-esr/distribution/policies.json
   fi
 }
 
@@ -300,7 +285,7 @@ deploy_vim
 deploy_nvim
 deploy_apt
 deploy_python3
-deploy_firefox_addons
+deploy_firefox_policy
 deploy_bloodhound
 trust_ca_certs_in_firefox
 deploy_arsenal_cheatsheet
