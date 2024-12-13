@@ -1283,7 +1283,14 @@ function install_LDAPWordlistHarvester() {
 function install_pywerview() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pywerview"
-    pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview
+    #pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview
+    # Temp fix for : https://github.com/the-useless-one/pywerview/issues/68
+    local temp_fix_limit="2025-02-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview@pyproject
+    fi
     add-history pywerview
     add-test-command "pywerview --help"
     add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
