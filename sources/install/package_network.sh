@@ -117,6 +117,16 @@ function install_nmap-parse-output() {
     add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
 }
 
+function install_udpx(){
+    colorecho "Install udpx"
+    go install -v github.com/nullt3r/udpx/cmd/udpx@latest
+    asdf reshim golang
+    add-aliases udpx
+    add-history udpx
+    add-test-command "udpx --help"
+    add-to-list "udpx,https://github.com/nullt3r/udpx, Fast and lightweight, UDPX is a single-packet UDP scanner written in Go that supports the discovery of over 45 services with the ability to add custom ones."
+}
+
 function install_autorecon() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing autorecon"
@@ -299,6 +309,7 @@ function package_network() {
     install_remmina                 # Remote desktop client
     install_nmap                    # Port scanner
     install_nmap-parse-output       # Parse nmap XML files
+    install_udpx
     install_autorecon               # External recon tool
     install_dnschef                 # Python DNS server
     install_divideandscan           # Python project to automate port scanning routine
