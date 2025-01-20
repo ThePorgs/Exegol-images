@@ -896,18 +896,19 @@ function install_postman() {
 }
 
 function install_zaproxy() {
+    colorecho "Installing Zaproxy"
     local download_url
     download_url=$(/usr/bin/curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | \
         jq --raw-output '.assets[]|select(.name|test("ZAP_[0-9.]+_Linux.tar.gz")).browser_download_url')
     mkdir /opt/tools/zaproxy
-    curl --output-dir /opt/tools/zaproxy --location --remote-name $download_url
+    curl --output-dir /opt/tools/zaproxy --location --remote-name "$download_url"
     tar --directory /opt/tools/zaproxy --extract --file /opt/tools/zaproxy/ZAP_*.tar.gz
     rm /opt/tools/zaproxy/ZAP_*.tar.gz
     ln -s /opt/tools/zaproxy/ZAP_*/zap.sh /opt/tools/zaproxy/
     /opt/tools/zaproxy/zap.sh -cmd -addonupdate
     add-aliases zaproxy
     add-history zaproxy
-    add-test-command "/opt/tools/zaproxy/zap.sh -suppinfo"
+    add-test-command "zaproxy -suppinfo"
     add-to-list "zaproxy,https://www.zaproxy.org/,Web application security testing tool."
 }
     
