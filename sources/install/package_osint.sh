@@ -486,8 +486,19 @@ function install_blackbird() {
     cd /opt/tools/blackbird || exit
     sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
     sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
+    dos2unix requirements.txt
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
+    # spacy 3.8.2 uses blis 1.2.0 as dependency. This version of blis in the ARM architecture has issues during build.
+    local temp_fix_limit="2025-02-20"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+        criticalecho "Temp fix expired. Exiting."
+    else
+        if [[ $(uname -m) = 'aarch64' ]]
+        then
+            criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+        fi
+    fi
     pip3 install -r requirements.txt
     deactivate
     add-aliases blackbird
