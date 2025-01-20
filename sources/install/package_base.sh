@@ -57,7 +57,7 @@ function install_go() {
     #asdf install golang latest
     #asdf global golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2024-12-01"
+    local temp_fix_limit="2025-06-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -140,10 +140,11 @@ function install_pyenv() {
         colorecho "Installing python${v}"
         pyenv install "$v"
     done
-    # allowing python2, python3 and python3.6 to be found
+    # allowing python2, python3, python3.10, python3.11 and python3.12 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
-    #  --> python3.6 points to 3.6
+    #  --> python3.10 points to 3.10
+    #  --> python3.12 points to 3.12
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -467,7 +468,7 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.12 3.10 3.6 2"
+    PYTHON_VERSIONS="3.11 3.12 3.10 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
