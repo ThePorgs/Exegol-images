@@ -156,24 +156,6 @@ function install_infoga() {
     add-to-list "infoga,https://github.com/m4ll0k/Infoga,Information gathering tool for hacking."
 }
 
-function install_buster() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing buster"
-    git -C /opt/tools clone --depth 1 https://github.com/sham00n/buster
-    cd /opt/tools/buster || exit
-    fapt libxml2-dev libxslt-dev
-    python3.6 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    # setting static lxml version since buster doesn't support latest one
-    python3.6 -m pip install cython cchardet requests beautifulsoup4 PyYaml lxml==5.1.1 grequests gevent twint
-    python3.6 setup.py install
-    deactivate
-    ln -s /opt/tools/buster/venv/bin/buster /opt/tools/bin
-    add-history buster
-    add-test-command "buster --help"
-    add-to-list "buster,https://github.com/sham00n/Buster,Advanced OSINT tool"
-}
-
 function install_pwnedornot() {
     colorecho "Installing pwnedornot"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
@@ -571,7 +553,6 @@ function package_osint() {
     install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
     # install_infoga                  # Gathering email accounts informations TODO : 404, it seems the repo has been removed
-    install_buster                  # An advanced tool for email reconnaissance
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     # install_ghunt                 # Investigate Google Accounts with emails FIXME: Need python3.10 -> https://github.com/mxrch/GHunt/issues/398
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
