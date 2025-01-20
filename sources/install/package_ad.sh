@@ -1283,7 +1283,7 @@ function install_LDAPWordlistHarvester() {
 function install_pywerview() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pywerview"
-    pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview
+    pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview@master
     add-history pywerview
     add-test-command "pywerview --help"
     add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
