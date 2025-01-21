@@ -1205,8 +1205,10 @@ function install_roadrecon() {
 }
 
 function install_roadtx() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing roadtx"
     pipx install --system-site-packages roadtx
+    add-test-command "roadtx --help"
     add-to-list "ROADtx,https://github.com/dirkjanm/ROADtools#roadtools-token-exchange-roadtx,ROADtools Token eXchange."
 }
 
