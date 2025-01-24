@@ -1,0 +1,4 @@
+dbassets add creds -u 'Administrator' -p 'Passw0rd!'
+dbassets get creds -u 'Administrator' --json
+dbassets add hosts --ip '127.0.0.1'
+dbassets get hosts --ip '127.0.0.1'

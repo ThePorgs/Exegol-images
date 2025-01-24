@@ -1,0 +1,13 @@
+alias dbcreds='(){
+	CREDS=$(dbassets tui creds);
+	export USER=$( echo "$CREDS" | sed "1q;d");
+	export PASSWORD=$( echo "$CREDS" | sed "2q;d");
+	export NT_HASH=$( echo "$CREDS" | sed "3q;d");
+	export DOMAIN=$( echo "$CREDS" | sed "4q;d");
+}'
+alias dbhosts='(){
+	HOSTS=$(dbassets tui hosts);
+	export IP=$( echo "$HOSTS" | sed "1q;d");
+	export TARGET=$( echo "$HOSTS" | sed "1q;d");
+	export HOSTNAME=$( echo "$HOSTS" | sed "2q;d");
+}'

@@ -94,6 +94,15 @@ function install_genusernames() {
     add-to-list "genusernames,https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."
 }
 
+function install_dbassets() {
+    colorecho "Installing dbassets"
+    pipx install --system-site-packages git+https://github.com/lap1nou/db-assets
+    add-aliases dbassets
+    add-history dbassets
+    add-test-command "dbassets -h"
+    add-to-list "dbassets,https://github.com/lap1nou/db-assets,Compromised credentials management"
+}
+
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
     set_env
@@ -107,6 +116,7 @@ function package_wordlists() {
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
+    install_dbassets
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package wordlists completed in $elapsed_time seconds."
