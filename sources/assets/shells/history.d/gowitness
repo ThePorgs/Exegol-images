@@ -1,1 +1,1 @@
-gowitness nmap -f nmap.xml --open --service-contains http --delay 5 --timeout 5
+gowitness scan nmap -f nmap.xml --open-only --service-contains http --delay 5 --timeout 5
