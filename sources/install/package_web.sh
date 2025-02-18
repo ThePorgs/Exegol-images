@@ -895,21 +895,19 @@ function install_postman() {
     add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }
 
-function install_zaproxy() {
-    colorecho "Installing Zaproxy"
+function install_zap() {
+    colorecho "Installing ZAP"
     local download_url
-    download_url=$(/usr/bin/curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | \
-        jq --raw-output '.assets[]|select(.name|test("ZAP_[0-9.]+_Linux.tar.gz")).browser_download_url')
-    mkdir /opt/tools/zaproxy
-    curl --output-dir /opt/tools/zaproxy --location --remote-name "$download_url"
-    tar --directory /opt/tools/zaproxy --extract --file /opt/tools/zaproxy/ZAP_*.tar.gz
-    rm /opt/tools/zaproxy/ZAP_*.tar.gz
-    ln -s /opt/tools/zaproxy/ZAP_*/zap.sh /opt/tools/zaproxy/
+    URL=$(curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | grep 'browser_download_url.*ZAP.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/ZAP.tar.gz "$URL"
+    tar -xf /tmp/yourtool.tar.xz --directory /tmp
+    rm /tmp/ZAP.tar.gz
+    mv /tmp/ZAP* /opt/tools/zaproxy
+    ln -s "/opt/tools/zaproxy/zap.sh" "/opt/tools/bin/zap"
     /opt/tools/zaproxy/zap.sh -cmd -addonupdate
-    add-aliases zaproxy
     add-history zaproxy
     add-test-command "zaproxy -suppinfo"
-    add-to-list "zaproxy,https://www.zaproxy.org/,Web application security testing tool."
+    add-to-list "Zed Attack Proxy (ZAP),https://www.zaproxy.org/,Web application security testing tool."
 }
     
 function install_token_exploiter() {
@@ -999,7 +997,7 @@ function package_web() {
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     install_katana                  # A next-generation crawling and spidering framework
     install_postman                 # Postman - API platform for testing APIs
-    install_zaproxy                 # Zed Attack Proxy
+    install_zap                     # Zed Attack Proxy
     install_token_exploiter         # Github personal token Analyzer
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
