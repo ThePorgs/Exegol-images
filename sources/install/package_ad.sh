@@ -1197,8 +1197,16 @@ function install_noPac() {
 function install_roadrecon() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing roadrecon"
-    pipx install --system-site-packages roadrecon
-    pipx inject roadrecon pyyaml numpy pandas # dependencies of road2timeline plugin
+    # Install dependencies of road2timeline plugin
+    # see https://github.com/dirkjanm/ROADtools/pull/121
+    local temp_fix_limit="2025-04-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+      pipx install --system-site-packages roadrecon[road2timeline]
+    else
+      pipx install --system-site-packages roadrecon
+      pipx inject roadrecon pyyaml numpy pandas
+    fi
     add-test-command "roadrecon --help"
     add-test-command "roadrecon-gui --help"
     add-to-list "ROADrecon,https://github.com/dirkjanm/ROADtools#roadrecon,Azure AD recon for red and blue."
