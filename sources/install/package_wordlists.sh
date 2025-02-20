@@ -142,7 +142,6 @@ function install_rules(){
         "/d3adhob0.rule" \
         "/hob064.rule"
 
-
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
         "/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
         "/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz" \
@@ -150,13 +149,11 @@ function install_rules(){
         "/rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz" \
         "/rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz"
 
-
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
         "/rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz" \
         "/rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz" \
         "/rules/private.hashorg.royce/pantagrule.one.royce.rule.gz" \
         "/rules/private.hashorg.royce/pantagrule.random.royce.rule.gz"
-
 
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
         "/rules/private.v5/pantagrule.private.v5.hybrid.rule.gz" \
@@ -180,8 +177,8 @@ function package_wordlists() {
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
     install_onelistforall
+    install_rules_from_repo()
     install_rules
-    install_wordlist_via_assetnotes
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package wordlists completed in $elapsed_time seconds."
