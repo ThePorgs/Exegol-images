@@ -117,54 +117,52 @@ function install_onelistforall() {
     add-to-list "onelistforall,https://github.com/six2dez/OneListForAll,Rockyou for web fuzzing"
 }
 
-function install_wordlist_via_assetnotes(){
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Add assetnotes wordlists"
-    mkdir -p /opt/lists/assetnotewordlist
-    wget -r --no-parent -R "index.html*" https://wordlists-cdn.assetnote.io/data/ -nH -e robots=off -P /opt/lists/assetnotewordlist
-    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data' ]]"
-    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/automated' ]]"
-    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/kiterunner' ]]"
-    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/manual' ]]"
-    add-add-test-command "[[ -d '/opt/lists/assetnotewordlist/data/techologies' ]]"
+
+function install_rules_from_repo() {
+    local owner="$1"
+    local repo_name="$2"
+    local branch="$3"
+    shift 3
+    local paths=($@)
+
+    for path in "${paths[@]}"; do
+        url="https://github.com/$owner/$repo_name/raw/refs/heads/$branch$path"
+        list_name=$(basename "$path")
+        wget "$url" -P /opt/rules/
+        add-test-command "[[ -f '/opt/lists/$list_name' ]]"
+    done
 }
+
 function install_rules(){
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Add rules"
-    wget https://github.com/NSAKEY/nsa-rules/raw/refs/heads/master/_NSAKEY.v1.dive.rule -P /opt/rules/
-    add-test-command "[[ -f '/opt/lists/_NSAKEY.v1.dive.rule.gz' ]]"
-    wget https://github.com/NSAKEY/nsa-rules/raw/refs/heads/master/_NSAKEY.v2.dive.rule -P /opt/rules/
-    add-test-command "[[ -f '/opt/lists/_NSAKEY.v2.dive.rule.gz' ]]"
-    wget https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/refs/heads/master/d3adhob0.rule -P /opt/rules/
-    add-test-command "[[ -f '/opt/lists/d3adhob0.rule.gz' ]]"
-    wget https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/refs/heads/master/hob064.rule -P /opt/rules/
-    add-test-command "[[ -f '/opt/lists/hob064.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.hashorg.v6.hybrid.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.hashorg.v6.one.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.hashorg.v6.popular.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.hashorg.v6.random.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.hashorg.v6.raw1m.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.popular.royce.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.hybrid.royce.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.hashorg.royce/pantagrule.one.royce.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.one.royce.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.hashorg.royce/pantagrule.random.royce.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.random.royce.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.hybrid.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.private.v5.hybrid.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.one.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.private.v5.one.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.popular.rule.gz -P /opt/rules/
-    add-test-command "[[ -f 'pantagrule.private.v5.popular.rule.gz' ]]"
-    wget https://github.com/rarecoil/pantagrule/raw/refs/heads/master/rules/private.v5/pantagrule.private.v5.random.rule.gz -P /opt/rules/
-    add-test-command "[[ -f '/opt/lists/pantagrule.private.v5.random.rule.gz' ]]"
+    install_rules_from_repo "NSAKEY" "nsa-rules" "master" \
+        "/_NSAKEY.v1.dive.rule" \
+        "/_NSAKEY.v2.dive.rule"
+
+    install_rules_from_repo "praetorian-inc" "Hob0Rules" "master" \
+        "/d3adhob0.rule" \
+        "/hob064.rule"
+
+
+    install_rules_from_repo "rarecoil" "pantagrule" "master" \
+        "/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
+        "/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz" \
+        "/rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz" \
+        "/rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz" \
+        "/rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz"
+
+
+    install_rules_from_repo "rarecoil" "pantagrule" "master" \
+        "/rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz" \
+        "/rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz" \
+        "/rules/private.hashorg.royce/pantagrule.one.royce.rule.gz" \
+        "/rules/private.hashorg.royce/pantagrule.random.royce.rule.gz"
+
+
+    install_rules_from_repo "rarecoil" "pantagrule" "master" \
+        "/rules/private.v5/pantagrule.private.v5.hybrid.rule.gz" \
+        "/rules/private.v5/pantagrule.private.v5.one.gz" \
+        "/rules/private.v5/pantagrule.private.v5.popular.rule.gz" \
+        "/rules/private.v5/pantagrule.private.v5.random.rule.gz"
 }
 
 
