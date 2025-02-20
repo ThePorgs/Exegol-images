@@ -9,5 +9,14 @@ alias dbhosts='(){
 	HOSTS=$(dbassets tui hosts);
 	export IP=$( echo "$HOSTS" | sed "1q;d");
 	export TARGET=$( echo "$HOSTS" | sed "1q;d");
-	export HOSTNAME=$( echo "$HOSTS" | sed "2q;d");
+	export DB_HOSTNAME=$( echo "$HOSTS" | sed "2q;d");
+}'
+alias dbshow='(){
+	echo "Username: $USER";
+	echo "Password: $PASSWORD";
+	echo "NT hash: $NT_HASH";
+	echo "Domain: $DOMAIN";
+	echo "IP: $IP";
+	echo "Target: $TARGET";
+	echo "Hostname: $DB_HOSTNAME";
 }'
