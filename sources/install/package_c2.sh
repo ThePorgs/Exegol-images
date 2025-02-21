@@ -143,7 +143,7 @@ function install_havoc() {
     colorecho "Installing Havoc"
     git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
     # https://github.com/HavocFramework/Havoc/issues/516 (seems fixed but keeping commented tempfix just in case)
-    #    local temp_fix_limit="2025-02-01"
+    #    local temp_fix_limit="YYYY-MM-DD"
     #    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
     #      criticalecho "Temp fix expired. Exiting."
     #    else
