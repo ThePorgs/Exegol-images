@@ -118,6 +118,7 @@ function install_nmap-parse-output() {
 }
 
 function install_udpx(){
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Install udpx"
     go install -v github.com/nullt3r/udpx/cmd/udpx@latest
     asdf reshim golang
