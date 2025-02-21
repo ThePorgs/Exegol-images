@@ -896,8 +896,9 @@ function install_postman() {
 }
 
 function install_zap() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ZAP"
-    local download_url
+    local URL
     URL=$(curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | grep 'browser_download_url.*ZAP.*tar.gz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/ZAP.tar.gz "$URL"
     tar -xf /tmp/yourtool.tar.xz --directory /tmp
