@@ -6,8 +6,8 @@ export FZF_BASE=/opt/tools/fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # asdf
-source "$HOME/.asdf/asdf.sh"
-source "$HOME/.asdf/completions/asdf.bash"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+source <(asdf completion bash)
 export GOPATH=$(go env GOPATH)
 
 PS1="\[\e[37m\][\[\e[33m\]\D{%b %d, %Y - %T (%Z)}\[\e[37m\]]\[\e[m\]${LOGGING}\[\e[1;38;5;13m\] \h \[\e[1;34m\]\w $(prompt_char)\[\e[m\] "

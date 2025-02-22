@@ -55,7 +55,7 @@ function install_go() {
     # 1.19 needed by sliver
     asdf install golang 1.19
     #asdf install golang latest
-    #asdf global golang latest
+    #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
     local temp_fix_limit="2025-06-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
@@ -65,7 +65,7 @@ function install_go() {
       asdf install golang 1.23.0
       # Default GO version: 1.22.2
       asdf install golang 1.22.2
-      asdf global golang 1.22.2
+      asdf set --home golang 1.22.2
     fi
 
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
@@ -422,12 +422,24 @@ function post_install() {
 
 function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Install asdf"
-    # creates ~/.asdf/
-    git -C "$HOME" clone --depth 1 --branch v0.13.1 https://github.com/asdf-vm/asdf .asdf
-    source "$HOME/.asdf/asdf.sh"
-    # completions file
-    source "$HOME/.asdf/completions/asdf.bash"
+    colorecho "Installing asdf"
+    local URL
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' | grep -o 'https://[^"]*')
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' | grep -o 'https://[^"]*')
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    curl --location -o /tmp/asdf.tar.gz "$URL"
+    tar -xf /tmp/asdf.tar.gz --directory /tmp
+    rm /tmp/asdf.tar.gz
+    mv /tmp/asdf /opt/tools/bin/asdf
+    # asdf completions
+    mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
+    asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }

@@ -90,7 +90,7 @@ function install_sliver() {
       git -C /opt/tools/ clone --branch v1.5.42 --depth 1 https://github.com/BishopFox/sliver.git
       cd /opt/tools/sliver || exit
     fi
-    asdf local golang 1.19
+    asdf set golang 1.19
     make
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
     ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client

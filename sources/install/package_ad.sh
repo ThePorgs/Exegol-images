@@ -193,7 +193,7 @@ function install_bloodhound-ce() {
     cd "${bloodhoundce_path}/src/packages/javascript/bh-shared-ui" || exit
     zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
     cd "${bloodhoundce_path}/src/" || exit
-    asdf local golang 1.23.0
+    asdf set golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     ## SharpHound
