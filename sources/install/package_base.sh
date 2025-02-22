@@ -269,23 +269,30 @@ function install_neovim() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-        chmod u+x nvim.appimage
-        ./nvim.appimage --appimage-extract
+        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-amd64.appimage
+        chmod u+x nvim-linux-amd64.appimage
+        ./nvim-linux-amd64.appimage --appimage-extract
         mkdir /opt/tools/nvim
         cp -r squashfs-root/usr/* /opt/tools/nvim
-        rm -rf squashfs-root nvim.appimage
+        rm -rf squashfs-root nvim-linux-amd64.appimage
         ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     elif [[ $(uname -m) = 'aarch64' ]]
     then
+        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-amd64.appimage
+        chmod u+x nvim-linux-amd64.appimage
+        ./nvim-linux-amd64.appimage --appimage-extract
+        mkdir /opt/tools/nvim
+        cp -r squashfs-root/usr/* /opt/tools/nvim
+        rm -rf squashfs-root nvim-linux-amd64.appimage
+        ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
         # Build take ~5min
-        fapt gettext
-        git clone --depth 1 https://github.com/neovim/neovim.git
-        cd neovim || exit
-        make CMAKE_BUILD_TYPE=RelWithDebInfo
-        make install
-        cd .. || exit
-        rm -rf ./neovim
+        # fapt gettext
+        # git clone --depth 1 https://github.com/neovim/neovim.git
+        # cd neovim || exit
+        # make CMAKE_BUILD_TYPE=RelWithDebInfo
+        # make install
+        # cd .. || exit
+        # rm -rf ./neovim
     fi
     add-test-command "nvim --version"
     add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
