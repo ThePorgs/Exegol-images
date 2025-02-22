@@ -82,7 +82,7 @@ function install_sliver() {
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
     # or check if it's possible to make this dynamic
-    local temp_fix_limit="2024-12-01"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -90,7 +90,7 @@ function install_sliver() {
       git -C /opt/tools/ clone --branch v1.5.42 --depth 1 https://github.com/BishopFox/sliver.git
       cd /opt/tools/sliver || exit
     fi
-    asdf local golang 1.19
+    asdf set golang 1.19
     make
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
     ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
@@ -141,15 +141,15 @@ function install_empire() {
 
 function install_havoc() {
     colorecho "Installing Havoc"
-    # git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
-    # https://github.com/HavocFramework/Havoc/issues/516
-    local temp_fix_limit="2024-12-01"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
-      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
-    fi
+    git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
+    # https://github.com/HavocFramework/Havoc/issues/516 (seems fixed but keeping commented tempfix just in case)
+    #    local temp_fix_limit="YYYY-MM-DD"
+    #    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    #      criticalecho "Temp fix expired. Exiting."
+    #    else
+    #      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
+    #      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
+    #    fi
     # Building Team Server
     cd /opt/tools/Havoc/teamserver || exit
     go mod download golang.org/x/sys

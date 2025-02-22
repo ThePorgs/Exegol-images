@@ -55,9 +55,9 @@ function install_go() {
     # 1.19 needed by sliver
     asdf install golang 1.19
     #asdf install golang latest
-    #asdf global golang latest
+    #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2024-12-01"
+    local temp_fix_limit="2025-06-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -65,7 +65,7 @@ function install_go() {
       asdf install golang 1.23.0
       # Default GO version: 1.22.2
       asdf install golang 1.22.2
-      asdf global golang 1.22.2
+      asdf set --home golang 1.22.2
     fi
 
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
@@ -140,10 +140,11 @@ function install_pyenv() {
         colorecho "Installing python${v}"
         pyenv install "$v"
     done
-    # allowing python2, python3 and python3.6 to be found
+    # allowing python2, python3, python3.10, python3.11 and python3.12 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
-    #  --> python3.6 points to 3.6
+    #  --> python3.10 points to 3.10
+    #  --> python3.12 points to 3.12
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -421,12 +422,24 @@ function post_install() {
 
 function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Install asdf"
-    # creates ~/.asdf/
-    git -C "$HOME" clone --depth 1 --branch v0.13.1 https://github.com/asdf-vm/asdf .asdf
-    source "$HOME/.asdf/asdf.sh"
-    # completions file
-    source "$HOME/.asdf/completions/asdf.bash"
+    colorecho "Installing asdf"
+    local URL
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' | grep -o 'https://[^"]*')
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' | grep -o 'https://[^"]*')
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    curl --location -o /tmp/asdf.tar.gz "$URL"
+    tar -xf /tmp/asdf.tar.gz --directory /tmp
+    rm /tmp/asdf.tar.gz
+    mv /tmp/asdf /opt/tools/bin/asdf
+    # asdf completions
+    mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
+    /opt/tools/bin/asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
@@ -467,7 +480,7 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.12 3.10 3.6 2"
+    PYTHON_VERSIONS="3.11 3.12 3.10 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
