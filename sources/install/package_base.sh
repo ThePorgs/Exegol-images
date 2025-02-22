@@ -439,7 +439,7 @@ function install_asdf() {
     mv /tmp/asdf /opt/tools/bin/asdf
     # asdf completions
     mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
-    asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
+    /opt/tools/bin/asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
