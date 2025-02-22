@@ -26,8 +26,9 @@ update_prompt() {
 
   if [[ ! -z "${USER}" ]]; then
     DB_PROMPT="%{$fg[white]%}[$fg[yellow]%}${USER}%{$fg[white]%}]%{$reset_color%}"
-  
-  if [[ ! -z "${DOMAIN}" ]]; then
+  fi
+
+  if [[ ! -z "${DOMAIN}" && ! -z "${USER}" ]]; then
     DB_PROMPT="%{$fg[white]%}[$fg[yellow]%}${USER}@${DOMAIN}%{$fg[white]%}]%{$reset_color%}"
   fi
 
