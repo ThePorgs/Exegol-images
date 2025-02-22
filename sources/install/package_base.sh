@@ -127,11 +127,8 @@ function install_pyenv() {
     fapt git curl build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
+    set_python_env
     local v
-    # add pyenv to PATH
-    export PATH="/root/.pyenv/bin:$PATH"
-    # add python commands (pyenv shims) to PATH
-    eval "$(pyenv init --path)"
     colorecho "Installing python2 (latest)"
     fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
     # Don't think it's needed, but if something fails, use command below
@@ -437,9 +434,11 @@ function install_asdf() {
     tar -xf /tmp/asdf.tar.gz --directory /tmp
     rm /tmp/asdf.tar.gz
     mv /tmp/asdf /opt/tools/bin/asdf
+    set_bin_path
+    set_asdf_env
     # asdf completions
     mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
-    /opt/tools/bin/asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
+    asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }

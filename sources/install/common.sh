@@ -71,13 +71,19 @@ function set_python_env() {
     eval "$(pyenv init --path)"
 }
 
-function set_asdf_env() {
-    colorecho "Setting env for asdf"
-    source "$HOME/.asdf/asdf.sh"
+function set_bin_path() {
+    colorecho "Adding /opt/tools/bin to PATH"
+    export PATH="/opt/tools/bin:$PATH"
+}
+
+function set_asdf_env(){
+    colorecho "Setting asdf environment"
+    export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 }
 
 function set_env() {
     colorecho "Setting env (caller)"
+    set_bin_path
     set_cargo_env
     set_ruby_env
     set_python_env
