@@ -149,11 +149,11 @@ function install_havoc() {
     #    else
     #      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
     #      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
+    #      go mod download golang.org/x/sys
+    #      go mod download github.com/ugorji/go
     #    fi
     # Building Team Server
     cd /opt/tools/Havoc/teamserver || exit
-    go mod download golang.org/x/sys
-    go mod download github.com/ugorji/go
     cd /opt/tools/Havoc || exit
     sed -i 's/golang-go//' teamserver/Install.sh
     make ts-build
