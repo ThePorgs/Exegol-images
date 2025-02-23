@@ -137,11 +137,11 @@ function install_pyenv() {
         colorecho "Installing python${v}"
         pyenv install "$v"
     done
-    # allowing python2, python3, python3.10, python3.11 and python3.12 to be found
+    # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
     #  --> python3.10 points to 3.10
-    #  --> python3.12 points to 3.12
+    #  --> python3.13 points to 3.13
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -153,6 +153,8 @@ function install_pyenv() {
         add-test-command "python${v} --version"
         add-test-command "pip${v} --version"
     done
+    fapt python3-venv
+    add-test-command "python3 -m venv -h"
 }
 
 function install_firefox() {
@@ -485,10 +487,6 @@ function package_base() {
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
-    # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
-    # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
-    # with pyenv, not sure the command below is needed anymore
-    # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     for v in $PYTHON_VERSIONS; do
         # shellcheck disable=SC2086
         pip${v} install --upgrade pip
