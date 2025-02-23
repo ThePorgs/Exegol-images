@@ -270,16 +270,25 @@ function install_neovim() {
     if [[ $(uname -m) = 'x86_64' ]]
     then
         curl --location --output nvim.appimage "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
+        chmod u+x nvim.appimage
+        ./nvim.appimage --appimage-extract
+        mkdir /opt/tools/nvim
+        cp -rv squashfs-root/usr/* /opt/tools/nvim
+        rm -rf squashfs-root nvim.appimage
+        ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl --location --output nvim.appimage "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.appimage"
+        # Building, because when using release, error is raised: "./bin/nvim: /lib/aarch64-linux-gnu/libm.so.6: version `GLIBC_2.38' not found (required by ./bin/nvim)"
+        # https://github.com/neovim/neovim/issues/32496
+        # Would require a bump in glibc, using old releases, or manually building. So manual build it is.
+        fapt gettext
+        git clone --depth 1 https://github.com/neovim/neovim.git
+        cd neovim || exit
+        make CMAKE_BUILD_TYPE=RelWithDebInfo
+        make install
+        cd .. || exit
+        rm -rf ./neovim
     fi
-    chmod u+x nvim.appimage
-    ./nvim.appimage --appimage-extract
-    mkdir /opt/tools/nvim
-    cp -rv squashfs-root/usr/* /opt/tools/nvim
-    rm -rf squashfs-root nvim.appimage
-    ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     add-test-command "nvim --version"
     add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
 }
