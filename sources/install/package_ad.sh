@@ -1053,6 +1053,7 @@ function install_rusthound() {
     cd /opt/tools/RustHound || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
+    cargo update -p time
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
