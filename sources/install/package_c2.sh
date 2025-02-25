@@ -54,6 +54,9 @@ function install_metasploit() {
     sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
     cp -r /var/lib/postgresql/.msf4 /root
 
+    # Install the PEASS Ruby MSF module (https://github.com/peass-ng/PEASS-ng/tree/master/metasploit)
+    wget https://raw.githubusercontent.com/peass-ng/PEASS-ng/master/metasploit/peass.rb -O /opt/tools/metasploit-framework/modules/post/multi/gather/peass.rb
+
     add-aliases metasploit
     add-history metasploit
     add-test-command "msfconsole --help"
