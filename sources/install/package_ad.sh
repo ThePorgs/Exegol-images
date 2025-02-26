@@ -1256,8 +1256,8 @@ function install_extractbitlockerkeys() {
 
 function install_LDAPWordlistHarvester() {
     colorecho "Installing LDAPWordlistHarvester"
-    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/LDAPWordlistHarvester
-    cd /opt/tools/LDAPWordlistHarvester || exit
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLDAPWordlistHarvester
+    cd /opt/tools/pyLDAPWordlistHarvester || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
@@ -1265,7 +1265,7 @@ function install_LDAPWordlistHarvester() {
     add-aliases LDAPWordlistHarvester
     add-history LDAPWordlistHarvester
     add-test-command "LDAPWordlistHarvester.py --help"
-    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
+    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/pyLDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
 }
 
 function install_pywerview() {
