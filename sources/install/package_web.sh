@@ -901,13 +901,13 @@ function install_zap() {
     local URL
     URL=$(curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | grep 'browser_download_url.*ZAP.*tar.gz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/ZAP.tar.gz "$URL"
-    tar -xf /tmp/yourtool.tar.xz --directory /tmp
+    tar -xf /tmp/ZAP.tar.gz --directory /tmp
     rm /tmp/ZAP.tar.gz
     mv /tmp/ZAP* /opt/tools/zaproxy
-    ln -s "/opt/tools/zaproxy/zap.sh" "/opt/tools/bin/zap"
-    /opt/tools/zaproxy/zap.sh -cmd -addonupdate
+    ln -s /opt/tools/zaproxy/zap.sh /opt/tools/bin/zap
+    zap -cmd -addonupdate
     add-history zaproxy
-    add-test-command "zaproxy -suppinfo"
+    add-test-command "zap -suppinfo"
     add-to-list "Zed Attack Proxy (ZAP),https://www.zaproxy.org/,Web application security testing tool."
 }
     
