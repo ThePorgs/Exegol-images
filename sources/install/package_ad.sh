@@ -336,7 +336,9 @@ function install_privexchange() {
 function install_ruler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
-    asdf local golang 1.22.2
+    mkdir -p /opt/tools/ruler || exit
+    cd /opt/tools/ruler || exit
+    asdf local golang 1.23.0
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
