@@ -191,8 +191,6 @@ function install_bloodhound-ce() {
     latestRelease=$(jq --raw-output 'first(.[] | select(.tag_name | contains("-rc") | not) | .tag_name)' "${curl_tempfile}")
     git -C "${bloodhoundce_path}" clone --depth 1 --branch "${latestRelease}" "https://github.com/SpecterOps/BloodHound.git" src
     cd "${bloodhoundce_path}/src/" || exit
-    asdf install golang 1.23.0
-    asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     ## SharpHound
@@ -338,7 +336,7 @@ function install_ruler() {
     colorecho "Downloading ruler and form templates"
     mkdir -p /opt/tools/ruler || exit
     cd /opt/tools/ruler || exit
-    asdf local golang 1.23.0
+    asdf set golang 1.23.0
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
