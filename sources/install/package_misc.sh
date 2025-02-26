@@ -102,7 +102,7 @@ function install_trilium() {
     /opt/tools/trilium/trilium-manager.sh start
     /opt/tools/trilium/trilium-manager.sh configure
     /opt/tools/trilium/trilium-manager.sh stop
-    nvm use default
+    zsh -c "source ~/.zshrc && nvm use default"
     add-aliases trilium
     add-history trilium
     add-test-command "trilium-test"
