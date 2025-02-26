@@ -10,5 +10,8 @@ if ! pg_isready -q; then
     service postgresql start
 fi
 
-/opt/tools/BloodHound-CE/bloodhound -configfile /opt/tools/BloodHound-CE/bloodhound.config.json
+if neo4j status|grep -q "not running"; then
+    neo4j start
+fi
 
+/opt/tools/BloodHound-CE/bloodhound -configfile /opt/tools/BloodHound-CE/bloodhound.config.json
