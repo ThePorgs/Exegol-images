@@ -92,15 +92,20 @@ function install_trilium() {
     # TODO : apt install in a second step
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
-    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild && npm run webpack"
+    cd /opt/tools/trilium || exit
+    nvm install 16
+    nvm use 16
+    npm install
+    npm rebuild
+    npm run webpack
     mkdir -p /root/.local/share/trilium-data
     # config.ini contains the exposition port and host
     cp -v /root/sources/assets/trilium/config.ini /root/.local/share/trilium-data
     cp -v /root/sources/assets/trilium/trilium-manager.sh /opt/tools/trilium/trilium-manager.sh
     chmod +x /opt/tools/trilium/trilium-manager.sh
-    zsh /opt/tools/trilium/trilium-manager.sh start
-    zsh /opt/tools/trilium/trilium-manager.sh configure
-    zsh /opt/tools/trilium/trilium-manager.sh stop
+    /opt/tools/trilium/trilium-manager.sh start
+    /opt/tools/trilium/trilium-manager.sh configure
+    /opt/tools/trilium/trilium-manager.sh stop
     add-aliases trilium
     add-history trilium
     add-test-command "trilium-test"
