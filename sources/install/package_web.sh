@@ -270,7 +270,7 @@ function install_patator() {
     fapt libmariadb-dev libcurl4-openssl-dev libssl-dev ldap-utils libpq-dev ike-scan unzip default-jdk libsqlite3-dev libsqlcipher-dev
     git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
     cd /opt/tools/patator || exit
-    python3 -m venv --system-site-packages ./venv
+    python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
