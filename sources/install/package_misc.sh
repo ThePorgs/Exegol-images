@@ -93,6 +93,7 @@ function install_trilium() {
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
     cd /opt/tools/trilium || exit
+    source ~/.zshrc
     nvm install 16
     nvm use 16
     npm install
