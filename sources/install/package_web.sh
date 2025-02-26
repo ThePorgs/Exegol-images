@@ -896,7 +896,6 @@ function install_postman() {
 }
 
 function install_zap() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ZAP"
     local URL
     URL=$(curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | grep 'browser_download_url.*ZAP.*tar.gz"' | grep -o 'https://[^"]*')
@@ -906,6 +905,7 @@ function install_zap() {
     mv /tmp/ZAP* /opt/tools/zaproxy
     ln -s /opt/tools/zaproxy/zap.sh /opt/tools/bin/zap
     zap -cmd -addonupdate
+    add-aliases zaproxy
     add-history zaproxy
     add-test-command "zap -suppinfo"
     add-to-list "Zed Attack Proxy (ZAP),https://www.zaproxy.org/,Web application security testing tool."
