@@ -1,1 +1,1 @@
-alias patator.py="/opt/tools/patator/venv/bin/python3 /opt/tools/patator/patator.py"
+alias patator.py="/opt/tools/patator/venv/bin/python3 /opt/tools/patator/src/patator/patator.py"
