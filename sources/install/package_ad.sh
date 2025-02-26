@@ -332,13 +332,14 @@ function install_privexchange() {
 }
 
 function install_ruler() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
     mkdir -p /opt/tools/ruler || exit
     cd /opt/tools/ruler || exit
     asdf set golang 1.23.0
-    go install -v github.com/sensepost/ruler@latest
+    mkdir -p .go/bin
+    GOBIN=/opt/tools/ruler/.go/bin go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
+    add-aliases ruler
     add-history ruler
     add-test-command "ruler --version"
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
