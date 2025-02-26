@@ -1265,7 +1265,7 @@ function install_LDAPWordlistHarvester() {
     add-aliases LDAPWordlistHarvester
     add-history LDAPWordlistHarvester
     add-test-command "LDAPWordlistHarvester.py --help"
-    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
+    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/pyLDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
 }
 
 function install_pywerview() {
