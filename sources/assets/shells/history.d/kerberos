@@ -1,3 +1,4 @@
 klist
 klist purge
 kdestroy
+export KRB5CCNAME=user.ccache
