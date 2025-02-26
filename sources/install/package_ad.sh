@@ -336,6 +336,7 @@ function install_privexchange() {
 function install_ruler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
+    asdf set golang 1.23.0
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
@@ -1052,6 +1053,7 @@ function install_rusthound() {
     cd /opt/tools/RustHound || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
+    cargo update -p time
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
@@ -1254,8 +1256,8 @@ function install_extractbitlockerkeys() {
 
 function install_LDAPWordlistHarvester() {
     colorecho "Installing LDAPWordlistHarvester"
-    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/LDAPWordlistHarvester
-    cd /opt/tools/LDAPWordlistHarvester || exit
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLDAPWordlistHarvester
+    cd /opt/tools/pyLDAPWordlistHarvester || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
@@ -1263,7 +1265,7 @@ function install_LDAPWordlistHarvester() {
     add-aliases LDAPWordlistHarvester
     add-history LDAPWordlistHarvester
     add-test-command "LDAPWordlistHarvester.py --help"
-    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
+    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/pyLDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
 }
 
 function install_pywerview() {

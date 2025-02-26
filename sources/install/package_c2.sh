@@ -114,17 +114,7 @@ function install_empire() {
     cd /opt/tools/Empire || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-      pip3 install .
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-      # for ARM64, pip install doesn't work because of donut-shellcode not supporting this arch (https://github.com/TheWover/donut/issues/139)
-#      criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-      pip3 install .
-    else
-      criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
+    pip3 install .
     deactivate
     # TODO : use mysql instead, need to configure that
     sed -i 's/use: mysql/use: sqlite/g' empire/server/config.yaml
@@ -149,11 +139,11 @@ function install_havoc() {
     #    else
     #      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
     #      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
+    #      go mod download golang.org/x/sys
+    #      go mod download github.com/ugorji/go
     #    fi
     # Building Team Server
     cd /opt/tools/Havoc/teamserver || exit
-    go mod download golang.org/x/sys
-    go mod download github.com/ugorji/go
     cd /opt/tools/Havoc || exit
     sed -i 's/golang-go//' teamserver/Install.sh
     make ts-build
