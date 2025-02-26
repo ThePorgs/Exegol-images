@@ -233,6 +233,15 @@ function install_pipx() {
     add-test-command "pipx --version"
 }
 
+function install_pyftpdlib() {
+    # CODE-CHECK-WHITELIST=add-history
+    colorecho "Installing pyftpdlib"
+    pip3 install pyftpdlib
+    add-aliases pyftpdlib
+    add-test-command "python3 -c 'import pyftpdlib'"
+    add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
+}
+
 function install_yarn() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing yarn"
@@ -487,7 +496,6 @@ function package_base() {
     add-aliases grc
     add-aliases emacs-nox
     add-aliases xsel
-    add-aliases pyftpdlib
 
     # Rust, Cargo, rvm
     install_rust_cargo
@@ -504,6 +512,7 @@ function package_base() {
     install_fzf                                         # Fuzzy finder
     add-history curl
     install_yarn
+    install_pyftpdlib
     install_ultimate_vimrc                              # Make vim usable OOFB
     install_neovim
     install_mdcat                                       # cat markdown files

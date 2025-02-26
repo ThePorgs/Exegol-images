@@ -410,16 +410,24 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(c:Computer {enabled: TRUE})-[:HasSession]->(u:User {enabled: TRUE}) WITH c,u MATCH p=shortestPath((u)-[:AdminTo|MemberOf*1..]->(c)) RETURN p",
+                "query": "MATCH shortestPath((u:User {enabled: TRUE})-[:AdminTo|MemberOf*1..]->(c:Computer {enabled: TRUE})) MATCH p=(c)-[:HasSession]->(u) RETURN p",
                 "allowCollapse": true
             }]
         },
         {
-            "name": "Users with local admin rights",
+            "name": "Enabled users (not Domain/Enterprise Admins) with local admin rights",
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(m:User {enabled: TRUE})-[:AdminTo]->(n:Computer {enabled: TRUE}) RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH p=shortestPath((u2:User {enabled: TRUE})-[:MemberOf|AdminTo*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' RETURN p"
+            }]
+        },
+        {
+            "name": "Enabled users (not Domain/Enterprise Admins) with ReadLAPSPassword rights",
+            "category": "Admins",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH shortestPath((u2:User {enabled: TRUE})-[:MemberOf|ReadLAPSPassword*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' RETURN u2"
             }]
         },
         {
@@ -447,7 +455,7 @@
             }]
         },
         {
-            "name": "Users with adminCount, not sensitive for delegation, not members of Protected Users",
+            "name": "Enabled users with adminCount, not sensitive for delegation, not members of Protected Users (3 hops)",
             "category": "Admins",
             "queryList": [{
                 "final": true,
@@ -475,7 +483,7 @@
             "category": "Groups",
             "queryList": [{
                 "final": true,
-                "query": "Match (n:Group) WHERE n.name CONTAINS 'ADMIN' RETURN n"
+                "query": "Match (g:Group) WHERE g.name CONTAINS 'ADMIN' RETURN g"
             }]
         },
         {
@@ -483,7 +491,7 @@
             "category": "Groups",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(m:Group)-[:ForceChangePassword]->(n:User) RETURN DISTINCT m.name, COUNT(m.name) ORDER BY COUNT(m.name) DESC"
+                "query": "MATCH p=(g:Group)-[:ForceChangePassword]->(u:User) RETURN DISTINCT g.name, COUNT(g.name) ORDER BY COUNT(g.name) DESC"
             }]
         },
         {
@@ -491,7 +499,7 @@
             "category": "Groups",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(n:User)-[:MemberOf*1..]->(m:Group {highvalue:true}) RETURN p"
+                "query": "MATCH p=(u:User)-[:MemberOf*1..]->(g:Group {highvalue:TRUE}) RETURN p"
             }]
         },
         {
@@ -688,7 +696,7 @@
             "category": "Top Ten",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH (n:User {enabled: TRUE})-[r:AdminTo]->(m:Computer {enabled: TRUE}) WHERE NOT n.objectid IN domainAdmins AND NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT  n.name='' WITH n, COUNT(r) AS rel_count ORDER BY rel_count DESC LIMIT 10 MATCH p=(n)-[:AdminTo]->(m:Computer {enabled: TRUE}) RETURN p",
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH (n:User {enabled: TRUE})-[r:AdminTo]->(m:Computer {enabled: TRUE}) WHERE NOT n.objectid IN domainAdmins AND NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH n, COUNT(r) AS rel_count ORDER BY rel_count DESC LIMIT 10 MATCH p=(n)-[:AdminTo]->(m:Computer {enabled: TRUE}) RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -742,7 +750,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid ENDS WITH '-513' RETURN p2 AS path"
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' RETURN p"
             }]
         },
         {
@@ -750,16 +758,16 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid ENDS WITH '-513' AND c2.operatingsystem =~ '(?i).*Server.*' RETURN p2 AS path",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p",
                 "allowCollapse": true
             }]
         },
         {
-            "name": "Find enabled machines Authenticated Users can RDP to",
+            "name": "Find enabled computers Authenticated Users can RDP to",
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid =~ '(?i).*S-1-5-11$' RETURN p2 AS path",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -768,7 +776,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=((g:Group)-[:CanRDP]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p AS path UNION MATCH p2=((g2:Group)-[:MemberOf*1..]->(g3:Group)-[:CanRDP]->(c2:Computer {enabled: TRUE})) WHERE g2.objectid =~ '(?i).*S-1-5-11$' AND c2.operatingsystem =~ '(?i).*Server.*' RETURN p2 AS path",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -777,7 +785,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=(m:Group)-[r:CanRDP]->(n:Computer) RETURN p"
+                "query": "MATCH p=(g:Group)-[:CanRDP]->(c:Computer) RETURN p"
             }]
         },
         {
@@ -793,7 +801,7 @@
             "category": "Azure",
             "queryList": [{
                 "final": true,
-                "query": "MATCH  p=(m:User)-[r:AZResetPassword|AZOwns|AZUserAccessAdministrator|AZContributor|AZAddMembers|AZGlobalAdmin|AZVMContributor|AZOwnsAZAvereContributor]->(n) WHERE m.objectid CONTAINS 'S-1-5-21' RETURN p"
+                "query": "MATCH p=(m:User)-[r:AZResetPassword|AZOwns|AZUserAccessAdministrator|AZContributor|AZAddMembers|AZGlobalAdmin|AZVMContributor|AZOwnsAZAvereContributor]->(n) WHERE m.objectid CONTAINS 'S-1-5-21' RETURN p"
             }]
         },
         {

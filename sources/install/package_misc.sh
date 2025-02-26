@@ -199,6 +199,16 @@ function install_uploader() {
     add-to-list "uploader,https://github.com/Frozenka/uploader,Tool for quickly downloading files to a remote machine based on the target operating system"
 }
 
+function install_wesng() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing wesng"
+    pipx install --system-site-packages git+https://github.com/bitsadmin/wesng
+    add-history wesng
+    add-test-command "wes --help"
+    add-to-list "wesng,https://github.com/bitsadmin/wesng,WES-NG is a tool based on the output of Windows's systeminfo utility which provides the list of vulnerabilities the OS is vulnerable to including any exploits for these vulnerabilities."
+}
+
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -220,6 +230,7 @@ function package_misc() {
     install_cyberchef       # A web based toolbox
     install_creds           # A default credentials vault
     install_uploader        # uploader for fast file upload
+    install_wesng           # Search Windows vulnerability via systeminfo
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."
