@@ -190,10 +190,9 @@ function install_bloodhound-ce() {
     curl --location --silent "https://api.github.com/repos/SpecterOps/BloodHound/releases" -o "${curl_tempfile}"
     latestRelease=$(jq --raw-output 'first(.[] | select(.tag_name | contains("-rc") | not) | .tag_name)' "${curl_tempfile}")
     git -C "${bloodhoundce_path}" clone --depth 1 --branch "${latestRelease}" "https://github.com/SpecterOps/BloodHound.git" src
-    cd "${bloodhoundce_path}/src/packages/javascript/bh-shared-ui" || exit
-    zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
     cd "${bloodhoundce_path}/src/" || exit
-    asdf set golang 1.23.0
+    asdf install golang 1.23.0
+    asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     ## SharpHound
@@ -238,12 +237,13 @@ function install_bloodhound-ce() {
     # work directory required by bloodhound
     mkdir -p "${bloodhoundce_path}/work"
     ln -v -s "${bloodhoundce_path}/src/artifacts/bhapi" "${bloodhoundce_path}/bloodhound"
-    cp -v "${bloodhoundce_path}/src/dockerfiles/configs/bloodhound.config.json" "${bloodhoundce_path}"
-    cp -v /root/sources/assets/bloodhound-ce/* /opt/tools/bin/
-    chmod +x /opt/tools/bin/bloodhound*
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce /opt/tools/bin/
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce-reset /opt/tools/bin/
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce-stop /opt/tools/bin/
+    chmod +x /opt/tools/bin/bloodhound-ce*
 
     # Configuration
-    cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json /opt/tools/BloodHound-CE/
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json "${bloodhoundce_path}"
 
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
     add-test-command "${bloodhoundce_path}/bloodhound -version"
