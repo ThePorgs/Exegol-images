@@ -3,7 +3,7 @@ name: (level 1 sub) Code compliance
 on:
   workflow_call:
     secrets:
-        GH_PAT_IMAGES_CCCA:
+        GH_PAT_IMAGES_CCC:
           required: true
 jobs:
   code-check:
@@ -19,7 +19,7 @@ jobs:
       with:
         repository: ThePorgs/Exegol-images-ccc
         ref: dev
-        token: ${{ secrets.GH_PAT_IMAGES_CCCA }}
+        token: ${{ secrets.GH_PAT_IMAGES_CCC }}
         path: exegol-ccc
     - name: Run Code Compliance Check
       uses: ./exegol-ccc
