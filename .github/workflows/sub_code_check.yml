@@ -1,30 +1,28 @@
 name: (level 1 sub) Code compliance
 
-on:
-  workflow_call:
-    secrets:
-        GH_PAT_IMAGES_CCCA:
-          required: true
+on: workflow_call
+
 jobs:
   code-check:
-    name: Code Compliance Check
+    name: Function check
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      matrix:
+        checked_function: [ "colorecho", "add-aliases", "add-history", "add-test-command", "add-to-list" ]
     steps:
     - name: Checkout
       uses: actions/checkout@main
-    - name: Checkout Private Action
+    - name: Check ${{ matrix.checked_function }}
+      run: python3 sources/code_compliance_check.py ${{ matrix.checked_function }}
+  temp-fix:
+    name: Temp-fix check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
       uses: actions/checkout@main
-      with:
-        repository: ThePorgs/Exegol-images-ccc
-        ref: dev
-        token: ${{ secrets.GH_PAT_IMAGES_CCCA }}
-        path: exegol-ccc
-    - name: Run Code Compliance Check
-      uses: ./exegol-ccc
-      with:
-        dir_path: "sources/install/"
+    - name: Check temp-fix
+      run: python3 sources/code_compliance_check.py temp-fix
   shellcheck:
     name: Shell check
     runs-on: ubuntu-latest

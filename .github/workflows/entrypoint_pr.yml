@@ -57,8 +57,6 @@ jobs:
   code_check:
     name: Code compliance check
     uses: ./.github/workflows/sub_code_check.yml
-    secrets:
-      GH_PAT_IMAGES_CCCA: ${{ secrets.GH_PAT_IMAGES_CCCA }}
 
   build_base:
     name: Base image build
