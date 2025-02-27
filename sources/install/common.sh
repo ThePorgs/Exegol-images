@@ -2,7 +2,7 @@
 # Author: The Exegol Project
 
 # Functions and commands that will be retried multiple times to counter random network issues when building
-CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "apt-get" "nvm" "pipx" "pip2" "pip3" "cargo" "gem")
+CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "apt-get" "nvm" "npm" "pipx" "pip2" "pip3" "cargo" "gem")
 
 export RED='\033[1;31m'
 export BLUE='\033[1;34m'
@@ -71,13 +71,19 @@ function set_python_env() {
     eval "$(pyenv init --path)"
 }
 
-function set_asdf_env() {
-    colorecho "Setting env for asdf"
-    source "$HOME/.asdf/asdf.sh"
+function set_bin_path() {
+    colorecho "Adding /opt/tools/bin to PATH"
+    export PATH="/opt/tools/bin:$PATH"
+}
+
+function set_asdf_env(){
+    colorecho "Setting asdf environment"
+    export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 }
 
 function set_env() {
     colorecho "Setting env (caller)"
+    set_bin_path
     set_cargo_env
     set_ruby_env
     set_python_env

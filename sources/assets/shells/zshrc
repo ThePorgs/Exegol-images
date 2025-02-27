@@ -9,12 +9,20 @@ ZSH_THEME="gentoo"
 export FZF_BASE=/opt/tools/fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm asdf)
+plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm)
 
 # asdf
-source "$HOME/.asdf/asdf.sh"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+# Golang asdf plugin
 source ~/.asdf/plugins/golang/set-env.zsh
 export GOPATH=$(go env GOPATH)
+
+# asdf completions
+# append completions to fpath
+fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+# initialise completions with ZSH's compinit
+autoload -Uz compinit && compinit
 
 # oh-my-zsh
 source $ZSH/oh-my-zsh.sh

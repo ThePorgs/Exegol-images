@@ -43,17 +43,17 @@ function install_go() {
     # 1.19 needed by sliver
     asdf install golang 1.19
     #asdf install golang latest
-    #asdf global golang latest
+    #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
     local temp_fix_limit="2025-06-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      # 1.23 needed by BloodHound-CE
+      # 1.23 needed by BloodHound-CE, and sensepost/ruler
       asdf install golang 1.23.0
       # Default GO version: 1.22.2
       asdf install golang 1.22.2
-      asdf global golang 1.22.2
+      asdf set --home golang 1.22.2
     fi
 
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
@@ -115,11 +115,8 @@ function install_pyenv() {
     fapt git curl build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
+    set_python_env
     local v
-    # add pyenv to PATH
-    export PATH="/root/.pyenv/bin:$PATH"
-    # add python commands (pyenv shims) to PATH
-    eval "$(pyenv init --path)"
     colorecho "Installing python2 (latest)"
     fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
     # Don't think it's needed, but if something fails, use command below
@@ -128,11 +125,11 @@ function install_pyenv() {
         colorecho "Installing python${v}"
         pyenv install "$v"
     done
-    # allowing python2, python3, python3.10, python3.11 and python3.12 to be found
+    # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
     #  --> python3.10 points to 3.10
-    #  --> python3.12 points to 3.12
+    #  --> python3.13 points to 3.13
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -144,6 +141,8 @@ function install_pyenv() {
         add-test-command "python${v} --version"
         add-test-command "pip${v} --version"
     done
+    fapt python3-venv
+    add-test-command "python3 -m venv -h"
 }
 
 function install_firefox() {
@@ -153,7 +152,7 @@ function install_firefox() {
     mkdir /opt/tools/firefox
     mv /root/sources/assets/firefox/* /opt/tools/firefox/
     pip3 install -r /opt/tools/firefox/requirements.txt
-    python3 /opt/tools/firefox/setup.py
+    python3 /opt/tools/firefox/generate_policy.py
     add-history firefox
     add-test-command "file /root/.mozilla/firefox/*.Exegol"
     add-test-command "firefox --version"
@@ -256,20 +255,22 @@ function install_ultimate_vimrc() {
 }
 
 function install_neovim() {
-    colorecho "Installing neovim"
+    colorecho "Installing neovim/nvim"
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        curl --location --output nvim.appimage "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
         chmod u+x nvim.appimage
         ./nvim.appimage --appimage-extract
         mkdir /opt/tools/nvim
-        cp -r squashfs-root/usr/* /opt/tools/nvim
+        cp -rv squashfs-root/usr/* /opt/tools/nvim
         rm -rf squashfs-root nvim.appimage
         ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        # Build take ~5min
+        # Building, because when using release, error is raised: "./bin/nvim: /lib/aarch64-linux-gnu/libm.so.6: version `GLIBC_2.38' not found (required by ./bin/nvim)"
+        # https://github.com/neovim/neovim/issues/32496
+        # Would require a bump in glibc, using old releases, or manually building. So manual build it is.
         fapt gettext
         git clone --depth 1 https://github.com/neovim/neovim.git
         cd neovim || exit
@@ -410,12 +411,26 @@ function post_install() {
 
 function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Install asdf"
-    # creates ~/.asdf/
-    git -C "$HOME" clone --depth 1 --branch v0.13.1 https://github.com/asdf-vm/asdf .asdf
-    source "$HOME/.asdf/asdf.sh"
-    # completions file
-    source "$HOME/.asdf/completions/asdf.bash"
+    colorecho "Installing asdf"
+    local URL
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' | grep -o 'https://[^"]*')
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' | grep -o 'https://[^"]*')
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    curl --location -o /tmp/asdf.tar.gz "$URL"
+    tar -xf /tmp/asdf.tar.gz --directory /tmp
+    rm /tmp/asdf.tar.gz
+    mv /tmp/asdf /opt/tools/bin/asdf
+    set_bin_path
+    set_asdf_env
+    # asdf completions
+    mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
+    asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
@@ -444,7 +459,7 @@ function package_base() {
     nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
     logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 grc emacs-nox xsel xxd libnss3-tools
+    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem
@@ -456,14 +471,10 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.12 3.10 2"
+    PYTHON_VERSIONS="3.11 3.13 3.10 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
-    # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
-    # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
-    # with pyenv, not sure the command below is needed anymore
-    # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     for v in $PYTHON_VERSIONS; do
         # shellcheck disable=SC2086
         pip${v} install --upgrade pip
