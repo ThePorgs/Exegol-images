@@ -232,7 +232,7 @@ function install_bloodhound-ce() {
     (cd "${azurehound_path}"; sha256sum --check --warn ./*.sha256) || exit
     7z a -tzip -mx9 "${azurehound_path}/azurehound-${azurehound_version}.zip" "${azurehound_path}/azurehound-*"
     # Upstream does not provide a sha256 file for the archive to check the integrity
-    sha256sum "azurehound-${azurehound_version}.zip" > "azurehound-${azurehound_version}.zip.sha256"
+    sha256sum "${azurehound_path}/azurehound-${azurehound_version}.zip" > "${azurehound_path}/azurehound-${azurehound_version}.zip.sha256"
 
     # Files and directories
     # work directory required by bloodhound
