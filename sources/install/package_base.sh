@@ -429,7 +429,7 @@ function package_base() {
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh
     deploy_exegol
-    install_dbassets
+
     fapt software-properties-common
     add_debian_repository_components
     cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
@@ -552,4 +552,6 @@ function package_base() {
 
     # Global python dependencies
     pip3 install -r /root/sources/assets/python/requirements.txt
+
+    install_dbassets
 }
