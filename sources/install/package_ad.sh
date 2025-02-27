@@ -205,7 +205,7 @@ function install_bloodhound-ce() {
     wget --directory-prefix "${sharphound_path}" "${sharphound_url}"
     [[ -f "${sharphound_path}/${sharphound_name}" ]] || exit
     mv "${sharphound_path}/${sharphound_name}" "${sharphound_path}/${sharphound_name_lowercase}"
-    sha256sum "${sharphound_name_lowercase}" > "${sharphound_name_lowercase}.sha256"
+    sha256sum "${sharphound_path}/${sharphound_name_lowercase}" > "${sharphound_path}/${sharphound_name_lowercase}.sha256"
     # Unlike Azurehound, upstream does not provide a sha256 file to check the integrity
 
     ## AzureHound
