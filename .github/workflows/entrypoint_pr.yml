@@ -3,6 +3,7 @@ name: External PR tests
 on:
   pull_request:
     branches:
+      - pipeline-tests
       - dev
       - "*.*.*"
       - "*.*.*b*"
