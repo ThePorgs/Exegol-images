@@ -54,6 +54,9 @@ function install_metasploit() {
     sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
     cp -r /var/lib/postgresql/.msf4 /root
 
+    # Install the PEASS Ruby MSF module (https://github.com/peass-ng/PEASS-ng/tree/master/metasploit)
+    wget https://raw.githubusercontent.com/peass-ng/PEASS-ng/master/metasploit/peass.rb -O /opt/tools/metasploit-framework/modules/post/multi/gather/peass.rb
+
     add-aliases metasploit
     add-history metasploit
     add-test-command "msfconsole --help"
@@ -82,7 +85,7 @@ function install_sliver() {
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
     # or check if it's possible to make this dynamic
-    local temp_fix_limit="2025-02-01"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -90,7 +93,7 @@ function install_sliver() {
       git -C /opt/tools/ clone --branch v1.5.42 --depth 1 https://github.com/BishopFox/sliver.git
       cd /opt/tools/sliver || exit
     fi
-    asdf local golang 1.19
+    asdf set golang 1.19
     make
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
     ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
@@ -114,17 +117,7 @@ function install_empire() {
     cd /opt/tools/Empire || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-      pip3 install .
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-      # for ARM64, pip install doesn't work because of donut-shellcode not supporting this arch (https://github.com/TheWover/donut/issues/139)
-#      criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-      pip3 install .
-    else
-      criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
+    pip3 install .
     deactivate
     # TODO : use mysql instead, need to configure that
     sed -i 's/use: mysql/use: sqlite/g' empire/server/config.yaml
@@ -141,19 +134,19 @@ function install_empire() {
 
 function install_havoc() {
     colorecho "Installing Havoc"
-    # git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
-    # https://github.com/HavocFramework/Havoc/issues/516
-    local temp_fix_limit="2025-02-01"
-    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
-      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
-    fi
+    git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
+    # https://github.com/HavocFramework/Havoc/issues/516 (seems fixed but keeping commented tempfix just in case)
+    #    local temp_fix_limit="YYYY-MM-DD"
+    #    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    #      criticalecho "Temp fix expired. Exiting."
+    #    else
+    #      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
+    #      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
+    #      go mod download golang.org/x/sys
+    #      go mod download github.com/ugorji/go
+    #    fi
     # Building Team Server
     cd /opt/tools/Havoc/teamserver || exit
-    go mod download golang.org/x/sys
-    go mod download github.com/ugorji/go
     cd /opt/tools/Havoc || exit
     sed -i 's/golang-go//' teamserver/Install.sh
     make ts-build

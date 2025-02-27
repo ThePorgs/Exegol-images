@@ -120,7 +120,7 @@ function install_bloodhound-ce-py() {
     source ./venv/bin/activate
     pip3 install .
     deactivate
-    ln -v -s /opt/tools/BloodHound-CE.py/venv/bin/bloodhound-python /opt/tools/bin/bloodhound-ce.py
+    ln -v -s /opt/tools/BloodHound-CE.py/venv/bin/bloodhound-ce-python /opt/tools/bin/bloodhound-ce.py
     add-history bloodhound-ce-py
     add-test-command "bloodhound-ce.py --help"
     add-to-list "bloodhound-ce.py,https://github.com/fox-it/BloodHound.py,BloodHound-CE ingestor in Python."
@@ -190,10 +190,7 @@ function install_bloodhound-ce() {
     curl --location --silent "https://api.github.com/repos/SpecterOps/BloodHound/releases" -o "${curl_tempfile}"
     latestRelease=$(jq --raw-output 'first(.[] | select(.tag_name | contains("-rc") | not) | .tag_name)' "${curl_tempfile}")
     git -C "${bloodhoundce_path}" clone --depth 1 --branch "${latestRelease}" "https://github.com/SpecterOps/BloodHound.git" src
-    cd "${bloodhoundce_path}/src/packages/javascript/bh-shared-ui" || exit
-    zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
     cd "${bloodhoundce_path}/src/" || exit
-    asdf local golang 1.23.0
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
     ## SharpHound
@@ -238,12 +235,13 @@ function install_bloodhound-ce() {
     # work directory required by bloodhound
     mkdir -p "${bloodhoundce_path}/work"
     ln -v -s "${bloodhoundce_path}/src/artifacts/bhapi" "${bloodhoundce_path}/bloodhound"
-    cp -v "${bloodhoundce_path}/src/dockerfiles/configs/bloodhound.config.json" "${bloodhoundce_path}"
-    cp -v /root/sources/assets/bloodhound-ce/* /opt/tools/bin/
-    chmod +x /opt/tools/bin/bloodhound*
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce /opt/tools/bin/
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce-reset /opt/tools/bin/
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce-stop /opt/tools/bin/
+    chmod +x /opt/tools/bin/bloodhound-ce*
 
     # Configuration
-    cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json /opt/tools/BloodHound-CE/
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json "${bloodhoundce_path}"
 
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
     add-test-command "${bloodhoundce_path}/bloodhound -version"
@@ -334,10 +332,14 @@ function install_privexchange() {
 }
 
 function install_ruler() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
-    go install -v github.com/sensepost/ruler@latest
+    mkdir -p /opt/tools/ruler || exit
+    cd /opt/tools/ruler || exit
+    asdf set golang 1.23.0
+    mkdir -p .go/bin
+    GOBIN=/opt/tools/ruler/.go/bin go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
+    add-aliases ruler
     add-history ruler
     add-test-command "ruler --version"
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
@@ -463,7 +465,7 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-02-01"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -702,7 +704,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-02-01"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -805,7 +807,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-02-01"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -982,7 +984,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-02-01"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1052,21 +1054,8 @@ function install_rusthound() {
     cd /opt/tools/RustHound || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
-    # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2025-02-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      cargo update -p time
-    fi
+    cargo update -p time
     cargo build --release
-    # Temp fix for : https://github.com/NH-RED-TEAM/RustHound/issues/32
-    local temp_fix_limit="2025-02-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      cargo update -p time
-    fi
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
     ln -s /opt/tools/RustHound/target/release/rusthound /opt/tools/bin/rusthound
@@ -1207,13 +1196,21 @@ function install_noPac() {
     add-to-list "noPac,https://github.com/Ridter/noPac,Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user."
 }
 
-function install_roadtools() {
+function install_roadrecon() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Installing roadtools"
+    colorecho "Installing roadrecon"
     pipx install --system-site-packages roadrecon
     add-test-command "roadrecon --help"
     add-test-command "roadrecon-gui --help"
-    add-to-list "ROADtools,https://github.com/dirkjanm/ROADtools,ROADtools is a framework to interact with Azure AD. It consists of a library (roadlib) with common components / the ROADrecon Azure AD exploration tool and the ROADtools Token eXchange (roadtx) tool."
+    add-to-list "ROADrecon,https://github.com/dirkjanm/ROADtools#roadrecon,Azure AD recon for red and blue."
+}
+
+function install_roadtx() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing roadtx"
+    pipx install --system-site-packages roadtx
+    add-test-command "roadtx --help"
+    add-to-list "ROADtx,https://github.com/dirkjanm/ROADtools#roadtools-token-exchange-roadtx,ROADtools Token eXchange."
 }
 
 function install_teamsphisher() {
@@ -1268,8 +1265,8 @@ function install_extractbitlockerkeys() {
 
 function install_LDAPWordlistHarvester() {
     colorecho "Installing LDAPWordlistHarvester"
-    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/LDAPWordlistHarvester
-    cd /opt/tools/LDAPWordlistHarvester || exit
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLDAPWordlistHarvester
+    cd /opt/tools/pyLDAPWordlistHarvester || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
@@ -1277,20 +1274,13 @@ function install_LDAPWordlistHarvester() {
     add-aliases LDAPWordlistHarvester
     add-history LDAPWordlistHarvester
     add-test-command "LDAPWordlistHarvester.py --help"
-    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/LDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
+    add-to-list "LDAPWordlistHarvester,https://github.com/p0dalirius/pyLDAPWordlistHarvester,Generate a wordlist from the information present in LDAP in order to crack passwords of domain accounts"
 }
 
 function install_pywerview() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pywerview"
-    #pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview
-    # Temp fix for : https://github.com/the-useless-one/pywerview/issues/68
-    local temp_fix_limit="2025-02-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview@pyproject
-    fi
+    pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview
     add-history pywerview
     add-test-command "pywerview --help"
     add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView."
@@ -1522,7 +1512,8 @@ function package_ad() {
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
     install_noPac
-    install_roadtools              # Rogue Office 365 and Azure (active) Directory tools
+    install_roadrecon              # Rogue Office 365 and Azure (active) Directory tools
+    install_roadtx                 # ROADtools Token eXchange
     install_teamsphisher           # TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications.
     install_GPOddity
     install_netexec                # Crackmapexec repo
