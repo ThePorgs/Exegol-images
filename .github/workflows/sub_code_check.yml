@@ -1,7 +1,10 @@
 name: (level 1 sub) Code compliance
 
-on: workflow_call
-
+on:
+  workflow_call:
+    secrets:
+        GH_PAT_IMAGES_CCC:
+          required: true
 jobs:
   code-check:
     name: Code Compliance Check
