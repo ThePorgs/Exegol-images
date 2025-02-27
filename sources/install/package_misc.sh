@@ -102,7 +102,7 @@ function install_trilium() {
     /opt/tools/trilium/trilium-manager.sh start
     /opt/tools/trilium/trilium-manager.sh configure
     /opt/tools/trilium/trilium-manager.sh stop
-    nvm use default
+    zsh -c "source ~/.zshrc && nvm use default"
     add-aliases trilium
     add-history trilium
     add-test-command "trilium-test"
@@ -169,7 +169,7 @@ function install_cyberchef() {
     if [[ -z "$last_release" ]]; then
         criticalecho-noexit "Latest release not found" && return
     fi
-    mkdir /opt/tools/CyberChef
+    mkdir -p /opt/tools/CyberChef
     wget "$last_release" -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
     rm /tmp/CyberChef.zip

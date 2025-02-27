@@ -334,13 +334,14 @@ function install_privexchange() {
 }
 
 function install_ruler() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
     mkdir -p /opt/tools/ruler || exit
     cd /opt/tools/ruler || exit
     asdf set golang 1.23.0
-    go install -v github.com/sensepost/ruler@latest
+    mkdir -p .go/bin
+    GOBIN=/opt/tools/ruler/.go/bin go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
+    add-aliases ruler
     add-history ruler
     add-test-command "ruler --version"
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
@@ -1197,13 +1198,21 @@ function install_noPac() {
     add-to-list "noPac,https://github.com/Ridter/noPac,Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user."
 }
 
-function install_roadtools() {
+function install_roadrecon() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Installing roadtools"
+    colorecho "Installing roadrecon"
     pipx install --system-site-packages roadrecon
     add-test-command "roadrecon --help"
     add-test-command "roadrecon-gui --help"
-    add-to-list "ROADtools,https://github.com/dirkjanm/ROADtools,ROADtools is a framework to interact with Azure AD. It consists of a library (roadlib) with common components / the ROADrecon Azure AD exploration tool and the ROADtools Token eXchange (roadtx) tool."
+    add-to-list "ROADrecon,https://github.com/dirkjanm/ROADtools#roadrecon,Azure AD recon for red and blue."
+}
+
+function install_roadtx() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing roadtx"
+    pipx install --system-site-packages roadtx
+    add-test-command "roadtx --help"
+    add-to-list "ROADtx,https://github.com/dirkjanm/ROADtools#roadtools-token-exchange-roadtx,ROADtools Token eXchange."
 }
 
 function install_teamsphisher() {
@@ -1505,7 +1514,8 @@ function package_ad() {
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
     install_noPac
-    install_roadtools              # Rogue Office 365 and Azure (active) Directory tools
+    install_roadrecon              # Rogue Office 365 and Azure (active) Directory tools
+    install_roadtx                 # ROADtools Token eXchange
     install_teamsphisher           # TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications.
     install_GPOddity
     install_netexec                # Crackmapexec repo
