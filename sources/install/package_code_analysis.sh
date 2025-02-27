@@ -44,6 +44,7 @@ function package_code_analysis() {
     install_brakeman		            # Checks Ruby on Rails applications for security vulnerabilities
     install_semgrep                     # Static analysis engine for finding bugs and vulnerabilities
     install_pp-finder                   # Prototype pollution finder tool for javascript
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package code_analysis completed in $elapsed_time seconds."

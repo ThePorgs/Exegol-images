@@ -130,6 +130,7 @@ function package_cloud() {
     install_prowler
     install_cloudmapper
     install_azure_cli       # Command line for Azure
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package cloud completed in $elapsed_time seconds."

@@ -107,6 +107,7 @@ function package_wordlists() {
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package wordlists completed in $elapsed_time seconds."

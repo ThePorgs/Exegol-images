@@ -113,4 +113,8 @@ function install_xfce() {
 
 function package_desktop() {
     install_xfce
+    post_install
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package desktop completed in $elapsed_time seconds."
 }

@@ -188,6 +188,7 @@ function package_c2() {
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
     install_havoc                   # C2 in Go
     install_villain                 # C2 using hoaxShell in Python
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package c2 completed in $elapsed_time seconds."

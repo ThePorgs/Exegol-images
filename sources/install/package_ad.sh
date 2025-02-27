@@ -1434,14 +1434,14 @@ function package_ad() {
     local end_time
     start_time=$(date +%s)
     install_ad_apt_tools
-    install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
+    install_asrepcatcher            # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
     install_bloodhound-py           # ingestor for legacy BloodHound
-    install_bloodhound-ce-py           # ingestor for legacy BloodHound
+    install_bloodhound-ce-py        # ingestor for legacy BloodHound
     install_bloodhound
     install_cypheroth               # Bloodhound dependency
     # install_mitm6_sources         # Install mitm6 from sources
@@ -1534,6 +1534,7 @@ function package_ad() {
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
     install_adminer
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."

@@ -18,7 +18,7 @@ COPY sources /root/sources/
 
 WORKDIR /root/sources/install
 
-# WARNING: package_most_used can't be used with other functions other than: package_base, post_install
+# WARNING: package_most_used can't be used with other functions other than: package_base
 # ./entrypoint.sh package_most_used
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
@@ -27,7 +27,6 @@ RUN ./entrypoint.sh package_base
 RUN ./entrypoint.sh package_desktop
 RUN ./entrypoint.sh package_most_used
 RUN ./entrypoint.sh package_misc
-RUN ./entrypoint.sh post_install
 
 WORKDIR /workspace
 

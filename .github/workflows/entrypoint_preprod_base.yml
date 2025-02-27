@@ -68,7 +68,6 @@ jobs:
               "sources/install/package_base.sh"
               "sources/install/entrypoint.sh"
               "sources/install/package_desktop.sh"
-              "sources/install/post_install.sh"
           )
           for file_to_check in "${files_to_check[@]}"; do
               if [[ $file_list =~ $file_to_check ]]; then
