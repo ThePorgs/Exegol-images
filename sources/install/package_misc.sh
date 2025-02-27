@@ -169,7 +169,7 @@ function install_cyberchef() {
     if [[ -z "$last_release" ]]; then
         criticalecho-noexit "Latest release not found" && return
     fi
-    mkdir /opt/tools/CyberChef
+    mkdir -p /opt/tools/CyberChef
     wget "$last_release" -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
     rm /tmp/CyberChef.zip
