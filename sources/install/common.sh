@@ -4,6 +4,8 @@
 # Functions and commands that will be retried multiple times to counter random network issues when building
 CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "apt-get" "nvm" "npm" "pipx" "pip2" "pip3" "cargo" "gem")
 
+# Trigger the pipeline
+
 export RED='\033[1;31m'
 export BLUE='\033[1;34m'
 export GREEN='\033[1;32m'
