@@ -399,37 +399,6 @@ function add_debian_repository_components() {
     mv "$out_file" "$source_file"
 }
 
-function post_install() {
-    # Function used to clean up post-install files
-    colorecho "Cleaning..."
-    local listening_processes
-    updatedb
-    rm -rfv /tmp/*
-    rm -rfv /var/lib/apt/lists/*
-    rm -rfv /root/sources
-    rm -rfv /root/.cache
-    rm -rfv /root/.gradle/caches
-    colorecho "Stop listening processes"
-    listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
-    if [[ -n $listening_processes ]]; then
-        echo "Listening processes detected"
-        ss -lnpt
-        echo "Kill processes"
-        # shellcheck disable=SC2086
-        kill -9 $listening_processes
-    fi
-    add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
-    colorecho "Sorting tools list"
-    (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
-    mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
-    colorecho "Adding end-of-preset in zsh_history"
-    echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
-    cp /opt/.exegol_history ~/.zsh_history
-    cp /opt/.exegol_history ~/.bash_history
-    colorecho "Removing desktop icons"
-    if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
-}
-
 function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing asdf"
@@ -458,6 +427,9 @@ function install_asdf() {
 
 # Package dedicated to the basic things the env needs
 function package_base() {
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     update
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
@@ -586,4 +558,9 @@ function package_base() {
     pip3 install -r /root/sources/assets/python/requirements.txt
 
     install_dbassets
+
+    post_install
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package base completed in $elapsed_time seconds."
 }

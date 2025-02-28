@@ -50,6 +50,7 @@ function install_jackit() {
 
 # Package dedicated to SDR
 function package_sdr() {
+    apt-get update
     set_env
     local start_time
     local end_time
@@ -57,6 +58,7 @@ function package_sdr() {
     install_sdr_apt_tools
     install_mousejack               # tools for mousejacking
     install_jackit                  # tools for mousejacking
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package sdr completed in $elapsed_time seconds."

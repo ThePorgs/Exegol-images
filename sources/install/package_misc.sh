@@ -6,7 +6,7 @@ source common.sh
 function install_misc_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing misc apt tools"
-    fapt rlwrap imagemagick ascii rsync
+    fapt rlwrap imagemagick ascii rsync yq xq
 
     add-history rlwrap
     add-history imagemagick
@@ -213,6 +213,7 @@ function install_wesng() {
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
+    apt-get update
     set_env
     local start_time
     local end_time
@@ -233,6 +234,7 @@ function package_misc() {
     install_creds           # A default credentials vault
     install_uploader        # uploader for fast file upload
     install_wesng           # Search Windows vulnerability via systeminfo
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."

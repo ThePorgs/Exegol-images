@@ -14,11 +14,13 @@ function install_sipvicious() {
 
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
+    apt-get update
     set_env
     local start_time
     local end_time
     start_time=$(date +%s)
     install_sipvicious              # Set of tools for auditing SIP based VOIP systems
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package voip completed in $elapsed_time seconds."

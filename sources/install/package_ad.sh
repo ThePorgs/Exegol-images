@@ -6,19 +6,21 @@ source common.sh
 function install_ad_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing AD apt tools"
-    fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
+    fapt samdump2 smbclient onesixtyone nbtscan ldap-utils krb5-user
 
     add-history samdump2
     add-history smbclient
     add-history onesixtyone
     add-history nbtscan
     add-history ldapsearch
+    add-history kerberos
 
     add-test-command "samdump2 -h|& grep 'enable debugging'"        # Dumps Windows 2k/NT/XP/Vista password hashes
     add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
     add-test-command "onesixtyone 127.0.0.1 public"                 # SNMP scanning
     add-test-command "nbtscan 127.0.0.1"                            # NetBIOS scanning tool
     add-test-command "ldapsearch --help|& grep 'Search options'"    # Perform queries on a LDAP server
+    add-test-command "klist -V"
 
     add-to-list "samdump2,https://github.com/azan121468/SAMdump2,A tool to dump Windows NT/2k/XP/Vista password hashes from SAM files"
     add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
@@ -206,6 +208,7 @@ function install_bloodhound-ce() {
     [[ -f "${sharphound_path}/${sharphound_name}" ]] || exit
     mv "${sharphound_path}/${sharphound_name}" "${sharphound_path}/${sharphound_name_lowercase}"
     # Unlike Azurehound, upstream does not provide a sha256 file to check the integrity
+    sha256sum "${sharphound_path}/${sharphound_name_lowercase}" > "${sharphound_path}/${sharphound_name_lowercase}.sha256"
 
     ## AzureHound
     local azurehound_url_amd64
@@ -230,6 +233,8 @@ function install_bloodhound-ce() {
     [[ -f "${azurehound_path}/azurehound-linux-arm64.zip.sha256" ]] || exit
     (cd "${azurehound_path}"; sha256sum --check --warn ./*.sha256) || exit
     7z a -tzip -mx9 "${azurehound_path}/azurehound-${azurehound_version}.zip" "${azurehound_path}/azurehound-*"
+    # Upstream does not provide a sha256 file for the archive to check the integrity
+    sha256sum "${azurehound_path}/azurehound-${azurehound_version}.zip" > "${azurehound_path}/azurehound-${azurehound_version}.zip.sha256"
 
     # Files and directories
     # work directory required by bloodhound
@@ -1429,19 +1434,20 @@ function install_adminer() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
+    apt-get update
     set_env
     local start_time
     local end_time
     start_time=$(date +%s)
     install_ad_apt_tools
-    install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
+    install_asrepcatcher            # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
     install_bloodhound-py           # ingestor for legacy BloodHound
-    install_bloodhound-ce-py           # ingestor for legacy BloodHound
+    install_bloodhound-ce-py        # ingestor for legacy BloodHound
     install_bloodhound
     install_cypheroth               # Bloodhound dependency
     # install_mitm6_sources         # Install mitm6 from sources
@@ -1534,6 +1540,7 @@ function package_ad() {
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
     install_adminer
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."
