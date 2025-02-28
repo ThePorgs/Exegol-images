@@ -124,7 +124,7 @@ function install_udpx(){
     asdf reshim golang
     add-history udpx
     add-test-command "udpx --help"
-    add-to-list "udpx,https://github.com/nullt3r/udpx, Fast and lightweight, UDPX is a single-packet UDP scanner written in Go that supports the discovery of over 45 services with the ability to add custom ones."
+    add-to-list "udpx,https://github.com/nullt3r/udpx, Fast and lightweight - UDPX is a single-packet UDP scanner written in Go that supports the discovery of over 45 services with the ability to add custom ones."
 }
 
 function install_autorecon() {
