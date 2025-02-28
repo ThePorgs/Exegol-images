@@ -448,8 +448,8 @@ function install_asdf() {
     local URL
     if [[ $(uname -m) = 'x86_64' ]]
     then
-    elif [[ $(uname -m) = 'aarch64' ]]
         URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' | grep -o 'https://[^"]*')
+    elif [[ $(uname -m) = 'aarch64' ]]
     then
         URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' | grep -o 'https://[^"]*')
     else
@@ -459,11 +459,11 @@ function install_asdf() {
     tar -xf /tmp/asdf.tar.gz --directory /tmp
     rm /tmp/asdf.tar.gz
     mv /tmp/asdf /opt/tools/bin/asdf
-    asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
-    mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
-    # asdf completions
-    set_asdf_env
     set_bin_path
+    set_asdf_env
+    # asdf completions
+    mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
+    asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     local version
     version=$(asdf version)
     add-test-command "asdf version"
