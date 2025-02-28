@@ -31,6 +31,7 @@ RUN ./entrypoint.sh package_cracking
 RUN ./entrypoint.sh package_osint
 RUN ./entrypoint.sh package_web
 RUN ./entrypoint.sh package_code_analysis
+RUN ./entrypoint.sh post_build
 
 WORKDIR /workspace
 

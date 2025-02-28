@@ -29,6 +29,7 @@ RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_wordlists
 RUN ./entrypoint.sh package_cracking
 RUN ./entrypoint.sh package_wifi
+RUN ./entrypoint.sh post_build
 
 WORKDIR /workspace
 

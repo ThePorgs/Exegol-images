@@ -27,6 +27,7 @@ RUN ./entrypoint.sh package_base
 RUN ./entrypoint.sh package_desktop
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_osint
+RUN ./entrypoint.sh post_build
 
 WORKDIR /workspace
 

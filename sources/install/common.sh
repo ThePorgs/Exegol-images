@@ -151,7 +151,6 @@ function post_install() {
     updatedb
     rm -rfv /tmp/*
     rm -rfv /var/lib/apt/lists/*
-    rm -rfv /root/sources
     rm -rfv /root/.cache
     rm -rfv /root/.gradle/caches
     colorecho "Stop listening processes"
@@ -163,6 +162,11 @@ function post_install() {
         # shellcheck disable=SC2086
         kill -9 $listening_processes
     fi
+}
+
+function post_build() {
+    colorecho "Post build..."
+    rm -rfv /root/sources
     add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
     colorecho "Sorting tools list"
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
