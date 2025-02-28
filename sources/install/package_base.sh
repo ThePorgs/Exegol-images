@@ -418,7 +418,6 @@ function install_asdf() {
 
 # Package dedicated to the basic things the env needs
 function package_base() {
-    set_env
     local start_time
     local end_time
     start_time=$(date +%s)
