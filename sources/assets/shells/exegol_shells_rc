@@ -36,9 +36,6 @@ source $HOME/.cargo/env
 # In case pipx ensurepath didn't work, and positioning pipx in priority
 export PATH="/root/.local/bin:$PATH"
 
-# Add my-resources custom tools to PATH if my-resources is activated
-[ -d /opt/my-resources/bin ] && export PATH="$PATH:/opt/my-resources/bin"
-
 # locales
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -68,3 +65,7 @@ fi
 
 EXEGOL_HOSTNAME="%m"
 [[ -z "${EXEGOL_NAME}" ]] && EXEGOL_HOSTNAME="%m" || EXEGOL_HOSTNAME="$EXEGOL_NAME (%m)"
+
+# Add my-resources custom tools to PATH if my-resources is activated
+# Must be at the end of the file to be first in the PATH !
+[ -d /opt/my-resources/bin ] && export PATH="/opt/my-resources/bin:$PATH"

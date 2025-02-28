@@ -166,7 +166,7 @@ function install_firefox() {
     pip3 install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/generate_policy.py
     add-history firefox
-    add-test-command "file /root/.mozilla/firefox/*.Exegol"
+    add-test-command "cat /usr/lib/firefox-esr/distribution/policies.json|grep 'Exegol'"
     add-test-command "firefox --version"
     add-to-list "firefox,https://www.mozilla.org,A web browser"
 }
