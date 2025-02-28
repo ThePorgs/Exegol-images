@@ -6,7 +6,7 @@ source common.sh
 function install_misc_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing misc apt tools"
-    fapt rlwrap imagemagick ascii rsync
+    fapt rlwrap imagemagick ascii rsync yq xq
 
     add-history rlwrap
     add-history imagemagick
