@@ -206,6 +206,7 @@ function install_bloodhound-ce() {
     [[ -f "${sharphound_path}/${sharphound_name}" ]] || exit
     mv "${sharphound_path}/${sharphound_name}" "${sharphound_path}/${sharphound_name_lowercase}"
     # Unlike Azurehound, upstream does not provide a sha256 file to check the integrity
+    sha256sum "${sharphound_path}/${sharphound_name_lowercase}" > "${sharphound_path}/${sharphound_name_lowercase}.sha256"
 
     ## AzureHound
     local azurehound_url_amd64
@@ -230,6 +231,8 @@ function install_bloodhound-ce() {
     [[ -f "${azurehound_path}/azurehound-linux-arm64.zip.sha256" ]] || exit
     (cd "${azurehound_path}"; sha256sum --check --warn ./*.sha256) || exit
     7z a -tzip -mx9 "${azurehound_path}/azurehound-${azurehound_version}.zip" "${azurehound_path}/azurehound-*"
+    # Upstream does not provide a sha256 file for the archive to check the integrity
+    sha256sum "${azurehound_path}/azurehound-${azurehound_version}.zip" > "${azurehound_path}/azurehound-${azurehound_version}.zip.sha256"
 
     # Files and directories
     # work directory required by bloodhound
