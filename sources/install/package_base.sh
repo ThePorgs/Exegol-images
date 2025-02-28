@@ -18,6 +18,27 @@ function install_dbassets() {
     add-to-list "dbassets,https://github.com/lap1nou/db-assets,Compromised credentials management"
 }
 
+function install_exegol-history() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history,add-test-command
+    colorecho "Installing Exegol-history"
+    #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
+    # todo : below is something basic. A nice tool being created for faster and smoother workflow
+    mkdir -p /opt/tools/Exegol-history
+    rm -rf /opt/tools/Exegol-history/profile.sh
+    {
+      echo "#export INTERFACE='eth0'"
+      echo "#export DOMAIN='DOMAIN.LOCAL'"
+      echo "#export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'"
+      echo "#export USER='someuser'"
+      echo "#export PASSWORD='somepassword'"
+      echo "#export NT_HASH='c1c635aa12ae60b7fe39e28456a7bac6'"
+      echo "#export DC_IP='192.168.56.101'"
+      echo "#export DC_HOST='DC01.DOMAIN.LOCAL'"
+      echo "#export TARGET='192.168.56.69'"
+      echo "#export ATTACKER_IP='192.168.56.1'"
+    } >> /opt/tools/Exegol-history/profile.sh
+}
+
 function install_rust_cargo() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing rustc, cargo, rustup"
@@ -444,7 +465,7 @@ function package_base() {
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh
     deploy_exegol
-
+    install_exegol-history
     fapt software-properties-common
     add_debian_repository_components
     cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
