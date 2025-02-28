@@ -177,6 +177,15 @@ function install_chisel() {
     add-to-list "chisel,https://github.com/jpillora/chisel,Go based TCP tunnel with authentication and encryption support"
 }
 
+function install_penelope() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Penelope"
+    pipx install --system-site-packages git+https://github.com/brightio/penelope.git
+    add-history penelope 
+    add-test-command "penelope.py -v" 
+    add-to-list "penelope,https://github.com/brightio/penelope,Penelope is a shell handler designed to be easy to use and intended to replace netcat when exploiting RCE vulnerabilities."
+}
+
 function install_sshuttle() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sshtuttle"
@@ -325,6 +334,7 @@ function package_network() {
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
+    install_penelope                # Shell handler
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package network completed in $elapsed_time seconds."
