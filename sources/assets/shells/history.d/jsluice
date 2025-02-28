@@ -1,0 +1,3 @@
+jsluice urls https://$TARGET
+jsluice secrets https://$TARGET
+jsluice tree https://$TARGET

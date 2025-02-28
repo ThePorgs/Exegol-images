@@ -6,37 +6,48 @@ source common.sh
 function install_wifi_apt_tools() {
     colorecho "Installing wifi apt tools"
     fapt aircrack-ng reaver bully cowpatty
-  
+
     add-aliases aircrack-ng
 
     add-history aircrack-ng
     add-history reaver
     add-history bully
     add-history cowpatty
-  
+
     add-test-command "aircrack-ng --help"                                                # WiFi security auditing tools suite
     add-test-command "reaver --help; reaver --help |& grep 'Tactical Network Solutions'" # Brute force attack against Wifi Protected Setup
     add-test-command "bully --version"                                                   # WPS brute force attack
     add-test-command "cowpatty -V"                                                       # WPA2-PSK Cracking
-  
+
     local version
     version=$(aircrack-ng --help | grep Aircrack-ng | awk '{print $2}')
+    add-to-list "aircrack-ng,https://www.aircrack-ng.org,A suite of tools for wireless penetration testing,$version"
     local version
     version=$(reaver --help |& grep Reaver | awk '{print $2}')
+    add-to-list "reaver,https://github.com/t6x/reaver-wps-fork-t6x,reaver is a tool for brute-forcing WPS (Wireless Protected Setup) PINs.,$version"
     local version
     version=$(bully --version)
+    add-to-list "bully,https://github.com/aanarchyy/bully,bully is a tool for brute-forcing WPS (Wireless Protected Setup) PINs.,$version"
     local version
     version=$(cowpatty -V | head -n 1 | awk '{print $2}')
-
-    add-to-list "aircrack-ng,https://www.aircrack-ng.org,A suite of tools for wireless penetration testing,$version"
-    add-to-list "reaver,https://github.com/t6x/reaver-wps-fork-t6x,reaver is a tool for brute-forcing WPS (Wireless Protected Setup) PINs.,$version"
-    add-to-list "bully,https://github.com/aanarchyy/bully,bully is a tool for brute-forcing WPS (Wireless Protected Setup) PINs.,$version"
     add-to-list "cowpatty,https://github.com/joswr1ght/cowpatty,cowpatty is a tool for offline dictionary attacks against WPA-PSK (Pre-Shared Key) networks.,$version"
 }
 
 function install_pyrit() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pyrit"
-    git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
+    # can't install with python3/python2 with latest changes.
+    # steps to remove temp fix:
+    #  1. try to install pyrit with git clone + venv + setup.py install with python2 or 3 (without the git patch)
+    #  2. if it works, remove the temp fix (and probably the patch as well)
+    local temp_fix_limit="2025-04-01"
+    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      # git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
+      git -C /opt/tools/ clone https://github.com/JPaulMora/Pyrit
+      git -C /opt/tools/Pyrit checkout f0f1913c645b445dd391fb047b812b5ba511782c
+    fi
     cd /opt/tools/Pyrit || exit
     fapt libpq-dev
     virtualenv --python python2 ./venv
@@ -51,7 +62,8 @@ function install_pyrit() {
     python2 setup.py build
     python2 setup.py install
     deactivate
-    add-aliases pyrit
+    # Copy the binary because Wifite can't find it with a symlink - https://github.com/ThePorgs/Development/issues/183
+    cp ./venv/bin/pyrit /opt/tools/bin/
     add-history pyrit
     local version
     version=$(pyrit help | head -n 1 | awk '{print $2}')
@@ -63,7 +75,7 @@ function install_wifite2() {
     colorecho "Installing wifite2"
     git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
     cd /opt/tools/wifite2 || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     catch_and_retry ./venv/bin/python3 setup.py install
     add-aliases wifite
     add-history wifite

@@ -48,7 +48,7 @@ function install_osint_apt_tools() {
 function install_youtubedl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing youtube-dl"
-    pipx install youtube-dl
+    pipx install --system-site-packages youtube-dl
     add-history youtube-dl
     local version
     version=$(youtube-dl --version)
@@ -59,7 +59,7 @@ function install_youtubedl() {
 function install_sublist3r() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing Sublist3r"
-    pipx install git+https://github.com/aboul3la/Sublist3r
+    pipx install --system-site-packages git+https://github.com/aboul3la/Sublist3r
     add-history sublist3r
     add-test-command "sublist3r --help"
     add-to-list "sublist3r,https://github.com/aboul3la/Sublist3r,a Python tool designed to enumerate subdomains of websites.,$version"
@@ -112,7 +112,7 @@ function install_findomain() {
 function install_holehe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing holehe"
-    pipx install holehe
+    pipx install --system-site-packages holehe
     add-history holehe
     local version
     version=$(holehe --help | grep holehe | tail -n 1 | awk '{print $2}')
@@ -140,7 +140,7 @@ function install_theharvester() {
     colorecho "Installing theHarvester"
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -157,7 +157,7 @@ function install_theharvester() {
 function install_h8mail() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing h8mail"
-    pipx install h8mail
+    pipx install --system-site-packages h8mail
     add-history h8mail
     local version
     version=$(h8mail --help | grep Version | awk '{print $3}')
@@ -181,29 +181,12 @@ function install_infoga() {
     add-to-list "infoga,https://github.com/m4ll0k/Infoga,Information gathering tool for hacking.,$version"
 }
 
-function install_buster() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-version
-    colorecho "Installing buster"
-    git -C /opt/tools clone --depth 1 https://github.com/sham00n/buster
-    cd /opt/tools/buster || exit
-    fapt libxml2-dev libxslt-dev
-    python3.6 -m venv ./venv
-    source ./venv/bin/activate
-    python3.6 -m pip install cython cchardet requests beautifulsoup4 PyYaml lxml grequests gevent twint
-    python3.6 setup.py install
-    deactivate
-    ln -s /opt/tools/buster/venv/bin/buster /opt/tools/bin
-    add-history buster
-    add-test-command "buster --help"
-    add-to-list "buster,https://github.com/sham00n/Buster,Advanced OSINT tool,$version"
-}
-
 function install_pwnedornot() {
     # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing pwnedornot"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/pwnedOrNot
     cd /opt/tools/pwnedOrNot || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install requests html2text
     deactivate
@@ -239,7 +222,7 @@ function install_phoneinfoga() {
 function install_maigret() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing maigret"
-    pipx install git+https://github.com/soxoj/maigret.git
+    pipx install --system-site-packages git+https://github.com/soxoj/maigret.git
     add-history maigret
     local version
     version=$(maigret --version | head -n 1 | awk '{print $2}')
@@ -252,7 +235,7 @@ function install_linkedin2username() {
     colorecho "Installing linkedin2username"
     git -C /opt/tools/ clone --depth 1 https://github.com/initstring/linkedin2username
     cd /opt/tools/linkedin2username || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -265,7 +248,7 @@ function install_linkedin2username() {
 function install_toutatis() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing toutatis"
-    pipx install git+https://github.com/megadose/toutatis
+    pipx install --system-site-packages git+https://github.com/megadose/toutatis
     add-history toutatis
     add-test-command "toutatis --help"
     add-to-list "toutatis,https://github.com/megadose/Toutatis,Toutatis is a tool that allows you to extract information from instagrams accounts such as e-mails / phone numbers and more.,$version"
@@ -286,7 +269,7 @@ function install_carbon14() {
     colorecho "Installing Carbon14"
     git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
     cd /opt/tools/Carbon14 || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -300,7 +283,7 @@ function install_photon() {
     colorecho "Installing photon"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/photon
     cd /opt/tools/photon || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -356,7 +339,7 @@ function install_spiderfoot() {
     colorecho "Installing Spiderfoot"
     git -C /opt/tools/ clone --depth 1 https://github.com/smicallef/spiderfoot
     cd /opt/tools/spiderfoot || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -373,9 +356,11 @@ function install_finalrecon() {
     colorecho "Installing FinalRecon"
     git -C /opt/tools/ clone --depth 1 https://github.com/thewhiteh4t/FinalRecon
     cd /opt/tools/FinalRecon || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # https://github.com/ThePorgs/Exegol-images/issues/372
+    pip3 install aiodns
     deactivate
     add-aliases finalrecon
     add-history finalrecon
@@ -388,7 +373,7 @@ function install_finalrecon() {
 function install_osrframework() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing osrframework"
-    pipx install osrframework
+    pipx install --system-site-packages osrframework
     pipx inject osrframework 'urllib3<2'
     pipx inject osrframework 'pip==21.2'
     add-history osrframework
@@ -403,9 +388,10 @@ function install_pwndb() {
     colorecho "Installing pwndb"
     git -C /opt/tools/ clone --depth 1 https://github.com/davidtavarez/pwndb.git
     cd /opt/tools/pwndb || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    pip3 install -U pysocks
     deactivate
     add-aliases pwndb
     add-history pwndb
@@ -428,7 +414,7 @@ function install_recondog() {
     colorecho "Installing ReconDog"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/ReconDog
     cd /opt/tools/ReconDog/ || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -453,7 +439,7 @@ function install_gron() {
 function install_ignorant() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ignorant"
-    pipx install git+https://github.com/megadose/ignorant
+    pipx install --system-site-packages git+https://github.com/megadose/ignorant
     add-history ignorant
     local version
     version=$(ignorant --help | grep ignorant | tail -n 1 | awk '{print $2}')
@@ -468,7 +454,7 @@ function install_trevorspray() {
     cd /opt/tools/TREVORspray || exit
     # https://github.com/blacklanternsecurity/TREVORspray/pull/27
     sed -i "s/1.0.5/1.0.4/" pyproject.toml
-    pipx install .
+    pipx install --system-site-packages .
     add-history trevorspray
     add-test-command "trevorspray --help"
     add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules / and more,$version"
@@ -478,7 +464,7 @@ function install_gitfive() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     # GitFive only works with Python 3.10+.
     colorecho "Installing GitFive"
-    pipx install git+https://github.com/mxrch/GitFive
+    pipx install --system-site-packages git+https://github.com/mxrch/GitFive
     add-test-command "gitfive --help"
     add-to-list "GitFive,https://github.com/mxrch/GitFive,GitFive is an OSINT tool to investigate GitHub profiles.,$version"
 }
@@ -489,7 +475,7 @@ function install_geopincer() {
     git -C /opt/tools clone --depth 1 https://github.com/tloja/GeoPincer.git
     cd /opt/tools/GeoPincer || exit
     sed -i "s#regions.txt#/opt/tools/GeoPincer/regions.txt##" GeoPincer.py
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -516,7 +502,7 @@ function install_murmurhash() {
     colorecho "Installing MurMurHash"
     git -C /opt/tools clone --depth 1 https://github.com/QU35T-code/MurMurHash
     cd /opt/tools/MurMurHash || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -533,7 +519,7 @@ function install_blackbird() {
     cd /opt/tools/blackbird || exit
     sed -i "s#data.json#/opt/tools/blackbird/data.json#" blackbird.py
     sed -i "s#useragents.txt#/opt/tools/blackbird/useragents.txt#" blackbird.py
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -544,25 +530,20 @@ function install_blackbird() {
 }
 
 function install_sherlock() {
-    # CODE-CHECK-WHITELIST=add-history
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sherlock"
-    git -C /opt/tools/ clone --depth 1 https://github.com/sherlock-project/sherlock
-    cd /opt/tools/sherlock || exit
-    python3 -m venv ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases sherlock
+    pipx install sherlock-project
+    add-history sherlock
+    add-test-command "sherlock --help"
     local version
     version=$(sherlock.py --version | head -n 1 | awk '{print $2}')
-    add-test-command "sherlock.py --help"
     add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks.,$version"
 }
 
 function install_censys() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Censys"
-    pipx install censys
+    pipx install --system-site-packages censys
     add-history censys
     local version
     version=$(censys --version | awk '{print $4}')
@@ -584,19 +565,19 @@ function install_gomapenum() {
 
 function install_pymeta() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
-    colorecho "Installing pymeta"
-    fapt exiftool
-    git -C /opt/tools clone --depth 1 https://github.com/m8sec/pymeta
-    cd /opt/tools/pymeta || exit
-    python3 -m venv ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    pip3 install -r requirements.txt
-    deactivate
-    ln -v -s /opt/tools/pymeta/venv/bin/pymeta /opt/tools/bin/
-    add-history pymeta
-    add-test-command "pymeta -h"
-    add-to-list "pymeta,https://github.com/m8sec/pymeta,Google and Bing scraping osint tool,$version"
+  colorecho "Installing pymeta"
+  fapt exiftool
+  git -C /opt/tools clone --depth 1 https://github.com/m8sec/pymeta
+  cd /opt/tools/pymeta || exit
+  python3 -m venv --system-site-packages ./venv
+  source ./venv/bin/activate
+  pip3 install .
+  pip3 install -r requirements.txt
+  deactivate
+  ln -v -s /opt/tools/pymeta/venv/bin/pymeta /opt/tools/bin/
+  add-history pymeta
+  add-test-command "pymeta -h"
+  add-to-list "pymeta,https://github.com/m8sec/pymeta,Google and Bing scraping osint tool,$version"
 }
 
 # Package dedicated to osint, recon and passive tools
@@ -616,7 +597,6 @@ function package_osint() {
     install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
     # install_infoga                  # Gathering email accounts informations TODO : 404, it seems the repo has been removed
-    install_buster                  # An advanced tool for email reconnaissance
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     # install_ghunt                 # Investigate Google Accounts with emails FIXME: Need python3.10 -> https://github.com/mxrch/GHunt/issues/398
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers
@@ -644,7 +624,7 @@ function package_osint() {
     install_geopincer               # GeoPincer is a script that leverages OpenStreetMap's Overpass API in order to search for locations
     install_yalis                   # Yet Another LinkedIn Scraper
     install_murmurhash              # Little tool is to calculate a MurmurHash value
-    install_blackbird               # OSINT tool to search fast for accounts by username
+    #install_blackbird              Skipping install because of https://github.com/p1ngul1n0/blackbird/issues/119 # OSINT tool to search fast for accounts by username
     install_sherlock                # Hunt down social media accounts by username across social networks
     install_censys                  # An easy-to-use and lightweight API wrapper for Censys APIs
     install_gomapenum               # Nothing new but existing techniques are brought together in one tool.

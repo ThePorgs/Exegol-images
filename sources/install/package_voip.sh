@@ -6,7 +6,7 @@ source common.sh
 function install_sipvicious() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing SIPVicious"
-    pipx install git+https://github.com/enablesecurity/sipvicious.git
+    pipx install --system-site-packages git+https://github.com/enablesecurity/sipvicious.git
     add-history sipvicious_svcrack
     local version
     version=$(sipvicious_svcrack --version | head -n 1 | awk '{print $2}')

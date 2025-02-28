@@ -6,15 +6,13 @@ source common.sh
 function install_forensic_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing forensic apt tools"
-    fapt pst-utils binwalk foremost testdisk fdisk sleuthkit
+    fapt pst-utils foremost testdisk fdisk sleuthkit
     
-    add-history binwalk
     add-history foremost
     add-history testdisk
     add-history fdisk
     
     add-test-command "pst2ldif -V"      # Reads a PST and prints the tree structure to the console
-    add-test-command "binwalk --help"   # Tool to find embedded files
     add-test-command "foremost -V"      # Alternative to binwalk
     add-test-command "testdisk --help"  # Recover lost partitions
     add-test-command "fdisk --help"     # Creating and manipulating disk partition table
@@ -22,23 +20,28 @@ function install_forensic_apt_tools() {
 
     local version
     version=$(pst2ldif -V | head -n 1 | awk '{print $2}')
-    local version
-    version=$(binwalk --help | grep Binwalk | awk '{print $2}')
+    add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
     local version
     version=$(foremost -V | head -n 1)
+    add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers / footers / and internal data structures."
     local version
     version=$(testdisk --version | grep Version | awk '{print $2}')
+    add-to-list "testdisk,https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
     local version
     version=$(fdisk --version | awk '{print $4}')
+    add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool"
     local version
     version=$(blkcalc -V | awk '{print $5}')
+    add-to-list "sleuthkit,https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
+}
 
-    add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files.,$version"
-    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images.,$version"
-    add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers / footers / and internal data structures.,$version"
-    add-to-list "testdisk,https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility,$version"
-    add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool,$version"
-    add-to-list "sleuthkit,https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data,$version"
+function install_binwalk() {
+    colorecho "Installing binwalk"
+    fapt squashfs-tools binwalk
+    add-aliases binwalk
+    add-history binwalk
+    add-test-command "binwalk --help"
+    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
 }
 
 function install_volatility2() {
@@ -65,10 +68,7 @@ function install_volatility2() {
 
 function install_volatility3() {
     colorecho "Installing volatility3"
-    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
-    pipx install /opt/tools/volatility3
-    # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
-    pipx inject volatility3 yara-python capstone pycryptodome
+    pipx install --system-site-packages git+https://github.com/volatilityfoundation/volatility3
     add-aliases volatility3
     add-history volatility3
     local version
@@ -143,6 +143,7 @@ function package_forensic() {
     local end_time
     start_time=$(date +%s)
     install_forensic_apt_tools
+    install_binwalk                 # Tool to find embedded files
     install_volatility2             # Memory analysis tool
     install_volatility3             # Memory analysis tool v2
     install_trid                    # filetype detection tool

@@ -10,6 +10,7 @@ function update() {
 }
 
 function install_exegol-history() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history,add-test-command
     colorecho "Installing Exegol-history"
     #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
     # todo : below is something basic. A nice tool being created for faster and smoother workflow
@@ -54,10 +55,22 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    asdf install golang latest
     # 1.19 needed by sliver
     asdf install golang 1.19
-    asdf global golang latest
+    #asdf install golang latest
+    #asdf set --home golang latest
+    # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
+    local temp_fix_limit="2025-06-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      # 1.23 needed by BloodHound-CE, and sensepost/ruler
+      asdf install golang 1.23.0
+      # Default GO version: 1.22.2
+      asdf install golang 1.22.2
+      asdf set --home golang 1.22.2
+    fi
+
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
 #        return
 #    fi
@@ -119,11 +132,8 @@ function install_pyenv() {
     fapt git curl build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
+    set_python_env
     local v
-    # add pyenv to PATH
-    export PATH="/root/.pyenv/bin:$PATH"
-    # add python commands (pyenv shims) to PATH
-    eval "$(pyenv init --path)"
     colorecho "Installing python2 (latest)"
     fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
     # Don't think it's needed, but if something fails, use command below
@@ -132,10 +142,11 @@ function install_pyenv() {
         colorecho "Installing python${v}"
         pyenv install "$v"
     done
-    # allowing python2, python3 and python3.6 to be found
+    # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
-    #  --> python3.6 points to 3.6
+    #  --> python3.10 points to 3.10
+    #  --> python3.13 points to 3.13
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -147,6 +158,8 @@ function install_pyenv() {
         add-test-command "python${v} --version"
         add-test-command "pip${v} --version"
     done
+    fapt python3-venv
+    add-test-command "python3 -m venv -h"
 }
 
 function install_firefox() {
@@ -156,11 +169,11 @@ function install_firefox() {
     mkdir /opt/tools/firefox
     mv /root/sources/assets/firefox/* /opt/tools/firefox/
     pip3 install -r /opt/tools/firefox/requirements.txt
-    python3 /opt/tools/firefox/setup.py
+    python3 /opt/tools/firefox/generate_policy.py
     add-history firefox
     local version
     version=$(firefox --version | awk '{print $3}')
-    add-test-command "file /root/.mozilla/firefox/*.Exegol"
+    add-test-command "cat /usr/lib/firefox-esr/distribution/policies.json|grep 'Exegol'"
     add-test-command "firefox --version"
     add-to-list "firefox,https://www.mozilla.org,A web browser,$version"
 }
@@ -184,7 +197,8 @@ function install_rvm() {
     rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
-    rvm install ruby-3.1.2
+    rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
+    rvm install ruby-3.1.5  # needed metasploit-framework
     rvm get head
     gem update
     local version
@@ -233,6 +247,15 @@ function install_pipx() {
     add-test-command "pipx --version"
 }
 
+function install_pyftpdlib() {
+    # CODE-CHECK-WHITELIST=add-history
+    colorecho "Installing pyftpdlib"
+    pip3 install pyftpdlib
+    add-aliases pyftpdlib
+    add-test-command "python3 -c 'import pyftpdlib'"
+    add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
+}
+
 function install_yarn() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing yarn"
@@ -259,22 +282,24 @@ function install_ultimate_vimrc() {
 }
 
 function install_neovim() {
-    colorecho "Installing neovim"
+    colorecho "Installing neovim/nvim"
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        curl --location --output nvim.appimage "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
         chmod u+x nvim.appimage
         ./nvim.appimage --appimage-extract
         mkdir /opt/tools/nvim
-        cp -r squashfs-root/usr/* /opt/tools/nvim
+        cp -rv squashfs-root/usr/* /opt/tools/nvim
         rm -rf squashfs-root nvim.appimage
         ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        # Build take ~5min
+        # Building, because when using release, error is raised: "./bin/nvim: /lib/aarch64-linux-gnu/libm.so.6: version `GLIBC_2.38' not found (required by ./bin/nvim)"
+        # https://github.com/neovim/neovim/issues/32496
+        # Would require a bump in glibc, using old releases, or manually building. So manual build it is.
         fapt gettext
-        git clone https://github.com/neovim/neovim.git
+        git clone --depth 1 https://github.com/neovim/neovim.git
         cd neovim || exit
         make CMAKE_BUILD_TYPE=RelWithDebInfo
         make install
@@ -350,6 +375,25 @@ function install_java11() {
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
+function install_java21() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
+    colorecho "Installing java 11"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
+
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-aarch64_bin.tar.gz"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    tar -xzf /tmp/openjdk21-jdk.tar.gz --directory /tmp
+    mkdir -p "/usr/lib/jvm"
+    mv /tmp/jdk-21* /usr/lib/jvm/java-21-openjdk
+    add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
+}
+
 function add_debian_repository_components() {
     # add non-free non-free-firmware contrib repository
     # adding at the end of the line start with Components of the repository to add
@@ -375,6 +419,8 @@ function post_install() {
     rm -rfv /tmp/*
     rm -rfv /var/lib/apt/lists/*
     rm -rfv /root/sources
+    rm -rfv /root/.cache
+    rm -rfv /root/.gradle/caches
     colorecho "Stop listening processes"
     listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
     if [[ -n $listening_processes ]]; then
@@ -398,12 +444,26 @@ function post_install() {
 
 function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Install asdf"
-    # creates ~/.asdf/
-    git -C "$HOME" clone --depth 1 --branch v0.13.1 https://github.com/asdf-vm/asdf .asdf
-    source "$HOME/.asdf/asdf.sh"
-    # completions file
-    source "$HOME/.asdf/completions/asdf.bash"
+    colorecho "Installing asdf"
+    local URL
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+    elif [[ $(uname -m) = 'aarch64' ]]
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' | grep -o 'https://[^"]*')
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' | grep -o 'https://[^"]*')
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    curl --location -o /tmp/asdf.tar.gz "$URL"
+    tar -xf /tmp/asdf.tar.gz --directory /tmp
+    rm /tmp/asdf.tar.gz
+    mv /tmp/asdf /opt/tools/bin/asdf
+    asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
+    mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
+    # asdf completions
+    set_asdf_env
+    set_bin_path
     local version
     version=$(asdf version)
     add-test-command "asdf version"
@@ -422,6 +482,8 @@ function package_base() {
     install_exegol-history
     fapt software-properties-common
     add_debian_repository_components
+    cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
+    cp -v /root/sources/assets/apt/preferences.d/* /etc/apt/preferences.d/
     apt-get update
     colorecho "Starting main programs install"
     fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
@@ -432,7 +494,8 @@ function package_base() {
     nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
     logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 grc emacs-nox xsel xxd libnss3-tools
+    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools
+    apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem
     install_locales
@@ -443,14 +506,10 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.12 3.10 3.6 2"
+    PYTHON_VERSIONS="3.11 3.13 3.10 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
-    # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
-    # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
-    # with pyenv, not sure the command below is needed anymore
-    # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     for v in $PYTHON_VERSIONS; do
         # shellcheck disable=SC2086
         pip${v} install --upgrade pip
@@ -473,7 +532,6 @@ function package_base() {
     add-aliases grc
     add-aliases emacs-nox
     add-aliases xsel
-    add-aliases pyftpdlib
 
     # Rust, Cargo, rvm
     install_rust_cargo
@@ -481,6 +539,7 @@ function package_base() {
 
     # java11 install, and java17 as default
     install_java11
+    install_java21
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
@@ -489,6 +548,7 @@ function package_base() {
     install_fzf                                         # Fuzzy finder
     add-history curl
     install_yarn
+    install_pyftpdlib
     install_ultimate_vimrc                              # Make vim usable OOFB
     install_neovim
     install_mdcat                                       # cat markdown files
@@ -507,7 +567,7 @@ function package_base() {
 
     LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
     # shellcheck disable=SC2016
-    sed -i "${LINE}"'i [ "$(resolvconf -l "tun*" | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+    sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
     ((LINE++))
     sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
     add-test-command "openvpn --version"
@@ -524,12 +584,18 @@ function package_base() {
     mkdir -p ~/.local/share/tldr
     tldr -u
 
-    # NVM (install in conctext)
+    # NVM (install in context)
     zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
     # Set Global config path to vendor
     # All programs using bundle will store their deps in vendor/
     bundle config path vendor/
 
-    # Remote Graphical Desktop installation
+    # OpenSSL activate legacy support
+    cat /root/sources/assets/patches/openssl.patch >> /etc/ssl/openssl.cnf
+    add-test-command "echo -n '1337' | openssl dgst -md4"
+    add-test-command "python3 -c 'import hashlib;print(hashlib.new(\"md4\", \"1337\".encode()).digest())'"
+
+    # Global python dependencies
+    pip3 install -r /root/sources/assets/python/requirements.txt
 }

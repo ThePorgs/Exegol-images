@@ -8,10 +8,7 @@ function install_network_apt_tools() {
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
-    rdesktop xtightvncviewer ssh-audit hydra mariadb-client redis-tools
-    fapt remmina remmina-plugin-rdp remmina-plugin-secret
-    # remmina-plugin-spice need build ?
-    # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
+    rdesktop xtightvncviewer hydra mariadb-client redis-tools mitmproxy
 
     add-history wireshark
     add-history tshark
@@ -24,6 +21,7 @@ function install_network_apt_tools() {
     add-history rdesktop
     add-history hydra
     add-history xfreerdp
+    add-history mitmproxy
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
     add-test-command "tshark --version"                             # Tshark packet sniffer
@@ -37,64 +35,56 @@ function install_network_apt_tools() {
     add-test-command "which xfreerdp"
     add-test-command "rdesktop|& grep 'Usage: rdesktop'"
     add-test-command "which xtightvncviewer"
-    add-test-command "ssh-audit --help |& grep 'verbose output'"    # SSH server audit
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
-    add-test-command "remmina --help"                          # Redis protocol
-
+    add-test-command "mitmproxy --version"                          # MITMProxy
     local version
     version=$(wireshark --version | head -n 1 | awk '{print $2}')
+    add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     local version
     version=$(tshark --version |& grep TShark | awk '{print $3}')
+    add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
     local version
     version=$(hping3 --version | head -n 1 | awk '{print $3}')
+    add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
     local version
     version=$(masscan --version | grep version | head -n 1 | awk '{print $3}')
+    add-to-list "masscan,https://github.com/robertdavidgraham/masscan,Masscan is an Internet-scale port scanner"
     local version
     version=$(netdiscover -h | head -n 1 | awk '{print $2}')
+    add-to-list "netdiscover,https://github.com/netdiscover-scanner/netdiscover,netdiscover is an active/passive address reconnaissance tool"
     local version
     version=$(tcpdump --version | head -n 1 | awk '{print $3}')
+    add-to-list "tcpdump,https://github.com/the-tcpdump-group/tcpdump,a powerful command-line packet analyzer for Unix-like systems"
     local version
     version=$(iptables --version | awk '{print $2}')
+    add-to-list "iptables,https://linux.die.net/man/8/iptables,Userspace command line tool for configuring kernel firewall"
     local version
     version=$(traceroute --version |& head -n 1 | awk '{print $6}')
+    add-to-list "traceroute,https://github.com/iputils/iputils,Traceroute is a command which can show you the path a packet of information takes from your computer to one you specify."
     local version
     version=$(dns2tcpc |& grep dns2tcp | head -n 1 | awk '{print $2}')
+    add-to-list "dns2tcp,https://github.com/alex-sector/dns2tcp,dns2tcp is a tool for relaying TCP connections over DNS."
     local version
     version=$(xfreerdp --version | awk '{print $5}')
+    add-to-list "freerdp2-x11,https://github.com/FreeRDP/FreeRDP,FreeRDP is a free implementation of the Remote Desktop Protocol (RDP) released under the Apache license."
     local version
     version=$(rdesktop |& grep Version | awk '{print $2}' | sed 's/\.$//')
+    add-to-list "rdesktop,https://github.com/rdesktop/rdesktop,rdesktop is a client for Remote Desktop Protocol (RDP) used in a number of Microsoft products including Windows NT Terminal Server / Windows 2000 Server / Windows XP and Windows 2003 Server."
     local version
     version=$(xtightvncviewer --version |& head -n 1 | awk '{print $4}')
-    local version
-    version=$(ssh-audit --help | head -n 1 | awk '{print $3}' | tr -d ',')
+    add-to-list "xtightvncviewer,https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software."
     local version
     version=$(hydra -h | head -n 1 | awk '{print $2}')
+    add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
     local version
     version=$(mariadb --version | awk '{print $3}')
+    add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     local version
     version=$(redis-cli --version | awk '{print $2}')
-    local version
-    version=$(remmina --help | grep 'remmina.Remmina' | tail -n 1 | awk '{print $2}')
-
-    add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level.,$version"
-    add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark.,$version"
-    add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets,$version"
-    add-to-list "masscan,https://github.com/robertdavidgraham/masscan,Masscan is an Internet-scale port scanner,$version"
-    add-to-list "netdiscover,https://github.com/netdiscover-scanner/netdiscover,netdiscover is an active/passive address reconnaissance tool,$version"
-    add-to-list "tcpdump,https://github.com/the-tcpdump-group/tcpdump,a powerful command-line packet analyzer for Unix-like systems,$version"
-    add-to-list "iptables,https://linux.die.net/man/8/iptables,Userspace command line tool for configuring kernel firewall,$version"
-    add-to-list "traceroute,https://github.com/iputils/iputils,Traceroute is a command which can show you the path a packet of information takes from your computer to one you specify.,$version"
-    add-to-list "dns2tcp,https://github.com/alex-sector/dns2tcp,dns2tcp is a tool for relaying TCP connections over DNS.,$version"
-    add-to-list "freerdp2-x11,https://github.com/FreeRDP/FreeRDP,FreeRDP is a free implementation of the Remote Desktop Protocol (RDP) released under the Apache license.,$version"
-    add-to-list "rdesktop,https://github.com/rdesktop/rdesktop,rdesktop is a client for Remote Desktop Protocol (RDP) used in a number of Microsoft products including Windows NT Terminal Server / Windows 2000 Server / Windows XP and Windows 2003 Server.,$version"
-    add-to-list "xtightvncviewer,https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software.,$version"
-    add-to-list "ssh-audit,https://github.com/arthepsy/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices.,$version"
-    add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack.,$version"
-    add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server.,$version"
-    add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark.,$version"
-    add-to-list "remmina,https://github.com/FreeRDP/Remmina,Remote desktop client.,$version"
+    add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
+    add-to-list "mitmproxy,https://github.com/mitmproxy/mitmproxy,mitmproxy is an interactive SSL/TLS-capable intercepting proxy with a console interface for HTTP/1 HTTP/2 and WebSockets."
 }
 
 function install_proxychains() {
@@ -116,11 +106,28 @@ function install_proxychains() {
     add-to-list "proxychains,https://github.com/rofl0r/proxychains,Proxy chains - redirect connections through proxy servers.,$version"
 }
 
+function install_remmina() {
+    colorecho "Installing remmina"
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    fapt remmina remmina-plugin-rdp remmina-plugin-secret
+    # remmina-plugin-spice need build ?
+    # https://gitlab.com/Remmina/Remmina/-/wikis/Compilation/Compile-on-Debian-10-Buster
+
+    # Create default remmina config
+    mkdir -p /root/.config/remmina
+    # Use the same keymap for RDP than the local client
+    echo "[remmina_pref]
+rdp_use_client_keymap=1" > /root/.config/remmina/remmina.pref
+
+    add-test-command "remmina --help"
+    add-to-list "remmina,https://github.com/FreeRDP/Remmina,Remote desktop client."
+}
+
 function install_nmap() {
     colorecho "Installing nmap"
     # echo 'deb http://deb.debian.org/debian bullseye-backports main' > /etc/apt/sources.list.d/backports.list
     # nmap in main repo is a latest version
-    apt-get update
+    # apt-get update
     fapt nmap
     add-aliases nmap
     add-history nmap
@@ -144,6 +151,16 @@ function install_nmap-parse-output() {
     add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output.,$version"
 }
 
+function install_udpx(){
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Install udpx"
+    go install -v github.com/nullt3r/udpx/cmd/udpx@latest
+    asdf reshim golang
+    add-history udpx
+    add-test-command "udpx --help"
+    add-to-list "udpx,https://github.com/nullt3r/udpx, Fast and lightweight - UDPX is a single-packet UDP scanner written in Go that supports the discovery of over 45 services with the ability to add custom ones."
+}
+
 function install_autorecon() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing autorecon"
@@ -152,7 +169,7 @@ function install_autorecon() {
     git -C /opt/tools clone --depth 1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
     ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
     fapt dnsrecon wkhtmltopdf
-    pipx install git+https://github.com/Tib3rius/AutoRecon
+    pipx install --system-site-packages git+https://github.com/Tib3rius/AutoRecon
     add-history autorecon
     # test below cannot work because test runner cannot have a valid display
     # add-test-command "autorecon --version"
@@ -164,7 +181,7 @@ function install_dnschef() {
     colorecho "Installing DNSChef"
     git -C /opt/tools/ clone --depth 1 https://github.com/iphelix/dnschef
     cd /opt/tools/dnschef || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -179,7 +196,7 @@ function install_dnschef() {
 function install_divideandscan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DivideAndScan"
-    pipx install git+https://github.com/snovvcrash/DivideAndScan
+    pipx install --system-site-packages git+https://github.com/snovvcrash/DivideAndScan
     add-history divideandscan
     local version
     version=$(divideandscan --help |& grep DivideAndScan | awk '{print $4}' | tr -d '{}')
@@ -203,7 +220,7 @@ function install_chisel() {
 function install_sshuttle() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sshtuttle"
-    pipx install git+https://github.com/sshuttle/sshuttle.git
+    pipx install --system-site-packages git+https://github.com/sshuttle/sshuttle.git
     add-history sshuttle
     local version
     version=$(sshuttle --version)
@@ -215,8 +232,8 @@ function install_eaphammer() {
     colorecho "Installing eaphammer"
     git -C /opt/tools clone --depth 1 https://github.com/s0lst1c3/eaphammer.git
     cd /opt/tools/eaphammer || exit
-    xargs apt install -y < kali-dependencies.txt
-    python3 -m venv ./venv
+    fapt apache2 dnsmasq libssl-dev libnfnetlink-dev libnl-3-dev libnl-genl-3-dev libcurl4-openssl-dev zlib1g-dev libpcap-dev
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r pip.req
     deactivate
@@ -231,7 +248,7 @@ function install_eaphammer() {
 function install_fierce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing fierce"
-    pipx install git+https://github.com/mschwager/fierce
+    pipx install --system-site-packages git+https://github.com/mschwager/fierce
     add-history fierce
     add-test-command "fierce --help"
     add-to-list "fierce,https://github.com/mschwager/fierce,A DNS reconnaissance tool for locating non-contiguous IP space,$version"
@@ -326,6 +343,15 @@ function install_legba() {
     add-to-list "legba,https://github.com/evilsocket/legba,a multiprotocol credentials bruteforcer / password sprayer and enumerator built with Rust,$version"
 }
 
+function install_ssh-audit() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing ssh-audit"
+    pipx install --system-site-packages git+https://github.com/jtesta/ssh-audit
+    add-history ssh-audit
+    add-test-command "ssh-audit --help"
+    add-to-list "ssh-audit,https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
+}
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_env
@@ -334,8 +360,10 @@ function package_network() {
     start_time=$(date +%s)
     install_network_apt_tools
     install_proxychains             # Network tool
+    install_remmina                 # Remote desktop client
     install_nmap                    # Port scanner
     install_nmap-parse-output       # Parse nmap XML files
+    install_udpx
     install_autorecon               # External recon tool
     install_dnschef                 # Python DNS server
     install_divideandscan           # Python project to automate port scanning routine
@@ -350,6 +378,7 @@ function package_network() {
     install_ligolo-ng               # Tunneling tool that uses a TUN interface
     install_rustscan
     install_legba                   # Login Scanner
+    install_ssh-audit               # SSH server audit
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package network completed in $elapsed_time seconds."

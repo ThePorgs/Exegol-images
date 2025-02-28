@@ -6,19 +6,21 @@ source common.sh
 function install_ad_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing AD apt tools"
-    fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
+    fapt samdump2 smbclient onesixtyone nbtscan ldap-utils krb5-user
 
     add-history samdump2
     add-history smbclient
     add-history onesixtyone
     add-history nbtscan
     add-history ldapsearch
+    add-history kerberos
 
     add-test-command "samdump2 -h|& grep 'enable debugging'"        # Dumps Windows 2k/NT/XP/Vista password hashes
     add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
     add-test-command "onesixtyone 127.0.0.1 public"                 # SNMP scanning
     add-test-command "nbtscan 127.0.0.1"                            # NetBIOS scanning tool
     add-test-command "ldapsearch --help|& grep 'Search options'"    # Perform queries on a LDAP server
+    add-test-command "klist -V"
 
     local version
     version=$(samdump2 -h | head -n 1 | awk '{print $2}')
@@ -36,6 +38,15 @@ function install_ad_apt_tools() {
     add-to-list "ldapsearch,https://wiki.debian.org/LDAP/LDAPUtils,Search for and display entries (ldap),$version"
 }
 
+function install_asrepcatcher() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing ASRepCatcher"
+    pipx install --system-site-packages git+https://github.com/Yaxxine7/ASRepCatcher
+    add-history asrepcatcher
+    add-test-command "ASRepCatcher --help"
+    add-to-list "asrepcatcher,https://github.com/Yaxxine7/ASRepCatcher,Make your VLAN ASREProastable."
+}
+
 function install_pretender() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing Pretender"
@@ -51,11 +62,11 @@ function install_responder() {
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/Responder
     cd /opt/tools/Responder || exit
     fapt gcc-mingw-w64-x86-64
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # following requirements needed by MultiRelay.py
-    pip3 install pycryptodome pycryptodomex six
+    pip3 install pycryptodomex six
     deactivate
     sed -i 's/ Random/ 1122334455667788/g' /opt/tools/Responder/Responder.conf
     sed -i 's/files\/AccessDenied.html/\/opt\/tools\/Responder\/files\/AccessDenied.html/g' /opt/tools/Responder/Responder.conf
@@ -78,7 +89,7 @@ function install_responder() {
 function install_sprayhound() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sprayhound"
-    pipx install git+https://github.com/Hackndo/sprayhound
+    pipx install --system-site-packages git+https://github.com/Hackndo/sprayhound
     add-history sprayhound
     local version
     version=$(sprayhound --help | grep spraying | head -n 1 | awk '{print $2}')
@@ -89,7 +100,7 @@ function install_sprayhound() {
 function install_smartbrute() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing smartbrute"
-    pipx install git+https://github.com/ShutdownRepo/smartbrute
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/smartbrute
     add-history smartbrute
     add-test-command "smartbrute --help"
     add-to-list "smartbrute,https://github.com/ShutdownRepo/SmartBrute,The smart password spraying and bruteforcing tool for Active Directory Domain Services.,$version"
@@ -98,33 +109,17 @@ function install_smartbrute() {
 function install_ldapdomaindump() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing ldapdomaindump"
+    # Remove --system-site-packages because the ldapdomaindump package conflicts with the base package
     pipx install git+https://github.com/dirkjanm/ldapdomaindump
     add-history ldapdomaindump
     add-test-command "ldapdomaindump --help"
     add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service,$version"
 }
 
-function install_crackmapexec() {
-    colorecho "Installing CrackMapExec"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Porchetta-Industries/CrackMapExec
-    pipx install /opt/tools/CrackMapExec/
-    mkdir -p ~/.cme
-    [[ -f ~/.cme/cme.conf ]] && mv ~/.cme/cme.conf ~/.cme/cme.conf.bak
-    cp -v /root/sources/assets/crackmapexec/cme.conf ~/.cme/cme.conf
-    # below is for having the ability to check the source code when working with modules and so on
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
-    add-aliases crackmapexec
-    add-history crackmapexec
-    local version
-    version=$(crackmapexec --version | grep - | awk '{print $1}')
-    add-test-command "crackmapexec --help"
-    add-to-list "crackmapexec,https://github.com/Porchetta-Industries/CrackMapExec,Network scanner.,$version"
-}
-
 function install_bloodhound-py() {
     # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing and Python ingestor for BloodHound"
-    pipx install git+https://github.com/fox-it/BloodHound.py
+    pipx install --system-site-packages git+https://github.com/fox-it/BloodHound.py
     add-aliases bloodhound-py
     add-history bloodhound-py
     add-test-command "bloodhound.py --help"
@@ -135,14 +130,13 @@ function install_bloodhound-py() {
 function install_bloodhound-ce-py() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing and Python ingestor for BloodHound-CE"
-    git -C /opt/tools/ clone https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
+    git -C /opt/tools/ clone --branch bloodhound-ce --depth 1 https://github.com/dirkjanm/BloodHound.py BloodHound-CE.py
     cd /opt/tools/BloodHound-CE.py || exit
-    git checkout bloodhound-ce
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .
     deactivate
-    ln -v -s /opt/tools/BloodHound-CE.py/venv/bin/bloodhound-python /opt/tools/bin/bloodhound-ce.py
+    ln -v -s /opt/tools/BloodHound-CE.py/venv/bin/bloodhound-ce-python /opt/tools/bin/bloodhound-ce.py
     add-history bloodhound-ce-py
     add-test-command "bloodhound-ce.py --help"
     add-to-list "bloodhound-ce.py,https://github.com/fox-it/BloodHound.py,BloodHound-CE ingestor in Python.,$version"
@@ -181,11 +175,25 @@ function install_bloodhound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing BloodHound-CE"
 
+    # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
+    local bloodhoundce_path="/opt/tools/BloodHound-CE/"
+    local sharphound_path="${bloodhoundce_path}/collectors/sharphound/"
+    local azurehound_path="${bloodhoundce_path}/collectors/azurehound/"
+    mkdir -p "${bloodhoundce_path}"
+    mkdir -p "${sharphound_path}"
+    mkdir -p "${azurehound_path}"
+
+    local curl_tempfile
+    curl_tempfile=$(mktemp)
+    [[ -f "${curl_tempfile}" ]] || exit
+
     # Installing & Configuring the database
     fapt postgresql postgresql-client
+
     # only expose postgresql on localhost
     sed -i 's/#listen_addresse/listen_addresse/' /etc/postgresql/15/main/postgresql.conf
     service postgresql start
+
     # avoid permissions issues when impersonating postgres
     cd /tmp || exit
     sudo -u postgres psql -c "CREATE USER bloodhound WITH PASSWORD 'exegol4thewin';"
@@ -194,53 +202,72 @@ function install_bloodhound-ce() {
     service postgresql stop
 
     # Build BloodHound-CE
-    mkdir -p /opt/tools/BloodHound-CE/
-    git -C /opt/tools/BloodHound-CE/ clone --depth 1 https://github.com/SpecterOps/BloodHound.git src
-    cd /opt/tools/BloodHound-CE/src/packages/javascript/bh-shared-ui || exit
-    zsh -c "source ~/.zshrc && nvm install 18 && nvm use 18 && yarn install --immutable && yarn build"
-    cd /opt/tools/BloodHound-CE/src/ || exit
+    local latestRelease
+    # Had to output into a tempfile as the Exegol's wrapper for curl breaks stdout
+    curl --location --silent "https://api.github.com/repos/SpecterOps/BloodHound/releases" -o "${curl_tempfile}"
+    latestRelease=$(jq --raw-output 'first(.[] | select(.tag_name | contains("-rc") | not) | .tag_name)' "${curl_tempfile}")
+    git -C "${bloodhoundce_path}" clone --depth 1 --branch "${latestRelease}" "https://github.com/SpecterOps/BloodHound.git" src
+    cd "${bloodhoundce_path}/src/" || exit
     catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
 
-    # Ingestors: bloodhound-ce requires the ingestors to be in a specific directory and checks that when starting, they need to be downloaded here
-    mkdir -p /opt/tools/BloodHound-CE/collectors/sharphound
-    mkdir -p /opt/tools/BloodHound-CE/collectors/azurehound
     ## SharpHound
-    local SHARPHOUND_URL
-    SHARPHOUND_URL=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep 'SharpHound-.*.zip' | grep -v 'debug' | grep -o 'https://[^"]*')
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/sharphound/ "$SHARPHOUND_URL"
-    local SHARPHOUND_NAME
-    SHARPHOUND_NAME=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" | grep -o 'SharpHound-.*.zip' | grep -v debug | uniq)
-    sha256sum "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME" > "/opt/tools/BloodHound-CE/collectors/sharphound/$SHARPHOUND_NAME.sha256"
+    local sharphound_url
+    local sharphound_name
+    local sharphound_name_lowercase
+    curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" -o "${curl_tempfile}"
+    sharphound_url=$(jq --raw-output '.assets[].browser_download_url | select(contains("debug") | not)' "${curl_tempfile}")
+    sharphound_name=$(jq --raw-output '.assets[].name | select(contains("debug") | not)' "${curl_tempfile}")
+    # lowercase fix: https://github.com/ThePorgs/Exegol-images/pull/405
+    sharphound_name_lowercase=$(jq --raw-output '.assets[].name | ascii_downcase | select(contains("debug") | not)' "${curl_tempfile}")
+    wget --directory-prefix "${sharphound_path}" "${sharphound_url}"
+    [[ -f "${sharphound_path}/${sharphound_name}" ]] || exit
+    mv "${sharphound_path}/${sharphound_name}" "${sharphound_path}/${sharphound_name_lowercase}"
+    # Unlike Azurehound, upstream does not provide a sha256 file to check the integrity
+    sha256sum "${sharphound_path}/${sharphound_name_lowercase}" > "${sharphound_path}/${sharphound_name_lowercase}.sha256"
+
     ## AzureHound
-    local AZUREHOUND_URL_AMD64
-    local AZUREHOUND_URL_ARM64
-    AZUREHOUND_URL_AMD64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-arm64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
-    AZUREHOUND_URL_ARM64=$(curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" | grep 'azurehound-linux-amd64.zip' | grep -v 'sha' | grep -o 'https://[^"]*')
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_AMD64"
-    wget --directory-prefix /opt/tools/BloodHound-CE/collectors/azurehound/ "$AZUREHOUND_URL_ARM64"
+    local azurehound_url_amd64
+    local azurehound_url_amd64_sha256
+    local azurehound_url_arm64
+    local azurehound_url_arm64_sha256
+    local azurehound_version
+    curl --location --silent "https://api.github.com/repos/BloodHoundAD/AzureHound/releases/latest" -o "${curl_tempfile}"
+    azurehound_version=$(jq --raw-output '.tag_name' "${curl_tempfile}")
+    azurehound_url_amd64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip"))' "${curl_tempfile}")
+    azurehound_url_amd64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-amd64.zip.sha256"))' "${curl_tempfile}")
+    azurehound_url_arm64=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip"))' "${curl_tempfile}")
+    azurehound_url_arm64_sha256=$(jq --raw-output '.assets[].browser_download_url | select (endswith("azurehound-linux-arm64.zip.sha256"))' "${curl_tempfile}")
+    rm "${curl_tempfile}"
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64}"
+    [[ -f "${azurehound_path}/azurehound-linux-amd64.zip" ]] || exit
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64_sha256}"
+    [[ -f "${azurehound_path}/azurehound-linux-amd64.zip.sha256" ]] || exit
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64}"
+    [[ -f "${azurehound_path}/azurehound-linux-arm64.zip" ]] || exit
+    wget --directory-prefix "${azurehound_path}" "${azurehound_url_arm64_sha256}"
+    [[ -f "${azurehound_path}/azurehound-linux-arm64.zip.sha256" ]] || exit
+    (cd "${azurehound_path}"; sha256sum --check --warn ./*.sha256) || exit
+    7z a -tzip -mx9 "${azurehound_path}/azurehound-${azurehound_version}.zip" "${azurehound_path}/azurehound-*"
+    # Upstream does not provide a sha256 file for the archive to check the integrity
+    sha256sum "${azurehound_path}/azurehound-${azurehound_version}.zip" > "${azurehound_path}/azurehound-${azurehound_version}.zip.sha256"
 
     # Files and directories
     # work directory required by bloodhound
-    mkdir /opt/tools/BloodHound-CE/work
-    ln -v -s /opt/tools/BloodHound-CE/src/artifacts/bhapi /opt/tools/BloodHound-CE/bloodhound
-    cp -v /opt/tools/BloodHound-CE/src/dockerfiles/configs/bloodhound.config.json /opt/tools/BloodHound-CE/
-    cp -v /root/sources/assets/bloodhound-ce/* /opt/tools/bin/
-    chmod +x /opt/tools/bin/bloodhound*
+    mkdir -p "${bloodhoundce_path}/work"
+    ln -v -s "${bloodhoundce_path}/src/artifacts/bhapi" "${bloodhoundce_path}/bloodhound"
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce /opt/tools/bin/
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce-reset /opt/tools/bin/
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound-ce-stop /opt/tools/bin/
+    chmod +x /opt/tools/bin/bloodhound-ce*
 
     # Configuration
-    sed -i "s#app-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#graph-db#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#8080#1030##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#0.0.0.0#127.0.0.1##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#neo4j:bloodhoundcommunityedition#neo4j:exegol4thewin##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#user=bloodhound password=bloodhoundcommunityedition#user=bloodhound password=exegol4thewin##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#/etc/bloodhound/collectors#/opt/tools/BloodHound-CE/collectors##" /opt/tools/BloodHound-CE/bloodhound.config.json
-    sed -i "s#/opt/bloodhound/work#/opt/tools/BloodHound-CE/work##" /opt/tools/BloodHound-CE/bloodhound.config.json
+    cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json "${bloodhoundce_path}"
 
     local version
     version=$(/opt/tools/BloodHound-CE/bloodhound -version | awk '{print $4}')
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
-    add-test-command "/opt/tools/BloodHound-CE/bloodhound -version"
+    add-test-command "${bloodhoundce_path}/bloodhound -version"
+    add-test-command "service postgresql start && sleep 5 && PGPASSWORD=exegol4thewin psql -U bloodhound -d bloodhound -h localhost -c '\l' && service postgresql stop"
     add-to-list "BloodHound-CE,https://github.com/SpecterOps/BloodHound,Active Directory security tool for reconnaissance and attacking AD environments (Community Edition),$version"
 }
 
@@ -257,7 +284,7 @@ function install_cypheroth() {
 function install_mitm6_pip() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing mitm6 with pip"
-    pipx install mitm6
+    pipx install --system-site-packages mitm6
     add-history mitm6
     add-test-command "mitm6 --help"
     add-to-list "mitm6,https://github.com/fox-it/mitm6,Tool to conduct a man-in-the-middle attack against IPv6 protocols.,$version"
@@ -266,7 +293,7 @@ function install_mitm6_pip() {
 function install_aclpwn() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing aclpwn with pip"
-    pipx install git+https://github.com/aas-n/aclpwn.py
+    pipx install --system-site-packages git+https://github.com/aas-n/aclpwn.py
     add-history aclpwn
     add-test-command "aclpwn -h"
     add-to-list "aclpwn,https://github.com/aas-n/aclpwn.py,Tool for testing the security of Active Directory access controls.,$version"
@@ -274,14 +301,8 @@ function install_aclpwn() {
 
 function install_impacket() {
     colorecho "Installing Impacket scripts"
-    pipx install git+https://github.com/ThePorgs/impacket
+    pipx install --system-site-packages git+https://github.com/ThePorgs/impacket
     pipx inject impacket chardet
-    local temp_fix_limit="2024-03-20"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pipx inject impacket pycryptodome
-    fi
     cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
     cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
     cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
@@ -316,7 +337,7 @@ function install_pykek() {
 function install_lsassy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing lsassy"
-    pipx install lsassy
+    pipx install --system-site-packages lsassy
     add-history lsassy
     local version
     version=$(lsassy --version | awk '{print $3}' | tr -d ')')
@@ -329,7 +350,7 @@ function install_privexchange() {
     colorecho "Installing privexchange"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PrivExchange
     cd /opt/tools/PrivExchange || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -340,10 +361,14 @@ function install_privexchange() {
 }
 
 function install_ruler() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates"
-    go install -v github.com/sensepost/ruler@latest
+    mkdir -p /opt/tools/ruler || exit
+    cd /opt/tools/ruler || exit
+    asdf set golang 1.23.0
+    mkdir -p .go/bin
+    GOBIN=/opt/tools/ruler/.go/bin go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
+    add-aliases ruler
     add-history ruler
     local version
     version=$(ruler --version | awk '{print $3}')
@@ -450,9 +475,9 @@ function install_krbrelayx() {
     colorecho "Installing krbrelayx"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/krbrelayx
     cd /opt/tools/krbrelayx || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install dnspython ldap3 impacket dsinternals pycryptodome
+    pip3 install dnspython ldap3 impacket dsinternals
     deactivate
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
@@ -466,7 +491,7 @@ function install_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    rvm use 3.2.2@evil-winrm --create
+    rvm use 3.1.2@evil-winrm --create
     gem install evil-winrm
     rvm use 3.2.2@default
     add-aliases evil-winrm
@@ -482,20 +507,20 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
+       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
-      python3 -m venv ./venv/
+      python3 -m venv --system-site-packages ./venv
       source ./venv/bin/activate
       pip3 install .
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
       ln -v -s /opt/tools/pypykatz/venv/bin/pypykatz /opt/tools/bin/pypykatz
       deactivate
     fi
-    # pipx install pypykatz
+    # pipx install --system-site-packages pypykatz
     add-history pypykatz
     local version
     version=$(pypykatz version)
@@ -507,7 +532,7 @@ function install_pypykatz() {
 function install_krbjack() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing krbjack"
-    pipx install krbjack
+    pipx install --system-site-packages krbjack
     add-test-command "krbjack --help"
     add-to-list "krbjack,https://github.com/almandin/krbjack,A Kerberos AP-REQ hijacking tool with DNS unsecure updates abuse.,$version"
 }
@@ -525,7 +550,7 @@ function install_enyx() {
 function install_enum4linux-ng() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing enum4linux-ng"
-    pipx install git+https://github.com/cddmp/enum4linux-ng
+    pipx install --system-site-packages git+https://github.com/cddmp/enum4linux-ng
     add-history enum4linux-ng
     local version
     version=$(enum4linux-ng --help | grep ENUM4LINUX | awk '{print $5}' | tr -d '()')
@@ -538,7 +563,7 @@ function install_zerologon() {
     colorecho "Pulling CVE-2020-1472 exploit and scan scripts"
     mkdir /opt/tools/zerologon
     cd /opt/tools/zerologon || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -590,7 +615,7 @@ function install_oaburl() {
     mkdir /opt/tools/OABUrl
     wget -O /opt/tools/OABUrl/oaburl.py "https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py"
     cd /opt/tools/OABUrl/ || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install requests
     deactivate
@@ -620,7 +645,7 @@ function install_polenum() {
     colorecho "Installing polenum"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh1t3Fox/polenum
     cd /opt/tools/polenum || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -635,7 +660,7 @@ function install_smbmap() {
     colorecho "Installing smbmap"
     git -C /opt/tools clone --depth 1 https://github.com/ShawnDEvans/smbmap
     cd /opt/tools/smbmap || exit
-    pipx install .
+    pipx install --system-site-packages .
     add-history smbmap
     local version
     version=$(smbmap --help | grep Samba | awk '{print $6}')
@@ -671,7 +696,7 @@ function install_pth-tools() {
 function install_smtp-user-enum() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smtp-user-enum"
-    pipx install smtp-user-enum
+    pipx install --system-site-packages smtp-user-enum
     add-history smtp-user-enum
     local version
     version=$(smtp-user-enum --version | awk '{print $2}')
@@ -683,7 +708,7 @@ function install_gpp-decrypt() {
     colorecho "Installing gpp-decrypt"
     git -C /opt/tools/ clone --depth 1 https://github.com/t0thkr1s/gpp-decrypt
     cd /opt/tools/gpp-decrypt || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install pycryptodome colorama
     deactivate
@@ -708,7 +733,7 @@ function install_ntlmv1-multi() {
 function install_hashonymize() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing hashonymizer"
-    pipx install git+https://github.com/ShutdownRepo/hashonymize
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/hashonymize
     add-history hashonymize
     add-test-command "hashonymize --help"
     add-to-list "hashonymize,https://github.com/ShutdownRepo/hashonymize,This small tool is aimed at anonymizing hashes files for offline but online cracking like Google Collab for instance (see https://github.com/ShutdownRepo/google-colab-hashcat).,$version"
@@ -729,8 +754,7 @@ function install_gosecretsdump() {
 function install_adidnsdump() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing adidnsdump"
-    pipx install git+https://github.com/dirkjanm/adidnsdump
-    pipx inject adidnsdump pycryptodome
+    pipx install --system-site-packages git+https://github.com/dirkjanm/adidnsdump
     add-history adidnsdump
     add-test-command "adidnsdump --help"
     add-to-list "adidnsdump,https://github.com/dirkjanm/adidnsdump,Active Directory Integrated DNS dump utility,$version"
@@ -741,12 +765,12 @@ function install_pygpoabuse() {
     colorecho "Installing pyGPOabuse"
     git -C /opt/tools/ clone --depth 1 https://github.com/Hackndo/pyGPOAbuse
     cd /opt/tools/pyGPOAbuse || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -762,7 +786,7 @@ function install_pygpoabuse() {
 function install_bloodhound-import() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing bloodhound-import"
-    pipx install bloodhound-import
+    pipx install --system-site-packages bloodhound-import
     add-history bloodhound-import
     add-test-command "bloodhound-import --help"
     add-to-list "bloodhound-import,https://github.com/fox-it/BloodHound.py,Import data into BloodHound for analyzing active directory trust relationships,$version"
@@ -773,7 +797,7 @@ function install_bloodhound-quickwin() {
     colorecho "Installing bloodhound-quickwin"
     git -C /opt/tools/ clone --depth 1 https://github.com/kaluche/bloodhound-quickwin
     cd /opt/tools/bloodhound-quickwin || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -787,7 +811,7 @@ function install_ldapsearch-ad() {
     colorecho "Installing ldapsearch-ad"
     git -C /opt/tools/ clone --depth 1 https://github.com/yaap7/ldapsearch-ad
     cd /opt/tools/ldapsearch-ad || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -804,14 +828,14 @@ function install_petitpotam() {
     colorecho "Installing PetitPotam"
     git -C /opt/tools/ clone --depth 1 https://github.com/ly4k/PetitPotam
     cd /opt/tools/PetitPotam || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
     mv /opt/tools/PetitPotam /opt/tools/PetitPotam_alt
     git -C /opt/tools/ clone --depth 1 https://github.com/topotam/PetitPotam
     cd /opt/tools/PetitPotam || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -826,7 +850,7 @@ function install_dfscoerce() {
     colorecho "Installing DfsCoerce"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wh04m1001/DFSCoerce
     cd /opt/tools/DFSCoerce || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -839,7 +863,7 @@ function install_dfscoerce() {
 function install_coercer() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Coercer"
-    pipx install git+https://github.com/p0dalirius/Coercer
+    pipx install --system-site-packages git+https://github.com/p0dalirius/Coercer
     add-history coercer
     local version
     version=$(coercer --help | grep v | head -n 1 | awk '{print $11}')
@@ -852,12 +876,12 @@ function install_pkinittools() {
     colorecho "Installing PKINITtools"
     git -C /opt/tools/ clone --depth 1 https://github.com/dirkjanm/PKINITtools
     cd /opt/tools/PKINITtools || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -873,15 +897,10 @@ function install_pkinittools() {
 function install_pywhisker() {
     # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing pyWhisker"
-    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/pywhisker
-    cd /opt/tools/pywhisker || exit
-    python3 -m venv ./venv/
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases pywhisker
+    # CODE-CHECK-WHITELIST=add-aliases
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/pywhisker
     add-history pywhisker
-    add-test-command "pywhisker.py --help"
+    add-test-command "pywhisker --help"
     add-to-list "pywhisker,https://github.com/ShutdownRepo/pywhisker,PyWhisker is a Python equivalent of the original Whisker made by Elad Shamir and written in C#. This tool allows users to manipulate the msDS-KeyCredentialLink attribute of a target user/computer to obtain full control over that object. It's based on Impacket and on a Python equivalent of Michael Grafnetter's DSInternals called PyDSInternals made by podalirius.,$version"
 }
 
@@ -890,7 +909,7 @@ function install_manspider() {
     colorecho "Installing Manspider"
     git -C /opt/tools clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER.git
     cd /opt/tools/MANSPIDER || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .
     deactivate
@@ -907,7 +926,7 @@ function install_targetedKerberoast() {
     colorecho "Installing targetedKerberoast"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/targetedKerberoast
     cd /opt/tools/targetedKerberoast || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -922,7 +941,7 @@ function install_pcredz() {
     fapt libpcap-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/lgandx/PCredz
     cd /opt/tools/PCredz || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install Cython python-libpcap
     deactivate
@@ -940,7 +959,7 @@ function install_pywsus() {
     fapt libxml2-dev libxslt-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
     cd /opt/tools/pywsus || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     # https://github.com/GoSecure/pywsus/pull/12
     echo -e "beautifulsoup4==4.9.1\nlxml==4.9.1\nsoupsieve==2.0.1" > requirements.txt
     source ./venv/bin/activate
@@ -956,7 +975,7 @@ function install_donpapi() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DonPAPI"
     fapt swig
-    pipx install git+https://github.com/login-securite/DonPAPI
+    pipx install --system-site-packages git+https://github.com/login-securite/DonPAPI
     add-history donpapi
     local version
     version=$(DonPAPI --help | grep version | awk '{print $3}')
@@ -967,7 +986,7 @@ function install_donpapi() {
 function install_webclientservicescanner() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing webclientservicescanner"
-    pipx install git+https://github.com/Hackndo/WebclientServiceScanner
+    pipx install --system-site-packages git+https://github.com/Hackndo/WebclientServiceScanner
     add-history webclientservicescanner
     local version
     version=$(webclientservicescanner --help | head -n 1 | awk '{print $4}')
@@ -978,7 +997,7 @@ function install_webclientservicescanner() {
 function install_certipy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Certipy"
-    pipx install git+https://github.com/ly4k/Certipy
+    pipx install --system-site-packages git+https://github.com/ly4k/Certipy
     add-history certipy
     local version
     version=$(certipy --version |& head -n 1 | awk '{print $2}')
@@ -991,7 +1010,7 @@ function install_shadowcoerce() {
     colorecho "Installing ShadowCoerce PoC"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/ShadowCoerce
     cd /opt/tools/ShadowCoerce || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -1006,16 +1025,9 @@ function install_gmsadumper() {
     colorecho "Installing gMSADumper"
     git -C /opt/tools/ clone --depth 1 https://github.com/micahvandeusen/gMSADumper
     cd /opt/tools/gMSADumper || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
-    # https://github.com/micahvandeusen/gMSADumper/issues/12
-    local temp_fix_limit="2024-03-20"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      pip3 install pycryptodome
-    fi
     deactivate
     add-aliases gmsadumper
     add-history gmsadumper
@@ -1027,7 +1039,7 @@ function install_pylaps() {
     colorecho "Installing pyLAPS"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLAPS
     cd /opt/tools/pyLAPS || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -1043,7 +1055,7 @@ function install_finduncommonshares() {
     colorecho "Installing FindUncommonShares"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/FindUncommonShares
     cd /opt/tools/FindUncommonShares/ || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1060,12 +1072,12 @@ function install_ldaprelayscan() {
     colorecho "Installing LdapRelayScan"
     git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/LdapRelayScan
     cd /opt/tools/LdapRelayScan || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -1083,7 +1095,7 @@ function install_goldencopy() {
     colorecho "Installing GoldenCopy"
     git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
     cd /opt/tools/GoldenCopy || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .
     deactivate
@@ -1100,7 +1112,7 @@ function install_crackhound() {
     colorecho "Installing CrackHound"
     git -C /opt/tools/ clone --depth 1 https://github.com/trustedsec/CrackHound
     cd /opt/tools/CrackHound || exit
-    python3 -m venv ./venv/
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1126,7 +1138,7 @@ function install_ldeep() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
-    pipx install ldeep
+    pipx install --system-site-packages ldeep
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers.,$version"
@@ -1136,10 +1148,11 @@ function install_rusthound() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone --depth 1 https://github.com/OPENCYBER-FR/RustHound
+    git -C /opt/tools/ clone --depth 1 https://github.com/NH-RED-TEAM/RustHound
     cd /opt/tools/RustHound || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
+    cargo update -p time
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
@@ -1155,14 +1168,14 @@ function install_rusthound-ce() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound for BloodHound-CE"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    git -C /opt/tools/ clone --depth 1 --branch v2 https://github.com/OPENCYBER-FR/RustHound RustHound-CE
+    git -C /opt/tools/ clone --depth 1 https://github.com/g0h4n/RustHound-CE
     cd /opt/tools/RustHound-CE || exit
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     cargo build --release
     # Clean dependencies used to build the binary
     rm -rf target/release/{deps,build}
-    ln -v -s /opt/tools/RustHound-CE/target/release/rusthound /opt/tools/bin/rusthound-ce
+    ln -v -s /opt/tools/RustHound-CE/target/release/rusthound-ce /opt/tools/bin/rusthound-ce
     add-history rusthound-ce
     local version
     version=$(rusthound-ce --version | grep rusthound | awk '{print $2}')
@@ -1173,7 +1186,7 @@ function install_rusthound-ce() {
 function install_certsync() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing certsync"
-    pipx install git+https://github.com/zblurx/certsync
+    pipx install --system-site-packages git+https://github.com/zblurx/certsync
     add-history certsync
     add-test-command "certsync --help"
     add-to-list "certsync,https://github.com/zblurx/certsync,certsync is a tool that helps you synchronize certificates between two directories.,$version"
@@ -1182,7 +1195,7 @@ function install_certsync() {
 function install_keepwn() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing KeePwn"
-    pipx install git+https://github.com/Orange-Cyberdefense/KeePwn
+    pipx install --system-site-packages git+https://github.com/Orange-Cyberdefense/KeePwn
     add-history keepwn
     local version
     version=$(KeePwn --help | head -n 1 | awk '{print $2}')
@@ -1193,7 +1206,7 @@ function install_keepwn() {
 function install_pre2k() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing pre2k"
-    pipx install git+https://github.com/garrettfoster13/pre2k
+    pipx install --system-site-packages git+https://github.com/garrettfoster13/pre2k
     add-history pre2k
     add-test-command "pre2k --help"
     add-to-list "pre2k,https://github.com/garrettfoster13/pre2k,pre2k is a tool to check if a Windows domain has any pre-2000 Windows 2000 logon names still in use.,$version"
@@ -1202,7 +1215,7 @@ function install_pre2k() {
 function install_msprobe() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing msprobe"
-    pipx install git+https://github.com/puzzlepeaches/msprobe
+    pipx install --system-site-packages git+https://github.com/puzzlepeaches/msprobe
     add-history msprobe
     add-test-command "msprobe --help"
     add-to-list "msprobe,https://github.com/puzzlepeaches/msprobe,msprobe is a tool to identify Microsoft Windows hosts and servers that are running certain services.,$version"
@@ -1211,7 +1224,7 @@ function install_msprobe() {
 function install_masky() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing masky"
-    pipx install git+https://github.com/Z4kSec/Masky
+    pipx install --system-site-packages git+https://github.com/Z4kSec/Masky
     add-history masky
     local version
     version=$(masky --help | grep v | head -n 1 | awk '{print $1}')
@@ -1222,7 +1235,7 @@ function install_masky() {
 function install_roastinthemiddle() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing roastinthemiddle"
-    pipx install git+https://github.com/Tw1sm/RITM
+    pipx install --system-site-packages git+https://github.com/Tw1sm/RITM
     add-history roastinthemiddle
     add-test-command "roastinthemiddle --help"
     add-to-list "roastinthemiddle,https://github.com/Tw1sm/RITM,RoastInTheMiddle is a tool to intercept and relay NTLM authentication requests.,$version"
@@ -1233,7 +1246,7 @@ function install_PassTheCert() {
     colorecho "Installing PassTheCert"
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
     cd /opt/tools/PassTheCert/Python/ || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install impacket
     deactivate
@@ -1284,7 +1297,7 @@ function install_noPac() {
     colorecho "Installing noPac"
     git -C /opt/tools/ clone --depth 1 https://github.com/Ridter/noPac
     cd /opt/tools/noPac || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1294,20 +1307,28 @@ function install_noPac() {
     add-to-list "noPac,https://github.com/Ridter/noPac,Exploiting CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user.,$version"
 }
 
-function install_roadtools() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
-    colorecho "Installing roadtools"
-    pipx install roadrecon
+function install_roadrecon() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing roadrecon"
+    pipx install --system-site-packages roadrecon
     add-test-command "roadrecon --help"
     add-test-command "roadrecon-gui --help"
-    add-to-list "ROADtools,https://github.com/dirkjanm/ROADtools,ROADtools is a framework to interact with Azure AD. It consists of a library (roadlib) with common components / the ROADrecon Azure AD exploration tool and the ROADtools Token eXchange (roadtx) tool.,$version"
+    add-to-list "ROADrecon,https://github.com/dirkjanm/ROADtools#roadrecon,Azure AD recon for red and blue."
+}
+
+function install_roadtx() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing roadtx"
+    pipx install --system-site-packages roadtx
+    add-test-command "roadtx --help"
+    add-to-list "ROADtx,https://github.com/dirkjanm/ROADtools#roadtools-token-exchange-roadtx,ROADtools Token eXchange."
 }
 
 function install_teamsphisher() {
     colorecho "Installing TeamsPhisher"
     git -C /opt/tools clone --depth 1 https://github.com/Octoberfest7/TeamsPhisher
     cd /opt/tools/TeamsPhisher || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install msal colorama requests
     deactivate
@@ -1322,7 +1343,7 @@ function install_teamsphisher() {
 function install_GPOddity() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing GPOddity"
-    pipx install git+https://github.com/synacktiv/GPOddity
+    pipx install --system-site-packages git+https://github.com/synacktiv/GPOddity
     add-history GPOddity
     add-test-command "gpoddity --help"
     add-to-list "GPOddity,https://github.com/synacktiv/GPOddity,Aiming at automating GPO attack vectors through NTLM relaying (and more),$version"
@@ -1331,11 +1352,10 @@ function install_GPOddity() {
 function install_netexec() {
     colorecho "Installing netexec"
     git -C /opt/tools/ clone --depth 1 https://github.com/Pennyw0rth/NetExec
-    pipx install /opt/tools/NetExec/
+    pipx install --system-site-packages /opt/tools/NetExec/
     mkdir -p ~/.nxc
     [[ -f ~/.nxc/nxc.conf ]] && mv ~/.nxc/nxc.conf ~/.nxc/nxc.conf.bak
     cp -v /root/sources/assets/netexec/nxc.conf ~/.nxc/nxc.conf
-    cp -v /root/sources/assets/grc/conf.cme /usr/share/grc/conf.cme
     add-aliases netexec
     add-history netexec
     local version
@@ -1348,7 +1368,7 @@ function install_extractbitlockerkeys() {
     colorecho "Installing ExtractBitlockerKeys"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/ExtractBitlockerKeys
     cd /opt/tools/ExtractBitlockerKeys || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1362,9 +1382,9 @@ function install_extractbitlockerkeys() {
 
 function install_LDAPWordlistHarvester() {
     colorecho "Installing LDAPWordlistHarvester"
-    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/LDAPWordlistHarvester
-    cd /opt/tools/LDAPWordlistHarvester || exit
-    python3 -m venv ./venv
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyLDAPWordlistHarvester
+    cd /opt/tools/pyLDAPWordlistHarvester || exit
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1380,7 +1400,7 @@ function install_LDAPWordlistHarvester() {
 function install_pywerview() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing pywerview"
-    pipx install git+https://github.com/the-useless-one/pywerview
+    pipx install --system-site-packages git+https://github.com/the-useless-one/pywerview
     add-history pywerview
     add-test-command "pywerview --help"
     add-to-list "pywerview,https://github.com/the-useless-one/pywerview,A (partial) Python rewriting of PowerSploit's PowerView.,$version"
@@ -1400,7 +1420,7 @@ function install_freeipscanner() {
 function install_scrtdnsdump() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing scrtdnsdump"
-    pipx install git+https://github.com/scrt/scrtdnsdump
+    pipx install --system-site-packages git+https://github.com/scrt/scrtdnsdump
     add-history scrtdnsdump
     add-test-command "scrtdnsdump --help"
     add-to-list "scrtdnsdump,https://github.com/scrt/scrtdnsdump,Enumeration and exporting of all DNS records in the zone for recon purposes of internal networks,$version"
@@ -1410,7 +1430,7 @@ function install_ntlm_theft() {
     colorecho "Installing ntlm_theft"
     git -C /opt/tools/ clone --depth 1 https://github.com/Greenwolf/ntlm_theft
     cd /opt/tools/ntlm_theft || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install xlsxwriter
     deactivate
@@ -1425,12 +1445,110 @@ function install_ntlm_theft() {
 function install_abuseACL() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing abuseACL"
-    pipx install git+https://github.com/AetherBlack/abuseACL
+    pipx install --system-site-packages git+https://github.com/AetherBlack/abuseACL
     add-history abuseACL
     local version
     version=$(abuseACL --help | grep by | awk '{print $4}' | tr -d '()')
     add-test-command "abuseACL --help"
     add-to-list "abuseACL,https://github.com/AetherBlack/abuseACL,A python script to automatically list vulnerable Windows ACEs/ACLs.,$version"
+}
+
+function install_bloodyAD() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing bloodyAD"
+    pipx install --system-site-packages git+https://github.com/CravateRouge/bloodyAD
+    add-history bloodyAD
+    add-test-command "bloodyAD --help"
+    add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
+}
+
+function install_autobloody() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing autobloody"
+    pipx install --system-site-packages git+https://github.com/CravateRouge/autobloody
+    add-history autobloody
+    add-test-command "autobloody --help"
+    add-to-list "autobloody,https://github.com/CravateRouge/autobloody,Automatically exploit Active Directory privilege escalation paths shown by BloodHound."
+}
+
+function install_dploot() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing dploot"
+    pipx install --system-site-packages git+https://github.com/zblurx/dploot
+    add-history dploot
+    add-test-command "dploot --help"
+    add-to-list "dploot,https://github.com/zblurx/dploot,dploot is Python rewrite of SharpDPAPI written un C#."
+}
+
+# function install_PXEThief() {
+#     # CODE-CHECK-WHITELIST=
+#     colorecho "Installing PXEThief"
+#     git -C /opt/tools/ clone --depth 1 https://github.com/MWR-CyberSec/PXEThief
+#     cd /opt/tools/PXEThief || exit
+#     python3 -m venv ./venv
+#     source ./venv/bin/activate
+# TODO: pywin32 not found
+#     pip3 install -r requirements.txt
+#     deactivate
+#     add-aliases PXEThief
+#     add-history PXEThief
+#     add-test-command "PXEThief --help"
+#     add-to-list "PXEThief,https://github.com/MWR-CyberSec/PXEThief,PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment enabling credential theft from network and task sequence accounts."
+# }
+
+function install_sccmhunter() {
+    colorecho "Installing sccmhunter"
+    git -C /opt/tools/ clone --depth 1 https://github.com/garrettfoster13/sccmhunter
+    cd /opt/tools/sccmhunter || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases sccmhunter
+    add-history sccmhunter
+    add-test-command "sccmhunter.py --help"
+    add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying profiling and attacking SCCM related assets in an Active Directory domain."
+}
+
+function install_sccmwtf() {
+    # CODE-CHECK-WHITELIST=add-test-command
+    colorecho "Installing sccmwtf"
+    git -C /opt/tools/ clone --depth 1 https://github.com/xpn/sccmwtf
+    cd /opt/tools/sccmwtf || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases sccmwtf
+    add-history sccmwtf
+    add-to-list "sccmwtf,https://github.com/xpn/sccmwtf,This code is designed for exploring SCCM in a lab."
+}
+
+function install_smbclientng() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing smbclient-ng"
+    pipx install git+https://github.com/p0dalirius/smbclient-ng
+    add-history smbclient-ng
+    add-test-command "smbclientng --help"
+    add-to-list "smbclient-ng,https://github.com/p0dalirius/smbclient-ng,smbclient-ng is a fast and user friendly way to interact with SMB shares."
+}
+
+function install_conpass() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing conpass"
+    pipx install --system-site-packages git+https://github.com/login-securite/conpass
+    add-history conpass
+    add-test-command "conpass --help"
+    add-to-list "conpass,https://github.com/login-securite/conpass,Python tool for continuous password spraying taking into account the password policy."
+}
+
+function install_adminer() {
+    colorecho "Installing adminer"
+    pipx install git+https://github.com/Mazars-Tech/AD_Miner
+    add-aliases adminer
+    add-history adminer
+    add-test-command "adminer --help"
+    add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner,Active Directory audit tool that leverages cypher queries."
 }
 
 # Package dedicated to internal Active Directory tools
@@ -1440,10 +1558,10 @@ function package_ad() {
     local end_time
     start_time=$(date +%s)
     install_ad_apt_tools
+    install_asrepcatcher           # Active Directory ASREP roasting tool that catches ASREP for users in the same VLAN whether they require pre-authentication or not
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
-    install_crackmapexec            # Network scanner
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
     install_bloodhound-py           # ingestor for legacy BloodHound
@@ -1518,7 +1636,8 @@ function package_ad() {
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
     install_noPac
-    install_roadtools              # Rogue Office 365 and Azure (active) Directory tools
+    install_roadrecon              # Rogue Office 365 and Azure (active) Directory tools
+    install_roadtx                 # ROADtools Token eXchange
     install_teamsphisher           # TeamsPhisher is a Python3 program that facilitates the delivery of phishing messages and attachments to Microsoft Teams users whose organizations allow external communications.
     install_GPOddity
     install_netexec                # Crackmapexec repo
@@ -1530,6 +1649,15 @@ function package_ad() {
     install_bloodhound-ce          # AD (Community Edition) security tool for reconnaissance and attacking AD environments
     install_ntlm_theft
     install_abuseACL
+    install_bloodyAD               # Active Directory privilege escalation swiss army knife.
+    install_autobloody             # Automatically exploit Active Directory privilege escalation paths.
+    install_dploot                 # Python rewrite of SharpDPAPI written un C#.
+    # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
+    install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
+    install_sccmwtf                # This code is designed for exploring SCCM in a lab.
+    install_smbclientng
+    install_conpass                # Python tool for continuous password spraying taking into account the password policy.
+    install_adminer
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."

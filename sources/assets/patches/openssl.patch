@@ -1,0 +1,12 @@
+[exegol_provider]
+default = default_sect
+legacy = legacy_sect
+
+[openssl_init]
+providers = exegol_provider
+
+[default_sect]
+activate = 1
+
+[legacy_sect]
+activate = 1

@@ -38,7 +38,7 @@ function install_scrpy() {
                  meson ninja-build libsdl2-dev \
                  libavcodec-dev libavdevice-dev libavformat-dev libavutil-dev \
                  libswresample-dev libusb-1.0-0 libusb-1.0-0-dev
-    git clone https://github.com/Genymobile/scrcpy
+    git clone --depth 1 https://github.com/Genymobile/scrcpy
     # opening subshell to not have to cd back
     (
       cd scrcpy || exit
@@ -79,7 +79,7 @@ function install_dex2jar() {
 function install_frida() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing frida"
-    pipx install frida-tools
+    pipx install --system-site-packages frida-tools
     add-history frida
     local version
     version=$(frida --version)
@@ -90,7 +90,7 @@ function install_frida() {
 function install_objection() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing objection"
-    pipx install git+https://github.com/sensepost/objection
+    pipx install --system-site-packages git+https://github.com/sensepost/objection
     add-history objection
     local version
     version=$(objection version | awk '{print $2}')
@@ -101,7 +101,7 @@ function install_objection() {
 function install_androguard() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing androguard"
-    pipx install androguard
+    pipx install --system-site-packages git+https://github.com/androguard/androguard
     add-history androguard
     local version
     version=$(androguard --version | awk '{print $3}')
@@ -117,11 +117,11 @@ function install_mobsf() {
     cd /opt/tools/MobSF || exit
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
     #  in the mean time, switching to manual venv and an alias for mobsf
-    local temp_fix_limit="2024-03-20"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
     else
-      python3 -m venv ./venv
+      python3 -m venv --system-site-packages ./venv
       ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
       ./venv/bin/python3 -m pip install .
       add-aliases mobsf # alias is only needed with venv and can be removed when switching back to pipx

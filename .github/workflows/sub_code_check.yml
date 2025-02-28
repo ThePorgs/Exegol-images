@@ -12,14 +12,22 @@ jobs:
         checked_function: [ "colorecho", "add-aliases", "add-history", "add-test-command", "add-to-list" ]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@main
     - name: Check ${{ matrix.checked_function }}
       run: python3 sources/code_compliance_check.py ${{ matrix.checked_function }}
+  temp-fix:
+    name: Temp-fix check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Check temp-fix
+      run: python3 sources/code_compliance_check.py temp-fix
   shellcheck:
     name: Shell check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@main
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
         env:

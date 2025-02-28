@@ -42,14 +42,14 @@ jobs:
           docker image ls -a
           docker ps
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
       - name: Prepare build
         # Preparing variables used for tagging the image to build
         id: prepare
         run: echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
       - name: Build the image
         if: success()
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@master
         with:
           load: true
           no-cache: true

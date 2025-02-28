@@ -39,7 +39,7 @@ function trust_ca_burp_in_firefox() {
     sed -i "s/\"listener_port\":[0-9]\+/\"listener_port\":$burp_port/g" /opt/tools/BurpSuiteCommunity/conf.json
     # Start Burp with "y" to accept policy and generate CA, keep its PID to kill it when done
     infoecho 'Starting Burp and waiting for proxy to listen'
-    echo y|java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json 2>&1 > /dev/null &
+    echo y|/usr/lib/jvm/java-21-openjdk/bin/java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json 2>&1 > /dev/null &
     # pull the latest process's ID
     local burp_pid=$!
     # Define Timeout counter
@@ -59,26 +59,14 @@ function trust_ca_burp_in_firefox() {
     done
     # Download the CA to /tmp and update the CA path
     infoecho 'Retrieving CA'
-    local burp_ca_path="/tmp/cacert.der"
+    local burp_ca_path="/opt/tools/firefox/cacert.der"
     local burp_ca_name="PortSwigger CA"
     if ! wget -q "http://127.0.0.1:$burp_port/cert" -O "$burp_ca_path"; then
       kill "$burp_pid"
       errorecho 'The CA cert could not be retrieved, please trust it manually'
     fi
     kill "$burp_pid"
-    _trust_ca_cert_in_firefox "$burp_ca_path" "$burp_ca_name"
     okecho 'CA trusted successfully'
-  fi
-}
-
-function _trust_ca_cert_in_firefox() {
-  # internal function to trust a CA cert (.DER) given the path and the name to set
-  infoecho "Trusting cert $2 ($1) in Firefox"
-  # -n : name of the cert
-  # -t : attributes
-  #   TC : trusted CA to issue client & server certs
-  if ! certutil -A -n "$2" -t "TC" -i "$1" -d ~/.mozilla/firefox/*.Exegol; then
-    errorecho 'Could not trust Burp CA automatically, please trust it manually.'
   fi
 }
 

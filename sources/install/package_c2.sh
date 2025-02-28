@@ -8,7 +8,7 @@ source package_ad.sh
 function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwncat"
-    pipx install pwncat-cs
+    pipx install --system-site-packages pwncat-cs
     # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
     pipx inject pwncat-cs cryptography==36.0.2
     add-history pwncat
@@ -19,35 +19,63 @@ function install_pwncat() {
 }
 
 function install_metasploit() {
-    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Metasploit"
     fapt libpcap-dev libpq-dev zlib1g-dev libsqlite3-dev
     git -C /opt/tools clone --depth 1 https://github.com/rapid7/metasploit-framework.git
-    cd /opt/tools/metasploit-framework || exit
-    rvm use 3.2.2@metasploit --create
+    cd /opt/tools/metasploit-framework || exit  # rvm gemset ruby-3.1.5@metasploit-framework should be auto setup here
+
+    # Fix msfupdate git config requirements
+    git config user.name "exegol"
+    git config user.email "exegol@localhost"
+
+    rvm use 3.1.5@metasploit-framework --create
+
+    # install dep manager
     gem install bundler
     bundle install
-    # fixes 'You have already activated timeout 0.3.1, but your Gemfile requires timeout 0.4.0. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    # fixes 'You have already activated timeout 0.4.1, but your Gemfile requires timeout 0.4.0. Prepending `bundle exec` to your command may solve this.'
-    local temp_fix_limit="2024-02-25"
+
+    # Add missing deps
+    gem install rex
+    gem install rex-text
+
+    # fixes 'You have already activated timeout 0.2.0, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
+    local temp_fix_limit="2025-06-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      gem install timeout --version 0.4.0
+      gem install timeout --version 0.4.1
     fi
     rvm use 3.2.2@default
+
+    # msfdb setup
+    fapt postgresql
+    cp -r /root/.bundle /var/lib/postgresql
+    chown -R postgres:postgres /var/lib/postgresql/.bundle
+    chmod -R o+rx /opt/tools/metasploit-framework/
+    chmod 444 /opt/tools/metasploit-framework/.git/index # fatal: .git/index: index file open failed: Permission denied
+    sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
+    cp -r /var/lib/postgresql/.msf4 /root
+
+    # Install the PEASS Ruby MSF module (https://github.com/peass-ng/PEASS-ng/tree/master/metasploit)
+    wget https://raw.githubusercontent.com/peass-ng/PEASS-ng/master/metasploit/peass.rb -O /opt/tools/metasploit-framework/modules/post/multi/gather/peass.rb
+
     add-aliases metasploit
+    add-history metasploit
     local version
     version=$(msfconsole --version |& awk '{print $3}')
     add-test-command "msfconsole --help"
+    add-test-command "msfconsole --version"
+    add-test-command "msfdb --help"
+    add-test-command "msfdb status"
     add-test-command "msfvenom --list platforms"
+    add-test-command "msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f exe > /tmp/test.exe && file /tmp/test.exe|grep 'PE32 executable' && rm /tmp/test.exe"
     add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads,$version"
 }
 
 function install_routersploit() {
     # CODE-CHECK-WHITELIST=add-history,add-version
     colorecho "Installing RouterSploit"
-    pipx install routersploit
+    pipx install --system-site-packages routersploit
     pipx inject routersploit colorama
     add-aliases routersploit
     add-test-command "routersploit --help"
@@ -57,20 +85,19 @@ function install_routersploit() {
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sliver"
-    # Deletion of --depth 1 due to installation of stable branch
-    git -C /opt/tools/ clone https://github.com/BishopFox/sliver.git
-    cd /opt/tools/sliver || exit
-    asdf local golang 1.19
     # making the static version checkout a temporary thing
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
     # or check if it's possible to make this dynamic
-    local temp_fix_limit="2024-02-25"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      git checkout tags/v1.5.41
+      # Add branch v1.5.41 due to installation of stable branch
+      git -C /opt/tools/ clone --branch v1.5.42 --depth 1 https://github.com/BishopFox/sliver.git
+      cd /opt/tools/sliver || exit
     fi
+    asdf set golang 1.19
     make
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
     ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
@@ -95,19 +122,9 @@ function install_empire() {
     install_powershell
     git -C /opt/tools/ clone --recursive https://github.com/BC-SECURITY/Empire
     cd /opt/tools/Empire || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-      pip3 install .
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-      # for ARM64, pip install doesn't work because of donut-shellcode not supporting this arch (https://github.com/TheWover/donut/issues/139)
-#      criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-      pip3 install .
-    else
-      criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
+    pip3 install .
     deactivate
     # TODO : use mysql instead, need to configure that
     sed -i 's/use: mysql/use: sqlite/g' empire/server/config.yaml
@@ -125,10 +142,18 @@ function install_empire() {
 function install_havoc() {
     colorecho "Installing Havoc"
     git -C /opt/tools/ clone --depth 1 https://github.com/HavocFramework/Havoc
+    # https://github.com/HavocFramework/Havoc/issues/516 (seems fixed but keeping commented tempfix just in case)
+    #    local temp_fix_limit="YYYY-MM-DD"
+    #    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
+    #      criticalecho "Temp fix expired. Exiting."
+    #    else
+    #      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
+    #      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
+    #      go mod download golang.org/x/sys
+    #      go mod download github.com/ugorji/go
+    #    fi
     # Building Team Server
     cd /opt/tools/Havoc/teamserver || exit
-    go mod download golang.org/x/sys
-    go mod download github.com/ugorji/go
     cd /opt/tools/Havoc || exit
     sed -i 's/golang-go//' teamserver/Install.sh
     make ts-build
@@ -150,7 +175,7 @@ function install_villain() {
     colorecho "Installing Villain"
     git -C /opt/tools/ clone --depth 1 https://github.com/t3l3machus/Villain
     cd /opt/tools/Villain || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r ./requirements.txt
     deactivate

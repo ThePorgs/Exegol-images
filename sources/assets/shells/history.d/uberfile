@@ -1,1 +1,1 @@
-uberfile --lhost $TARGET --lport $PORT --target-os linux --downloader python --input-file LinEnum.sh --output-file /tmp/linenum.sh
+uberfile --lhost $TARGET --lport $PORT --target-os linux --command python --input-file LinEnum.sh --output-file /tmp/linenum.sh

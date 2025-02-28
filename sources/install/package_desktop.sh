@@ -11,10 +11,19 @@ function install_xfce() {
 
     # DEBUG TOOLS
     # TODO remove
-    fapt terminator firefox-esr iproute2
+    fapt terminator iproute2
 
     # Dependencies
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
+
+    # temp fix to use latest websockify (min 0.12.0 to fix fedora daemon issue) waiting for apt stable repo to be up-to-date
+    local temp_fix_limit="2025-04-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      # Install websockify (min 0.12.0) explicit from sid repo
+      fapt python3-websockify/sid
+    fi
 
     # Icons
     fapt librsvg2-common papirus-icon-theme
@@ -35,7 +44,7 @@ function install_xfce() {
 
     # Dock
     fapt xfce4-dev-tools libglib2.0-dev libgtk-3-dev libwnck-3-dev libxfce4ui-2-dev libxfce4panel-2.0-dev g++ build-essential
-    git -C /tmp clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git
+    git -C /tmp clone --branch xfce4-docklike-plugin-0.4.2 --depth 1 https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git
     cd /tmp/xfce4-docklike-plugin
     sh autogen.sh --prefix=/tmp/
     make
@@ -93,6 +102,8 @@ function install_xfce() {
     # Stopping VNC server used for config
     vncserver -kill :0
     sleep 6
+    # Remove log files of temp vncserver run ## TODO check if more
+    rm /root/.vnc/*.log /root/.xsession-errors
     [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
 
     # Binaries

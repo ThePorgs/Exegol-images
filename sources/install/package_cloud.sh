@@ -57,7 +57,7 @@ function install_awscli() {
 function install_scout() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ScoutSuite"
-    pipx install scoutsuite
+    pipx install --system-site-packages scoutsuite
     add-history scout
     local version
     version=$(scout --version | awk '{print $3}')
@@ -68,7 +68,7 @@ function install_scout() {
 function install_cloudsplaining() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Cloudsplaining"
-    pipx install cloudsplaining
+    pipx install --system-site-packages cloudsplaining
     add-history cloudsplaining
     local version
     version=$(cloudsplaining --version | awk '{print $3}')
@@ -90,7 +90,7 @@ function install_cloudsploit() {
 function install_prowler() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing Prowler"
-    pipx install prowler
+    pipx install --system-site-packages prowler
     add-history prowler
     add-test-command "prowler -h"
     add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness.,$version"
@@ -102,7 +102,7 @@ function install_cloudmapper() {
     cd /opt/tools/cloudmapper || exit
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install wheel
     pip3 install -r requirements.txt
@@ -121,9 +121,7 @@ function install_azure_cli() {
     # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl -sL https://aka.ms/InstallAzureCLIDeb -o /tmp/azure-cli-install.sh
     bash /tmp/azure-cli-install.sh
-    fapt azure-cli
-    mv /opt/az/ /opt/tools/az/
-    sed -i 's/\/opt/\/opt\/tools/' "$(which az)"
+    rm /tmp/azure-cli-install.sh
     add-history azure-cli
     local version
     version=$(az version | grep cli | head -n 1 | awk '{print $2}' | tr -d '\",')

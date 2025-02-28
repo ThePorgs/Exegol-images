@@ -32,7 +32,7 @@ function install_weevely() {
     colorecho "Installing weevely"
     git -C /opt/tools clone --depth 1 https://github.com/epinna/weevely3
     cd /opt/tools/weevely3 || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -65,9 +65,18 @@ function install_wfuzz() {
     colorecho "Installing wfuzz"
     apt --purge remove python3-pycurl -y
     fapt libcurl4-openssl-dev libssl-dev
-    pip3 install pycurl wfuzz
+    #pip3 install pycurl wfuzz  # uncomment when issue is fix
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
+    # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
+    local temp_fix_limit="2025-04-01"
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
+      criticalecho "Temp fix expired. Exiting."
+    else
+      pip3 install pycurl  # remove this line and uncomment the first when issue is fix
+      sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
+      pip3 install /tmp/wfuzz/
+    fi
     mv /tmp/wfuzz/wordlist/* /usr/share/wfuzz
     rm -rf /tmp/wfuzz
     add-history wfuzz
@@ -137,7 +146,7 @@ function install_ffuf() {
 function install_dirsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    pipx install git+https://github.com/maurosoria/dirsearch
+    pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
     add-history dirsearch
     local version
     version=$(dirsearch --version | awk '{print $2}')
@@ -150,7 +159,7 @@ function install_ssrfmap() {
     colorecho "Installing SSRFmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -196,7 +205,7 @@ function install_xsstrike() {
     colorecho "Installing XSStrike"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/XSStrike.git
     cd /opt/tools/XSStrike || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -224,7 +233,7 @@ function install_xsser() {
     colorecho "Installing xsser"
     git -C /opt/tools clone --depth 1 https://github.com/epsylon/xsser.git
     cd /opt/tools/xsser || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install pycurl bs4 pygeoip gobject cairocffi selenium
     deactivate
@@ -239,7 +248,7 @@ function install_xsser() {
 function install_xsrfprobe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing XSRFProbe"
-    pipx install git+https://github.com/0xInfection/XSRFProbe
+    pipx install --system-site-packages git+https://github.com/0xInfection/XSRFProbe
     add-history xsrfprobe
     local version
     version=$(xsrfprobe --version | grep Version | awk '{print $6}')
@@ -252,7 +261,7 @@ function install_bolt() {
     colorecho "Installing Bolt"
     git -C /opt/tools/ clone --depth 1 https://github.com/s0md3v/Bolt.git
     cd /opt/tools/Bolt || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -282,7 +291,7 @@ function install_fuxploider() {
     colorecho "Installing fuxploider"
     git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
     cd /opt/tools/fuxploider || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -297,7 +306,7 @@ function install_patator() {
     fapt libmariadb-dev libcurl4-openssl-dev libssl-dev ldap-utils libpq-dev ike-scan unzip default-jdk libsqlite3-dev libsqlcipher-dev
     git -C /opt/tools clone --depth 1 https://github.com/lanjelot/patator.git
     cd /opt/tools/patator || exit
-    python3 -m venv ./venv
+    python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -336,7 +345,7 @@ function install_wpscan() {
 function install_droopescan() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing droopescan"
-    pipx install git+https://github.com/droope/droopescan.git
+    pipx install --system-site-packages git+https://github.com/droope/droopescan.git
     add-history droopescan
     add-test-command "droopescan --help"
     add-to-list "droopescan,https://github.com/droope/droopescan,Scan Drupal websites for vulnerabilities.,$version"
@@ -347,7 +356,7 @@ function install_drupwn() {
     colorecho "Installing drupwn"
     git -C /opt/tools/ clone --depth 1 https://github.com/immunIT/drupwn
     cd /opt/tools/drupwn || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r ./requirements.txt
     deactivate
@@ -360,8 +369,10 @@ function install_drupwn() {
 function install_cmsmap() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing CMSmap"
-    pipx install git+https://github.com/Dionach/CMSmap.git
-    # TODO: Config ?
+    pipx install --system-site-packages git+https://github.com/Dionach/CMSmap.git
+    sed -i 's/wordlist =  wordlist\/rockyou.txt/wordlist =  \/usr\/share\/wordlists\/rockyou.txt/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
+    sed -i 's/edbpath = \/usr\/share\/exploitdb/edbpath = \/opt\/tools\/exploitdb/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
+    sed -i 's/edbtype = apt/edbtype = git/' /root/.local/share/pipx/venvs/cmsmap/lib/python3*/site-packages/cmsmap/cmsmap.conf
     # exploit-db path is required (misc package -> searchsploit)
     # cmsmap -U PC
     add-history cmsmap
@@ -375,7 +386,7 @@ function install_moodlescan() {
     colorecho "Installing moodlescan"
     git -C /opt/tools/ clone --depth 1 https://github.com/inc0d3/moodlescan.git
     cd /opt/tools/moodlescan || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -421,7 +432,7 @@ function install_cloudfail() {
     colorecho "Installing CloudFail"
     git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
     cd /opt/tools/CloudFail || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -438,7 +449,7 @@ function install_eyewitness() {
     colorecho "Installing EyeWitness"
     git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
     cd /opt/tools/EyeWitness || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     ./Python/setup/setup.sh
     deactivate
@@ -452,18 +463,7 @@ function install_oneforall() {
     colorecho "Installing OneForAll"
     git -C /opt/tools/ clone --depth 1 https://github.com/shmilylty/OneForAll.git
     cd /opt/tools/OneForAll || exit
-    # https://github.com/shmilylty/OneForAll/pull/340
-    local temp_fix_limit="2024-03-20"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git config --local user.email "local"
-      git config --local user.name "local"
-      local prs=("340")
-      local pr
-      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit "pull/$pr"; done
-    fi
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -471,14 +471,14 @@ function install_oneforall() {
     add-history oneforall
     local version
     version=$(oneforall.py version | grep "v" | head -n 1 | awk '{print $9}' | tr -d '{')
-    add-test-command "oneforall.py version"
+    add-test-command "oneforall.py check"
     add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool.,$version"
 }
 
 function install_wafw00f() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing wafw00f"
-    pipx install wafw00F
+    pipx install --system-site-packages wafw00F
     add-history wafw00f
     local version
     version=$(wafw00f --version | grep version | awk '{print $9}')
@@ -491,7 +491,7 @@ function install_corscanner() {
     colorecho "Installing CORScanner"
     git -C /opt/tools/ clone --depth 1 https://github.com/chenjj/CORScanner.git
     cd /opt/tools/CORScanner || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -518,7 +518,7 @@ function install_gowitness() {
     asdf reshim golang
     add-history gowitness
     add-test-command "gowitness --help"
-    add-test-command "gowitness single https://exegol.readthedocs.io" # check the chromium dependency
+    add-test-command "gowitness scan single --url https://exegol.readthedocs.io" # check the chromium dependency
     add-to-list "gowitness,https://github.com/sensepost/gowitness,A website screenshot utility written in Golang.,$version"
 }
 
@@ -527,7 +527,7 @@ function install_linkfinder() {
     colorecho "Installing LinkFinder"
     git -C /opt/tools/ clone --depth 1 https://github.com/GerbenJavado/LinkFinder.git
     cd /opt/tools/LinkFinder || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -553,7 +553,7 @@ function install_timing_attack() {
 function install_updog() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing updog"
-    pipx install updog
+    pipx install --system-site-packages updog
     add-history updog
     local version
     version=$(updog --version | awk '{print $2}')
@@ -566,10 +566,19 @@ function install_jwt_tool() {
     colorecho "Installing JWT tool"
     git -C /opt/tools/ clone --depth 1 https://github.com/ticarpi/jwt_tool
     cd /opt/tools/jwt_tool || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
+    # Running the tool to create the initial configuration and force it to returns 0
+    python3 jwt_tool.py || :
     deactivate
+    
+    # Configuration
+    sed -i 's/^proxy = 127.0.0.1:8080/#proxy = 127.0.0.1:8080/' /root/.jwt_tool/jwtconf.ini
+    sed -i 's|^wordlist = jwt-common.txt|wordlist = /opt/tools/jwt_tool/jwt-common.txt|' /root/.jwt_tool/jwtconf.ini
+    sed -i 's|^commonHeaders = common-headers.txt|commonHeaders = /opt/tools/jwt_tool/common-headers.txt|' /root/.jwt_tool/jwtconf.ini
+    sed -i 's|^commonPayloads = common-payloads.txt|commonPayloads = /opt/tools/jwt_tool/common-payloads.txt|' /root/.jwt_tool/jwtconf.ini
+
     add-aliases jwt_tool
     add-history jwt_tool
     add-test-command "jwt_tool.py --help"
@@ -591,7 +600,7 @@ function install_wuzz() {
 function install_git-dumper() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing git-dumper"
-    pipx install git-dumper
+    pipx install --system-site-packages git-dumper
     add-history git-dumper
     add-test-command "git-dumper --help"
     add-to-list "git-dumper,https://github.com/arthaud/git-dumper,Small script to dump a Git repository from a website.,$version"
@@ -602,7 +611,7 @@ function install_gittools() {
     colorecho "Installing GitTools"
     git -C /opt/tools/ clone --depth 1 https://github.com/internetwache/GitTools.git
     cd /opt/tools/GitTools/Finder || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -660,7 +669,7 @@ function install_httpmethods() {
     colorecho "Installing httpmethods"
     git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
     cd /opt/tools/httpmethods || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -677,7 +686,7 @@ function install_h2csmuggler() {
     colorecho "Installing h2csmuggler"
     git -C /opt/tools/ clone --depth 1 https://github.com/BishopFox/h2csmuggler
     cd /opt/tools/h2csmuggler || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install h2
     deactivate
@@ -718,7 +727,7 @@ function install_tomcatwardeployer() {
     colorecho "Installing tomcatWarDeployer"
     git -C /opt/tools/ clone --depth 1 https://github.com/mgeeky/tomcatWarDeployer.git
     cd /opt/tools/tomcatWarDeployer || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -749,7 +758,7 @@ function install_clusterd() {
 function install_arjun() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing arjun"
-    pipx install arjun
+    pipx install --system-site-packages arjun
     add-history arjun
     add-test-command "arjun --help"
     add-to-list "arjun,https://github.com/s0md3v/Arjun,HTTP parameter discovery suite.,$version"
@@ -758,7 +767,7 @@ function install_arjun() {
 function install_nuclei() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Nuclei"
-    go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+    go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
     asdf reshim golang
     nuclei -update-templates
     add-history nuclei
@@ -824,7 +833,7 @@ function install_anew() {
 function install_robotstester() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing Robotstester"
-    pipx install git+https://github.com/p0dalirius/robotstester
+    pipx install --system-site-packages git+https://github.com/p0dalirius/robotstester
     add-history robotstester
     add-test-command "robotstester --help"
     add-to-list "robotstester,https://github.com/p0dalirius/robotstester,Utility for testing whether a website's robots.txt file is correctly configured.,$version"
@@ -871,7 +880,7 @@ function install_smuggler() {
     colorecho "Installing smuggler.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/defparam/smuggler.git
     cd /opt/tools/smuggler || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     add-aliases smuggler
     add-history smuggler
     add-test-command "smuggler.py --help"
@@ -893,7 +902,7 @@ function install_kraken() {
     colorecho "Installing Kraken"
     git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
     cd /opt/tools/Kraken || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -933,12 +942,78 @@ function install_sslscan() {
     git -C /opt/tools clone --depth 1 https://github.com/rbsec/sslscan.git
     cd /opt/tools/sslscan || exit
     make static
-    ln -s /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
+    mv /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
+    make clean
     add-history sslscan
     local version
     version=$(sslscan --version | head -n 1 | awk '{print $2}')
     add-test-command "sslscan --version"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers,$version"
+}
+
+function install_jsluice() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing jsluice"
+    go install -v github.com/BishopFox/jsluice/cmd/jsluice@latest
+    asdf reshim golang
+    add-history jsluice
+    add-test-command "jsluice --help"
+    add-to-list "jsluice,https://github.com/BishopFox/jsluice,Extract URLs / paths / secrets and other interesting data from JavaScript source code."
+}
+
+function install_katana() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing katana"
+    go install -v github.com/projectdiscovery/katana/cmd/katana@latest
+    asdf reshim golang
+    add-history katana
+    add-test-command "katana --help"
+    add-to-list "katana,https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
+}
+
+function install_postman() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Postman"
+    local archive_name
+    if [[ $(uname -m) = 'x86_64' ]]; then
+        archive_name="linux_64"
+    elif [[ $(uname -m) = 'aarch64' ]]; then
+        archive_name="linux_arm64"
+    fi
+    curl -L "https://dl.pstmn.io/download/latest/${archive_name}" -o /tmp/postman.tar.gz
+    tar -xf /tmp/postman.tar.gz --directory /tmp
+    rm /tmp/postman.tar.gz
+    mv /tmp/Postman /tmp/postman
+    mv /tmp/postman /opt/tools/postman
+    ln -s /opt/tools/postman/app/Postman /opt/tools/bin/postman
+    fapt libsecret-1-0
+    add-history postman
+    add-test-command "which postman"
+    add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
+}
+
+function install_zap() {
+    colorecho "Installing ZAP"
+    local URL
+    URL=$(curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | grep 'browser_download_url.*ZAP.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/ZAP.tar.gz "$URL"
+    tar -xf /tmp/ZAP.tar.gz --directory /tmp
+    rm /tmp/ZAP.tar.gz
+    mv /tmp/ZAP* /opt/tools/zaproxy
+    ln -s /opt/tools/zaproxy/zap.sh /opt/tools/bin/zap
+    zap -cmd -addonupdate
+    add-aliases zaproxy
+    add-history zaproxy
+    add-test-command "zap -suppinfo"
+    add-to-list "Zed Attack Proxy (ZAP),https://www.zaproxy.org/,Web application security testing tool."
+}
+    
+function install_token_exploiter() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing Token Exploiter"
+    pipx install --system-site-packages git+https://github.com/psyray/token-exploiter
+    add-test-command "token-exploiter --help"
+    add-to-list "token-exploiter,https://github.com/psyray/token-exploiter,Token Exploiter is a tool designed to analyze GitHub Personal Access Tokens."
 }
 
 # Package dedicated to applicative and active web pentest tools
@@ -1017,6 +1092,11 @@ function package_web() {
     install_soapui                  # SoapUI is an open-source web service testing application for SOAP and REST
     install_sqlmap                  # SQL injection scanner
     install_sslscan                 # SSL/TLS scanner
+    install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
+    install_katana                  # A next-generation crawling and spidering framework
+    install_postman                 # Postman - API platform for testing APIs
+    install_zap                     # Zed Attack Proxy
+    install_token_exploiter         # Github personal token Analyzer
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package web completed in $elapsed_time seconds."

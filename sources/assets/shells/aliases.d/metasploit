@@ -1,7 +1,10 @@
-alias msfconsole='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfconsole'
-alias msfd='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfd'
-alias msfdb='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfdb'
-alias msfrpc='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfrpc'
-alias msfrpcd='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfrpcd'
-alias msfupdate='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfupdate'
-alias msfvenom='/usr/local/rvm/gems/ruby-3.2.2@metasploit/wrappers/ruby /opt/tools/metasploit-framework/msfvenom'
+alias msfconsole='BUNDLE_GEMFILE=/opt/tools/metasploit-framework/Gemfile /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfconsole'
+alias msfd='BUNDLE_GEMFILE=/opt/tools/metasploit-framework/Gemfile /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfd'
+alias msfrpc='BUNDLE_GEMFILE=/opt/tools/metasploit-framework/Gemfile /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfrpc'
+alias msfrpcd='BUNDLE_GEMFILE=/opt/tools/metasploit-framework/Gemfile /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfrpcd'
+alias msfupdate='cd /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfupdate; cd -'
+alias msfvenom='BUNDLE_GEMFILE=/opt/tools/metasploit-framework/Gemfile /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfvenom'
+msfdb_func() {
+    sudo -u postgres sh -c "BUNDLE_GEMFILE=/opt/tools/metasploit-framework/Gemfile /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb $@"
+}
+alias msfdb='msfdb_func'

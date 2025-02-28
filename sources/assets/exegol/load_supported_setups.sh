@@ -62,8 +62,13 @@ function deploy_zsh() {
 function deploy_tmux() {
   colorecho "Deploying tmux"
   if [[ -d "$MY_SETUP_PATH/tmux" ]]; then
-    # copy tmux/tmux.conf to ~/.tmux.conf
-    [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]] && cp "$MY_SETUP_PATH/tmux/tmux.conf" ~/.tmux.conf
+    # id define, copy tmux/tmux.conf to ~/.tmux.conf
+    if [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]]; then
+      # This key must always be defined (if redefined later in the file, the user user will take precedence)
+      echo 'set-option -g default-shell /bin/zsh' > ~/.tmux.conf
+      # Adding custom user config
+      cat "$MY_SETUP_PATH/tmux/tmux.conf" >> ~/.tmux.conf
+    fi
   else
     mkdir "$MY_SETUP_PATH/tmux" && chmod 770 "$MY_SETUP_PATH/tmux"
   fi
@@ -171,25 +176,10 @@ function run_user_setup() {
   colorecho "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== End of custom setups loading ===="
 }
 
-function deploy_firefox_addons() {
-  colorecho "Deploying Firefox Add-Ons"
-  local addon_folder
-  local addon_list
-  if [[ -d "$MY_SETUP_PATH/firefox/" ]]; then
-    if [[ -d "$MY_SETUP_PATH/firefox/addons" ]]; then
-      addon_folder="$MY_SETUP_PATH/firefox/addons"
-    else
-      mkdir "$MY_SETUP_PATH/firefox/addons" && chmod 770 "$MY_SETUP_PATH/firefox/addons"
-    fi
-    if [[ -f "$MY_SETUP_PATH/firefox/addons.txt" ]]; then
-      addon_list="$MY_SETUP_PATH/firefox/addons.txt"
-    else
-      cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
-    fi
-    python3 /opt/tools/firefox/user-setup.py -L "$addon_list" -D "$addon_folder"
-  else
-    mkdir --parents "$MY_SETUP_PATH/firefox/addons" && chmod 770 -R "$MY_SETUP_PATH/firefox/addons"
-    cp --preserve=mode /.exegol/skel/firefox/addons.txt "$MY_SETUP_PATH/firefox/addons.txt"
+function deploy_firefox_policy() {
+  colorecho "Deploying Firefox Policy"
+  if [[ -f "$MY_SETUP_PATH/firefox/policies.json" ]]; then
+    cp --preserve=mode "$MY_SETUP_PATH/firefox/policies.json" /usr/lib/firefox-esr/distribution/policies.json
   fi
 }
 
@@ -242,6 +232,8 @@ function deploy_bloodhound() {
 }
 
 function trust_ca_certs_in_firefox() {
+  colorecho "Trusting Burp CA certificate in Firefox"
+  /opt/tools/bin/trust-ca-burp
   colorecho "Trusting user CA certificates in Firefox"
   local file
   if [[ -d "$MY_SETUP_PATH/firefox/CA" ]]; then
@@ -270,6 +262,15 @@ function _trust_ca_cert_in_firefox() {
   certutil -A -n "$2" -t "TC" -i "$1" -d ~/.mozilla/firefox/*.Exegol
 }
 
+function deploy_arsenal_cheatsheet () {
+  # Function to add custom cheatsheets into arsenal
+  colorecho "Deploying custom arsenal cheatsheet"
+  if [[ ! -d "$MY_SETUP_PATH/arsenal-cheats" ]]; then
+      mkdir -p "$MY_SETUP_PATH/arsenal-cheats"
+  fi
+  # This specific path is fetched by default by arsenal to load custom cheatsheet
+}
+
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
@@ -284,9 +285,10 @@ deploy_vim
 deploy_nvim
 deploy_apt
 deploy_python3
-deploy_firefox_addons
+deploy_firefox_policy
 deploy_bloodhound
 trust_ca_certs_in_firefox
+deploy_arsenal_cheatsheet
 
 run_user_setup
 

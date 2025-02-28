@@ -51,7 +51,7 @@ function install_john() {
 function install_name-that-hash() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing Name-That-Hash"
-    pipx install name-that-hash
+    pipx install --system-site-packages name-that-hash
     add-history name-that-hash
     add-test-command "nth --help"
     add-to-list "name-that-hash,https://github.com/HashPals/Name-That-Hash,Online tool for identifying hashes.,$version"
@@ -73,7 +73,7 @@ function install_haiti() {
 function install_geowordlists() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GeoWordlists"
-    pipx install git+https://github.com/p0dalirius/GeoWordlists
+    pipx install --system-site-packages git+https://github.com/p0dalirius/GeoWordlists
     add-history geowordlists
     local version
     version=$(geowordlists --help | head -n 1 | awk '{print $2}')
@@ -84,7 +84,7 @@ function install_geowordlists() {
 function install_pkcrack() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing pkcrack"
-    git -C /opt/tools/ clone https://github.com/keyunluo/pkcrack
+    git -C /opt/tools/ clone --depth 1 https://github.com/keyunluo/pkcrack
     mkdir -v /opt/tools/pkcrack/build/
     cd /opt/tools/pkcrack/build || exit
     cmake ..

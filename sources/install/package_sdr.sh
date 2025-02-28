@@ -46,7 +46,7 @@ function install_mousejack() {
 function install_jackit() {
     # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing jackit"
-    pipx install git+https://github.com/insecurityofthings/jackit
+    pipx install --system-site-packages git+https://github.com/insecurityofthings/jackit
     add-history jackit
     add-test-command "jackit --help"
     add-to-list "jackit,https://github.com/insecurityofthings/jackit,Exploit to take over a wireless mouse and keyboard,$version"

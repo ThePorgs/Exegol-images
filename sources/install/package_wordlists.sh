@@ -41,7 +41,7 @@ function install_cewl() {
 function install_cewler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing cewler"
-    pipx install cewler
+    pipx install --system-site-packages cewler
     add-history cewler
     local version
     version=$(cewler | grep CeWLeR | awk '{print $2}')

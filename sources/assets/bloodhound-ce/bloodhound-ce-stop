@@ -4,4 +4,8 @@ if pg_isready -q; then
     service postgresql stop
 fi
 
+if neo4j status|grep -q "is running"; then
+    neo4j stop
+fi
+
 pkill bloodhound

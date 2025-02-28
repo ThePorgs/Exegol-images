@@ -36,11 +36,10 @@ function install_reverse_apt_tools() {
 function install_pwntools() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing pwntools"
-    python -m pip install pwntools
-    # Downgrade pyelftools version because : https://github.com/Gallopsled/pwntools/issues/2260
-    python -m pip install pathlib2 pyelftools==0.29
-    pip3 install pwntools
-    pip3 install pyelftools==0.29
+    git -C /opt/tools/ clone --depth 1 https://github.com/Gallopsled/pwntools
+    cd /opt/tools/pwntools || exit
+    sed -i 's/capstone[>=][^"]*/capstone==6.0.0a2/' pyproject.toml
+    pip install .
     add-test-command "python -c 'import pwn'"
     add-test-command "python3 -c 'import pwn'"
     add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library,$version"
@@ -63,8 +62,14 @@ function install_angr() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing angr"
     fapt libffi-dev
-    pip3 install angr
-    add-test-command "python3 -c 'import angr'"
+    mkdir -p /opt/tools/angr || exit
+    cd /opt/tools/angr || exit
+    python3 -m venv ./venv
+    source ./venv/bin/activate
+    pip install angr
+    deactivate
+    add-aliases angr
+    add-test-command "angr -c 'import angr'"
     add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework,$version"
 }
 
@@ -73,10 +78,9 @@ function install_checksec-py() {
     colorecho "Installing checksec.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
     cd /opt/tools/checksec.py || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip install .
-    pip install --upgrade lief==0.13.2
     deactivate
     add-aliases checksec
     add-history checksec

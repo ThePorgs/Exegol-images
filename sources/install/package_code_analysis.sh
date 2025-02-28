@@ -19,7 +19,7 @@ function install_brakeman() {
 function install_semgrep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing semgrep"
-    pipx install semgrep
+    pipx install --system-site-packages semgrep
     add-history semgrep
     local version
     version=$(semgrep --version |& tail -n 1)

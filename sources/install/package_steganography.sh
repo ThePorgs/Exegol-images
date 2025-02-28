@@ -51,7 +51,7 @@ function install_zsteg() {
 function install_stegolsb() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing stegolsb"
-    pipx install stego-lsb
+    pipx install --system-site-packages stego-lsb
     add-history stegolsb
     local version
     version=$(stegolsb --version | awk '{print $3}')

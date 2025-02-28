@@ -73,7 +73,6 @@ function package_most_used() {
     install_gittools                # Dump a git repository from a website
     install_ysoserial               # Deserialization payloads
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
-    install_crackmapexec            # Network scanner
     install_impacket                # Network protocols scripts
     install_enum4linux-ng           # Active Directory enumeration tool, improved Python alternative to enum4linux
     install_smbmap                  # Allows users to enumerate samba share drives across an entire domain
@@ -85,6 +84,11 @@ function package_most_used() {
     install_netexec                 # Crackmapexec repo
     install_sslscan                 # SSL/TLS scanner
     install_cyberchef               # A web based toolbox
+    install_proxychains             # Network tool
+    install_neo4j
+    install_bloodhound
+    install_bloodhound-py           # Ingestor for legacy BloodHound
+    install_coercer                 # Python script to coerce auth through multiple methods
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package most_used completed in $elapsed_time seconds."

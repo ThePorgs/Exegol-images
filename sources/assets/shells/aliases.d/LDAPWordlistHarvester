@@ -1,1 +1,1 @@
-alias LDAPWordlistHarvester.py="/opt/tools/LDAPWordlistHarvester/venv/bin/python3 /opt/tools/LDAPWordlistHarvester/LDAPWordlistHarvester.py"
+alias LDAPWordlistHarvester.py="/opt/tools/pyLDAPWordlistHarvester/venv/bin/python3 /opt/tools/pyLDAPWordlistHarvester/LDAPWordlistHarvester.py"
