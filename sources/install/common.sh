@@ -143,3 +143,38 @@ function define_retry_function() {
 for CMD in "${CATCH_AND_RETRY_COMMANDS[@]}"; do
   define_retry_function "$CMD"
 done
+
+function post_install() {
+    # Function used to clean up post-install files
+    colorecho "Cleaning..."
+    local listening_processes
+    updatedb
+    rm -rfv /tmp/*
+    rm -rfv /var/lib/apt/lists/*
+    rm -rfv /root/.cache
+    rm -rfv /root/.gradle/caches
+    colorecho "Stop listening processes"
+    listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
+    if [[ -n $listening_processes ]]; then
+        echo "Listening processes detected"
+        ss -lnpt
+        echo "Kill processes"
+        # shellcheck disable=SC2086
+        kill -9 $listening_processes
+    fi
+}
+
+function post_build() {
+    colorecho "Post build..."
+    rm -rfv /root/sources
+    add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
+    colorecho "Sorting tools list"
+    (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
+    mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
+    colorecho "Adding end-of-preset in zsh_history"
+    echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
+    cp /opt/.exegol_history ~/.zsh_history
+    cp /opt/.exegol_history ~/.bash_history
+    colorecho "Removing desktop icons"
+    if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
+}

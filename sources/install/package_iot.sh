@@ -20,11 +20,13 @@ function install_iot_apt_tools() {
 
 # Package dedicated to IoT tools
 function package_iot() {
+    apt-get update
     set_env
     local start_time
     local end_time
     start_time=$(date +%s)
     install_iot_apt_tools
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package iot completed in $elapsed_time seconds."
