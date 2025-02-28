@@ -146,6 +146,7 @@ function install_pwninit() {
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
+    apt-get update
     set_env
     local start_time
     local end_time

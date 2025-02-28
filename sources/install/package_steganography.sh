@@ -50,6 +50,7 @@ function install_stegolsb() {
 
 # Package dedicated to steganography tools
 function package_steganography() {
+    apt-get update
     set_env
     local start_time
     local end_time

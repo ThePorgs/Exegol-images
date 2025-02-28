@@ -921,6 +921,7 @@ function install_token_exploiter() {
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
+    apt-get update
     set_env
     local start_time
     local end_time

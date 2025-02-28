@@ -37,6 +37,7 @@ function install_pp-finder() {
 
 # Package dedicated to SAST and DAST tools
 function package_code_analysis() {
+    apt-get update
     set_env
     local start_time
     local end_time

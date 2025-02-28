@@ -83,6 +83,7 @@ function install_pkcrack() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
+    apt-get update
     set_env
     local start_time
     local end_time

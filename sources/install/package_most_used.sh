@@ -47,6 +47,7 @@ function install_most_used_apt_tools() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
+    apt-get update
     set_env
     local start_time
     local end_time

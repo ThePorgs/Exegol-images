@@ -14,6 +14,7 @@ function install_sipvicious() {
 
 # Package dedicated to VOIP/SIP pentest tools
 function package_voip() {
+    apt-get update
     set_env
     local start_time
     local end_time

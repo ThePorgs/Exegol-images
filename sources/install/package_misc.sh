@@ -213,6 +213,7 @@ function install_wesng() {
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
+    apt-get update
     set_env
     local start_time
     local end_time

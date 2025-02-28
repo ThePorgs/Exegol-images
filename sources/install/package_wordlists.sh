@@ -96,6 +96,7 @@ function install_genusernames() {
 
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
+    apt-get update
     set_env
     local start_time
     local end_time
