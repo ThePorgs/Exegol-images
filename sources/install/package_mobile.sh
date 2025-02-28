@@ -18,10 +18,17 @@ function install_mobile_apt_tools() {
     add-test-command "apksigner --version"
     add-test-command "apktool --version"
 
-    add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications"
-    add-to-list "zipalign,https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file"
-    add-to-list "apksigner,https://source.android.com/security/apksigning,arguably the most important step to optimize your APK file"
-    add-to-list "apktool,https://github.com/iBotPeaches/Apktool,It is a tool for reverse engineering 3rd party / closed / binary Android apps."
+    local version
+    version=$(adb --version | head -n 1 | awk '{print $5}')
+    local version
+    version=$(apksigner --version)
+    local version
+    version=$(apktool --version)
+
+    add-to-list "android-tools-adb,https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications,$version"
+    add-to-list "zipalign,https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file,$version"
+    add-to-list "apksigner,https://source.android.com/security/apksigning,arguably the most important step to optimize your APK file,$version"
+    add-to-list "apktool,https://github.com/iBotPeaches/Apktool,It is a tool for reverse engineering 3rd party / closed / binary Android apps.,$version"
 }
 
 function install_scrpy() {
@@ -39,8 +46,10 @@ function install_scrpy() {
     )
     rm -rf ./scrcpy
     add-history scrcpy
+    local version
+    version=$(scrcpy --version | head -n 1 | awk '{print $2}')
     add-test-command "scrcpy --version"
-    add-to-list "scrcpy,https://github.com/Genymobile/scrcpy,Display and control your Android device."
+    add-to-list "scrcpy,https://github.com/Genymobile/scrcpy,Display and control your Android device.,$version"
 }
 
 function install_smali() {
@@ -49,12 +58,14 @@ function install_smali() {
     wget https://bitbucket.org/JesusFreke/smali/downloads/smali-2.5.2.jar -O /opt/tools/smali/smali-2.5.2.jar
     add-aliases smali
     add-history smali
+    local version
+    version=$(smali --version | head -n 1 | awk '{print $2}')
     add-test-command "smali --version"
-    add-to-list "smali,https://github.com/JesusFreke/smali,A tool to disassemble and assemble Android's dex files"
+    add-to-list "smali,https://github.com/JesusFreke/smali,A tool to disassemble and assemble Android's dex files,$version"
 }
 
 function install_dex2jar() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing dex2jar"
     wget https://github.com/pxb1988/dex2jar/releases/download/v2.4/dex-tools-v2.4.zip -O /tmp/dex2jar.zip
     unzip /tmp/dex2jar.zip -d /opt/tools/
@@ -62,7 +73,7 @@ function install_dex2jar() {
     find /opt/tools/dex2jar -type f -name "*.sh" -exec ln -s '{}' /opt/tools/bin ';'
     add-history dex2jar
     add-test-command "d2j-dex2jar.sh --help"
-    add-to-list "dex2jar,https://github.com/pxb1988/dex2jar,A tool to convert Android's dex files to Java's jar files"
+    add-to-list "dex2jar,https://github.com/pxb1988/dex2jar,A tool to convert Android's dex files to Java's jar files,$version"
 }
 
 function install_frida() {
@@ -70,8 +81,10 @@ function install_frida() {
     colorecho "Installing frida"
     pipx install --system-site-packages frida-tools
     add-history frida
+    local version
+    version=$(frida --version)
     add-test-command "frida --version"
-    add-to-list "frida,https://github.com/frida/frida,Dynamic instrumentation toolkit"
+    add-to-list "frida,https://github.com/frida/frida,Dynamic instrumentation toolkit,$version"
 }
 
 function install_objection() {
@@ -79,8 +92,10 @@ function install_objection() {
     colorecho "Installing objection"
     pipx install --system-site-packages git+https://github.com/sensepost/objection
     add-history objection
+    local version
+    version=$(objection version | awk '{print $2}')
     add-test-command "objection --help"
-    add-to-list "objection,https://github.com/sensepost/objection,Runtime mobile exploration"
+    add-to-list "objection,https://github.com/sensepost/objection,Runtime mobile exploration,$version"
 }
 
 function install_androguard() {
@@ -88,12 +103,14 @@ function install_androguard() {
     colorecho "Installing androguard"
     pipx install --system-site-packages git+https://github.com/androguard/androguard
     add-history androguard
+    local version
+    version=$(androguard --version | awk '{print $3}')
     add-test-command "androguard --version"
-    add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications"
+    add-to-list "androguard,https://github.com/androguard/androguard,Reverse engineering and analysis of Android applications,$version"
 }
 
 function install_mobsf() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf
     git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF MobSF
@@ -111,7 +128,7 @@ function install_mobsf() {
     fi
     add-history mobsf
     add-test-command "/opt/tools/MobSF/venv/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
-    add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated and all-in-one mobile application (Android/iOS/Windows) pen-testing malware analysis and security assessment framework"
+    add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated and all-in-one mobile application (Android/iOS/Windows) pen-testing malware analysis and security assessment framework,$version"
 }
 
 # Package dedicated to mobile apps pentest tools

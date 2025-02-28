@@ -37,6 +37,8 @@ function install_rust_cargo() {
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
     sh /tmp/rustup.sh -y
     source "$HOME/.cargo/env"
+    local version
+    version=$(cargo --version | awk '{print $2}')
     add-test-command "cargo --version"
 }
 
@@ -44,6 +46,7 @@ function filesystem() {
     colorecho "Preparing filesystem"
     mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/
     touch /.exegol/build_pipeline_tests/all_commands.txt
+    touch /.exegol/build_pipeline_tests/all_versions.txt
     touch /.exegol/installed_tools.csv
     echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
 }
@@ -88,6 +91,8 @@ function install_go() {
 #    tar -C /usr/local -xzf /tmp/go.tar.gz
 #    rm -rf /tmp/go.tar.gz
 #    export PATH=$PATH:/usr/local/go/bin
+    local version
+    version=$(go version | awk '{print $3}')
     add-test-command "go version"
 }
 
@@ -111,7 +116,7 @@ function deploy_exegol() {
 }
 
 function install_locales() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list,add-version
     colorecho "Installing locales"
     fapt locales
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
@@ -166,9 +171,11 @@ function install_firefox() {
     pip3 install -r /opt/tools/firefox/requirements.txt
     python3 /opt/tools/firefox/generate_policy.py
     add-history firefox
+    local version
+    version=$(firefox --version | awk '{print $3}')
     add-test-command "cat /usr/lib/firefox-esr/distribution/policies.json|grep 'Exegol'"
     add-test-command "firefox --version"
-    add-to-list "firefox,https://www.mozilla.org,A web browser"
+    add-to-list "firefox,https://www.mozilla.org,A web browser,$version"
 }
 
 function install_rvm() {
@@ -194,6 +201,8 @@ function install_rvm() {
     rvm install ruby-3.1.5  # needed metasploit-framework
     rvm get head
     gem update
+    local version
+    version=$(rvm --version |& tail -n 1 | awk '{print $2}')
     add-test-command "rvm --version"
 }
 
@@ -203,13 +212,15 @@ function install_fzf() {
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
     add-aliases fzf
+    local version
+    version=$(fzf --version | awk '{print $1}')
     add-test-command "fzf-wordlists --help"
     add-test-command "fzf --help"
-    add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
+    add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder,$version"
 }
 
 function install_ohmyzsh() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list,add-version
     if [[ -d "/root/.oh-my-zsh" ]]; then
         return
     fi
@@ -231,6 +242,8 @@ function install_pipx() {
     colorecho "Installing pipx"
     pip3 install pipx
     pipx ensurepath
+    local version
+    version=$(pipx --version)
     add-test-command "pipx --version"
 }
 
@@ -253,11 +266,13 @@ function install_yarn() {
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
     apt-get update
     fapt yarn
+    local version
+    version=$(yarn --version)
     add-test-command "yarn --help"
 }
 
 function install_ultimate_vimrc() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list,add-version
     if [[ -d "/root/.vim_runtime" ]]; then
         return
     fi
@@ -291,8 +306,10 @@ function install_neovim() {
         cd .. || exit
         rm -rf ./neovim
     fi
+    local version
+    version=$(nvim --version | head -n 1 | awk '{print $2}')
     add-test-command "nvim --version"
-    add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
+    add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor,$version"
 }
 
 function install_mdcat() {
@@ -301,8 +318,10 @@ function install_mdcat() {
     source "$HOME/.cargo/env"
     cargo install mdcat
     add-history mdcat
+    local version
+    version=$(mdcat --version | head -n 1 | awk '{print $2}')
     add-test-command "mdcat --version"
-    add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
+    add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown,$version"
 }
 
 function install_gf() {
@@ -329,7 +348,7 @@ function install_gf() {
     add-history gf
     add-test-command "gf --list"
     add-test-command "ls ~/.gf |& grep 'redirect.json'"
-    add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
+    add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns,$version"
 }
 
 function install_java11() {
@@ -351,6 +370,8 @@ function install_java11() {
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
+    local version
+    version=$(/usr/lib/jvm/java-11-openjdk/bin/java --version | head -n 1 | awk '{print $2}')
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
 }
 
@@ -443,8 +464,10 @@ function install_asdf() {
     # asdf completions
     mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
     asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
+    local version
+    version=$(asdf version)
     add-test-command "asdf version"
-    add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
+    add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc,$version"
 }
 
 # Package dedicated to the basic things the env needs

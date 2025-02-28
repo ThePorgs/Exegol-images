@@ -24,7 +24,7 @@ source package_cracking.sh
 source package_c2.sh
 
 function install_most_used_apt_tools() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing most used apt tools"
     fapt hydra smbclient hashcat fcrackzip
 

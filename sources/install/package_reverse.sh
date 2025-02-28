@@ -15,7 +15,7 @@ function install_reverse_apt_tools() {
     then
         fapt ltrace
         add-test-command "ltrace --version"
-        add-to-list "ltrace,https://github.com/dkogan/ltrace,ltrace is a debugging program for Linux and Unix that intercepts and records dynamic library calls that are called by an executed process."
+        add-to-list "ltrace,https://github.com/dkogan/ltrace,ltrace is a debugging program for Linux and Unix that intercepts and records dynamic library calls that are called by an executed process.,$version"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
@@ -23,13 +23,18 @@ function install_reverse_apt_tools() {
     add-test-command "nasm --version" # Netwide Assembler
     add-test-command "strace --version"
 
-    add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity."
-    add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm) including assembler and disassembler / a syntax checker / and a binary format validator."
-    add-to-list "strace,https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process."
+    local version
+    version=$(nasm --version | awk '{print $3}')
+    local version
+    version=$(strace --version | head -n 1 | awk '{print $4}')
+
+    add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity.,$version"
+    add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm) including assembler and disassembler / a syntax checker / and a binary format validator.,$version"
+    add-to-list "strace,https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process.,$version"
 }
 
 function install_pwntools() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing pwntools"
     git -C /opt/tools/ clone --depth 1 https://github.com/Gallopsled/pwntools
     cd /opt/tools/pwntools || exit
@@ -37,10 +42,11 @@ function install_pwntools() {
     pip install .
     add-test-command "python -c 'import pwn'"
     add-test-command "python3 -c 'import pwn'"
-    add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
+    add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library,$version"
 }
 
 function install_pwndbg() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing pwndbg"
     git -C /opt/tools/ clone --depth 1 https://github.com/pwndbg/pwndbg
     cd /opt/tools/pwndbg || exit
@@ -49,11 +55,11 @@ function install_pwndbg() {
     add-aliases gdb
     add-history gdb
     add-test-command "gdb --help"
-    add-to-list "pwndbg,https://github.com/pwndbg/pwndbg,a GDB plugin that makes debugging with GDB suck less"
+    add-to-list "pwndbg,https://github.com/pwndbg/pwndbg,a GDB plugin that makes debugging with GDB suck less,$version"
 }
 
 function install_angr() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-version
     colorecho "Installing angr"
     fapt libffi-dev
     mkdir -p /opt/tools/angr || exit
@@ -64,10 +70,11 @@ function install_angr() {
     deactivate
     add-aliases angr
     add-test-command "angr -c 'import angr'"
-    add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework"
+    add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework,$version"
 }
 
 function install_checksec-py() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing checksec.py"
     git -C /opt/tools/ clone --depth 1 https://github.com/Wenzel/checksec.py.git
     cd /opt/tools/checksec.py || exit
@@ -78,17 +85,17 @@ function install_checksec-py() {
     add-aliases checksec
     add-history checksec
     add-test-command "checksec.py --help"
-    add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
+    add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX.,$version"
 }
 
 function install_radare2() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-version
     colorecho "Installing radare2"
     git -C /opt/tools/ clone --depth 1 https://github.com/radareorg/radare2
     /opt/tools/radare2/sys/install.sh
     add-history radare2
     add-test-command "radare2 -h"
-    add-to-list "radare2,https://github.com/radareorg/radare2,A complete framework for reverse-engineering and analyzing binaries"
+    add-to-list "radare2,https://github.com/radareorg/radare2,A complete framework for reverse-engineering and analyzing binaries,$version"
 }
 
 function install_ghidra() {
@@ -99,12 +106,14 @@ function install_ghidra() {
     rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
     add-aliases ghidra
     add-history ghidra
+    local version
+    version=$(find /opt/tools/ghidra* | head -n 1 | cut -d '_' -f 2)
     # TODO add-test-command GUI app
-    add-to-list "ghidra,https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools."
+    add-to-list "ghidra,https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools.,$version"
 }
 
 function install_ida() {
-    # CODE-CHECK-WHITELIST=add-test-command
+    # CODE-CHECK-WHITELIST=add-test-command,add-version
     colorecho "Installing IDA"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -118,18 +127,18 @@ function install_ida() {
     add-aliases ida
     add-history ida
     # TODO add-test-command GUI app
-    add-to-list "ida,https://www.hex-rays.com/products/ida/,Interactive disassembler for software analysis."
+    add-to-list "ida,https://www.hex-rays.com/products/ida/,Interactive disassembler for software analysis.,$version"
 }
 
 function install_jd-gui() {
-    # CODE-CHECK-WHITELIST=add-test-command
+    # CODE-CHECK-WHITELIST=add-test-command,add-version
     colorecho "Installing jd-gui"
     mkdir -p /opt/tools/jd-gui && cd /opt/tools/jd-gui || exit
     wget https://github.com/java-decompiler/jd-gui/releases/download/v1.6.6/jd-gui-1.6.6.jar
     add-aliases jd-gui
     add-history jd-gui
     # TODO add-test-command GUI app
-    add-to-list "jd-gui,https://github.com/java-decompiler/jd-gui,A standalone Java Decompiler GUI"
+    add-to-list "jd-gui,https://github.com/java-decompiler/jd-gui,A standalone Java Decompiler GUI,$version"
 }
 
 function install_pwninit() {
@@ -140,8 +149,10 @@ function install_pwninit() {
     source "$HOME/.cargo/env"
     cargo install pwninit
     add-history pwninit
+    local version
+    version=$(pwninit --version | awk '{print $2}')
     add-test-command "pwninit --help"
-    add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
+    add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges,$version"
 }
 
 # Package dedicated to reverse engineering tools

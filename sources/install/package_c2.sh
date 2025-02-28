@@ -12,8 +12,10 @@ function install_pwncat() {
     # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
     pipx inject pwncat-cs cryptography==36.0.2
     add-history pwncat
+    local version
+    version=$(pwncat-cs --version)
     add-test-command "pwncat-cs --version"
-    add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
+    add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features.,$version"
 }
 
 function install_metasploit() {
@@ -59,23 +61,25 @@ function install_metasploit() {
 
     add-aliases metasploit
     add-history metasploit
+    local version
+    version=$(msfconsole --version |& awk '{print $3}')
     add-test-command "msfconsole --help"
     add-test-command "msfconsole --version"
     add-test-command "msfdb --help"
     add-test-command "msfdb status"
     add-test-command "msfvenom --list platforms"
     add-test-command "msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f exe > /tmp/test.exe && file /tmp/test.exe|grep 'PE32 executable' && rm /tmp/test.exe"
-    add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
+    add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads,$version"
 }
 
 function install_routersploit() {
-    # CODE-CHECK-WHITELIST=add-history
+    # CODE-CHECK-WHITELIST=add-history,add-version
     colorecho "Installing RouterSploit"
     pipx install --system-site-packages routersploit
     pipx inject routersploit colorama
     add-aliases routersploit
     add-test-command "routersploit --help"
-    add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
+    add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers.,$version"
 }
 
 function install_sliver() {
@@ -98,12 +102,15 @@ function install_sliver() {
     ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
     ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
     add-history sliver
+    local version
+    version=$(sliver-server version | awk '{print $1}')
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
-    add-to-list "sliver,https://github.com/BishopFox/sliver,Open source / cross-platform and extensible C2 framework"
+    add-to-list "sliver,https://github.com/BishopFox/sliver,Open source / cross-platform and extensible C2 framework,$version"
 }
 
 function install_empire() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing Empire"
     wget -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
     dpkg -i /tmp/packages-microsoft-prod.deb
@@ -127,7 +134,7 @@ function install_empire() {
     add-history empire
     add-test-command "ps-empire server --help"
     add-test-command "ps-empire client --help"
-    add-to-list "empire,https://github.com/BC-SECURITY/Empire,post-exploitation and adversary emulation framework"
+    add-to-list "empire,https://github.com/BC-SECURITY/Empire,post-exploitation and adversary emulation framework,$version"
     # exit the Empire workdir, since it sets the python version to 3.12 and could mess up later installs
     cd || exit
 }
@@ -157,11 +164,14 @@ function install_havoc() {
     make client-build || cat /opt/tools/Havoc/client/Build/CMakeFiles/CMakeOutput.log
     add-aliases havoc
     add-history havoc
-    add-test-command "havoc "
-    add-to-list "Havoc,https://github.com/HavocFramework/Havoc,Command & Control Framework"
+    local version
+    version=$(havoc | grep Version | awk '{print $4}' | tr -d ']')
+    add-test-command "havoc"
+    add-to-list "Havoc,https://github.com/HavocFramework/Havoc,Command & Control Framework,$version"
 }
 
 function install_villain() {
+    # CODE-CHECK-WHITELIST=add-version
     colorecho "Installing Villain"
     git -C /opt/tools/ clone --depth 1 https://github.com/t3l3machus/Villain
     cd /opt/tools/Villain || exit
@@ -172,7 +182,7 @@ function install_villain() {
     add-aliases villain
     add-history villain
     add-test-command "Villain.py -h"
-    add-to-list "Villain,https://github.com/t3l3machus/Villain,Command & Control Framework"
+    add-to-list "Villain,https://github.com/t3l3machus/Villain,Command & Control Framework,$version"
 }
 
 # Package dedicated to command & control frameworks

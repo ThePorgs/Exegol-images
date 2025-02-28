@@ -18,10 +18,20 @@ function install_forensic_apt_tools() {
     add-test-command "fdisk --help"     # Creating and manipulating disk partition table
     add-test-command "blkcalc -V"       # Collection of command line tools that allow you to investigate disk images
 
+    local version
+    version=$(pst2ldif -V | head -n 1 | awk '{print $2}')
     add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
+    local version
+    version=$(foremost -V | head -n 1)
     add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers / footers / and internal data structures."
+    local version
+    version=$(testdisk --version | grep Version | awk '{print $2}')
     add-to-list "testdisk,https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
+    local version
+    version=$(fdisk --version | awk '{print $4}')
     add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool"
+    local version
+    version=$(blkcalc -V | awk '{print $5}')
     add-to-list "sleuthkit,https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
 }
 
@@ -50,8 +60,10 @@ function install_volatility2() {
     add-aliases volatility2
     # TODO: Improve volatility2 history
     add-history volatility2
+    local version
+    version=$(volatility2 --help |& head -n 1 | awk '{print $5}')
     add-test-command "volatility2 --help"
-    add-to-list "volatility2,https://github.com/volatilityfoundation/volatility,Volatile memory extraction utility framework"
+    add-to-list "volatility2,https://github.com/volatilityfoundation/volatility,Volatile memory extraction utility framework,$version"
 }
 
 function install_volatility3() {
@@ -59,8 +71,10 @@ function install_volatility3() {
     pipx install --system-site-packages git+https://github.com/volatilityfoundation/volatility3
     add-aliases volatility3
     add-history volatility3
+    local version
+    version=$(volatility3 --help | head -n 1 | awk '{print $4}')
     add-test-command "volatility3 --help"
-    add-to-list "volatility3,https://github.com/volatilityfoundation/volatility3,Advanced memory forensics framework"
+    add-to-list "volatility3,https://github.com/volatilityfoundation/volatility3,Advanced memory forensics framework,$version"
 }
 
 function install_trid() {
@@ -78,8 +92,10 @@ function install_trid() {
     python3 tridupdate.py
     add-aliases trid
     add-history trid
+    local version
+    version=$(trid --help | grep Identifier | awk '{print $5}')
     add-test-command "trid '-?'; trid | grep 'This help'"
-    add-to-list "trid,https://mark0.net/soft-trid-e.html,File identifier"
+    add-to-list "trid,https://mark0.net/soft-trid-e.html,File identifier,$version"
 }
 
 function install_peepdf() {
@@ -87,8 +103,10 @@ function install_peepdf() {
     git -C /opt/tools clone --depth 1 https://github.com/jesparza/peepdf
     add-aliases peepdf
     add-history peepdf
+    local version
+    version=$(peepdf.py --version | head -n 1 | awk '{print $3}')
     add-test-command "peepdf.py --help"
-    add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
+    add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not.,$version"
 } 
 
 function install_jadx() {
@@ -100,8 +118,10 @@ function install_jadx() {
     ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
     ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
     add-history jadx
+    local version
+    version=$(jadx --version)
     add-test-command "jadx --help"
-    add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler"
+    add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler,$version"
 }
 
 function install_chainsaw() {
@@ -110,8 +130,10 @@ function install_chainsaw() {
     source "$HOME/.cargo/env"
     cargo install chainsaw
     add-history chainsaw
+    local version
+    version=$(chainsaw --version | awk '{print $2}')
     add-test-command "chainsaw --help"
-    add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
+    add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts,$version"
 }
 
 # Package dedicated to forensic tools
