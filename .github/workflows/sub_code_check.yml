@@ -9,6 +9,8 @@ jobs:
   code-check:
     name: Code Compliance Check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
     steps:
