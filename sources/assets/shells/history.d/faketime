@@ -1,2 +1,2 @@
-faketime '2022-01-31 22:05:35' zsh
-faketime "$(date +'%Y-%m-%d') $(net time -S $DC_IP | awk '{print $4}')"
+faketime "2022-01-31 22:05:35" zsh
+faketime "$(date +'%Y-%m-%d') $(net time -S $DC_IP | awk '{print $4}')" zsh

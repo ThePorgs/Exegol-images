@@ -6,19 +6,21 @@ source common.sh
 function install_ad_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing AD apt tools"
-    fapt samdump2 smbclient onesixtyone nbtscan ldap-utils
+    fapt samdump2 smbclient onesixtyone nbtscan ldap-utils krb5-user
 
     add-history samdump2
     add-history smbclient
     add-history onesixtyone
     add-history nbtscan
     add-history ldapsearch
+    add-history kerberos
 
     add-test-command "samdump2 -h|& grep 'enable debugging'"        # Dumps Windows 2k/NT/XP/Vista password hashes
     add-test-command "smbclient --help"                             # Small dynamic library that allows iOS apps to access SMB/CIFS file servers
     add-test-command "onesixtyone 127.0.0.1 public"                 # SNMP scanning
     add-test-command "nbtscan 127.0.0.1"                            # NetBIOS scanning tool
     add-test-command "ldapsearch --help|& grep 'Search options'"    # Perform queries on a LDAP server
+    add-test-command "klist -V"
 
     add-to-list "samdump2,https://github.com/azan121468/SAMdump2,A tool to dump Windows NT/2k/XP/Vista password hashes from SAM files"
     add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
