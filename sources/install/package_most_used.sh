@@ -84,6 +84,7 @@ function package_most_used() {
     install_netexec                 # Crackmapexec repo
     install_sslscan                 # SSL/TLS scanner
     install_cyberchef               # A web based toolbox
+    install_proxychains             # Network tool
     install_neo4j
     install_bloodhound
     install_bloodhound-py           # Ingestor for legacy BloodHound
