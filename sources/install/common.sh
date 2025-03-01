@@ -147,15 +147,16 @@ done
 function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
-    local listening_processes
     updatedb
-    rm -rfv /tmp/*
-    rm -rfv /var/lib/apt/lists/*
-    rm -rfv /root/.cache
-    rm -rfv /root/.gradle/caches
-    rm -rfv /root/.cargo/registry
-    rm -rfv /root/.npm/_cacache
+    rm -rf /tmp/*
+    rm -rf /var/lib/apt/lists/*
+    rm -rf /root/.cache
+    rm -rf /root/.gradle/caches
+    rm -rf /root/.cargo/registry
+    rm -rf /root/.npm/_cacache
+
     colorecho "Stop listening processes"
+    local listening_processes
     listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
     if [[ -n $listening_processes ]]; then
         echo "Listening processes detected"
