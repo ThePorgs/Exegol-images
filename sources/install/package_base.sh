@@ -11,7 +11,7 @@ function update() {
 
 function install_dbassets() {
     colorecho "Installing dbassets"
-    pipx install --system-site-packages git+https://github.com/lap1nou/db-assets
+    pipx install --system-site-packages git+https://github.com/ThePorgs/Exegol-history
     add-aliases dbassets
     add-history dbassets
     add-test-command "dbassets -h"
