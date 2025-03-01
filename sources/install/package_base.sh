@@ -15,7 +15,7 @@ function install_dbassets() {
     add-aliases dbassets
     add-history dbassets
     add-test-command "dbassets -h"
-    add-to-list "dbassets,https://github.com/lap1nou/db-assets,Compromised credentials management"
+    add-to-list "dbassets,https://github.com/ThePorgs/Exegol-history,Compromised credentials management"
 }
 
 function install_exegol-history() {
