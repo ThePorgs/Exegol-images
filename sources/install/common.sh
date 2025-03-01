@@ -153,6 +153,7 @@ function post_install() {
     rm -rfv /var/lib/apt/lists/*
     rm -rfv /root/.cache
     rm -rfv /root/.gradle/caches
+    rm -rfv /root/.cargo/registry
     colorecho "Stop listening processes"
     listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
     if [[ -n $listening_processes ]]; then
