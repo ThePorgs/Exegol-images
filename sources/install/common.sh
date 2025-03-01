@@ -148,12 +148,14 @@ function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
     updatedb
+    rm -rf /root/.bundle/cache
+    rm -rf /root/.cache
+    rm -rf /root/.cargo/registry
+    rm -rf /root/.gradle/caches
+    rm -rf /root/.npm/_cacache
+    rm -rf /root/.nvm/.cache
     rm -rf /tmp/*
     rm -rf /var/lib/apt/lists/*
-    rm -rf /root/.cache
-    rm -rf /root/.gradle/caches
-    rm -rf /root/.cargo/registry
-    rm -rf /root/.npm/_cacache
 
     colorecho "Stop listening processes"
     local listening_processes
