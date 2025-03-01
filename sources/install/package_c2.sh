@@ -113,7 +113,7 @@ function install_empire() {
     chmod +x /tmp/dotnet-install.sh
     /tmp/dotnet-install.sh --channel 6.0
     install_powershell
-    git -C /opt/tools/ clone --recursive https://github.com/BC-SECURITY/Empire
+    git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/BC-SECURITY/Empire
     cd /opt/tools/Empire || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
