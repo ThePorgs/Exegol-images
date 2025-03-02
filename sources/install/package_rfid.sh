@@ -89,8 +89,6 @@ function install_proxmark3() {
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
-    setup_measure
-
     apt-get update
     set_env
     local start_time
@@ -101,7 +99,7 @@ function package_rfid() {
     install_libnfc-crypto1-crack    # tool for hardnested attack on Mifare Classic
     install_mfdread                 # Tool to pretty print Mifare 1k/4k dumps
     install_proxmark3               # Proxmark3 scripts
-    measure post_install
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package rfid completed in $elapsed_time seconds."

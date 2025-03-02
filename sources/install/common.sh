@@ -180,7 +180,7 @@ function define_measure_function() {
     eval "
     measured_${original_fn}() { $(declare -f "$original_fn" | tail -n +2); }
     ${original_fn}() {
-        measure measured_${original_fn} \"\$@\"
+        measure measured_${original_fn} \$@
     }
     "
   fi
@@ -188,7 +188,7 @@ function define_measure_function() {
 
 function setup_measure() {
   # Find and wrap all functions starting by 'install_'
-  for fn in $(declare -F | awk '{print $3}' | grep '^install_'); do
+  for fn in $(declare -F | awk '{print $3}' | grep '^install_\|^package_'); do
     define_measure_function "$fn"
   done
 }

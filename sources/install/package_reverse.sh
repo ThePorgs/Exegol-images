@@ -146,8 +146,6 @@ function install_pwninit() {
 
 # Package dedicated to reverse engineering tools
 function package_reverse() {
-    setup_measure
-
     apt-get update
     set_env
     local start_time
@@ -163,7 +161,7 @@ function package_reverse() {
     install_ida
     install_jd-gui                  # Java decompiler
     install_pwninit                 # Tool for automating starting binary exploit
-    measure post_install
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package reverse completed in $elapsed_time seconds."

@@ -213,8 +213,6 @@ function install_wesng() {
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
-    setup_measure
-
     apt-get update
     set_env
     local start_time
@@ -236,7 +234,7 @@ function package_misc() {
     install_creds           # A default credentials vault
     install_uploader        # uploader for fast file upload
     install_wesng           # Search Windows vulnerability via systeminfo
-    measure post_install
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."

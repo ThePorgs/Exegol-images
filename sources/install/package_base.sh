@@ -418,8 +418,6 @@ function install_asdf() {
 
 # Package dedicated to the basic things the env needs
 function package_base() {
-    setup_measure
-
     local start_time
     local end_time
     start_time=$(date +%s)
@@ -549,7 +547,7 @@ function package_base() {
 
     # Global python dependencies
     pip3 install -r /root/sources/assets/python/requirements.txt
-    measure post_install
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package base completed in $elapsed_time seconds."

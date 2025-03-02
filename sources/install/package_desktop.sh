@@ -112,15 +112,13 @@ function install_xfce() {
 }
 
 function package_desktop() {
-    setup_measure
-
     apt-get update
     set_env
     local start_time
     local end_time
     start_time=$(date +%s)
     install_xfce
-    measure post_install
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package desktop completed in $elapsed_time seconds."

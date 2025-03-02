@@ -300,8 +300,6 @@ function install_ssh-audit() {
 
 # Package dedicated to network pentest tools
 function package_network() {
-    setup_measure
-
     apt-get update
     set_env
     local start_time
@@ -328,7 +326,7 @@ function package_network() {
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
-    measure post_install
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package network completed in $elapsed_time seconds."

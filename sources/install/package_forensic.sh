@@ -116,8 +116,6 @@ function install_chainsaw() {
 
 # Package dedicated to forensic tools
 function package_forensic() {
-    setup_measure
-
     apt-get update
     set_env
     local start_time
@@ -131,7 +129,7 @@ function package_forensic() {
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
-    measure post_install
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package forensic completed in $elapsed_time seconds."

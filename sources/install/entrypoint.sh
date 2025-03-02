@@ -26,6 +26,8 @@ source package_cracking.sh
 source package_c2.sh
 source package_desktop.sh
 
+setup_measure
+
 # Entry point for the installation
 if [[ $EUID -ne 0 ]]; then
   criticalecho "You must be a root user"
@@ -37,7 +39,7 @@ else
       echo "This script is running in docker, as it should :)"
       echo "If you see things in red, don't panic, it's usually not errors, just badly handled colors"
       echo -e "${NOCOLOR}"
-      measure "$@"
+      "$@"
     else
       echo -e "${RED}"
       echo "[!] Careful : this script is supposed to be run inside a docker/VM, do not run this on your host unless you know what you are doing and have done backups. You have been warned :)"
