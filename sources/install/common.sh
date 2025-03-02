@@ -148,20 +148,25 @@ function measure() {
   echo -e "${BLUE}[EXEGOL MEASURE] Start measuring '$*'${NOCOLOR}"
 
   # Initial start time and disk usage in bytes
-  local start_time=$(date +%s)
-  local initial_space=$(df --output=used / | tail -1) # df is not fully accurate but fast and good enough
+  local start_time
+  start_time=$(date +%s)
+  local initial_space
+  initial_space=$(df --output=used / | tail -1) # df is not fully accurate but fast and good enough
 
   # Run the command
   "$@"
 
   # Calculate elapsed time and disk usage change
-  local end_time=$(date +%s)
-  local final_space=$(df --output=used / | tail -1)
+  local end_time
+  local final_space
+  end_time=$(date +%s)
+  final_space=$(df --output=used / | tail -1)
   local elapsed_time=$((end_time - start_time))
   local space_change=$((final_space - initial_space))
 
   # Convert disk usage change to human-readable format
-  local space_change_human=$(numfmt --to=iec-i --suffix=B -- $((space_change * 1024)))
+  local space_change_human
+  space_change_human=$(numfmt --to=iec-i --suffix=B -- $((space_change * 1024)))
 
   echo -e "${BLUE}[EXEGOL MEASURE] '$*' took ${elapsed_time} seconds, Disk Usage change: ${space_change_human}${NOCOLOR}"
   echo "$*,${elapsed_time}s,${space_change_human}" >> /.exegol/measure.csv
