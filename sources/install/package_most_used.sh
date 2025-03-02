@@ -47,6 +47,8 @@ function install_most_used_apt_tools() {
 
 # Package dedicated to most used offensive tools
 function package_most_used() {
+    setup_measure
+
     apt-get update
     set_env
     local start_time
@@ -90,7 +92,7 @@ function package_most_used() {
     install_bloodhound
     install_bloodhound-py           # Ingestor for legacy BloodHound
     install_coercer                 # Python script to coerce auth through multiple methods
-    post_install
+    measure post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package most_used completed in $elapsed_time seconds."

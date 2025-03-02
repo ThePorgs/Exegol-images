@@ -144,6 +144,50 @@ for CMD in "${CATCH_AND_RETRY_COMMANDS[@]}"; do
   define_retry_function "$CMD"
 done
 
+function measure() {
+  echo -e "${BLUE}[EXEGOL MEASURE] Start measuring '$@'${NOCOLOR}"
+
+  # Initial start time and disk usage in bytes
+  local start_time=$(date +%s)
+  local initial_space=$(df --output=used / | tail -1) # df is not fully accurate but fast and good enough
+
+  # Run the command
+  "$@"
+
+  # Calculate elapsed time and disk usage change
+  local end_time=$(date +%s)
+  local final_space=$(df --output=used / | tail -1)
+  local elapsed_time=$((end_time - start_time))
+  local space_change=$((final_space - initial_space))
+
+  # Convert disk usage change to human-readable format
+  local space_change_human=$(numfmt --to=iec-i --suffix=B -- $((space_change * 1024)))
+
+  echo -e "${BLUE}[EXEGOL MEASURE] '$@' took ${elapsed_time} seconds, Disk Usage change: ${space_change_human}${NOCOLOR}"
+  echo "$@,${elapsed_time}s,${space_change_human}" >> /.exegol/measure.csv
+}
+
+function define_measure_function() {
+  local original_fn="$1"
+
+  # Redefine the function to include measurement if not already done
+  if ! declare -F "measured_$fn" > /dev/null; then
+    eval "
+    measured_${original_fn}() { $(declare -f "$original_fn" | tail -n +2); }
+    ${original_fn}() {
+        measure measured_${original_fn} \"\$@\"
+    }
+    "
+  fi
+}
+
+function setup_measure() {
+  # Find and wrap all functions starting by 'install_'
+  for fn in $(declare -F | awk '{print $3}' | grep '^install_'); do
+    define_measure_function "$fn"
+  done
+}
+
 function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."

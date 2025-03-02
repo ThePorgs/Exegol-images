@@ -118,6 +118,8 @@ function install_azure_cli() {
 
 # Package dedicated to cloud tools
 function package_cloud() {
+    setup_measure
+
     apt-get update
     set_env
     local start_time
@@ -131,7 +133,7 @@ function package_cloud() {
     install_prowler
     install_cloudmapper
     install_azure_cli       # Command line for Azure
-    post_install
+    measure post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package cloud completed in $elapsed_time seconds."

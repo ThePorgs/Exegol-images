@@ -1434,6 +1434,8 @@ function install_adminer() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
+    setup_measure
+
     apt-get update
     set_env
     local start_time
@@ -1540,7 +1542,7 @@ function package_ad() {
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
     install_adminer
-    post_install
+    measure post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package ad completed in $elapsed_time seconds."

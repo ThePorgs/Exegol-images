@@ -118,6 +118,8 @@ function install_hcxdumptool() {
 
 # Package dedicated to wifi pentest tools
 function package_wifi() {
+    setup_measure
+
     apt-get update
     set_env
     local start_time
@@ -130,7 +132,7 @@ function package_wifi() {
     install_bettercap               # MiTM tool
     install_hcxtools                # Tools for PMKID and other wifi attacks
     install_hcxdumptool             # Small tool to capture packets from wlan devices
-    post_install
+    measure post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package wifi completed in $elapsed_time seconds."

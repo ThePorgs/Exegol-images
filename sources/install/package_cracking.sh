@@ -83,6 +83,8 @@ function install_pkcrack() {
 
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
+    setup_measure
+
     apt-get update
     set_env
     local start_time
@@ -94,7 +96,7 @@ function package_cracking() {
     install_haiti                   # haiti, hash type identifier
     install_geowordlists            # wordlists generator
     install_pkcrack                 # known plaintext ZIP cracker
-    post_install
+    measure post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package cracking completed in $elapsed_time seconds."

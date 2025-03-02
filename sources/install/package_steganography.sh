@@ -50,6 +50,8 @@ function install_stegolsb() {
 
 # Package dedicated to steganography tools
 function package_steganography() {
+    setup_measure
+
     apt-get update
     set_env
     local start_time
@@ -58,7 +60,7 @@ function package_steganography() {
     install_steganography_apt_tools
     install_zsteg                   # Detect stegano-hidden data in PNG & BMP
     install_stegolsb                # (including wavsteg)
-    post_install
+    measure post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package steganography completed in $elapsed_time seconds."

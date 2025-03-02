@@ -116,6 +116,8 @@ function install_mobsf() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
+    setup_measure
+
     apt-get update
     set_env
     local start_time
@@ -129,7 +131,7 @@ function package_mobile() {
     install_objection               # Runtime mobile exploration toolkit
     install_androguard              # Reverse engineering and analysis of Android applications
     install_mobsf                   # Automated mobile application testing framework
-    post_install
+    measure post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package mobile completed in $elapsed_time seconds."

@@ -527,6 +527,8 @@ function install_pymeta() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
+    setup_measure
+
     apt-get update
     set_env
     local start_time
@@ -575,7 +577,7 @@ function package_osint() {
     install_censys                  # An easy-to-use and lightweight API wrapper for Censys APIs
     install_gomapenum               # Nothing new but existing techniques are brought together in one tool.
     install_pymeta
-    post_install
+    measure post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package osint completed in $elapsed_time seconds."
