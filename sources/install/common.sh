@@ -145,7 +145,7 @@ for CMD in "${CATCH_AND_RETRY_COMMANDS[@]}"; do
 done
 
 function measure() {
-  echo -e "${BLUE}[EXEGOL MEASURE] Start measuring '$@'${NOCOLOR}"
+  echo -e "${BLUE}[EXEGOL MEASURE] Start measuring '$*'${NOCOLOR}"
 
   # Initial start time and disk usage in bytes
   local start_time=$(date +%s)
@@ -163,8 +163,8 @@ function measure() {
   # Convert disk usage change to human-readable format
   local space_change_human=$(numfmt --to=iec-i --suffix=B -- $((space_change * 1024)))
 
-  echo -e "${BLUE}[EXEGOL MEASURE] '$@' took ${elapsed_time} seconds, Disk Usage change: ${space_change_human}${NOCOLOR}"
-  echo "$@,${elapsed_time}s,${space_change_human}" >> /.exegol/measure.csv
+  echo -e "${BLUE}[EXEGOL MEASURE] '$*' took ${elapsed_time} seconds, Disk Usage change: ${space_change_human}${NOCOLOR}"
+  echo "$*,${elapsed_time}s,${space_change_human}" >> /.exegol/measure.csv
 }
 
 function define_measure_function() {
