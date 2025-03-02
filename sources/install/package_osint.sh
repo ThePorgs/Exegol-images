@@ -527,7 +527,6 @@ function install_pymeta() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
-    apt-get update
     set_env
     local start_time
     local end_time

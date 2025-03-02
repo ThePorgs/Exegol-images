@@ -20,7 +20,6 @@ function install_iot_apt_tools() {
 
 # Package dedicated to IoT tools
 function package_iot() {
-    apt-get update
     set_env
     local start_time
     local end_time

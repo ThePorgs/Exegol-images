@@ -116,7 +116,6 @@ function install_mobsf() {
 
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
-    apt-get update
     set_env
     local start_time
     local end_time
