@@ -18,7 +18,7 @@ import subprocess
 from concurrent.futures import TimeoutError as FuturesTimeoutError
 
 # File paths for command input and logging
-COMMANDS_FILE = "/.exegol/build_pipeline_tests/all_commands.sorted.txt"
+COMMANDS_FILE = "/.exegol/build_pipeline_tests/all_commands.txt"
 FAIL_LOG_FILE = "/.exegol/build_pipeline_tests/failed_commands.log"
 TIMEOUT_LOG_FILE = "/.exegol/build_pipeline_tests/timedout_commands.log"
 SUCCESS_LOG_FILE = "/.exegol/build_pipeline_tests/success_commands.log"
@@ -90,7 +90,7 @@ class CommandRunner:
 def read_commands(file: str) -> list[str]:
     # Reading commands from the specified file
     with open(file, 'r') as f:
-        return [cmd.strip() for cmd in f.readlines()]
+        return sorted([cmd.strip() for cmd in f.readlines()])
 
 
 async def main():
