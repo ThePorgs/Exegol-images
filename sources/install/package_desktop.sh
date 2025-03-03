@@ -112,7 +112,6 @@ function install_xfce() {
 }
 
 function package_desktop() {
-    apt-get update
     set_env
     local start_time
     local end_time
