@@ -300,7 +300,6 @@ function install_ssh-audit() {
 
 # Package dedicated to network pentest tools
 function package_network() {
-    apt-get update
     set_env
     local start_time
     local end_time
