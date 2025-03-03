@@ -49,6 +49,10 @@ function add-test-command() {
 
 function fapt() {
     colorecho "Installing apt package(s): $*"
+    # Do apt-get update only when no list are found
+    if [ -z "$( ls -A '/var/lib/apt/lists/' )" ]; then
+      apt-get update
+    fi
     apt-fast install -y --no-install-recommends "$@"
 }
 

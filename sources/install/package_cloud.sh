@@ -118,7 +118,6 @@ function install_azure_cli() {
 
 # Package dedicated to cloud tools
 function package_cloud() {
-    apt-get update
     set_env
     local start_time
     local end_time
