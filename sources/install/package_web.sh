@@ -368,9 +368,8 @@ function install_testssl() {
 function install_tls-scanner() {
     colorecho "Installing TLS-Scanner"
     fapt maven
-    git -C /opt/tools/ clone --depth 1 https://github.com/tls-attacker/TLS-Scanner
+    git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/tls-attacker/TLS-Scanner
     cd /opt/tools/TLS-Scanner || exit
-    git submodule update --init --recursive
     mvn clean package -DskipTests=true
     add-aliases tls-scanner
     add-history tls-scanner
@@ -808,7 +807,7 @@ function install_php_filter_chain_generator() {
 
 function install_kraken() {
     colorecho "Installing Kraken"
-    git -C /opt/tools clone --depth 1 --recurse-submodules https://github.com/kraken-ng/Kraken.git
+    git -C /opt/tools clone --depth 1 --recursive --shallow-submodules https://github.com/kraken-ng/Kraken.git
     cd /opt/tools/Kraken || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
