@@ -419,7 +419,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH p=shortestPath((u2:User {enabled: TRUE})-[:MemberOf|AdminTo*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH p=shortestPath((u2:User {enabled: TRUE})-[:MemberOf|AdminTo*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' AND NOT u2=c RETURN p"
             }]
         },
         {
@@ -427,7 +427,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH shortestPath((u2:User {enabled: TRUE})-[:MemberOf|ReadLAPSPassword*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' RETURN u2"
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH shortestPath((u2:User {enabled: TRUE})-[:MemberOf|ReadLAPSPassword*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' AND NOT u2=c RETURN u2"
             }]
         },
         {
@@ -467,7 +467,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT(u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, admincount: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group) WHERE (NOT u2.objectid IN protectedUsers OR u2.objectid =~ '.*-500$') AND g2.objectid =~ '.*-(512|517|518|519|544|548|549|550|551|574|583)$' RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT(u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group) WHERE (NOT u2.objectid IN protectedUsers OR u2.objectid =~ '.*-500$') AND g2.objectid =~ '.*-(512|516|517|518|519|521|526|544|548|549|550|551|583)$' RETURN p"
             }]
         },
         {
