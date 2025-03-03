@@ -89,7 +89,6 @@ function install_proxmark3() {
 
 # Package dedicated to RFID/NCF pentest tools
 function package_rfid() {
-    apt-get update
     set_env
     local start_time
     local end_time

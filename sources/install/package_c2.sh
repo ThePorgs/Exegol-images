@@ -177,7 +177,6 @@ function install_villain() {
 
 # Package dedicated to command & control frameworks
 function package_c2() {
-    apt-get update
     set_env
     local start_time
     local end_time

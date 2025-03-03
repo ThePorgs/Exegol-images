@@ -50,7 +50,6 @@ function install_jackit() {
 
 # Package dedicated to SDR
 function package_sdr() {
-    apt-get update
     set_env
     local start_time
     local end_time

@@ -1434,7 +1434,6 @@ function install_adminer() {
 
 # Package dedicated to internal Active Directory tools
 function package_ad() {
-    apt-get update
     set_env
     local start_time
     local end_time
