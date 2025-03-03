@@ -47,6 +47,7 @@ RUN ./entrypoint.sh package_steganography
 RUN ./entrypoint.sh package_reverse
 RUN ./entrypoint.sh package_crypto
 RUN ./entrypoint.sh package_code_analysis
+RUN ./entrypoint.sh post_build
 
 WORKDIR /workspace
 
