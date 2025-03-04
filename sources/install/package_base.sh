@@ -9,23 +9,22 @@ function update() {
     apt-get -y update && apt-get -y install apt-utils dialog && apt-get -y upgrade && apt-get -y autoremove && apt-get clean
 }
 
-function install_dbassets() {
-    colorecho "Installing dbassets"
+function install_exegol-history() {
+    colorecho "Installing Exegol-history"
     pipx install --system-site-packages git+https://github.com/ThePorgs/Exegol-history
-    add-aliases dbassets
-    add-history dbassets
-    add-test-command "dbassets -h"
-    add-to-list "dbassets,https://github.com/ThePorgs/Exegol-history,Compromised credentials management"
+    add-aliases exegol-history
+    add-history exegol-history
+    add-test-command "exh -h"
+    add-to-list "exegol-history,https://github.com/ThePorgs/Exegol-history,Credentials management for Exegol"
 }
 
-function install_exegol-history() {
+function install_exegol-history-legacy() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history,add-test-command
-    colorecho "Installing Exegol-history"
-    #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
-    # todo : below is something basic. A nice tool being created for faster and smoother workflow
+    colorecho "Installing Exegol-history (legacy)"
     mkdir -p /opt/tools/Exegol-history
     rm -rf /opt/tools/Exegol-history/profile.sh
     {
+      echo "# IMPORPTANT : soon, this file will be removed. You can now manage credentials with the new exegol-history, with the exh (short) / exegol-history (long) command"
       echo "#export INTERFACE='eth0'"
       echo "#export DOMAIN='DOMAIN.LOCAL'"
       echo "#export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'"
@@ -437,7 +436,7 @@ function package_base() {
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh
     deploy_exegol
-    install_exegol-history
+    install_exegol-history-legacy
     fapt software-properties-common
     add_debian_repository_components
     cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
@@ -557,7 +556,7 @@ function package_base() {
     # Global python dependencies
     pip3 install -r /root/sources/assets/python/requirements.txt
 
-    install_dbassets
+    install_exegol-history
 
     post_install
     end_time=$(date +%s)
