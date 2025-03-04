@@ -966,10 +966,10 @@ function install_pylaps() {
     add-to-list "pylaps,https://github.com/p0dalirius/pylaps,Utility for enumerating and querying LDAP servers."
 }
 
-function install_finduncommonshares() {
-    colorecho "Installing FindUncommonShares"
-    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/FindUncommonShares
-    cd /opt/tools/FindUncommonShares/ || exit
+function install_pyfinduncommonshares() {
+    colorecho "Installing pyFindUncommonShares"
+    git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyFindUncommonShares
+    cd /opt/tools/pyFindUncommonShares/ || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
@@ -977,7 +977,7 @@ function install_finduncommonshares() {
     add-aliases finduncommonshares
     add-history finduncommonshares
     add-test-command "FindUncommonShares.py --help"
-    add-to-list "finduncommonshares,https://github.com/p0dalirius/FindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
+    add-to-list "pyFindUncommonShares,https://github.com/p0dalirius/pyFindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
 }
 
 function install_ldaprelayscan() {
@@ -1499,7 +1499,7 @@ function package_ad() {
     install_shadowcoerce
     install_gmsadumper
     install_pylaps
-    install_finduncommonshares
+    install_pyfinduncommonshares
     install_ldaprelayscan
     install_goldencopy
     install_crackhound
