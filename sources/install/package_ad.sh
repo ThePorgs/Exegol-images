@@ -966,8 +966,8 @@ function install_pylaps() {
     add-to-list "pylaps,https://github.com/p0dalirius/pylaps,Utility for enumerating and querying LDAP servers."
 }
 
-function install_finduncommonshares() {
-    colorecho "Installing FindUncommonShares"
+function install_pyfinduncommonshares() {
+    colorecho "Installing pyFindUncommonShares"
     git -C /opt/tools/ clone --depth 1 https://github.com/p0dalirius/pyFindUncommonShares
     cd /opt/tools/pyFindUncommonShares/ || exit
     python3 -m venv --system-site-packages ./venv
