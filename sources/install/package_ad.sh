@@ -977,7 +977,7 @@ function install_pyfinduncommonshares() {
     add-aliases finduncommonshares
     add-history finduncommonshares
     add-test-command "FindUncommonShares.py --help"
-    add-to-list "pyfinduncommonshares,https://github.com/p0dalirius/pyFindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
+    add-to-list "pyFindUncommonShares,https://github.com/p0dalirius/pyFindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
 }
 
 function install_ldaprelayscan() {
