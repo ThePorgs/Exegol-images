@@ -26,7 +26,6 @@ WORKDIR /root/sources/install
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
-RUN apt-get update
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_c2
 RUN ./entrypoint.sh package_wordlists
@@ -47,6 +46,7 @@ RUN ./entrypoint.sh package_steganography
 RUN ./entrypoint.sh package_reverse
 RUN ./entrypoint.sh package_crypto
 RUN ./entrypoint.sh package_code_analysis
+RUN ./entrypoint.sh post_build
 
 WORKDIR /workspace
 

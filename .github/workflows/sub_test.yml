@@ -30,7 +30,6 @@ jobs:
       - name: Run the tests
         if: success()
         run: |
-          docker exec exegol-${{ inputs.IMAGE_NAME }} zsh -c 'cat /.exegol/build_pipeline_tests/all_commands.txt | grep -vE "^\s*$" | sort -u > /.exegol/build_pipeline_tests/all_commands.sorted.txt'
           docker exec exegol-${{ inputs.IMAGE_NAME }} python3 /.exegol/build_pipeline_tests/run_tests.py
       - name: Print the failed tests if any
         if: failure()

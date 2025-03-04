@@ -118,7 +118,6 @@ function install_hcxdumptool() {
 
 # Package dedicated to wifi pentest tools
 function package_wifi() {
-    apt-get update
     set_env
     local start_time
     local end_time

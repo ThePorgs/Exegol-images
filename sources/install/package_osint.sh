@@ -58,7 +58,7 @@ function install_assetfinder() {
     go install -v github.com/tomnomnom/assetfinder@latest
     asdf reshim golang
     add-history assetfinder
-    add-test-command "assetfinder thehacker.recipes"
+    add-test-command "assetfinder --help"
     add-to-list "assetfinder,https://github.com/tomnomnom/assetfinder,Tool to find subdomains and IP addresses associated with a domain."
 }
 
@@ -527,7 +527,6 @@ function install_pymeta() {
 
 # Package dedicated to osint, recon and passive tools
 function package_osint() {
-    apt-get update
     set_env
     local start_time
     local end_time
