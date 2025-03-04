@@ -977,7 +977,7 @@ function install_pyfinduncommonshares() {
     add-aliases finduncommonshares
     add-history finduncommonshares
     add-test-command "FindUncommonShares.py --help"
-    add-to-list "finduncommonshares,https://github.com/p0dalirius/pyFindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
+    add-to-list "pyfinduncommonshares,https://github.com/p0dalirius/pyFindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
 }
 
 function install_ldaprelayscan() {
@@ -1499,7 +1499,7 @@ function package_ad() {
     install_shadowcoerce
     install_gmsadumper
     install_pylaps
-    install_finduncommonshares
+    install_pyfinduncommonshares
     install_ldaprelayscan
     install_goldencopy
     install_crackhound
