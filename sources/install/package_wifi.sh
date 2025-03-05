@@ -95,8 +95,8 @@ function install_hcxtools() {
     fapt libpcap-dev libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools
     cd /opt/tools/hcxtools || exit
-    make -j install PREFIX=/opt/tools
-    ln -s /opt/tools/bin/hcxpcapngtool /opt/tools/bin/hcxpcaptool
+    make -j
+    make install clean
     add-history hcxtools
     add-test-command "hcxpcapngtool --version"
     add-test-command "hcxhashtool --version"
