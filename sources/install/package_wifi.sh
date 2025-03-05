@@ -96,7 +96,7 @@ function install_hcxtools() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools
     cd /opt/tools/hcxtools || exit
     make -j
-    make install clean
+    make install PREFIX=/opt/tools clean
     add-history hcxtools
     add-test-command "hcxpcapngtool --version"
     add-test-command "hcxhashtool --version"
