@@ -244,7 +244,7 @@ function install_kadimus() {
     fapt libcurl4-openssl-dev libpcre3-dev libssh-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/P0cL4bs/Kadimus
     cd /opt/tools/Kadimus || exit
-    make
+    make -j
     add-aliases kadimus
     add-history kadimus
     add-test-command "kadimus --help"

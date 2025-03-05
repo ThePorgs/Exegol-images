@@ -395,7 +395,7 @@ function install_amber() {
     mkdir build && cd build || exit
     ../make-lib.sh
     cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;X86" -G "Unix Makefiles" ..
-    make -j8
+    make -j
     make install && ldconfig
     # Installing amber
     go install -v github.com/EgeBalci/amber@latest

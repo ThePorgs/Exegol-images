@@ -33,8 +33,8 @@ function install_mfoc() {
     cd /opt/tools/mfoc || exit
     autoreconf -vis
     ./configure
-    make
-    make install
+    make -j
+    make install clean
     add-history mfoc
     add-test-command "mfoc -h"
     add-to-list "mfoc,https://github.com/nfc-tools/mfoc,Implementation of 'offline nested' attack by Nethemba"
@@ -49,7 +49,7 @@ function install_libnfc-crypto1-crack() {
     xz -d craptev1-v1.1.tar.xz crapto1-v3.3.tar.xz
     tar xvf craptev1-v1.1.tar
     tar xvf crapto1-v3.3.tar --one-top-level
-    make CFLAGS=-"-std=gnu99 -O3 -march=native -Wl,--allow-multiple-definition"
+    make -j CFLAGS=-"-std=gnu99 -O3 -march=native -Wl,--allow-multiple-definition"
     cp libnfc_crypto1_crack /opt/tools/bin
     add-aliases libnfc-crypto1-crack
     add-history libnfc-crypto1-crack
@@ -79,8 +79,8 @@ function install_proxmark3() {
     git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
     cd /opt/tools/proxmark3 || exit
     make clean
-    make all PLATFORM=PM3OTHER
-    make install PLATFORM=PM3OTHER
+    make -j all PLATFORM=PM3OTHER
+    make install PLATFORM=PM3OTHER clean
     add-aliases proxmark3
     add-history proxmark3
     add-test-command "proxmark3 --version"

@@ -144,8 +144,8 @@ function install_tig() {
     colorecho "Installing tig"
     git -C /opt/tools clone --depth 1 https://github.com/jonas/tig.git
     cd /opt/tools/tig || exit
-    make
-    make install
+    make -j
+    make install clean
     mv /root/bin/tig /opt/tools/bin/tig
     # Need add-history ?
     add-test-command "tig --help"

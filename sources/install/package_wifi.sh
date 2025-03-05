@@ -92,10 +92,10 @@ function install_bettercap() {
 function install_hcxtools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxtools"
-    fapt libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
+    fapt libpcap-dev libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxtools
     cd /opt/tools/hcxtools || exit
-    make install PREFIX=/opt/tools
+    make -j install PREFIX=/opt/tools
     ln -s /opt/tools/bin/hcxpcapngtool /opt/tools/bin/hcxpcaptool
     add-history hcxtools
     add-test-command "hcxpcapngtool --version"
@@ -106,11 +106,11 @@ function install_hcxtools() {
 function install_hcxdumptool() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxdumptool"
-    fapt libcurl4-openssl-dev
+    fapt libpcap-dev libcurl4-openssl-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/ZerBea/hcxdumptool
     cd /opt/tools/hcxdumptool || exit
-    make
-    make install PREFIX=/opt/tools
+    make -j
+    make install PREFIX=/opt/tools clean
     add-history hcxdumptool
     add-test-command "hcxdumptool --version"
     add-to-list "hcxdumptool,https://github.com/ZerBea/hcxdumptool,Small tool to capture packets from wlan devices."

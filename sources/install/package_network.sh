@@ -63,8 +63,8 @@ function install_proxychains() {
     git -C /opt/tools/ clone --depth 1 https://github.com/rofl0r/proxychains-ng
     cd /opt/tools/proxychains-ng || exit
     ./configure --prefix=/usr --sysconfdir=/etc
-    make
-    make install
+    make -j
+    make install clean
     # Add proxyresolv to PATH (needed with 'proxy_dns_old' config)
     ln -s /opt/tools/proxychains-ng/src/proxyresolv /usr/bin/proxyresolv
     make install-config
