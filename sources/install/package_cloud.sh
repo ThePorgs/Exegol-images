@@ -40,7 +40,7 @@ function install_awscli() {
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    unzip awscliv2.zip
+    unzip -q awscliv2.zip # -q because too much useless verbose
     ./aws/install -i /opt/tools/aws-cli -b /usr/local/bin
     rm -rf aws
     rm awscliv2.zip
