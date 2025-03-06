@@ -7,6 +7,6 @@ on:
 
 jobs:
   test:
-    uses: theporgs/pipelines/.github/workflows/test.yml@main
+    uses: ThePorgs/Pipelines/.github/workflows/test.yml@main
     with:
       EXEGOL_TEST: exegol4thewin
