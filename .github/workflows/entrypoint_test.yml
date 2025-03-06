@@ -1,0 +1,12 @@
+name: Entrypoint Tests
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    uses: theporgs/pipelines/images/test.yml@main
+    with:
+      EXEGOL_TEST: exegol4thewin
