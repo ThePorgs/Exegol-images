@@ -7,6 +7,6 @@ on:
 
 jobs:
   test:
-    uses: theporgs/pipelines/images/test.yml@main
+    uses: theporgs/pipelines/images@main
     with:
       EXEGOL_TEST: exegol4thewin
