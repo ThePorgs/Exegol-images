@@ -87,6 +87,7 @@ function set_asdf_env(){
 
 function set_build_only_env(){
     colorecho "Setting build only environment"
+    export CURL_HOME="/root/sources/assets/shells/"
     export WGETRC="/root/sources/assets/shells/wgetrc"
 }
 
