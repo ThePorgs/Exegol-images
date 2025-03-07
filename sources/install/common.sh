@@ -86,8 +86,12 @@ function set_asdf_env(){
 }
 
 function set_build_only_env(){
+    # Here you can set environment variables that are only needed during the build process
     colorecho "Setting build only environment"
-    export CURL_HOME="/root/sources/assets/shells/"
+    
+    # Make curl fails on HTTP errors (4xx and 5xx) because it doesn't by default
+    export CURL_HOME="/root/sources/assets/shells/" # Curl will search for .curlrc in this directory
+    # Make wget a bit less verbose
     export WGETRC="/root/sources/assets/shells/wgetrc"
 }
 
