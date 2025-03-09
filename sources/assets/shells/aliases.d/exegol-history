@@ -1,1 +1,1 @@
-alias exh="exegol-history"
+alias exh=". exegol-history"
