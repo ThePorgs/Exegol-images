@@ -1,1 +1,2 @@
-alias exh=". exegol-history"
+alias exegol-history="source /opt/tools/Exegol-history/exegol-history.sh"
+alias exh="exegol-history"
