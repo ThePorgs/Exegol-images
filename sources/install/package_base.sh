@@ -17,7 +17,6 @@ function install_exegol-history() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
-    ln -s /opt/tools/Exegol-history/exegol-history.sh /opt/tools/bin/exegol-history
     add-aliases exegol-history
     add-history exegol-history
     add-test-command "exh -h"
