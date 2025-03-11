@@ -9,18 +9,41 @@ ZSH_THEME="gentoo"
 export FZF_BASE=/opt/tools/fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm asdf)
+plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm)
 
 # asdf
-source "$HOME/.asdf/asdf.sh"
+export PATH="$PATH:${ASDF_DATA_DIR:-$HOME/.asdf}/shims"
+
+# Golang asdf plugin
 source ~/.asdf/plugins/golang/set-env.zsh
 export GOPATH=$(go env GOPATH)
+
+# asdf completions
+# append completions to fpath
+fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
+# initialise completions with ZSH's compinit
+autoload -Uz compinit && compinit
 
 # oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
 TIME_="%{$fg[white]%}[%{$fg[red]%}%D{%b %d, %Y - %T (%Z)}%{$fg[white]%}]%{$reset_color%}"
-PROMPT="$LOGGING$TIME_%{$FX[bold]$FG[013]%} $EXEGOL_HOSTNAME %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_char)%{$reset_color%} "
+
+update_prompt() {
+  DB_PROMPT=""
+
+  if [[ ! -z "${USER}" ]]; then
+    DB_PROMPT="%{$fg[white]%}[%{$fg[yellow]%}${USER}%{$fg[white]%}]%{$reset_color%}"
+  fi
+
+  if [[ ! -z "${DOMAIN}" && ! -z "${USER}" ]]; then
+    DB_PROMPT="%{$fg[white]%}[%{$fg[yellow]%}${USER}@${DOMAIN}%{$fg[white]%}]%{$reset_color%}"
+  fi
+
+  PROMPT="$LOGGING$DB_PROMPT$TIME_%{$FX[bold]$FG[013]%} $EXEGOL_HOSTNAME %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_char)%{$reset_color%} "
+}
+
+add-zsh-hook precmd update_prompt
 
 # zsh history config
 export HISTFILESIZE=1000000000

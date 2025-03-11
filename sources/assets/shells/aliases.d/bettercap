@@ -1,1 +1,2 @@
+alias bettercap="/opt/tools/bettercap/.go/bin/bettercap"
 alias bettercap-ui='bettercap -caplet http-ui'

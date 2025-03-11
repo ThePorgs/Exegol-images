@@ -6,7 +6,7 @@ source common.sh
 function install_misc_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing misc apt tools"
-    fapt rlwrap imagemagick ascii rsync
+    fapt rlwrap imagemagick ascii rsync yq xq
 
     add-history rlwrap
     add-history imagemagick
@@ -92,15 +92,17 @@ function install_trilium() {
     # TODO : apt install in a second step
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
-    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild && npm run webpack"
+    cd /opt/tools/trilium || exit
+    zsh -c "source ~/.zshrc && nvm install 16 && nvm use 16 && npm install && npm rebuild && npm run webpack"
     mkdir -p /root/.local/share/trilium-data
     # config.ini contains the exposition port and host
     cp -v /root/sources/assets/trilium/config.ini /root/.local/share/trilium-data
     cp -v /root/sources/assets/trilium/trilium-manager.sh /opt/tools/trilium/trilium-manager.sh
     chmod +x /opt/tools/trilium/trilium-manager.sh
-    zsh /opt/tools/trilium/trilium-manager.sh start
-    zsh /opt/tools/trilium/trilium-manager.sh configure
-    zsh /opt/tools/trilium/trilium-manager.sh stop
+    /opt/tools/trilium/trilium-manager.sh start
+    /opt/tools/trilium/trilium-manager.sh configure
+    /opt/tools/trilium/trilium-manager.sh stop
+    zsh -c "source ~/.zshrc && nvm use default"
     add-aliases trilium
     add-history trilium
     add-test-command "trilium-test"
@@ -142,8 +144,8 @@ function install_tig() {
     colorecho "Installing tig"
     git -C /opt/tools clone --depth 1 https://github.com/jonas/tig.git
     cd /opt/tools/tig || exit
-    make
-    make install
+    make -j
+    make install clean
     mv /root/bin/tig /opt/tools/bin/tig
     # Need add-history ?
     add-test-command "tig --help"
@@ -167,7 +169,7 @@ function install_cyberchef() {
     if [[ -z "$last_release" ]]; then
         criticalecho-noexit "Latest release not found" && return
     fi
-    mkdir /opt/tools/CyberChef
+    mkdir -p /opt/tools/CyberChef
     wget "$last_release" -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
     rm /tmp/CyberChef.zip
@@ -231,6 +233,7 @@ function package_misc() {
     install_creds           # A default credentials vault
     install_uploader        # uploader for fast file upload
     install_wesng           # Search Windows vulnerability via systeminfo
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."

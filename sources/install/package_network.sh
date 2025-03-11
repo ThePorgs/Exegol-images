@@ -63,8 +63,8 @@ function install_proxychains() {
     git -C /opt/tools/ clone --depth 1 https://github.com/rofl0r/proxychains-ng
     cd /opt/tools/proxychains-ng || exit
     ./configure --prefix=/usr --sysconfdir=/etc
-    make
-    make install
+    make -j
+    make install clean
     # Add proxyresolv to PATH (needed with 'proxy_dns_old' config)
     ln -s /opt/tools/proxychains-ng/src/proxyresolv /usr/bin/proxyresolv
     make install-config
@@ -115,6 +115,16 @@ function install_nmap-parse-output() {
     # nmap-parse-output always exits with 1 if no argument is passed
     add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
     add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
+}
+
+function install_udpx(){
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Install udpx"
+    go install -v github.com/nullt3r/udpx/cmd/udpx@latest
+    asdf reshim golang
+    add-history udpx
+    add-test-command "udpx --help"
+    add-to-list "udpx,https://github.com/nullt3r/udpx, Fast and lightweight - UDPX is a single-packet UDP scanner written in Go that supports the discovery of over 45 services with the ability to add custom ones."
 }
 
 function install_autorecon() {
@@ -299,6 +309,7 @@ function package_network() {
     install_remmina                 # Remote desktop client
     install_nmap                    # Port scanner
     install_nmap-parse-output       # Parse nmap XML files
+    install_udpx
     install_autorecon               # External recon tool
     install_dnschef                 # Python DNS server
     install_divideandscan           # Python project to automate port scanning routine
@@ -314,6 +325,7 @@ function package_network() {
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package network completed in $elapsed_time seconds."

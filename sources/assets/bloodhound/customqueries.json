@@ -103,7 +103,7 @@
             "category": "Owned Objects",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=shortestPath((n {owned: TRUE})-[:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|CanRDP|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin|ReadGMSAPassword|HasSIDHistory|CanPSRemote*1..5]->(m {highvalue: TRUE})) WHERE NOT n=m RETURN p",
+                "query": "MATCH p=shortestPath((n {owned: TRUE})-[:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|CanRDP|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin|ReadGMSAPassword|HasSIDHistory|CanPSRemote*1..5]->(m {highvalue: TRUE})) WHERE n<>m RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -112,7 +112,7 @@
             "category": "Owned Objects",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=allShortestPaths((n {owned: TRUE})-[:MemberOf|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin|ReadGMSAPassword|HasSIDHistory*1..5]->(m {highvalue:true})) WHERE NOT n=m RETURN p",
+                "query": "MATCH p=allShortestPaths((n {owned: TRUE})-[:MemberOf|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin|ReadGMSAPassword|HasSIDHistory*1..5]->(m {highvalue:true})) WHERE n<>m RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -121,7 +121,7 @@
             "category": "Owned Objects",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=shortestPath((c {owned: TRUE})-[*1..5]->(s)) WHERE NOT c = s RETURN p"
+                "query": "MATCH p=shortestPath((c {owned: TRUE})-[*1..5]->(s)) WHERE c<>s RETURN p"
             }]
         },
         {
@@ -129,7 +129,7 @@
             "category": "Owned Objects",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=shortestPath((c {owned: TRUE})-[*1..3]->(s)) WHERE NOT c = s RETURN p"
+                "query": "MATCH p=shortestPath((c {owned: TRUE})-[*1..3]->(s)) WHERE c<>s RETURN p"
             }]
         },
         {
@@ -198,7 +198,7 @@
             "category": "Roasting",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p = shortestPath( (u:User {enabled: TRUE, hasspn: TRUE})-[*1..]->(g:Group) ) WHERE g.objectid ENDS WITH '-512' RETURN p"
+                "query": "MATCH p = shortestPath( (u:User {enabled: TRUE, hasspn: TRUE})-[*1..]->(g:Group) ) WHERE g.objectid ENDS WITH '-512' AND u<>g RETURN p"
             }]
         },
         {
@@ -206,7 +206,7 @@
             "category": "Roasting",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p = shortestPath( (u:User {enabled: TRUE, hasspn: TRUE})-[*1..]->(n {highvalue: TRUE}) ) RETURN p"
+                "query": "MATCH p = shortestPath( (u:User {enabled: TRUE, hasspn: TRUE})-[*1..]->(n {highvalue: TRUE}) ) WHERE u<>n RETURN p"
             }]
         },
         {
@@ -214,7 +214,7 @@
             "category": "Roasting",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p = shortestPath((u:User {enabled: TRUE, hasspn:TRUE})-[:AdminTo]->(c:Computer {enabled: TRUE})) RETURN p"
+                "query": "MATCH p = shortestPath((u:User {enabled: TRUE, hasspn:TRUE})-[:AdminTo]->(c:Computer {enabled: TRUE})) WHERE u<>c RETURN p"
             }]
         },
         {
@@ -222,7 +222,7 @@
             "category": "Roasting",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p = shortestPath((u:User {enabled: TRUE, hasspn: TRUE})-[:MemberOf*1..]->(g:Group {highvalue: TRUE})) RETURN p"
+                "query": "MATCH p = shortestPath((u:User {enabled: TRUE, hasspn: TRUE})-[:MemberOf*1..]->(g:Group {highvalue: TRUE})) WHERE u<>g RETURN p"
             }]
         },
         {
@@ -286,7 +286,7 @@
             "category": "Kerberos Delegations",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=shortestPath((o {owned: TRUE})-[:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin|ReadGMSAPassword|HasSIDHistory|CanPSRemote*1..]->(m:Computer {unconstraineddelegation: TRUE})) WHERE NOT o=m RETURN p"
+                "query": "MATCH p=shortestPath((o {owned: TRUE})-[:MemberOf|HasSession|AdminTo|AllExtendedRights|AddMember|ForceChangePassword|GenericAll|GenericWrite|Owns|WriteDacl|WriteOwner|ExecuteDCOM|AllowedToDelegate|ReadLAPSPassword|Contains|GpLink|AddAllowedToAct|AllowedToAct|SQLAdmin|ReadGMSAPassword|HasSIDHistory|CanPSRemote*1..]->(m:Computer {unconstraineddelegation: TRUE})) WHERE o<>m RETURN p"
             }]
         },
         {
@@ -410,7 +410,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH shortestPath((u:User {enabled: TRUE})-[:AdminTo|MemberOf*1..]->(c:Computer {enabled: TRUE})) MATCH p=(c)-[:HasSession]->(u) RETURN p",
+                "query": "MATCH shortestPath((u:User {enabled: TRUE})-[:AdminTo|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE u<>c MATCH p=(c)-[:HasSession]->(u) RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -419,7 +419,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH p=shortestPath((u2:User {enabled: TRUE})-[:MemberOf|AdminTo*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH p=shortestPath((u2:User {enabled: TRUE})-[:MemberOf|AdminTo*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' AND u2<>c RETURN p"
             }]
         },
         {
@@ -427,7 +427,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH shortestPath((u2:User {enabled: TRUE})-[:MemberOf|ReadLAPSPassword*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' RETURN u2"
+                "query": "MATCH (u:User {enabled: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' WITH COLLECT(u.objectid) AS domainAdmins MATCH shortestPath((u2:User {enabled: TRUE})-[:MemberOf|ReadLAPSPassword*1..]->(c:Computer {enabled: TRUE})) WHERE NOT u2.objectid IN domainAdmins AND NOT u2.name STARTS WITH 'ANONYMOUS LOGON' AND NOT u2.name='' AND u2<>c RETURN u2"
             }]
         },
         {
@@ -459,15 +459,15 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled:TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '(?i)S-1-5-.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled:TRUE, admincount:TRUE, sensitive:FALSE})-[:MemberOf*1..3]->(g2:Group) WHERE NOT u2.objectid IN protectedUsers RETURN p"
+                "query": "MATCH (u:User {enabled:TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '(?i)S-1-5-.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled:TRUE, admincount:TRUE, sensitive:FALSE})-[:MemberOf*1..3]->(g2:Group) WHERE (NOT u2.objectid IN protectedUsers OR u2.objectid =~ '.*-500$') RETURN p"
             }]
         },
         {
-            "name": "Enabled Domain/Enterprise Administrators, not sensitive for delegation and not members of Protected Users",
+            "name": "Enabled Domain/Enterprise Administrators, Account/Backup/Print/Server Operators,... not sensitive for delegation and not members of Protected Users",
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT(u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, admincount: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group) WHERE NOT u2.objectid IN protectedUsers AND g2.objectid =~ '.*-(512|519|(?i)S-1-5-32-544)$' RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT(u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group) WHERE (NOT u2.objectid IN protectedUsers OR u2.objectid =~ '.*-500$') AND g2.objectid =~ '.*-(512|516|517|518|519|521|526|544|548|549|550|551|583)$' RETURN p"
             }]
         },
         {
@@ -475,7 +475,7 @@
             "category": "Admins",
             "queryList": [{
                 "final": true,
-                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group {highvalue: TRUE}) WHERE NOT u2.objectid IN protectedUsers RETURN p"
+                "query": "MATCH (u:User {enabled: TRUE, admincount: TRUE})-[:MemberOf*1..]->(g:Group) WHERE g.objectid =~ '.*-525$' WITH COLLECT (u.objectid) AS protectedUsers MATCH p=(u2:User {enabled: TRUE, sensitive: FALSE})-[:MemberOf*1..]->(g2:Group {highvalue: TRUE}) WHERE (NOT u2.objectid IN protectedUsers OR u2.objectid =~ '.*-500$') RETURN p"
             }]
         },
         {
@@ -750,7 +750,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' RETURN p"
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' AND g<>c RETURN p"
             }]
         },
         {
@@ -758,7 +758,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid ENDS WITH '-513' AND c.operatingsystem =~ '(?i).*Server.*' AND g<>c RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -767,7 +767,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' RETURN p",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' AND g<>c RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -776,7 +776,7 @@
             "category": "RDP",
             "queryList": [{
                 "final": true,
-                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' AND c.operatingsystem =~ '(?i).*Server.*' RETURN p",
+                "query": "MATCH p=shortestPath((g:Group)-[:CanRDP|MemberOf*1..]->(c:Computer {enabled: TRUE})) WHERE g.objectid =~ '(?i).*S-1-5-11$' AND c.operatingsystem =~ '(?i).*Server.*' AND g<>c RETURN p",
                 "allowCollapse": true
             }]
         },
@@ -1132,7 +1132,7 @@
 			"queryList": [
 				{
 					"final": true,
-					"query": "MATCH p=shortestPath((u:User {enabled: TRUE, plaintext: TRUE})-[*1..]->(o {highvalue: TRUE})) WHERE u.plaintextpassword =~ '(?i).*(?:password).*' RETURN p LIMIT 25",
+					"query": "MATCH p=shortestPath((u:User {enabled: TRUE, plaintext: TRUE})-[*1..]->(o {highvalue: TRUE})) WHERE u.plaintextpassword =~ '(?i).*(?:password).*' AND u<>o RETURN p LIMIT 25",
 					"allowCollapse": true
 				}
 			]

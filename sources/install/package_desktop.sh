@@ -17,7 +17,7 @@ function install_xfce() {
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
 
     # temp fix to use latest websockify (min 0.12.0 to fix fedora daemon issue) waiting for apt stable repo to be up-to-date
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2025-04-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
@@ -47,8 +47,8 @@ function install_xfce() {
     git -C /tmp clone --branch xfce4-docklike-plugin-0.4.2 --depth 1 https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git
     cd /tmp/xfce4-docklike-plugin
     sh autogen.sh --prefix=/tmp/
-    make
-    make install
+    make -j
+    make install clean
     CUSTOM_PATH=$(find /usr/lib/ -name "xfce*"|head -n1)
     mv -v /tmp/lib/xfce4/panel/plugins/libdocklike.* "$CUSTOM_PATH/panel/plugins"
     mv -v /tmp/share/xfce4/panel/plugins/docklike.desktop /usr/share/xfce4/panel/plugins
@@ -112,5 +112,13 @@ function install_xfce() {
 }
 
 function package_desktop() {
+    set_env
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     install_xfce
+    post_install
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package desktop completed in $elapsed_time seconds."
 }

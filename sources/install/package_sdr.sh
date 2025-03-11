@@ -24,12 +24,9 @@ function install_sdr_apt_tools() {
 function install_mousejack() {
     colorecho "Installing mousejack"
     fapt sdcc binutils
-    git -C /opt/tools/ clone --depth 1 https://github.com/BastilleResearch/mousejack
-    cd /opt/tools/mousejack || exit
-    git submodule init
-    git submodule update
-    cd nrf-research-firmware || exit
-    make
+    git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/BastilleResearch/mousejack
+    cd /opt/tools/mousejack/nrf-research-firmware || exit
+    make -j
     pip2 install libusb pyusb
     add-aliases mousejack
     add-history mousejack
@@ -57,6 +54,7 @@ function package_sdr() {
     install_sdr_apt_tools
     install_mousejack               # tools for mousejacking
     install_jackit                  # tools for mousejacking
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package sdr completed in $elapsed_time seconds."

@@ -40,7 +40,7 @@ function install_awscli() {
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    unzip awscliv2.zip
+    unzip -q awscliv2.zip # -q because too much useless verbose
     ./aws/install -i /opt/tools/aws-cli -b /usr/local/bin
     rm -rf aws
     rm awscliv2.zip
@@ -130,6 +130,7 @@ function package_cloud() {
     install_prowler
     install_cloudmapper
     install_azure_cli       # Command line for Azure
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package cloud completed in $elapsed_time seconds."

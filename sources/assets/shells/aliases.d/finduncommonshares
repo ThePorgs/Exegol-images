@@ -1,1 +1,1 @@
-alias FindUncommonShares.py='/opt/tools/FindUncommonShares/venv/bin/python3 /opt/tools/FindUncommonShares/FindUncommonShares.py'
+alias FindUncommonShares.py='/opt/tools/pyFindUncommonShares/venv/bin/python3 /opt/tools/pyFindUncommonShares/FindUncommonShares.py'

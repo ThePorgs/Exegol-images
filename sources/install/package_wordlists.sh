@@ -69,19 +69,7 @@ function install_pass_station() {
 
 function install_username-anarchy() {
     colorecho "Installing Username-Anarchy"
-    #git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
-    git -C /opt/tools/ clone https://github.com/urbanadventurer/username-anarchy
-    cd /opt/tools/username-anarchy || exit
-    # https://github.com/urbanadventurer/username-anarchy/pull/3
-    local temp_fix_limit="2025-04-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      git config --local user.email "local"
-      git config --local user.name "local"
-      local prs=("3")
-      for pr in "${prs[@]}"; do git fetch origin "pull/$pr/head:pull/$pr" && git merge --strategy-option theirs --no-edit "pull/$pr"; done
-    fi
+    git -C /opt/tools/ clone --depth 1 https://github.com/urbanadventurer/username-anarchy
     add-aliases username-anarchy
     add-history username-anarchy
     add-test-command "username-anarchy --help"
@@ -186,6 +174,7 @@ function package_wordlists() {
     install_genusernames
     install_onelistforall
     install_rules
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package wordlists completed in $elapsed_time seconds."
