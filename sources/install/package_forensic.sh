@@ -7,11 +7,11 @@ function install_forensic_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing forensic apt tools"
     fapt pst-utils foremost testdisk fdisk sleuthkit
-    
+
     add-history foremost
     add-history testdisk
     add-history fdisk
-    
+
     add-test-command "pst2ldif -V"      # Reads a PST and prints the tree structure to the console
     add-test-command "foremost -V"      # Alternative to binwalk
     add-test-command "testdisk --help"  # Recover lost partitions
@@ -89,7 +89,7 @@ function install_peepdf() {
     add-history peepdf
     add-test-command "peepdf.py --help"
     add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
-} 
+}
 
 function install_jadx() {
     # CODE-CHECK-WHITELIST=add-aliases

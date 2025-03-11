@@ -43,16 +43,16 @@ function install_cewler() {
 function install_seclists() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing seclists"
-    git -C /opt clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
-    cd /opt/seclists || exit
+    git -C /opt/lists clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
+    cd /opt/lists/seclists|| exit
     rm -r LICENSE .git* CONTRIBUT* .bin
-    mkdir -p /usr/share/wordlists
+    tar -xvf /opt/lists/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/lists/
+    # helping people to find wordlists in common places
     ln -v -s /opt/seclists /usr/share/seclists
     ln -v -s /opt/seclists /usr/share/wordlists/seclists
-    tar -xvf /opt/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/
     ln -v -s /opt/rockyou.txt /usr/share/wordlists/rockyou.txt
-    add-test-command "[[ -f '/usr/share/wordlists/rockyou.txt' ]]"
-    add-test-command "[[ -d '/opt/seclists/Discovery/' ]]"
+    add-test-command "[[ -f '/opt/lists/rockyou.txt' ]]"
+    add-test-command "[[ -d '/opt/lists/seclists/Discovery/' ]]"
     add-to-list "seclists,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
 }
 
@@ -94,6 +94,71 @@ function install_genusernames() {
     add-to-list "genusernames,https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."
 }
 
+
+
+function install_onelistforall() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing onelistforall"
+    wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallmicro.txt -P /opt/lists/
+    wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallshort.txt -P /opt/lists/
+    add-test-command "[[ -f '/opt/lists/onelistforallshort.txt' ]]"
+    add-to-list "onelistforall,https://github.com/six2dez/OneListForAll,Rockyou for web fuzzing"
+}
+
+
+function install_rules_from_repo() {
+    local owner="$1"
+    local repo_name="$2"
+    local branch="$3"
+    shift 3
+    local paths=($@)
+
+    # Validate required arguments
+    if [[ -z "$owner" || -z "$repo_name" || -z "$branch" || ${#paths[@]} -eq 0 ]]; then
+        criticalecho "Usage: install_rules_from_repo <owner> <repo_name> <branch> <path1> [<path2> ...]"
+    fi
+
+    # Display installation information
+    colorecho "Installing rules from $owner/$repo_name ($branch): ${paths[*]}"
+
+    for path in "${paths[@]}"; do
+        url="https://github.com/$owner/$repo_name/raw/refs/heads/$branch/$path"
+        list_name=$(basename "$path")
+        wget -q --show-progress "$url" -P /opt/rules/
+        add-test-command "[[ -f '/opt/rules/$list_name' ]]"
+    done
+}
+
+function install_rules(){
+    install_rules_from_repo "NSAKEY" "nsa-rules" "master" \
+        "_NSAKEY.v1.dive.rule" \
+        "_NSAKEY.v2.dive.rule"
+
+    install_rules_from_repo "praetorian-inc" "Hob0Rules" "master" \
+        "d3adhob0.rule" \
+        "hob064.rule"
+
+    install_rules_from_repo "rarecoil" "pantagrule" "master" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz"
+
+    install_rules_from_repo "rarecoil" "pantagrule" "master" \
+        "rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz" \
+        "rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz" \
+        "rules/private.hashorg.royce/pantagrule.one.royce.rule.gz" \
+        "rules/private.hashorg.royce/pantagrule.random.royce.rule.gz"
+
+    install_rules_from_repo "rarecoil" "pantagrule" "master" \
+        "rules/private.v5/pantagrule.private.v5.hybrid.rule.gz" \
+        "rules/private.v5/pantagrule.private.v5.one.gz" \
+        "rules/private.v5/pantagrule.private.v5.popular.rule.gz" \
+        "rules/private.v5/pantagrule.private.v5.random.rule.gz"
+}
+
+
 # Package dedicated to the installation of wordlists and tools like wl generators
 function package_wordlists() {
     set_env
@@ -107,6 +172,8 @@ function package_wordlists() {
     install_pass_station            # Default credentials database
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
+    install_onelistforall
+    install_rules
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
