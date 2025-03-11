@@ -33,11 +33,11 @@ update_prompt() {
   DB_PROMPT=""
 
   if [[ ! -z "${USER}" ]]; then
-    DB_PROMPT="%{$fg[white]%}[$fg[yellow]%}${USER}%{$fg[white]%}]%{$reset_color%}"
+    DB_PROMPT="%{$fg[white]%}[%{$fg[yellow]%}${USER}%{$fg[white]%}]%{$reset_color%}"
   fi
 
   if [[ ! -z "${DOMAIN}" && ! -z "${USER}" ]]; then
-    DB_PROMPT="%{$fg[white]%}[$fg[yellow]%}${USER}@${DOMAIN}%{$fg[white]%}]%{$reset_color%}"
+    DB_PROMPT="%{$fg[white]%}[%{$fg[yellow]%}${USER}@${DOMAIN}%{$fg[white]%}]%{$reset_color%}"
   fi
 
   PROMPT="$LOGGING$DB_PROMPT$TIME_%{$FX[bold]$FG[013]%} $EXEGOL_HOSTNAME %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_char)%{$reset_color%} "
