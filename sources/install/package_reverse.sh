@@ -95,7 +95,7 @@ function install_ghidra() {
     # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing Ghidra"
     wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
-    unzip /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools
+    unzip -q /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools # -q because too much useless verbose
     rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
     add-aliases ghidra
     add-history ghidra
