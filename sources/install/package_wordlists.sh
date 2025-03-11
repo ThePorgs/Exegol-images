@@ -107,7 +107,7 @@ function install_onelistforall() {
 
 
 function install_rules_from_repo() {
-    # CODE-CHECK-WHITELIST=add-test-command,add-to-list
+    # CODE-CHECK-WHITELIST=add-test-command,add-to-list,add-aliases,add-history
     local owner="$1"
     local repo_name="$2"
     local branch="$3"
