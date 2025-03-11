@@ -30,7 +30,7 @@ YELLOW = "\033[33m"
 RESET = "\033[0m"
 
 # Configuration constants
-COMMAND_TIMEOUT = 20
+COMMAND_TIMEOUT = 30
 CONCURRENT_TASKS = 5
 
 class CommandRunner:
