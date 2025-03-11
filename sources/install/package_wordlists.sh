@@ -107,11 +107,12 @@ function install_onelistforall() {
 
 
 function install_rules_from_repo() {
+    # CODE-CHECK-WHITELIST=add-test-command,add-to-list
     local owner="$1"
     local repo_name="$2"
     local branch="$3"
     shift 3
-    local paths=($@)
+    local paths=("$@")
 
     # Validate required arguments
     if [[ -z "$owner" || -z "$repo_name" || -z "$branch" || ${#paths[@]} -eq 0 ]]; then
@@ -130,32 +131,34 @@ function install_rules_from_repo() {
 }
 
 function install_rules(){
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command
+    colorecho "Installing rules"
+
     install_rules_from_repo "NSAKEY" "nsa-rules" "master" \
         "_NSAKEY.v1.dive.rule" \
         "_NSAKEY.v2.dive.rule"
+    add-to-list "NSAKEY rules,https://github.com/NSAKEY/nsa-rules,Password cracking rules and masks for hashcat"
 
     install_rules_from_repo "praetorian-inc" "Hob0Rules" "master" \
         "d3adhob0.rule" \
         "hob064.rule"
+    add-to-list "Hob0Rules rules,https://github.com/praetorian-inc/Hob0Rules,Password cracking rules for Hashcat based on statistics and industry patterns"
 
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz" \
-        "rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz"
-
-    install_rules_from_repo "rarecoil" "pantagrule" "master" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz" \
         "rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz" \
         "rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz" \
         "rules/private.hashorg.royce/pantagrule.one.royce.rule.gz" \
-        "rules/private.hashorg.royce/pantagrule.random.royce.rule.gz"
-
-    install_rules_from_repo "rarecoil" "pantagrule" "master" \
+        "rules/private.hashorg.royce/pantagrule.random.royce.rule.gz" \
         "rules/private.v5/pantagrule.private.v5.hybrid.rule.gz" \
         "rules/private.v5/pantagrule.private.v5.one.gz" \
         "rules/private.v5/pantagrule.private.v5.popular.rule.gz" \
         "rules/private.v5/pantagrule.private.v5.random.rule.gz"
+    add-to-list "Pantagrule rules,https://github.com/rarecoil/pantagrule,large hashcat rulesets generated from real-world compromised passwords"
 }
 
 
