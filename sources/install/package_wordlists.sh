@@ -125,41 +125,49 @@ function install_rules_from_repo() {
     shift 3
     local paths=($@)
 
+    # Validate required arguments
+    if [[ -z "$owner" || -z "$repo_name" || -z "$branch" || ${#paths[@]} -eq 0 ]]; then
+        criticalecho "Usage: install_rules_from_repo <owner> <repo_name> <branch> <path1> [<path2> ...]"
+    fi
+
+    # Display installation information
+    colorecho "Installing rules from $owner/$repo_name ($branch): ${paths[*]}"
+
     for path in "${paths[@]}"; do
-        url="https://github.com/$owner/$repo_name/raw/refs/heads/$branch$path"
+        url="https://github.com/$owner/$repo_name/raw/refs/heads/$branch/$path"
         list_name=$(basename "$path")
-        wget "$url" -P /opt/rules/
-        add-test-command "[[ -f '/opt/lists/$list_name' ]]"
+        wget -q --show-progress "$url" -P /opt/rules/
+        add-test-command "[[ -f '/opt/rules/$list_name' ]]"
     done
 }
 
 function install_rules(){
     install_rules_from_repo "NSAKEY" "nsa-rules" "master" \
-        "/_NSAKEY.v1.dive.rule" \
-        "/_NSAKEY.v2.dive.rule"
+        "_NSAKEY.v1.dive.rule" \
+        "_NSAKEY.v2.dive.rule"
 
     install_rules_from_repo "praetorian-inc" "Hob0Rules" "master" \
-        "/d3adhob0.rule" \
-        "/hob064.rule"
+        "d3adhob0.rule" \
+        "hob064.rule"
 
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
-        "/rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
-        "/rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz" \
-        "/rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz" \
-        "/rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz" \
-        "/rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz"
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.popular.rule.gz" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.random.rule.gz" \
+        "rules/hashesorg.v6/pantagrule.hashorg.v6.raw1m.rule.gz"
 
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
-        "/rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz" \
-        "/rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz" \
-        "/rules/private.hashorg.royce/pantagrule.one.royce.rule.gz" \
-        "/rules/private.hashorg.royce/pantagrule.random.royce.rule.gz"
+        "rules/private.hashorg.royce/pantagrule.popular.royce.rule.gz" \
+        "rules/private.hashorg.royce/pantagrule.hybrid.royce.rule.gz" \
+        "rules/private.hashorg.royce/pantagrule.one.royce.rule.gz" \
+        "rules/private.hashorg.royce/pantagrule.random.royce.rule.gz"
 
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
-        "/rules/private.v5/pantagrule.private.v5.hybrid.rule.gz" \
-        "/rules/private.v5/pantagrule.private.v5.one.gz" \
-        "/rules/private.v5/pantagrule.private.v5.popular.rule.gz" \
-        "/rules/private.v5/pantagrule.private.v5.random.rule.gz"
+        "rules/private.v5/pantagrule.private.v5.hybrid.rule.gz" \
+        "rules/private.v5/pantagrule.private.v5.one.gz" \
+        "rules/private.v5/pantagrule.private.v5.popular.rule.gz" \
+        "rules/private.v5/pantagrule.private.v5.random.rule.gz"
 }
 
 
@@ -177,7 +185,6 @@ function package_wordlists() {
     install_username-anarchy        # Generate possible usernames based on heuristics
     install_genusernames
     install_onelistforall
-    install_rules_from_repo()
     install_rules
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
