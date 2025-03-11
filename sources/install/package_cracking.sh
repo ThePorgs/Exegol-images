@@ -73,7 +73,7 @@ function install_pkcrack() {
     mkdir -v /opt/tools/pkcrack/build/
     cd /opt/tools/pkcrack/build || exit
     cmake ..
-    make
+    make -j
     ln -s /opt/tools/pkcrack/bin/pkcrack /opt/tools/bin
     ln -s /opt/tools/pkcrack/bin/zipdecrypt /opt/tools/bin
     add-history pkcrack

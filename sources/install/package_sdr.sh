@@ -26,7 +26,7 @@ function install_mousejack() {
     fapt sdcc binutils
     git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/BastilleResearch/mousejack
     cd /opt/tools/mousejack/nrf-research-firmware || exit
-    make
+    make -j
     pip2 install libusb pyusb
     add-aliases mousejack
     add-history mousejack
