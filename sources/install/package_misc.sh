@@ -88,7 +88,7 @@ function install_searchsploit() {
 }
 
 function install_triliumnext() {
-    colorecho "Installing Trilium (building from sources)"
+    colorecho "Installing TriliumNext"
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/triliumnext/notes.git triliumnext
     cd /opt/tools/triliumnext || exit
@@ -96,7 +96,7 @@ function install_triliumnext() {
     mkdir /opt/tools/triliumnext/data
     # config.ini contains the exposition port and host
     cp -v /root/sources/assets/triliumnext/config.ini /opt/tools/triliumnext/data/config.ini
-    cp -v /root/sources/assets/triliumnext/triliumnext-manager.sh /opt/tools/trilium/triliumnext-manager.sh
+    cp -v /root/sources/assets/triliumnext/triliumnext-manager.sh /opt/tools/triliumnext/triliumnext-manager.sh
     chmod +x /opt/tools/triliumnext/triliumnext-manager.sh
     /opt/tools/triliumnext/triliumnext-manager.sh start
     /opt/tools/triliumnext/triliumnext-manager.sh configure
