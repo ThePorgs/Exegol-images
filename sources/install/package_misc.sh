@@ -92,8 +92,7 @@ function install_trilium() {
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/triliumnext/notes.git triliumnext
     cd /opt/tools/triliumnext || exit
-    nvm use default
-    npm install
+    zsh -c "source ~/.zshrc && nvm use default && npm install"
     mkdir /opt/tools/triliumnext/data
     # config.ini contains the exposition port and host
     cp -v /root/sources/assets/triliumnext/config.ini /opt/tools/triliumnext/data/config.ini
