@@ -16,6 +16,7 @@ function start_app() {
   get_config_values
   nvm use default
   nohup npm --prefix /opt/tools/triliumnext run server:start &> /tmp/triliumnext.nohup.out &
+  # npx --prefix /opt/tools/triliumnext/ nodemon src/main.ts  # this command can be used instead of npm run server:start, especially if one needs to pass the TRILIUM_DATA_DIR env var
   NODE_PID=$!
   echo "Starting TriliumNext..."
   sleep 5

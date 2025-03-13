@@ -94,8 +94,6 @@ function install_trilium() {
     cd /opt/tools/triliumnext || exit
     nvm use default
     npm install
-    # npm install -g nodemon
-    # nodemond src/main.ts  # this command can be used instead of npm run server:start, especially if one needs to pass the TRILIUM_DATA_DIR env var
     mkdir /opt/tools/triliumnext/data
     # config.ini contains the exposition port and host
     cp -v /root/sources/assets/triliumnext/config.ini /opt/tools/triliumnext/data/config.ini
