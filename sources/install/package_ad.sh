@@ -666,6 +666,7 @@ function install_gpp-decrypt() {
 function install_ntlmv1-multi() {
     colorecho "Installing ntlmv1 multi tool"
     git -C /opt/tools clone --depth 1 https://github.com/evilmog/ntlmv1-multi
+    cd /opt/tools/ntlmv1-multi || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install pycryptodome

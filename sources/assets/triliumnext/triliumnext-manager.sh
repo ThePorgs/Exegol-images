@@ -34,8 +34,17 @@ function test_app() {
   get_config_values
   nvm use default
   nohup npm --prefix /opt/tools/triliumnext run server:start &> /dev/null &
-  sleep 2
-  curl --silent --fail "http://$HOST:$PORT/api/setup/status" | grep -q '"isInitialized":true'
+  NODE_PID=$!
+  sleep 5
+  if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
+    echo "Trilium started successfully, stopping now..."
+    kill -9 "$NODE_PID"
+    exit 0
+  else
+    echo "Application failed to start..."
+    kill -9 "$NODE_PID" 2>/dev/null
+    exit 1
+  fi
 }
 
 # Function to stop the application

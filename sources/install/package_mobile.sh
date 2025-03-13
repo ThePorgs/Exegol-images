@@ -107,6 +107,8 @@ function install_mobsf() {
       python3 -m venv --system-site-packages ./venv
       ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
       ./venv/bin/python3 -m pip install .
+      # https://github.com/MobSF/Mobile-Security-Framework-MobSF/issues/2503
+      # pip install xmlsec==1.3.14
       add-aliases mobsf # alias is only needed with venv and can be removed when switching back to pipx
     fi
     add-history mobsf
