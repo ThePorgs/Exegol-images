@@ -6,7 +6,7 @@ function get_config_values() {
   PORT=$(awk -F '=' '/^port=/ {print $2}' /opt/tools/triliumnext/data/config.ini)
 
   if [[ -z "$PORT" ]]; then
-    echo "Could not find port number in config.ini"
+    echo "Could not find port in config.ini"
     exit 1
   fi
 }
