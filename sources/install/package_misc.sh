@@ -87,7 +87,7 @@ function install_searchsploit() {
     sed -i 's/opt\/exploitdb/opt\/tools\/exploitdb/' ~/.searchsploit_rc
 }
 
-function install_trilium() {
+function install_triliumnext() {
     colorecho "Installing Trilium (building from sources)"
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/triliumnext/notes.git triliumnext
@@ -97,7 +97,7 @@ function install_trilium() {
     # config.ini contains the exposition port and host
     cp -v /root/sources/assets/triliumnext/config.ini /opt/tools/triliumnext/data/config.ini
     cp -v /root/sources/assets/triliumnext/triliumnext-manager.sh /opt/tools/trilium/triliumnext-manager.sh
-    chmod +x /opt/tools/trilium/triliumnext-manager.sh
+    chmod +x /opt/tools/triliumnext/triliumnext-manager.sh
     /opt/tools/triliumnext/triliumnext-manager.sh start
     /opt/tools/triliumnext/triliumnext-manager.sh configure
     /opt/tools/triliumnext/triliumnext-manager.sh stop
@@ -221,7 +221,7 @@ function package_misc() {
     install_shellerator     # Reverse shell generator
     install_uberfile        # file uploader/downloader commands generator
     install_arsenal         # Cheatsheets tool
-    install_trilium         # notes taking tool
+    install_triliumnext     # notes taking tool
     install_ngrok           # expose a local development server to the Internet
     install_whatportis      # Search default port number
     install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory
