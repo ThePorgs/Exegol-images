@@ -34,6 +34,7 @@ source /opt/tools/Exegol-history/profile.sh
 source $HOME/.cargo/env
 
 # In case pipx ensurepath didn't work, and positioning pipx in priority
+# uv bins and tools are also in this folder
 export PATH="/root/.local/bin:$PATH"
 
 # locales
@@ -42,11 +43,6 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US:en
 
 [ -f ~/banner.txt ] && cat ~/banner.txt
-
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
 # dotnet
 export DOTNET_ROOT="$HOME/.dotnet"
