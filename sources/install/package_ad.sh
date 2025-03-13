@@ -1045,7 +1045,7 @@ function install_ldeep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldeep"
     fapt libkrb5-dev krb5-config
-    pipx install --system-site-packages ldeep
+    uv tool install ldeep
     add-history ldeep
     add-test-command "ldeep --help"
     add-to-list "ldeep,https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."

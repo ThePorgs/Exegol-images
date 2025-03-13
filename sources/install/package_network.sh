@@ -160,7 +160,7 @@ function install_dnschef() {
 function install_divideandscan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing DivideAndScan"
-    pipx install --system-site-packages git+https://github.com/snovvcrash/DivideAndScan
+    uv tool install git+https://github.com/snovvcrash/DivideAndScan
     add-history divideandscan
     add-test-command "divideandscan --help"
     add-to-list "divideandscan,https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
