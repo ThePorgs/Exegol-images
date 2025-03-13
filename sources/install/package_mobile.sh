@@ -95,7 +95,7 @@ function install_androguard() {
 function install_mobsf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Mobile Security Framework"
-    fapt wkhtmltopdf
+    fapt wkhtmltopdf libxmlsec1 libxmlsec1-dev
     git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF MobSF
     cd /opt/tools/MobSF || exit
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
