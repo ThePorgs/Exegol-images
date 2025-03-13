@@ -1,4 +1,0 @@
-alias trilium-start='zsh /opt/tools/trilium/trilium-manager.sh start'
-alias trilium-stop='zsh /opt/tools/trilium/trilium-manager.sh stop'
-alias trilium-test='zsh /opt/tools/trilium/trilium-manager.sh test'
-alias trilium-configure='zsh /opt/tools/trilium/trilium-manager.sh configure'

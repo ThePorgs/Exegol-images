@@ -2,8 +2,8 @@
 
 # Function to get config values from config.ini
 function get_config_values() {
-  HOST=$(awk -F '=' '/^host=/ {print $2}' /root/.local/share/trilium-data/config.ini)
-  PORT=$(awk -F '=' '/^port=/ {print $2}' /root/.local/share/trilium-data/config.ini)
+  HOST=$(awk -F '=' '/^host=/ {print $2}' /opt/tools/triliumnext/data/config.ini)
+  PORT=$(awk -F '=' '/^port=/ {print $2}' /opt/tools/triliumnext/data/config.ini)
 
   if [[ -z "$PORT" ]]; then
     echo "Could not find port number in config.ini"
@@ -14,13 +14,13 @@ function get_config_values() {
 # Function to start the application
 function start_app() {
   get_config_values
-  nvm use 16
-  nohup node /opt/tools/trilium/src/www &> /tmp/trilium.nohup.out &
+  nvm use default
+  nohup npm --prefix /opt/tools/triliumnext run server:start &> /tmp/triliumnext.nohup.out &
   NODE_PID=$!
-  echo "Starting Trilium..."
+  echo "Starting TriliumNext..."
   sleep 5
   if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
-    echo "Trilium is running on http://$HOST:$PORT"
+    echo "TriliumNext is running on http://$HOST:$PORT"
   else
     echo "Application failed to start..."
     kill -9 "$NODE_PID" 2>/dev/null
@@ -31,33 +31,24 @@ function start_app() {
 # Function to test the application
 function test_app() {
   get_config_values
-  nvm use 16
-  node /opt/tools/trilium/src/www &
-  NODE_PID=$!
-  sleep 5
-  if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
-    echo "Trilium started successfully, stopping now..."
-    kill -9 "$NODE_PID"
-    exit 0
-  else
-    echo "Application failed to start..."
-    kill -9 "$NODE_PID" 2>/dev/null
-    exit 1
-  fi
+  nvm use default
+  nohup npm --prefix /opt/tools/triliumnext run server:start &> /dev/null &
+  sleep 2
+  curl --silent --fail "http://$HOST:$PORT/api/setup/status" | grep -q '"isInitialized":true'
 }
 
 # Function to stop the application
 function stop_app() {
   get_config_values
-  if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
-    echo "Trilium is running on http://$HOST:$PORT, stopping now..."
+  if lsof -Pi :"$PORT" -s TCP:LISTEN -t >/dev/null ; then
+    echo "TriliumNext is running on http://$HOST:$PORT, stopping now..."
     fuser -k "$PORT"/tcp
     sleep 2
     if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
-      echo "Something went wrong, Trilium still runs"
+      echo "Something went wrong, TriliumNext still runs"
       exit 1
     else
-      echo "Trilium stopped."
+      echo "TriliumNext stopped."
       exit 0
     fi
   else
@@ -70,8 +61,8 @@ function stop_app() {
 # Function to configure the application
 function configure_app() {
   get_config_values
-  if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
-    echo "Trilium is running on http://$HOST:$PORT"
+  if lsof -Pi :"$PORT" -s TCP:LISTEN -t >/dev/null ; then
+    echo "TriliumNext is running on http://$HOST:$PORT"
     curl --request POST "http://$HOST:$PORT/api/setup/new-document"
     curl --request POST --data-raw 'password1=exegol4thewin&password2=exegol4thewin' "http://$HOST:$PORT/set-password"
     exit 0
