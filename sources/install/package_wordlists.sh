@@ -48,9 +48,10 @@ function install_seclists() {
     rm -r LICENSE .git* CONTRIBUT* .bin
     tar -xvf /opt/lists/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/lists/
     # helping people to find wordlists in common places
-    ln -v -s /opt/seclists /usr/share/seclists
-    ln -v -s /opt/seclists /usr/share/wordlists/seclists
-    ln -v -s /opt/rockyou.txt /usr/share/wordlists/rockyou.txt
+    ln -v -s /opt/lists/seclists /usr/share/seclists
+    mkdir -p /usr/share/wordlists
+    ln -v -s /opt/lists/seclists /usr/share/wordlists/seclists
+    ln -v -s /opt/lists/rockyou.txt /usr/share/wordlists/rockyou.txt
     add-test-command "[[ -f '/opt/lists/rockyou.txt' ]]"
     add-test-command "[[ -d '/opt/lists/seclists/Discovery/' ]]"
     add-to-list "seclists,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"

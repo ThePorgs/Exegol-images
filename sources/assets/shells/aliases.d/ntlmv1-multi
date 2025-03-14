@@ -1,1 +1,1 @@
-alias ntlmv1-multi.py='python3 /opt/tools/ntlmv1-multi/ntlmv1.py'
+alias ntlmv1-multi.py='/opt/tools/ntlmv1-multi/venv/bin/python3 /opt/tools/ntlmv1-multi/ntlmv1.py'
