@@ -87,26 +87,24 @@ function install_searchsploit() {
     sed -i 's/opt\/exploitdb/opt\/tools\/exploitdb/' ~/.searchsploit_rc
 }
 
-function install_trilium() {
-    colorecho "Installing Trilium (building from sources)"
-    # TODO : apt install in a second step
+function install_triliumnext() {
+    colorecho "Installing TriliumNext"
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
-    git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
-    cd /opt/tools/trilium || exit
-    zsh -c "source ~/.zshrc && nvm install 16 && nvm use 16 && npm install && npm rebuild && npm run webpack"
-    mkdir -p /root/.local/share/trilium-data
+    git -C /opt/tools/ clone --depth 1 https://github.com/triliumnext/notes.git triliumnext
+    cd /opt/tools/triliumnext || exit
+    zsh -c "source ~/.zshrc && nvm use default && npm install"
+    mkdir /opt/tools/triliumnext/data
     # config.ini contains the exposition port and host
-    cp -v /root/sources/assets/trilium/config.ini /root/.local/share/trilium-data
-    cp -v /root/sources/assets/trilium/trilium-manager.sh /opt/tools/trilium/trilium-manager.sh
-    chmod +x /opt/tools/trilium/trilium-manager.sh
-    /opt/tools/trilium/trilium-manager.sh start
-    /opt/tools/trilium/trilium-manager.sh configure
-    /opt/tools/trilium/trilium-manager.sh stop
-    zsh -c "source ~/.zshrc && nvm use default"
-    add-aliases trilium
-    add-history trilium
-    add-test-command "trilium-test"
-    add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
+    cp -v /root/sources/assets/triliumnext/config.ini /opt/tools/triliumnext/data/config.ini
+    cp -v /root/sources/assets/triliumnext/triliumnext-manager.sh /opt/tools/triliumnext/triliumnext-manager.sh
+    chmod +x /opt/tools/triliumnext/triliumnext-manager.sh
+    /opt/tools/triliumnext/triliumnext-manager.sh start
+    /opt/tools/triliumnext/triliumnext-manager.sh configure
+    /opt/tools/triliumnext/triliumnext-manager.sh stop
+    add-aliases triliumnext
+    add-history triliumnext
+    add-test-command "triliumnext-test"
+    add-to-list "TriliumNext,https://github.com/TriliumNext/Notes,Personal knowledge management system (successor to Trilium)."
 }
 
 function install_ngrok() {
@@ -223,7 +221,7 @@ function package_misc() {
     install_shellerator     # Reverse shell generator
     install_uberfile        # file uploader/downloader commands generator
     install_arsenal         # Cheatsheets tool
-    install_trilium         # notes taking tool
+    install_triliumnext     # notes taking tool
     install_ngrok           # expose a local development server to the Internet
     install_whatportis      # Search default port number
     install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory

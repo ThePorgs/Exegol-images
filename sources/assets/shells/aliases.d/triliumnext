@@ -1,0 +1,4 @@
+alias triliumnext-start='zsh /opt/tools/triliumnext/triliumnext-manager.sh start'
+alias triliumnext-stop='zsh /opt/tools/triliumnext/triliumnext-manager.sh stop'
+alias triliumnext-test='zsh /opt/tools/triliumnext/triliumnext-manager.sh test'
+alias triliumnext-configure='zsh /opt/tools/triliumnext/triliumnext-manager.sh configure'

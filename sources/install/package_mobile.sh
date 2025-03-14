@@ -95,7 +95,7 @@ function install_androguard() {
 function install_mobsf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Mobile Security Framework"
-    fapt wkhtmltopdf libxmlsec1-dev
+    fapt wkhtmltopdf libxmlsec1 libxmlsec1-dev
     # xmlsec>1.3.14 breaks MobSF, see <https://github.com/MobSF/Mobile-Security-Framework-MobSF/issues/2503>
     local temp_fix_limit="2026-03-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
