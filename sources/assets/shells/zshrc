@@ -9,7 +9,7 @@ ZSH_THEME="gentoo"
 export FZF_BASE=/opt/tools/fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-plugins=(docker docker-compose zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm)
+plugins=(docker docker-compose git zsh-syntax-highlighting zsh-completions zsh-autosuggestions tmux fzf zsh-z zsh-nvm)
 
 # asdf
 export PATH="$PATH:${ASDF_DATA_DIR:-$HOME/.asdf}/shims"
