@@ -101,8 +101,10 @@ function install_mobsf() {
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting." # check if xmlsec>1.3.14 support is added
     else
+        # We need to manually clone the repo because uv doesn't support shallow clones yet
+        git -C /tmp clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF MobSF
         # yara-python-dex is be needed for ARM64
-        uv tool install git+https://github.com/MobSF/Mobile-Security-Framework-MobSF --with setuptools \
+        uv tool install /tmp/MobSF --with setuptools \
             --with git+https://github.com/MobSF/yara-python-dex.git \
             --with xmlsec==1.3.14
     fi
