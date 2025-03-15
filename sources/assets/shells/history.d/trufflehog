@@ -1,0 +1,2 @@
+trufflehog git https://github.com/ThePorgs/Exegol.git
+trufflehog filesystem ./
