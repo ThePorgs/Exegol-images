@@ -95,8 +95,6 @@ function install_genusernames() {
     add-to-list "genusernames,https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."
 }
 
-
-
 function install_onelistforall() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing onelistforall"
@@ -146,7 +144,7 @@ function install_rules(){
     add-to-list "Hob0Rules rules,https://github.com/praetorian-inc/Hob0Rules,Password cracking rules for Hashcat based on statistics and industry patterns"
 
     install_rules_from_repo "stealthsploit" "OneRuleToRuleThemStill" "main" "OneRuleToRuleThemStill.rule"
-    add-to-list "OneRuleToRuleThemStill rules,https://github.com/stealthsploit/OneRuleToRuleThemStill,One rule to crack all passwords. A revamped, optimised and updated version of the original OneRuleToRuleThemAll hashcat rule"
+    add-to-list "OneRuleToRuleThemStill rules,https://github.com/stealthsploit/OneRuleToRuleThemStill,One rule to crack all passwords. A revamped - optimised and updated version of the original OneRuleToRuleThemAll hashcat rule"
 
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
