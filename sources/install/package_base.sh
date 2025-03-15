@@ -150,6 +150,17 @@ function install_pyenv() {
     add-test-command "python3 -m venv -h"
 }
 
+function install_uv() {
+    # By default, uv will attempt to use Python versions found on the system and only download managed interpreters when necessary.
+    # See <https://docs.astral.sh/uv/concepts/python-versions/#adjusting-python-version-preferences>
+    # So, all uv tools will use the system python3.11 by default.
+    colorecho "Installing uv python"
+    asdf plugin add uv
+    asdf install uv latest
+    asdf set --home uv latest
+    add-test-command "uv --version"
+}
+
 function install_firefox() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing firefox"
@@ -458,6 +469,7 @@ function package_base() {
         pip${v} install wheel
     done
     install_pipx
+    install_uv
 
     # change default shell
     chsh -s /bin/zsh

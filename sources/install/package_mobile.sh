@@ -96,23 +96,20 @@ function install_mobsf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Mobile Security Framework"
     fapt wkhtmltopdf libxmlsec1 libxmlsec1-dev
-    git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF MobSF
-    cd /opt/tools/MobSF || exit
-    # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
-    #  in the mean time, switching to manual venv and an alias for mobsf
-    local temp_fix_limit="2025-04-01"
+    # xmlsec>1.3.14 breaks MobSF, see <https://github.com/MobSF/Mobile-Security-Framework-MobSF/issues/2503>
+    local temp_fix_limit="2026-03-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
+      criticalecho "Temp fix expired. Exiting." # check if xmlsec>1.3.14 support is added
     else
-      python3 -m venv --system-site-packages ./venv
-      ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
-      ./venv/bin/python3 -m pip install .
-      # https://github.com/MobSF/Mobile-Security-Framework-MobSF/issues/2503
-      # pip install xmlsec==1.3.14
-      add-aliases mobsf # alias is only needed with venv and can be removed when switching back to pipx
+        # We need to manually clone the repo because uv doesn't support shallow clones yet
+        git -C /tmp clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF MobSF
+        # yara-python-dex is be needed for ARM64
+        uv tool install /tmp/MobSF --with setuptools \
+            --with git+https://github.com/MobSF/yara-python-dex.git \
+            --with xmlsec==1.3.14
     fi
     add-history mobsf
-    add-test-command "/opt/tools/MobSF/venv/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
+    add-test-command "$(uv tool dir)/mobsf/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
     add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated and all-in-one mobile application (Android/iOS/Windows) pen-testing malware analysis and security assessment framework"
 }
 
