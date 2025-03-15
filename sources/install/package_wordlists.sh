@@ -145,6 +145,9 @@ function install_rules(){
         "hob064.rule"
     add-to-list "Hob0Rules rules,https://github.com/praetorian-inc/Hob0Rules,Password cracking rules for Hashcat based on statistics and industry patterns"
 
+    install_rules_from_repo "stealthsploit" "OneRuleToRuleThemStill" "main" "OneRuleToRuleThemStill.rule"
+    add-to-list "OneRuleToRuleThemStill rules,https://github.com/stealthsploit/OneRuleToRuleThemStill,One rule to crack all passwords. A revamped, optimised and updated version of the original OneRuleToRuleThemAll hashcat rule"
+
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.one.rule.gz" \
