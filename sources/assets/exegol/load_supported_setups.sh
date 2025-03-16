@@ -20,6 +20,10 @@ function colorecho () {
     echo -e "${BLUE}[EXEGOL] $*${NOCOLOR}"
 }
 
+function timecolorecho () {
+    echo -e "${BLUE}[EXEGOL] [$(date +'%d/%m/%Y %H:%M:%S')] $*${NOCOLOR}"
+}
+
 function criticalecho () {
     echo -e "${RED}[EXEGOL ERROR] $*${NOCOLOR}" 2>&1
     exit 1
@@ -30,10 +34,10 @@ function criticalecho-noexit () {
 }
 
 function init() {
-  colorecho "Initialization"
-  colorecho "Checking environment variables"
+  timecolorecho "==== Initialization"
+  timecolorecho "Checking environment variables"
   env
-  colorecho "Deploying /opt/my-resources"
+  timecolorecho "Deploying /opt/my-resources"
   # Deploying the /opt/my-resources/ folder if not already there
   if [[ -d "$MY_ROOT_PATH" ]]; then
     # Setup basic structure
@@ -43,13 +47,13 @@ function init() {
     echo "Exiting, 'my-resources' is disabled"
     exit 1
   fi
-  colorecho "Copying README.md to /opt/my-resources"
+  timecolorecho "Copying README.md to /opt/my-resources"
   # Copying README.md to /opt/my-resources/ (first use)
   [[ -f "$MY_SETUP_PATH/README.md" ]] || cp --preserve=mode /.exegol/skel/README.md "$MY_SETUP_PATH/README.md"
 }
 
 function deploy_zsh() {
-  colorecho "Deploying zsh"
+  timecolorecho "Deploying zsh"
   if [[ -d "$MY_SETUP_PATH/zsh" ]]; then
     # TODO remove fallback 'cp' command
     grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/zsh/history" >> ~/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_SETUP_PATH/zsh/history"
@@ -60,7 +64,7 @@ function deploy_zsh() {
 }
 
 function deploy_tmux() {
-  colorecho "Deploying tmux"
+  timecolorecho "Deploying tmux"
   if [[ -d "$MY_SETUP_PATH/tmux" ]]; then
     # id define, copy tmux/tmux.conf to ~/.tmux.conf
     if [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]]; then
@@ -75,7 +79,7 @@ function deploy_tmux() {
 }
 
 function deploy_vim() {
-  colorecho "Deploying vim"
+  timecolorecho "Deploying vim"
   local vpath
   if [[ -d "$MY_SETUP_PATH/vim" ]]; then
     # Copy vim/vimrc to ~/.vimrc
@@ -92,7 +96,7 @@ function deploy_vim() {
 }
 
 function deploy_nvim () {
-  colorecho "Deploying nvim"
+  timecolorecho "Deploying nvim"
   if [[ -d "$MY_SETUP_PATH/nvim" ]]; then
     mkdir -p ~/.config/
     cp -r "$MY_SETUP_PATH/nvim/" ~/.config
@@ -102,7 +106,7 @@ function deploy_nvim () {
 }
 
 function deploy_apt() {
-  colorecho "Deploying APT packages"
+  timecolorecho "Deploying APT packages"
   local key_url
   local install_list
   local tmpaptkeys
@@ -140,7 +144,7 @@ function deploy_apt() {
         # Install every packages listed in the file
         apt-get install -y "${install_list[@]}"
     else
-        colorecho "No APT package to install."
+        timecolorecho "No APT package to install."
     fi
   else
     # Import file template
@@ -150,7 +154,7 @@ function deploy_apt() {
 }
 
 function deploy_python3() {
-  colorecho "Deploying python3 packages"
+  timecolorecho "Deploying python3 packages"
   if [[ -d "$MY_SETUP_PATH/python3" ]]; then
     # Install every pip3 packages listed in the requirements.txt file
     pip3 install -r "$MY_SETUP_PATH/python3/requirements.txt"
@@ -162,34 +166,34 @@ function deploy_python3() {
 }
 
 function run_user_setup() {
-  colorecho "Executing user setup"
+  timecolorecho "Executing user setup"
   # Executing user setup (or create the file)
   if [[ -f "$MY_SETUP_PATH/load_user_setup.sh" ]]; then
-    colorecho "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading user setup ($MY_SETUP_PATH/load_user_setup.sh) ===="
-    colorecho "Installing my-resources user's defined custom setup ..."
+    timecolorecho "==== Loading user setup ($MY_SETUP_PATH/load_user_setup.sh) ===="
+    timecolorecho "Installing my-resources user's defined custom setup ..."
     "$MY_SETUP_PATH"/load_user_setup.sh
   else
-    colorecho "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh) ===="
+    timecolorecho "==== User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh) ===="
     cp /.exegol/skel/load_user_setup.sh "$MY_SETUP_PATH/load_user_setup.sh"
     chmod 760 "$MY_SETUP_PATH/load_user_setup.sh"
   fi
-  colorecho "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== End of custom setups loading ===="
+  timecolorecho "==== End of custom setups loading ===="
 }
 
 function deploy_firefox_policy() {
-  colorecho "Deploying Firefox Policy"
+  timecolorecho "Deploying Firefox Policy"
   if [[ -f "$MY_SETUP_PATH/firefox/policies.json" ]]; then
     cp --preserve=mode "$MY_SETUP_PATH/firefox/policies.json" /usr/lib/firefox-esr/distribution/policies.json
   fi
 }
 
 function deploy_bloodhound_config() {
-  colorecho "Deploying BloodHound User Config"
+  timecolorecho "Deploying BloodHound User Config"
   [[ -f "$my_setup_bh_path/config.json" ]] && cp "$my_setup_bh_path/config.json" "$bh_config_homedir/config.json"
 }
 
 function deploy_bloodhound_customqueries_merge() {
-  colorecho "Merging User Custom Queries with Exegol Custom Queries for BloodHound"
+  timecolorecho "Merging User Custom Queries with Exegol Custom Queries for BloodHound"
   # Merge Exegol's customqueries.json file with the ones from my-resources
   local cq_merge_directory="$my_setup_bh_path/customqueries_merge"
   [[ ! -d "$cq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$cq_merge_directory"
@@ -201,7 +205,7 @@ function deploy_bloodhound_customqueries_merge() {
 }
 
 function deploy_bloodhound_customqueries_replacement() {
-  colorecho "Merging User Custom Queries for BloodHound, and overwriting Exegol Custom Queries"
+  timecolorecho "Merging User Custom Queries for BloodHound, and overwriting Exegol Custom Queries"
   local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
   [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
   if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
@@ -211,7 +215,7 @@ function deploy_bloodhound_customqueries_replacement() {
 }
 
 function deploy_bloodhound() {
-  colorecho "Deploying BloodHound"
+  timecolorecho "Deploying BloodHound"
   local bh_config_homedir=~/.config/bloodhound
   local my_setup_bh_path="$MY_SETUP_PATH/bloodhound"
   local cq_replacement_done=0
@@ -227,14 +231,14 @@ function deploy_bloodhound() {
   [[ $cq_replacement_done -eq 0 ]] && deploy_bloodhound_customqueries_merge
   if [[ -f "$bqm_output_file" ]]; then
     mv "$bqm_output_file" "$bh_config_homedir/customqueries.json" &&
-    colorecho "$bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
+    timecolorecho "$bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
   fi
 }
 
 function trust_ca_certs_in_firefox() {
-  colorecho "Trusting Burp CA certificate in Firefox"
+  timecolorecho "Trusting Burp CA certificate in Firefox"
   /opt/tools/bin/trust-ca-burp
-  colorecho "Trusting user CA certificates in Firefox"
+  timecolorecho "Trusting user CA certificates in Firefox"
   local file
   if [[ -d "$MY_SETUP_PATH/firefox/CA" ]]; then
     for file in $(find "$MY_SETUP_PATH/firefox/CA" -type f); do
@@ -255,7 +259,7 @@ function trust_ca_certs_in_firefox() {
 
 function _trust_ca_cert_in_firefox() {
   # internal function to trust a CA cert (.DER) given the path and the name to set
-  colorecho "Trusting cert $2 ($1) in Firefox"
+  timecolorecho "Trusting cert $2 ($1) in Firefox"
   # -n : name of the cert
   # -t : attributes
   #   TC : trusted CA to issue client & server certs
@@ -264,7 +268,7 @@ function _trust_ca_cert_in_firefox() {
 
 function deploy_arsenal_cheatsheet () {
   # Function to add custom cheatsheets into arsenal
-  colorecho "Deploying custom arsenal cheatsheet"
+  timecolorecho "Deploying custom arsenal cheatsheet"
   if [[ ! -d "$MY_SETUP_PATH/arsenal-cheats" ]]; then
       mkdir -p "$MY_SETUP_PATH/arsenal-cheats"
   fi
@@ -274,8 +278,8 @@ function deploy_arsenal_cheatsheet () {
 # Starting
 # This procedure is supposed to be executed only once at the first startup, using a lockfile check
 
-colorecho "This log file is the result of the execution of the official and personal customization script"
-colorecho "[$(date +'%d-%m-%Y_%H-%M-%S')] ==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
+timecolorecho "This log file is the result of the execution of the official and personal customization script"
+timecolorecho "==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
 
 init
 
