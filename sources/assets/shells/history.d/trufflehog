@@ -1,0 +1,2 @@
+trufflehog git https://github.com/OWNER/REPO.git
+trufflehog filesystem ./
