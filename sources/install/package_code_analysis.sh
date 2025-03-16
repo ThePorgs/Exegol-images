@@ -38,9 +38,11 @@ function install_pp-finder() {
 function install_gitleaks() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gitleaks"
-    if [[ $(uname -m) = 'x86_64' ]] then
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
         local arch="x64"
-    elif [[ $(uname -m) = 'aarch64' ]] then
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
         local arch="arm64"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
@@ -59,9 +61,11 @@ function install_gitleaks() {
 function install_trufflehog() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing trufflehog"
-    if [[ $(uname -m) = 'x86_64' ]] then
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
         local arch="amd64"
-    elif [[ $(uname -m) = 'aarch64' ]] then
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
         local arch="arm64"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
