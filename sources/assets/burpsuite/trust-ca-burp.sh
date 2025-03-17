@@ -7,6 +7,8 @@
 
 # This script being called by load_supported_setups.sh, we're in a lower level of logging, meaning the logger_info will not be defined here and shouldn't be used
 
+LOG_FILE="/var/log/exegol/load_setups.log"
+
 function echo2wrapper () {
   echo "[EXEGOL]$*"
 }
