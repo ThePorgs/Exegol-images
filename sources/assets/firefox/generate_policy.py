@@ -17,7 +17,6 @@ POLICY_PATH = "/usr/lib/firefox-esr/distribution/"
 
 names = [
     "foxyproxy-standard",
-    "darkreader",
     "uaswitcher",
     "cookie-editor",
     "wappalyzer",
