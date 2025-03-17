@@ -78,7 +78,7 @@ function install_trufflehog() {
     mv /tmp/trufflehog /opt/tools/bin/trufflehog
     add-history trufflehog
     add-test-command "trufflehog --help"
-    add-to-list "trufflehog,https://github.com/trufflesecurity/trufflehog,Find, verify, and analyze hardcoded secrets in git repositories, folders, buckets, and more."
+    add-to-list "trufflehog,https://github.com/trufflesecurity/trufflehog,Find verify and analyze hardcoded secrets in git repositories folders buckets and more."
 }
 
 # Package dedicated to SAST and DAST tools
