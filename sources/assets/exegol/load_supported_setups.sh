@@ -164,7 +164,7 @@ function deploy_apt() {
     # Create a package array
     install_list=()
     # Read the my-resource package.list file
-    logger_debug "Reading my-resource package.list file"
+    logger_debug "Reading my resources package.list file"
     while IFS= read -r ligne
     do
         # Exclude comment line start by "#"
