@@ -1,29 +1,54 @@
 #!/bin/zsh
 
-export RED='\033[1;31m'
-export BLUE='\033[1;34m'
-export GREEN='\033[1;32m'
-export NOCOLOR='\033[0m'
+# The following functions are used to log messages to the console
+#   By starting with [EXEGOL], the wrapper can catch the message and forward it to the user
+#   Logs that don't start with [EXEGOL] are not forwarded to the user, but they are still logged to /var/log/exegol/load_setups.log
+#   Using [INFO], [VERBOSE], [WARNING], [ERROR], [SUCCESS] tags so that the wrapper can catch them and forward them to the user with the corresponding logger level
 
-### Echo functions
+# This script being called by load_supported_setups.sh, we're in a lower level of logging, meaning the logger_info will not be defined here and shouldn't be used
 
-function infoecho () {
-    echo -e "${BLUE}[*]${NOCOLOR} $*"
+function echo2wrapper () {
+  echo "[EXEGOL]$*"
 }
 
-function okecho () {
-    echo -e "${GREEN}[+]${NOCOLOR} $*"
+function echo2log () {
+  echo "trust-ca-burp.sh $(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG_FILE"
 }
 
-function errorecho () {
-    echo -e "${RED}[-]${NOCOLOR} $*" 2>&1
-    exit 1
+function logger_verbose () {
+  echo2wrapper "[VERBOSE]$*"
+  echo2log "VERBOSE $*"
+}
+
+function logger_advanced () {
+  echo2wrapper "[ADVANCED]$*"
+  echo2log "ADVANCED $*"
+}
+
+function logger_debug () {
+  echo2wrapper "[DEBUG]$*"
+  echo2log "DEBUG $*"
+}
+
+function logger_warning () {
+  echo2wrapper "[WARNING]$*"
+  echo2log "WARNING $*"
+}
+
+function logger_error () {
+  echo2wrapper "[ERROR]$*"
+  echo2log "ERROR $*"
+}
+
+function logger_success () {
+  echo2wrapper "[SUCCESS]$*"
+  echo2log "SUCCESS $*"
 }
 
 function trust_ca_burp_in_firefox() {
-  infoecho "Generating Burp CA and trusting in Firefox"
+  logger_verbose "Generating Burp CA and trusting in Firefox"
   if [[ -d "/opt/tools/BurpSuiteCommunity/" ]]; then
-    infoecho 'Looking for available port'
+    logger_debug 'Looking for available port'
     # Find an available port for Burp to listen
     local burp_port=8080
     # TODO : add the dynamic port finder
@@ -35,10 +60,10 @@ function trust_ca_burp_in_firefox() {
       burp_port=$((burp_port+1))
     done
     # Edit configuration file to listen on the available port found
-    infoecho 'Preparing burp configuration file'
+    logger_debug 'Preparing burp configuration file'
     sed -i "s/\"listener_port\":[0-9]\+/\"listener_port\":$burp_port/g" /opt/tools/BurpSuiteCommunity/conf.json
     # Start Burp with "y" to accept policy and generate CA, keep its PID to kill it when done
-    infoecho 'Starting Burp and waiting for proxy to listen'
+    logger_debug 'Starting Burp and waiting for proxy to listen'
     echo y|/usr/lib/jvm/java-21-openjdk/bin/java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json 2>&1 > /dev/null &
     # pull the latest process's ID
     local burp_pid=$!
@@ -54,19 +79,19 @@ function trust_ca_burp_in_firefox() {
         timeout_counter=$((timeout_counter+1))
       else
         kill "$burp_pid"
-        errorecho 'Process timed out, please trust the CA manually.'
+        logger_error 'Process timed out, please trust the CA manually.'
       fi
     done
     # Download the CA to /tmp and update the CA path
-    infoecho 'Retrieving CA'
+    logger_debug 'Retrieving CA'
     local burp_ca_path="/opt/tools/firefox/cacert.der"
     local burp_ca_name="PortSwigger CA"
     if ! wget -q "http://127.0.0.1:$burp_port/cert" -O "$burp_ca_path"; then
       kill "$burp_pid"
-      errorecho 'The CA cert could not be retrieved, please trust it manually'
+      logger_error 'The CA cert could not be retrieved, please trust it manually'
     fi
     kill "$burp_pid"
-    okecho 'CA trusted successfully'
+    logger_success 'CA trusted successfully'
   fi
 }
 

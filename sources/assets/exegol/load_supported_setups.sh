@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+# This procedure is supposed to be executed only once at the first startup, using a lockfile check
+# It is called by the entrypoint of the container and is used to deploy the supported setups as well as the user's customizations
+
 # Cannot source from a function
 source "$HOME/.zshrc"
 
@@ -9,51 +12,83 @@ MY_ROOT_PATH="/opt/my-resources"
 # Setup directory for user customization
 MY_SETUP_PATH="$MY_ROOT_PATH/setup"
 
-export RED='\033[1;31m'
-export BLUE='\033[1;34m'
-export GREEN='\033[1;32m'
-export NOCOLOR='\033[0m'
+# Log file
+LOG_FILE="/var/log/exegol/load_setups.log"
 
-### Echo functions
+# The following functions are used to log messages to the console
+#   By starting with [EXEGOL], the wrapper can catch the message and forward it to the user
+#   Logs that don't start with [EXEGOL] are not forwarded to the user, but they are still logged to /var/log/exegol/load_setups.log
+#   Using [INFO], [VERBOSE], [WARNING], [ERROR], [SUCCESS] tags so that the wrapper can catch them and forward them to the user with the corresponding logger level
 
-function colorecho () {
-    echo -e "${BLUE}[EXEGOL] $*${NOCOLOR}"
+function echo2wrapper () {
+  echo "[EXEGOL]$*"
 }
 
-function timecolorecho () {
-    echo -e "${BLUE}[EXEGOL] [$(date +'%d/%m/%Y %H:%M:%S')] $*${NOCOLOR}"
+function echo2log () {
+  echo "load_supported_setups.sh $(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG_FILE"
 }
 
-function criticalecho () {
-    echo -e "${RED}[EXEGOL ERROR] $*${NOCOLOR}" 2>&1
-    exit 1
+function logger_info () {
+  echo2wrapper "[INFO]$*"
+  echo2log "INFO $*"
 }
 
-function criticalecho-noexit () {
-    echo -e "${RED}[EXEGOL ERROR] $*${NOCOLOR}" 2>&1
+function logger_verbose () {
+  echo2wrapper "[VERBOSE]$*"
+  echo2log "VERBOSE $*"
 }
+
+function logger_advanced () {
+  echo2wrapper "[ADVANCED]$*"
+  echo2log "ADVANCED $*"
+}
+
+function logger_debug () {
+  echo2wrapper "[DEBUG]$*"
+  echo2log "DEBUG $*"
+}
+
+function logger_warning () {
+  echo2wrapper "[WARNING]$*"
+  echo2log "WARNING $*"
+}
+
+function logger_error () {
+  echo2wrapper "[ERROR]$*"
+  echo2log "ERROR $*"
+}
+
+function logger_success () {
+  echo2wrapper "[SUCCESS]$*"
+  echo2log "SUCCESS $*"
+}
+
+# The following functions are used to deploy the supported setups
 
 function init() {
-  timecolorecho "==== Initialization"
-  timecolorecho "Checking environment variables"
-  env
-  timecolorecho "Deploying /opt/my-resources"
+  logger_info "Initialization"
+  logger_verbose "Checking environment variables"
+  # Print environment variables in a more readable format
+  env | sort | while read -r line; do
+    logger_verbose "ENV: $line"
+  done
+  logger_debug "Deploying /opt/my-resources"
   # Deploying the /opt/my-resources/ folder if not already there
   if [[ -d "$MY_ROOT_PATH" ]]; then
     # Setup basic structure
     [[ -d "$MY_SETUP_PATH" ]] || (mkdir "$MY_SETUP_PATH" && chmod 770 "$MY_SETUP_PATH")
     [[ -d "$MY_ROOT_PATH/bin" ]] || (mkdir "$MY_ROOT_PATH/bin" && chmod 770 "$MY_ROOT_PATH/bin")
   else
-    echo "Exiting, 'my-resources' is disabled"
+    logger_error "Exiting, 'my-resources' is disabled"
     exit 1
   fi
-  timecolorecho "Copying README.md to /opt/my-resources"
+  logger_debug "Copying README.md to /opt/my-resources"
   # Copying README.md to /opt/my-resources/ (first use)
   [[ -f "$MY_SETUP_PATH/README.md" ]] || cp --preserve=mode /.exegol/skel/README.md "$MY_SETUP_PATH/README.md"
 }
 
 function deploy_zsh() {
-  timecolorecho "Deploying zsh"
+  logger_info "Deploying zsh"
   if [[ -d "$MY_SETUP_PATH/zsh" ]]; then
     # TODO remove fallback 'cp' command
     grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/zsh/history" >> ~/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_SETUP_PATH/zsh/history"
@@ -64,7 +99,7 @@ function deploy_zsh() {
 }
 
 function deploy_tmux() {
-  timecolorecho "Deploying tmux"
+  logger_info "Deploying tmux"
   if [[ -d "$MY_SETUP_PATH/tmux" ]]; then
     # id define, copy tmux/tmux.conf to ~/.tmux.conf
     if [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]]; then
@@ -79,7 +114,7 @@ function deploy_tmux() {
 }
 
 function deploy_vim() {
-  timecolorecho "Deploying vim"
+  logger_info "Deploying vim"
   local vpath
   if [[ -d "$MY_SETUP_PATH/vim" ]]; then
     # Copy vim/vimrc to ~/.vimrc
@@ -96,7 +131,7 @@ function deploy_vim() {
 }
 
 function deploy_nvim () {
-  timecolorecho "Deploying nvim"
+  logger_info "Deploying nvim"
   if [[ -d "$MY_SETUP_PATH/nvim" ]]; then
     mkdir -p ~/.config/
     cp -r "$MY_SETUP_PATH/nvim/" ~/.config
@@ -106,19 +141,21 @@ function deploy_nvim () {
 }
 
 function deploy_apt() {
-  timecolorecho "Deploying APT packages"
+  logger_info "Deploying APT packages"
   local key_url
   local install_list
   local tmpaptkeys
   tmpaptkeys=$(mktemp -d)
   if [[ -d "$MY_SETUP_PATH/apt" ]]; then
     # Deploy custom apt repository
+    logger_verbose "Deploying custom apt repository"
     cp "$MY_SETUP_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
     # Register custom repo's GPG keys
     grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r key_url; do
       wget -nv "$key_url" -O "$tmpaptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
     if [[ -n $(find "$tmpaptkeys" -type f -name "*.key") ]]; then
+      logger_verbose "Importing custom apt repository GPG keys"
       gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --import "$tmpaptkeys"/*.key &&
         gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
@@ -127,6 +164,7 @@ function deploy_apt() {
     # Create a package array
     install_list=()
     # Read the my-resource package.list file
+    logger_debug "Reading my-resource package.list file"
     while IFS= read -r ligne
     do
         # Exclude comment line start by "#"
@@ -139,12 +177,13 @@ function deploy_apt() {
     done < "$MY_SETUP_PATH/apt/packages.list"
     # Check if there is some package to install
     if [[ ${#install_list[@]} -gt 0 ]]; then
+        logger_verbose "Updating package list from repos"
         # Update package list from repos (only if there is some package to install
         apt-get update
         # Install every packages listed in the file
         apt-get install -y "${install_list[@]}"
     else
-        timecolorecho "No APT package to install."
+        logger_verbose "No APT package to install."
     fi
   else
     # Import file template
@@ -154,11 +193,13 @@ function deploy_apt() {
 }
 
 function deploy_python3() {
-  timecolorecho "Deploying python3 packages"
+  logger_info "Deploying python3 packages"
   if [[ -d "$MY_SETUP_PATH/python3" ]]; then
+    logger_verbose "Installing python3 packages"
     # Install every pip3 packages listed in the requirements.txt file
     pip3 install -r "$MY_SETUP_PATH/python3/requirements.txt"
   else
+    logger_verbose "Importing file template"
     # Import file template
     mkdir "$MY_SETUP_PATH/python3" && chmod 770 "$MY_SETUP_PATH/python3"
     cp --preserve=mode /.exegol/skel/python3/requirements.txt "$MY_SETUP_PATH/python3/requirements.txt"
@@ -166,34 +207,34 @@ function deploy_python3() {
 }
 
 function run_user_setup() {
-  timecolorecho "Executing user setup"
+  logger_info "Running user setup"
   # Executing user setup (or create the file)
   if [[ -f "$MY_SETUP_PATH/load_user_setup.sh" ]]; then
-    timecolorecho "==== Loading user setup ($MY_SETUP_PATH/load_user_setup.sh) ===="
-    timecolorecho "Installing my-resources user's defined custom setup ..."
+    logger_verbose "Loading user setup ($MY_SETUP_PATH/load_user_setup.sh)"
     "$MY_SETUP_PATH"/load_user_setup.sh
   else
-    timecolorecho "==== User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh) ===="
+    logger_verbose "User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh)"
     cp /.exegol/skel/load_user_setup.sh "$MY_SETUP_PATH/load_user_setup.sh"
     chmod 760 "$MY_SETUP_PATH/load_user_setup.sh"
   fi
-  timecolorecho "==== End of custom setups loading ===="
+  logger_verbose "End of custom setups loading"
 }
 
 function deploy_firefox_policy() {
-  timecolorecho "Deploying Firefox Policy"
+  logger_info "Deploying Firefox Policy"
   if [[ -f "$MY_SETUP_PATH/firefox/policies.json" ]]; then
+    logger_verbose "Copying Firefox Policy"
     cp --preserve=mode "$MY_SETUP_PATH/firefox/policies.json" /usr/lib/firefox-esr/distribution/policies.json
   fi
 }
 
 function deploy_bloodhound_config() {
-  timecolorecho "Deploying BloodHound User Config"
+  logger_verbose "Deploying BloodHound User Config"
   [[ -f "$my_setup_bh_path/config.json" ]] && cp "$my_setup_bh_path/config.json" "$bh_config_homedir/config.json"
 }
 
 function deploy_bloodhound_customqueries_merge() {
-  timecolorecho "Merging User Custom Queries with Exegol Custom Queries for BloodHound"
+  logger_verbose "Merging User Custom Queries with Exegol Custom Queries for BloodHound"
   # Merge Exegol's customqueries.json file with the ones from my-resources
   local cq_merge_directory="$my_setup_bh_path/customqueries_merge"
   [[ ! -d "$cq_merge_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_merge "$cq_merge_directory"
@@ -205,7 +246,7 @@ function deploy_bloodhound_customqueries_merge() {
 }
 
 function deploy_bloodhound_customqueries_replacement() {
-  timecolorecho "Merging User Custom Queries for BloodHound, and overwriting Exegol Custom Queries"
+  logger_verbose "Merging User Custom Queries for BloodHound, and overwriting Exegol Custom Queries"
   local cq_replacement_directory="$my_setup_bh_path/customqueries_replacement"
   [[ ! -d "$cq_replacement_directory" ]] && cp -r /.exegol/skel/bloodhound/customqueries_replacement "$cq_replacement_directory"
   if [[ -n $(find "$cq_replacement_directory" -type f -name "*.json") ]]; then
@@ -215,7 +256,7 @@ function deploy_bloodhound_customqueries_replacement() {
 }
 
 function deploy_bloodhound() {
-  timecolorecho "Deploying BloodHound"
+  logger_info "Deploying BloodHound"
   local bh_config_homedir=~/.config/bloodhound
   local my_setup_bh_path="$MY_SETUP_PATH/bloodhound"
   local cq_replacement_done=0
@@ -231,14 +272,15 @@ function deploy_bloodhound() {
   [[ $cq_replacement_done -eq 0 ]] && deploy_bloodhound_customqueries_merge
   if [[ -f "$bqm_output_file" ]]; then
     mv "$bqm_output_file" "$bh_config_homedir/customqueries.json" &&
-    timecolorecho "$bh_config_homedir/customqueries.json successfully replaced by $bqm_output_file"
+    logger_verbose "$bh_config_homedir/customqueries.json replaced by $bqm_output_file"
   fi
 }
 
 function trust_ca_certs_in_firefox() {
-  timecolorecho "Trusting Burp CA certificate in Firefox"
-  /opt/tools/bin/trust-ca-burp
-  timecolorecho "Trusting user CA certificates in Firefox"
+  logger_info "Trusting Burp CA certificate in Firefox"
+  logger_verbose "Running Burp Suite CA installation in background to save time"
+  /opt/tools/bin/trust-ca-burp 2>&1 | tee -a "$LOG_FILE" &
+  logger_info "Trusting user CA certificates in Firefox"
   local file
   if [[ -d "$MY_SETUP_PATH/firefox/CA" ]]; then
     for file in $(find "$MY_SETUP_PATH/firefox/CA" -type f); do
@@ -248,7 +290,7 @@ function trust_ca_certs_in_firefox() {
           base_filename_without_extension=$(basename "$file" | rev | cut -d. -f2- | rev)
           _trust_ca_cert_in_firefox "$file" "$base_filename_without_extension"
         else
-          criticalecho-noexit "Error: File $file does not have a .der or .DER extension and will not be trusted. Not supported by Exegol's my-resources yet"
+          logger_error "File $file does not have a .der or .DER extension and will not be trusted. Not supported by Exegol's my-resources yet"
         fi
       fi
     done
@@ -259,7 +301,7 @@ function trust_ca_certs_in_firefox() {
 
 function _trust_ca_cert_in_firefox() {
   # internal function to trust a CA cert (.DER) given the path and the name to set
-  timecolorecho "Trusting cert $2 ($1) in Firefox"
+  logger_verbose "Trusting cert $2 ($1) in Firefox"
   # -n : name of the cert
   # -t : attributes
   #   TC : trusted CA to issue client & server certs
@@ -268,18 +310,12 @@ function _trust_ca_cert_in_firefox() {
 
 function deploy_arsenal_cheatsheet () {
   # Function to add custom cheatsheets into arsenal
-  timecolorecho "Deploying custom arsenal cheatsheet"
+  logger_info "Deploying custom arsenal cheatsheet"
   if [[ ! -d "$MY_SETUP_PATH/arsenal-cheats" ]]; then
       mkdir -p "$MY_SETUP_PATH/arsenal-cheats"
   fi
   # This specific path is fetched by default by arsenal to load custom cheatsheet
 }
-
-# Starting
-# This procedure is supposed to be executed only once at the first startup, using a lockfile check
-
-timecolorecho "This log file is the result of the execution of the official and personal customization script"
-timecolorecho "==== Loading custom setups (/.exegol/load_supported_setups.sh) ===="
 
 init
 
