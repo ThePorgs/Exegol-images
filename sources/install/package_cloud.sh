@@ -93,10 +93,10 @@ function install_cloudmapper() {
     cd /opt/tools/cloudmapper || exit
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch
-    python3 -m venv --system-site-packages ./venv
+    uv venv --python 3.9 --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install wheel
-    pip3 install -r requirements.txt
+    # pip3 install wheel
+    uv pip install -r requirements.txt
     deactivate
     add-aliases cloudmapper
     add-history cloudmapper

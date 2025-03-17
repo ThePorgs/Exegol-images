@@ -114,40 +114,60 @@ function install_locales() {
     export LANGUAGE=en_US.UTF-8
 }
 
-function install_pyenv() {
+function install_python() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing pyenv"
-    fapt git curl build-essential
-    curl -o /tmp/pyenv.run https://pyenv.run
-    bash /tmp/pyenv.run
-    set_python_env
-    local v
-    colorecho "Installing python2 (latest)"
-    fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
-    # Don't think it's needed, but if something fails, use command below
-    # apt install xz-utils tk-dev
-    for v in $PYTHON_VERSIONS; do
-        colorecho "Installing python${v}"
-        pyenv install "$v"
-    done
-    # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
+    # Let's keep basic python behaviour (with pip) for legacy usage and install uv wrapper for python3 because uv doesn't support python2
+    export PYTHON2_VERSIONS="2.7.18" # latest patch version
+    export PYTHON3_VERSIONS="3.11.11" # latest patch version
+    colorecho "Installing legacy python ($PYTHON2_VERSIONS, $PYTHON3_VERSIONS)"
+    asdf plugin add python
+    fapt patch libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev # python2 dependencies
+    asdf install python $PYTHON2_VERSIONS
+    asdf install python $PYTHON3_VERSIONS
+    asdf set --home python $PYTHON3_VERSIONS $PYTHON2_VERSIONS # python3 takes precedence
+
+    pip2 install --no-cache-dir virtualenv
+    pip2 install --upgrade pip
+    pip2 install wheel
+    pip3 install --upgrade pip
+    pip3 install wheel
+
+    # Fallback builtin python (/usr/bin/python3, /usr/bin/python3.11) site-packages to asdf python because pip is now managed by asdf
+    echo /root/.asdf/installs/python/$PYTHON3_VERSIONS/lib/python3.11/site-packages >> /usr/local/lib/python3.11/dist-packages/site-packages.pth
+
     #  --> python points to python3
     #  --> python3 points to python3.11
-    #  --> python3.10 points to 3.10
-    #  --> python3.13 points to 3.13
     #  --> python2 points to latest python2
+     add-test-command "python --version | grep -q '^Python 3'"
+    add-test-command "python3 --version | grep -q '^Python 3.11'"
+    add-test-command "python2 --version |& grep -q '^Python 2.7'" # Python2 outputs version to stderr
+    add-test-command "pip --version | grep -q '(python 3.11)'"
+    add-test-command "pip3 --version | grep -q '(python 3.11)'"
+    add-test-command "pip2 --version | grep -q '(python 2.7)'"
+
+    export UV_PYTHON3_VERSIONS="3.10 3.11 3.13"
+    export DEFAULT_UV_PYTHON3_VERSION="3.11" # asdf python 3.11 take precedence over uv python 3.11
+    colorecho "Installing uv python ($UV_PYTHON3_VERSIONS, default $DEFAULT_UV_PYTHON3_VERSION)"
+    asdf plugin add uv
+    asdf install uv latest
+    asdf set --home uv latest
+    add-test-command "uv --version"
+
     # shellcheck disable=SC2086
-    pyenv global $PYTHON_VERSIONS
-    add-test-command "python --version"
-    add-test-command "pip --version"
-    add-test-command "python3 --version"
-    add-test-command "pip3 --version"
-    for v in $PYTHON_VERSIONS; do
-        add-test-command "python${v} --version"
-        add-test-command "pip${v} --version"
+    uv python install $UV_PYTHON3_VERSIONS --preview
+    uv python pin $DEFAULT_UV_PYTHON3_VERSION
+
+    #  --> each python3.x points to the correct version
+    local v
+    for v in $UV_PYTHON3_VERSIONS; do
+        add-test-command "python$v --version | grep -q '^Python $v'"
     done
-    fapt python3-venv
-    add-test-command "python3 -m venv -h"
+
+    # Install pipx for legacy usage
+    uv tool install pipx
+    add-test-command "pipx --version"
+
+    # NOTE: you can see all python3 versions and paths using `uv python list` (including non uv managed versions)
 }
 
 function install_firefox() {
@@ -217,14 +237,6 @@ function install_ohmyzsh() {
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/agkozak/zsh-z
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
-}
-
-function install_pipx() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing pipx"
-    pip3 install pipx
-    pipx ensurepath
-    add-test-command "pipx --version"
 }
 
 function install_pyftpdlib() {
@@ -444,20 +456,7 @@ function package_base() {
     cp -v /root/sources/assets/shells/bashrc ~/.bashrc
 
     install_asdf
-
-    # setup Python environment
-    # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.13 3.10 2"
-    install_pyenv
-    pip2 install --no-cache-dir virtualenv
-    local v
-    for v in $PYTHON_VERSIONS; do
-        # shellcheck disable=SC2086
-        pip${v} install --upgrade pip
-        # shellcheck disable=SC2086
-        pip${v} install wheel
-    done
-    install_pipx
+    install_python
 
     # change default shell
     chsh -s /bin/zsh
