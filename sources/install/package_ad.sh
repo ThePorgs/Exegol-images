@@ -132,7 +132,7 @@ function install_bloodhound() {
     colorecho "Installing BloodHound from sources"
     git -C /opt/tools/ clone --depth 1 https://github.com/BloodHoundAD/BloodHound/
     mv /opt/tools/BloodHound /opt/tools/BloodHound4
-    zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux && nvm use default"
+    zsh -c "source ~/.zshrc && cd /opt/tools/BloodHound4 && source /root/.nvm/nvm.sh && nvm install 16.13.0 && nvm use 16.13.0 && npm install -g electron-packager && npm install && npm run build:linux && nvm use default"
     if [[ $(uname -m) = 'x86_64' ]]
     then
         ln -s /opt/tools/BloodHound4/BloodHound-linux-x64/BloodHound /opt/tools/BloodHound4/BloodHound
