@@ -196,8 +196,8 @@ function install_fzf() {
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
     add-aliases fzf
-    add-test-command "fzf-wordlists --help"
-    add-test-command "fzf --help"
+    add-test-command "source ~/.fzf.zsh && fzf-wordlists --help"
+    add-test-command "source ~/.fzf.zsh && fzf --help"
     add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
 }
 

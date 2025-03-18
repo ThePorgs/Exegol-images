@@ -72,6 +72,7 @@ function trust_ca_burp_in_firefox() {
       else
         kill "$burp_pid"
         logger_error 'Process timed out, please trust the CA manually.'
+        exit 1
       fi
     done
     # Download the CA to /tmp and update the CA path
