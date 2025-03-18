@@ -25,7 +25,7 @@ function echo2wrapper () {
 }
 
 function echo2log () {
-  echo "load_supported_setups.sh $(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG_FILE"
+  echo "load_supported_setups.sh $(date '+%Y-%m-%d %H:%M:%S') $*" | sed -E 's#\[/?(green|red)]##g' >> "$LOG_FILE"
 }
 
 function logger_info () {
@@ -239,7 +239,7 @@ function run_user_setup() {
   # Executing user setup (or create the file)
   if [[ -f "$MY_SETUP_PATH/load_user_setup.sh" ]]; then
     logger_verbose "Loading user setup ($MY_SETUP_PATH/load_user_setup.sh)"
-    "$MY_SETUP_PATH"/load_user_setup.sh |& tee "$LOG_FILE"
+    "$MY_SETUP_PATH"/load_user_setup.sh |& tee -a "$LOG_FILE"
   else
     logger_verbose "User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh)"
     cp /.exegol/skel/load_user_setup.sh "$MY_SETUP_PATH/load_user_setup.sh"
