@@ -261,7 +261,7 @@ function install_neovim() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        curl -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage -o nvim.appimage
         chmod u+x nvim.appimage
         ./nvim.appimage --appimage-extract
         mkdir /opt/tools/nvim
