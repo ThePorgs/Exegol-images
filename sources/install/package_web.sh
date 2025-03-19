@@ -779,6 +779,15 @@ function install_burpsuite() {
     cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
+
+    # Install Jython
+    JYTHON_VERSION="2.7.4"
+    mkdir /opt/tools/BurpSuiteCommunity/jython
+    wget "https://repo1.maven.org/maven2/org/python/jython-standalone/${JYTHON_VERSION}/jython-standalone-${JYTHON_VERSION}.jar" -O "/opt/tools/BurpSuiteCommunity/jython/jython-standalone.jar"
+
+    # Create a directory to hold extensions JAR
+    mkdir /opt/tools/BurpSuiteCommunity/extensions
+
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"
