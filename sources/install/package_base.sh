@@ -344,12 +344,18 @@ function install_java11() {
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
+    for x in /usr/lib/jvm/java-11-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 11;
+    done
+    ln -s -v /usr/lib/jvm/java-11-openjdk/bin/java /usr/bin/java11
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
+    add-test-command "java11 --version"
 }
 
 function install_java21() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
-    colorecho "Installing java 11"
+    colorecho "Installing java 21"
     if [[ $(uname -m) = 'x86_64' ]]
     then
         wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
@@ -363,7 +369,38 @@ function install_java21() {
     tar -xzf /tmp/openjdk21-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-21* /usr/lib/jvm/java-21-openjdk
+    for x in /usr/lib/jvm/java-21-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 21;
+    done
+    ln -s -v /usr/lib/jvm/java-21-openjdk/bin/java /usr/bin/java21
     add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
+    add-test-command "java21 --version"
+}
+
+function install_java24() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
+    colorecho "Installing java 24"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        wget -O /tmp/openjdk24-jdk.tar.gz "https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-x64_bin.tar.gz"
+
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        wget -O /tmp/openjdk24-jdk.tar.gz "https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-aarch64_bin.tar.gz"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    tar -xzf /tmp/openjdk24-jdk.tar.gz --directory /tmp
+    mkdir -p "/usr/lib/jvm"
+    mv /tmp/jdk-24* /usr/lib/jvm/java-24-openjdk
+    for x in /usr/lib/jvm/java-24-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 24;
+    done
+    ln -s -v /usr/lib/jvm/java-24-openjdk/bin/java /usr/bin/java24
+    add-test-command "/usr/lib/jvm/java-24-openjdk/bin/java --version"
+    add-test-command "java24 --version"
 }
 
 function add_debian_repository_components() {
@@ -478,10 +515,12 @@ function package_base() {
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
 
-    # java11 install, and java17 as default
+    # java11 install, java21 install, and java17 as default
     install_java11
     install_java21
+    #install_java24  # Ready to be install when needed as replacement of java21 ?
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+    ln -s -v /usr/lib/jvm/java-17-openjdk/bin/java /usr/bin/java17          # Add java17 bin
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
     install_go                                          # Golang language
