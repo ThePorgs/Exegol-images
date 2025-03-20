@@ -1,7 +1,6 @@
 #!/bin/bash
 
 echo "##### EXEGOL SAYS ##### Listening on http://$(jq -r .bind_addr < /opt/tools/BloodHound-CE/bloodhound.config.json)"
-echo "#####             ##### Don't forget to run neo4j-start"
 echo "#####             ##### Login : admin"
 echo "#####             ##### Password : intial password will only be printed on the first run of bloodhound, it then needs to be changed in the Web UI"
 echo "#####             #####            if you lost the password, run bloodhound-ce-reset."
@@ -10,5 +9,32 @@ if ! pg_isready -q; then
     service postgresql start
 fi
 
-/opt/tools/BloodHound-CE/bloodhound -configfile /opt/tools/BloodHound-CE/bloodhound.config.json
+if neo4j status|grep -q "not running"; then
+  echo "Starting neo4j service"
+  JAVA_HOME=/usr/lib/jvm/java-11-openjdk neo4j start  # TODO use neo4j alias ?
+  PORT=7687  # TODO get this port from neo4j config
 
+  # timeout variables
+  TIMEOUT=60  # Timeout in seconds
+  INTERVAL=5  # Time between check in seconds
+  TIME_ELAPSED=0
+
+  # Check if app start until timeout
+  while [ $TIME_ELAPSED -lt $TIMEOUT ]; do
+    if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
+      break
+    fi
+
+    sleep $INTERVAL
+    TIME_ELAPSED=$((TIME_ELAPSED + INTERVAL))
+    echo "Waiting for neo4j to start ... ($TIME_ELAPSED/$TIMEOUT seconds)"
+  done
+  if lsof -Pi :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
+    echo "Neo4j started successfully"
+  else
+    echo "Unable to start neo4j.."
+    exit 1
+  fi
+fi
+
+/opt/tools/BloodHound-CE/bloodhound -configfile /opt/tools/BloodHound-CE/bloodhound.config.json

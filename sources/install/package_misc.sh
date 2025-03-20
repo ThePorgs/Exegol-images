@@ -6,7 +6,7 @@ source common.sh
 function install_misc_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing misc apt tools"
-    fapt rlwrap imagemagick ascii rsync
+    fapt rlwrap imagemagick ascii rsync yq xq
 
     add-history rlwrap
     add-history imagemagick
@@ -87,24 +87,24 @@ function install_searchsploit() {
     sed -i 's/opt\/exploitdb/opt\/tools\/exploitdb/' ~/.searchsploit_rc
 }
 
-function install_trilium() {
-    colorecho "Installing Trilium (building from sources)"
-    # TODO : apt install in a second step
+function install_triliumnext() {
+    colorecho "Installing TriliumNext"
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
-    git -C /opt/tools/ clone -b stable --depth 1 https://github.com/zadam/trilium.git
-    zsh -c "source ~/.zshrc && cd /opt/tools/trilium && nvm install 16 && nvm use 16 && npm install && npm rebuild && npm run webpack"
-    mkdir -p /root/.local/share/trilium-data
+    git -C /opt/tools/ clone --depth 1 https://github.com/triliumnext/notes.git triliumnext
+    cd /opt/tools/triliumnext || exit
+    zsh -c "source ~/.zshrc && nvm use default && npm install"
+    mkdir /opt/tools/triliumnext/data
     # config.ini contains the exposition port and host
-    cp -v /root/sources/assets/trilium/config.ini /root/.local/share/trilium-data
-    cp -v /root/sources/assets/trilium/trilium-manager.sh /opt/tools/trilium/trilium-manager.sh
-    chmod +x /opt/tools/trilium/trilium-manager.sh
-    zsh /opt/tools/trilium/trilium-manager.sh start
-    zsh /opt/tools/trilium/trilium-manager.sh configure
-    zsh /opt/tools/trilium/trilium-manager.sh stop
-    add-aliases trilium
-    add-history trilium
-    add-test-command "trilium-test"
-    add-to-list "trilium,https://github.com/zadam/trilium,Personal knowledge management system."
+    cp -v /root/sources/assets/triliumnext/config.ini /opt/tools/triliumnext/data/config.ini
+    cp -v /root/sources/assets/triliumnext/triliumnext-manager.sh /opt/tools/triliumnext/triliumnext-manager.sh
+    chmod +x /opt/tools/triliumnext/triliumnext-manager.sh
+    /opt/tools/triliumnext/triliumnext-manager.sh start
+    /opt/tools/triliumnext/triliumnext-manager.sh configure
+    /opt/tools/triliumnext/triliumnext-manager.sh stop
+    add-aliases triliumnext
+    add-history triliumnext
+    add-test-command "triliumnext-test"
+    add-to-list "TriliumNext,https://github.com/TriliumNext/Notes,Personal knowledge management system (successor to Trilium)."
 }
 
 function install_ngrok() {
@@ -142,8 +142,8 @@ function install_tig() {
     colorecho "Installing tig"
     git -C /opt/tools clone --depth 1 https://github.com/jonas/tig.git
     cd /opt/tools/tig || exit
-    make
-    make install
+    make -j
+    make install clean
     mv /root/bin/tig /opt/tools/bin/tig
     # Need add-history ?
     add-test-command "tig --help"
@@ -167,7 +167,7 @@ function install_cyberchef() {
     if [[ -z "$last_release" ]]; then
         criticalecho-noexit "Latest release not found" && return
     fi
-    mkdir /opt/tools/CyberChef
+    mkdir -p /opt/tools/CyberChef
     wget "$last_release" -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
     rm /tmp/CyberChef.zip
@@ -199,6 +199,16 @@ function install_uploader() {
     add-to-list "uploader,https://github.com/Frozenka/uploader,Tool for quickly downloading files to a remote machine based on the target operating system"
 }
 
+function install_wesng() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing wesng"
+    pipx install --system-site-packages git+https://github.com/bitsadmin/wesng
+    add-history wesng
+    add-test-command "wes --help"
+    add-to-list "wesng,https://github.com/bitsadmin/wesng,WES-NG is a tool based on the output of Windows's systeminfo utility which provides the list of vulnerabilities the OS is vulnerable to including any exploits for these vulnerabilities."
+}
+
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -211,7 +221,7 @@ function package_misc() {
     install_shellerator     # Reverse shell generator
     install_uberfile        # file uploader/downloader commands generator
     install_arsenal         # Cheatsheets tool
-    install_trilium         # notes taking tool
+    install_triliumnext     # notes taking tool
     install_ngrok           # expose a local development server to the Internet
     install_whatportis      # Search default port number
     install_objectwalker    # Python module to explore the object tree to extract paths to interesting objects in memory
@@ -220,6 +230,8 @@ function package_misc() {
     install_cyberchef       # A web based toolbox
     install_creds           # A default credentials vault
     install_uploader        # uploader for fast file upload
+    install_wesng           # Search Windows vulnerability via systeminfo
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package misc completed in $elapsed_time seconds."

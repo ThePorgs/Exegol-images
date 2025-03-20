@@ -21,12 +21,11 @@ COPY sources /root/sources/
 
 WORKDIR /root/sources/install
 
-# WARNING: package_most_used can't be used with other functions other than: package_base, post_install
+# WARNING: package_most_used can't be used with other functions other than: package_base
 # ./entrypoint.sh package_most_used
 
 RUN echo "${TAG}-${VERSION}" > /opt/.exegol_version
 RUN chmod +x entrypoint.sh
-RUN apt-get update
 RUN ./entrypoint.sh package_misc
 RUN ./entrypoint.sh package_c2
 RUN ./entrypoint.sh package_wordlists
@@ -47,7 +46,7 @@ RUN ./entrypoint.sh package_steganography
 RUN ./entrypoint.sh package_reverse
 RUN ./entrypoint.sh package_crypto
 RUN ./entrypoint.sh package_code_analysis
-RUN ./entrypoint.sh post_install
+RUN ./entrypoint.sh post_build
 
 WORKDIR /workspace
 

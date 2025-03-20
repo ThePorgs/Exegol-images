@@ -11,22 +11,16 @@ function update() {
 
 function install_exegol-history() {
     colorecho "Installing Exegol-history"
-    #  git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
-    # todo : below is something basic. A nice tool being created for faster and smoother workflow
-    mkdir -p /opt/tools/Exegol-history
-    rm -rf /opt/tools/Exegol-history/profile.sh
-    {
-      echo "#export INTERFACE='eth0'"
-      echo "#export DOMAIN='DOMAIN.LOCAL'"
-      echo "#export DOMAIN_SID='S-1-5-11-39129514-1145628974-103568174'"
-      echo "#export USER='someuser'"
-      echo "#export PASSWORD='somepassword'"
-      echo "#export NT_HASH='c1c635aa12ae60b7fe39e28456a7bac6'"
-      echo "#export DC_IP='192.168.56.101'"
-      echo "#export DC_HOST='DC01.DOMAIN.LOCAL'"
-      echo "#export TARGET='192.168.56.69'"
-      echo "#export ATTACKER_IP='192.168.56.1'"
-    } >> /opt/tools/Exegol-history/profile.sh
+    git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
+    cd /opt/tools/Exegol-history || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases exegol-history
+    add-history exegol-history
+    add-test-command "exh -h"
+    add-to-list "exegol-history,https://github.com/ThePorgs/Exegol-history,Credentials management for Exegol"
 }
 
 function install_rust_cargo() {
@@ -41,7 +35,7 @@ function install_rust_cargo() {
 
 function filesystem() {
     colorecho "Preparing filesystem"
-    mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/
+    mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/ /opt/rules/ /opt/lists
     touch /.exegol/build_pipeline_tests/all_commands.txt
     touch /.exegol/installed_tools.csv
     echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
@@ -54,17 +48,17 @@ function install_go() {
     # 1.19 needed by sliver
     asdf install golang 1.19
     #asdf install golang latest
-    #asdf global golang latest
+    #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2024-11-01"
+    local temp_fix_limit="2025-06-01"
     if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
       criticalecho "Temp fix expired. Exiting."
     else
-      # 1.23 needed by BloodHound-CE
+      # 1.23 needed by BloodHound-CE, and sensepost/ruler
       asdf install golang 1.23.0
       # Default GO version: 1.22.2
       asdf install golang 1.22.2
-      asdf global golang 1.22.2
+      asdf set --home golang 1.22.2
     fi
 
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
@@ -126,11 +120,8 @@ function install_pyenv() {
     fapt git curl build-essential
     curl -o /tmp/pyenv.run https://pyenv.run
     bash /tmp/pyenv.run
+    set_python_env
     local v
-    # add pyenv to PATH
-    export PATH="/root/.pyenv/bin:$PATH"
-    # add python commands (pyenv shims) to PATH
-    eval "$(pyenv init --path)"
     colorecho "Installing python2 (latest)"
     fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
     # Don't think it's needed, but if something fails, use command below
@@ -139,10 +130,11 @@ function install_pyenv() {
         colorecho "Installing python${v}"
         pyenv install "$v"
     done
-    # allowing python2, python3 and python3.6 to be found
+    # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
-    #  --> python3.6 points to 3.6
+    #  --> python3.10 points to 3.10
+    #  --> python3.13 points to 3.13
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -154,6 +146,8 @@ function install_pyenv() {
         add-test-command "python${v} --version"
         add-test-command "pip${v} --version"
     done
+    fapt python3-venv
+    add-test-command "python3 -m venv -h"
 }
 
 function install_firefox() {
@@ -163,9 +157,9 @@ function install_firefox() {
     mkdir /opt/tools/firefox
     mv /root/sources/assets/firefox/* /opt/tools/firefox/
     pip3 install -r /opt/tools/firefox/requirements.txt
-    python3 /opt/tools/firefox/setup.py
+    python3 /opt/tools/firefox/generate_policy.py
     add-history firefox
-    add-test-command "file /root/.mozilla/firefox/*.Exegol"
+    add-test-command "cat /usr/lib/firefox-esr/distribution/policies.json|grep 'Exegol'"
     add-test-command "firefox --version"
     add-to-list "firefox,https://www.mozilla.org,A web browser"
 }
@@ -202,8 +196,8 @@ function install_fzf() {
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
     add-aliases fzf
-    add-test-command "fzf-wordlists --help"
-    add-test-command "fzf --help"
+    add-test-command "source ~/.fzf.zsh && fzf-wordlists --help"
+    add-test-command "source ~/.fzf.zsh && fzf --help"
     add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
 }
 
@@ -233,6 +227,15 @@ function install_pipx() {
     add-test-command "pipx --version"
 }
 
+function install_pyftpdlib() {
+    # CODE-CHECK-WHITELIST=add-history
+    colorecho "Installing pyftpdlib"
+    pip3 install pyftpdlib
+    add-aliases pyftpdlib
+    add-test-command "python3 -c 'import pyftpdlib'"
+    add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
+}
+
 function install_yarn() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing yarn"
@@ -257,20 +260,22 @@ function install_ultimate_vimrc() {
 }
 
 function install_neovim() {
-    colorecho "Installing neovim"
+    colorecho "Installing neovim/nvim"
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        curl --location --output nvim.appimage "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
         chmod u+x nvim.appimage
         ./nvim.appimage --appimage-extract
         mkdir /opt/tools/nvim
-        cp -r squashfs-root/usr/* /opt/tools/nvim
+        cp -rv squashfs-root/usr/* /opt/tools/nvim
         rm -rf squashfs-root nvim.appimage
         ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        # Build take ~5min
+        # Building, because when using release, error is raised: "./bin/nvim: /lib/aarch64-linux-gnu/libm.so.6: version `GLIBC_2.38' not found (required by ./bin/nvim)"
+        # https://github.com/neovim/neovim/issues/32496
+        # Would require a bump in glibc, using old releases, or manually building. So manual build it is.
         fapt gettext
         git clone --depth 1 https://github.com/neovim/neovim.git
         cd neovim || exit
@@ -339,12 +344,18 @@ function install_java11() {
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
+    for x in /usr/lib/jvm/java-11-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 11;
+    done
+    ln -s -v /usr/lib/jvm/java-11-openjdk/bin/java /usr/bin/java11
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
+    add-test-command "java11 --version"
 }
 
 function install_java21() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
-    colorecho "Installing java 11"
+    colorecho "Installing java 21"
     if [[ $(uname -m) = 'x86_64' ]]
     then
         wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
@@ -358,7 +369,38 @@ function install_java21() {
     tar -xzf /tmp/openjdk21-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-21* /usr/lib/jvm/java-21-openjdk
+    for x in /usr/lib/jvm/java-21-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 21;
+    done
+    ln -s -v /usr/lib/jvm/java-21-openjdk/bin/java /usr/bin/java21
     add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
+    add-test-command "java21 --version"
+}
+
+function install_java24() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
+    colorecho "Installing java 24"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        wget -O /tmp/openjdk24-jdk.tar.gz "https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-x64_bin.tar.gz"
+
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        wget -O /tmp/openjdk24-jdk.tar.gz "https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-aarch64_bin.tar.gz"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    tar -xzf /tmp/openjdk24-jdk.tar.gz --directory /tmp
+    mkdir -p "/usr/lib/jvm"
+    mv /tmp/jdk-24* /usr/lib/jvm/java-24-openjdk
+    for x in /usr/lib/jvm/java-24-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 24;
+    done
+    ln -s -v /usr/lib/jvm/java-24-openjdk/bin/java /usr/bin/java24
+    add-test-command "/usr/lib/jvm/java-24-openjdk/bin/java --version"
+    add-test-command "java24 --version"
 }
 
 function add_debian_repository_components() {
@@ -378,51 +420,37 @@ function add_debian_repository_components() {
     mv "$out_file" "$source_file"
 }
 
-function post_install() {
-    # Function used to clean up post-install files
-    colorecho "Cleaning..."
-    local listening_processes
-    updatedb
-    rm -rfv /tmp/*
-    rm -rfv /var/lib/apt/lists/*
-    rm -rfv /root/sources
-    rm -rfv /root/.cache
-    rm -rfv /root/.gradle/caches
-    colorecho "Stop listening processes"
-    listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
-    if [[ -n $listening_processes ]]; then
-        echo "Listening processes detected"
-        ss -lnpt
-        echo "Kill processes"
-        # shellcheck disable=SC2086
-        kill -9 $listening_processes
-    fi
-    add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
-    colorecho "Sorting tools list"
-    (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
-    mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
-    colorecho "Adding end-of-preset in zsh_history"
-    echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
-    cp /opt/.exegol_history ~/.zsh_history
-    cp /opt/.exegol_history ~/.bash_history
-    colorecho "Removing desktop icons"
-    if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
-}
-
 function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Install asdf"
-    # creates ~/.asdf/
-    git -C "$HOME" clone --depth 1 --branch v0.13.1 https://github.com/asdf-vm/asdf .asdf
-    source "$HOME/.asdf/asdf.sh"
-    # completions file
-    source "$HOME/.asdf/completions/asdf.bash"
+    colorecho "Installing asdf"
+    local URL
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' | grep -o 'https://[^"]*')
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' | grep -o 'https://[^"]*')
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    curl --location -o /tmp/asdf.tar.gz "$URL"
+    tar -xf /tmp/asdf.tar.gz --directory /tmp
+    rm /tmp/asdf.tar.gz
+    mv /tmp/asdf /opt/tools/bin/asdf
+    set_bin_path
+    set_asdf_env
+    # asdf completions
+    mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
+    asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
 
 # Package dedicated to the basic things the env needs
 function package_base() {
+    local start_time
+    local end_time
+    start_time=$(date +%s)
     update
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
@@ -430,7 +458,6 @@ function package_base() {
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh
     deploy_exegol
-    install_exegol-history
     fapt software-properties-common
     add_debian_repository_components
     cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
@@ -445,7 +472,7 @@ function package_base() {
     nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
     logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 grc emacs-nox xsel xxd libnss3-tools
+    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem
@@ -457,14 +484,10 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.12 3.10 3.6 2"
+    PYTHON_VERSIONS="3.11 3.13 3.10 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
-    # https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-everytime-i-use-pip3
-    # TODO: do we really want to unset EXTERNALLY-MANAGED? Not sure it's the best course of action
-    # with pyenv, not sure the command below is needed anymore
-    # rm /usr/lib/python3.*/EXTERNALLY-MANAGED
     for v in $PYTHON_VERSIONS; do
         # shellcheck disable=SC2086
         pip${v} install --upgrade pip
@@ -487,16 +510,17 @@ function package_base() {
     add-aliases grc
     add-aliases emacs-nox
     add-aliases xsel
-    add-aliases pyftpdlib
 
     # Rust, Cargo, rvm
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
 
-    # java11 install, and java17 as default
+    # java11 install, java21 install, and java17 as default
     install_java11
     install_java21
+    #install_java24  # Ready to be install when needed as replacement of java21 ?
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+    ln -s -v /usr/lib/jvm/java-17-openjdk/bin/java /usr/bin/java17          # Add java17 bin
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
 
     install_go                                          # Golang language
@@ -504,6 +528,7 @@ function package_base() {
     install_fzf                                         # Fuzzy finder
     add-history curl
     install_yarn
+    install_pyftpdlib
     install_ultimate_vimrc                              # Make vim usable OOFB
     install_neovim
     install_mdcat                                       # cat markdown files
@@ -553,4 +578,11 @@ function package_base() {
 
     # Global python dependencies
     pip3 install -r /root/sources/assets/python/requirements.txt
+
+    install_exegol-history
+
+    post_install
+    end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    colorecho "Package base completed in $elapsed_time seconds."
 }

@@ -25,10 +25,10 @@ PATHNAME = "/root/.mozilla/firefox/**.Exegol/"
 # Define addons urls
 urls = [
     "https://addons.mozilla.org/en-US/firefox/addon/foxyproxy-standard/",
-    "https://addons.mozilla.org/en-US/firefox/addon/darkreader/",
     "https://addons.mozilla.org/en-US/firefox/addon/uaswitcher/",
     "https://addons.mozilla.org/en-US/firefox/addon/cookie-editor/",
-    "https://addons.mozilla.org/en-US/firefox/addon/wappalyzer/"
+    "https://addons.mozilla.org/en-US/firefox/addon/wappalyzer/",
+    "https://addons.mozilla.org/en-US/firefox/addon/multi-account-containers/"
 ]
 
 # Define regex

@@ -1,0 +1,1 @@
+autobloody --dbuser "neo4j" --dbpassword "exegol4thewin" --dbsource "$OWNED_USER" --dbtarget "$TARGET_USER" --domain "$DOMAIN" --username "$USER" --password "$PASSWORD" --host "$DC_HOST"

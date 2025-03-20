@@ -84,6 +84,12 @@ function package_most_used() {
     install_netexec                 # Crackmapexec repo
     install_sslscan                 # SSL/TLS scanner
     install_cyberchef               # A web based toolbox
+    install_proxychains             # Network tool
+    install_neo4j
+    install_bloodhound
+    install_bloodhound-py           # Ingestor for legacy BloodHound
+    install_coercer                 # Python script to coerce auth through multiple methods
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package most_used completed in $elapsed_time seconds."

@@ -1,0 +1,16 @@
+exegol-history export creds -u 'Administrator' --json
+exh export creds -u 'Administrator' --json
+exegol-history export hosts --ip '127.0.0.1'
+exh export hosts --ip '127.0.0.1'
+exegol-history export creds
+exh export creds
+exegol-history add creds -u 'Administrator' -p 'Passw0rd!'
+exh add creds -u 'Administrator' -p 'Passw0rd!'
+exegol-history add hosts --ip '127.0.0.1'
+exh add hosts --ip '127.0.0.1'
+exegol-history show
+exh show
+exegol-history apply creds
+exh apply creds
+exegol-history apply hosts
+exh apply hosts

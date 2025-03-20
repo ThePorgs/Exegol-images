@@ -1,0 +1,2 @@
+function exegol-history { /opt/tools/Exegol-history/venv/bin/python3 /opt/tools/Exegol-history/exegol-history.py "$@" && exec zsh }
+alias exh="exegol-history"

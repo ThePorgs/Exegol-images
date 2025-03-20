@@ -7,11 +7,11 @@ function install_forensic_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing forensic apt tools"
     fapt pst-utils foremost testdisk fdisk sleuthkit
-    
+
     add-history foremost
     add-history testdisk
     add-history fdisk
-    
+
     add-test-command "pst2ldif -V"      # Reads a PST and prints the tree structure to the console
     add-test-command "foremost -V"      # Alternative to binwalk
     add-test-command "testdisk --help"  # Recover lost partitions
@@ -56,14 +56,10 @@ function install_volatility2() {
 
 function install_volatility3() {
     colorecho "Installing volatility3"
-    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility3
-    cd /opt/tools/volatility3 || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    # volatility's setup.py installs requirements from requirements-minimal.txt. Some reqs from requirements.txt are missing, injecting now
-    pip3 install -r requirements.txt
-    deactivate
+    pipx install --system-site-packages git+https://github.com/volatilityfoundation/volatility3
+    # We are using the full path of 'pipx', because otherwise our catch and retry mechanism mess with the command
+    # https://github.com/volatilityfoundation/volatility3/blob/bd5fb7d61148afef031faade3efe68dcb012d95a/pyproject.toml#L23
+    /root/.pyenv/shims/pipx inject volatility3 'yara-python>=4.5.1,<5' 'capstone>=5.0.3,<6' 'pycryptodome>=3.21.0,<4' 'leechcorepyc>=2.19.2,<3; sys_platform != "darwin"' 'pillow>=10.0.0,<11.0.0'
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
@@ -96,7 +92,7 @@ function install_peepdf() {
     add-history peepdf
     add-test-command "peepdf.py --help"
     add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
-} 
+}
 
 function install_jadx() {
     # CODE-CHECK-WHITELIST=add-aliases
@@ -135,6 +131,7 @@ function package_forensic() {
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package forensic completed in $elapsed_time seconds."

@@ -8,7 +8,7 @@ function install_network_apt_tools() {
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
-    rdesktop xtightvncviewer hydra mariadb-client redis-tools
+    rdesktop xtightvncviewer hydra mariadb-client redis-tools mitmproxy
 
     add-history wireshark
     add-history tshark
@@ -21,6 +21,7 @@ function install_network_apt_tools() {
     add-history rdesktop
     add-history hydra
     add-history xfreerdp
+    add-history mitmproxy
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
     add-test-command "tshark --version"                             # Tshark packet sniffer
@@ -37,7 +38,8 @@ function install_network_apt_tools() {
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
-
+    add-test-command "mitmproxy --version"                          # MITMProxy
+    
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
     add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
@@ -53,6 +55,7 @@ function install_network_apt_tools() {
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
     add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
+    add-to-list "mitmproxy,https://github.com/mitmproxy/mitmproxy,mitmproxy is an interactive SSL/TLS-capable intercepting proxy with a console interface for HTTP/1 HTTP/2 and WebSockets."
 }
 
 function install_proxychains() {
@@ -60,8 +63,8 @@ function install_proxychains() {
     git -C /opt/tools/ clone --depth 1 https://github.com/rofl0r/proxychains-ng
     cd /opt/tools/proxychains-ng || exit
     ./configure --prefix=/usr --sysconfdir=/etc
-    make
-    make install
+    make -j
+    make install clean
     # Add proxyresolv to PATH (needed with 'proxy_dns_old' config)
     ln -s /opt/tools/proxychains-ng/src/proxyresolv /usr/bin/proxyresolv
     make install-config
@@ -112,6 +115,16 @@ function install_nmap-parse-output() {
     # nmap-parse-output always exits with 1 if no argument is passed
     add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
     add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
+}
+
+function install_udpx(){
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Install udpx"
+    go install -v github.com/nullt3r/udpx/cmd/udpx@latest
+    asdf reshim golang
+    add-history udpx
+    add-test-command "udpx --help"
+    add-to-list "udpx,https://github.com/nullt3r/udpx, Fast and lightweight - UDPX is a single-packet UDP scanner written in Go that supports the discovery of over 45 services with the ability to add custom ones."
 }
 
 function install_autorecon() {
@@ -293,8 +306,10 @@ function package_network() {
     start_time=$(date +%s)
     install_network_apt_tools
     install_proxychains             # Network tool
+    install_remmina                 # Remote desktop client
     install_nmap                    # Port scanner
     install_nmap-parse-output       # Parse nmap XML files
+    install_udpx
     install_autorecon               # External recon tool
     install_dnschef                 # Python DNS server
     install_divideandscan           # Python project to automate port scanning routine
@@ -310,6 +325,7 @@ function package_network() {
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
+    post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package network completed in $elapsed_time seconds."
