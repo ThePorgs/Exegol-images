@@ -298,6 +298,27 @@ function install_ssh-audit() {
     add-to-list "ssh-audit,https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
 }
 
+
+
+function install_remote-method-guesser() {
+    colorecho "Installing remote method guesser (rmg)"
+    git -C /opt/tools clone --depth 1 https://github.com/qtc-de/remote-method-guesser
+    cd /opt/tools/remote-method-guesser || exit
+    mvn package
+    cat << 'EOF' > /usr/local/bin/rmg
+#!/bin/bash
+java -jar /opt/tools/remote-method-guesser/target/rmg-5.1.0-jar-with-dependencies.jar "$@"
+EOF
+    chmod +x /usr/local/bin/rmg
+    colorecho "rmg installed successfully. Run 'rmg -help' to use the application."
+    add-test-command "rmg --help"
+    add-to-list "emote-method-guesser (rmg) is a Java RMI vulnerability scanner and can be used to identify and verify common security vulnerabilities on Java RMI endpoints."
+}
+
+
+
+
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_env
