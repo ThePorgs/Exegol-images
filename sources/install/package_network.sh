@@ -368,6 +368,7 @@ function package_network() {
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
+    post_install
     install_remote_method_guesser   # Remote methode guesser
     install_beanshooter             # beanshooter
     end_time=$(date +%s)
