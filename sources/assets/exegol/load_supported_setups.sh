@@ -308,7 +308,7 @@ function deploy_burpsuite() {
     git clone "$line" "/opt/tools/BurpSuiteCommunity/extensions/$extension_name"
   done
 
-  python3 "$MY_SETUP_PATH/burpsuite/generate_config.py"
+  python3 "/opt/tools/BurpSuiteCommunity/generate_config.py"
 }
 
 function _trust_ca_cert_in_firefox() {
