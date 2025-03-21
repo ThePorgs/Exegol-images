@@ -119,6 +119,7 @@ jobs:
       EXPORT_TOOLS: false
       # not pushing base image, we only need to push the final nightly image
       PUSH_IMAGE: false
+      # MUST be set to dev, as the nightly base image is built from the dev branch of the images sources repo
       IMAGES_SOURCES_BRANCH: ${{ needs.init.outputs.IMAGES_SOURCES_BRANCH }}
   build:
     name: Final image build
@@ -153,6 +154,8 @@ jobs:
       EXPORT_TOOLS: true
       DOCS_TARGET_BRANCH: ${{ needs.init.outputs.DOCS_TARGET_BRANCH }}
       PUSH_IMAGE: true
+      # MUST be set to dev, as the nightly base image is built from the dev branch of the images sources repo
+      IMAGES_SOURCES_BRANCH: ${{ needs.init.outputs.IMAGES_SOURCES_BRANCH }}
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
