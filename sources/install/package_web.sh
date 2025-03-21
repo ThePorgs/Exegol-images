@@ -785,6 +785,10 @@ function install_burpsuite() {
     mkdir /opt/tools/BurpSuiteCommunity/jython
     wget "https://repo1.maven.org/maven2/org/python/jython-standalone/${JYTHON_VERSION}/jython-standalone-${JYTHON_VERSION}.jar" -O "/opt/tools/BurpSuiteCommunity/jython/jython-standalone.jar"
 
+    JRUBY_VERSION="9.4.12.0"
+    mkdir /opt/tools/BurpSuiteCommunity/jruby
+    wget https://repo1.maven.org/maven2/org/jruby/jruby-complete/${JRUBY_VERSION}/jruby-complete-${JRUBY_VERSION}.jar -O "/opt/tools/BurpSuiteCommunity/jruby/jruby-standalone.jar"
+
     # Create a directory to hold extensions JAR
     mkdir /opt/tools/BurpSuiteCommunity/extensions
 

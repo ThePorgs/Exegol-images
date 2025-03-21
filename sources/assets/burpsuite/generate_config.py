@@ -2,7 +2,7 @@ import json
 import os
 import subprocess
 
-BURP_CONFIG_FILE = "UserConfigCommunity.json"
+BURP_CONFIG_FILE = "/root/.BurpSuite/UserConfigCommunity.json"
 BURPSUITE_EXTENSIONS_PATH = "/opt/tools/BurpSuiteCommunity/extensions/"
 BURP_MANIFEST_NAME = "BappManifest.bmf"
 
@@ -76,6 +76,15 @@ def install_extensions():
                     "errors": "ui",
                     "extension_file": final_entrypoint,
                     "extension_type": "python",
+                    "loaded": False,
+                    "name": name,
+                    "output": "ui"
+                }
+            elif extension_type == 3: # Ruby
+                extension_object = {
+                    "errors": "ui",
+                    "extension_file": final_entrypoint,
+                    "extension_type": "ruby",
                     "loaded": False,
                     "name": name,
                     "output": "ui"

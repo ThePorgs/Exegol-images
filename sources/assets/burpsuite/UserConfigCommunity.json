@@ -56,7 +56,7 @@
                 "location_of_jython_standalone_jar_file":"/opt/tools/BurpSuiteCommunity/jython/jython-standalone.jar"
             },
             "ruby":{
-                "location_of_jruby_jar_file":""
+                "location_of_jruby_jar_file":"/opt/tools/BurpSuiteCommunity/jruby/jruby-standalone.jar"
             },
             "settings":{
                 "automatically_reload_extensions_on_startup":true,
