@@ -31,6 +31,7 @@ urls = [
     "https://addons.mozilla.org/en-US/firefox/addon/multi-account-containers/"
 ]
 
+
 # Define regex
 reurl = r"(https:\/\/addons\.mozilla\.org\/firefox\/downloads\/file\/[0-9]+\/)([a-zA-Z0-9\-\_\.]+\.xpi)"
 reid = r'"id": "([^"]+)"'
