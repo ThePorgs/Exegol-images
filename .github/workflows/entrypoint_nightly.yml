@@ -31,6 +31,9 @@ env:
   # ThePorgs/Exegol-docs branch for tools lists
   DOCS_TARGET_BRANCH: "main"
 
+  # branch of the images-sources repo to use
+  IMAGES_SOURCES_BRANCH: "dev"
+
 # creating a concurrency group for nightly builds
 # so that when pushing multiple things in dev, build is always running for the latest push
 # this is to save resources, by killing "in progress" jobs when another build starts for the last push
@@ -55,6 +58,7 @@ jobs:
       BASE_IMAGE_TAG: ${{ steps.varset.outputs.BASE_IMAGE_TAG }}
       BASE_IMAGE_DOCKERFILE: ${{ steps.varset.outputs.BASE_IMAGE_DOCKERFILE }}
       DOCS_TARGET_BRANCH: ${{ steps.varset.outputs.DOCS_TARGET_BRANCH }}
+      IMAGES_SOURCES_BRANCH: ${{ steps.varset.outputs.IMAGES_SOURCES_BRANCH }}
       image_exists: ${{ steps.check_remote_image.outputs.image_exists }}
     steps:
       - name: Setting variables
@@ -71,6 +75,7 @@ jobs:
           echo "BASE_IMAGE_TAG=${{ env.BASE_IMAGE_TAG }}" >> $GITHUB_OUTPUT
           echo "BASE_IMAGE_DOCKERFILE=${{ env.BASE_IMAGE_DOCKERFILE }}" >> $GITHUB_OUTPUT
           echo "DOCS_TARGET_BRANCH=${{ env.DOCS_TARGET_BRANCH }}" >> $GITHUB_OUTPUT
+          echo "IMAGES_SOURCES_BRANCH=${{ env.IMAGES_SOURCES_BRANCH }}" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
       - name: Checking if remote image exists
         id: check_remote_image
@@ -114,7 +119,7 @@ jobs:
       EXPORT_TOOLS: false
       # not pushing base image, we only need to push the final nightly image
       PUSH_IMAGE: false
-
+      IMAGES_SOURCES_BRANCH: ${{ needs.init.outputs.IMAGES_SOURCES_BRANCH }}
   build:
     name: Final image build
     needs: [ init, code_check, build_base ]

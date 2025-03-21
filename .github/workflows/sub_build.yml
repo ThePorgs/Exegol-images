@@ -27,6 +27,9 @@ on:
       ARCH:
         required: true
         type: string
+      IMAGES_SOURCES_BRANCH:
+        required: false
+        type: string
 
 jobs:
   build:
@@ -43,6 +46,8 @@ jobs:
           docker ps
       - name: Checkout
         uses: actions/checkout@main
+        with:
+          ref: ${{ inputs.IMAGES_SOURCES_BRANCH || 'main' }}
       - name: Prepare build
         # Preparing variables used for tagging the image to build
         id: prepare
