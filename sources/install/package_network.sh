@@ -316,7 +316,7 @@ EOF
     chmod +x /usr/local/bin/rmg
     colorecho "rmg installed successfully. Run 'rmg --help' to use the application."
     add-test-command "rmg --help"
-    add-to-list "Remote-method-guesser (rmg) is a Java RMI vulnerability scanner and can be used to identify and verify common security vulnerabilities on Java RMI endpoints."
+    add-to-list "remote_method_guesser,https://github.com/qtc-de/remote-method-guesser (rmg) is a Java RMI vulnerability scanner and can be used to identify and verify common security vulnerabilities on Java RMI endpoints."
 }
 
 function install_beanshooter() {
@@ -337,7 +337,7 @@ EOF
     chmod +x /usr/local/bin/beanshooter
     colorecho "beanshooter installed successfully. Run 'beanshooter --help' to use the application."
     add-test-command "beanshooter --help"
-    add-to-list "beanshooter is a JMX enumeration and attacking tool, which helps to identify common vulnerabilities on JMX endpoints."
+    add-to-list "beanshooter,https://github.com/qtc-de/beanshooter is a JMX enumeration and attacking tool, which helps to identify common vulnerabilities on JMX endpoints."
 }
 
 
