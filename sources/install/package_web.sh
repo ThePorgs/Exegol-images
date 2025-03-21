@@ -769,16 +769,28 @@ function install_burpsuite() {
     # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
     burp_version=$($(which curl) -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
     wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
-    # TODO: two lines below should set up dark theme as default, does it work?
+
     mkdir -p /root/.BurpSuite/
-    # proxy (server) config for burpsuite
-    cp -v /root/sources/assets/burpsuite/conf.json /opt/tools/BurpSuiteCommunity/
-    # user config for burpsuite (dark theme)
     cp -v /root/sources/assets/burpsuite/UserConfigCommunity.json /root/.BurpSuite/UserConfigCommunity.json
+    mv /root/sources/assets/burpsuite/* /opt/tools/BurpSuiteCommunity/
+
     # script to trust burp CA
     cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
+
+    # Install Jython
+    JYTHON_VERSION="2.7.4"
+    mkdir /opt/tools/BurpSuiteCommunity/jython
+    wget "https://repo1.maven.org/maven2/org/python/jython-standalone/${JYTHON_VERSION}/jython-standalone-${JYTHON_VERSION}.jar" -O "/opt/tools/BurpSuiteCommunity/jython/jython-standalone.jar"
+
+    JRUBY_VERSION="9.4.12.0"
+    mkdir /opt/tools/BurpSuiteCommunity/jruby
+    wget https://repo1.maven.org/maven2/org/jruby/jruby-complete/${JRUBY_VERSION}/jruby-complete-${JRUBY_VERSION}.jar -O "/opt/tools/BurpSuiteCommunity/jruby/jruby-standalone.jar"
+
+    # Create a directory to hold extensions JAR
+    mkdir /opt/tools/BurpSuiteCommunity/extensions
+
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"
