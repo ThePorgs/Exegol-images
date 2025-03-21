@@ -47,7 +47,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
         with:
-          ref: ${{ inputs.IMAGES_SOURCES_BRANCH || 'main' }}
+          ref: ${{ inputs.IMAGES_SOURCES_BRANCH || github.event.repository.default_branch }}
       - name: Prepare build
         # Preparing variables used for tagging the image to build
         id: prepare
