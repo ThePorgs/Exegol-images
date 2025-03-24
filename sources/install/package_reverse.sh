@@ -135,7 +135,7 @@ function install_jd-gui() {
 function install_pwninit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwninit"
-    fapt liblzma-dev
+    fapt liblzma-dev patchelf elfutils
     # Sourcing rustup shell setup, so that rust binaries are found when installing cme
     source "$HOME/.cargo/env"
     cargo install pwninit
