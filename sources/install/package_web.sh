@@ -843,11 +843,10 @@ function install_sqlmap() {
 function install_sslscan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sslscan"
-    git -C /opt/tools clone --depth 1 https://github.com/rbsec/sslscan.git
-    cd /opt/tools/sslscan || exit
+    git -C /tmp clone --depth 1 https://github.com/rbsec/sslscan.git
+    cd /tmp/sslscan || exit
     make static
-    mv /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
-    make clean
+    mv /tmp/sslscan/sslscan /opt/tools/bin/sslscan
     add-history sslscan
     add-test-command "sslscan --version"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
