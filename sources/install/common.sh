@@ -172,6 +172,9 @@ function post_install() {
     rm -rf /tmp/*
     rm -rf /var/lib/apt/lists/*
 
+    # Tools' git cleanup
+    find /opt/tools -name .git -exec rm -rf {} \;
+
     colorecho "Stop listening processes"
     local listening_processes
     listening_processes=$(ss -lnpt | awk -F"," 'NR>1 {split($2,a,"="); print a[2]}')
