@@ -26,6 +26,8 @@ source package_cracking.sh
 source package_c2.sh
 source package_desktop.sh
 
+setup_measure
+
 # Entry point for the installation
 if [[ $EUID -ne 0 ]]; then
   criticalecho "You must be a root user"
