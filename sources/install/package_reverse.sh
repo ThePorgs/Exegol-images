@@ -94,9 +94,12 @@ function install_radare2() {
 function install_ghidra() {
     # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing Ghidra"
-    wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
-    unzip -q /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools # -q because too much useless verbose
-    rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
+    local ghidra_url
+    ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep 'browser_download_url' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/ghidra.zip "$ghidra_url"
+    unzip -q /tmp/ghidra.zip -d /opt/tools # -q because too much useless verbose
+    mv -v /opt/tools/ghidra_* /opt/tools/ghidra # ghidra always has a version number in the unzipped folder, lets make it consistent
+    rm /tmp/ghidra.zip
     add-aliases ghidra
     add-history ghidra
     # TODO add-test-command GUI app
