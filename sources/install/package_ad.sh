@@ -1,6 +1,6 @@
 #!/bin/bash
 # Author: The Exegol Project
-
+# test
 source common.sh
 
 function install_ad_apt_tools() {
