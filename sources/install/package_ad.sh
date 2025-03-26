@@ -1437,6 +1437,15 @@ function install_adminer() {
     add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner,Active Directory audit tool that leverages cypher queries."
 }
 
+function install_pysnaffler(){
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing pysnaffler"
+    pipx install --system-site-packages git+https://github.com/skelsec/pysnaffler
+    add-history pysnaffler
+    add-test-command "pysnaffler --help"
+    add-to-list "pysnaffler,https://github.com/skelsec/pysnaffler,Snaffler. But in python."
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1544,6 +1553,7 @@ function package_ad() {
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
     install_adminer
+    install_pysnaffler             # Snaffler, but in Python
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
