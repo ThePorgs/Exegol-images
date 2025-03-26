@@ -108,10 +108,10 @@ function install_ida() {
     colorecho "Installing IDA"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
-        chmod +x /tmp/idafree77_linux.run
-        /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
-        rm /tmp/idafree77_linux.run
+        wget "https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
+        chmod +x /tmp/idafree_linux.run # This is the setup wizard
+        /tmp/idafree_linux.run --mode unattended --prefix /opt/tools/idafree
+        rm /tmp/idafree_linux.run
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64" && return
     fi
