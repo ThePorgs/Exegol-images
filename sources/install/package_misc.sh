@@ -140,11 +140,10 @@ function install_objectwalker() {
 function install_tig() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing tig"
-    git -C /opt/tools clone --depth 1 https://github.com/jonas/tig.git
-    cd /opt/tools/tig || exit
+    git -C /tmp clone --depth 1 https://github.com/jonas/tig.git
+    cd /tmp/tig || exit
     make -j
-    make install clean
-    mv /root/bin/tig /opt/tools/bin/tig
+    make install bindir=/opt/tools/bin sysconfdir=/etc
     # Need add-history ?
     add-test-command "tig --help"
     add-to-list "tig,https://github.com/jonas/tig,Tig is an ncurses-based text-mode interface for git."
