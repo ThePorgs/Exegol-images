@@ -1,0 +1,4 @@
+bbot --target $TARGET --preset subdomain-enum
+bbot --target $TARGET --preset subdomain-enum --require-flags passive
+bbot --target $TARGET --preset spider
+bbot --target $TARGET --preset web-basic

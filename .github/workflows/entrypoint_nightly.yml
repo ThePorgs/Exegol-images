@@ -7,9 +7,6 @@ on:
     paths-ignore:
 #      - ".github/**"
       - "**.md"
-  schedule:
-    - cron: '0 0 * * 5'  # Run at midnight every Friday
-  workflow_dispatch:  # Enable manual triggering from GitHub interface
 
 env:
   # fake local registry for base image
