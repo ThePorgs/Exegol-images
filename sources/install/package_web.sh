@@ -918,6 +918,13 @@ function install_token_exploiter() {
     add-to-list "token-exploiter,https://github.com/psyray/token-exploiter,Token Exploiter is a tool designed to analyze GitHub Personal Access Tokens."
 }
 
+function install_bbot() {
+    colorecho "Installing BBOT"
+    pipx install --system-site-packages bbot
+    add-history bbot
+    add-test-command "bbot --help"
+    add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon, Bug Bounties, and ASM."
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -999,6 +1006,7 @@ function package_web() {
     install_postman                 # Postman - API platform for testing APIs
     install_zap                     # Zed Attack Proxy
     install_token_exploiter         # Github personal token Analyzer
+    install_bbot                    # Recursive scanner
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
