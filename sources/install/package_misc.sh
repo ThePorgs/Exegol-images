@@ -220,6 +220,14 @@ function install_glow() {
     add-to-list "glow,https://github.com/charmbracelet/glow,glow is a tool to render Markdown inside the terminal."
 }
 
+function install_thr() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing thr"
+    git -C /opt/tools/ clone https://github.com/The-Hacker-Recipes/The-Hacker-Recipes.git
+    add-test-command "ls /opt/tools/The-Hacker-Recipes/"
+    add-to-list "thr,https://www.thehacker.recipes/,THR (The Hacker Recipes) is aimed at providing technical guides on various hacking topics."
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -243,6 +251,7 @@ function package_misc() {
     install_uploader        # uploader for fast file upload
     install_wesng           # Search Windows vulnerability via systeminfo
     install_glow            # Render markdown file inside the terminal
+    install_thr             # https://www.thehacker.recipes/
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
