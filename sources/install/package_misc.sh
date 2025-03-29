@@ -208,6 +208,17 @@ function install_wesng() {
     add-to-list "wesng,https://github.com/bitsadmin/wesng,WES-NG is a tool based on the output of Windows's systeminfo utility which provides the list of vulnerabilities the OS is vulnerable to including any exploits for these vulnerabilities."
 }
 
+function install_glow() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing glow"
+    wget https://github.com/charmbracelet/glow/releases/download/v2.1.0/glow_2.1.0_Linux_x86_64.tar.gz -O /tmp/glow.tar.gz
+    tar -xvf /tmp/glow.tar.gz
+    cp glow_2.1.0_Linux_x86_64/glow /opt/tools/bin
+    rm -f /tmp/glow.tar.gz
+    rm -rf /tmp/glow_2.1.0_Linux_x86_64/
+    add-test-command "glow --help"
+    add-to-list "glow,https://github.com/charmbracelet/glow,glow is a tool to render Markdown inside the terminal."
+}
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
@@ -231,6 +242,7 @@ function package_misc() {
     install_creds           # A default credentials vault
     install_uploader        # uploader for fast file upload
     install_wesng           # Search Windows vulnerability via systeminfo
+    install_glow            # Render markdown file inside the terminal
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

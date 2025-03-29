@@ -4,3 +4,36 @@ alias fzf-haiti-hashcat='(){ haiti -e $1 | fzf --ansi | grep -E -o " [0-9]*]" | 
 alias fzf-haiti-john='(){ haiti -e $1 | fzf --ansi | grep -E -o "JtR: .*]" | cut -d "]" -f 1 | cut -d " " -f 2 ;}'
 alias hcat='(){ if [ -f "$1" ]; then hashcat -m $(fzf-haiti-hashcat $(head -n 1 "$1")) "$1" $(fzf-wordlists) "${@:2}"; elif [ -n "$1" ]; then hashcat -m $(fzf-haiti-hashcat "$1") "$1" $(fzf-wordlists) "${@:2}"; fi ;}'
 alias hjohn='(){ if [ -f "$1" ]; then john --format=$(fzf-haiti-john $(head -n 1 "$1")) --wordlist=$(fzf-wordlists) "${@:2}" $1; elif [ -n "$1" ]; then echo "$1" | john --format=$(fzf-haiti-john "$1") --wordlist=$(fzf-wordlists) "${@:2}" /dev/stdin; fi ;}'
+alias fzf-thr='() {
+	file=$(find "/opt/tools/The-Hacker-Recipes/docs/src" -type f -name "*.md" | fzf)
+
+	if [ ! -z $DC_HOST ]; then
+		sed -i -e "s/\$DC_HOST/$DC_HOST/g" "$file";
+	fi
+
+	if [ ! -z $PASSWORD ]; then
+		sed -i -e "s/\$PASSWORD/$PASSWORD/g" "$file";
+	fi
+
+	if [ ! -z $USER ]; then
+		sed -i -e "s/\$USER/$USER/g" "$file";
+	fi
+
+	if [ ! -z $NT_HASH ]; then
+		sed -i -e "s/\$NT_HASH/$NT_HASH/g" "$file";
+	fi
+
+	if [ ! -z $DOMAIN ]; then
+		sed -i -e "s/\$DOMAIN/$DOMAIN/g" "$file";
+	fi
+
+	if [ ! -z $DC_IP ]; then
+		sed -i -e "s/\$DC_IP/$DC_IP/g" "$file";
+	fi
+
+	glow -p "$file"
+	old_path="$PWD"
+	cd /opt/tools/The-Hacker-Recipes/
+	git restore .
+	cd $old_path
+}'
