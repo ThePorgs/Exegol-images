@@ -9,41 +9,31 @@
 
 LOG_FILE="/var/log/exegol/load_setups.log"
 
-function echo2wrapper () {
-  echo "[EXEGOL]$*"
-}
-
 function echo2log () {
   echo "trust-ca-burp.sh $(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG_FILE"
 }
 
 function logger_verbose () {
-  echo2wrapper "[VERBOSE]$*"
   echo2log "VERBOSE $*"
 }
 
 function logger_advanced () {
-  echo2wrapper "[ADVANCED]$*"
   echo2log "ADVANCED $*"
 }
 
 function logger_debug () {
-  echo2wrapper "[DEBUG]$*"
   echo2log "DEBUG $*"
 }
 
 function logger_warning () {
-  echo2wrapper "[WARNING]$*"
   echo2log "WARNING $*"
 }
 
 function logger_error () {
-  echo2wrapper "[ERROR]$*"
   echo2log "ERROR $*"
 }
 
 function logger_success () {
-  echo2wrapper "[SUCCESS]$*"
   echo2log "SUCCESS $*"
 }
 
@@ -82,6 +72,7 @@ function trust_ca_burp_in_firefox() {
       else
         kill "$burp_pid"
         logger_error 'Process timed out, please trust the CA manually.'
+        exit 1
       fi
     done
     # Download the CA to /tmp and update the CA path
