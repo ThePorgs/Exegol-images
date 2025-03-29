@@ -57,6 +57,9 @@ function install_volatility2() {
 function install_volatility3() {
     colorecho "Installing volatility3"
     pipx install --system-site-packages git+https://github.com/volatilityfoundation/volatility3
+    # We are using the full path of 'pipx', because otherwise our catch and retry mechanism mess with the command
+    # https://github.com/volatilityfoundation/volatility3/blob/bd5fb7d61148afef031faade3efe68dcb012d95a/pyproject.toml#L23
+    /root/.pyenv/shims/pipx inject volatility3 'yara-python>=4.5.1,<5' 'capstone>=5.0.3,<6' 'pycryptodome>=3.21.0,<4' 'leechcorepyc>=2.19.2,<3; sys_platform != "darwin"' 'pillow>=10.0.0,<11.0.0'
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
