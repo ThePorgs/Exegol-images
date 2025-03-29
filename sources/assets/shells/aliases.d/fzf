@@ -31,7 +31,7 @@ alias fzf-thr='() {
 		sed -i -e "s/\$DC_IP/$DC_IP/g" "$file";
 	fi
 
-	glow -p "$file"
+	glow -t "$file"
 	old_path="$PWD"
 	cd /opt/tools/The-Hacker-Recipes/
 	git restore .
