@@ -298,6 +298,15 @@ function install_ssh-audit() {
     add-to-list "ssh-audit,https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
 }
 
+function install_credslayer() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing credslayer"
+    pipx install --system-site-packages credslayer
+    add-history credslayer
+    add-test-command "credslayer --help"
+    add-to-list "credslayer,https://github.com/ShellCode33/CredSLayer,CredSLayer goal is to look for credentials and other useful stuff in network captures."
+}
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_env
@@ -325,6 +334,7 @@ function package_network() {
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
+    install_credslayer              # Credential extractor from network captures
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
