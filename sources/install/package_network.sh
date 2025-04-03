@@ -298,6 +298,38 @@ function install_ssh-audit() {
     add-to-list "ssh-audit,https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
 }
 
+function install_bruteshark() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing bruteshark"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="x64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    git -C /tmp clone --depth 1 git@github.com:odedshimon/BruteShark.git 
+    cd /tmp/BruteShark || exit
+
+    # Waiting for a patch: https://github.com/odedshimon/BruteShark/issues/124#issuecomment-1972774996
+    # + allow linux runs: https://stackoverflow.com/a/77595657
+    cp -v /root/sources/assets/patches/bruteshark.patch bruteshark.patch
+    git apply --verbose bruteshark.patch
+
+    # RID generation: https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
+    local runtimeIdentifier
+    runtimeIdentifier="$(lsb_release -is | tr '[:upper:]' '[:lower:]').$(lsb_release -rs)-$arch"
+    cd /tmp/BruteShark/BruteShark/BruteSharkCli || exit
+    dotnet publish -c Release -r "$runtimeIdentifier" /p:PublishSingleFile=true
+    cp "./bin/Release/netcoreapp3.1/$runtimeIdentifier/publish/BruteSharkCli" /opt/tools/bin/BruteSharkCli
+
+    add-history bruteshark
+    add-test-command "bruteshark --help"
+    add-to-list "bruteshark,https://github.com/odedshimon/BruteShark,BruteShark goal is to look for credentials and other useful stuff in network captures."
+}
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_env
@@ -325,6 +357,7 @@ function package_network() {
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
+    install_bruteshark              # Credential extractor from network captures
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

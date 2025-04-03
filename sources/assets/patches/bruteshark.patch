@@ -1,0 +1,25 @@
+diff --git a/BruteShark/BruteSharkCli/BruteSharkCli.csproj b/BruteShark/BruteSharkCli/BruteSharkCli.csproj
+index 3026793..d6c3731 100644
+--- a/BruteShark/BruteSharkCli/BruteSharkCli.csproj
++++ b/BruteShark/BruteSharkCli/BruteSharkCli.csproj
+@@ -3,6 +3,7 @@
+ 		<OutputType>Exe</OutputType>
+ 		<TargetFramework>netcoreapp3.1</TargetFramework>
+ 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
++		<InvariantGlobalization>true</InvariantGlobalization>
+ 	</PropertyGroup>
+ 	<ItemGroup>
+ 	  <PackageReference Include="CommandLineParser" Version="2.8.0" />
+diff --git a/BruteShark/PcapProcessor/PcapProcessor.csproj b/BruteShark/PcapProcessor/PcapProcessor.csproj
+index 4e60117..582be23 100644
+--- a/BruteShark/PcapProcessor/PcapProcessor.csproj
++++ b/BruteShark/PcapProcessor/PcapProcessor.csproj
+@@ -7,7 +7,7 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="SharpPcap" Version="6.0.0" />
++    <PackageReference Include="SharpPcap" Version="6.3.0" />
+   </ItemGroup>
+ 
+ </Project>
