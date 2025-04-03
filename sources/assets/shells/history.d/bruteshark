@@ -1,0 +1,1 @@
+BruteSharkCli -m Credentials,FileExtracting,NetworkMap,DNS,Voip -o results -i capture.pcap
