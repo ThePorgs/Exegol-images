@@ -27,6 +27,32 @@ function install_kubectl() {
     add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
 }
 
+function install_k9s() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing k9s"
+    mkdir -p /opt/tools/k9s
+    cd /opt/tools/k9s || exit
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+       curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_amd64.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+       tar -zxvf k9s_Linux_amd64.tar.gz k9s
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_arm64.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+        tar -zxvf k9s_Linux_arm64.tar.gz k9s
+    elif [[ $(uname -m) = 'armv7l' ]]
+    then
+        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_armv7.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+        tar -zxvf k9s_Linux_armv7.tar.gz k9s
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    add-history k9s
+    add-test-command "k9s --help"
+    add-to-list "k9s,https://github.com/derailed/k9s,TUI interface for managing Kubernetes clusters."
+}
+
 function install_awscli() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing aws cli"
