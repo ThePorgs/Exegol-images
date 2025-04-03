@@ -1437,6 +1437,14 @@ function install_adminer() {
     add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner,Active Directory audit tool that leverages cypher queries."
 }
 
+function install_powerview() {
+    colorecho "Installing powerview.py"
+    pipx install git+https://github.com/aniqfakhrul/powerview.py
+    add-history powerview.py
+    add-test-command "powerview --help"
+    add-to-list "Powerview.py,https://github.com/aniqfakhrul/powerview.py,PowerView.py is an alternative for the awesome original PowerView.ps1 script. Most of the modules used in PowerView are available here ( some of the flags are changed )"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1544,6 +1552,7 @@ function package_ad() {
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
     install_adminer
+    install_powerview              # Powerview Python implementation 
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
