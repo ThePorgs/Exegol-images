@@ -51,7 +51,6 @@ function install_k9s() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     install -o root -g root -m 0755 k9s /usr/local/bin/k9s
-    add-history k9s
     add-test-command "k9s --help"
     add-to-list "k9s,https://github.com/derailed/k9s,TUI interface for managing Kubernetes clusters."
 }
