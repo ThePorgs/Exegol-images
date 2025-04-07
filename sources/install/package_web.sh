@@ -894,6 +894,16 @@ function install_postman() {
     add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }
 
+function install_wpprobe() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing wpprobe"
+    go install -v github.com/Chocapikk/wpprobe@latest
+    asdf reshim golang
+    add-history wpprobe
+    add-test-command "wpprobe --help"
+    add-to-list "wpprobe,https://github.com/Chocapikk/wpprobe,A fast WordPress plugin enumeration tool."
+}
+
 function install_zap() {
     colorecho "Installing ZAP"
     local URL
@@ -997,6 +1007,7 @@ function package_web() {
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     install_katana                  # A next-generation crawling and spidering framework
     install_postman                 # Postman - API platform for testing APIs
+    install_wpprobe                 # WPProbe - Tool for detecting WordPress plugins using misconfigured REST API endpoints
     install_zap                     # Zed Attack Proxy
     install_token_exploiter         # Github personal token Analyzer
     post_install
