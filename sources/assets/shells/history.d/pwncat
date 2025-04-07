@@ -1,3 +1,15 @@
-pwncat-cs -lp $PORT
-pwncat-cs $TARGET:$PORT
-pwncat-cs ssh://$USER:$PASSWORD@$TARGET
+pwncat-vl connect://$HOST:$PORT
+pwncat-vl $HOST:$PORT
+pwncat-vl $HOST $PORT
+
+pwncat-vl bind://0.0.0.0:$PORT
+pwncat-vl :$PORT
+pwncat-vl -lp $PORT
+
+pwncat-vl ssh://$USER:$PASSWORD@$HOST
+pwncat-vl $USER@$HOST
+pwncat-vl -i id_rsa $USER@$HOST
+pwncat-vl -p $PORT $USER@$HOST
+
+pwncat-vl reconnect://$USER@$HOST
+pwncat-vl reconnect://$USER@$SESSION_ID
