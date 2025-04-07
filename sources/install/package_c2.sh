@@ -7,13 +7,13 @@ source package_ad.sh
 
 function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing pwncat"
-    pipx install --system-site-packages pwncat-cs
+    colorecho "Installing pwncat-vl"
+    pipx install --system-site-packages pwncat-vl
     # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
-    pipx inject pwncat-cs cryptography==36.0.2
+    pipx inject pwncat-vl cryptography==36.0.2
     add-history pwncat
-    add-test-command "pwncat-cs --version"
-    add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
+    add-test-command "pwncat-vl --version"
+    add-to-list "pwncat-vl,https://github.com/Chocapikk/pwncat-vl,Maintained fork of pwncat-cs with recent fixes and enhancements."
 }
 
 function install_metasploit() {
