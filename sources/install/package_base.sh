@@ -499,6 +499,7 @@ function package_base() {
     # change default shell
     chsh -s /bin/zsh
 
+    add-history sshpass
     add-history dnsutils
     add-history samba
     add-history ssh
