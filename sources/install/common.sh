@@ -44,7 +44,7 @@ function add-history() {
 
 function add-test-command() {
     colorecho "Adding build pipeline test command: $*"
-    echo "$*" >> "/.exegol/build_pipeline_tests/all_commands.txt"
+    echo "$*" >> "/.exegol/unit_tests_all_commands.txt"
 }
 
 function fapt() {

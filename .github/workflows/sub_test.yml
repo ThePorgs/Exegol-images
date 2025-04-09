@@ -26,19 +26,21 @@ jobs:
         run: docker inspect ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }}
       - name: Create a container from the built image
         run: |
-          docker run --name exegol-${{ inputs.IMAGE_NAME }} --rm -t -d ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }} endless
+          docker run --name exegol-unit-tests-${{ inputs.IMAGE_NAME }} --rm -t -d ${{ inputs.IMAGE_REGISTRY }}:${{ inputs.IMAGE_NAME }} endless
+      - name: Copy the unit tests script
+        run: docker cp ~/exegol-pipelines-tools/run_unit_tests.py exegol-unit-tests-${{ inputs.IMAGE_NAME }}/.exegol/
       - name: Run the tests
         if: success()
         run: |
-          docker exec exegol-${{ inputs.IMAGE_NAME }} python3 /.exegol/build_pipeline_tests/run_tests.py
+          docker exec exegol-unit-tests-${{ inputs.IMAGE_NAME }} python3 /.exegol/run_unit_tests.py
       - name: Print the failed tests if any
         if: failure()
         run: |
-          docker exec exegol-${{ inputs.IMAGE_NAME }} cat /.exegol/build_pipeline_tests/failed_commands.log
+          docker exec exegol-unit-tests-${{ inputs.IMAGE_NAME }} cat /.exegol/unit_tests_failed_commands.log
       - name: Print the successful tests
         if: always()
         run: |
-          docker exec exegol-${{ inputs.IMAGE_NAME }} cat /.exegol/build_pipeline_tests/success_commands.log
+          docker exec exegol-unit-tests-${{ inputs.IMAGE_NAME }} cat /.exegol/unit_tests_success_commands.log
       - name: Stop the container
         if: always()
-        run: docker stop exegol-${{ inputs.IMAGE_NAME }}
+        run: docker stop exegol-unit-tests-${{ inputs.IMAGE_NAME }}
