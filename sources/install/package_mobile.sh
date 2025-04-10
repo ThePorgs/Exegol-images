@@ -108,7 +108,7 @@ function install_mobsf() {
       ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
       ./venv/bin/python3 -m pip install .
       # https://github.com/MobSF/Mobile-Security-Framework-MobSF/issues/2503
-      local temp_fix_limit="2025-04-01"
+      local temp_fix_limit="2025-06-01"
       if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
         criticalecho "Temp fix expired. Exiting." # check if pipx supports preinstall now
       else
