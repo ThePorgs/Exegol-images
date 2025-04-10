@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - ci_updates
     paths-ignore:
 #      - ".github/**"
       - "**.md"

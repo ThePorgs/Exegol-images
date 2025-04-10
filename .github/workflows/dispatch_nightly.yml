@@ -1,0 +1,35 @@
+name: Nightly Build Trigger
+
+on:
+  push:
+    branches:
+      - dev
+      - ci_updates
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  trigger-private-pipeline:
+    name: Trigger Private Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Private Pipeline
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PIPELINE_PAT }}
+          repository: ThePorgs/Exegol-pipelines
+          event-type: build-pipeline
+          client-payload: |
+            {
+              "ref": "${{ github.ref }}",
+              "sha": "${{ github.sha }}",
+              "repository": "${{ github.repository }}",
+              "event_name": "${{ github.event_name }}",
+              "workflow": "${{ github.workflow }}",
+              "actor": "${{ github.actor }}",
+              "run_id": "${{ github.run_id }}",
+              "run_number": "${{ github.run_number }}",
+              "run_attempt": "${{ github.run_attempt }}",
+              "head_ref": "${{ github.head_ref }}",
+              "base_ref": "${{ github.base_ref }}"
+            }
