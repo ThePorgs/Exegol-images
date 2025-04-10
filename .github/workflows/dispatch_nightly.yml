@@ -13,11 +13,11 @@ jobs:
     name: Trigger Private Pipeline
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Private Pipeline
+      - name: Trigger Pipeline Repo
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.PIPELINE_PAT }}
-          repository: ThePorgs/Exegol-pipelines
+          repository: ThePorgs/Pipelines
           event-type: build-pipeline
           client-payload: |
             {
