@@ -1,0 +1,24 @@
+name: Nightly Build Trigger
+
+on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  trigger-private-pipeline:
+    name: Trigger Private Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Pipeline Repo
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PIPELINE_PAT }}
+          repository: ThePorgs/Pipelines
+          event-type: build-pipeline
+          client-payload: |
+            {
+              "sha": "${{ github.sha }}"
+            }
