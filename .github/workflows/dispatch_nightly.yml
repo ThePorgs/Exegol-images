@@ -21,15 +21,5 @@ jobs:
           event-type: build-pipeline
           client-payload: |
             {
-              "ref": "${{ github.ref }}",
               "sha": "${{ github.sha }}",
-              "repository": "${{ github.repository }}",
-              "event_name": "${{ github.event_name }}",
-              "workflow": "${{ github.workflow }}",
-              "actor": "${{ github.actor }}",
-              "run_id": "${{ github.run_id }}",
-              "run_number": "${{ github.run_number }}",
-              "run_attempt": "${{ github.run_attempt }}",
-              "head_ref": "${{ github.head_ref }}",
-              "base_ref": "${{ github.base_ref }}"
             }
