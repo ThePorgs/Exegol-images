@@ -298,6 +298,49 @@ function install_ssh-audit() {
     add-to-list "ssh-audit,https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
 }
 
+function install_remote_method_guesser() {
+    colorecho "Installing remote method guesser (rmg)"
+    git -C /opt/tools clone --depth 1 https://github.com/qtc-de/remote-method-guesser
+    cd /opt/tools/remote-method-guesser || exit
+    mvn package
+    cat << 'EOF' > /usr/local/bin/rmg
+#!/bin/bash
+JAR=$(ls -t /opt/tools/remote-method-guesser/target/*-jar-with-dependencies.jar 2>/dev/null | head -n 1)
+echo "$JAR"
+if [[ -z "$JAR" ]]; then
+    echo "JAR file not found in /opt/tools/remote-method-guesser/target/"
+    exit 1
+fi
+java -jar "$JAR" "$@"
+EOF
+    chmod +x /usr/local/bin/rmg
+    colorecho "rmg installed successfully. Run 'rmg --help' to use the application."
+    add-test-command "rmg --help"
+    add-to-list "remote_method_guesser,https://github.com/qtc-de/remote-method-guesser (rmg) is a Java RMI vulnerability scanner and can be used to identify and verify common security vulnerabilities on Java RMI endpoints."
+}
+
+function install_beanshooter() {
+    colorecho "Installing beanshooter"
+    git -C /opt/tools clone --depth 1 https://github.com/qtc-de/beanshooter
+    cd /opt/tools/beanshooter || exit
+    mvn package
+    cat << 'EOF' > /usr/local/bin/beanshooter
+#!/bin/bash
+JAR=$(ls -t /opt/tools/beanshooter/target/*-jar-with-dependencies.jar 2>/dev/null | head -n 1)
+echo "$JAR"
+if [[ -z "$JAR" ]]; then
+    echo "JAR file not found in /opt/tools/beanshooter/target/"
+    exit 1
+fi
+java -jar "$JAR" "$@"
+EOF
+    chmod +x /usr/local/bin/beanshooter
+    colorecho "beanshooter installed successfully. Run 'beanshooter --help' to use the application."
+    add-test-command "beanshooter --help"
+    add-to-list "beanshooter,https://github.com/qtc-de/beanshooter is a JMX enumeration and attacking tool, which helps to identify common vulnerabilities on JMX endpoints."
+}
+
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_env
@@ -325,6 +368,8 @@ function package_network() {
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
+    install_remote_method_guesser   # Remote methode guesser
+    install_beanshooter             # beanshooter
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
