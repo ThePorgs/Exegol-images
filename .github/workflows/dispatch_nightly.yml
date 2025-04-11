@@ -20,5 +20,6 @@ jobs:
           event-type: build-pipeline
           client-payload: |
             {
-              "sha": "${{ github.sha }}"
+              "sha": "${{ github.sha }}",
+              "commit_message": "${{ github.event.head_commit.message }}"
             }
