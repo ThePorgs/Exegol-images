@@ -12,3 +12,4 @@ alias http-put-server='python3 /opt/resources/linux/http-put-server.py --bind 0.
 alias ws='cd /workspace'
 alias systemctl="echo 'Systemctl cannot be used inside the container. Please use the \"service\" command instead.' && false"
 alias history-dump='history -E | tail -n +$(($(history | grep "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" | grep -v "grep" | tail -n1 | cut -d "#" -f1 | tr -d " ") + 1))'
+alias stop="kill -SIGTERM 1"
