@@ -439,8 +439,8 @@ function install_geopincer() {
 function install_yalis() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Yalis"
-    git -C /opt/tools clone --depth 1 https://github.com/EatonChips/yalis
-    cd /opt/tools/yalis || exit
+    git -C /tmp clone --depth 1 https://github.com/EatonChips/yalis
+    cd /tmp/yalis || exit
     go build .
     mv ./yalis /opt/tools/bin/
     add-history yalis
@@ -499,8 +499,8 @@ function install_censys() {
 function install_gomapenum() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoMapEnum"
-    git -C /opt/tools clone --depth 1 https://github.com/nodauf/GoMapEnum
-    cd /opt/tools/GoMapEnum/src || exit
+    git -C /tmp clone --depth 1 https://github.com/nodauf/GoMapEnum
+    cd /tmp/GoMapEnum/src || exit
     go build .
     mv ./src /opt/tools/bin/gomapenum
     add-history gomapenum
