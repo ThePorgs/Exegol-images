@@ -294,7 +294,8 @@ function install_aclpwn() {
 function install_impacket() {
     colorecho "Installing Impacket scripts"
     pipx install --system-site-packages git+https://github.com/ThePorgs/impacket
-    pipx inject impacket chardet
+    # Pycryptodome because: https://github.com/fortra/impacket/issues/1634
+    pipx inject impacket chardet pycryptodome
     cp -v /root/sources/assets/grc/conf.ntlmrelayx /usr/share/grc/conf.ntlmrelayx
     cp -v /root/sources/assets/grc/conf.secretsdump /usr/share/grc/conf.secretsdump
     cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
