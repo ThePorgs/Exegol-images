@@ -141,3 +141,11 @@ function post_build() {
     colorecho "Removing desktop icons"
     if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
 }
+
+function catch_and_retry() {
+    colorecho "Catch and retry"
+    local escaped_command
+    escaped_command=$(printf '%q ' "$@")
+    echo "[EXEGOL DEBUG] sh -c \"$escaped_command\""
+    sh -c "$escaped_command"
+}
