@@ -1,0 +1,1 @@
+sshpass -p "$PASSWORD" ssh -oStrictHostKeyChecking=no "$USER"@"$TARGET"
