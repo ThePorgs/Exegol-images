@@ -58,7 +58,7 @@ function install_angr() {
     fapt libffi-dev
     mkdir -p /opt/tools/angr || exit
     cd /opt/tools/angr || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip install angr
     deactivate

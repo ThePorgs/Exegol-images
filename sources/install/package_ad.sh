@@ -97,7 +97,7 @@ function install_ldapdomaindump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldapdomaindump"
     # Remove --system-site-packages because the ldapdomaindump package conflicts with the base package
-    pipx install git+https://github.com/dirkjanm/ldapdomaindump
+    pipx install --system-site-packages git+https://github.com/dirkjanm/ldapdomaindump
     add-history ldapdomaindump
     add-test-command "ldapdomaindump --help"
     add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service"
@@ -1423,7 +1423,7 @@ function install_sccmwtf() {
 function install_smbclientng() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing smbclient-ng"
-    pipx install git+https://github.com/p0dalirius/smbclient-ng
+    pipx install --system-site-packages git+https://github.com/p0dalirius/smbclient-ng
     add-history smbclient-ng
     add-test-command "smbclientng --help"
     add-to-list "smbclient-ng,https://github.com/p0dalirius/smbclient-ng,smbclient-ng is a fast and user friendly way to interact with SMB shares."
@@ -1440,7 +1440,7 @@ function install_conpass() {
 
 function install_adminer() {
     colorecho "Installing adminer"
-    pipx install git+https://github.com/Mazars-Tech/AD_Miner
+    pipx install --system-site-packages git+https://github.com/Mazars-Tech/AD_Miner
     add-aliases adminer
     add-history adminer
     add-test-command "adminer --help"
