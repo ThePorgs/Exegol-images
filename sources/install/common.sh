@@ -2,7 +2,7 @@
 # Author: The Exegol Project
 
 # Functions and commands that will be retried multiple times to counter random network issues when building
-CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "apt-get" "nvm" "npm" "pipx" "pip2" "pip3" "cargo" "gem")
+CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "apt-get" "asdf" "nvm" "npm" "pipx" "pip2" "pip3" "uv" "cargo" "gem")
 
 export RED='\033[1;31m'
 export BLUE='\033[1;34m'
@@ -68,11 +68,9 @@ function set_ruby_env() {
 }
 
 function set_python_env() {
-    colorecho "Setting pyenv environment"
-    # add pyenv to PATH
-    export PATH="/root/.pyenv/bin:$PATH"
-    # add python commands (pyenv shims) to PATH
-    eval "$(pyenv init --path)"
+    colorecho "Setting uv environment"
+    # add uv bins and tools to PATH
+    export PATH="/root/.local/bin:$PATH"
 }
 
 function set_bin_path() {
