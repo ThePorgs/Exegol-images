@@ -111,6 +111,9 @@ function install_mobsf() {
         pip install xmlsec==1.3.14
       fi
     fi
+
+    /opt/tools/MobSF/setup.sh # Setup MobSF to resolve default passwords not working
+
     add-aliases mobsf # alias is only needed with venv and can be removed when switching back to pipx
     add-history mobsf
     add-test-command "/opt/tools/MobSF/venv/bin/python -c 'from mobsf.MobSF.settings import VERSION; print(VERSION)'"
