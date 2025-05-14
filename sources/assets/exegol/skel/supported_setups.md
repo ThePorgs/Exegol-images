@@ -39,6 +39,10 @@ To automatically overwrite the `neovim` configuration to allow all users to use 
 
 To automatically overwrite the `~/.tmux.conf` configuration file, simply create the file `/opt/my-resources/setup/tmux/tmux.conf`
 
+### zellij
+
+To automatically overwrite the `~/.config/zellij/config.kdl` configuration file, simply create the file `/opt/my-resources/setup/zellij/config.kdl`
+
 ### python3 / pip3
 
 The `/opt/my-resources/setup/python3/requirements.txt` file allows the user to list a set of packages to install with constraints just like a classic **requirements.txt** file.

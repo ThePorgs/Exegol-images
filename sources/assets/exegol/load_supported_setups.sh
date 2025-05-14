@@ -141,6 +141,19 @@ function deploy_tmux() {
   fi
 }
 
+function deploy_zellij() {
+  wrapper_verbose "Deploying zellij"
+  if [[ -d "$MY_SETUP_PATH/zellij" ]]; then
+    # Copy zellij/config.kdl to ~/.config/zellij/config.kdl
+    if [[ -f "$MY_SETUP_PATH/zellij/config.kdl" ]]; then
+      # Adding custom user config
+      cat "$MY_SETUP_PATH/zellij/config.kdl" >> ~/.config/zellij/config.kdl
+    fi
+  else
+    mkdir "$MY_SETUP_PATH/zellij" && chmod 770 "$MY_SETUP_PATH/zellij"
+  fi
+}
+
 function deploy_vim() {
   wrapper_verbose "Deploying vim"
   local vim_path

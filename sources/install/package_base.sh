@@ -444,6 +444,19 @@ function install_asdf() {
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
 
+function install_zellij() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing zellij"
+    source "$HOME/.cargo/env"
+    cargo install --locked zellij
+    mkdir -p ~/.config/zellij
+    cp -v /root/sources/assets/zellij/config.kdl ~/.config/zellij/config.kdl
+    ln -s -v /root/.cargo/bin/zellij /usr/bin/zellij
+    # CODE-CHECK-WHITELIST=add-history
+    add-test-command "zellij --version"
+    add-to-list "zellij,https://github.com/zellij-org/zellij,A terminal workspace with batteries included"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
     local start_time
@@ -536,6 +549,7 @@ function package_base() {
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
     install_firefox
+    install_zellij                                      # A terminal workspace with batteries included
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
