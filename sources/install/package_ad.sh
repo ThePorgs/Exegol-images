@@ -233,7 +233,7 @@ function install_bloodhound-ce() {
     wget --directory-prefix "${azurehound_path}" "${azurehound_url_amd64_sha256}"
     [[ -f "${azurehound_path}/${azurehound_amd64_filename}" ]] || exit
     [[ -f "${azurehound_path}/${azurehound_amd64_filename}.sha256" ]] || exit
-    
+
     # Extract filename from URL for ARM64
     local azurehound_arm64_filename
     azurehound_arm64_filename=$(basename "${azurehound_url_arm64}")
@@ -926,9 +926,14 @@ function install_webclientservicescanner() {
 }
 
 function install_certipy() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Certipy"
-    pipx install --system-site-packages git+https://github.com/ly4k/Certipy
+    git -C /opt/tools/ clone --depth 1 https://github.com/ly4k/Certipy
+    cd /opt/tools/Certipy || exit
+    python3.13 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    add-aliases certipy
     add-history certipy
     add-test-command "certipy --version"
     add-to-list "certipy,https://github.com/ly4k/Certipy,Python tool to create and sign certificates"
@@ -1419,6 +1424,20 @@ function install_sccmhunter() {
     add-to-list "sccmhunter,https://github.com/garrettfoster13/sccmhunter,SCCMHunter is a post-ex tool built to streamline identifying profiling and attacking SCCM related assets in an Active Directory domain."
 }
 
+function install_sccmsecrets() {
+    colorecho "Installing SCCMSecrets"
+    git -C /opt/tools/ clone --depth 1 https://github.com/synacktiv/SCCMSecrets
+    cd /opt/tools/SCCMSecrets || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases sccmsecrets
+    add-history sccmsecrets
+    add-test-command "sccmsecrets.py policies --help"
+    add-to-list "sccmsecrets,https://github.com/synacktiv/SCCMSecrets,SCCMSecrets.py aims at exploiting SCCM policies distribution for credentials harvesting and initial access and lateral movement."
+}
+
 function install_sccmwtf() {
     # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing sccmwtf"
@@ -1577,6 +1596,7 @@ function package_ad() {
     install_dploot                 # Python rewrite of SharpDPAPI written un C#.
     # install_PXEThief             # TODO: pywin32 not found - PXEThief is a toolset designed to exploit vulnerabilities in Microsoft Endpoint Configuration Manager's OS Deployment, enabling credential theft from network and task sequence accounts.
     install_sccmhunter             # SCCMHunter is a post-ex tool built to streamline identifying, profiling, and attacking SCCM related assets in an Active Directory domain.
+    install_sccmsecrets
     install_sccmwtf                # This code is designed for exploring SCCM in a lab.
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
