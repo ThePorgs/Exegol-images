@@ -193,7 +193,7 @@ function install_bloodhound-ce() {
     latestRelease=$(jq --raw-output 'first(.[] | select(.tag_name | contains("-rc") | not) | .tag_name)' "${curl_tempfile}")
     git -C "${bloodhoundce_path}" clone --depth 1 --branch "${latestRelease}" "https://github.com/SpecterOps/BloodHound.git" src
     cd "${bloodhoundce_path}/src/" || exit
-    catch_and_retry VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci
+    catch_and_retry /bin/sh -c 'VERSION=v999.999.999 CHECKOUT_HASH="" python3 ./packages/python/beagle/main.py build --verbose --ci'
     # Force remove go and yarn cache that are not stored in standard locations
     rm -rf "${bloodhoundce_path}/src/cache" "${bloodhoundce_path}/src/.yarn/cache"
 
@@ -483,7 +483,7 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
@@ -725,7 +725,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -826,7 +826,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1006,7 +1006,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1124,7 +1124,7 @@ function install_pre2k() {
     colorecho "Installing pre2k"
     pipx install --system-site-packages git+https://github.com/garrettfoster13/pre2k
     # https://github.com/fastapi/typer/discussions/1215
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pipx inject pre2k "click~=8.1.8" --force
     fi
@@ -1156,7 +1156,7 @@ function install_roastinthemiddle() {
     colorecho "Installing roastinthemiddle"
     pipx install --system-site-packages git+https://github.com/Tw1sm/RITM
     # https://github.com/fastapi/typer/discussions/1215
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pipx inject ritm "click~=8.1.8" --force
     fi
@@ -1262,7 +1262,7 @@ function install_GPOddity() {
     colorecho "Installing GPOddity"
     pipx install --system-site-packages git+https://github.com/synacktiv/GPOddity
     # https://github.com/fastapi/typer/discussions/1215
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pipx inject gpoddity "click~=8.1.8" --force
     fi
@@ -1415,7 +1415,7 @@ function install_sccmhunter() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # https://github.com/fastapi/typer/discussions/1215
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install click~=8.1.8
     fi
@@ -1468,7 +1468,7 @@ function install_conpass() {
     colorecho "Installing conpass"
     pipx install --system-site-packages git+https://github.com/login-securite/conpass
     # https://github.com/fastapi/typer/discussions/1215
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pipx inject conpass "click~=8.1.8" --force
     fi
@@ -1484,6 +1484,20 @@ function install_adminer() {
     add-history adminer
     add-test-command "adminer --help"
     add-to-list "AD-miner,https://github.com/Mazars-Tech/AD_Miner,Active Directory audit tool that leverages cypher queries."
+}
+
+function install_goexec() {
+    colorecho "Installing GoExec"
+    mkdir -p /opt/tools/goexec || exit
+    cd /opt/tools/goexec || exit
+    asdf set golang 1.24.1
+    mkdir -p .go/bin
+    GOBIN=/opt/tools/goexec/.go/bin CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
+    asdf reshim golang
+    add-aliases goexec
+    add-history goexec
+    add-test-command "goexec --help"
+    add-to-list "GoExec,https://github.com/FalconOpsLLC/goexec,GoExec is a new take on some of the methods used to gain remote execution on Windows devices. GoExec implements a number of largely unrealized execution methods and provides significant OPSEC improvements overall"
 }
 
 function install_remotemonologue() {
@@ -1520,9 +1534,14 @@ function install_powerview() {
 }
 
 function install_pysnaffler(){
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pysnaffler"
-    pipx install --system-site-packages git+https://github.com/skelsec/pysnaffler
+    git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pysnaffler
+    cd /opt/tools/pysnaffler || exit
+    python3.13 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    add-aliases pysnaffler
     add-history pysnaffler
     add-test-command "pysnaffler --help"
     add-to-list "pysnaffler,https://github.com/skelsec/pysnaffler,Snaffler. But in python."
@@ -1636,6 +1655,7 @@ function package_ad() {
     install_smbclientng
     install_conpass                # Python tool for continuous password spraying taking into account the password policy.
     install_adminer
+    install_goexec                 # Go version of *exec (smb,dcom...) from impacket with stronger OPSEC
     install_remotemonologue        # A tool to coerce NTLM authentications via DCOM
     install_godap                  # A complete terminal user interface (TUI) for LDAP
     install_powerview              # Powerview Python implementation 

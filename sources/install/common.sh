@@ -119,20 +119,14 @@ function catch_and_retry() {
   # 4th retry: 2×4^4 = 2×256  = 512 seconds
   # 5th retry: 2×4^5 = 2×1024 = 2048 seconds
   local max_wait_time=600
-  local command="$*"
-  # escaping characters that could mess with the sh execution
-  local escaped_command
-  # not double-quoting $command as it would escape spaces inside the command and we don't want that
-  # shellcheck disable=SC2086
-  escaped_command=$(printf '%q ' $command)
   for ((i=1; i<=retries; i++)); do
-    # sh -c is used instead of an "eval" in order to avoid an infinite loop
-    #  for instance, with an "eval", "wget" would point to the "wget" function defined with define_retry_function()
+    # $1 always point to the bin full path to avoid infinite function loop
+    # $@ is used to split parameters and run the function
     # TODO : there is a limitation to this approach. It escapes metachars as well (like &&, ;, ||,)
     #  it means commands like "cmd1 && cmd2" won't work and will be interpreted as "cmd1 \&\& cmd2"
-    echo "[EXEGOL DEBUG] sh -c \"$escaped_command\""
+    echo "[EXEGOL C&R DEBUG]" "$@"
     # If command exits successfully, no need for more retries
-    sh -c "$escaped_command" && return 0
+    "$@" && return 0
     # Calculate the exponential backoff time
     local wait_time=$((scale_factor * (base_exponent ** i)))
     # Cap it at max_wait_time
@@ -149,7 +143,7 @@ function define_retry_function() {
   eval "
   function $original_command() {
     colorecho 'Catch & retry function for: $1'
-    catch_and_retry \"$original_command \$@\"
+    catch_and_retry \"\$(which $original_command)\" \"\$@\"
   }
   "
 }

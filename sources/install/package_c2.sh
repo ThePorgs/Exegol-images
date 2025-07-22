@@ -37,7 +37,7 @@ function install_metasploit() {
     gem install rex-text
 
     # fixes 'You have already activated timeout 0.2.0, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       gem install timeout --version 0.4.1
     fi
@@ -83,7 +83,7 @@ function install_sliver() {
     # function below will serve as a reminder to update sliver's version regularly
     # when the pipeline fails because the time limit is reached: update the version and the time limit
     # or check if it's possible to make this dynamic
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # Add branch v1.5.41 due to installation of stable branch
       git -C /opt/tools/ clone --branch v1.5.42 --depth 1 https://github.com/BishopFox/sliver.git
@@ -133,9 +133,7 @@ function install_havoc() {
     cd /opt/tools/Havoc || exit
     # https://github.com/HavocFramework/Havoc/issues/516 (seems fixed but keeping commented tempfix just in case)
     #    local temp_fix_limit="YYYY-MM-DD"
-    #    if [ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]; then
-    #      criticalecho "Temp fix expired. Exiting."
-    #    else
+    #    if check_temp_fix_expiry "$temp_fix_limit"; then
     #      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
     #      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
     #      go mod download golang.org/x/sys

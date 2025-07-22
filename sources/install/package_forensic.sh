@@ -117,6 +117,15 @@ function install_chainsaw() {
     add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
 }
 
+function install_oletools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing oletools"
+    pipx install --system-site-packages oletools
+    add-history oletools
+    add-test-command "olevba --help"
+    add-to-list "oletools,https://github.com/decalage2/oletools,python tools to analyze MS OLE2 files and MS Office documents - for malware analysis - forensics and debugging."
+}
+
 # Package dedicated to forensic tools
 function package_forensic() {
     set_env
@@ -131,6 +140,7 @@ function package_forensic() {
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
+    install_oletools                # Tools to analyze MS OLE2 files and MS Office documents
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

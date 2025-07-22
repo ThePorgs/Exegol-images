@@ -27,6 +27,30 @@ function install_kubectl() {
     add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
 }
 
+function install_k9s() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing k9s"
+    cd /tmp || exit
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_amd64.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+        tar -zxvf k9s_Linux_amd64.tar.gz k9s
+        rm k9s_Linux_amd64.tar.gz
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_arm64.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+        tar -zxvf k9s_Linux_arm64.tar.gz k9s
+        rm k9s_Linux_arm64.tar.gz
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    mkdir -p /opt/tools/bin || exit
+    mv k9s /opt/tools/bin/
+    add-history k9s
+    add-test-command "k9s --help"
+    add-to-list "k9s,https://github.com/derailed/k9s,TUI interface for managing Kubernetes clusters."
+}
+
 function install_awscli() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing aws cli"
@@ -123,6 +147,7 @@ function package_cloud() {
     local end_time
     start_time=$(date +%s)
     install_kubectl
+    install_k9s
     install_awscli
     install_scout           # Multi-Cloud Security Auditing Tool
     install_cloudsplaining

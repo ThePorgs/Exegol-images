@@ -6,10 +6,11 @@ source common.sh
 function install_misc_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing misc apt tools"
-    fapt rlwrap imagemagick ascii rsync yq xq
+    fapt rlwrap imagemagick ascii rsync yq xq keepassxc
 
     add-history rlwrap
     add-history imagemagick
+    add-history rsync
     add-history rsync
 
     add-test-command "rlwrap --version"                            # Reverse shell utility
@@ -19,6 +20,7 @@ function install_misc_apt_tools() {
     add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history"
     add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images."
     add-to-list "rsync,https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations"
+    add-to-list "keepassxc,https://github.com/keepassxreboot/keepassxc,Cross-platform password manager"
 }
 
 function install_goshs() {
@@ -91,7 +93,7 @@ function install_triliumnext() {
     colorecho "Installing TriliumNext"
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     # https://github.com/TriliumNext/Notes/issues/1890
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --branch v0.93.0 --depth 1 https://github.com/triliumnext/notes.git triliumnext
     fi
@@ -212,6 +214,13 @@ function install_wesng() {
     add-to-list "wesng,https://github.com/bitsadmin/wesng,WES-NG is a tool based on the output of Windows's systeminfo utility which provides the list of vulnerabilities the OS is vulnerable to including any exploits for these vulnerabilities."
 }
 
+function install_dtrx() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing dtrx"
+    pipx install --system-site-packages dtrx
+    add-test-command "dtrx --help"
+    add-to-list "dtrx,https://github.com/dtrx-py/dtrx,Do The Right eXtraction - don't remember what set of tar flags or where to pipe the output to extract it? no worries!"
+}
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
@@ -235,6 +244,7 @@ function package_misc() {
     install_creds           # A default credentials vault
     install_uploader        # uploader for fast file upload
     install_wesng           # Search Windows vulnerability via systeminfo
+    install_dtrx            # Intelligent archive extractor
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

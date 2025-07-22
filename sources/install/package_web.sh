@@ -58,7 +58,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2025-07-01"
+    local temp_fix_limit="2025-09-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
