@@ -1,1 +1,1 @@
-traceroute $TARGET
+traceroute "$TARGET"

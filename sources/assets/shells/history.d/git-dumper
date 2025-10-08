@@ -1,1 +1,1 @@
-git-dumper $TARGET/.git ./git-dump/
+git-dumper "$TARGET"/.git ./git-dump/

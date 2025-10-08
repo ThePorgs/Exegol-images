@@ -1,1 +1,1 @@
-xsstrike.py -u $TARGET
+xsstrike.py -u "$TARGET"

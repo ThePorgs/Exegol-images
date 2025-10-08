@@ -1,1 +1,1 @@
-dnsenum $TARGET
+dnsenum "$TARGET"

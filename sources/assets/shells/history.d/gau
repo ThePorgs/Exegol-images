@@ -1,1 +1,1 @@
-gau $TARGET
+gau "$TARGET"

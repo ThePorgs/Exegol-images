@@ -1,1 +1,1 @@
-fuxploider.py --url $TARGET --not-regex "wrong file type"
+fuxploider.py --url "$TARGET" --not-regex "wrong file type"

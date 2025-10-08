@@ -1,4 +1,4 @@
-katana -u https://$TARGET
-katana -u https://$TARGET,https://$TARGET
+katana -u "https://$TARGET"
+katana -u "https://$TARGET","https://$TARGET"
 katana -list url_list.txt
-katana -u https://$TARGET -headless -no-incognito
+katana -u "https://$TARGET" -headless -no-incognito

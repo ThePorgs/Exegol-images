@@ -1,2 +1,2 @@
-arjun -u $TARGET
-arjun -u $TARGET -m POST
+arjun -u "$TARGET"
+arjun -u "$TARGET" -m POST
