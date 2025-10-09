@@ -196,6 +196,15 @@ function install_pycdc() {
     add-to-list "pycdc,https://github.com/zrax/pycdc,Python bytecode disassembler and decompiler."
 }
 
+function install_refinery() {
+    colorecho "Installing Binary Refinery"
+    REFINERY_PREFIX=r. pipx install binary-refinery[extended] # Prefix to avoid conflicts with other tools like pwntools
+    add-history binref
+    add-test-command "emit 'PIZZA TIME' | r.hex -R | r.xor H:42 | r.b64 -R | r.b64 | r.xor H:42 | r.hex"
+    add-test-command "binref -h"
+    add-to-list "binref,https://github.com/binref/refinery,Framework for binary data analysis and transformation."
+}
+
 # Package dedicated to reverse engineering tools
 function package_reverse() {
     set_env
@@ -214,6 +223,7 @@ function package_reverse() {
     install_jd-gui                  # Java decompiler
     install_pwninit                 # Tool for automating starting binary exploit
     install_pycdc                   # Python bytecode disassembler and decompiler
+    install_refinery                # Multi-tool framework for binary data analysis and transformation.
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
