@@ -198,7 +198,7 @@ function install_pycdc() {
 
 function install_refinery() {
     colorecho "Installing Binary Refinery"
-    REFINERY_PREFIX=r. pipx install binary-refinery[extended] # Prefix to avoid conflicts with other tools like pwntools
+    REFINERY_PREFIX=r. pipx install 'binary-refinery[extended]' # Prefix to avoid conflicts with other tools like pwntools
     add-history binref
     add-test-command "emit 'PIZZA TIME' | r.hex -R | r.xor H:42 | r.b64 -R | r.b64 | r.xor H:42 | r.hex"
     add-test-command "binref -h"
