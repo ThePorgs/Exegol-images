@@ -22,9 +22,9 @@ function install_web_apt_tools() {
 }
 
 function install_weevely() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing weevely"
     pipx install --python 3.13 --system-site-packages git+https://github.com/epinna/weevely3
-    add-aliases weevely
     add-history weevely
     add-test-command "weevely --help"
     add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
