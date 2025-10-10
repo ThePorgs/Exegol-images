@@ -1,2 +1,2 @@
 enum4linux-ng -A "$TARGET"
-enum4linux-ng -A -u "$DOMAIN"/"$USER" -p "$PASSWORD" "$DC_HOST"
+enum4linux-ng -A -u "$DOMAIN"/"$USER" -p "$PASSWORD" "$DC_IP"

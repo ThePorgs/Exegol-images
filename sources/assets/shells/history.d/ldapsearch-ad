@@ -1,2 +1,2 @@
-ldapsearch-ad.py --server "$DC_HOST" --domain "$DOMAIN" --username "$USER" --password "$PASSWORD" --type all
-ldapsearch-ad.py --server "$DC_HOST" --type info
+ldapsearch-ad.py --server "$DC_IP" --domain "$DOMAIN" --username "$USER" --password "$PASSWORD" --type all
+ldapsearch-ad.py --server "$DC_IP" --type info
