@@ -15,14 +15,15 @@ function get_config_values() {
 function start_app() {
   get_config_values
   nvm use default
-  nohup npm --prefix /opt/tools/triliumnext run server:start &> /tmp/triliumnext.nohup.out &
+  local log_file="/tmp/triliumnext.nohup.out"
+  nohup npm --prefix /opt/tools/triliumnext run server:start &> "$log_file" &
   # npx --prefix /opt/tools/triliumnext/ nodemon src/main.ts  # this command can be used instead of npm run server:start, especially if one needs to pass the TRILIUM_DATA_DIR env var
   NODE_PID=$!
   echo "Starting TriliumNext..."
 
   # timeout variables
-  TIMEOUT=60  # Timeout in seconds
-  INTERVAL=2  # Time between check in seconds
+  TIMEOUT=100  # Timeout in seconds
+  INTERVAL=5  # Time between check in seconds
   TIME_ELAPSED=0
 
   # Check if app start until timeout
@@ -40,6 +41,8 @@ function start_app() {
   echo "Application failed to start in time (after $TIMEOUT seconds)..."
   kill -SIGINT $(pgrep -f 'node /opt/tools/triliumnext/node_modules/.bin/cross-env') 2>/dev/null
   kill -9 "$NODE_PID" 2>/dev/null
+  echo "Starting logs:"
+  cat "$log_file"
   exit 2
 }
 

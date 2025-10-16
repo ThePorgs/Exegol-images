@@ -6,10 +6,11 @@ source common.sh
 function install_misc_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing misc apt tools"
-    fapt rlwrap imagemagick ascii rsync yq xq
+    fapt rlwrap imagemagick ascii rsync yq xq keepassxc
 
     add-history rlwrap
     add-history imagemagick
+    add-history rsync
     add-history rsync
 
     add-test-command "rlwrap --version"                            # Reverse shell utility
@@ -19,6 +20,7 @@ function install_misc_apt_tools() {
     add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history"
     add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images."
     add-to-list "rsync,https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations"
+    add-to-list "keepassxc,https://github.com/keepassxreboot/keepassxc,Cross-platform password manager"
 }
 
 function install_goshs() {
@@ -90,7 +92,12 @@ function install_searchsploit() {
 function install_triliumnext() {
     colorecho "Installing TriliumNext"
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
-    git -C /opt/tools/ clone --depth 1 https://github.com/triliumnext/notes.git triliumnext
+    # https://github.com/TriliumNext/Notes/issues/1890
+    local temp_fix_limit="2025-11-01"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      git -C /opt/tools/ clone --branch v0.93.0 --depth 1 https://github.com/triliumnext/notes.git triliumnext
+    fi
+    #git -C /opt/tools/ clone --depth 1 https://github.com/triliumnext/notes.git triliumnext
     cd /opt/tools/triliumnext || exit
     zsh -c "source ~/.zshrc && nvm use default && npm install"
     mkdir /opt/tools/triliumnext/data
@@ -140,11 +147,10 @@ function install_objectwalker() {
 function install_tig() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing tig"
-    git -C /opt/tools clone --depth 1 https://github.com/jonas/tig.git
-    cd /opt/tools/tig || exit
+    git -C /tmp clone --depth 1 https://github.com/jonas/tig.git
+    cd /tmp/tig || exit
     make -j
-    make install clean
-    mv /root/bin/tig /opt/tools/bin/tig
+    make install bindir=/opt/tools/bin sysconfdir=/etc
     # Need add-history ?
     add-test-command "tig --help"
     add-to-list "tig,https://github.com/jonas/tig,Tig is an ncurses-based text-mode interface for git."
@@ -189,7 +195,7 @@ function install_uploader() {
     colorecho "Installing Uploader"
     git -C /opt/tools/ clone --depth 1 https://github.com/Frozenka/uploader.git 
     cd /opt/tools/uploader || exit
-    python3 -m venv --system-site-package ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip install -r requirements.txt
     deactivate
@@ -208,6 +214,36 @@ function install_wesng() {
     add-to-list "wesng,https://github.com/bitsadmin/wesng,WES-NG is a tool based on the output of Windows's systeminfo utility which provides the list of vulnerabilities the OS is vulnerable to including any exploits for these vulnerabilities."
 }
 
+function install_glow() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    local url
+    local version
+    colorecho "Installing glow"
+    url=$(curl --location --silent --output /dev/null --write-out "%{url_effective}" https://github.com/charmbracelet/glow/releases/latest)    version=${url##*v}
+    wget "https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_Linux_x86_64.tar.gz" -O /tmp/glow.tar.gz
+    tar -xvf /tmp/glow.tar.gz
+    cp "glow_${version}_Linux_x86_64/glow" "/opt/tools/bin"
+    rm -f /tmp/glow.tar.gz
+    rm -rf "/tmp/glow_${version}_Linux_x86_64/"
+    add-test-command "glow --help"
+    add-to-list "glow,https://github.com/charmbracelet/glow,glow is a tool to render Markdown inside the terminal."
+}
+
+function install_thr() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing thr"
+    git -C /opt/tools/ clone https://github.com/The-Hacker-Recipes/The-Hacker-Recipes.git
+    add-test-command "ls /opt/tools/The-Hacker-Recipes/"
+    add-to-list "thr,https://www.thehacker.recipes/,THR (The Hacker Recipes) is aimed at providing technical guides on various hacking topics."
+}
+
+function install_dtrx() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing dtrx"
+    pipx install --system-site-packages dtrx
+    add-test-command "dtrx --help"
+    add-to-list "dtrx,https://github.com/dtrx-py/dtrx,Do The Right eXtraction - don't remember what set of tar flags or where to pipe the output to extract it? no worries!"
+}
 
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
@@ -231,6 +267,9 @@ function package_misc() {
     install_creds           # A default credentials vault
     install_uploader        # uploader for fast file upload
     install_wesng           # Search Windows vulnerability via systeminfo
+    install_glow            # Render markdown file inside the terminal
+    install_thr             # https://www.thehacker.recipes/
+    install_dtrx            # Intelligent archive extractor
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

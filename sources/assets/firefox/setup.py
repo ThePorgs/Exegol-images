@@ -104,9 +104,9 @@ def activate_addons(addon_list):
                 json.dump(extensions_config, extensions_file)
                 extensions_file.truncate()  # remove remaining part
             if disable:
-                logger.success(f"{addon_name} sucessfully disabled\n")
+                logger.success(f"{addon_name} successfully disabled\n")
             else:
-                logger.success(f"{addon_name} sucessfully enabled\n")
+                logger.success(f"{addon_name} successfully enabled\n")
         except:
             if disable:
                 logger.error(f"Could not disable {addon_name}\n")
@@ -166,16 +166,16 @@ if __name__ == "__main__":
             # Read manifest.json in the archive
             addon_id = get_addon_id("/tmp/" + addon_name)
             install_addons(addon_name, addon_id, "/tmp/")
-            logger.success(f"{addon_name} installed sucessfully\n")
+            logger.success(f"{addon_name} installed successfully\n")
             addon_list.append((addon_id, addon_name[0:-4], False))
         except:
             install_ko.append("- " + addon_name)
             logger.error(f"{addon_name} could not be installed\n")
             continue
     if install_ko:
-        logger.info("All addons from the list were installed sucessfully except:\n%s\n" % "\n".join(install_ko))
+        logger.info("All addons from the list were installed successfully except:\n%s\n" % "\n".join(install_ko))
     else:
-        logger.success("All addons from the list were installed sucessfully\n")
+        logger.success("All addons from the list were installed successfully\n")
 
     # Run firefox to initialise profile
     logger.info("Initialising Firefox profile")
@@ -186,7 +186,7 @@ if __name__ == "__main__":
             sleep(0.5)
         p_firefox.kill()
         assert(Path(glob("%s" % PATHNAME)[0] + "/extensions.json").is_file())
-        logger.success("Firefox profile initialised sucessfully\n")
+        logger.success("Firefox profile initialised successfully\n")
     except:
         logger.error("Could not initialise Firefox profile")
         raise

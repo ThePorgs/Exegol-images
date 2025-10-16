@@ -94,7 +94,7 @@ function wrapper_success () {
 # The following functions are used to deploy the supported setups
 
 function init() {
-  wrapper_verbose "Initialization supported setups"
+  wrapper_verbose "Initializing supported setups"
   logger_debug "Checking environment variables"
   # Print environment variables in a more readable format
   env | sort | while read -r line; do
@@ -143,16 +143,16 @@ function deploy_tmux() {
 
 function deploy_vim() {
   wrapper_verbose "Deploying vim"
-  local vpath
+  local vim_path
   if [[ -d "$MY_SETUP_PATH/vim" ]]; then
     # Copy vim/vimrc to ~/.vimrc
     [[ -f "$MY_SETUP_PATH/vim/vimrc" ]] && cp "$MY_SETUP_PATH/vim/vimrc" ~/.vimrc
     # Copy every subdir configs to ~/.vim directory
-    for vpath in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
-      [[ "$(ls -A "$vpath")" ]] && mkdir -p ~/.vim && cp -rf "$vpath" ~/.vim
+    for vim_path in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
+      [[ "$(ls -A "$vim_path")" ]] && mkdir -p ~/.vim && cp -rf "$vim_path" ~/.vim
     done
   else
-    # Create supported directories struct
+    # Create supported directories structure
     mkdir -p "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"
     chmod 770 -R "$MY_SETUP_PATH/vim"
   fi
@@ -172,43 +172,38 @@ function deploy_apt() {
   wrapper_verbose "Deploying APT packages"
   local key_url
   local install_list
-  local tmpaptkeys
-  tmpaptkeys=$(mktemp -d)
+  local tmp_apt_keys
+  tmp_apt_keys=$(mktemp -d)
   if [[ -d "$MY_SETUP_PATH/apt" ]]; then
     # Deploy custom apt repository
     logger_verbose "Deploying custom apt repository"
     cp "$MY_SETUP_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
     # Register custom repo's GPG keys
     grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r key_url; do
-      wget -nv "$key_url" -O "$tmpaptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
+      wget -nv "$key_url" -O "$tmp_apt_keys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
-    if [[ -n $(find "$tmpaptkeys" -type f -name "*.key") ]]; then
+    if [[ -n $(find "$tmp_apt_keys" -type f -name "*.key") ]]; then
       logger_verbose "Importing custom apt repository GPG keys"
-      gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --import "$tmpaptkeys"/*.key &&
-        gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
+      gpg --no-default-keyring --keyring="$tmp_apt_keys/user_custom.gpg" --batch --import "$tmp_apt_keys"/*.key &&
+        gpg --no-default-keyring --keyring="$tmp_apt_keys/user_custom.gpg" --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
     fi
-    rm -rf "$tmpaptkeys"
+    rm -rf "$tmp_apt_keys"
     # Create a package array
     install_list=()
-    # Read the my-resource package.list file
+    # Read the my-resource package.list file using awk to handle last line properly
     logger_debug "Reading my resources package.list file"
-    while IFS= read -r ligne
-    do
-        # Exclude comment line start by "#"
-        if [[ "$ligne" =~ ^\#.* ]]; then
-            continue
-        fi
-        # Add packages to the list
+    # Use awk to read packages, skipping comments and empty lines
+    while IFS= read -r line; do
         # shellcheck disable=SC2191
-        install_list+=( $=ligne )
-    done < "$MY_SETUP_PATH/apt/packages.list"
+        install_list+=( $=line )
+    done < <(awk '!/^#/ && NF' "$MY_SETUP_PATH/apt/packages.list")
     # Check if there is some package to install
     if [[ ${#install_list[@]} -gt 0 ]]; then
         logger_verbose "Updating package list from repos"
-        # Update package list from repos (only if there is some package to install
+        # Update package list from repos (only if there is some package to install)
         apt-get update
-        # Install every packages listed in the file
+        # Install every package listed in the file
         apt-get install -y "${install_list[@]}"
     else
         logger_verbose "No APT package to install."
@@ -225,7 +220,10 @@ function deploy_python3() {
   if [[ -d "$MY_SETUP_PATH/python3" ]]; then
     logger_verbose "Installing python3 packages"
     # Install every pip3 packages listed in the requirements.txt file (if any supplied)
-    [[ $(sed -E "/^\s*([#;]|\/\/|).*$/d" "$MY_SETUP_PATH/python3/requirements.txt" | wc -l) -gt 0 ]] && pip3 install -r "$MY_SETUP_PATH/python3/requirements.txt"
+    # ignore empty lines, lines with only spaces and comments
+    if grep -vE '^\s*$|^#' "$MY_SETUP_PATH/python3/requirements.txt"; then
+      pip3 install -r "$MY_SETUP_PATH/python3/requirements.txt"
+    fi
   else
     logger_verbose "Importing file template"
     # Import file template

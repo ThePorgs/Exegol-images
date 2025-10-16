@@ -8,7 +8,7 @@
         "toplevel_name": "Exegol Bookmarks"
       },
       {
-        "url": "https://exegol.readthedocs.io/en/latest/",
+        "url": "https://docs.exegol.com/",
         "name": "Exegol Doc"
       },
       {
@@ -23,7 +23,7 @@
             "name": "THR Tools"
           },
           {
-            "url": "https://book.hacktricks.xyz/welcome/readme",
+            "url": "https://book.hacktricks.wiki/",
             "name": "HackTricks"
           },
           {
@@ -35,7 +35,7 @@
             "name": "RedTeam Notes"
           },
           {
-            "url": "https://orange-cyberdefense.github.io/ocd-mindmaps/img/pentest_ad_dark_2023_02.svg",
+            "url": "https://orange-cyberdefense.github.io/ocd-mindmaps/img/mindmap_ad_dark_classic_2025.03.excalidraw.svg",
             "name": "OCD AD Mindmap"
           },
           {
@@ -45,6 +45,14 @@
           {
             "url": "https://lolol.farm/",
             "name": "LOLOL Farm"
+          },
+          {
+            "url": "https://github.com/subat0mik/Misconfiguration-Manager",
+            "name": "SCCM Misconfiguration guide"
+          },
+          {
+            "url": "https://queries.specterops.io/",
+            "name": "BloodHound Query Library"
           }
         ]
       },
@@ -73,11 +81,11 @@
         "name": "Services",
         "children": [
           {
-            "url": "http://127.0.0.1:1991/login",
+            "url": "http://localhost:1991/login",
             "name": "Trillium"
           },
           {
-            "url": "http://127.0.0.1:1030/login",
+            "url": "http://127.0.0.1:1030/ui/login",
             "name": "BloodHound-CE"
           }
         ]

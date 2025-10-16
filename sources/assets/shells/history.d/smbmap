@@ -1,4 +1,3 @@
 smbmap -H "$TARGET"
-smbmap -H "$TARGET" -R
-smbmap -H "$TARGET" -R test
-smbmap -u guest -H "$TARGET"
+smbmap -H "$TARGET" -u guest
+smbmap -H "$TARGET" -u "$USER" -p "$PASSWORD"

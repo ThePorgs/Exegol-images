@@ -1,0 +1,33 @@
+function fzf-thr='() {
+	file=$(find "/opt/tools/The-Hacker-Recipes/docs/src" -type f -name "*.md" | fzf)
+
+	if [[ ! -z "$DC_HOST" ]]; then
+		sed -i -e "s/\$DC_HOST/$DC_HOST/g" "$file";
+	fi
+
+	if [[ ! -z "$PASSWORD" ]]; then
+		sed -i -e "s/\$PASSWORD/$PASSWORD/g" "$file";
+	fi
+
+	if [[ ! -z "$USER" ]]; then
+		sed -i -e "s/\$USER/$USER/g" "$file";
+	fi
+
+	if [[ ! -z "$NT_HASH" ]]; then
+		sed -i -e "s/\$NT_HASH/$NT_HASH/g" "$file";
+	fi
+
+	if [[ ! -z "$DOMAIN" ]]; then
+		sed -i -e "s/\$DOMAIN/$DOMAIN/g" "$file";
+	fi
+
+	if [[ ! -z "$DC_IP" ]]; then
+		sed -i -e "s/\$DC_IP/$DC_IP/g" "$file";
+	fi
+
+	glow -t "$file"
+	old_path="$PWD"
+	cd /opt/tools/The-Hacker-Recipes/
+	git restore .
+	cd $old_path
+}'

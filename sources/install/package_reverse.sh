@@ -40,16 +40,35 @@ function install_pwntools() {
     add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
 }
 
-function install_pwndbg() {
-    colorecho "Installing pwndbg"
-    git -C /opt/tools/ clone --depth 1 https://github.com/pwndbg/pwndbg
-    cd /opt/tools/pwndbg || exit
+function install_gdb_plugins() {
+    colorecho "Installing GDB plugins"
+    mkdir -p /opt/tools/gdb
+
+    # Pwndbg
+    colorecho "Installing pwndbg GDB plugin"
+    git -C /opt/tools/gdb clone --depth 1 https://github.com/pwndbg/pwndbg
+    cd /opt/tools/gdb/pwndbg || exit
     ./setup.sh
-    echo 'set disassembly-flavor intel' >> ~/.gdbinit
+    add-to-list "pwndbg,https://github.com/pwndbg/pwndbg,a GDB plugin that makes debugging with GDB suck less"
+
+    # PEDA
+    colorecho "Installing PEDA GDB plugin"
+    git -C /opt/tools/gdb clone --depth 1 https://github.com/longld/peda.git
+    add-to-list "peda,https://github.com/longld/peda,Python Exploit Development Assistance for GDB."
+
+    # GEF
+    colorecho "Installing GEF GDB plugin"
+    mkdir -p /opt/tools/gdb/gef
+    wget "https://raw.githubusercontent.com/hugsy/gef/refs/heads/main/gef.py" -O /opt/tools/gdb/gef/gef.py
+    add-to-list "gef,https://github.com/hugsy/gef,A modern experience for GDB with advanced debugging capabilities for exploit devs & reverse engineers on Linux."
+
+    # GDB
+    cp -v /root/sources/assets/shells/gdbinit ~/.gdbinit
     add-aliases gdb
     add-history gdb
     add-test-command "gdb --help"
-    add-to-list "pwndbg,https://github.com/pwndbg/pwndbg,a GDB plugin that makes debugging with GDB suck less"
+    add-test-command "gdb-peda --help"
+    add-test-command "gdb-gef --help"
 }
 
 function install_angr() {
@@ -58,7 +77,7 @@ function install_angr() {
     fapt libffi-dev
     mkdir -p /opt/tools/angr || exit
     cd /opt/tools/angr || exit
-    python3 -m venv ./venv
+    python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip install angr
     deactivate
@@ -94,9 +113,12 @@ function install_radare2() {
 function install_ghidra() {
     # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing Ghidra"
-    wget -P /tmp/ "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.1.2_build/ghidra_10.1.2_PUBLIC_20220125.zip"
-    unzip -q /tmp/ghidra_10.1.2_PUBLIC_20220125.zip -d /opt/tools # -q because too much useless verbose
-    rm /tmp/ghidra_10.1.2_PUBLIC_20220125.zip
+    local ghidra_url
+    ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep 'browser_download_url' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/ghidra.zip "$ghidra_url"
+    unzip -q /tmp/ghidra.zip -d /opt/tools # -q because too much useless verbose
+    mv -v /opt/tools/ghidra_* /opt/tools/ghidra # ghidra always has a version number in the unzipped folder, lets make it consistent
+    rm /tmp/ghidra.zip
     add-aliases ghidra
     add-history ghidra
     # TODO add-test-command GUI app
@@ -108,10 +130,10 @@ function install_ida() {
     colorecho "Installing IDA"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget -P /tmp/ "https://out7.hex-rays.com/files/idafree77_linux.run"
-        chmod +x /tmp/idafree77_linux.run
-        /tmp/idafree77_linux.run --mode unattended --prefix /opt/tools/idafree-7.7
-        rm /tmp/idafree77_linux.run
+        wget "https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
+        chmod +x /tmp/idafree_linux.run # This is the setup wizard
+        /tmp/idafree_linux.run --mode unattended --prefix /opt/tools/idafree
+        rm /tmp/idafree_linux.run
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64" && return
     fi
@@ -120,6 +142,23 @@ function install_ida() {
     # TODO add-test-command GUI app
     add-to-list "ida,https://www.hex-rays.com/products/ida/,Interactive disassembler for software analysis."
 }
+
+function install_binaryninja() {
+    # CODE-CHECK-WHITELIST=add-test-command,add-aliases,add-history
+    colorecho "Installing Binary Ninja"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        wget "https://cdn.binary.ninja/installers/binaryninja_free_linux.zip" -O /tmp/binaryninja_free_linux.zip
+        unzip /tmp/binaryninja_free_linux.zip -d /opt/tools
+        ln -s "/opt/tools/binaryninja/binaryninja" "/opt/tools/bin/binaryninja"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m), Binary Ninja only supports x86/x64" && return
+    fi
+    # TODO add-test-command GUI app
+    # TODO replace dashes by commas once `add-to-list` supports commas in tool description
+    add-to-list "binaryninja,https://binary.ninja,An interactive decompiler - disassembler - debugger and binary analysis platform built by reverse engineers for reverse engineers."
+}
+
 
 function install_jd-gui() {
     # CODE-CHECK-WHITELIST=add-test-command
@@ -135,13 +174,26 @@ function install_jd-gui() {
 function install_pwninit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwninit"
-    fapt liblzma-dev
-    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-    source "$HOME/.cargo/env"
-    cargo install pwninit
+    fapt liblzma-dev patchelf elfutils
+    cargo binstall -y pwninit
     add-history pwninit
     add-test-command "pwninit --help"
     add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
+}
+
+function install_pycdc() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing pycdc"
+    git -C /tmp clone --depth 1 https://github.com/zrax/pycdc.git
+    mkdir -v /tmp/pycdc/build
+    cd /tmp/pycdc/build || exit
+    cmake ..
+    make -j
+    mv pycdc pycdas /opt/tools/bin
+    add-history pycdc
+    add-test-command "pycdc --help"
+    add-test-command "pycdas --help"
+    add-to-list "pycdc,https://github.com/zrax/pycdc,Python bytecode disassembler and decompiler."
 }
 
 # Package dedicated to reverse engineering tools
@@ -152,14 +204,16 @@ function package_reverse() {
     start_time=$(date +%s)
     install_reverse_apt_tools
     install_pwntools                # CTF framework and exploit development library
-    install_pwndbg                  # Advanced Gnu Debugger
+    install_gdb_plugins             # GDB plugins (pwndbg, PEDA, GEF)
     install_angr                    # Binary analysis
     install_checksec-py             # Check security on binaries
     install_radare2                 # Awesome debugger
     install_ghidra
     install_ida
+    install_binaryninja
     install_jd-gui                  # Java decompiler
     install_pwninit                 # Tool for automating starting binary exploit
+    install_pycdc                   # Python bytecode disassembler and decompiler
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

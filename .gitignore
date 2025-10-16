@@ -109,3 +109,6 @@ shared-resources/
 
 # Build logs for debugging
 .build.log
+
+# macOS files
+.DS_Store

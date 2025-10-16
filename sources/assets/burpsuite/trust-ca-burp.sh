@@ -66,7 +66,7 @@ function trust_ca_burp_in_firefox() {
     # Let time to Burp to init CA
     while [[ -z $(netstat -lnt|grep -Eo "(127.0.0.1|0.0.0.0):$burp_port") ]]
     do
-      if (( $timeout_counter < 30 )); then
+      if (( $timeout_counter < 120 )); then
         sleep 0.5
         timeout_counter=$((timeout_counter+1))
       else

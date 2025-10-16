@@ -2,7 +2,7 @@
 # Author: The Exegol Project
 
 # Functions and commands that will be retried multiple times to counter random network issues when building
-CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "apt-get" "nvm" "npm" "pipx" "pip2" "pip3" "cargo" "gem")
+CATCH_AND_RETRY_COMMANDS=("curl" "wget" "apt-fast" "git" "go" "apt-get" "nvm" "npm" "pip" "pipx" "pip2" "pip3" "cargo" "gem")
 
 export RED='\033[1;31m'
 export BLUE='\033[1;34m'
@@ -44,7 +44,12 @@ function add-history() {
 
 function add-test-command() {
     colorecho "Adding build pipeline test command: $*"
-    echo "$*" >> "/.exegol/build_pipeline_tests/all_commands.txt"
+    echo "$*" >> "/.exegol/unit_tests_all_commands.txt"
+}
+
+function add-test-gui-command() {
+    colorecho "Adding build pipeline test gui command: $*"
+    echo "$*" >> "/.exegol/unit_tests_gui_commands.txt"
 }
 
 function fapt() {
@@ -119,20 +124,14 @@ function catch_and_retry() {
   # 4th retry: 2×4^4 = 2×256  = 512 seconds
   # 5th retry: 2×4^5 = 2×1024 = 2048 seconds
   local max_wait_time=600
-  local command="$*"
-  # escaping characters that could mess with the sh execution
-  local escaped_command
-  # not double-quoting $command as it would escape spaces inside the command and we don't want that
-  # shellcheck disable=SC2086
-  escaped_command=$(printf '%q ' $command)
   for ((i=1; i<=retries; i++)); do
-    # sh -c is used instead of an "eval" in order to avoid an infinite loop
-    #  for instance, with an "eval", "wget" would point to the "wget" function defined with define_retry_function()
+    # $1 always point to the bin full path to avoid infinite function loop
+    # $@ is used to split parameters and run the function
     # TODO : there is a limitation to this approach. It escapes metachars as well (like &&, ;, ||,)
     #  it means commands like "cmd1 && cmd2" won't work and will be interpreted as "cmd1 \&\& cmd2"
-    echo "[EXEGOL DEBUG] sh -c \"$escaped_command\""
+    echo "[EXEGOL C&R DEBUG]" "$@"
     # If command exits successfully, no need for more retries
-    sh -c "$escaped_command" && return 0
+    "$@" && return 0
     # Calculate the exponential backoff time
     local wait_time=$((scale_factor * (base_exponent ** i)))
     # Cap it at max_wait_time
@@ -149,7 +148,7 @@ function define_retry_function() {
   eval "
   function $original_command() {
     colorecho 'Catch & retry function for: $1'
-    catch_and_retry \"$original_command \$@\"
+    catch_and_retry \"\$(which $original_command)\" \"\$@\"
   }
   "
 }
@@ -163,6 +162,7 @@ function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
     updatedb
+    rm -rf /root/.asdf/installs/golang/*/packages/pkg/mod
     rm -rf /root/.bundle/cache
     rm -rf /root/.cache
     rm -rf /root/.cargo/registry
@@ -197,4 +197,28 @@ function post_build() {
     cp /opt/.exegol_history ~/.bash_history
     colorecho "Removing desktop icons"
     if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
+}
+
+function check_temp_fix_expiry() {
+    # This function checks if a temporary fix has expired
+    # Parameters:
+    # $1: expiry date in YYYY-MM-DD format
+    # Returns:
+    # 0 if the fix should be applied (not expired or local build)
+    # 1 if the fix has expired (and not a local build)
+    
+    local expiry_date="$1"
+    
+    # Apply the fix if it's a local build regardless of expiry
+    if [[ "$EXEGOL_BUILD_TYPE" == "local" ]]; then
+        return 0
+    fi
+    
+    # Check if the current date is past the expiry date
+    if [[ "$(date +%Y%m%d)" -gt "$(date -d "$expiry_date" +%Y%m%d)" ]]; then
+        criticalecho "Temp fix expired. Exiting."
+    fi
+    
+    # Not expired, apply the fix
+    return 0
 }

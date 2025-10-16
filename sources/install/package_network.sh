@@ -32,9 +32,7 @@ function install_network_apt_tools() {
     add-test-command "iptables --version"                           # iptables for the win
     add-test-command "traceroute --help"                            # ping ping
     add-test-command "dns2tcpc|& grep 'Usage : dns2tcpc'"           # TCP tunnel over DNS
-    add-test-command "which xfreerdp"
     add-test-command "rdesktop|& grep 'Usage: rdesktop'"
-    add-test-command "which xtightvncviewer"
     add-test-command "hydra -h |& grep 'more command line options'" # Login scanner
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
@@ -139,7 +137,7 @@ function install_autorecon() {
     add-history autorecon
     # test below cannot work because test runner cannot have a valid display
     # add-test-command "autorecon --version"
-    add-test-command "which autorecon"
+    add-test-command "autorecon --help"
     add-to-list "autorecon,https://github.com/Tib3rius/AutoRecon,Multi-threaded network reconnaissance tool which performs automated enumeration of services."
 }
 
@@ -175,6 +173,15 @@ function install_chisel() {
     add-history chisel
     add-test-command "chisel --help"
     add-to-list "chisel,https://github.com/jpillora/chisel,Go based TCP tunnel with authentication and encryption support"
+}
+
+function install_penelope() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Penelope"
+    pipx install --system-site-packages git+https://github.com/brightio/penelope.git
+    add-history penelope 
+    add-test-command "which penelope.py" 
+    add-to-list "penelope,https://github.com/brightio/penelope,Penelope is a shell handler designed to be easy to use and intended to replace netcat when exploiting RCE vulnerabilities."
 }
 
 function install_sshuttle() {
@@ -220,6 +227,18 @@ function install_dnsx() {
     add-to-list "dnsx,https://github.com/projectdiscovery/dnsx,A tool for DNS reconnaissance that can help identify subdomains and other related domains."
 }
 
+function install_massdns() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing massdns"
+    git -C /opt/tools clone --depth 1 https://github.com/blechschmidt/massdns.git
+    cd /opt/tools/massdns || exit
+    make
+    ln -s /opt/tools/massdns/bin/massdns /opt/tools/bin/massdns
+    add-history massdns
+    add-test-command "massdns --help"
+    add-to-list "massdns,https://github.com/blechschmidt/massdns,MassDNS is a simple high-performance DNS stub resolver targeting those who seek to resolve a massive amount of domain names in the order of millions or even billions."
+}
+
 function install_shuffledns() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing shuffledns"
@@ -261,14 +280,7 @@ function install_ligolo-ng() {
 function install_rustscan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustScan"
-    git -C /opt/tools/ clone --depth 1 https://github.com/RustScan/RustScan.git
-    cd /opt/tools/RustScan || exit
-    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-    source "$HOME/.cargo/env"
-    cargo build --release
-    # Clean dependencies used to build the binary
-    rm -rf target/release/{deps,build,.fingerprint}
-    ln -s /opt/tools/RustScan/target/release/rustscan /opt/tools/bin/rustscan
+    cargo binstall -y rustscan
     add-history rustscan
     add-test-command "rustscan --help"
     add-to-list "rustscan,https://github.com/RustScan/RustScan,The Modern Port Scanner"
@@ -319,12 +331,14 @@ function package_network() {
     install_fierce
     # install_odat                  # Oracle Database Attacking Tool, FIXME
     install_dnsx                    # Fast and multi-purpose DNS toolkit
+    install_massdns                 # Install massdns as a requirement for shuffledns
     install_shuffledns              # Wrapper around massdns to enumerate valid subdomains
     install_tailscale               # Zero config VPN for building secure networks
     install_ligolo-ng               # Tunneling tool that uses a TUN interface
     install_rustscan
     install_legba                   # Login Scanner
     install_ssh-audit               # SSH server audit
+    install_penelope                # Shell handler
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

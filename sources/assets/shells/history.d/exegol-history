@@ -10,7 +10,9 @@ exegol-history add hosts --ip '127.0.0.1'
 exh add hosts --ip '127.0.0.1'
 exegol-history show
 exh show
-exegol-history apply creds
-exh apply creds
-exegol-history apply hosts
-exh apply hosts
+exegol-history set creds
+exh set creds
+exegol-history set hosts
+exh set hosts
+exegol-history unset
+exh unset

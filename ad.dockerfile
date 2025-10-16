@@ -7,12 +7,17 @@ FROM debian:12-slim
 ARG TAG="local"
 ARG VERSION="local"
 ARG BUILD_DATE="n/a"
+ARG BUILD_PROFILE="ad"
 
 LABEL org.exegol.tag="${TAG}"
 LABEL org.exegol.version="${VERSION}"
 LABEL org.exegol.build_date="${BUILD_DATE}"
+LABEL org.exegol.build_profile="${BUILD_PROFILE}"
 LABEL org.exegol.app="Exegol"
 LABEL org.exegol.src_repository="https://github.com/ThePorgs/Exegol-images"
+
+# Set the build type environment variable to bypass temp fix expiry check when building locally
+ENV EXEGOL_BUILD_TYPE="${VERSION}"
 
 COPY sources /root/sources/
 

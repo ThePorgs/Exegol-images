@@ -4,3 +4,4 @@ subfinder -silent -d "$DOMAIN" | dnsx -silent -a -resp
 subfinder -silent -d "$DOMAIN" | dnsx -silent -a -resp-only
 subfinder -silent -d "$DOMAIN" | dnsx -silent -cname -resp
 subfinder -silent -d "$DOMAIN" | dnsx -silent -rcode noerror,servfail,refused
+subfinder -silent -d "$DOMAIN" | alterx -enrich | dnsx -a

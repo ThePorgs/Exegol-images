@@ -1,0 +1,30 @@
+name: Pre-release Base Build Trigger
+
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - ".github/**"
+      - "**.md"
+
+jobs:
+  trigger-private-pipeline:
+    name: Trigger pipeline
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.pull_request.title, 'Release')
+    steps:
+      - name: Compute image version
+        id: version
+        run: |
+          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+      - name: Trigger Pipeline Repo
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PIPELINE_PAT }}
+          repository: ThePorgs/Pipelines
+          event-type: preprod-base-pipeline
+          client-payload: |
+            {
+              "sha": "${{ github.sha }}",
+              "image_version": "${{ steps.version.outputs.IMAGE_VERSION }}"
+            }

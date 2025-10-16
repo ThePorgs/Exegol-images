@@ -13,7 +13,6 @@ function install_sdr_apt_tools() {
     add-history rtl-433
 
     add-test-command "hackrf_debug --help"              # tools for hackrf
-    add-test-command "which gqrx"                       # spectrum analyzer for SDR
     add-test-command "dpkg -l rtl-433 | grep 'rtl-433'" # decode radio transmissions from devices on the ISM bands
   
     add-to-list "hackrf,https://github.com/mossmann/hackrf,Low cost software defined radio platform"

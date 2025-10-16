@@ -120,15 +120,13 @@ function install_theharvester() {
     colorecho "Installing theHarvester"
     git -C /opt/tools/ clone --depth 1 https://github.com/laramies/theHarvester
     cd /opt/tools/theHarvester || exit
-    python3 -m venv --system-site-packages ./venv
+    python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    pip3 install .
     deactivate
-    # The tool needs access to the proxies.yaml file in the folder.
-    ln -s /opt/tools/theHarvester /usr/local/etc/
     add-aliases theharvester
     add-history theharvester
-    add-test-command "theHarvester.py --help"
+    add-test-command "theHarvester --help"
     add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts / subdomain names / virtual host / open ports / banners / and employee names from different public sources"
 }
 
@@ -439,8 +437,8 @@ function install_geopincer() {
 function install_yalis() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Yalis"
-    git -C /opt/tools clone --depth 1 https://github.com/EatonChips/yalis
-    cd /opt/tools/yalis || exit
+    git -C /tmp clone --depth 1 https://github.com/EatonChips/yalis
+    cd /tmp/yalis || exit
     go build .
     mv ./yalis /opt/tools/bin/
     add-history yalis
@@ -481,7 +479,7 @@ function install_blackbird() {
 function install_sherlock() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sherlock"
-    pipx install sherlock-project
+    pipx install --system-site-packages sherlock-project
     add-history sherlock
     add-test-command "sherlock --help"
     add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks."
@@ -499,8 +497,8 @@ function install_censys() {
 function install_gomapenum() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoMapEnum"
-    git -C /opt/tools clone --depth 1 https://github.com/nodauf/GoMapEnum
-    cd /opt/tools/GoMapEnum/src || exit
+    git -C /tmp clone --depth 1 https://github.com/nodauf/GoMapEnum
+    cd /tmp/GoMapEnum/src || exit
     go build .
     mv ./src /opt/tools/bin/gomapenum
     add-history gomapenum

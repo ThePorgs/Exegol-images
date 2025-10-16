@@ -13,10 +13,11 @@ function install_exegol-history() {
     colorecho "Installing Exegol-history"
     git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
     cd /opt/tools/Exegol-history || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
+    pipx install --system-site-packages /opt/tools/Exegol-history
+    # Temp fix add default profile.sh back to root directory
+    if check_temp_fix_expiry "2025-10-01"; then
+      [ -f /opt/tools/Exegol-history/profile.sh ] || cp /opt/tools/Exegol-history/exegol_history/config/profile.sh /opt/tools/Exegol-history/profile.sh
+    fi
     add-aliases exegol-history
     add-history exegol-history
     add-test-command "exh -h"
@@ -30,13 +31,17 @@ function install_rust_cargo() {
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
     sh /tmp/rustup.sh -y
     source "$HOME/.cargo/env"
+    # Fast rust crate installation helper
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh -o /tmp/install-from-binstall-release.sh
+    sh /tmp/install-from-binstall-release.sh
     add-test-command "cargo --version"
 }
 
 function filesystem() {
     colorecho "Preparing filesystem"
-    mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/ /opt/rules/ /opt/lists
-    touch /.exegol/build_pipeline_tests/all_commands.txt
+    mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/ /opt/rules/ /opt/lists
+    touch /.exegol/unit_tests_all_commands.txt
+    touch /.exegol/unit_tests_gui_commands.txt
     touch /.exegol/installed_tools.csv
     echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
 }
@@ -45,15 +50,17 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    # 1.19 needed by sliver
-    asdf install golang 1.19
+    # 1.19 needed by sliver (not now ?)
+    # asdf install golang 1.19
     #asdf install golang latest
     #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2025-06-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
+    local temp_fix_limit="2025-11-01"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      # 1.24.4 needed for BloodHound-CE
+      asdf install golang 1.24.4
+      # 1.24.1 needed for GoExec
+      asdf install golang 1.24.1
       # 1.23 needed by BloodHound-CE, and sensepost/ruler
       asdf install golang 1.23.0
       # Default GO version: 1.22.2
@@ -133,8 +140,8 @@ function install_pyenv() {
     # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
-    #  --> python3.10 points to 3.10
     #  --> python3.13 points to 3.13
+    #  --> python3.10 points to 3.10
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -186,6 +193,7 @@ function install_rvm() {
     rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
     rvm install ruby-3.1.5  # needed metasploit-framework
     rvm get head
+    rvm cleanup all
     gem update
     add-test-command "rvm --version"
 }
@@ -292,7 +300,7 @@ function install_mdcat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mdcat"
     source "$HOME/.cargo/env"
-    cargo install mdcat
+    cargo binstall -y mdcat
     add-history mdcat
     add-test-command "mdcat --version"
     add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
@@ -309,9 +317,7 @@ function install_gf() {
       # adding new-line
       echo ''
       echo '# Enable gf autocompletion'
-      # FIXME GOPATH not set
-      # shellcheck disable=SC2016
-      echo 'source "$GOPATH"/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh'
+      cat "$(sh -c "go env GOPATH")"/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh
     } >> ~/.zshrc
     cp -r "$(sh -c "go env GOPATH")"/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
     # Add patterns from 1ndianl33t
@@ -446,6 +452,49 @@ function install_asdf() {
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
 
+function install_openvpn() {
+  # CODE-CHECK-WHITELIST=add-aliases,add-history
+  colorecho "Installing OpenVPN"
+  fapt openvpn openresolv
+
+  # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
+  LINE=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  # shellcheck disable=SC2016
+  sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+  ((LINE++))
+  sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  LINE=$(($(grep -n 'down)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  LINE=$(($(grep -n 'resolvconf -d' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  # shellcheck disable=SC2016
+  sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+  ((LINE++))
+  sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  add-test-command "openvpn --version"
+  add-to-list "OpenVPN,https://openvpn.net/,Fast and Easy Zero-Trust VPN Fully in Your Control"
+}
+
+function install_wireguard() {
+  # CODE-CHECK-WHITELIST=add-aliases,add-history
+  colorecho "Installing WireGuard"
+  fapt wireguard
+
+  # Patch wireguard start script https://github.com/WireGuard/wireguard-tools/pull/5
+  local temp_fix_limit="2025-12-01"
+  if check_temp_fix_expiry "$temp_fix_limit"; then
+    # shellcheck disable=SC2016
+    sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
+  fi
+  add-test-command "wg-quick -h"
+  add-to-list "wireguard,https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
     local start_time
@@ -464,15 +513,15 @@ function package_base() {
     cp -v /root/sources/assets/apt/preferences.d/* /etc/apt/preferences.d/
     apt-get update
     colorecho "Starting main programs install"
-    fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
-    libffi-dev  zsh asciinema npm gem automake autoconf make cmake time gcc g++ file lsof \
+    fapt man git gh glab subversion lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
+    libffi-dev zsh asciinema npm gem automake autoconf make cmake time gcc g++ file lsof \
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
-    nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
+    nim perl libwww-perl openjdk-17-jdk \
     logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools
+    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem
@@ -499,6 +548,7 @@ function package_base() {
     # change default shell
     chsh -s /bin/zsh
 
+    add-history sshpass
     add-history dnsutils
     add-history samba
     add-history ssh
@@ -536,21 +586,11 @@ function package_base() {
     add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
+    install_openvpn
+    install_wireguard
     install_firefox
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
-
-    # openvpn
-    # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
-    LINE=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
-
-    LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    # shellcheck disable=SC2016
-    sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
-    ((LINE++))
-    sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
-    add-test-command "openvpn --version"
 
     # logrotate
     mv /root/sources/assets/logrotate/* /etc/logrotate.d/

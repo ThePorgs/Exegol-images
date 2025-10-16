@@ -20,7 +20,8 @@ names = [
     "uaswitcher",
     "cookie-editor",
     "wappalyzer",
-    "multi-account-containers"
+    "multi-account-containers",
+    "multi-url-opener"
 ]
 
 def get_extension_id(extension_name):

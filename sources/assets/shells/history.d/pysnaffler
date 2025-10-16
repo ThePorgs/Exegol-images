@@ -1,0 +1,3 @@
+pysnaffler 'smb2+ntlm-password://$DOMAIN\$USER:$PASSWORD@$HOST' $HOST
+pysnaffler 'smb2+ntlm-nt://$DOMAIN\$USER:$NT_HASH@$HOST' $HOST
+pysnaffler 'smb2+kerberos+password://$DOMAIN\$USER:$PASSWORD@$HOST/?dc=$DC_IP' $HOST
