@@ -379,6 +379,7 @@ function install_java21() {
       BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
       update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 21;
     done
+    fix_ownership /usr/lib/jvm/java-21-openjdk/
     ln -s -v /usr/lib/jvm/java-21-openjdk/bin/java /usr/bin/java21
     add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
     add-test-command "java21 --version"

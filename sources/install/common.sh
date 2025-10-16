@@ -158,6 +158,12 @@ for CMD in "${CATCH_AND_RETRY_COMMANDS[@]}"; do
   define_retry_function "$CMD"
 done
 
+# Find UID ownership of unknown user for unprivileged lxc image download
+function fix_ownership() {
+  find "$1" -type l -uid +2000 '!' -user nobody -exec chown -h root:root {} \; 2>/dev/null
+  find "$1" -uid +2000 '!' -user nobody -exec chown root:root {} \; 2>/dev/null
+}
+
 function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."

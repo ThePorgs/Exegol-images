@@ -96,7 +96,7 @@ function install_cloudsploit() {
     colorecho "Installing Cloudsploit"
     git -C /opt/tools/ clone --depth 1 https://github.com/aquasecurity/cloudsploit
     cd /opt/tools/cloudsploit && npm install
-    find node_modules/ -uid +2000 -exec chown root:root {} \; 2>/dev/null
+    fix_ownership /opt/tools/cloudsploit/node_modules/
     chmod +x index.js
     add-aliases cloudsploit
     add-history cloudsploit
