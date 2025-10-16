@@ -11,7 +11,7 @@ fi
 
 if neo4j status|grep -q "not running"; then
   echo "Starting neo4j service"
-  JAVA_HOME=/usr/lib/jvm/java-11-openjdk neo4j start  # TODO use neo4j alias ?
+  JAVA_HOME=/root/.asdf/installs/java/adoptopenjdk-11.0.9+11 neo4j start
   PORT=7687  # TODO get this port from neo4j config
 
   # timeout variables
