@@ -55,7 +55,7 @@ function install_go() {
     #asdf install golang latest
     #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2025-10-01"
+    local temp_fix_limit="2025-11-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # 1.24.4 needed for BloodHound-CE
       asdf install golang 1.24.4
@@ -379,6 +379,7 @@ function install_java21() {
       BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
       update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 21;
     done
+    fix_ownership /usr/lib/jvm/java-21-openjdk/
     ln -s -v /usr/lib/jvm/java-21-openjdk/bin/java /usr/bin/java21
     add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
     add-test-command "java21 --version"
@@ -462,6 +463,15 @@ function install_openvpn() {
   sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
 
   LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  # shellcheck disable=SC2016
+  sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+  ((LINE++))
+  sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  LINE=$(($(grep -n 'down)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  LINE=$(($(grep -n 'resolvconf -d' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
   # shellcheck disable=SC2016
   sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
   ((LINE++))

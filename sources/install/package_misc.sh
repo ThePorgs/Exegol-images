@@ -93,7 +93,7 @@ function install_triliumnext() {
     colorecho "Installing TriliumNext"
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     # https://github.com/TriliumNext/Notes/issues/1890
-    local temp_fix_limit="2025-10-01"
+    local temp_fix_limit="2025-11-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --branch v0.93.0 --depth 1 https://github.com/triliumnext/notes.git triliumnext
     fi

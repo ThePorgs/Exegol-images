@@ -17,7 +17,7 @@ function install_xfce() {
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
 
     # temp fix to use latest websockify (min 0.12.0 to fix fedora daemon issue) waiting for apt stable repo to be up-to-date
-    local temp_fix_limit="2025-10-01"
+    local temp_fix_limit="2025-11-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # Install websockify (min 0.12.0) explicit from sid repo
       fapt python3-websockify/sid
