@@ -974,6 +974,29 @@ function install_bbot() {
     add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
 }
 
+function install_apidog() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Apidog"
+    local archive_name
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+    curl -L "https://file-assets.apidog.com/download/Apidog-linux-deb-latest.zip" -o /tmp/apidog.zip
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+    curl -L "https://file-assets.apidog.com/download/Apidog-linux-arm64-deb-latest.zip" -o /tmp/apidog.zip
+    else
+    criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    unzip /tmp/apidog.zip -d /tmp
+    rm /tmp/apidog.zip
+    mv "$(ls /tmp/apidog_*.deb | head -n1)" /tmp/apidog.deb
+    dpkg -i /tmp/apidog.deb
+    rm /tmp/apidog.deb
+    add-history apidog 
+    add-test-command "which apidog"
+    #add-test-gui-command "apidog"
+    add-to-list "apidog,https://apidog.com/,API platform for testing APIs"
+}
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
@@ -1060,6 +1083,7 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
+    install_apidog                  # Apidog - API platform for testing APIs
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
