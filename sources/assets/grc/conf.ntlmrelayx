@@ -10,6 +10,18 @@ colours=yellow
 regexp=.*\[\-\].*
 colours=yellow
 =======
+# SUCCESS
+regexp=.*GOT CERTIFICATE!
+colours=green
+=======
+# SUCCESS
+regexp=.*Certificate successfully written to file
+colours=green
+=======
+# SUCCESS
+regexp=.*Writing PKCS#12 certificate to.*pfx
+colours=green
+=======
 # SUCCESS hashes
 regexp=.{1,120}:\d{1,4}:[0-9a-fA-F]{32}:[0-9a-fA-F]{32}:::
 colours=bold green

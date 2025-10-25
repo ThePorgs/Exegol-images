@@ -14,10 +14,6 @@ function install_exegol-history() {
     git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
     cd /opt/tools/Exegol-history || exit
     pipx install --system-site-packages /opt/tools/Exegol-history
-    # Temp fix add default profile.sh back to root directory
-    if check_temp_fix_expiry "2025-10-01"; then
-      [ -f /opt/tools/Exegol-history/profile.sh ] || cp /opt/tools/Exegol-history/exegol_history/config/profile.sh /opt/tools/Exegol-history/profile.sh
-    fi
     add-aliases exegol-history
     add-history exegol-history
     add-test-command "exh -h"

@@ -385,9 +385,10 @@ function install_eyewitness() {
     colorecho "Installing EyeWitness"
     git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
     cd /opt/tools/EyeWitness || exit
+    fapt jq cmake xvfb chromium chromium-driver
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    ./Python/setup/setup.sh
+    pip3 install -r ./setup/requirements.txt
     deactivate
     add-aliases eyewitness
     add-history eyewitness

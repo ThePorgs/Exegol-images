@@ -1014,11 +1014,6 @@ function install_pyfinduncommonshares() {
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
-    # Waiting for github.com/p0dalirius/sectools release (1.5.0 actually)
-    local temp_fix_limit="2025-11-01"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      pip3 install --force sectools@git+https://github.com/p0dalirius/sectools.git@main
-    fi
     deactivate
     add-aliases finduncommonshares
     add-history finduncommonshares
