@@ -53,7 +53,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2025-11-01"
+    local temp_fix_limit="2025-11-20"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
@@ -385,9 +385,10 @@ function install_eyewitness() {
     colorecho "Installing EyeWitness"
     git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
     cd /opt/tools/EyeWitness || exit
+    fapt jq cmake xvfb chromium chromium-driver
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    ./Python/setup/setup.sh
+    pip3 install -r ./setup/requirements.txt
     deactivate
     add-aliases eyewitness
     add-history eyewitness
