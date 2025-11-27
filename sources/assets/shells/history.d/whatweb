@@ -1,1 +1,1 @@
-whatweb $TARGET
+whatweb "$TARGET"

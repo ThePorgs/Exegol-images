@@ -1,1 +1,1 @@
-findomain -t $TARGET
+findomain -t "$TARGET"

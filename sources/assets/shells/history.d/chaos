@@ -1,1 +1,1 @@
-chaos -d $DOMAIN -silent
+chaos -d "$DOMAIN" -silent

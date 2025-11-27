@@ -1,1 +1,1 @@
-gMSADumper.py -d "$DOMAIN" -l "$DC_HOST" -u "$USER" -p "$PASSWORD"
+gMSADumper.py -d "$DOMAIN" -l "$DC_IP" -u "$USER" -p "$PASSWORD"

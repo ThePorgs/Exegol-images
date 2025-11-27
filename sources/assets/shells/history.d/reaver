@@ -1,1 +1,1 @@
-reaver -i eth0 -b $MAC
+reaver -i eth0 -b "$MAC"

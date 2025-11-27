@@ -1,6 +1,6 @@
 wpprobe update
 wpprobe update-db
-wpprobe scan -u $URL
+wpprobe scan -u "$URL"
 wpprobe scan -f $TARGET_FILE -t $THREAD_COUNT
 wpprobe scan -f $TARGET_FILE -t $THREAD_COUNT -o $OUTPUT_CSV
 wpprobe scan -f $TARGET_FILE -t $THREAD_COUNT -o $OUTPUT_JSON

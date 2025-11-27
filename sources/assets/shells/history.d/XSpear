@@ -1,1 +1,1 @@
-XSpear -u $TARGET
+XSpear -u "$TARGET"

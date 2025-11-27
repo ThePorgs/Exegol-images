@@ -1,2 +1,2 @@
-snmpwalk -c public -v 1 "$TARGET"
-snmpwalk -c public -v 2c "$TARGET"
+snmpwalk -c public -v 1 "$TARGET" "$MIB"
+snmpwalk -c public -v 2c "$TARGET" "$MIB"

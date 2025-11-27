@@ -1,1 +1,1 @@
-drupwn --mode exploit --target $TARGET
+drupwn --mode exploit --target "$TARGET"
