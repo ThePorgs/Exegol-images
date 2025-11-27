@@ -51,7 +51,7 @@ function install_go() {
     #asdf install golang latest
     #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2025-11-01"
+    local temp_fix_limit="2025-12-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # 1.24.4 needed for BloodHound-CE
       asdf install golang 1.24.4
@@ -518,7 +518,7 @@ function package_base() {
     nim perl libwww-perl openjdk-17-jdk \
     logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep
+    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep pv
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem

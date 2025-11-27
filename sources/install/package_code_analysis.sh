@@ -71,7 +71,7 @@ function install_trufflehog() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     local trufflehog_url
-    trufflehog_url=$(curl --location --silent "https://api.github.com/repos/trufflesecurity/trufflehog/releases/latest" | grep 'browser_download_url.*trufflehog.*linux_'"$arch"'.*tar.gz"' | grep -o 'https://[^"]*')
+    trufflehog_url=$(curl --location --silent "https://api.github.com/repos/trufflesecurity/trufflehog/releases/latest" | grep -o '"browser_download_url": "[^"]*"' | grep "linux_$arch" | grep -o 'https://[^"]*')
     curl --location -o /tmp/trufflehog.tar.gz "$trufflehog_url"
     tar -xf /tmp/trufflehog.tar.gz --directory /tmp
     rm /tmp/trufflehog.tar.gz

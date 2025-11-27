@@ -93,7 +93,7 @@ function install_triliumnext() {
     colorecho "Installing TriliumNext"
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     # https://github.com/TriliumNext/Notes/issues/1890
-    local temp_fix_limit="2025-11-01"
+    local temp_fix_limit="2025-12-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --branch v0.93.0 --depth 1 https://github.com/triliumnext/notes.git triliumnext
     fi
@@ -232,7 +232,7 @@ function install_glow() {
 function install_thr() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing thr"
-    git -C /opt/tools/ clone https://github.com/The-Hacker-Recipes/The-Hacker-Recipes.git
+    git -C /opt/tools/ clone --depth 1 https://github.com/The-Hacker-Recipes/The-Hacker-Recipes.git
     add-test-command "ls /opt/tools/The-Hacker-Recipes/"
     add-to-list "thr,https://www.thehacker.recipes/,THR (The Hacker Recipes) is aimed at providing technical guides on various hacking topics."
 }
@@ -243,6 +243,16 @@ function install_dtrx() {
     pipx install --system-site-packages dtrx
     add-test-command "dtrx --help"
     add-to-list "dtrx,https://github.com/dtrx-py/dtrx,Do The Right eXtraction - don't remember what set of tar flags or where to pipe the output to extract it? no worries!"
+}
+function install_nfsshell() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing nfsshell"
+    git -C /tmp clone --depth 1 https://github.com/Supermathie/nfsshell.git
+    cd /tmp/nfsshell || exit
+    make -j
+    mv nfsshell /opt/tools/bin/
+    add-test-command "nfsshell --help |& grep Usage"
+    add-to-list "nfsshell,https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
 }
 
 # Package dedicated to offensive miscellaneous tools
@@ -270,6 +280,7 @@ function package_misc() {
     install_glow            # Render markdown file inside the terminal
     install_thr             # https://www.thehacker.recipes/
     install_dtrx            # Intelligent archive extractor
+    install_nfsshell        # NFS share interaction tool
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
