@@ -1,4 +1,4 @@
-shuffledns -d "$DOMAIN" -list example-subdomains.txt -r resolvers.txt
-subfinder -d "$DOMAIN" | shuffledns -d "$DOMAIN" -r resolvers.txt
-shuffledns -d "$DOMAIN" -w wordlist.txt -r resolvers.txt
-echo "$DOMAIN" | shuffledns -w wordlist.txt -r resolvers.txt
+shuffledns -d "$DOMAIN" -list example-subdomains.txt -r resolvers.txt -mode resolve
+subfinder -d "$DOMAIN" | shuffledns -d "$DOMAIN" -r resolvers.txt -mode resolve
+shuffledns -d "$DOMAIN" -w `fzf-wordlists` -r resolvers.txt -mode bruteforce
+echo "$DOMAIN" | shuffledns -w `fzf-wordlists` -r resolvers.txt -mode bruteforce
