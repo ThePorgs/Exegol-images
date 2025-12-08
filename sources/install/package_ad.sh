@@ -1205,6 +1205,17 @@ function install_neo4j() {
     neo4j-admin set-initial-password exegol4thewin
     mkdir -p /usr/share/neo4j/logs/
     touch /usr/share/neo4j/logs/neo4j.log
+
+    # Install GDS plugin (required by autobloody)
+    # Current neo4j 4.4.x is compatible with GDS 2.6.x, see <https://neo4j.com/docs/graph-data-science/current/installation/supported-neo4j-versions>
+    wget https://graphdatascience.ninja/neo4j-graph-data-science-2.6.8.jar -P /var/lib/neo4j/plugins/
+    # Config docs: <https://neo4j.com/docs/graph-data-science/current/installation/neo4j-server/>
+    cat << 'EOF' | sudo tee -a /etc/neo4j/neo4j.conf > /dev/null
+# --- GDS config for autobloody ---
+dbms.security.procedures.unrestricted=gds.*
+dbms.security.procedures.allowlist=gds.*
+EOF
+
     add-aliases neo4j
     add-history neo4j
     add-test-command "neo4j version"
