@@ -83,7 +83,6 @@ function install_findomain() {
     fi
     unzip -d /opt/tools/bin/ /tmp/findomain.zip
     chmod +x /opt/tools/bin/findomain
-    rm /tmp/findomain.zip
     add-history findomain
     add-test-command "findomain --version"
     add-to-list "findomain,https://github.com/findomain/findomain,The fastest and cross-platform subdomain enumerator."
@@ -180,7 +179,6 @@ function install_phoneinfoga() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     tar xfv /tmp/phoneinfoga.tar.gz -C /opt/tools/bin/
-    rm /tmp/phoneinfoga.tar.gz
     add-history phoneinfoga
     add-test-command "phoneinfoga help"
     add-to-list "phoneinfoga,https://github.com/sundowndev/PhoneInfoga,Information gathering & OSINT framework for phone numbers."
@@ -273,7 +271,6 @@ function install_constellation() {
     then
         wget -O /tmp/constellation.tar.gz https://github.com/constellation-app/constellation/releases/download/v2.1.1/constellation-linux-v2.1.1.tar.gz
         tar xvf /tmp/constellation.tar.gz -C /opt/tools/
-        rm /tmp/constellation.tar.gz
         ln -s /opt/tools/constellation/bin/constellation /opt/tools/bin/constellation
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return

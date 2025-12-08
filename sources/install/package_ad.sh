@@ -404,7 +404,6 @@ function install_upx() {
     upx_url=$(curl --location --silent "https://api.github.com/repos/upx/upx/releases/latest" | grep 'browser_download_url.*upx.*'"$arch"'.*tar.xz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/upx.tar.xz "$upx_url"
     tar -xf /tmp/upx.tar.xz --directory /tmp
-    rm /tmp/upx.tar.xz
     mv /tmp/upx* /opt/tools/upx
     ln -v -s /opt/tools/upx/upx /opt/tools/bin/upx
     ln -v -s upx /opt/tools/bin/upx-ucl
@@ -464,7 +463,6 @@ function install_powershell() {
       mkdir -v -p /opt/tools/powershell/7
       tar xvfz /tmp/powershell.tar.gz -C /opt/tools/powershell/7
       chmod -v +x /opt/tools/powershell/7/pwsh
-      rm -v /tmp/powershell.tar.gz
       ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/pwsh
       ln -v -s /opt/tools/powershell/7/pwsh /opt/tools/bin/powershell
       add-history powershell

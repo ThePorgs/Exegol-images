@@ -60,7 +60,6 @@ function install_wfuzz() {
       pip3 install /tmp/wfuzz/
     fi
     mv /tmp/wfuzz/wordlist/* /usr/share/wfuzz
-    rm -rf /tmp/wfuzz
     add-history wfuzz
     add-test-command "wfuzz --help"
     add-test-command "test -d '/usr/share/wfuzz/' || exit 1"
@@ -906,7 +905,6 @@ function install_postman() {
     fi
     curl -L "https://dl.pstmn.io/download/latest/${archive_name}" -o /tmp/postman.tar.gz
     tar -xf /tmp/postman.tar.gz --directory /tmp
-    rm /tmp/postman.tar.gz
     mv /tmp/Postman /tmp/postman
     mv /tmp/postman /opt/tools/postman
     ln -s /opt/tools/postman/app/Postman /opt/tools/bin/postman

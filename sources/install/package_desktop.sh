@@ -38,7 +38,6 @@ function install_xfce() {
     tar -xvf ./Prof_XFCE_2_1.tar.gz
     mv 'Prof--XFCE- 2.1' Prof_XFCE_2_1
     cp -r ./Prof_XFCE_2_1 /root/.themes/
-    rm -rf /tmp/Prof*
 
     # Dock
     fapt xfce4-dev-tools libglib2.0-dev libgtk-3-dev libwnck-3-dev libxfce4ui-2-dev libxfce4panel-2.0-dev g++ build-essential
@@ -53,7 +52,6 @@ function install_xfce() {
 
     # Locale
     cp -rv /tmp/share/locale/* /usr/share/locale
-    rm -rf /tmp/*
 
     # Wallpapers
     # TODO : enable custom config in my-resources

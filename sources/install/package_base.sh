@@ -82,7 +82,6 @@ function install_go() {
 #    fi
 #    rm -rf /usr/local/go
 #    tar -C /usr/local -xzf /tmp/go.tar.gz
-#    rm -rf /tmp/go.tar.gz
 #    export PATH=$PATH:/usr/local/go/bin
     add-test-command "go version"
 }
@@ -438,7 +437,6 @@ function install_asdf() {
     fi
     curl --location -o /tmp/asdf.tar.gz "$URL"
     tar -xf /tmp/asdf.tar.gz --directory /tmp
-    rm /tmp/asdf.tar.gz
     mv /tmp/asdf /opt/tools/bin/asdf
     set_bin_path
     set_asdf_env

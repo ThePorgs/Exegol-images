@@ -51,7 +51,6 @@ function install_gitleaks() {
     gitleaks_url=$(curl --location --silent "https://api.github.com/repos/gitleaks/gitleaks/releases/latest" | grep 'browser_download_url.*gitleaks.*linux_'"$arch"'.*tar.gz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/gitleaks.tar.gz "$gitleaks_url"
     tar -xf /tmp/gitleaks.tar.gz --directory /tmp
-    rm /tmp/gitleaks.tar.gz
     mv /tmp/gitleaks /opt/tools/bin/gitleaks
     add-history gitleaks
     add-test-command "gitleaks --help"
@@ -75,7 +74,6 @@ function install_trufflehog() {
     echo "Downloading $download_url"
     curl --location -o /tmp/trufflehog.tar.gz "$download_url"
     tar -xf /tmp/trufflehog.tar.gz --directory /tmp
-    rm /tmp/trufflehog.tar.gz
     mv /tmp/trufflehog /opt/tools/bin/trufflehog
     add-history trufflehog
     add-test-command "trufflehog --help"

@@ -176,7 +176,6 @@ function install_cyberchef() {
     mkdir -p /opt/tools/CyberChef
     wget "$last_release" -O /tmp/CyberChef.zip
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
-    rm /tmp/CyberChef.zip
     mv /opt/tools/CyberChef/CyberChef_*.html /opt/tools/CyberChef/CyberChef.html
     add-test-command "file /opt/tools/CyberChef/CyberChef.html"
     add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
@@ -223,8 +222,6 @@ function install_glow() {
     wget "https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_Linux_x86_64.tar.gz" -O /tmp/glow.tar.gz
     tar -xvf /tmp/glow.tar.gz
     cp "glow_${version}_Linux_x86_64/glow" "/opt/tools/bin"
-    rm -f /tmp/glow.tar.gz
-    rm -rf "/tmp/glow_${version}_Linux_x86_64/"
     add-test-command "glow --help"
     add-to-list "glow,https://github.com/charmbracelet/glow,glow is a tool to render Markdown inside the terminal."
 }

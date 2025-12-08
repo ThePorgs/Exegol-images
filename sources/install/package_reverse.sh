@@ -118,7 +118,6 @@ function install_ghidra() {
     curl --location -o /tmp/ghidra.zip "$ghidra_url"
     unzip -q /tmp/ghidra.zip -d /opt/tools # -q because too much useless verbose
     mv -v /opt/tools/ghidra_* /opt/tools/ghidra # ghidra always has a version number in the unzipped folder, lets make it consistent
-    rm /tmp/ghidra.zip
     add-aliases ghidra
     add-history ghidra
     # TODO add-test-command GUI app
@@ -133,7 +132,6 @@ function install_ida() {
         wget "https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
         chmod +x /tmp/idafree_linux.run # This is the setup wizard
         /tmp/idafree_linux.run --mode unattended --prefix /opt/tools/idafree
-        rm /tmp/idafree_linux.run
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m), IDA Free only supports x86/x64" && return
     fi
