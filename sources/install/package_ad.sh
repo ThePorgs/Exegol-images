@@ -329,44 +329,33 @@ function install_impacket() {
 function install_impacket_og() {
     # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Impacket scripts (original)"
-    git -C /opt/tools/ clone --depth 1 https://github.com/fortra/impacket
-    cd /opt/tools/impacket || exit
+    git -C /opt/tools/ clone --depth 1 https://github.com/fortra/impacket impacket-og
+    cd /opt/tools/impacket-og || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install .
     pip3 install chardet pycryptodome # simply replicating what we do in install_impacket(), not 100% sure this is needed
     deactivate
 
-    # --- Check for missing Impacket example script aliases in impacket-og ---
-    colorecho "Checking for missing Impacket example script aliases in impacket-og..."
-    alias_file="/root/sources/assets/shells/aliases.d/impacket-og"
-    examples_dir="/opt/tools/impacket/examples"
-    missing_aliases=0
+    # Generate aliases dynamically for all impacket-og scripts
+    colorecho "Generating aliases for impacket-og scripts..."
+    alias_file="/opt/.exegol_aliases"
+    impacket_og_dir="/opt/tools/impacket-og"
+    examples_dir="${impacket_og_dir}/examples"
+    venv_python="${impacket_og_dir}/venv/bin/python3"
 
-    if [ -d "$examples_dir" ] && [ -f "$alias_file" ]; then
+    # aliases for scripts in the examples directory
+    if [ -d "$examples_dir" ]; then
         while read -r script_path; do
             script_name="$(basename "$script_path")"
             alias_name="${script_name%.py}-og.py"
-            # does the alias file reference this alias?
-            if ! grep -q "alias $alias_name=" "$alias_file"; then
-                echo "[-] Missing alias for $script_name"
-                missing_aliases=$((missing_aliases + 1))
-            else
-                echo "[+] Found $script_name"
-            fi
-        done < <(find "$examples_dir" -maxdepth 1 -type f -name '*.py')
-        if [ "$missing_aliases" -eq 0 ]; then
-            colorecho "All Impacket example scripts have matching aliases in impacket-og."
-        else
-            criticalecho "$missing_aliases missing aliases found in impacket-og. Please update $alias_file."
-        fi
-    else
-        criticalecho "Could not check aliases (file missing)"
+            echo "alias ${alias_name}=\"${venv_python} ${script_path}\"" >> "$alias_file"
+        done < <(find "$examples_dir" -maxdepth 1 -type f -name '*.py' | sort)
     fi
 
     add-aliases impacket-og
-    add-test-command "ntlmrelayx-og.py --help" || true
-    add-test-command "secretsdump-og.py --help" || true
+    add-test-command "ntlmrelayx-og.py --help"
+    add-test-command "secretsdump-og.py --help"
     add-to-list "impacket,https://github.com/fortra/impacket,Set of tools for working with network protocols (original version)."
 }
 
