@@ -344,7 +344,7 @@ function install_impacket_og() {
     missing_aliases=0
 
     if [ -d "$examples_dir" ] && [ -f "$alias_file" ]; then
-        find "$examples_dir" -maxdepth 1 -type f -name '*.py' | while read -r script_path; do
+        while read -r script_path; do
             script_name="$(basename "$script_path")"
             alias_name="${script_name%.py}-og.py"
             # does the alias file reference this alias?
@@ -354,7 +354,7 @@ function install_impacket_og() {
             else
                 echo "[+] Found $script_name"
             fi
-        done
+        done < <(find "$examples_dir" -maxdepth 1 -type f -name '*.py')
         if [ "$missing_aliases" -eq 0 ]; then
             colorecho "All Impacket example scripts have matching aliases in impacket-og."
         else
