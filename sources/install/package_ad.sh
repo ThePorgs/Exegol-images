@@ -303,7 +303,7 @@ function install_aclpwn() {
 }
 
 function install_impacket() {
-    colorecho "Installing Impacket scripts"
+    colorecho "Installing Impacket scripts (Exegol fork)"
     pipx install --system-site-packages git+https://github.com/ThePorgs/impacket
     # Pycryptodome because: https://github.com/fortra/impacket/issues/1634
     pipx inject impacket chardet pycryptodome
@@ -324,6 +324,50 @@ function install_impacket() {
     add-test-command "dacledit.py --help"
     add-test-command "describeTicket.py --help"
     add-to-list "impacket,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
+}
+
+function install_impacket_og() {
+    # CODE-CHECK-WHITELIST=add-history
+    colorecho "Installing Impacket scripts (original)"
+    git -C /opt/tools/ clone --depth 1 https://github.com/fortra/impacket
+    cd /opt/tools/impacket || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    pip3 install chardet pycryptodome # simply replicating what we do in install_impacket(), not 100% sure this is needed
+    deactivate
+
+    # --- Check for missing Impacket example script aliases in impacket-og ---
+    colorecho "Checking for missing Impacket example script aliases in impacket-og..."
+    alias_file="/root/sources/assets/shells/aliases.d/impacket-og"
+    examples_dir="/opt/tools/impacket/examples"
+    missing_aliases=0
+
+    if [ -d "$examples_dir" ] && [ -f "$alias_file" ]; then
+        find "$examples_dir" -maxdepth 1 -type f -name '*.py' | while read -r script_path; do
+            script_name="$(basename "$script_path")"
+            alias_name="${script_name%.py}-og.py"
+            # does the alias file reference this alias?
+            if ! grep -q "alias $alias_name=" "$alias_file"; then
+                echo "[-] Missing alias for $script_name"
+                missing_aliases=$((missing_aliases + 1))
+            else
+                echo "[+] Found $script_name"
+            fi
+        done
+        if [ "$missing_aliases" -eq 0 ]; then
+            colorecho "All Impacket example scripts have matching aliases in impacket-og."
+        else
+            criticalecho "$missing_aliases missing aliases found in impacket-og. Please update $alias_file."
+        fi
+    else
+        criticalecho "Could not check aliases (file missing)"
+    fi
+
+    add-aliases impacket-og
+    add-test-command "ntlmrelayx-og.py --help" || true
+    add-test-command "secretsdump-og.py --help" || true
+    add-to-list "impacket,https://github.com/fortra/impacket,Set of tools for working with network protocols (original version)."
 }
 
 function install_pykek() {
@@ -1678,6 +1722,7 @@ function package_ad() {
     install_pysnaffler             # Snaffler, but in Python
     install_evil-winrm-py          # Evil-Winrm, but in Python
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
+    install_impacket_og            # Impacket scripts (original version)
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
