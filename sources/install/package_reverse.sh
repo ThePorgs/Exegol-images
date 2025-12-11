@@ -10,7 +10,7 @@ function install_reverse_apt_tools() {
 
     add-history nasm
     add-history strace
-    
+
     if [[ $(uname -m) = 'x86_64' ]]
     then
         fapt ltrace

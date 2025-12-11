@@ -206,7 +206,7 @@ function install_bloodhound-ce() {
 
     # Force remove go and yarn cache that are not stored in standard locations
     rm -rf "${bloodhoundce_path}/src/cache" "${bloodhoundce_path}/src/.yarn/cache"
-    
+
     ## SharpHound
     local sharphound_url
     local sharphound_name
@@ -507,7 +507,7 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-11-01"
+    local temp_fix_limit="2026-02-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
@@ -749,7 +749,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-11-01"
+    local temp_fix_limit="2026-02-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -850,7 +850,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-11-01"
+    local temp_fix_limit="2026-02-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -883,7 +883,7 @@ function install_manspider() {
         # https://github.com/blacklanternsecurity/MANSPIDER/issues/55
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    
+
 }
 
 function install_targetedKerberoast() {
@@ -1030,7 +1030,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2025-11-01"
+    local temp_fix_limit="2026-02-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1300,11 +1300,6 @@ function install_LDAPWordlistHarvester() {
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install -r requirements.txt
-    # Waiting for github.com/p0dalirius/sectools release (1.5.0 actually)
-    local temp_fix_limit="2025-11-01"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      pip3 install --force sectools@git+https://github.com/p0dalirius/sectools.git@main
-    fi
     deactivate
     add-aliases LDAPWordlistHarvester
     add-history LDAPWordlistHarvester
@@ -1558,6 +1553,15 @@ function install_evil-winrm-py() {
     add-to-list "evil-winrm-py,https://github.com/adityatelange/evil-winrm-py,Evil-WinRM. But in python"
 }
 
+function install_daclsearch() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing daclsearch"
+    pipx install --system-site-packages git+https://github.com/cogiceo/daclsearch
+    add-history daclsearch
+    add-test-command "daclsearch --help"
+    add-to-list "daclsearch,https://github.com/uknowsec/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1670,9 +1674,10 @@ function package_ad() {
     install_goexec                 # Go version of *exec (smb,dcom...) from impacket with stronger OPSEC
     install_remotemonologue        # A tool to coerce NTLM authentications via DCOM
     install_godap                  # A complete terminal user interface (TUI) for LDAP
-    install_powerview              # Powerview Python implementation 
+    install_powerview              # Powerview Python implementation
     install_pysnaffler             # Snaffler, but in Python
     install_evil-winrm-py          # Evil-Winrm, but in Python
+    install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

@@ -1,1 +1,2 @@
-rdesktop -u $USER -p $PASSWORD -d $DOMAIN
+rdesktop -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
+rdesktop -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -r disk:EXEGOL=/workspace

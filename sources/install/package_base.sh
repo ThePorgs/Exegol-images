@@ -51,7 +51,7 @@ function install_go() {
     #asdf install golang latest
     #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2025-11-01"
+    local temp_fix_limit="2026-02-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # 1.24.4 needed for BloodHound-CE
       asdf install golang 1.24.4
@@ -232,10 +232,10 @@ function install_pipx() {
 }
 
 function install_pyftpdlib() {
-    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing pyftpdlib"
     pip3 install pyftpdlib
     add-aliases pyftpdlib
+    add-history pyftpdlib
     add-test-command "python3 -c 'import pyftpdlib'"
     add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
 }
@@ -415,7 +415,7 @@ function add_debian_repository_components() {
 
     while IFS= read -r line; do
       if [[ "$line" == "Components"* ]]; then
-        echo  "${line} non-free non-free-firmware contrib" >> "$out_file"
+        echo "${line} non-free non-free-firmware contrib" >> "$out_file"
       else
         echo "$line" >> "$out_file"
       fi
@@ -483,7 +483,7 @@ function install_wireguard() {
   fapt wireguard
 
   # Patch wireguard start script https://github.com/WireGuard/wireguard-tools/pull/5
-  local temp_fix_limit="2025-12-01"
+  local temp_fix_limit="2026-02-10"
   if check_temp_fix_expiry "$temp_fix_limit"; then
     # shellcheck disable=SC2016
     sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
@@ -518,13 +518,17 @@ function package_base() {
     nim perl libwww-perl openjdk-17-jdk \
     logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep
+    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep pv
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem
     install_locales
     cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
     cp -v /root/sources/assets/shells/bashrc ~/.bashrc
+    # Add /etc/zsh.d directory to import dynamically any script after /etc/zsh/zshrc
+    mkdir /etc/zsh.d && echo "test -d /etc/zsh.d && source /etc/zsh.d/*" >> /etc/zsh/zshrc
+    # Add /etc/bash.d directory to import dynamically any script after /etc/bash.bashrc
+    mkdir /etc/bash.d && echo "test -d /etc/bash.d && source /etc/bash.d/*" >> /etc/bash.bashrc
 
     install_asdf
 
