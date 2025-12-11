@@ -206,7 +206,7 @@ function install_bloodhound-ce() {
 
     # Force remove go and yarn cache that are not stored in standard locations
     rm -rf "${bloodhoundce_path}/src/cache" "${bloodhoundce_path}/src/.yarn/cache"
-    
+
     ## SharpHound
     local sharphound_url
     local sharphound_name
@@ -883,7 +883,7 @@ function install_manspider() {
         # https://github.com/blacklanternsecurity/MANSPIDER/issues/55
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    
+
 }
 
 function install_targetedKerberoast() {
@@ -1685,7 +1685,7 @@ function package_ad() {
     install_goexec                 # Go version of *exec (smb,dcom...) from impacket with stronger OPSEC
     install_remotemonologue        # A tool to coerce NTLM authentications via DCOM
     install_godap                  # A complete terminal user interface (TUI) for LDAP
-    install_powerview              # Powerview Python implementation 
+    install_powerview              # Powerview Python implementation
     install_pysnaffler             # Snaffler, but in Python
     install_evil-winrm-py          # Evil-Winrm, but in Python
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs

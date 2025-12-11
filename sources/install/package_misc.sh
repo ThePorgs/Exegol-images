@@ -193,7 +193,7 @@ function install_creds() {
 
 function install_uploader() {
     colorecho "Installing Uploader"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Frozenka/uploader.git 
+    git -C /opt/tools/ clone --depth 1 https://github.com/Frozenka/uploader.git
     cd /opt/tools/uploader || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
@@ -219,7 +219,8 @@ function install_glow() {
     local url
     local version
     colorecho "Installing glow"
-    url=$(curl --location --silent --output /dev/null --write-out "%{url_effective}" https://github.com/charmbracelet/glow/releases/latest)    version=${url##*v}
+    url=$(curl --location --silent --output /dev/null --write-out "%{url_effective}" https://github.com/charmbracelet/glow/releases/latest)
+    version=${url##*v}
     wget "https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_Linux_x86_64.tar.gz" -O /tmp/glow.tar.gz
     tar -xvf /tmp/glow.tar.gz
     cp "glow_${version}_Linux_x86_64/glow" "/opt/tools/bin"

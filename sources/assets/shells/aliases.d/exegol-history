@@ -1,2 +1,2 @@
-function exegol-history { /root/.local/bin/exegol-history "$@" && [ -f /opt/tools/Exegol-history/profile.sh ] || return 0 && source /opt/tools/Exegol-history/profile.sh }
+function exegol-history { /root/.local/bin/exegol-history "$@" && [ -f /opt/tools/Exegol-history/profile.sh ] || return 0 && source /opt/tools/Exegol-history/profile.sh; }
 alias exh="exegol-history"

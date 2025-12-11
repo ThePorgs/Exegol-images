@@ -93,7 +93,7 @@ function set_asdf_env(){
 function set_build_only_env(){
     # Here you can set environment variables that are only needed during the build process
     colorecho "Setting build only environment"
-    
+
     # Make curl fails on HTTP errors (4xx and 5xx) because it doesn't by default
     export CURL_HOME="/root/sources/assets/shells/" # Curl will search for .curlrc in this directory
     # Make wget a bit less verbose
@@ -212,19 +212,19 @@ function check_temp_fix_expiry() {
     # Returns:
     # 0 if the fix should be applied (not expired or local build)
     # 1 if the fix has expired (and not a local build)
-    
+
     local expiry_date="$1"
-    
+
     # Apply the fix if it's a local build regardless of expiry
     if [[ "$EXEGOL_BUILD_TYPE" == "local" ]]; then
         return 0
     fi
-    
+
     # Check if the current date is past the expiry date
     if [[ "$(date +%Y%m%d)" -gt "$(date -d "$expiry_date" +%Y%m%d)" ]]; then
         criticalecho "Temp fix expired. Exiting."
     fi
-    
+
     # Not expired, apply the fix
     return 0
 }

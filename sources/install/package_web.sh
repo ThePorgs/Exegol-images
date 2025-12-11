@@ -197,8 +197,8 @@ function install_xspear() {
     rvm use 3.2.2@xspear --create
     gem install XSpear
     rvm use 3.2.2@default
-    add-aliases Xspear
-    add-history xspear
+    add-aliases XSpear
+    add-history XSpear
     add-test-command "XSpear --help"
     add-to-list "XSpear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
 }
@@ -498,7 +498,7 @@ function install_jwt_tool() {
     # Running the tool to create the initial configuration and force it to returns 0
     python3 jwt_tool.py || :
     deactivate
-    
+
     # Configuration
     sed -i 's/^proxy = 127.0.0.1:8080/#proxy = 127.0.0.1:8080/' /root/.jwt_tool/jwtconf.ini
     sed -i 's|^wordlist = jwt-common.txt|wordlist = /opt/tools/jwt_tool/jwt-common.txt|' /root/.jwt_tool/jwtconf.ini
@@ -951,13 +951,13 @@ function install_caido() {
     caido_file_name_cli=$(basename "$caido_cli")
     wget "$caido_cli" -O "/opt/tools/caido/$caido_file_name_cli"
     tar -xvzf "/opt/tools/caido/$caido_file_name_cli" -C /opt/tools/bin/
-    
+
     add-history caido
     add-test-gui-command "caido --no-sandbox"
     add-test-command "caido-cli --help"
     add-to-list "caido,https://docs.caido.io/quickstart/,A lightweight web security auditing toolkit."
 }
-    
+
 function install_token_exploiter() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing Token Exploiter"
@@ -1009,7 +1009,6 @@ function package_web() {
     install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
     install_moodlescan              # Moodle scanner
     install_testssl                 # SSL/TLS scanner
-    # install_sslyze                # SSL/TLS scanner FIXME: Only AMD ?
     install_cloudfail               # Cloudflare misconfiguration detector
     install_eyewitness              # Website screenshoter
     install_oneforall               # OneForAll is a powerful subdomain integration tool

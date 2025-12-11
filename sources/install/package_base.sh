@@ -232,10 +232,10 @@ function install_pipx() {
 }
 
 function install_pyftpdlib() {
-    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing pyftpdlib"
     pip3 install pyftpdlib
     add-aliases pyftpdlib
+    add-history pyftpdlib
     add-test-command "python3 -c 'import pyftpdlib'"
     add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
 }
@@ -415,7 +415,7 @@ function add_debian_repository_components() {
 
     while IFS= read -r line; do
       if [[ "$line" == "Components"* ]]; then
-        echo  "${line} non-free non-free-firmware contrib" >> "$out_file"
+        echo "${line} non-free non-free-firmware contrib" >> "$out_file"
       else
         echo "$line" >> "$out_file"
       fi
@@ -525,6 +525,10 @@ function package_base() {
     install_locales
     cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
     cp -v /root/sources/assets/shells/bashrc ~/.bashrc
+    # Add /etc/zsh.d directory to import dynamically any script after /etc/zsh/zshrc
+    mkdir /etc/zsh.d && echo "test -d /etc/zsh.d && source /etc/zsh.d/*" >> /etc/zsh/zshrc
+    # Add /etc/bash.d directory to import dynamically any script after /etc/bash.bashrc
+    mkdir /etc/bash.d && echo "test -d /etc/bash.d && source /etc/bash.d/*" >> /etc/bash.bashrc
 
     install_asdf
 

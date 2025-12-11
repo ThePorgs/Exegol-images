@@ -533,9 +533,10 @@ function install_instaloader() {
 }
 
 function install_ghunt() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GHunt"
     pipx install --system-site-packages ghunt
+    add-history ghunt
     add-test-command "ghunt --help"
     add-to-list "GHunt,https://github.com/mxrch/GHunt,Investigate Google Accounts with emails"
 }
