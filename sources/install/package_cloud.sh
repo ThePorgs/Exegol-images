@@ -115,7 +115,7 @@ function install_prowler() {
 
 function install_cloudmapper() {
     colorecho "Installing Cloudmapper"
-    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git 
+    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git
     cd /opt/tools/cloudmapper || exit
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch

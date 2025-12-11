@@ -37,7 +37,7 @@ function install_network_apt_tools() {
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
     add-test-command "mitmproxy --version"                          # MITMProxy
-    
+
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
     add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
@@ -180,7 +180,7 @@ function install_penelope() {
     colorecho "Installing Penelope"
     pipx install --system-site-packages git+https://github.com/brightio/penelope.git
     add-history penelope 
-    add-test-command "which penelope.py" 
+    add-test-command "which penelope.py"
     add-to-list "penelope,https://github.com/brightio/penelope,Penelope is a shell handler designed to be easy to use and intended to replace netcat when exploiting RCE vulnerabilities."
 }
 

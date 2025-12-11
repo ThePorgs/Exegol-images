@@ -108,7 +108,7 @@
     "ExtensionSettings_Comment": "To get the 'ID' of a plugins, you can query the extension page and search for the 'guid' field in the HTML source code.",
     "ExtensionSettings": {
     },
-    
+
     "UserMessaging": {
       "WhatsNew": false,
       "ExtensionRecommendations": false,
