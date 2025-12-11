@@ -33,12 +33,12 @@ function install_k9s() {
     cd /tmp || exit
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_amd64.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_amd64.tar.gz" | head -n 1 | grep -o 'https://[^"]*' | wget -qi -
         tar -zxvf k9s_Linux_amd64.tar.gz k9s
         rm k9s_Linux_amd64.tar.gz
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_arm64.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_arm64.tar.gz" | head -n 1 | grep -o 'https://[^"]*' | wget -qi -
         tar -zxvf k9s_Linux_arm64.tar.gz k9s
         rm k9s_Linux_arm64.tar.gz
     else

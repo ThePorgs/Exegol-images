@@ -1553,6 +1553,15 @@ function install_evil-winrm-py() {
     add-to-list "evil-winrm-py,https://github.com/adityatelange/evil-winrm-py,Evil-WinRM. But in python"
 }
 
+function install_keytabextract() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing keytabextract"
+    wget -O /opt/tools/bin/keytabextract https://raw.githubusercontent.com/sosdave/KeyTabExtract/refs/heads/master/keytabextract.py
+    chmod +x /opt/tools/bin/keytabextract
+    add-history keytabextract
+    add-test-command "keytabextract |& grep keytabextract"
+    add-to-list "keytabextract,https://github.com/sosdave/KeyTabExtract,KeyTabExtract is a tool to extract valuable information from keytab files."
+
 function install_daclsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing daclsearch"
@@ -1677,6 +1686,7 @@ function package_ad() {
     install_powerview              # Powerview Python implementation
     install_pysnaffler             # Snaffler, but in Python
     install_evil-winrm-py          # Evil-Winrm, but in Python
+    install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     post_install
     end_time=$(date +%s)
