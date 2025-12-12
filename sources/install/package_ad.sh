@@ -323,7 +323,7 @@ function install_impacket() {
     add-test-command "ticketer.py --help |& grep extra-pac"
     add-test-command "dacledit.py --help"
     add-test-command "describeTicket.py --help"
-    add-to-list "impacket,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
+    add-to-list "impacket (fork),https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
 }
 
 function install_impacket_og() {
@@ -356,7 +356,7 @@ function install_impacket_og() {
     add-aliases impacket-og
     add-test-command "ntlmrelayx-og.py --help"
     add-test-command "secretsdump-og.py --help"
-    add-to-list "impacket,https://github.com/fortra/impacket,Set of tools for working with network protocols (original version)."
+    add-to-list "impacket (original),https://github.com/fortra/impacket,Set of tools for working with network protocols (original version)."
 }
 
 function install_pykek() {
