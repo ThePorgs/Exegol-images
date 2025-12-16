@@ -134,7 +134,7 @@ index 137d87d..f4f8e67 100644
 +//        return -1;
 +//    }
 +//#endif /* COMPILE_AESNI */
- 
+
  PyDoc_STRVAR(CCMPCracker_solve__doc__,
               "solve(object) -> solution or None\n\n"
 diff --git a/cpyrit/cpufeatures.h b/cpyrit/cpufeatures.h

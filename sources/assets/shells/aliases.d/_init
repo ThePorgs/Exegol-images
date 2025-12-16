@@ -1,8 +1,10 @@
 alias rickroll='curl tiredand.gay/rick'
 alias l='ls -alh'
 alias ip='grc ip'
-alias ipa='ip --brief --color a'
-alias ipr='ip --brief --color r'
+alias ipa='ip --brief --color address'
+alias ipr='ip --brief --color route'
+alias tun0='ip -4 -o addr show dev tun0 | awk "{print \$4}" | cut -d/ -f1'
+alias eth0='ip -4 -o addr show dev eth0 | awk "{print \$4}" | cut -d/ -f1'
 alias ncvz="nc -vzw2"
 alias urlencode='python3 -c "import sys; from urllib.parse import quote; print(quote(sys.argv[1], safe=\"\"))"'
 alias urldecode='python3 -c "import sys; from urllib.parse import unquote; print(unquote(sys.argv[1]))"'
