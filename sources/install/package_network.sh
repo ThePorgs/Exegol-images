@@ -20,6 +20,7 @@ function install_network_apt_tools() {
     add-history traceroute
     add-history rdesktop
     add-history hydra
+    add-history mariadb
     add-history xfreerdp
     add-history mitmproxy
 
