@@ -1,1 +1,1 @@
-mysql -u "$USER" -h "$TARGET" -P "$PORT" --password="$PASSWORD"
+mysql --user "$USER" --host "$TARGET" --port "$PORT" --password "$PASSWORD"
