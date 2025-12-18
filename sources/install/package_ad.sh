@@ -323,7 +323,7 @@ function install_impacket() {
     add-test-command "ticketer.py --help |& grep extra-pac"
     add-test-command "dacledit.py --help"
     add-test-command "describeTicket.py --help"
-    add-to-list "impacket fork,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
+    add-to-list "impacket,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
 }
 
 function install_impacket_og() {
@@ -1563,7 +1563,7 @@ function install_powerview() {
     add-to-list "Powerview.py,https://github.com/aniqfakhrul/powerview.py,PowerView.py is an alternative for the awesome original PowerView.ps1 script."
 }
 
-function install_pysnaffler(){
+function install_pysnaffler() {
     colorecho "Installing pysnaffler"
     git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pysnaffler
     cd /opt/tools/pysnaffler || exit
