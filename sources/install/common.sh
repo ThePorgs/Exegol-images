@@ -182,8 +182,8 @@ function post_install() {
     rm -rf /tmp/*
     rm -rf /var/lib/apt/lists/*
 
-    # debconf cache (safe)
-    rm -f /var/cache/debconf/templates.dat /var/cache/debconf/config.dat
+    # debconf cache
+    rm -f /var/cache/debconf
 
     colorecho "Stop listening processes"
     local listening_processes
