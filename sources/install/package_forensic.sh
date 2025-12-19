@@ -115,6 +115,8 @@ function install_chainsaw() {
     cd /opt/tools/chainsaw || exit
     cargo build --release
     ln -v -s /opt/tools/chainsaw/target/release/chainsaw /opt/tools/bin/chainsaw
+    # Clean dependencies used to build the binary
+    rm -rf target/release/{deps,build,.fingerprint}
     add-history chainsaw
     add-test-command "chainsaw --help"
     add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
