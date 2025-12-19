@@ -569,6 +569,7 @@ function package_base() {
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
     ln -s -v /usr/lib/jvm/java-17-openjdk/bin/java /usr/bin/java17          # Add java17 bin
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
+    find /usr/lib/jvm -name 'src.zip' -delete                               # Remove leftover JDK source archives
 
     install_go                                          # Golang language
     install_ohmyzsh                                     # Awesome shell
