@@ -167,16 +167,23 @@ function fix_ownership() {
 function post_install() {
     # Function used to clean up post-install files
     colorecho "Cleaning..."
-    updatedb
+
+    # language/tool caches
     rm -rf /root/.asdf/installs/golang/*/packages/pkg/mod
     rm -rf /root/.bundle/cache
     rm -rf /root/.cache
     rm -rf /root/.cargo/registry
     rm -rf /root/.gradle/caches
+    rm -rf /root/.local/state/pipx/log
     rm -rf /root/.npm/_cacache
     rm -rf /root/.nvm/.cache
+
+    # temp + apt
     rm -rf /tmp/*
     rm -rf /var/lib/apt/lists/*
+
+    # debconf cache (safe)
+    rm -f /var/cache/debconf/templates.dat /var/cache/debconf/config.dat
 
     colorecho "Stop listening processes"
     local listening_processes
@@ -194,13 +201,19 @@ function post_build() {
     colorecho "Post build..."
     rm -rfv /root/sources
     add-test-command "if [[ $(sudo ss -lnpt | tail -n +2 | wc -l) -ne 0 ]]; then ss -lnpt && false;fi"
+
+    colorecho "Build database for locate command"
+    updatedb
+
     colorecho "Sorting tools list"
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
+
     colorecho "Adding end-of-preset in zsh_history"
     echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
     cp /opt/.exegol_history ~/.zsh_history
     cp /opt/.exegol_history ~/.bash_history
+
     colorecho "Removing desktop icons"
     if [ -d "/root/Desktop" ]; then rm -r /root/Desktop; fi
 }
