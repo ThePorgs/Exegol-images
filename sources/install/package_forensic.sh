@@ -97,6 +97,7 @@ function install_peepdf() {
 function install_jadx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jadx"
+    local jadx_url
     jadx_url=$(curl --location --silent "https://api.github.com/repos/skylot/jadx/releases/latest" | grep 'browser_download_url.' | grep -o 'https://[^"]*' | head -n1)
     curl --location -o /tmp/jadx.zip "$jadx_url"
     unzip -q /tmp/jadx.zip -d /opt/tools/jadx
