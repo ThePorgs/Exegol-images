@@ -1,0 +1,3 @@
+ftp ftp://anonymous:anonymous@"$TARGET"
+ftp ftp://"$USER":"$PASSWORD"@"$TARGET"
+wget --mirror ftp://"$USER":"$PASSWORD"@"$TARGET"

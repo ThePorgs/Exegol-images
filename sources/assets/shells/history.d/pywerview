@@ -1,5 +1,5 @@
 KRB5CCNAME="$CCACHE_PATH" pywerview get-netcomputer -k --dc-ip "$DC_IP" --user "$USER"
 KRB5CCNAME="$CCACHE_PATH" pywerview get-localdisks -k --computername $COMPUTER --user "$USER"
-pywerview get-netuser --workgroup "$DOMAIN" --dc-ip "$DC_IP" --tls --cert cert.crt --key cert.key --username "$USER" --attributes distinguishedname useraccountcontrol 
+pywerview get-netuser --workgroup "$DOMAIN" --dc-ip "$DC_IP" --tls --cert cert.crt --key cert.key --username "$USER" --attributes distinguishedname useraccountcontrol
 pywerview get-netgmsa --dc-ip "$DC_IP" --user "$USER" --hashes "$NT_HASH" --resolve-sids
-pywerview get-netgmsa --dc-ip "$DC_IP" --tls --user "$USER" --hashes "$NT_HASH" --resolve-sids 
+pywerview get-netgmsa --dc-ip "$DC_IP" --tls --user "$USER" --hashes "$NT_HASH" --resolve-sids

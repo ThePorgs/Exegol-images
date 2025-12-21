@@ -19,8 +19,8 @@ function install_steganography_apt_tools() {
     add-test-command "exif --help"                              # Show and change EXIF information in JPEG files
     add-test-command "exiv2 --help"                             # Utility to read, write, delete and modify Exif, IPTC, XMP and ICC image metadata
     add-test-command "hexedit --help|& grep 'usage: hexedit'"   # View and edit files in hexadecimal or in ASCII
-    
-    
+
+
     add-to-list "stegosuite,https://github.com/osde8info/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files."
     add-to-list "steghide,https://github.com/StefanoDeVuono/steghide,steghide is a steganography program that is able to hide data in various kinds of image and audio files."
     add-to-list "exif,https://exiftool.org/,Utility to read / write and edit metadata in image / audio and video files"

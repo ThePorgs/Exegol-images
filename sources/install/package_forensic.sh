@@ -97,11 +97,12 @@ function install_peepdf() {
 function install_jadx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jadx"
-    git -C /opt/tools/ clone --depth 1 https://github.com/skylot/jadx.git
-    cd /opt/tools/jadx || exit
-    ./gradlew dist
-    ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
-    ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
+    local jadx_url
+    jadx_url=$(curl --location --silent "https://api.github.com/repos/skylot/jadx/releases/latest" | grep 'browser_download_url.' | grep -o 'https://[^"]*' | head -n1)
+    curl --location -o /tmp/jadx.zip "$jadx_url"
+    unzip -q /tmp/jadx.zip -d /opt/tools/jadx
+    ln -v -s /opt/tools/jadx/bin/jadx /opt/tools/bin/jadx
+    ln -v -s /opt/tools/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
     add-history jadx
     add-test-command "jadx --help"
     add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler"
@@ -115,6 +116,8 @@ function install_chainsaw() {
     cd /opt/tools/chainsaw || exit
     cargo build --release
     ln -v -s /opt/tools/chainsaw/target/release/chainsaw /opt/tools/bin/chainsaw
+    # Clean dependencies used to build the binary
+    rm -rf target/release/{deps,build,.fingerprint}
     add-history chainsaw
     add-test-command "chainsaw --help"
     add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
