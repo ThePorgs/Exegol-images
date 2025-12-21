@@ -1014,7 +1014,7 @@ function package_web() {
     install_zap                     # Zed Attack Proxy
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
-	install_urldedupe				# Get back a list of deduplicated (unique) URL and query string combination. 
+    install_urldedupe                # Get back a list of deduplicated (unique) URL and query string combination. 
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
