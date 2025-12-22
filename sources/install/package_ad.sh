@@ -1594,6 +1594,7 @@ function install_keytabextract() {
     add-history keytabextract
     add-test-command "keytabextract |& grep keytabextract"
     add-to-list "keytabextract,https://github.com/sosdave/KeyTabExtract,KeyTabExtract is a tool to extract valuable information from keytab files."
+}
 
 function install_daclsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
