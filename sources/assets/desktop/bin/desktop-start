@@ -36,7 +36,7 @@ find_available_display() {
 }
 
 
-mode=${EXEGOL_DESKTOP_PROTO:-"http"}
+mode=${EXEGOL_DESKTOP_PROTO:-"https"}
 # By default if no env are provided, exegol will select the eth0
 host=${EXEGOL_DESKTOP_HOST:-"$HOSTNAME"}
 port=${EXEGOL_DESKTOP_PORT:-"6336"}
@@ -56,6 +56,7 @@ echo "Using display :$display_id"
 
 case "$mode" in
   vnc)
+    update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep tiger)
     if [[ "$host" == "127.0.0.1" || "$host" == "localhost" ]]; then
         # In network host mode, vncserver can directly be accessed on localhost interface
         vncserver -localhost "yes" -rfbport "$port" -geometry "1920x1080" -SecurityTypes "TLSPlain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id"
@@ -70,10 +71,10 @@ case "$mode" in
     fi
 
     ;;
-  http)
-    random_port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
-    vncserver -localhost "yes" -rfbport "$random_port" -geometry "1920x1080" -SecurityTypes "Plain" -PAMService "tigervnc" -PlainUsers "$username" ":$display_id" && \
-      websockify -D --web /usr/share/novnc/ "$host:$port" "127.0.0.1:$random_port"
+  https)
+    update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep kasm)
+    #random_port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
+    vncserver -websocketPort "$port" -interface "$host" ":$display_id"
     ;;
 esac
 
