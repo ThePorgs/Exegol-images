@@ -1,4 +1,3 @@
-#!/bin/bash
 # Author: The Exegol Project
 
 source common.sh
@@ -103,11 +102,7 @@ function install_xfce() {
     touch /root/.Xauthority
     export DISPLAY=":0"
     update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep tiger)
-    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes Plain :0
-    sleep 10
-    vncserver -kill
-    update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep kasm)
-    echo -e "1\ny|n"|vncserver
+    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes Plain :1
     sleep 10
     xfconf-query -c xsettings -p /Net/ThemeName -s Prof_XFCE_2_1
     xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
@@ -131,6 +126,10 @@ function install_xfce() {
     # Stopping VNC server used for config
     vncserver -kill :1
     sleep 6
+    update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep kasm)
+    vncserver -select-de XFCE
+    sleep 10
+    vncserver -kill $(vncserver -list|grep -Po '^:[0-9]+')
     # Remove log files of temp vncserver run ## TODO check if more
     rm /root/.vnc/*.log /root/.xsession-errors
     [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
