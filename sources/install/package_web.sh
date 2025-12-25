@@ -102,7 +102,6 @@ function install_amass() {
 }
 
 function install_ffuf() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ffuf"
     if [[ $(uname -m) = 'x86_64' ]]
     then
@@ -118,6 +117,7 @@ function install_ffuf() {
     ffuf_url=$(curl --location --silent "https://api.github.com/repos/ffuf/ffuf/releases/latest" | grep 'browser_download_url.*ffuf.*linux_'"$arch"'.tar.gz"' | grep -o 'https://[^"]*')
     curl --location -o /tmp/ffuf.tar.gz "$ffuf_url"
     tar -xf /tmp/ffuf.tar.gz --directory /opt/tools/bin/
+    add-aliases ffuf
     add-history ffuf
     add-test-command "ffuf --help"
     add-to-list "ffuf,https://github.com/ffuf/ffuf,Fast web fuzzer written in Go."
