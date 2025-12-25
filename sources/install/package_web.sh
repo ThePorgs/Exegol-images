@@ -1000,6 +1000,16 @@ function install_curlie() {
     add-to-list "curlie,https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
 }
 
+function install_xxeinjector() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing XXEinjector"
+    wget https://raw.githubusercontent.com/enjoiz/XXEinjector/refs/heads/master/XXEinjector.rb -O /opt/tools/bin/XXEinjector.rb
+    chmod +x /opt/tools/bin/XXEinjector.rb
+    add-history xxeinjector
+    add-test-command "XXEinjector.rb --help"
+    add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -1085,6 +1095,7 @@ function package_web() {
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
     install_curlie                  # Mix of cURL and HTTPie
+    install_xxeinjector             # XXE injection testing tool
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
