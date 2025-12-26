@@ -1,2 +1,0 @@
-function ghunt.py { (cd /opt/tools/GHunt/ && python3 ghunt.py "$@") }
-function ghunt-config { (cd /opt/tools/GHunt/ && python3 check_and_gen.py "$@") }

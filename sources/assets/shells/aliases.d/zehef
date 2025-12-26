@@ -1,0 +1,1 @@
+function zehef.py { (cd /opt/tools/Zehef/ && ./venv/bin/python3 zehef.py "$@") }

@@ -1,0 +1,3 @@
+echo 'ssl:"Uber Technologies, Inc."' | uncover
+echo 8.8.8.8/20 | uncover -e driftnet
+uncover -shodan 'http.component:"Atlassian Jira"' -censys 'services.software.product=`Jira`' -fofa 'app="ATLASSIAN-JIRA"' -quake 'Jira' -hunter 'Jira' -zoomeye 'app:"Atlassian JIRA"' -netlas 'jira' -criminalip 'Jira' -driftnet 'field=product-tag:jira'

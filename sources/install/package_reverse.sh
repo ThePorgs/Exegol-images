@@ -10,7 +10,7 @@ function install_reverse_apt_tools() {
 
     add-history nasm
     add-history strace
-    
+
     if [[ $(uname -m) = 'x86_64' ]]
     then
         fapt ltrace
@@ -175,9 +175,7 @@ function install_pwninit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pwninit"
     fapt liblzma-dev patchelf elfutils
-    # Sourcing rustup shell setup, so that rust binaries are found when installing cme
-    source "$HOME/.cargo/env"
-    cargo install pwninit
+    cargo binstall -y pwninit
     add-history pwninit
     add-test-command "pwninit --help"
     add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
@@ -198,6 +196,16 @@ function install_pycdc() {
     add-to-list "pycdc,https://github.com/zrax/pycdc,Python bytecode disassembler and decompiler."
 }
 
+function install_vt(){
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing vt"
+    go install -v github.com/VirusTotal/vt-cli/vt@latest
+    asdf reshim golang
+    add-history vt
+    add-test-command "vt --help"
+    add-to-list "vt,https://github.com/VirusTotal/vt-cli,A command-line interface for VirusTotal."
+}
+
 # Package dedicated to reverse engineering tools
 function package_reverse() {
     set_env
@@ -216,6 +224,7 @@ function package_reverse() {
     install_jd-gui                  # Java decompiler
     install_pwninit                 # Tool for automating starting binary exploit
     install_pycdc                   # Python bytecode disassembler and decompiler
+    install_vt                      # VirusTotal CLI
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

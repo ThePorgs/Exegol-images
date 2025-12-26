@@ -7,7 +7,7 @@ function install_rfid_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing rfid apt tools"
     fapt libusb-dev autoconf nfct pcsc-tools pcscd libpcsclite-dev libpcsclite1 libnfc-dev libnfc-bin mfcuk
-    
+
     add-history libnfc
     add-history mfcuk
 
@@ -78,6 +78,12 @@ function install_proxmark3() {
     fapt --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev liblz4-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
     cd /opt/tools/proxmark3 || exit
+    local temp_fix_limit="2026-02-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        # https://github.com/RfidResearchGroup/proxmark3/issues/3063
+        git fetch --unshallow
+        git checkout 2d4129a5947d40f7071a3a95a1a1630538b6b13a
+    fi
     make clean
     make -j all PLATFORM=PM3OTHER
     make install PLATFORM=PM3OTHER clean

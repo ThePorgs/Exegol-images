@@ -46,7 +46,7 @@ def generate_firefox_policy():
 
             for name in names:
                 extension_guid = get_extension_id(name)
-                data['policies']['ExtensionSettings'][extension_guid] = {"installation_mode": "force_installed", "install_url": f"https://addons.mozilla.org/firefox/downloads/latest/{name}/latest.xpi"}
+                data['policies']['ExtensionSettings'][extension_guid] = {"installation_mode": "normal_installed", "install_url": f"https://addons.mozilla.org/firefox/downloads/latest/{name}/latest.xpi"}
 
             with open(f"{POLICY_PATH}{POLICY_FILENAME}", "w") as policy_file:
                 json.dump(data, policy_file)
