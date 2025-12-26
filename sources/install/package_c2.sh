@@ -7,13 +7,13 @@ source package_ad.sh
 
 function install_pwncat() {
     # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing pwncat"
-    pipx install --system-site-packages pwncat-cs
+    colorecho "Installing pwncat-vl"
+    pipx install --system-site-packages pwncat-vl
     # Because Blowfish has been deprecated, downgrade cryptography version - https://github.com/paramiko/paramiko/issues/2038
-    pipx inject pwncat-cs cryptography==36.0.2
+    pipx inject pwncat-vl cryptography==36.0.2
     add-history pwncat
-    add-test-command "pwncat-cs --version"
-    add-to-list "pwncat,https://github.com/calebstewart/pwncat,A lightweight and versatile netcat alternative that includes various additional features."
+    add-test-command "pwncat-vl --version"
+    add-to-list "pwncat-vl,https://github.com/Chocapikk/pwncat-vl,Maintained fork of pwncat-cs with recent fixes and enhancements."
 }
 
 function install_metasploit() {
@@ -37,7 +37,7 @@ function install_metasploit() {
     gem install rex-text
 
     # fixes 'You have already activated timeout 0.2.0, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    local temp_fix_limit="2025-09-01"
+    local temp_fix_limit="2026-02-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       gem install timeout --version 0.4.1
     fi
@@ -79,20 +79,10 @@ function install_routersploit() {
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sliver"
-    # making the static version checkout a temporary thing
-    # function below will serve as a reminder to update sliver's version regularly
-    # when the pipeline fails because the time limit is reached: update the version and the time limit
-    # or check if it's possible to make this dynamic
-    local temp_fix_limit="2025-09-01"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      # Add branch v1.5.41 due to installation of stable branch
-      git -C /opt/tools/ clone --branch v1.5.42 --depth 1 https://github.com/BishopFox/sliver.git
-      cd /opt/tools/sliver || exit
-    fi
-    asdf set golang 1.19
-    make
-    ln -s /opt/tools/sliver/sliver-server /opt/tools/bin/sliver-server
-    ln -s /opt/tools/sliver/sliver-client /opt/tools/bin/sliver-client
+    mkdir /opt/tools/sliver
+    cp -v /root/sources/assets/sliver/install.sh /opt/tools/sliver/install.sh
+    chmod +x /opt/tools/sliver/install.sh
+    /opt/tools/sliver/install.sh
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"

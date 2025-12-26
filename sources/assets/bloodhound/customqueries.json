@@ -728,6 +728,15 @@
             }]
         },
         {
+            "name": "Top 20 nodes, not DA, not HVT, most outgoing rights",
+            "category": "Top Ten",
+            "queryList": [{
+                "final": true,
+                "query": "MATCH (daGroup:Group)<-[:MemberOf*1..]-(domainAdmin) WHERE daGroup.objectid ENDS WITH '-512' WITH COLLECT(domainAdmin) AS domainAdmins MATCH (admGroup:Group)<-[:MemberOf*1..]-(domainAdm) WHERE admGroup.objectid ENDS WITH '-544' WITH domainAdmins, COLLECT(domainAdm) AS domainAdms MATCH p=(u)-[r1]->(n) WHERE r1.isacl=true AND NOT u IN domainAdmins AND NOT u IN domainAdms AND NOT u.highvalue=true WITH u, COUNT(r1) AS count_ctrl ORDER BY count_ctrl DESC LIMIT 20 RETURN u",
+                "allowCollapse": true
+            }]
+        },
+        {
             "name": "Top 20 nodes, 5 nested max, not DA, not HVT, most group deleg rights",
             "category": "Top Ten",
             "queryList": [{

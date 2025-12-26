@@ -1,0 +1,1 @@
+massdns -r resolvers.txt -t AAAA domains.txt

@@ -1,0 +1,5 @@
+evil-winrm-py --ip "$TARGET" --user "$USER" --password "$PASSWORD"
+evil-winrm-py --ip "$TARGET" --user "$USER" --password "$PASSWORD" --kerberos
+evil-winrm-py --ip "$TARGET" --user "$USER" --hash "$NT_HASH"
+evil-winrm-py --ip "$TARGET" --user "$USER" --kerberos --no-pass
+KRB5CCNAME="$CCACHE_PATH" evil-winrm-py --ip "$TARGET" --kerberos

