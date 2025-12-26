@@ -926,7 +926,7 @@ function install_dalfox() {
     cd /opt/tools/dalfox
     asdf set golang 1.24.4
     mkdir -p .go/bin
-    GOBIN=/opt/tools/ruler/.go/bin go install -v github.com/hahwul/dalfox/v2@latest
+    GOBIN=/opt/tools/dalfox/.go/bin go install -v github.com/hahwul/dalfox/v2@latest
     asdf reshim golang
 	add-history dalfox
 	add-test-command "dalfox --help"
