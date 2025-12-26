@@ -978,13 +978,12 @@ function install_bbot() {
 function install_urldedupe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing urldedupe"
-    git -C /opt/tools/ clone --depth 1 https://github.com/ameenmaali/urldedupe.git
-    cd /opt/tools/urldedupe || exit
+    git -C /tmp clone --depth 1 https://github.com/ameenmaali/urldedupe.git
+    cd /tmp/urldedupe || exit
     cmake CMakeLists.txt
     make
-    ln -s /opt/tools/urldedupe/urldedupe /opt/tools/bin/urldedupe
+    cp /tmp/urldedupe/urldedupe /opt/tools/bin/urldedupe
     add-history urldedupe
-    add-aliases urldedupe
     add-test-command "urldedupe -h"
     add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs, and get back a list of deduplicated (unique) URL and query string combination."
 }
