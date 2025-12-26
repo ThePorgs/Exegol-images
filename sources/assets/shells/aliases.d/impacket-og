@@ -1,0 +1,5 @@
+alias describeTicket-og='grc describeTicket-og.py'
+alias ntlmrelayx-og='grc ntlmrelayx-og.py'
+alias secretsdump-og='grc secretsdump-og.py'
+alias rbcd-og='grc rbcd-og.py'
+alias Get-GPPPassword-og='grc Get-GPPPassword-og.py'

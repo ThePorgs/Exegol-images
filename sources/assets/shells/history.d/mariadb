@@ -1,0 +1,1 @@
+mysql --user "$USER" --host "$TARGET" --port "$PORT" --password "$PASSWORD"

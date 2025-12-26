@@ -32,7 +32,7 @@ function install_pyrit() {
     # steps to remove temp fix:
     #  1. try to install pyrit with git clone + venv + setup.py install with python2 or 3 (without the git patch)
     #  2. if it works, remove the temp fix (and probably the patch as well)
-    local temp_fix_limit="2025-09-01"
+    local temp_fix_limit="2026-02-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
       git -C /opt/tools/ clone https://github.com/JPaulMora/Pyrit
@@ -79,8 +79,8 @@ function install_bettercap() {
     # Custom install because it requires go >= 1.23.0 (default running go is 1.22.2)
     asdf set golang 1.23.0
     mkdir -p .go/bin
-    GOBIN=/opt/tools/bettercap/.go/bin go install -v github.com/bettercap/bettercap@latest
-    /opt/tools/bettercap/.go/bin/bettercap -eval "caplets.update; ui.update; q"
+    GOBIN=/opt/tools/bettercap/.go/bin go install -v github.com/bettercap/bettercap/v2@latest
+    /opt/tools/bettercap/.go/bin/bettercap -eval "caplets.update; q"
     sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/http-ui.cap
     sed -i 's/set api.rest.password pass/set api.rest.password exegol4thewin/g' /usr/local/share/bettercap/caplets/http-ui.cap
     sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/https-ui.cap

