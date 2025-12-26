@@ -922,9 +922,12 @@ function install_bbot() {
 
 function install_dalfox() {
 	# CODE-CHECK-WHITELIST=add-aliases
-	colorecho "Installing dalfox"
-	go install -v github.com/hahwul/dalfox/v2@latest
-	asdf reshim golang
+    mkdir -p /opt/tools/dalfox
+    cd /opt/tools/dalfox
+    asdf set golang 1.24.4
+    mkdir -p .go/bin
+    GOBIN=/opt/tools/ruler/.go/bin go install -v github.com/hahwul/dalfox/v2@latest
+    asdf reshim golang
 	add-history dalfox
 	add-test-command "dalfox --help"
 	add-to-list "dalfox,https://github.com/hahwul/dalfox,a powerful open-source XSS scanner and utility focused on automation."
