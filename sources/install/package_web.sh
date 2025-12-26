@@ -925,7 +925,6 @@ function install_bxss() {
     colorecho "Installing bxss"
     go install -v github.com/ethicalhackingplayground/bxss/v2/cmd/bxss@latest
     asdf reshim golang
-    add-aliases bxss
     add-history bxss
     add-test-command "bxss"
     add-to-list "bxss,https://github.com/ethicalhackingplayground/bxss,A tool that can be used to scan for blind XSS vulnerabilities in web applications."
