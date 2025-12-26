@@ -1,0 +1,2 @@
+ghunt email "$EMAIL" --json user_data.json
+ghunt login

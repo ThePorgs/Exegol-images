@@ -1,18 +1,8 @@
-exegol-history export creds -u 'Administrator' --json
-exh export creds -u 'Administrator' --json
-exegol-history export hosts --ip '127.0.0.1'
-exh export hosts --ip '127.0.0.1'
-exegol-history export creds
-exh export creds
-exegol-history add creds -u 'Administrator' -p 'Passw0rd!'
-exh add creds -u 'Administrator' -p 'Passw0rd!'
-exegol-history add hosts --ip '127.0.0.1'
-exh add hosts --ip '127.0.0.1'
-exegol-history show
+exh export creds --format JSON
+exh export hosts --format JSON
 exh show
-exegol-history set creds
-exh set creds
-exegol-history set hosts
-exh set hosts
-exegol-history unset
 exh unset
+exh set creds
+exh set hosts
+exh add hosts --ip "127.0.0.1" --role "DC" --hostname "DC.DOMAIN.LOCAL"
+exh add creds -d "$DOMAIN" -u "Administrator" -p 'Passw0rd!'

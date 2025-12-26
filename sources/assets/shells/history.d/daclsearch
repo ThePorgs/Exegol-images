@@ -1,0 +1,2 @@
+daclsearch cli "${DOMAIN}_aces.db"
+daclsearch dump "${DOMAIN}_aces.db" -d "$DOMAIN" --dc-ip "$DC_IP" -u "$USER" -p "$PASSWORD"
