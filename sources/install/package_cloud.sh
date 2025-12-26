@@ -143,11 +143,12 @@ function install_azure_cli() {
 function install_s3scanner() {
 	# CODE-CHECK-WHITELIST=add-aliases
 	colorecho "Installing s3scanner"
-	git -C /opt/tools/ clone --depth 1 https://github.com/sa7mon/S3Scanner.git
-	cd /opt/tools/S3Scanner || exit
-	asdf reshim	golang
-	go build -o s3scanner .
-	ln -s /opt/tools/s3scanner/s3scanner /opt/tools/bin/s3scanner
+    mkdir /opt/tools/s3scanner
+    cd /opt/tools/s3scanner
+    asdf set golang 1.24.4
+    mkdir -p .go/bin
+    GOBIN=/opt/tools/s3scanner/.go/bin go install -v github.com/sa7mon/s3scanner@latest
+    asdf reshim golang
 	add-history s3scanner
 	add-test-command "s3scanner -version"
 	add-to-list "s3scanner,https://github.com/sa7mon/S3Scanner,a go tool for s3 buckets misconfiguration across S3-compatible APIs"
