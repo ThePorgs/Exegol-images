@@ -5,6 +5,7 @@
 # This default file is kept here for backward compatibility. No upcoming development expected here.
 # !!!!!!!!!!!!! #
 
+# shellcheck disable=SC2329
 function shell_logging() {
     # First parameter is the method to use for shell logging (default to script)
     local method=$1

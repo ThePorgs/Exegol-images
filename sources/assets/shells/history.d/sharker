@@ -1,0 +1,2 @@
+sharker --categories creds,hashcat,ldap --pcap-dir samples
+sharker --fast --all --pcap-dir samples

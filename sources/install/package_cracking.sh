@@ -81,6 +81,14 @@ function install_pkcrack() {
     add-to-list "pkcrack,https://github.com/keyunluo/pkcrack,tool to generate wordlists of passwords containing cities at a defined distance around the client city"
 }
 
+function install_firefox_decrypt() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing firefox_decrypt"
+    pipx install --system-site-packages git+https://github.com/unode/firefox_decrypt
+    add-test-command "firefox_decrypt --help"
+    add-to-list "firefox_decrypt,https://github.com/unode/firefox_decrypt,Decrypt Firefox saved passwords."
+}
+
 # Package dedicated to offline cracking/bruteforcing tools
 function package_cracking() {
     set_env
@@ -93,6 +101,7 @@ function package_cracking() {
     install_haiti                   # haiti, hash type identifier
     install_geowordlists            # wordlists generator
     install_pkcrack                 # known plaintext ZIP cracker
+    install_firefox_decrypt         # Decrypt Firefox saved passwords
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
