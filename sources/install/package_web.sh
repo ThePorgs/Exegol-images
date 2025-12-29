@@ -984,7 +984,7 @@ function install_jxscout() {
 	curl -fsSL https://bun.com/install | bash -s "bun-v1.2.12"
 	add-history jxscout
 	add-test-command "jxscout"
-	add-to-list "jxscout, https://github.com/francisconeves97/jxscout,a superpowers JavaScript analysis for security researchers."
+	add-to-list "jxscout,https://github.com/francisconeves97/jxscout,a JavaScript analysis tool with superpowers for security researchers."
  }
   
 function install_curlie() {
