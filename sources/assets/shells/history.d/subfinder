@@ -1,4 +1,4 @@
-subfinder -d "$DOMAIN" 
+subfinder -d "$DOMAIN"
 subfinder -silent -d "$DOMAIN" | dnsx -silent
 subfinder -silent -d "$DOMAIN" | dnsx -silent -a -resp
 subfinder -silent -d "$DOMAIN" | dnsx -silent -a -resp-only

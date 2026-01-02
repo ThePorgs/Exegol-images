@@ -126,7 +126,16 @@ function install_ffuf() {
 function install_dirsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
+    #pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
+    local temp_fix_limit="2026-02-10"
+    # https://github.com/maurosoria/dirsearch/issues/1498
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
+      cd /opt/tools/dirsearch || exit
+      git fetch --unshallow
+      git checkout c8192f7b3fd0796134ba294d3d591ad922bbcce9
+      pipx install .
+    fi
     add-history dirsearch
     add-test-command "dirsearch --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
@@ -197,8 +206,8 @@ function install_xspear() {
     rvm use 3.2.2@xspear --create
     gem install XSpear
     rvm use 3.2.2@default
-    add-aliases Xspear
-    add-history xspear
+    add-aliases XSpear
+    add-history XSpear
     add-test-command "XSpear --help"
     add-to-list "XSpear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
 }
@@ -498,7 +507,7 @@ function install_jwt_tool() {
     # Running the tool to create the initial configuration and force it to returns 0
     python3 jwt_tool.py || :
     deactivate
-    
+
     # Configuration
     sed -i 's/^proxy = 127.0.0.1:8080/#proxy = 127.0.0.1:8080/' /root/.jwt_tool/jwtconf.ini
     sed -i 's|^wordlist = jwt-common.txt|wordlist = /opt/tools/jwt_tool/jwt-common.txt|' /root/.jwt_tool/jwtconf.ini
@@ -951,13 +960,13 @@ function install_caido() {
     caido_file_name_cli=$(basename "$caido_cli")
     wget "$caido_cli" -O "/opt/tools/caido/$caido_file_name_cli"
     tar -xvzf "/opt/tools/caido/$caido_file_name_cli" -C /opt/tools/bin/
-    
+
     add-history caido
     add-test-gui-command "caido --no-sandbox"
     add-test-command "caido-cli --help"
     add-to-list "caido,https://docs.caido.io/quickstart/,A lightweight web security auditing toolkit."
 }
-    
+
 function install_token_exploiter() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing Token Exploiter"
@@ -986,6 +995,37 @@ function install_subzy() {
     add-to-list "subzy,https://github.com/PentestPad/subzy,Subdomain takeover tool which checks for various cloud services and identifies if a subdomain is vulnerable."
 }
 
+function install_curlie() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases
+    colorecho "Installing curlie"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    local URL
+    URL=$(curl --location --silent "https://api.github.com/repos/rs/curlie/releases/latest" | grep 'browser_download_url.*curlie.*linux.*'"$arch"'.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/curlie.tar.gz "$URL"
+    tar -zxf /tmp/curlie.tar.gz --directory /tmp curlie
+    rm /tmp/curlie.tar.gz
+    mv /tmp/curlie /opt/tools/bin/curlie
+    add-test-command "curlie"
+    add-to-list "curlie,https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
+}
+
+function install_xxeinjector() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing XXEinjector"
+    wget https://raw.githubusercontent.com/enjoiz/XXEinjector/refs/heads/master/XXEinjector.rb -O /opt/tools/bin/XXEinjector.rb
+    chmod +x /opt/tools/bin/XXEinjector.rb
+    add-history xxeinjector
+    add-test-command "XXEinjector.rb | grep Example"
+    add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
+}
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
@@ -1020,7 +1060,6 @@ function package_web() {
     install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
     install_moodlescan              # Moodle scanner
     install_testssl                 # SSL/TLS scanner
-    # install_sslyze                # SSL/TLS scanner FIXME: Only AMD ?
     install_cloudfail               # Cloudflare misconfiguration detector
     install_eyewitness              # Website screenshoter
     install_oneforall               # OneForAll is a powerful subdomain integration tool
@@ -1073,6 +1112,8 @@ function package_web() {
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
     install_subzy                   # Subdomain takeover tool
+    install_curlie                  # Mix of cURL and HTTPie
+    install_xxeinjector             # XXE injection testing tool
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

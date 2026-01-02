@@ -1,4 +1,4 @@
 xfreerdp /d:"$DOMAIN" /u:"$USER" /pth:"$NT_HASH" /v:"$TARGET" /cert-ignore /dynamic-resolution
-xfreerdp /d:"$DOMAIN" /u:"$USER" /pth:"$NT_HASH" /v:"$TARGET" /cert-ignore /drive:EXEGOL,/workspace /dynamic-resolution
+xfreerdp /d:"$DOMAIN" /u:"$USER" /pth:"$NT_HASH" /v:"$TARGET" /cert-ignore /drive:WORKSPACE,/workspace /drive:TOOLS,/opt/resources/windows /dynamic-resolution
 xfreerdp /d:"$DOMAIN" /u:"$USER" /p:"$PASSWORD" /v:"$TARGET" /cert-ignore /dynamic-resolution
-xfreerdp /d:"$DOMAIN" /u:"$USER" /p:"$PASSWORD" /v:"$TARGET" /cert-ignore /drive:EXEGOL,/workspace /dynamic-resolution
+xfreerdp /d:"$DOMAIN" /u:"$USER" /p:"$PASSWORD" /v:"$TARGET" /cert-ignore /drive:WORKSPACE,/workspace /drive:TOOLS,/opt/resources/windows /dynamic-resolution

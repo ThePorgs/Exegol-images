@@ -206,7 +206,7 @@ function install_bloodhound-ce() {
 
     # Force remove go and yarn cache that are not stored in standard locations
     rm -rf "${bloodhoundce_path}/src/cache" "${bloodhoundce_path}/src/.yarn/cache"
-    
+
     ## SharpHound
     local sharphound_url
     local sharphound_name
@@ -303,7 +303,7 @@ function install_aclpwn() {
 }
 
 function install_impacket() {
-    colorecho "Installing Impacket scripts"
+    colorecho "Installing Impacket scripts (Exegol fork)"
     pipx install --system-site-packages git+https://github.com/ThePorgs/impacket
     # Pycryptodome because: https://github.com/fortra/impacket/issues/1634
     pipx inject impacket chardet pycryptodome
@@ -324,6 +324,39 @@ function install_impacket() {
     add-test-command "dacledit.py --help"
     add-test-command "describeTicket.py --help"
     add-to-list "impacket,https://github.com/ThePorgs/impacket,Set of tools for working with network protocols (ThePorgs version)."
+}
+
+function install_impacket_og() {
+    # CODE-CHECK-WHITELIST=add-history
+    colorecho "Installing Impacket scripts (original)"
+    git -C /opt/tools/ clone --depth 1 https://github.com/fortra/impacket impacket-og
+    cd /opt/tools/impacket-og || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    pip3 install chardet pycryptodome # simply replicating what we do in install_impacket(), not 100% sure this is needed
+    deactivate
+
+    # Generate aliases dynamically for all impacket-og scripts
+    colorecho "Generating aliases for impacket-og scripts..."
+    alias_file="/opt/.exegol_aliases"
+    impacket_og_dir="/opt/tools/impacket-og"
+    examples_dir="${impacket_og_dir}/examples"
+    venv_python="${impacket_og_dir}/venv/bin/python3"
+
+    # aliases for scripts in the examples directory
+    if [ -d "$examples_dir" ]; then
+        while read -r script_path; do
+            script_name="$(basename "$script_path")"
+            alias_name="${script_name%.py}-og.py"
+            echo "alias ${alias_name}=\"${venv_python} ${script_path}\"" >> "$alias_file"
+        done < <(find "$examples_dir" -maxdepth 1 -type f -name '*.py' | sort)
+    fi
+
+    add-aliases impacket-og
+    add-test-command "ntlmrelayx-og.py --help"
+    add-test-command "secretsdump-og.py --help"
+    add-to-list "impacket,https://github.com/fortra/impacket,Set of tools for working with network protocols (original version)."
 }
 
 function install_pykek() {
@@ -883,7 +916,7 @@ function install_manspider() {
         # https://github.com/blacklanternsecurity/MANSPIDER/issues/55
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    
+
 }
 
 function install_targetedKerberoast() {
@@ -907,7 +940,7 @@ function install_pcredz() {
     cd /opt/tools/PCredz || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install Cython python-libpcap
+    pip3 install Cython python-libpcap pcapy-ng
     deactivate
     add-aliases pcredz
     add-history pcredz
@@ -1363,6 +1396,11 @@ function install_bloodyAD() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing bloodyAD"
     pipx install --system-site-packages git+https://github.com/CravateRouge/bloodyAD
+    local temp_fix_limit="2026-02-10"
+    # https://github.com/CravateRouge/bloodyAD/issues/109
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      pipx inject bloodyAD minikerberos
+    fi
     add-history bloodyAD
     add-test-command "bloodyAD --help"
     add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
@@ -1372,6 +1410,11 @@ function install_autobloody() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing autobloody"
     pipx install --system-site-packages git+https://github.com/CravateRouge/autobloody
+    local temp_fix_limit="2026-02-10"
+    # https://github.com/CravateRouge/bloodyAD/issues/109
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      pipx inject autobloody minikerberos
+    fi
     add-history autobloody
     add-test-command "autobloody --help"
     add-to-list "autobloody,https://github.com/CravateRouge/autobloody,Automatically exploit Active Directory privilege escalation paths shown by BloodHound."
@@ -1530,7 +1573,7 @@ function install_powerview() {
     add-to-list "Powerview.py,https://github.com/aniqfakhrul/powerview.py,PowerView.py is an alternative for the awesome original PowerView.ps1 script."
 }
 
-function install_pysnaffler(){
+function install_pysnaffler() {
     colorecho "Installing pysnaffler"
     git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pysnaffler
     cd /opt/tools/pysnaffler || exit
@@ -1551,6 +1594,16 @@ function install_evil-winrm-py() {
     add-history evil-winrm-py
     add-test-command "evil-winrm-py --help"
     add-to-list "evil-winrm-py,https://github.com/adityatelange/evil-winrm-py,Evil-WinRM. But in python"
+}
+
+function install_keytabextract() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing keytabextract"
+    wget -O /opt/tools/bin/keytabextract https://raw.githubusercontent.com/sosdave/KeyTabExtract/refs/heads/master/keytabextract.py
+    chmod +x /opt/tools/bin/keytabextract
+    add-history keytabextract
+    add-test-command "keytabextract |& grep keytabextract"
+    add-to-list "keytabextract,https://github.com/sosdave/KeyTabExtract,KeyTabExtract is a tool to extract valuable information from keytab files."
 }
 
 function install_daclsearch() {
@@ -1674,10 +1727,12 @@ function package_ad() {
     install_goexec                 # Go version of *exec (smb,dcom...) from impacket with stronger OPSEC
     install_remotemonologue        # A tool to coerce NTLM authentications via DCOM
     install_godap                  # A complete terminal user interface (TUI) for LDAP
-    install_powerview              # Powerview Python implementation 
+    install_powerview              # Powerview Python implementation
     install_pysnaffler             # Snaffler, but in Python
     install_evil-winrm-py          # Evil-Winrm, but in Python
+    install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
+    install_impacket_og            # Impacket scripts (original version)
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
