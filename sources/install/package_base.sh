@@ -61,7 +61,7 @@ function install_go() {
       asdf install golang 1.23.0
       # Default GO version: 1.22.2
       asdf install golang 1.22.2
-      asdf set --home golang 1.22.2
+      asdf set --home golang 1.22.2 1.23.0
     fi
 
 #    if command -v /usr/local/go/bin/go &>/dev/null; then
