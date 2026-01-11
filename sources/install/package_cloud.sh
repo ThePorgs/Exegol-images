@@ -27,6 +27,111 @@ function install_kubectl() {
     add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
 }
 
+function install_kubeletctl() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing kubeletctl"
+    mkdir -p /opt/tools/kubeletctl
+    cd /opt/tools/kubeletctl || exit
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        curl -LO "https://github.com/cyberark/kubeletctl/releases/download/v1.13/kubeletctl_linux_amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        curl -LO "https://github.com/cyberark/kubeletctl/releases/download/v1.13/kubeletctl_linux_arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+
+    mv kubeletctl_linux_* kubeletctl
+    install -o root -g root -m 0755 kubeletctl /usr/local/bin/kubeletctl
+    
+    add-history kubeletctl
+    add-test-command "kubeletctl --help"
+    add-to-list "kubeletctl,https://github.com/cyberark/kubeletctl,Tool for interacting with the kubelet API."
+}
+
+function install_kube_bench() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing kube-bench"
+    mkdir -p /opt/tools/kube-bench
+    cd /opt/tools/kube-bench || exit
+
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        curl -LO "https://github.com/aquasecurity/kube-bench/releases/download/v0.14.1/kube-bench_0.14.1_linux_amd64.tar.gz"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        curl -LO "https://github.com/aquasecurity/kube-bench/releases/download/v0.14.1/kube-bench_0.14.1_linux_arm64.tar.gz"
+    else
+        criticalecho-noexit "kube-bench doesn't support architecture $(uname -m)" && return
+    fi
+
+    tar -xzf kube-bench_*.tar.gz
+    install -o root -g root -m 0755 kube-bench /usr/local/bin/kube-bench
+
+    add-history kube-bench
+    add-test-command "kube-bench --help"
+    add-to-list "kube-bench,https://github.com/aquasecurity/kube-bench,CIS Kubernetes benchmark checker."
+}
+
+function install_kubescape() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing kubescape"
+    mkdir -p /opt/tools/kubescape
+    cd /opt/tools/kubescape || exit
+
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        curl -LO "https://github.com/kubescape/kubescape/releases/download/v3.0.47/kubescape_3.0.47_linux_amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        curl -LO "https://github.com/kubescape/kubescape/releases/download/v3.0.47/kubescape_3.0.47_linux_arm64"
+    else
+        criticalecho-noexit "kubescape doesn't support architecture $(uname -m)" && return
+    fi
+
+    mv kubescape_* kubescape
+    install -o root -g root -m 0755 kubescape /usr/local/bin/kubescape
+
+    add-history kubescape
+    add-test-command "kubescape version"
+    add-to-list "kubescape,https://github.com/kubescape/kubescape,Kubernetes security risk analysis and compliance tool."
+}
+
+function install_trivy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing trivy"
+    mkdir -p /opt/tools/trivy
+    cd /opt/tools/trivy || exit
+
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        curl -LO "https://github.com/aquasecurity/trivy/releases/download/v0.68.2/trivy_0.68.2_Linux-64bit.tar.gz"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        curl -LO "https://github.com/aquasecurity/trivy/releases/download/v0.68.2/trivy_0.68.2_Linux-ARM.tar.gz"
+    else
+        criticalecho-noexit "trivy doesn't support architecture $(uname -m)" && return
+    fi
+
+    tar -xzf trivy_*.tar.gz
+    install -o root -g root -m 0755 trivy /usr/local/bin/trivy
+
+    add-history trivy
+    add-test-command "trivy --version"
+    add-to-list "trivy,https://github.com/aquasecurity/trivy,Vulnerability scanner for containers and Kubernetes."
+}
+
+function install_kube_hunter() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing kube-hunter"
+    pipx install --system-site-packages kube-hunter
+    add-history kube-hunter
+    add-test-command "kube-hunter --help"
+    add-to-list "kube-hunter,https://github.com/aquasecurity/kube-hunter,Hunts for security weaknesses in Kubernetes clusters."
+}
+
+
 function install_k9s() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing k9s"
@@ -149,6 +254,11 @@ function package_cloud() {
     local end_time
     start_time=$(date +%s)
     install_kubectl
+    install_kubeletctl
+    install_kube_bench
+    install_kubescape
+    install_trivy
+    install_kube_hunter
     install_k9s
     install_awscli
     install_scout           # Multi-Cloud Security Auditing Tool

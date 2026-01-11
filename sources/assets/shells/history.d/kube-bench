@@ -1,0 +1,2 @@
+kube-bench
+kube-bench run --targets master

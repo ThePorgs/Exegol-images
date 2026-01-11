@@ -1,0 +1,5 @@
+kubescape scan
+kubescape scan framework nsa
+kubescape scan --namespace "$NAMESPACE"
+kubescape scan *.yaml
+kubescape scan --enable-host-scan

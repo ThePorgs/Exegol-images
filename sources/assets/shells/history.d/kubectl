@@ -1,1 +1,8 @@
-kubectl
+kubectl config set-cluster pwn --server=https://"$TARGET":6443 --certificate-authority=ca.crt
+kubectl config set-credentials exegol --token="$TOKEN"
+kubectl config set-context pwn --cluster=pwn --user=exegol
+kubectl config use-context pwn
+
+kubectl get pods -A
+kubectl auth can-i --list
+kubectl apply -f manifest.yaml

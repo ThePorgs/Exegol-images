@@ -1,0 +1,5 @@
+trivy image "$IMAGE"
+trivy k8s pod "$POD" -n "$NAMESPACE"
+trivy k8s --namespace "$NAMESPACE"
+trivy fs /
+trivy config .
