@@ -528,7 +528,7 @@ function package_base() {
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
     nim perl libwww-perl openjdk-17-jdk \
-    logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
+    logrotate tmux bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
     python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep pv
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
@@ -615,10 +615,6 @@ function package_base() {
     cp -v /root/sources/assets/shells/tmux.conf ~/.tmux.conf
     touch ~/.hushlogin
 
-    # TLDR
-    mkdir -p ~/.local/share/tldr
-    tldr -u
-
     # NVM (install in context)
     zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
@@ -635,6 +631,10 @@ function package_base() {
     pip3 install -r /root/sources/assets/python/requirements.txt
 
     install_exegol-history
+
+    # TLDR
+    pipx install --system-site-packages tldr
+    /root/.local/bin/tldr -u
 
     post_install
     end_time=$(date +%s)

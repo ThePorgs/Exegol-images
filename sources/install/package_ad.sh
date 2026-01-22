@@ -314,6 +314,8 @@ function install_impacket() {
     cp -v /root/sources/assets/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
     add-aliases impacket
     add-history impacket
+    # making sure we have the right mention of the fork
+    add-test-command "ntlmrelayx.py --help |& grep 'Impacket (Exegol fork)'"
     add-test-command "ntlmrelayx.py --help"
     add-test-command "secretsdump.py --help"
     add-test-command "Get-GPPPassword.py --help"
