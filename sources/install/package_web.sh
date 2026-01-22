@@ -126,7 +126,16 @@ function install_ffuf() {
 function install_dirsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
+    #pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
+    local temp_fix_limit="2026-02-10"
+    # https://github.com/maurosoria/dirsearch/issues/1498
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
+      cd /opt/tools/dirsearch || exit
+      git fetch --unshallow
+      git checkout c8192f7b3fd0796134ba294d3d591ad922bbcce9
+      pipx install .
+    fi
     add-history dirsearch
     add-test-command "dirsearch --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
@@ -1008,6 +1017,16 @@ function install_xsschecker() {
 }
 
 
+function install_xxeinjector() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing XXEinjector"
+    wget https://raw.githubusercontent.com/enjoiz/XXEinjector/refs/heads/master/XXEinjector.rb -O /opt/tools/bin/XXEinjector.rb
+    chmod +x /opt/tools/bin/XXEinjector.rb
+    add-history xxeinjector
+    add-test-command "XXEinjector.rb | grep Example"
+    add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -1094,6 +1113,7 @@ function package_web() {
     install_bbot                    # Recursive Scanner
     install_xsschecker              # Checker of reflected endpoints for potential xss vulnerability
     install_curlie                  # Mix of cURL and HTTPie
+    install_xxeinjector             # XXE injection testing tool
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

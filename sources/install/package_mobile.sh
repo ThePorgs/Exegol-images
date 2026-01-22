@@ -103,8 +103,8 @@ function install_mobsf() {
     local temp_fix_limit="2026-02-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       python3.13 -m venv --system-site-packages ./venv
-      ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
-      ./venv/bin/python3 -m pip install .
+      catch_and_retry ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
+      catch_and_retry ./venv/bin/python3 -m pip install .
     fi
     add-aliases mobsf # alias is only needed with venv and can be removed when switching back to pipx
     add-history mobsf
