@@ -32,16 +32,25 @@ function install_kubeletctl() {
     colorecho "Installing kubeletctl"
     mkdir -p /opt/tools/kubeletctl
     cd /opt/tools/kubeletctl || exit
+
+    local URL=""
+    curl --location --silent --output /tmp/meta.json "https://api.github.com/repos/cyberark/kubeletctl/releases/latest"
+
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO "https://github.com/cyberark/kubeletctl/releases/download/v1.13/kubeletctl_linux_amd64"
+        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "amd64")
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -LO "https://github.com/cyberark/kubeletctl/releases/download/v1.13/kubeletctl_linux_arm64"
+        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "arm64")
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
 
+    if [[ -z "$URL" ]]; then
+        cat /tmp/meta.json
+    fi
+
+    curl -LO "$URL"
     mv kubeletctl_linux_* kubeletctl
     install -o root -g root -m 0755 kubeletctl /usr/local/bin/kubeletctl
     
@@ -56,15 +65,24 @@ function install_kube_bench() {
     mkdir -p /opt/tools/kube-bench
     cd /opt/tools/kube-bench || exit
 
+    local URL=""
+    curl --location --silent --output /tmp/meta.json "https://api.github.com/repos/aquasecurity/kube-bench/releases/latest"
+
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO "https://github.com/aquasecurity/kube-bench/releases/download/v0.14.1/kube-bench_0.14.1_linux_amd64.tar.gz"
+        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "amd64.tar.gz")
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -LO "https://github.com/aquasecurity/kube-bench/releases/download/v0.14.1/kube-bench_0.14.1_linux_arm64.tar.gz"
+        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "arm64.tar.gz")
     else
-        criticalecho-noexit "kube-bench doesn't support architecture $(uname -m)" && return
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
+
+    if [[ -z "$URL" ]]; then
+        cat /tmp/meta.json
+    fi
+
+    curl -LO "$URL"
 
     tar -xzf kube-bench_*.tar.gz
     install -o root -g root -m 0755 kube-bench /usr/local/bin/kube-bench
@@ -80,15 +98,24 @@ function install_kubescape() {
     mkdir -p /opt/tools/kubescape
     cd /opt/tools/kubescape || exit
 
+    local URL=""
+    curl --location --silent --output /tmp/meta.json "https://api.github.com/repos/kubescape/kubescape/releases/latest"
+
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO "https://github.com/kubescape/kubescape/releases/download/v3.0.47/kubescape_3.0.47_linux_amd64"
+        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "amd64")
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -LO "https://github.com/kubescape/kubescape/releases/download/v3.0.47/kubescape_3.0.47_linux_arm64"
+        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "arm64")
     else
-        criticalecho-noexit "kubescape doesn't support architecture $(uname -m)" && return
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
+
+    if [[ -z "$URL" ]]; then
+        cat /tmp/meta.json
+    fi
+
+    curl -LO "$URL"
 
     mv kubescape_* kubescape
     install -o root -g root -m 0755 kubescape /usr/local/bin/kubescape
@@ -104,15 +131,24 @@ function install_trivy() {
     mkdir -p /opt/tools/trivy
     cd /opt/tools/trivy || exit
 
+    local URL=""
+    curl --location --silent --output /tmp/meta.json "https://api.github.com/repos/aquasecurity/trivy/releases/latest"
+
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -LO "https://github.com/aquasecurity/trivy/releases/download/v0.68.2/trivy_0.68.2_Linux-64bit.tar.gz"
+        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "64bit")
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -LO "https://github.com/aquasecurity/trivy/releases/download/v0.68.2/trivy_0.68.2_Linux-ARM.tar.gz"
+        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "ARM")
     else
-        criticalecho-noexit "trivy doesn't support architecture $(uname -m)" && return
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
+
+    if [[ -z "$URL" ]]; then
+        cat /tmp/meta.json
+    fi
+
+    curl -LO "$URL"
 
     tar -xzf trivy_*.tar.gz
     install -o root -g root -m 0755 trivy /usr/local/bin/trivy
