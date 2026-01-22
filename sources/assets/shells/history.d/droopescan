@@ -1,1 +1,5 @@
-droopescan scan drupal -u $TARGET -t 32
+droopescan scan drupal -u "http://$TARGET/" -t 32
+droopescan scan joomla -u "http://$TARGET/" -t 32
+droopescan scan moodle -u "http://$TARGET/" -t 32
+droopescan scan silverstripe -u "http://$TARGET/" -t 32
+droopescan scan wordpress -u "http://$TARGET/" -t 32

@@ -314,6 +314,8 @@ function install_impacket() {
     cp -v /root/sources/assets/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
     add-aliases impacket
     add-history impacket
+    # making sure we have the right mention of the fork
+    add-test-command "ntlmrelayx.py --help |& grep 'Impacket (Exegol fork)'"
     add-test-command "ntlmrelayx.py --help"
     add-test-command "secretsdump.py --help"
     add-test-command "Get-GPPPassword.py --help"
@@ -940,7 +942,7 @@ function install_pcredz() {
     cd /opt/tools/PCredz || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install Cython python-libpcap
+    pip3 install Cython python-libpcap pcapy-ng
     deactivate
     add-aliases pcredz
     add-history pcredz
@@ -1396,6 +1398,11 @@ function install_bloodyAD() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing bloodyAD"
     pipx install --system-site-packages git+https://github.com/CravateRouge/bloodyAD
+    local temp_fix_limit="2026-02-10"
+    # https://github.com/CravateRouge/bloodyAD/issues/109
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      pipx inject bloodyAD minikerberos
+    fi
     add-history bloodyAD
     add-test-command "bloodyAD --help"
     add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
@@ -1405,6 +1412,11 @@ function install_autobloody() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing autobloody"
     pipx install --system-site-packages git+https://github.com/CravateRouge/autobloody
+    local temp_fix_limit="2026-02-10"
+    # https://github.com/CravateRouge/bloodyAD/issues/109
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      pipx inject autobloody minikerberos
+    fi
     add-history autobloody
     add-test-command "autobloody --help"
     add-to-list "autobloody,https://github.com/CravateRouge/autobloody,Automatically exploit Active Directory privilege escalation paths shown by BloodHound."

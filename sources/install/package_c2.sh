@@ -81,8 +81,15 @@ function install_sliver() {
     colorecho "Installing Sliver"
     mkdir /opt/tools/sliver
     cp -v /root/sources/assets/sliver/install.sh /opt/tools/sliver/install.sh
-    chmod +x /opt/tools/sliver/install.sh
-    /opt/tools/sliver/install.sh
+    local temp_fix_limit="2026-02-10"
+    # Since release 1.6.0, the install.sh script is not working anymore (because of signature changes)
+    # version has beeen fixed to 1.5.44 in the install.sh script
+    # but in the future, we need to update the script to the new version at https://github.com/BishopFox/sliver/blob/master/docs/sliver-docs/public/install
+    # if possible, we should make it dynamic instead of hardcoded install script
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        chmod +x /opt/tools/sliver/install.sh
+        /opt/tools/sliver/install.sh
+    fi
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
