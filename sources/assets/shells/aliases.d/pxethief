@@ -1,0 +1,1 @@
+alias pxethief="/opt/tools/PXEThief/venv/bin/python3 /opt/tools/PXEThief/pxethief.py"

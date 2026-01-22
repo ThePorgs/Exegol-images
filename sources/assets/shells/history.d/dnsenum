@@ -1,1 +1,2 @@
-dnsenum $TARGET
+dnsenum "$TARGET"
+dnsenum --dnsserver "$TARGET" "$DOMAIN" --enum --pages 0 --scrap 0 -f `fzf-wordlists`
