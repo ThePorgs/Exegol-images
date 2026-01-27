@@ -241,16 +241,12 @@ function install_pyftpdlib() {
 }
 
 function install_yarn() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing yarn"
-    wget -O /tmp/yarn.gpg.armored https://dl.yarnpkg.com/debian/pubkey.gpg
-    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
-    gpg --dearmor --output /etc/apt/trusted.gpg.d/yarn.gpg /tmp/yarn.gpg.armored
-    chmod 644 /etc/apt/trusted.gpg.d/yarn.gpg
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-    apt-get update
-    fapt yarn
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing yarn / corepack"
+    npm install --global corepack
+    corepack prepare yarn@stable --activate
     add-test-command "yarn --help"
+    add-to-list "yarn,https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
 }
 
 function install_ultimate_vimrc() {
@@ -528,7 +524,7 @@ function package_base() {
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
     nim perl libwww-perl openjdk-17-jdk \
-    logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
+    logrotate tmux bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
     python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep pv
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
@@ -538,9 +534,9 @@ function package_base() {
     cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
     cp -v /root/sources/assets/shells/bashrc ~/.bashrc
     # Add /etc/zsh.d directory to import dynamically any script after /etc/zsh/zshrc
-    mkdir /etc/zsh.d && echo "test -d /etc/zsh.d && source /etc/zsh.d/*" >> /etc/zsh/zshrc
+    mkdir /etc/zsh.d && echo "test -d /etc/zsh.d && for f in \$(find -L /etc/zsh.d -maxdepth 1 -type f | sort); do source \$f; done" >> /etc/zsh/zshrc
     # Add /etc/bash.d directory to import dynamically any script after /etc/bash.bashrc
-    mkdir /etc/bash.d && echo "test -d /etc/bash.d && source /etc/bash.d/*" >> /etc/bash.bashrc
+    mkdir /etc/bash.d && echo "test -d /etc/bash.d && for f in \$(find -L /etc/bash.d -maxdepth 1 -type f | sort); do source \$f; done" >> /etc/bash.bashrc
 
     install_asdf
 
@@ -615,10 +611,6 @@ function package_base() {
     cp -v /root/sources/assets/shells/tmux.conf ~/.tmux.conf
     touch ~/.hushlogin
 
-    # TLDR
-    mkdir -p ~/.local/share/tldr
-    tldr -u
-
     # NVM (install in context)
     zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
@@ -635,6 +627,10 @@ function package_base() {
     pip3 install -r /root/sources/assets/python/requirements.txt
 
     install_exegol-history
+
+    # TLDR
+    pipx install --system-site-packages tldr
+    /root/.local/bin/tldr -u
 
     post_install
     end_time=$(date +%s)
