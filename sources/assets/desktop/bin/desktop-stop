@@ -1,4 +1,14 @@
 #!/bin/bash
 
+#!/bin/bash
+
+update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep tiger)
+echo "Stopping TigerVNC instances..."
 vncserver -kill
-pkill websockify
+
+update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep kasm)
+echo "Stopping KasmVNC instances..."
+for display in $(vncserver -list|grep -Po '^:[0-9]+')
+do
+    vncserver -kill "$display"
+done

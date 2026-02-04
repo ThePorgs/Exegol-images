@@ -1,9 +1,50 @@
-#!/bin/bash
 # Author: The Exegol Project
 
 source common.sh
 
 set -e
+
+function install_kasmvnc() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
+    colorecho "Installing kasmVNC"
+
+    # Detect architecture
+    local arch
+    if [[ $(uname -m) = 'x86_64' ]]; then
+        arch="amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]; then
+        arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+
+    # Get latest release tag from GitHub API (not master branch)
+    local kasmvnc_url
+    kasmvnc_url=$(curl --location --silent "https://api.github.com/repos/kasmtech/KasmVNC/releases/latest" | grep 'browser_download_url.*kasmvncserver_bookworm.*_'"$arch"'.deb"' | grep -o 'https://[^"]*')
+    wget -O /tmp/kasmvncserver.deb "${kasmvnc_url}"
+    
+    # Install kasmVNC package (use apt-get install for local .deb files to handle dependencies)
+    # Will throw a notice about the download being performed unsandboxed
+    fapt /tmp/kasmvncserver.deb
+    rm /tmp/kasmvncserver.deb
+    
+    # Add user to ssl-cert group (required by kasmVNC)
+    usermod -a -G ssl-cert root
+
+    # https://kasmweb.com/kasmvnc/docs/master/serverside.html#users
+    echo -e "123Pentest\n123Pentest\n" | vncpasswd -u test -w -r
+    # TODO : add a standard user, and modify its password later. 
+    # This is the user that will be used to connect to KasmVNC.
+
+    # Customization
+    if [[ -d "/usr/share/kasmvnc/www" ]]; then
+        mkdir -p /usr/share/kasmvnc/www/app/images/icons/
+        cp -rv /root/sources/assets/desktop/exegol_logo.png /usr/share/kasmvnc/www/app/images/icons/  
+    fi
+    # TODO : customize Title and icon in /usr/share/kasmvnc/www/vnc.html and index.html
+    
+    add-to-list "kasmvnc,https://github.com/kasmtech/KasmVNC,KasmVNC is a modern VNC server with built-in web client"
+}
 
 function install_xfce() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
@@ -13,15 +54,12 @@ function install_xfce() {
     # TODO remove
     fapt terminator iproute2
 
-    # Dependencies
-    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
+    # Dependencies - keep tigervnc-viewer for VNC client and tigervnc-standalone-server for vnc server, but use kasmVNC server instead of tigervnc-server + noVNC for https server
+    # kasmVNC has built-in web server, so no websockify needed
+    fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer xfce4 dbus-x11 intltool libtool tigervnc-tools
 
-    # temp fix to use latest websockify (min 0.12.0 to fix fedora daemon issue) waiting for apt stable repo to be up-to-date
-    local temp_fix_limit="2026-02-10"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      # Install websockify (min 0.12.0) explicit from sid repo
-      fapt python3-websockify/sid
-    fi
+    # Install kasmVNC (replaces tigervnc-standalone-server, novnc, and websockify - kasmVNC has built-in web server)
+    install_kasmvnc
 
     # Icons
     fapt librsvg2-common papirus-icon-theme
@@ -56,27 +94,15 @@ function install_xfce() {
     rm -rf /tmp/*
 
     # Wallpapers
-    # TODO : enable custom config in my-resources
     cp -rv /root/sources/assets/desktop/wallpapers /usr/share/backgrounds/exegol
 
-    # Favicon
-    cp -rv /root/sources/assets/desktop/exegol_logo.png /usr/share/novnc/app/images/icons/
-    sed -i "/novnc-.*.png/d" /usr/share/novnc/vnc.html
-    sed -i "s#novnc-icon.svg#exegol_logo.png#" /usr/share/novnc/vnc.html
-    sed -i "s#svg+xml#png#" /usr/share/novnc/vnc.html
-    echo '<link rel="icon" sizes="any" type="image/png" href="app/images/icons/exegol_logo.png">' >> /usr/share/novnc/vnc.html
 
-    # NoVNC title bar
-    sed -i "s#<title>noVNC</title>#<title>Exegol</title>#" /usr/share/novnc/vnc.html
-    sed -i 's#document.title = e.detail.name + " - noVNC";#document.title = "Exegol (" + e.detail.name.split(":")[0].replace("exegol-", "") + ")";#' /usr/share/novnc/app/ui.js
-
-    # NoVNC index redirection
-    echo '<html><head><meta http-equiv="refresh" content="0; URL=/vnc.html?resize=remote&path=websockify&autoconnect=true" /></head></html>' > /usr/share/novnc/index.html
 
     # Desktop
     touch /root/.Xauthority
     export DISPLAY=":0"
-    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes Plain :0
+    update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep tiger)
+    vncserver -localhost yes -geometry 1920x1080 -SecurityTypes Plain :1
     sleep 10
     xfconf-query -c xsettings -p /Net/ThemeName -s Prof_XFCE_2_1
     xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
@@ -98,8 +124,12 @@ function install_xfce() {
     cp /root/sources/assets/desktop/applications/* /usr/share/applications/
 
     # Stopping VNC server used for config
-    vncserver -kill :0
+    vncserver -kill :1
     sleep 6
+    update-alternatives --quiet --set vncserver $(update-alternatives --list vncserver|grep kasm)
+    vncserver -select-de XFCE
+    sleep 10
+    vncserver -kill $(vncserver -list|grep -Po '^:[0-9]+')
     # Remove log files of temp vncserver run ## TODO check if more
     rm /root/.vnc/*.log /root/.xsession-errors
     [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
