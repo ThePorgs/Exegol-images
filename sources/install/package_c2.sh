@@ -56,6 +56,23 @@ function install_metasploit() {
     wget https://raw.githubusercontent.com/peass-ng/PEASS-ng/master/metasploit/peass.rb -O /opt/tools/metasploit-framework/modules/post/multi/gather/peass.rb
 
     add-aliases metasploit
+    # Provide real binaries for non-interactive shells (sh, python os.system, etc.)
+    for bin in msfconsole msfvenom msfdb msfrpc msfrpcd msfd; do
+    [ -x "/opt/tools/metasploit-framework/${bin}" ] || continue
+    target="/usr/local/bin/${bin}"
+    [ -e "$target" ] && continue
+    cat >"$target" <<'EOF'
+#!/bin/sh
+set -eu
+export BUNDLE_GEMFILE=/opt/tools/metasploit-framework/Gemfile
+cmd="/opt/tools/metasploit-framework/$(basename "$0")"
+for p in /usr/local/rvm/gems/ruby-*@metasploit-framework/wrappers/bundle; do
+[ -x "$p" ] && exec "$p" exec "$cmd" "$@"
+done
+exec ruby -S bundle exec "$cmd" "$@"
+EOF
+    chmod 0755 "$target"
+      done
     add-history metasploit
     add-test-command "msfconsole --help"
     add-test-command "msfconsole --version"
