@@ -106,7 +106,6 @@ function install_ldapdomaindump() {
 function install_adwsdomaindump() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing adwsdomaindump"
-    # Remove --system-site-packages because the ldapdomaindump package conflicts with the base package
     pipx install --system-site-packages git+https://github.com/mverschu/adwsdomaindump
     add-history adwsdomaindump
     add-test-command "adwsdomaindump --help"
