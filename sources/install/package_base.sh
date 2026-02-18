@@ -241,16 +241,12 @@ function install_pyftpdlib() {
 }
 
 function install_yarn() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing yarn"
-    wget -O /tmp/yarn.gpg.armored https://dl.yarnpkg.com/debian/pubkey.gpg
-    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
-    gpg --dearmor --output /etc/apt/trusted.gpg.d/yarn.gpg /tmp/yarn.gpg.armored
-    chmod 644 /etc/apt/trusted.gpg.d/yarn.gpg
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-    apt-get update
-    fapt yarn
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing yarn / corepack"
+    npm install --global corepack
+    corepack prepare yarn@stable --activate
     add-test-command "yarn --help"
+    add-to-list "yarn,https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
 }
 
 function install_ultimate_vimrc() {

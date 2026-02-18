@@ -1,2 +1,2 @@
 gowitness scan nmap -f nmap.xml --open-only --service-contains http --delay 5 --timeout 5
-gowitness scan nmap -f nmap.xml --open-only --service-contains http --delay 10 --timeout 60 --write-screenshots --write-db --log-scan-errors
+gowitness scan nmap -f nmap.xml --open-only --service-contains http,https --delay 5 --timeout 30 --write-screenshots --write-db --log-scan-errors
