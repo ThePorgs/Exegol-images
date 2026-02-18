@@ -59,105 +59,6 @@ function install_kubeletctl() {
     add-to-list "kubeletctl,https://github.com/cyberark/kubeletctl,Tool for interacting with the kubelet API."
 }
 
-function install_kube_bench() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing kube-bench"
-    mkdir -p /opt/tools/kube-bench
-    cd /opt/tools/kube-bench || exit
-
-    local URL=""
-    curl --location --silent --output /tmp/meta.json "https://api.github.com/repos/aquasecurity/kube-bench/releases/latest"
-
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "amd64.tar.gz")
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "arm64.tar.gz")
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-
-    if [[ -z "$URL" ]]; then
-        cat /tmp/meta.json
-    fi
-
-    curl -LO "$URL"
-
-    tar -xzf kube-bench_*.tar.gz
-    install -o root -g root -m 0755 kube-bench /usr/local/bin/kube-bench
-
-    add-history kube-bench
-    add-test-command "kube-bench --help"
-    add-to-list "kube-bench,https://github.com/aquasecurity/kube-bench,CIS Kubernetes benchmark checker."
-}
-
-function install_kubescape() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing kubescape"
-    mkdir -p /opt/tools/kubescape
-    cd /opt/tools/kubescape || exit
-
-    local URL=""
-    curl --location --silent --output /tmp/meta.json "https://api.github.com/repos/kubescape/kubescape/releases/latest"
-
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "amd64")
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "arm64")
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-
-    if [[ -z "$URL" ]]; then
-        cat /tmp/meta.json
-    fi
-
-    curl -LO "$URL"
-
-    mv kubescape_* kubescape
-    install -o root -g root -m 0755 kubescape /usr/local/bin/kubescape
-
-    add-history kubescape
-    add-test-command "kubescape version"
-    add-to-list "kubescape,https://github.com/kubescape/kubescape,Kubernetes security risk analysis and compliance tool."
-}
-
-function install_trivy() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing trivy"
-    mkdir -p /opt/tools/trivy
-    cd /opt/tools/trivy || exit
-
-    local URL=""
-    curl --location --silent --output /tmp/meta.json "https://api.github.com/repos/aquasecurity/trivy/releases/latest"
-
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "64bit")
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "ARM")
-    else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-
-    if [[ -z "$URL" ]]; then
-        cat /tmp/meta.json
-    fi
-
-    curl -LO "$URL"
-
-    tar -xzf trivy_*.tar.gz
-    install -o root -g root -m 0755 trivy /usr/local/bin/trivy
-
-    add-history trivy
-    add-test-command "trivy --version"
-    add-to-list "trivy,https://github.com/aquasecurity/trivy,Vulnerability scanner for containers and Kubernetes."
-}
-
 function install_kube_hunter() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kube-hunter"
@@ -291,9 +192,6 @@ function package_cloud() {
     start_time=$(date +%s)
     install_kubectl
     install_kubeletctl
-    install_kube_bench
-    install_kubescape
-    install_trivy
     install_kube_hunter
     install_k9s
     install_awscli
