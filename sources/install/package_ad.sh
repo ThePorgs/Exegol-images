@@ -541,8 +541,8 @@ function install_pypykatz() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2026-02-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
@@ -783,8 +783,8 @@ function install_pygpoabuse() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2026-02-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -884,8 +884,8 @@ function install_pkinittools() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2026-02-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1064,8 +1064,8 @@ function install_ldaprelayscan() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2026-02-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1398,11 +1398,6 @@ function install_bloodyAD() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing bloodyAD"
     pipx install --system-site-packages git+https://github.com/CravateRouge/bloodyAD
-    local temp_fix_limit="2026-02-10"
-    # https://github.com/CravateRouge/bloodyAD/issues/109
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      pipx inject bloodyAD minikerberos
-    fi
     add-history bloodyAD
     add-test-command "bloodyAD --help"
     add-to-list "bloodyAD,https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
@@ -1412,11 +1407,6 @@ function install_autobloody() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing autobloody"
     pipx install --system-site-packages git+https://github.com/CravateRouge/autobloody
-    local temp_fix_limit="2026-02-10"
-    # https://github.com/CravateRouge/bloodyAD/issues/109
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      pipx inject autobloody minikerberos
-    fi
     add-history autobloody
     add-test-command "autobloody --help"
     add-to-list "autobloody,https://github.com/CravateRouge/autobloody,Automatically exploit Active Directory privilege escalation paths shown by BloodHound."
