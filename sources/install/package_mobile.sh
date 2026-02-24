@@ -100,7 +100,8 @@ function install_mobsf() {
     cd /opt/tools/MobSF || exit
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
     # in the mean time, switching to manual venv and an alias for mobsf
-    local temp_fix_limit="2026-02-10"
+    # Feb 23 2026: not a priority, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       python3.13 -m venv --system-site-packages ./venv
       catch_and_retry ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git

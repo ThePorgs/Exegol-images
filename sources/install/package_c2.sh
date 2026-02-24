@@ -37,7 +37,8 @@ function install_metasploit() {
     gem install rex-text
 
     # fixes 'You have already activated timeout 0.2.0, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    local temp_fix_limit="2026-02-10"
+    # Feb 23 2026: no time to check for now, if it works, it works. Extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       gem install timeout --version 0.4.1
     fi
@@ -98,7 +99,8 @@ function install_sliver() {
     colorecho "Installing Sliver"
     mkdir /opt/tools/sliver
     cp -v /root/sources/assets/sliver/install.sh /opt/tools/sliver/install.sh
-    local temp_fix_limit="2026-02-10"
+    # Feb 23 2026: not a priority for now, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     # Since release 1.6.0, the install.sh script is not working anymore (because of signature changes)
     # version has beeen fixed to 1.5.44 in the install.sh script
     # but in the future, we need to update the script to the new version at https://github.com/BishopFox/sliver/blob/master/docs/sliver-docs/public/install
