@@ -53,7 +53,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2026-02-10"
+    local temp_fix_limit="2026-06-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
@@ -127,7 +127,7 @@ function install_dirsearch() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
     #pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
-    local temp_fix_limit="2026-02-10"
+    local temp_fix_limit="2026-08-10"
     # https://github.com/maurosoria/dirsearch/issues/1498
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
