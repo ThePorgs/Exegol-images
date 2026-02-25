@@ -262,7 +262,7 @@ function install_nfsshell() {
 function install_web-server() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing web-server"
-    pipx install --system-site-packages git+https://github.com/lap1nou/web-server --python $(which python3.13)
+    pipx install --system-site-packages git+https://github.com/lap1nou/web-server --python "$(which python3.13)"
     add-test-command "web-server -h"
     add-to-list "web-server,https://github.com/lap1nou/web-server,Little TUI webserver that can be used to serve file during a CTF/Pentest."
 }
