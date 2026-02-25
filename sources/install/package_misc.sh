@@ -259,6 +259,14 @@ function install_nfsshell() {
     add-to-list "nfsshell,https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
 }
 
+function install_web-server() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing web-server"
+    pipx install --system-site-packages git+https://github.com/lap1nou/web-server --python $(which python3.13)
+    add-test-command "web-server -h"
+    add-to-list "web-server,https://github.com/lap1nou/web-server,Little TUI webserver that can be used to serve file during a CTF/Pentest."
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -285,6 +293,7 @@ function package_misc() {
     install_thr             # https://www.thehacker.recipes/
     install_dtrx            # Intelligent archive extractor
     install_nfsshell        # NFS share interaction tool
+    install_web-server      # TUI webserver
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
