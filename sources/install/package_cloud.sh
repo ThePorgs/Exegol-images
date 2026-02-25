@@ -122,7 +122,13 @@ function install_cloudmapper() {
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install wheel
-    pip3 install -r requirements.txt
+    # Temporary fix for 'setuptools' having removed the 'pkg_resources' library, see https://github.com/pypa/setuptools/issues/5174
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      echo 'setuptools<82' > build-constraints.txt
+      pip3 install --build-constraint build-constraints.txt -r requirements.txt
+    fi
+    #pip3 install -r requirements.txt
     deactivate
     add-aliases cloudmapper
     add-history cloudmapper
