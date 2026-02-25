@@ -124,18 +124,14 @@ function install_ffuf() {
 }
 
 function install_dirsearch() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    #pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
-    local temp_fix_limit="2026-08-10"
-    # https://github.com/maurosoria/dirsearch/issues/1498
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
-      cd /opt/tools/dirsearch || exit
-      git fetch --unshallow
-      git checkout c8192f7b3fd0796134ba294d3d591ad922bbcce9
-      pipx install .
-    fi
+    git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
+    cd /opt/tools/dirsearch || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases dirsearch
     add-history dirsearch
     add-test-command "dirsearch --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
