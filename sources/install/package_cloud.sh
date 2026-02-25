@@ -119,16 +119,11 @@ function install_cloudmapper() {
     cd /opt/tools/cloudmapper || exit
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch
-    python3 -m venv --system-site-packages ./venv
+    # Use Python 3.10: project unmaintained 3+ years; deps (e.g. lazy-object-proxy 1.6.0) fail on 3.11+ due to pkg_resources/setuptools. Patch pins lazy-object-proxy to 1.7.1.
+    python3.10 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install wheel
-    # Temporary fix for 'setuptools' having removed the 'pkg_resources' library, see https://github.com/pypa/setuptools/issues/5174
-    local temp_fix_limit="2026-08-10"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      echo 'setuptools<82' > build-constraints.txt
-      pip3 install --build-constraint build-constraints.txt -r requirements.txt
-    fi
-    #pip3 install -r requirements.txt
+    pip3 install -r requirements.txt
     deactivate
     add-aliases cloudmapper
     add-history cloudmapper
