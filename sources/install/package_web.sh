@@ -985,7 +985,7 @@ function install_urldedupe() {
     cp /tmp/urldedupe/urldedupe /opt/tools/bin/urldedupe
     add-history urldedupe
     add-test-command "urldedupe -h"
-    add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs, and get back a list of deduplicated (unique) URL and query string combination."
+    add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
 }
 
 function install_curlie() {
