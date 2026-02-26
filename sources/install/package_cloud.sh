@@ -143,7 +143,6 @@ function install_azure_cli() {
 }
 
 function install_s3scanner() {
-	# CODE-CHECK-WHITELIST=add-aliases
 	colorecho "Installing s3scanner"
     mkdir /opt/tools/s3scanner
     cd /opt/tools/s3scanner || exit
