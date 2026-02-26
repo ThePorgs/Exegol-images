@@ -151,6 +151,7 @@ function install_s3scanner() {
     mkdir -p .go/bin
     GOBIN=/opt/tools/s3scanner/.go/bin go install -v github.com/sa7mon/s3scanner@latest
     asdf reshim golang
+	add-aliases s3scanner
 	add-history s3scanner
 	add-test-command "s3scanner -version"
 	add-to-list "s3scanner,https://github.com/sa7mon/S3Scanner,a go tool for s3 buckets misconfiguration across S3-compatible APIs"
