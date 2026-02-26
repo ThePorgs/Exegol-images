@@ -101,6 +101,7 @@ function install_jadx() {
     jadx_url=$(curl --location --silent "https://api.github.com/repos/skylot/jadx/releases/latest" | grep 'browser_download_url.' | grep -o 'https://[^"]*' | head -n1)
     curl --location -o /tmp/jadx.zip "$jadx_url"
     unzip -q /tmp/jadx.zip -d /opt/tools/jadx
+    chmod +x /opt/tools/jadx/bin/jadx /opt/tools/jadx/bin/jadx-gui
     ln -v -s /opt/tools/jadx/bin/jadx /opt/tools/bin/jadx
     ln -v -s /opt/tools/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
     add-history jadx
