@@ -53,7 +53,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2026-02-10"
+    local temp_fix_limit="2026-06-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
@@ -124,20 +124,16 @@ function install_ffuf() {
 }
 
 function install_dirsearch() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    #pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
-    local temp_fix_limit="2026-02-10"
-    # https://github.com/maurosoria/dirsearch/issues/1498
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
-      cd /opt/tools/dirsearch || exit
-      git fetch --unshallow
-      git checkout c8192f7b3fd0796134ba294d3d591ad922bbcce9
-      pipx install .
-    fi
+    git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
+    cd /opt/tools/dirsearch || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases dirsearch
     add-history dirsearch
-    add-test-command "dirsearch --help"
+    add-test-command "dirsearch.py --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
 }
 
@@ -283,7 +279,13 @@ function install_patator() {
     cd /opt/tools/patator || exit
     python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    # Temporary fix for 'setuptools' having removed the 'pkg_resources' library, see https://github.com/pypa/setuptools/issues/5174
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      echo 'setuptools<82' > build-constraints.txt
+      pip3 install --build-constraint build-constraints.txt -r requirements.txt
+    fi
+    #pip3 install -r requirements.txt
     deactivate
     add-aliases patator
     add-history patator
