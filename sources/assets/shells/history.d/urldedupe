@@ -1,7 +1,7 @@
 urldedupe --urls urls.txt
 cat urls.txt | urldedupe
 cat urls.txt | urldedupe --similar
-cat waybackurls | urldedupe > deduped_urls.txt
-cat urls.txt | urldedupe --regex-parse > deduped_urls_regex.txt
+cat waybackurls | urldedupe | tee deduped_urls.txt
+cat urls.txt | urldedupe --regex-parse | tee deduped_urls_regex.txt
 urldedupe --urls urls.txt --similar --query-strings-only --no-extensions
 urldedupe --urls urls.txt --mode "s,qs,ne"
