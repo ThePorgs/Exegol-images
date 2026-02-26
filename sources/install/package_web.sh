@@ -986,6 +986,16 @@ function install_bbot() {
     add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
 }
 
+function install_bxss() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing bxss"
+    go install -v github.com/ethicalhackingplayground/bxss/v2/cmd/bxss@latest
+    asdf reshim golang
+    add-history bxss
+    add-test-command "bxss"
+    add-to-list "bxss,https://github.com/ethicalhackingplayground/bxss,A tool that can be used to scan for blind XSS vulnerabilities in web applications."
+}
+
 function install_curlie() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases
     colorecho "Installing curlie"
@@ -1102,6 +1112,7 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
+    install_bxss                    # Blind xss scanner
     install_curlie                  # Mix of cURL and HTTPie
     install_xxeinjector             # XXE injection testing tool
     post_install
