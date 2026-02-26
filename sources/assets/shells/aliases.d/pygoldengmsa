@@ -1,1 +1,1 @@
-alias pygoldengmsa.py='/opt/tools/pyGoldenGMSA/venv/bin/python3 /opt/tools/pyGoldenGMSA/main.py'
+alias pyGoldenGMSA.py='/opt/tools/pyGoldenGMSA/venv/bin/python3 /opt/tools/pyGoldenGMSA/main.py'
