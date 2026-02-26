@@ -986,6 +986,19 @@ function install_bbot() {
     add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
 }
 
+function install_dalfox() {
+	  # CODE-CHECK-WHITELIST=add-aliases
+    mkdir -p /opt/tools/dalfox
+    cd /opt/tools/dalfox
+    asdf set golang 1.24.4
+    mkdir -p .go/bin
+    GOBIN=/opt/tools/dalfox/.go/bin go install -v github.com/hahwul/dalfox/v2@latest
+    asdf reshim golang
+	  add-history dalfox
+	  add-test-command "dalfox --help"
+	  add-to-list "dalfox,https://github.com/hahwul/dalfox,a powerful open-source XSS scanner and utility focused on automation."
+}
+
 function install_curlie() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases
     colorecho "Installing curlie"
@@ -1102,6 +1115,7 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
+    install_dalfox					        # An automation tool for xss scanning
     install_curlie                  # Mix of cURL and HTTPie
     install_xxeinjector             # XXE injection testing tool
     post_install

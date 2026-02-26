@@ -1,0 +1,6 @@
+dalfox url "$TARGET" -b https://your-callback-url.com
+dalfox file "$filename"
+dalfox file req.raw --rawdata
+dalfox server # Start with default settings (listening on 0.0.0.0:6664 in REST API mode)
+dalfox server --host 127.0.0.1 --port 8090
+dalfox server --api-key "your-secret-key"
