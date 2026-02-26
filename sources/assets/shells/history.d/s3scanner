@@ -1,14 +1,4 @@
-s3scanner -bucket-file names.txt -enumerate
+s3scanner -bucket-file `fzf-wordlist` -enumerate
 s3scanner -provider gcp -db -bucket my-bucket -enumerate
-s3scanner -bucket secret_uploads
-s3scanner -bucket-file names.txt
-s3scanner -mq
-s3scanner -bucket images -db
-s3scanner -bucket images -json
-s3scanner -bucket-file names.txt -json | jq -r '. | select(.bucket.exists==1) | [.bucket.name, .bucket.region] | join(" - ")'
-s3scanner -bucket attachments -enumerate
-s3scanner -bucket assets -provider gcp
-s3scanner -bucket secret_docs -threads 8
-s3scanner -bucket spreadsheets -verbose
-s3scanner -version
+s3scanner -bucket "$BUCKET_NAME" -json
 
