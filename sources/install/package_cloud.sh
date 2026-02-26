@@ -146,7 +146,7 @@ function install_s3scanner() {
 	# CODE-CHECK-WHITELIST=add-aliases
 	colorecho "Installing s3scanner"
     mkdir /opt/tools/s3scanner
-    cd /opt/tools/s3scanner
+    cd /opt/tools/s3scanner || exit
     asdf set golang 1.24.4
     mkdir -p .go/bin
     GOBIN=/opt/tools/s3scanner/.go/bin go install -v github.com/sa7mon/s3scanner@latest
