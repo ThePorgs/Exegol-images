@@ -133,7 +133,7 @@ function install_dirsearch() {
     deactivate
     add-aliases dirsearch
     add-history dirsearch
-    add-test-command "dirsearch --help"
+    add-test-command "dirsearch.py --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
 }
 
