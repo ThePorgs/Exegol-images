@@ -403,29 +403,11 @@ function install_privexchange() {
 }
 
 function install_ruler() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates from source..."
-    mkdir -p /opt/tools/ruler || exit
-    cd /opt/tools/ruler || exit
     asdf set golang 1.24.1
-    mkdir -p .go/bin
-    git clone https://github.com/sensepost/ruler.git src
-
-    # Check if cloning was successful before proceeding
-    if [ ! -d "src" ]; then
-        colorecho "ERROR: Failed to clone the ruler repository." "red"
-        exit 1
-    fi
-
-    # Navigate into the source directory
-    cd src || exit
-
-    # Install from source.
-    GOBIN=/opt/tools/ruler/.go/bin go install .
-    cd ..
-    rm -rf src
-
+    go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
-    add-aliases ruler
     add-history ruler
     add-test-command "ruler --version"
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
@@ -1532,14 +1514,11 @@ function install_adminer() {
 }
 
 function install_goexec() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoExec"
-    mkdir -p /opt/tools/goexec || exit
-    cd /opt/tools/goexec || exit
     asdf set golang 1.24.1
-    mkdir -p .go/bin
-    GOBIN=/opt/tools/goexec/.go/bin CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
+    CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
     asdf reshim golang
-    add-aliases goexec
     add-history goexec
     add-test-command "goexec --help"
     add-to-list "GoExec,https://github.com/FalconOpsLLC/goexec,GoExec is a new take on some of the methods used to gain remote execution on Windows devices. GoExec implements a number of largely unrealized execution methods and provides significant OPSEC improvements overall"
