@@ -1602,6 +1602,20 @@ function install_pysnaffler() {
     add-to-list "pysnaffler,https://github.com/skelsec/pysnaffler,Snaffler. But in python."
 }
 
+function install_pygoldengmsa() {
+    colorecho "Installing pyGoldenGMSA"
+    git -C /opt/tools/ clone --depth 1 https://github.com/felixbillieres/pyGoldenGMSA.git
+    cd /opt/tools/pyGoldenGMSA || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases pygoldengmsa
+    add-history pygoldengmsa
+    add-test-command "pygoldengmsa.py --help"
+    add-to-list "pygoldengmsa,https://github.com/felixbillieres/pyGoldenGMSA, Cross-platform Python implementation of the GoldenGMSA attack for exploiting Group Managed Service Accounts (gMSA) in Active Directory. "
+}
+
 function install_evil-winrm-py() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing evil-winrm-py"
@@ -1697,6 +1711,7 @@ function package_ad() {
     install_shadowcoerce
     install_gmsadumper
     install_pylaps
+    install_pygoldengmsa
     install_pyfinduncommonshares
     install_ldaprelayscan
     install_goldencopy
