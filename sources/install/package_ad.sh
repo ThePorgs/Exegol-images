@@ -1600,7 +1600,7 @@ function install_pygoldengmsa() {
     deactivate
     add-aliases pygoldengmsa
     add-history pygoldengmsa
-    add-test-command "pygoldengmsa.py --help"
+    add-test-command "pyGoldenGMSA.py --help"
     add-to-list "pygoldengmsa,https://github.com/felixbillieres/pyGoldenGMSA, Cross-platform Python implementation of the GoldenGMSA attack for exploiting Group Managed Service Accounts (gMSA) in Active Directory. "
 }
 
