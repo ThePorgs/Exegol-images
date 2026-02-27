@@ -188,7 +188,7 @@ function install_rvm() {
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
     rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
-    rvm install ruby-3.1.5  # needed metasploit-framework
+    rvm install ruby-3.3.8  # needed by metasploit-framework
     rvm get head
     rvm cleanup all
     gem update
