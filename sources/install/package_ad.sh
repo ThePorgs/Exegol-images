@@ -103,6 +103,15 @@ function install_ldapdomaindump() {
     add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service"
 }
 
+function install_adwsdomaindump() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing adwsdomaindump"
+    pipx install --system-site-packages git+https://github.com/mverschu/adwsdomaindump
+    add-history adwsdomaindump
+    add-test-command "adwsdomaindump --help"
+    add-to-list "adwsdomaindump,https://github.com/mverschu/adwsdomaindump,A tool for dumping domain data via ADWS for evasion purposes."
+}
+
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install --system-site-packages git+https://github.com/fox-it/BloodHound.py
@@ -1655,6 +1664,7 @@ function package_ad() {
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
+    install_adwsdomaindump
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
     install_bloodhound-py           # ingestor for legacy BloodHound
