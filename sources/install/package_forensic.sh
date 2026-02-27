@@ -26,9 +26,11 @@ function install_forensic_apt_tools() {
 }
 
 function install_binwalk() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing binwalk"
-    fapt squashfs-tools binwalk
-    add-aliases binwalk
+    cargo install binwalk
+    fapt squashfs-tools
+    pipx install --system-site-packages jefferson ubi-reader uefi_firmware
     add-history binwalk
     add-test-command "binwalk --help"
     add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
