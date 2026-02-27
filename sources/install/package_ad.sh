@@ -202,7 +202,13 @@ function install_bloodhound-ce() {
 
     # Build the API
     asdf set golang 1.24.4
-    sed -i 's/\s*STORAGE MAIN//' ./cmd/api/src/database/migration/migrations/v8.5.0.sql
+
+    # See https://github.com/ThePorgs/Exegol-images/pull/667
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        sed -i 's/\s*STORAGE MAIN//' ./cmd/api/src/database/migration/migrations/v8.5.0.sql
+    fi
+    
     go build -C cmd/api/src -o ${bloodhoundce_path}/bloodhound -ldflags "-X 'github.com/specterops/bloodhound/cmd/api/src/version.majorVersion=8' -X 'github.com/specterops/bloodhound/cmd/api/src/version.minorVersion=0' -X 'github.com/specterops/bloodhound/cmd/api/src/version.patchVersion=1'" github.com/specterops/bloodhound/cmd/api/src/cmd/bhapi
 
     # Force remove go and yarn cache that are not stored in standard locations
