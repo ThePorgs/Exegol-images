@@ -119,7 +119,8 @@ function install_cloudmapper() {
     cd /opt/tools/cloudmapper || exit
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch
-    python3 -m venv --system-site-packages ./venv
+    # Use Python 3.10: project unmaintained 3+ years; deps (e.g. lazy-object-proxy 1.6.0) fail on 3.11+ due to pkg_resources/setuptools. Patch pins lazy-object-proxy to 1.7.1.
+    python3.10 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install wheel
     pip3 install -r requirements.txt

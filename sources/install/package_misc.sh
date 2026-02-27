@@ -16,7 +16,7 @@ function install_misc_apt_tools() {
     add-test-command "rlwrap --version"                            # Reverse shell utility
     add-test-command "convert -version"                            # Copy, modify, and distribute image
     add-test-command "rsync -h"                                    # File synchronization tool for efficiently copying and updating data between local or remote locations.
-    add-test-command "keepassxc --help"                            # Cross-platform password manager
+    add-test-command "keepassxc-cli --help"                            # Cross-platform password manager
 
     add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history"
     add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images."
@@ -94,8 +94,9 @@ function install_triliumnext() {
     colorecho "Installing TriliumNext"
     # TODO : switch to https://github.com/TriliumNext/Trilium
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
-    # https://github.com/TriliumNext/Notes/issues/1890
-    local temp_fix_limit="2026-02-10"
+    # Feb 23 2026: fixing Trilium version since they have switched to a monorepo using Nx and pnpm instead of npm (https://github.com/TriliumNext/Notes/discussions/1891)
+    # TODO: update the Trilium install method to use the right repo, as well as Nx and pnpm instead of npm
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --branch v0.93.0 --depth 1 https://github.com/triliumnext/notes.git triliumnext
     fi

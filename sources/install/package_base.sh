@@ -51,7 +51,8 @@ function install_go() {
     #asdf install golang latest
     #asdf set --home golang latest
     # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2026-02-10"
+    # Feb 23 2026: no time to check for now, if it works, it works. Extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # 1.24.4 needed for BloodHound-CE
       asdf install golang 1.24.4
@@ -241,16 +242,12 @@ function install_pyftpdlib() {
 }
 
 function install_yarn() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing yarn"
-    wget -O /tmp/yarn.gpg.armored https://dl.yarnpkg.com/debian/pubkey.gpg
-    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
-    gpg --dearmor --output /etc/apt/trusted.gpg.d/yarn.gpg /tmp/yarn.gpg.armored
-    chmod 644 /etc/apt/trusted.gpg.d/yarn.gpg
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-    apt-get update
-    fapt yarn
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing yarn / corepack"
+    npm install --global corepack
+    corepack prepare yarn@stable --activate
     add-test-command "yarn --help"
+    add-to-list "yarn,https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
 }
 
 function install_ultimate_vimrc() {
@@ -296,7 +293,7 @@ function install_mdcat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mdcat"
     source "$HOME/.cargo/env"
-    cargo binstall -y mdcat
+    cargo install mdcat --locked
     add-history mdcat
     add-test-command "mdcat --version"
     add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
@@ -495,7 +492,7 @@ function install_wireguard() {
   fapt wireguard
 
   # Patch wireguard start script https://github.com/WireGuard/wireguard-tools/pull/5
-  local temp_fix_limit="2026-02-10"
+  local temp_fix_limit="2026-08-10"
   if check_temp_fix_expiry "$temp_fix_limit"; then
     # shellcheck disable=SC2016
     sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
