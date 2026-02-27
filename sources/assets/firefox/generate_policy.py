@@ -21,7 +21,8 @@ names = [
     "cookie-editor",
     "wappalyzer",
     "multi-account-containers",
-    "multi-url-opener"
+    "multi-url-opener",
+    "caido-extension"
 ]
 
 pinned_names = [
