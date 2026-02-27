@@ -986,6 +986,20 @@ function install_bbot() {
     add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
 }
 
+function install_urldedupe() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing urldedupe"
+    git -C /tmp clone --depth 1 https://github.com/ameenmaali/urldedupe.git
+    cd /tmp/urldedupe || exit
+    cmake CMakeLists.txt
+    make
+    cp /tmp/urldedupe/urldedupe /opt/tools/bin/urldedupe
+    rm -r /tmp/urldedupe/
+    add-history urldedupe
+    add-test-command "urldedupe -h"
+    add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
+}
+
 function install_curlie() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases
     colorecho "Installing curlie"
@@ -1102,6 +1116,7 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
+    install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
     install_xxeinjector             # XXE injection testing tool
     post_install
