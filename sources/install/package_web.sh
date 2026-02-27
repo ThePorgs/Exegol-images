@@ -986,6 +986,17 @@ function install_bbot() {
     add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
 }
 
+function install_subzy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing subzy"
+    asdf set golang 1.23.0
+    go install -v github.com/PentestPad/subzy@latest
+    asdf reshim golang
+    add-history subzy
+    add-test-command "subzy --help"
+    add-to-list "subzy,https://github.com/PentestPad/subzy,Subdomain takeover tool which checks for various cloud services and identifies if a subdomain is vulnerable."
+}
+
 function install_urldedupe() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing urldedupe"
@@ -1116,6 +1127,7 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
+    install_subzy                   # Subdomain takeover tool
     install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
     install_xxeinjector             # XXE injection testing tool
