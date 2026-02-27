@@ -908,17 +908,10 @@ function install_pywhisker() {
 function install_manspider() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Manspider"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
-        add-history manspider
-        add-test-command "manspider --help"
-        add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
-    else
-        # https://github.com/blacklanternsecurity/MANSPIDER/issues/55
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-
+    pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
+    add-history manspider
+    add-test-command "manspider --help"
+    add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
 }
 
 function install_targetedKerberoast() {
