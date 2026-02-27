@@ -80,18 +80,23 @@ function install_routersploit() {
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sliver"
-    mkdir /opt/tools/sliver
-    cp -v /root/sources/assets/sliver/install.sh /opt/tools/sliver/install.sh
-    # Feb 23 2026: not a priority for now, extending for 6 months
-    local temp_fix_limit="2026-08-10"
-    # Since release 1.6.0, the install.sh script is not working anymore (because of signature changes)
-    # version has beeen fixed to 1.5.44 in the install.sh script
-    # but in the future, we need to update the script to the new version at https://github.com/BishopFox/sliver/blob/master/docs/sliver-docs/public/install
-    # if possible, we should make it dynamic instead of hardcoded install script
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-        chmod +x /opt/tools/sliver/install.sh
-        /opt/tools/sliver/install.sh
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
+    server_url=$(curl --location --silent "https://api.github.com/repos/BishopFox/sliver/releases/latest" | grep 'browser_download_url.*sliver-server.*linux.*'"$arch"'"' | grep -o 'https://[^"]*')
+    client_url=$(curl --location --silent "https://api.github.com/repos/BishopFox/sliver/releases/latest" | grep 'browser_download_url.*sliver-client.*linux.*'"$arch"'"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/sliver-server "$server_url"
+    curl --location -o /tmp/sliver-client "$client_url"
+    chmod +x /tmp/sliver-server
+    chmod +x /tmp/sliver-client
+    mv "/tmp/sliver-server" "/opt/tools/bin/sliver-server"
+    mv "/tmp/sliver-client" "/opt/tools/bin/sliver-client"
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
