@@ -30,30 +30,33 @@ function install_kubectl() {
 function install_kubeletctl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kubeletctl"
-    mkdir -p /opt/tools/kubeletctl
-    cd /opt/tools/kubeletctl || exit
 
     local URL=""
-    curl --location --silent --output /tmp/meta.json "https://api.github.com/repos/cyberark/kubeletctl/releases/latest"
+    local ARCH="$(uname -m)"
 
-    if [[ $(uname -m) = 'x86_64' ]]
+    curl --location --silent --output /tmp/meta.json \
+        "https://api.github.com/repos/cyberark/kubeletctl/releases/latest"
+
+    if [[ "$ARCH" = "x86_64" ]]
     then
-        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "amd64")
-    elif [[ $(uname -m) = 'aarch64' ]]
+        URL=$(grep 'browser_download_url' /tmp/meta.json | grep -o 'https://[^"]*' | grep 'linux' | grep 'amd64')
+    elif [[ "$ARCH" = "aarch64" ]]
     then
-        URL=$(cat /tmp/meta.json | grep 'browser_download_url' | grep -o 'https://[^"]*' | grep 'linux' | grep "arm64")
+        URL=$(grep 'browser_download_url' /tmp/meta.json | grep -o 'https://[^"]*' | grep 'linux' | grep 'arm64')
     else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+        criticalecho-noexit "This installation function doesn't support architecture $ARCH" && return
     fi
 
     if [[ -z "$URL" ]]; then
-        cat /tmp/meta.json
+        criticalecho "Unable to retrieve kubeletctl download URL"
     fi
 
-    curl -LO "$URL"
-    mv kubeletctl_linux_* kubeletctl
-    install -o root -g root -m 0755 kubeletctl /usr/local/bin/kubeletctl
-    
+    curl -L -o /tmp/kubeletctl "$URL"
+
+    install -o root -g root -m 0755 /tmp/kubeletctl /opt/tools/bin/kubeletctl
+
+    rm -f /tmp/kubeletctl /tmp/meta.json
+
     add-history kubeletctl
     add-test-command "kubeletctl --help"
     add-to-list "kubeletctl,https://github.com/cyberark/kubeletctl,Tool for interacting with the kubelet API."
