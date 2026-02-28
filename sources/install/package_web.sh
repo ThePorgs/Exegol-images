@@ -980,16 +980,16 @@ function install_jxscout() {
 	colorecho "Installing jxscout"
 	fapt unzip
 	go install -v github.com/francisconeves97/jxscout/cmd/jxscout@latest
-	asdf reshim golang
-	local bun_install_script
-	bun_install_script="$(mktemp)"
-	"$(which curl)" -fsSL https://bun.com/install -o "$bun_install_script"
-	bash "$bun_install_script" -s "bun-v1.2.12"
-	rm -f "$bun_install_script"
-	add-history jxscout
-	add-test-command "jxscout"
-	add-to-list "jxscout,https://github.com/francisconeves97/jxscout,a JavaScript analysis tool with superpowers for security researchers."
- }
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing jxscout"
+    fapt unzip
+    go install -v github.com/francisconeves97/jxscout/cmd/jxscout@latest
+    asdf reshim golang
+    curl -fsSL https://bun.com/install | bash -s "bun-v1.2.12"
+    add-history jxscout
+    add-test-command "jxscout"
+    add-to-list "jxscout,https://github.com/francisconeves97/jxscout,a JavaScript analysis tool with superpowers for security researchers."
+}
   
 function install_curlie() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases
