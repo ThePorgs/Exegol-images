@@ -1,0 +1,4 @@
+s3scanner -bucket-file `fzf-wordlist` -enumerate
+s3scanner -provider gcp -db -bucket my-bucket -enumerate
+s3scanner -bucket "$BUCKET_NAME" -json
+
