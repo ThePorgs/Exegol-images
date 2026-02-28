@@ -1097,7 +1097,7 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
-    install_jxscout					        # JavaScript analysis  tool
+    install_jxscout                 # JavaScript analysis tool
     install_curlie                  # Mix of cURL and HTTPie
     post_install
     end_time=$(date +%s)
