@@ -97,7 +97,7 @@ EOF
 
 # Download and Unpack Sliver Server
 echo "Fetching latest Sliver release URLs..."
-ARTIFACTS=$(curl -s "https://api.github.com/repos/BishopFox/sliver/releases/latest" | awk -F '"' '/browser_download_url/{print $4}')
+ARTIFACTS=$(curl -s "https://api.github.com/repos/BishopFox/sliver/releases" | grep 1.5.44 | awk -F '"' '/browser_download_url/{print $4}')
 SLIVER_SERVER="sliver-server_linux"
 SLIVER_CLIENT="sliver-client_linux"
 

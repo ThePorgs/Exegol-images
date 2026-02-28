@@ -26,9 +26,11 @@ function install_forensic_apt_tools() {
 }
 
 function install_binwalk() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing binwalk"
-    fapt squashfs-tools binwalk
-    add-aliases binwalk
+    cargo install binwalk
+    fapt squashfs-tools
+    pipx install --system-site-packages jefferson ubi-reader uefi_firmware
     add-history binwalk
     add-test-command "binwalk --help"
     add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
@@ -101,6 +103,7 @@ function install_jadx() {
     jadx_url=$(curl --location --silent "https://api.github.com/repos/skylot/jadx/releases/latest" | grep 'browser_download_url.' | grep -o 'https://[^"]*' | head -n1)
     curl --location -o /tmp/jadx.zip "$jadx_url"
     unzip -q /tmp/jadx.zip -d /opt/tools/jadx
+    chmod +x /opt/tools/jadx/bin/jadx /opt/tools/jadx/bin/jadx-gui
     ln -v -s /opt/tools/jadx/bin/jadx /opt/tools/bin/jadx
     ln -v -s /opt/tools/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
     add-history jadx

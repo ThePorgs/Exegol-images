@@ -209,6 +209,11 @@ function post_build() {
     (head -n 1 /.exegol/installed_tools.csv && tail -n +2 /.exegol/installed_tools.csv | sort -f ) | tee /tmp/installed_tools.csv.sorted
     mv /tmp/installed_tools.csv.sorted /.exegol/installed_tools.csv
 
+
+    colorecho "Removing comments from zsh_history"
+    grep -v '^#' /opt/.exegol_history > /tmp/.exegol_history.filtered
+    mv /tmp/.exegol_history.filtered /opt/.exegol_history
+    
     colorecho "Adding end-of-preset in zsh_history"
     echo "# -=-=-=-=-=-=-=- YOUR COMMANDS BELOW -=-=-=-=-=-=-=- #" >> /opt/.exegol_history
     cp /opt/.exegol_history ~/.zsh_history

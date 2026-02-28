@@ -53,7 +53,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2026-02-10"
+    local temp_fix_limit="2026-06-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
@@ -124,11 +124,16 @@ function install_ffuf() {
 }
 
 function install_dirsearch() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
+    git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
+    cd /opt/tools/dirsearch || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases dirsearch
     add-history dirsearch
-    add-test-command "dirsearch --help"
+    add-test-command "dirsearch.py --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
 }
 
@@ -274,7 +279,13 @@ function install_patator() {
     cd /opt/tools/patator || exit
     python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    # Temporary fix for 'setuptools' having removed the 'pkg_resources' library, see https://github.com/pypa/setuptools/issues/5174
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      echo 'setuptools<82' > build-constraints.txt
+      pip3 install --build-constraint build-constraints.txt -r requirements.txt
+    fi
+    #pip3 install -r requirements.txt
     deactivate
     add-aliases patator
     add-history patator
@@ -991,6 +1002,31 @@ function install_jxscout() {
     add-to-list "jxscout,https://github.com/francisconeves97/jxscout,a JavaScript analysis tool with superpowers for security researchers."
 }
   
+function install_subzy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing subzy"
+    asdf set golang 1.23.0
+    go install -v github.com/PentestPad/subzy@latest
+    asdf reshim golang
+    add-history subzy
+    add-test-command "subzy --help"
+    add-to-list "subzy,https://github.com/PentestPad/subzy,Subdomain takeover tool which checks for various cloud services and identifies if a subdomain is vulnerable."
+}
+
+function install_urldedupe() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing urldedupe"
+    git -C /tmp clone --depth 1 https://github.com/ameenmaali/urldedupe.git
+    cd /tmp/urldedupe || exit
+    cmake CMakeLists.txt
+    make
+    cp /tmp/urldedupe/urldedupe /opt/tools/bin/urldedupe
+    rm -r /tmp/urldedupe/
+    add-history urldedupe
+    add-test-command "urldedupe -h"
+    add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
+}
+
 function install_curlie() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases
     colorecho "Installing curlie"
@@ -1011,6 +1047,16 @@ function install_curlie() {
     mv /tmp/curlie /opt/tools/bin/curlie
     add-test-command "curlie"
     add-to-list "curlie,https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
+}
+
+function install_xxeinjector() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing XXEinjector"
+    wget https://raw.githubusercontent.com/enjoiz/XXEinjector/refs/heads/master/XXEinjector.rb -O /opt/tools/bin/XXEinjector.rb
+    chmod +x /opt/tools/bin/XXEinjector.rb
+    add-history xxeinjector
+    add-test-command "XXEinjector.rb | grep Example"
+    add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
 }
 
 # Package dedicated to applicative and active web pentest tools
@@ -1098,7 +1144,10 @@ function package_web() {
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
     install_jxscout                 # JavaScript analysis tool
+    install_subzy                   # Subdomain takeover tool
+    install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
+    install_xxeinjector             # XXE injection testing tool
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

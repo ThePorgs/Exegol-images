@@ -103,6 +103,15 @@ function install_ldapdomaindump() {
     add-to-list "ldapdomaindump,https://github.com/dirkjanm/ldapdomaindump,A tool for dumping domain data from an LDAP service"
 }
 
+function install_adwsdomaindump() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing adwsdomaindump"
+    pipx install --system-site-packages git+https://github.com/mverschu/adwsdomaindump
+    add-history adwsdomaindump
+    add-test-command "adwsdomaindump --help"
+    add-to-list "adwsdomaindump,https://github.com/mverschu/adwsdomaindump,A tool for dumping domain data via ADWS for evasion purposes."
+}
+
 function install_bloodhound-py() {
     colorecho "Installing and Python ingestor for BloodHound"
     pipx install --system-site-packages git+https://github.com/fox-it/BloodHound.py
@@ -314,6 +323,8 @@ function install_impacket() {
     cp -v /root/sources/assets/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
     add-aliases impacket
     add-history impacket
+    # making sure we have the right mention of the fork
+    add-test-command "ntlmrelayx.py --help |& grep 'Impacket (Exegol fork)'"
     add-test-command "ntlmrelayx.py --help"
     add-test-command "secretsdump.py --help"
     add-test-command "Get-GPPPassword.py --help"
@@ -392,29 +403,11 @@ function install_privexchange() {
 }
 
 function install_ruler() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates from source..."
-    mkdir -p /opt/tools/ruler || exit
-    cd /opt/tools/ruler || exit
     asdf set golang 1.24.1
-    mkdir -p .go/bin
-    git clone https://github.com/sensepost/ruler.git src
-
-    # Check if cloning was successful before proceeding
-    if [ ! -d "src" ]; then
-        colorecho "ERROR: Failed to clone the ruler repository." "red"
-        exit 1
-    fi
-
-    # Navigate into the source directory
-    cd src || exit
-
-    # Install from source.
-    GOBIN=/opt/tools/ruler/.go/bin go install .
-    cd ..
-    rm -rf src
-
+    go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
-    add-aliases ruler
     add-history ruler
     add-test-command "ruler --version"
     add-to-list "ruler,https://github.com/sensepost/ruler,Outlook Rules exploitation framework."
@@ -539,8 +532,8 @@ function install_pypykatz() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2026-02-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
@@ -781,8 +774,8 @@ function install_pygpoabuse() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2026-02-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -882,8 +875,8 @@ function install_pkinittools() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2026-02-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -906,17 +899,10 @@ function install_pywhisker() {
 function install_manspider() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Manspider"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
-        add-history manspider
-        add-test-command "manspider --help"
-        add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
-    else
-        # https://github.com/blacklanternsecurity/MANSPIDER/issues/55
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-    fi
-
+    pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
+    add-history manspider
+    add-test-command "manspider --help"
+    add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
 }
 
 function install_targetedKerberoast() {
@@ -940,7 +926,7 @@ function install_pcredz() {
     cd /opt/tools/PCredz || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install Cython python-libpcap
+    pip3 install Cython python-libpcap pcapy-ng
     deactivate
     add-aliases pcredz
     add-history pcredz
@@ -1062,8 +1048,8 @@ function install_ldaprelayscan() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 and https://github.com/wbond/oscrypto/issues/75
-    local temp_fix_limit="2026-02-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1238,6 +1224,17 @@ function install_neo4j() {
     neo4j-admin set-initial-password exegol4thewin
     mkdir -p /usr/share/neo4j/logs/
     touch /usr/share/neo4j/logs/neo4j.log
+
+    # Install GDS plugin (required by autobloody)
+    # Current neo4j 4.4.x is compatible with GDS 2.6.x, see <https://neo4j.com/docs/graph-data-science/current/installation/supported-neo4j-versions>
+    wget https://graphdatascience.ninja/neo4j-graph-data-science-2.6.8.jar -P /var/lib/neo4j/plugins/
+    # Config docs: <https://neo4j.com/docs/graph-data-science/current/installation/neo4j-server/>
+    cat << 'EOF' | sudo tee -a /etc/neo4j/neo4j.conf > /dev/null
+# --- GDS config for autobloody ---
+dbms.security.procedures.unrestricted=gds.*
+dbms.security.procedures.allowlist=gds.*
+EOF
+
     add-aliases neo4j
     add-history neo4j
     add-test-command "neo4j version"
@@ -1517,14 +1514,11 @@ function install_adminer() {
 }
 
 function install_goexec() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoExec"
-    mkdir -p /opt/tools/goexec || exit
-    cd /opt/tools/goexec || exit
     asdf set golang 1.24.1
-    mkdir -p .go/bin
-    GOBIN=/opt/tools/goexec/.go/bin CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
+    CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
     asdf reshim golang
-    add-aliases goexec
     add-history goexec
     add-test-command "goexec --help"
     add-to-list "GoExec,https://github.com/FalconOpsLLC/goexec,GoExec is a new take on some of the methods used to gain remote execution on Windows devices. GoExec implements a number of largely unrealized execution methods and provides significant OPSEC improvements overall"
@@ -1557,7 +1551,26 @@ function install_godap() {
 function install_powerview() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powerview.py"
-    pipx install git+https://github.com/aniqfakhrul/powerview.py
+    # When temp fix expires and upstream has fixed the SyntaxError (see sources/assets/upstream-issues/powerview-py-fstring-syntaxerror.md), revert to:
+    #   pipx install git+https://github.com/aniqfakhrul/powerview.py
+    #   add-history powerview.py
+    #   add-test-command "powerview --help"
+    #   add-to-list "Powerview.py,..."
+    # and remove: git clone, temp fix block, venv, pip install ., add-aliases; delete assets/shells/aliases.d/powerview.py and add CODE-CHECK-WHITELIST=add-aliases.
+    git -C /opt/tools clone --depth 1 https://github.com/aniqfakhrul/powerview.py
+    cd /opt/tools/powerview.py || exit
+    # https://github.com/aniqfakhrul/powerview.py/issues/224
+    # Temp fix: commit 79327239 introduced SyntaxError on Python 3.11 (f-string backslash in utils/shell.py). Checkout parent.
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        git fetch --unshallow
+        git checkout 1296e7a70a638694842ca5d13c6b510ca7cf0ce9
+    fi
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    ln -v -s /opt/tools/powerview.py/venv/bin/powerview /opt/tools/bin/powerview
     add-history powerview.py
     add-test-command "powerview --help"
     add-to-list "Powerview.py,https://github.com/aniqfakhrul/powerview.py,PowerView.py is an alternative for the awesome original PowerView.ps1 script."
@@ -1575,6 +1588,20 @@ function install_pysnaffler() {
     add-history pysnaffler
     add-test-command "pysnaffler --help"
     add-to-list "pysnaffler,https://github.com/skelsec/pysnaffler,Snaffler. But in python."
+}
+
+function install_pygoldengmsa() {
+    colorecho "Installing pyGoldenGMSA"
+    git -C /opt/tools/ clone --depth 1 https://github.com/felixbillieres/pyGoldenGMSA.git
+    cd /opt/tools/pyGoldenGMSA || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases pygoldengmsa
+    add-history pygoldengmsa
+    add-test-command "pyGoldenGMSA.py --help"
+    add-to-list "pygoldengmsa,https://github.com/felixbillieres/pyGoldenGMSA, Cross-platform Python implementation of the GoldenGMSA attack for exploiting Group Managed Service Accounts (gMSA) in Active Directory. "
 }
 
 function install_evil-winrm-py() {
@@ -1616,6 +1643,7 @@ function package_ad() {
     install_pretender
     install_responder               # LLMNR, NBT-NS and MDNS poisoner
     install_ldapdomaindump
+    install_adwsdomaindump
     install_sprayhound              # Password spraying tool
     install_smartbrute              # Password spraying tool
     install_bloodhound-py           # ingestor for legacy BloodHound
@@ -1672,6 +1700,7 @@ function package_ad() {
     install_shadowcoerce
     install_gmsadumper
     install_pylaps
+    install_pygoldengmsa
     install_pyfinduncommonshares
     install_ldaprelayscan
     install_goldencopy

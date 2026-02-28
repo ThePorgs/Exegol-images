@@ -46,44 +46,15 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    # 1.19 needed by sliver (not now ?)
-    # asdf install golang 1.19
-    #asdf install golang latest
-    #asdf set --home golang latest
-    # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2026-02-10"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      # 1.24.4 needed for BloodHound-CE
-      asdf install golang 1.24.4
-      # 1.24.1 needed for GoExec
-      asdf install golang 1.24.1
-      # 1.23 needed by BloodHound-CE, and sensepost/ruler
-      asdf install golang 1.23.0
-      # Default GO version: 1.22.2
-      asdf install golang 1.22.2
-      asdf set --home golang 1.22.2
-    fi
-
-#    if command -v /usr/local/go/bin/go &>/dev/null; then
-#        return
-#    fi
-#    cd /tmp/ || exit
-#    if [[ $(uname -m) = 'x86_64' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
-#    elif [[ $(uname -m) = 'aarch64' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-arm64.tar.gz
-#    elif [[ $(uname -m) = 'armv7l' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz
-#    else
-#        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-#    fi
-#    rm -rf /usr/local/go
-#    tar -C /usr/local -xzf /tmp/go.tar.gz
-#    rm -rf /tmp/go.tar.gz
-#    export PATH=$PATH:/usr/local/go/bin
+    # 1.24.4 needed for BloodHound-CE
+    asdf install golang 1.24.4
+    # 1.24.1 needed for GoExec
+    asdf install golang 1.24.1
+    # 1.23 needed by BloodHound-CE, and sensepost/ruler
+    asdf install golang 1.23.0
+    # Default GO version: 1.22.2
+    asdf install golang 1.22.2
+    asdf set --home golang 1.22.2 1.23.0 1.24.4 1.24.1
     add-test-command "go version"
 }
 
@@ -187,7 +158,7 @@ function install_rvm() {
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
     rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
-    rvm install ruby-3.1.5  # needed metasploit-framework
+    rvm install ruby-3.3.8  # needed by metasploit-framework
     rvm get head
     rvm cleanup all
     gem update
@@ -213,7 +184,7 @@ function install_ohmyzsh() {
     colorecho "Installing oh-my-zsh, config, history, aliases"
     # splitting wget and sh to avoid having additional logs put in curl output being executed because of catch_and_retry
     wget -O /tmp/ohmyzsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-    sh /tmp/ohmyzsh.sh
+    catch_and_retry sh /tmp/ohmyzsh.sh
     cp -v /root/sources/assets/shells/zshrc ~/.zshrc
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
@@ -241,16 +212,12 @@ function install_pyftpdlib() {
 }
 
 function install_yarn() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing yarn"
-    wget -O /tmp/yarn.gpg.armored https://dl.yarnpkg.com/debian/pubkey.gpg
-    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
-    gpg --dearmor --output /etc/apt/trusted.gpg.d/yarn.gpg /tmp/yarn.gpg.armored
-    chmod 644 /etc/apt/trusted.gpg.d/yarn.gpg
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-    apt-get update
-    fapt yarn
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing yarn / corepack"
+    npm install --global corepack
+    corepack prepare yarn@stable --activate
     add-test-command "yarn --help"
+    add-to-list "yarn,https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
 }
 
 function install_ultimate_vimrc() {
@@ -296,7 +263,7 @@ function install_mdcat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mdcat"
     source "$HOME/.cargo/env"
-    cargo binstall -y mdcat
+    cargo install mdcat --locked
     add-history mdcat
     add-test-command "mdcat --version"
     add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
@@ -349,11 +316,8 @@ function install_java11() {
     fi
     rm /tmp/openjdk11.json
     curl --location --output /tmp/openjdk11-jdk.tar.gz "$URL"
-    if [[ -z "$URL" ]]; then
-        cat /tmp/openjdk11-jdk.tar.gz
-    fi
-    rm /tmp/openjdk11-jdk.tar.gz
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
+    rm /tmp/openjdk11-jdk.tar.gz
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
     for x in /usr/lib/jvm/java-11-openjdk/bin/*; do
@@ -498,7 +462,7 @@ function install_wireguard() {
   fapt wireguard
 
   # Patch wireguard start script https://github.com/WireGuard/wireguard-tools/pull/5
-  local temp_fix_limit="2026-02-10"
+  local temp_fix_limit="2026-08-10"
   if check_temp_fix_expiry "$temp_fix_limit"; then
     # shellcheck disable=SC2016
     sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
@@ -531,7 +495,7 @@ function package_base() {
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
     nim perl libwww-perl openjdk-17-jdk \
-    logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
+    logrotate tmux bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
     python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep pv
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
@@ -541,9 +505,9 @@ function package_base() {
     cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
     cp -v /root/sources/assets/shells/bashrc ~/.bashrc
     # Add /etc/zsh.d directory to import dynamically any script after /etc/zsh/zshrc
-    mkdir /etc/zsh.d && echo "test -d /etc/zsh.d && source /etc/zsh.d/*" >> /etc/zsh/zshrc
+    mkdir /etc/zsh.d && echo "test -d /etc/zsh.d && for f in \$(find -L /etc/zsh.d -maxdepth 1 -type f | sort); do source \$f; done" >> /etc/zsh/zshrc
     # Add /etc/bash.d directory to import dynamically any script after /etc/bash.bashrc
-    mkdir /etc/bash.d && echo "test -d /etc/bash.d && source /etc/bash.d/*" >> /etc/bash.bashrc
+    mkdir /etc/bash.d && echo "test -d /etc/bash.d && for f in \$(find -L /etc/bash.d -maxdepth 1 -type f | sort); do source \$f; done" >> /etc/bash.bashrc
 
     install_asdf
 
@@ -618,10 +582,6 @@ function package_base() {
     cp -v /root/sources/assets/shells/tmux.conf ~/.tmux.conf
     touch ~/.hushlogin
 
-    # TLDR
-    mkdir -p ~/.local/share/tldr
-    tldr -u
-
     # NVM (install in context)
     zsh -c "source ~/.zshrc && nvm install node && nvm use default"
 
@@ -638,6 +598,10 @@ function package_base() {
     pip3 install -r /root/sources/assets/python/requirements.txt
 
     install_exegol-history
+
+    # TLDR
+    pipx install --system-site-packages tldr
+    /root/.local/bin/tldr -u
 
     post_install
     end_time=$(date +%s)

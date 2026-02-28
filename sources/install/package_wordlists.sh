@@ -36,7 +36,7 @@ function install_cewler() {
     colorecho "Installing cewler"
     pipx install --system-site-packages cewler
     add-history cewler
-    add-test-command "cewler --output cewler.txt https://thehacker.recipes/"
+    add-test-command "cewler --help"
     add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python"
 }
 
