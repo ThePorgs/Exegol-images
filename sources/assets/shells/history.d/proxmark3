@@ -1,2 +1,3 @@
+proxmark3 /dev/ttyACM0 --flash --unlock-bootloader --image bootrom.elf --image fullimage.elf
 proxmark3 -p /dev/ttyACM0
 pm3 -p /dev/ttyACM0

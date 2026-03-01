@@ -1,4 +1,7 @@
+# Show deleted objects
+ldapsearch -H ldap://$TARGET -D "$USER@$DOMAIN" -w "$PASSWORD" -b "DC=DOMAIN,DC=LOCAL" -E '1.2.840.113556.1.4.417' "(isDeleted=TRUE)"
+# Show recycled objects
+ldapsearch -H ldap://$TARGET -D "$USER@$DOMAIN" -w "$PASSWORD" -b "DC=DOMAIN,DC=LOCAL" -E '1.2.840.113556.1.4.2064' "(isDeleted=TRUE)"
 ldapsearch -h "$DC_IP" -x -s "base" "namingcontexts"
 ldapsearch -h "$TARGET" -x -b "DC=DOMAIN,DC=LOCAL"
 ldapsearch -H ldap://$TARGET -x -b "DC=DOMAIN,DC=LOCAL"
-

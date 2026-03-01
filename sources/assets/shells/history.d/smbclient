@@ -1,4 +1,8 @@
 smbclient --list "$TARGET"
+smbclient --user "$USER" --password "$NT_HASH" --pw-nt-hash --list "$TARGET"
+smbclient --user "$USER" --password "$NT_HASH" --pw-nt-hash "//$TARGET/SYSVOL"
+smbclient --user "$USER" --password "$PASSWORD" --list "$TARGET"
+smbclient --user "$USER" --password "$PASSWORD" "//$TARGET/SYSVOL"
 smbclient --no-pass --user '' "//$TARGET/SYSVOL"
 smbclient --no-pass --user '' --list "$TARGET"
 rpcclient -U "$DOMAIN"/"$USER" "$TARGET"

@@ -1,2 +1,3 @@
+bloodhound-ce.py --zip -c All -d "$TARGET_DOMAIN" -u "$USER@$DOMAIN" -p "$PASSWORD" -dc "$DC_HOST"
 bloodhound-ce.py --zip -c All -d "$DOMAIN" -u "$USER" --hashes 'ffffffffffffffffffffffffffffffff':"$NT_HASH" -dc "$DC_HOST"
 bloodhound-ce.py --zip -c All -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -dc "$DC_HOST"

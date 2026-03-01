@@ -58,7 +58,7 @@ function install_network_apt_tools() {
     add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
     add-to-list "mitmproxy,https://github.com/mitmproxy/mitmproxy,mitmproxy is an interactive SSL/TLS-capable intercepting proxy with a console interface for HTTP/1 HTTP/2 and WebSockets."
-    add-to-list "fping,https://github.com/schweikert/fping,fping is a program to send ICMP echo probes to network hosts, similar to ping but much better performing when pinging multiple hosts."
+    add-to-list "fping,https://github.com/schweikert/fping,fping is a program to send ICMP echo probes to network hosts similar to ping but much better performing when pinging multiple hosts."
 }
 
 function install_proxychains() {
@@ -185,7 +185,7 @@ function install_penelope() {
     colorecho "Installing Penelope"
     pipx install --system-site-packages git+https://github.com/brightio/penelope.git
     add-history penelope 
-    add-test-command "which penelope.py"
+    add-test-command "which penelope"
     add-to-list "penelope,https://github.com/brightio/penelope,Penelope is a shell handler designed to be easy to use and intended to replace netcat when exploiting RCE vulnerabilities."
 }
 
