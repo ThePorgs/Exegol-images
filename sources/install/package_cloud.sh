@@ -6,22 +6,43 @@ source common.sh
 function install_kubectl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kubectl"
-    mkdir -p /opt/tools/kubectl
-    cd /opt/tools/kubectl || exit
-    if [[ $(uname -m) = 'x86_64' ]]
-    # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
+
+    local ARCH
+    local VERSION
+    local URL
+
+    ARCH="$(uname -m)"
+
+    # Avoid extra logs from catch_and_retry
+    VERSION="$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)"
+
+	if [[ -z "$VERSION" ]]; then
+    	criticalecho "Unable to retrieve stable kubectl version"
+	fi
+
+    if [[ "$ARCH" = "x86_64" ]]
     then
-        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    elif [[ $(uname -m) = 'aarch64' ]]
+        URL="https://dl.k8s.io/release/${VERSION}/bin/linux/amd64/kubectl"
+    elif [[ "$ARCH" = "aarch64" ]]
     then
-        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
-    elif [[ $(uname -m) = 'armv7l' ]]
+        URL="https://dl.k8s.io/release/${VERSION}/bin/linux/arm64/kubectl"
+    elif [[ "$ARCH" = "armv7l" ]]
     then
-        curl -LO "https://dl.k8s.io/release/$($(which curl) -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm/kubectl"
+        URL="https://dl.k8s.io/release/${VERSION}/bin/linux/arm/kubectl"
     else
-        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+        criticalecho-noexit "This installation function doesn't support architecture $ARCH" && return
     fi
-    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+	if [[ -z "$URL" ]]; then
+        criticalecho "Unable to retrieve kubectl download URL"
+    fi
+
+    curl -L -o /tmp/kubectl "$URL"
+
+    install -o root -g root -m 0755 /tmp/kubectl /opt/tools/bin/kubectl
+
+    rm -f /tmp/kubectl
+
     add-history kubectl
     add-test-command "kubectl --help"
     add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
@@ -31,8 +52,10 @@ function install_kubeletctl() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing kubeletctl"
 
-    local URL=""
-    local ARCH="$(uname -m)"
+    local URL
+    local ARCH
+
+	ARCH="$(uname -m)"
 
     curl --location --silent --output /tmp/meta.json \
         "https://api.github.com/repos/cyberark/kubeletctl/releases/latest"
@@ -70,7 +93,6 @@ function install_kube_hunter() {
     add-test-command "kube-hunter --help"
     add-to-list "kube-hunter,https://github.com/aquasecurity/kube-hunter,Hunts for security weaknesses in Kubernetes clusters."
 }
-
 
 function install_k9s() {
     # CODE-CHECK-WHITELIST=add-aliases
@@ -204,6 +226,7 @@ function package_cloud() {
     set_env
     local start_time
     local end_time
+	local elapsed_time
     start_time=$(date +%s)
     install_kubectl
     install_kubeletctl
@@ -219,6 +242,6 @@ function package_cloud() {
     install_s3scanner		# S3 buckets misconfiguration scanner
     post_install
     end_time=$(date +%s)
-    local elapsed_time=$((end_time - start_time))
+    elapsed_time=$((end_time - start_time))
     colorecho "Package cloud completed in $elapsed_time seconds."
 }
