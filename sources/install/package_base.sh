@@ -46,45 +46,15 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    # 1.19 needed by sliver (not now ?)
-    # asdf install golang 1.19
-    #asdf install golang latest
-    #asdf set --home golang latest
-    # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    # Feb 23 2026: no time to check for now, if it works, it works. Extending for 6 months
-    local temp_fix_limit="2026-08-10"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      # 1.24.4 needed for BloodHound-CE
-      asdf install golang 1.24.4
-      # 1.24.1 needed for GoExec
-      asdf install golang 1.24.1
-      # 1.23 needed by BloodHound-CE, and sensepost/ruler
-      asdf install golang 1.23.0
-      # Default GO version: 1.22.2
-      asdf install golang 1.22.2
-      asdf set --home golang 1.22.2
-    fi
-
-#    if command -v /usr/local/go/bin/go &>/dev/null; then
-#        return
-#    fi
-#    cd /tmp/ || exit
-#    if [[ $(uname -m) = 'x86_64' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
-#    elif [[ $(uname -m) = 'aarch64' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-arm64.tar.gz
-#    elif [[ $(uname -m) = 'armv7l' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz
-#    else
-#        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-#    fi
-#    rm -rf /usr/local/go
-#    tar -C /usr/local -xzf /tmp/go.tar.gz
-#    rm -rf /tmp/go.tar.gz
-#    export PATH=$PATH:/usr/local/go/bin
+    # 1.24.4 needed for BloodHound-CE
+    asdf install golang 1.24.4
+    # 1.24.1 needed for GoExec
+    asdf install golang 1.24.1
+    # 1.23 needed by BloodHound-CE, and sensepost/ruler
+    asdf install golang 1.23.0
+    # Default GO version: 1.22.2
+    asdf install golang 1.22.2
+    asdf set --home golang 1.22.2 1.23.0 1.24.4 1.24.1
     add-test-command "go version"
 }
 
@@ -188,7 +158,7 @@ function install_rvm() {
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
     rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
-    rvm install ruby-3.1.5  # needed metasploit-framework
+    rvm install ruby-3.3.8  # needed by metasploit-framework
     rvm get head
     rvm cleanup all
     gem update
