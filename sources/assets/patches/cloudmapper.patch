@@ -34,3 +34,12 @@ index 3e5bce8..4bcad03 100644
  typing-extensions==3.10.0.2
  urllib3==1.26.18
  wrapt==1.13.3
+@@ -17,7 +17,7 @@
+ json-cfg==0.4.2
+ kiwisolver==1.3.2
+ kwonly-args==1.0.10
+-lazy-object-proxy==1.6.0
++lazy-object-proxy==1.7.1
+ MarkupSafe==2.0.1
+ matplotlib==3.4.3
+ mccabe==0.6.1
