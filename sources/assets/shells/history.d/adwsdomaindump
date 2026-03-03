@@ -1,0 +1,1 @@
+adwsdomaindump -u "$DOMAIN"\\"$USER" -p "$PASSWORD" -n "$DC_IP" "$DC_HOST"
