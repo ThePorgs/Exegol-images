@@ -10,7 +10,7 @@ function install_reverse_apt_tools() {
 
     add-history nasm
     add-history strace
-    
+
     if [[ $(uname -m) = 'x86_64' ]]
     then
         fapt ltrace
@@ -199,11 +199,20 @@ function install_pycdc() {
 function install_refinery() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Binary Refinery"
-    REFINERY_PREFIX='r.' pipx install 'binary-refinery[extended]' # Prefix to avoid conflicts with other tools like pwntools
+    REFINERY_PREFIX='r.' pipx install 'binary-refinery' # Prefix to avoid conflicts with other tools like pwntools
     add-history binref
-    add-test-command "emit 'PIZZA TIME' | r.hex -R | r.xor H:42 | r.b64 -R | r.b64 | r.xor H:42 | r.hex"
+    add-test-command "r.emit 'PIZZA TIME' | r.hex -R | r.xor H:42 | r.b64 -R | r.b64 | r.xor H:42 | r.hex"
     add-test-command "binref -h"
     add-to-list "binref,https://github.com/binref/refinery,Framework for binary data analysis and transformation."
+
+function install_vt(){
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing vt"
+    go install -v github.com/VirusTotal/vt-cli/vt@latest
+    asdf reshim golang
+    add-history vt
+    add-test-command "vt --help"
+    add-to-list "vt,https://github.com/VirusTotal/vt-cli,A command-line interface for VirusTotal."
 }
 
 # Package dedicated to reverse engineering tools
@@ -225,6 +234,7 @@ function package_reverse() {
     install_pwninit                 # Tool for automating starting binary exploit
     install_pycdc                   # Python bytecode disassembler and decompiler
     install_refinery                # Multi-tool framework for binary data analysis and transformation.
+    install_vt                      # VirusTotal CLI
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

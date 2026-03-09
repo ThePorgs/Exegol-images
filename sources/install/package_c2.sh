@@ -26,7 +26,7 @@ function install_metasploit() {
     git config user.name "exegol"
     git config user.email "exegol@localhost"
 
-    rvm use 3.1.5@metasploit-framework --create
+    rvm use 3.3.8@metasploit-framework --create
 
     # install dep manager
     gem install bundler
@@ -37,7 +37,8 @@ function install_metasploit() {
     gem install rex-text
 
     # fixes 'You have already activated timeout 0.2.0, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    local temp_fix_limit="2025-12-01"
+    # Feb 23 2026: no time to check for now, if it works, it works. Extending for 6 months
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       gem install timeout --version 0.4.1
     fi
@@ -49,7 +50,7 @@ function install_metasploit() {
     chown -R postgres:postgres /var/lib/postgresql/.bundle
     chmod -R o+rx /opt/tools/metasploit-framework/
     chmod 444 /opt/tools/metasploit-framework/.git/index # fatal: .git/index: index file open failed: Permission denied
-    sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.1.5@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
+    sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.3.8@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
     cp -r /var/lib/postgresql/.msf4 /root
 
     # Install the PEASS Ruby MSF module (https://github.com/peass-ng/PEASS-ng/tree/master/metasploit)
@@ -79,10 +80,23 @@ function install_routersploit() {
 function install_sliver() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Sliver"
-    mkdir /opt/tools/sliver
-    cp -v /root/sources/assets/sliver/install.sh /opt/tools/sliver/install.sh
-    chmod +x /opt/tools/sliver/install.sh
-    /opt/tools/sliver/install.sh
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    server_url=$(curl --location --silent "https://api.github.com/repos/BishopFox/sliver/releases/latest" | grep 'browser_download_url.*sliver-server.*linux.*'"$arch"'"' | grep -o 'https://[^"]*')
+    client_url=$(curl --location --silent "https://api.github.com/repos/BishopFox/sliver/releases/latest" | grep 'browser_download_url.*sliver-client.*linux.*'"$arch"'"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/sliver-server "$server_url"
+    curl --location -o /tmp/sliver-client "$client_url"
+    chmod +x /tmp/sliver-server
+    chmod +x /tmp/sliver-client
+    mv "/tmp/sliver-server" "/opt/tools/bin/sliver-server"
+    mv "/tmp/sliver-client" "/opt/tools/bin/sliver-client"
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"

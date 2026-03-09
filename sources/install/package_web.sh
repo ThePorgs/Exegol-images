@@ -53,7 +53,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2025-12-01"
+    local temp_fix_limit="2026-06-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
@@ -124,11 +124,16 @@ function install_ffuf() {
 }
 
 function install_dirsearch() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
+    git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
+    cd /opt/tools/dirsearch || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases dirsearch
     add-history dirsearch
-    add-test-command "dirsearch --help"
+    add-test-command "dirsearch.py --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
 }
 
@@ -197,8 +202,8 @@ function install_xspear() {
     rvm use 3.2.2@xspear --create
     gem install XSpear
     rvm use 3.2.2@default
-    add-aliases Xspear
-    add-history xspear
+    add-aliases XSpear
+    add-history XSpear
     add-test-command "XSpear --help"
     add-to-list "XSpear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
 }
@@ -274,7 +279,13 @@ function install_patator() {
     cd /opt/tools/patator || exit
     python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    # Temporary fix for 'setuptools' having removed the 'pkg_resources' library, see https://github.com/pypa/setuptools/issues/5174
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      echo 'setuptools<82' > build-constraints.txt
+      pip3 install --build-constraint build-constraints.txt -r requirements.txt
+    fi
+    #pip3 install -r requirements.txt
     deactivate
     add-aliases patator
     add-history patator
@@ -498,7 +509,7 @@ function install_jwt_tool() {
     # Running the tool to create the initial configuration and force it to returns 0
     python3 jwt_tool.py || :
     deactivate
-    
+
     # Configuration
     sed -i 's/^proxy = 127.0.0.1:8080/#proxy = 127.0.0.1:8080/' /root/.jwt_tool/jwtconf.ini
     sed -i 's|^wordlist = jwt-common.txt|wordlist = /opt/tools/jwt_tool/jwt-common.txt|' /root/.jwt_tool/jwtconf.ini
@@ -951,13 +962,13 @@ function install_caido() {
     caido_file_name_cli=$(basename "$caido_cli")
     wget "$caido_cli" -O "/opt/tools/caido/$caido_file_name_cli"
     tar -xvzf "/opt/tools/caido/$caido_file_name_cli" -C /opt/tools/bin/
-    
+
     add-history caido
     add-test-gui-command "caido --no-sandbox"
     add-test-command "caido-cli --help"
     add-to-list "caido,https://docs.caido.io/quickstart/,A lightweight web security auditing toolkit."
 }
-    
+
 function install_token_exploiter() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing Token Exploiter"
@@ -975,6 +986,62 @@ function install_bbot() {
     add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
 }
 
+function install_subzy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing subzy"
+    asdf set golang 1.23.0
+    go install -v github.com/PentestPad/subzy@latest
+    asdf reshim golang
+    add-history subzy
+    add-test-command "subzy --help"
+    add-to-list "subzy,https://github.com/PentestPad/subzy,Subdomain takeover tool which checks for various cloud services and identifies if a subdomain is vulnerable."
+}
+
+function install_urldedupe() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing urldedupe"
+    git -C /tmp clone --depth 1 https://github.com/ameenmaali/urldedupe.git
+    cd /tmp/urldedupe || exit
+    cmake CMakeLists.txt
+    make
+    cp /tmp/urldedupe/urldedupe /opt/tools/bin/urldedupe
+    rm -r /tmp/urldedupe/
+    add-history urldedupe
+    add-test-command "urldedupe -h"
+    add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
+}
+
+function install_curlie() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases
+    colorecho "Installing curlie"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    local URL
+    URL=$(curl --location --silent "https://api.github.com/repos/rs/curlie/releases/latest" | grep 'browser_download_url.*curlie.*linux.*'"$arch"'.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/curlie.tar.gz "$URL"
+    tar -zxf /tmp/curlie.tar.gz --directory /tmp curlie
+    rm /tmp/curlie.tar.gz
+    mv /tmp/curlie /opt/tools/bin/curlie
+    add-test-command "curlie"
+    add-to-list "curlie,https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
+}
+
+function install_xxeinjector() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing XXEinjector"
+    wget https://raw.githubusercontent.com/enjoiz/XXEinjector/refs/heads/master/XXEinjector.rb -O /opt/tools/bin/XXEinjector.rb
+    chmod +x /opt/tools/bin/XXEinjector.rb
+    add-history xxeinjector
+    add-test-command "XXEinjector.rb | grep Example"
+    add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
+}
 
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
@@ -1009,7 +1076,6 @@ function package_web() {
     install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
     install_moodlescan              # Moodle scanner
     install_testssl                 # SSL/TLS scanner
-    # install_sslyze                # SSL/TLS scanner FIXME: Only AMD ?
     install_cloudfail               # Cloudflare misconfiguration detector
     install_eyewitness              # Website screenshoter
     install_oneforall               # OneForAll is a powerful subdomain integration tool
@@ -1061,6 +1127,10 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
+    install_subzy                   # Subdomain takeover tool
+    install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
+    install_curlie                  # Mix of cURL and HTTPie
+    install_xxeinjector             # XXE injection testing tool
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
