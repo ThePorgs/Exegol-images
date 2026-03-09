@@ -460,13 +460,6 @@ function install_wireguard() {
   # CODE-CHECK-WHITELIST=add-aliases,add-history
   colorecho "Installing WireGuard"
   fapt wireguard
-
-  # Patch wireguard start script https://github.com/WireGuard/wireguard-tools/pull/5
-  local temp_fix_limit="2026-08-10"
-  if check_temp_fix_expiry "$temp_fix_limit"; then
-    # shellcheck disable=SC2016
-    sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
-  fi
   add-test-command "wg-quick -h"
   add-to-list "wireguard,https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
 }
