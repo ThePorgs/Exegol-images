@@ -601,7 +601,7 @@ function install_httpmethods() {
     cd /opt/tools/httpmethods || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    pip3 install .
     deactivate
     add-aliases httpmethods
     add-history httpmethods
