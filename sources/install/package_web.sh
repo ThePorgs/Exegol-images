@@ -597,12 +597,7 @@ function install_jdwp_shellifier(){
 
 function install_httpmethods() {
     colorecho "Installing httpmethods"
-    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
-    cd /opt/tools/httpmethods || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/httpmethods
     add-aliases httpmethods
     add-history httpmethods
     add-test-command "httpmethods.py --help"
