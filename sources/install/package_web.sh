@@ -596,6 +596,7 @@ function install_jdwp_shellifier(){
 }
 
 function install_httpmethods() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httpmethods"
     pipx install --system-site-packages git+https://github.com/ShutdownRepo/httpmethods
     add-history httpmethods
