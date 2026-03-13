@@ -1,1 +1,2 @@
 alias john='/opt/tools/john/run/john'
+alias ssh2john='/opt/tools/john/run/ssh2john.py'
