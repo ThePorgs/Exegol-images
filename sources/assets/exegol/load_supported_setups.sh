@@ -25,40 +25,68 @@ function echo2wrapper () {
 }
 
 function echo2log () {
-  echo "load_supported_setups.sh $(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG_FILE"
+  echo "load_supported_setups.sh $(date '+%Y-%m-%d %H:%M:%S') $*" | sed -E 's#\[/?(green|red)]##g' >> "$LOG_FILE"
 }
 
 function logger_info () {
-  echo2wrapper "[INFO]$*"
   echo2log "INFO $*"
 }
 
 function logger_verbose () {
-  echo2wrapper "[VERBOSE]$*"
   echo2log "VERBOSE $*"
 }
 
 function logger_advanced () {
-  echo2wrapper "[ADVANCED]$*"
   echo2log "ADVANCED $*"
 }
 
 function logger_debug () {
-  echo2wrapper "[DEBUG]$*"
   echo2log "DEBUG $*"
 }
 
 function logger_warning () {
-  echo2wrapper "[WARNING]$*"
   echo2log "WARNING $*"
 }
 
 function logger_error () {
-  echo2wrapper "[ERROR]$*"
   echo2log "ERROR $*"
 }
 
 function logger_success () {
+  echo2log "SUCCESS $*"
+}
+
+function wrapper_info () {
+  echo2wrapper "[INFO]$*"
+  echo2log "INFO $*"
+}
+
+function wrapper_verbose () {
+  echo2wrapper "[VERBOSE]$*"
+  echo2log "VERBOSE $*"
+}
+
+function wrapper_advanced () {
+  echo2wrapper "[ADVANCED]$*"
+  echo2log "ADVANCED $*"
+}
+
+function wrapper_debug () {
+  echo2wrapper "[DEBUG]$*"
+  echo2log "DEBUG $*"
+}
+
+function wrapper_warning () {
+  echo2wrapper "[WARNING]$*"
+  echo2log "WARNING $*"
+}
+
+function wrapper_error () {
+  echo2wrapper "[ERROR]$*"
+  echo2log "ERROR $*"
+}
+
+function wrapper_success () {
   echo2wrapper "[SUCCESS]$*"
   echo2log "SUCCESS $*"
 }
@@ -66,11 +94,11 @@ function logger_success () {
 # The following functions are used to deploy the supported setups
 
 function init() {
-  logger_info "Initialization"
-  logger_verbose "Checking environment variables"
+  wrapper_verbose "Initializing supported setups"
+  logger_debug "Checking environment variables"
   # Print environment variables in a more readable format
   env | sort | while read -r line; do
-    logger_verbose "ENV: $line"
+    logger_debug "ENV: $line"
   done
   logger_debug "Deploying /opt/my-resources"
   # Deploying the /opt/my-resources/ folder if not already there
@@ -79,16 +107,16 @@ function init() {
     [[ -d "$MY_SETUP_PATH" ]] || (mkdir "$MY_SETUP_PATH" && chmod 770 "$MY_SETUP_PATH")
     [[ -d "$MY_ROOT_PATH/bin" ]] || (mkdir "$MY_ROOT_PATH/bin" && chmod 770 "$MY_ROOT_PATH/bin")
   else
-    logger_error "Exiting, 'my-resources' is disabled"
+    wrapper_verbose "my-resources is disabled in this container, skipping deployment"
     exit 1
   fi
-  logger_debug "Copying README.md to /opt/my-resources"
+  logger_debug "Deploying my-resources README.md from current image to $MY_SETUP_PATH/README.md"
   # Copying README.md to /opt/my-resources/ (first use)
-  [[ -f "$MY_SETUP_PATH/README.md" ]] || cp --preserve=mode /.exegol/skel/README.md "$MY_SETUP_PATH/README.md"
+  cp --preserve=mode /.exegol/skel/README.md "$MY_SETUP_PATH/README.md"
 }
 
 function deploy_zsh() {
-  logger_info "Deploying zsh"
+  wrapper_verbose "Deploying zsh"
   if [[ -d "$MY_SETUP_PATH/zsh" ]]; then
     # TODO remove fallback 'cp' command
     grep -vE "^(\s*|#.*)$" "$MY_SETUP_PATH/zsh/history" >> ~/.zsh_history || cp --preserve=mode /.exegol/skel/zsh/history "$MY_SETUP_PATH/zsh/history"
@@ -99,7 +127,7 @@ function deploy_zsh() {
 }
 
 function deploy_tmux() {
-  logger_info "Deploying tmux"
+  wrapper_verbose "Deploying tmux"
   if [[ -d "$MY_SETUP_PATH/tmux" ]]; then
     # id define, copy tmux/tmux.conf to ~/.tmux.conf
     if [[ -f "$MY_SETUP_PATH/tmux/tmux.conf" ]]; then
@@ -114,24 +142,24 @@ function deploy_tmux() {
 }
 
 function deploy_vim() {
-  logger_info "Deploying vim"
-  local vpath
+  wrapper_verbose "Deploying vim"
+  local vim_path
   if [[ -d "$MY_SETUP_PATH/vim" ]]; then
     # Copy vim/vimrc to ~/.vimrc
     [[ -f "$MY_SETUP_PATH/vim/vimrc" ]] && cp "$MY_SETUP_PATH/vim/vimrc" ~/.vimrc
     # Copy every subdir configs to ~/.vim directory
-    for vpath in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
-      [[ "$(ls -A "$vpath")" ]] && mkdir -p ~/.vim && cp -rf "$vpath" ~/.vim
+    for vim_path in "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"; do
+      [[ "$(ls -A "$vim_path")" ]] && mkdir -p ~/.vim && cp -rf "$vim_path" ~/.vim
     done
   else
-    # Create supported directories struct
+    # Create supported directories structure
     mkdir -p "$MY_SETUP_PATH/vim/autoload" "$MY_SETUP_PATH/vim/backup" "$MY_SETUP_PATH/vim/colors" "$MY_SETUP_PATH/vim/plugged" "$MY_SETUP_PATH/vim/bundle"
     chmod 770 -R "$MY_SETUP_PATH/vim"
   fi
 }
 
 function deploy_nvim () {
-  logger_info "Deploying nvim"
+  wrapper_verbose "Deploying nvim"
   if [[ -d "$MY_SETUP_PATH/nvim" ]]; then
     mkdir -p ~/.config/
     cp -r "$MY_SETUP_PATH/nvim/" ~/.config
@@ -141,46 +169,41 @@ function deploy_nvim () {
 }
 
 function deploy_apt() {
-  logger_info "Deploying APT packages"
+  wrapper_verbose "Deploying APT packages"
   local key_url
   local install_list
-  local tmpaptkeys
-  tmpaptkeys=$(mktemp -d)
+  local tmp_apt_keys
+  tmp_apt_keys=$(mktemp -d)
   if [[ -d "$MY_SETUP_PATH/apt" ]]; then
     # Deploy custom apt repository
     logger_verbose "Deploying custom apt repository"
     cp "$MY_SETUP_PATH/apt/sources.list" /etc/apt/sources.list.d/exegol_user_sources.list
     # Register custom repo's GPG keys
     grep -vE "^(\s*|#.*)$" <"$MY_SETUP_PATH/apt/keys.list" | while IFS= read -r key_url; do
-      wget -nv "$key_url" -O "$tmpaptkeys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
+      wget -nv "$key_url" -O "$tmp_apt_keys/$(echo "$key_url" | md5sum | cut -d ' ' -f1).key"
     done
-    if [[ -n $(find "$tmpaptkeys" -type f -name "*.key") ]]; then
+    if [[ -n $(find "$tmp_apt_keys" -type f -name "*.key") ]]; then
       logger_verbose "Importing custom apt repository GPG keys"
-      gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --import "$tmpaptkeys"/*.key &&
-        gpg --no-default-keyring --keyring="$tmpaptkeys/user_custom.gpg" --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
+      gpg --no-default-keyring --keyring="$tmp_apt_keys/user_custom.gpg" --batch --import "$tmp_apt_keys"/*.key &&
+        gpg --no-default-keyring --keyring="$tmp_apt_keys/user_custom.gpg" --batch --output /etc/apt/trusted.gpg.d/user_custom.gpg --export --yes &&
         chmod 644 /etc/apt/trusted.gpg.d/user_custom.gpg
     fi
-    rm -rf "$tmpaptkeys"
+    rm -rf "$tmp_apt_keys"
     # Create a package array
     install_list=()
-    # Read the my-resource package.list file
+    # Read the my-resource package.list file using awk to handle last line properly
     logger_debug "Reading my resources package.list file"
-    while IFS= read -r ligne
-    do
-        # Exclude comment line start by "#"
-        if [[ "$ligne" =~ ^\#.* ]]; then
-            continue
-        fi
-        # Add packages to the list
+    # Use awk to read packages, skipping comments and empty lines
+    while IFS= read -r line; do
         # shellcheck disable=SC2191
-        install_list+=( $=ligne )
-    done < "$MY_SETUP_PATH/apt/packages.list"
+        install_list+=( $=line )
+    done < <(awk '!/^#/ && NF' "$MY_SETUP_PATH/apt/packages.list")
     # Check if there is some package to install
     if [[ ${#install_list[@]} -gt 0 ]]; then
         logger_verbose "Updating package list from repos"
-        # Update package list from repos (only if there is some package to install
+        # Update package list from repos (only if there is some package to install)
         apt-get update
-        # Install every packages listed in the file
+        # Install every package listed in the file
         apt-get install -y "${install_list[@]}"
     else
         logger_verbose "No APT package to install."
@@ -193,11 +216,14 @@ function deploy_apt() {
 }
 
 function deploy_python3() {
-  logger_info "Deploying python3 packages"
+  wrapper_verbose "Deploying python3 packages"
   if [[ -d "$MY_SETUP_PATH/python3" ]]; then
     logger_verbose "Installing python3 packages"
-    # Install every pip3 packages listed in the requirements.txt file
-    pip3 install -r "$MY_SETUP_PATH/python3/requirements.txt"
+    # Install every pip3 packages listed in the requirements.txt file (if any supplied)
+    # ignore empty lines, lines with only spaces and comments
+    if grep -vE '^\s*$|^#' "$MY_SETUP_PATH/python3/requirements.txt"; then
+      pip3 install -r "$MY_SETUP_PATH/python3/requirements.txt"
+    fi
   else
     logger_verbose "Importing file template"
     # Import file template
@@ -207,11 +233,11 @@ function deploy_python3() {
 }
 
 function run_user_setup() {
-  logger_info "Running user setup"
+  wrapper_verbose "Running user setup"
   # Executing user setup (or create the file)
   if [[ -f "$MY_SETUP_PATH/load_user_setup.sh" ]]; then
     logger_verbose "Loading user setup ($MY_SETUP_PATH/load_user_setup.sh)"
-    "$MY_SETUP_PATH"/load_user_setup.sh
+    "$MY_SETUP_PATH"/load_user_setup.sh |& tee -a "$LOG_FILE"
   else
     logger_verbose "User setup loader missing, deploying it ($MY_SETUP_PATH/load_user_setup.sh)"
     cp /.exegol/skel/load_user_setup.sh "$MY_SETUP_PATH/load_user_setup.sh"
@@ -221,7 +247,7 @@ function run_user_setup() {
 }
 
 function deploy_firefox_policy() {
-  logger_info "Deploying Firefox Policy"
+  wrapper_verbose "Deploying Firefox Policy"
   if [[ -f "$MY_SETUP_PATH/firefox/policies.json" ]]; then
     logger_verbose "Copying Firefox Policy"
     cp --preserve=mode "$MY_SETUP_PATH/firefox/policies.json" /usr/lib/firefox-esr/distribution/policies.json
@@ -256,7 +282,7 @@ function deploy_bloodhound_customqueries_replacement() {
 }
 
 function deploy_bloodhound() {
-  logger_info "Deploying BloodHound"
+  wrapper_verbose "Deploying BloodHound"
   local bh_config_homedir=~/.config/bloodhound
   local my_setup_bh_path="$MY_SETUP_PATH/bloodhound"
   local cq_replacement_done=0
@@ -277,9 +303,9 @@ function deploy_bloodhound() {
 }
 
 function trust_ca_certs_in_firefox() {
-  logger_info "Trusting Burp CA certificate in Firefox"
+  wrapper_verbose "Trusting Burp CA certificate in Firefox"
   logger_verbose "Running Burp Suite CA installation in background to save time"
-  /opt/tools/bin/trust-ca-burp 2>&1 | tee -a "$LOG_FILE" &
+  /opt/tools/bin/trust-ca-burp &> /dev/null &
   logger_info "Trusting user CA certificates in Firefox"
   local file
   if [[ -d "$MY_SETUP_PATH/firefox/CA" ]]; then
@@ -322,7 +348,7 @@ function _trust_ca_cert_in_firefox() {
 
 function deploy_arsenal_cheatsheet () {
   # Function to add custom cheatsheets into arsenal
-  logger_info "Deploying custom arsenal cheatsheet"
+  wrapper_verbose "Deploying custom arsenal cheatsheet"
   if [[ ! -d "$MY_SETUP_PATH/arsenal-cheats" ]]; then
       mkdir -p "$MY_SETUP_PATH/arsenal-cheats"
   fi
@@ -345,4 +371,5 @@ deploy_arsenal_cheatsheet
 
 run_user_setup
 
+wrapper_success "Successfully deployed [green]my-resources[/green]!"
 exit 0

@@ -52,7 +52,7 @@ if __name__ == "__main__":
                 try:
                     addon_id = get_addon_id("/tmp/" + addon_name)
                     install_addons(addon_name, addon_id, "/tmp/")
-                    logger.success(f"{addon_name} installed sucessfully\n")
+                    logger.success(f"{addon_name} installed successfully\n")
                     addon_list.append((addon_id, addon_name[0:-4], False))
                     install_ok = True
                 except:
@@ -61,9 +61,9 @@ if __name__ == "__main__":
                     continue
         if install_ok:
             if install_ko:
-                logger.info("All addons from the list were installed sucessfully except:\n%s\n" % "\n".join(install_ko))
+                logger.info("All addons from the list were installed successfully except:\n%s\n" % "\n".join(install_ko))
             else:
-                logger.success("All addons from the list were installed sucessfully\n")
+                logger.success("All addons from the list were installed successfully\n")
         else:
             logger.error("No addons were found in the list %s\n" % addon_links)
 
@@ -73,10 +73,10 @@ if __name__ == "__main__":
                 addon_name = addon_path.split("/")[-1]
                 addon_id = get_addon_id(addon_path)
                 install_addons(addon_name, addon_id, addon_folder)
-                logger.success(f"{addon_name} installed sucessfully\n")
+                logger.success(f"{addon_name} installed successfully\n")
                 addon_list.append((addon_id, addon_name[0:-4], False))
                 install_ok = True
-            logger.success("All addons from the folder %s were installed sucessfully\n" % addon_folder)
+            logger.success("All addons from the folder %s were installed successfully\n" % addon_folder)
         else:
             logger.error("No addons were found in the folder %s\n" % addon_folder)
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
                 sleep(0.5)
             p_firefox.kill()
             assert(Path(glob("%s" % PATHNAME)[0] + "/extensions.json").is_file())
-            logger.success("Firefox profile initialised sucessfully\n")
+            logger.success("Firefox profile initialised successfully\n")
         except:
             logger.error("Could not initialise Firefox profile")
             raise

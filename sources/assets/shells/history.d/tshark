@@ -1,2 +1,3 @@
 tshark -i eth0 -w capture.pcap
 tshark -r capture.pcap
+tshark -F pcap -r capture.pcapng -w capture.pcap

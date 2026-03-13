@@ -13,10 +13,7 @@ function install_exegol-history() {
     colorecho "Installing Exegol-history"
     git -C /opt/tools/ clone --depth 1 https://github.com/ThePorgs/Exegol-history
     cd /opt/tools/Exegol-history || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
+    pipx install --system-site-packages /opt/tools/Exegol-history
     add-aliases exegol-history
     add-history exegol-history
     add-test-command "exh -h"
@@ -30,13 +27,17 @@ function install_rust_cargo() {
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
     sh /tmp/rustup.sh -y
     source "$HOME/.cargo/env"
+    # Fast rust crate installation helper
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh -o /tmp/install-from-binstall-release.sh
+    sh /tmp/install-from-binstall-release.sh
     add-test-command "cargo --version"
 }
 
 function filesystem() {
     colorecho "Preparing filesystem"
-    mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/build_pipeline_tests/ /opt/rules/ /opt/lists
-    touch /.exegol/build_pipeline_tests/all_commands.txt
+    mkdir -p /opt/tools/bin/ /data/ /var/log/exegol /.exegol/ /opt/rules/ /opt/lists
+    touch /.exegol/unit_tests_all_commands.txt
+    touch /.exegol/unit_tests_gui_commands.txt
     touch /.exegol/installed_tools.csv
     echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
 }
@@ -45,42 +46,15 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    # 1.19 needed by sliver
-    asdf install golang 1.19
-    #asdf install golang latest
-    #asdf set --home golang latest
-    # With golang 1.23 many package build are broken, temp fix to use 1.22.2 as golang latest
-    local temp_fix_limit="2025-06-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
-      # 1.23 needed by BloodHound-CE, and sensepost/ruler
-      asdf install golang 1.23.0
-      # Default GO version: 1.22.2
-      asdf install golang 1.22.2
-      asdf set --home golang 1.22.2
-    fi
-
-#    if command -v /usr/local/go/bin/go &>/dev/null; then
-#        return
-#    fi
-#    cd /tmp/ || exit
-#    if [[ $(uname -m) = 'x86_64' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
-#    elif [[ $(uname -m) = 'aarch64' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-arm64.tar.gz
-#    elif [[ $(uname -m) = 'armv7l' ]]
-#    then
-#        wget -O /tmp/go.tar.gz https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz
-#    else
-#        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
-#    fi
-#    rm -rf /usr/local/go
-#    tar -C /usr/local -xzf /tmp/go.tar.gz
-#    rm -rf /tmp/go.tar.gz
-#    export PATH=$PATH:/usr/local/go/bin
+    # 1.24.4 needed for BloodHound-CE
+    asdf install golang 1.24.4
+    # 1.24.1 needed for GoExec
+    asdf install golang 1.24.1
+    # 1.23 needed by BloodHound-CE, and sensepost/ruler
+    asdf install golang 1.23.0
+    # Default GO version: 1.22.2
+    asdf install golang 1.22.2
+    asdf set --home golang 1.22.2 1.23.0 1.24.4 1.24.1
     add-test-command "go version"
 }
 
@@ -133,8 +107,8 @@ function install_pyenv() {
     # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
-    #  --> python3.10 points to 3.10
     #  --> python3.13 points to 3.13
+    #  --> python3.10 points to 3.10
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -184,8 +158,9 @@ function install_rvm() {
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
     rvm install ruby-3.1.2  # needed by cewl, pass-station, evil-winrm
-    rvm install ruby-3.1.5  # needed metasploit-framework
+    rvm install ruby-3.3.8  # needed by metasploit-framework
     rvm get head
+    rvm cleanup all
     gem update
     add-test-command "rvm --version"
 }
@@ -196,8 +171,8 @@ function install_fzf() {
     git -C /opt/tools clone --depth 1 https://github.com/junegunn/fzf.git
     yes|/opt/tools/fzf/install
     add-aliases fzf
-    add-test-command "fzf-wordlists --help"
-    add-test-command "fzf --help"
+    add-test-command "source ~/.fzf.zsh && fzf-wordlists --help"
+    add-test-command "source ~/.fzf.zsh && fzf --help"
     add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
 }
 
@@ -209,7 +184,7 @@ function install_ohmyzsh() {
     colorecho "Installing oh-my-zsh, config, history, aliases"
     # splitting wget and sh to avoid having additional logs put in curl output being executed because of catch_and_retry
     wget -O /tmp/ohmyzsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-    sh /tmp/ohmyzsh.sh
+    catch_and_retry sh /tmp/ohmyzsh.sh
     cp -v /root/sources/assets/shells/zshrc ~/.zshrc
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting
@@ -228,25 +203,21 @@ function install_pipx() {
 }
 
 function install_pyftpdlib() {
-    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing pyftpdlib"
     pip3 install pyftpdlib
     add-aliases pyftpdlib
+    add-history pyftpdlib
     add-test-command "python3 -c 'import pyftpdlib'"
     add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
 }
 
 function install_yarn() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
-    colorecho "Installing yarn"
-    wget -O /tmp/yarn.gpg.armored https://dl.yarnpkg.com/debian/pubkey.gpg
-    # doing wget, gpg, chmod, to avoid the warning of apt-key being deprecated
-    gpg --dearmor --output /etc/apt/trusted.gpg.d/yarn.gpg /tmp/yarn.gpg.armored
-    chmod 644 /etc/apt/trusted.gpg.d/yarn.gpg
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-    apt-get update
-    fapt yarn
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing yarn / corepack"
+    npm install --global corepack
+    corepack prepare yarn@stable --activate
     add-test-command "yarn --help"
+    add-to-list "yarn,https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
 }
 
 function install_ultimate_vimrc() {
@@ -292,7 +263,7 @@ function install_mdcat() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mdcat"
     source "$HOME/.cargo/env"
-    cargo install mdcat
+    cargo install mdcat --locked
     add-history mdcat
     add-test-command "mdcat --version"
     add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
@@ -309,9 +280,7 @@ function install_gf() {
       # adding new-line
       echo ''
       echo '# Enable gf autocompletion'
-      # FIXME GOPATH not set
-      # shellcheck disable=SC2016
-      echo 'source "$GOPATH"/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh'
+      cat "$(sh -c "go env GOPATH")"/pkg/mod/github.com/tomnomnom/gf@*/gf-completion.zsh
     } >> ~/.zshrc
     cp -r "$(sh -c "go env GOPATH")"/pkg/mod/github.com/tomnomnom/gf@*/examples ~/.gf
     # Add patterns from 1ndianl33t
@@ -328,28 +297,41 @@ function install_gf() {
 function install_java11() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
     colorecho "Installing java 11"
+    local ARCH
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        local arch="x64"
+        ARCH="x64"
 
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        local arch="aarch64"
+        ARCH="aarch64"
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    local jdk_url
-    jdk_url=$(curl --location --silent "https://api.github.com/repos/adoptium/temurin11-binaries/releases" | grep 'browser_download_url.*jdk_'"$arch"'_linux.*tar.gz"' | grep -o 'https://[^"]*' | sort | tail -n1)
-    curl --location -o /tmp/openjdk11-jdk.tar.gz "$jdk_url"
+    local URL
+    curl --location --silent --output /tmp/openjdk11.json "https://api.github.com/repos/adoptium/temurin11-binaries/releases"
+    URL=$(grep 'browser_download_url.*jdk_'"$ARCH"'_linux.*tar.gz"' /tmp/openjdk11.json | grep -o 'https://[^"]*' | sort | tail -n1)
+    if [[ -z "$URL" ]]; then
+        cat /tmp/openjdk11.json
+    fi
+    rm /tmp/openjdk11.json
+    curl --location --output /tmp/openjdk11-jdk.tar.gz "$URL"
     tar -xzf /tmp/openjdk11-jdk.tar.gz --directory /tmp
+    rm /tmp/openjdk11-jdk.tar.gz
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-11* /usr/lib/jvm/java-11-openjdk
+    for x in /usr/lib/jvm/java-11-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 11;
+    done
+    ln -s -v /usr/lib/jvm/java-11-openjdk/bin/java /usr/bin/java11
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
+    add-test-command "java11 --version"
 }
 
 function install_java21() {
     # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
-    colorecho "Installing java 11"
+    colorecho "Installing java 21"
     if [[ $(uname -m) = 'x86_64' ]]
     then
         wget -O /tmp/openjdk21-jdk.tar.gz "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
@@ -363,7 +345,39 @@ function install_java21() {
     tar -xzf /tmp/openjdk21-jdk.tar.gz --directory /tmp
     mkdir -p "/usr/lib/jvm"
     mv /tmp/jdk-21* /usr/lib/jvm/java-21-openjdk
+    for x in /usr/lib/jvm/java-21-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 21;
+    done
+    fix_ownership /usr/lib/jvm/java-21-openjdk/
+    ln -s -v /usr/lib/jvm/java-21-openjdk/bin/java /usr/bin/java21
     add-test-command "/usr/lib/jvm/java-21-openjdk/bin/java --version"
+    add-test-command "java21 --version"
+}
+
+function install_java24() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
+    colorecho "Installing java 24"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        wget -O /tmp/openjdk24-jdk.tar.gz "https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-x64_bin.tar.gz"
+
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        wget -O /tmp/openjdk24-jdk.tar.gz "https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-aarch64_bin.tar.gz"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    tar -xzf /tmp/openjdk24-jdk.tar.gz --directory /tmp
+    mkdir -p "/usr/lib/jvm"
+    mv /tmp/jdk-24* /usr/lib/jvm/java-24-openjdk
+    for x in /usr/lib/jvm/java-24-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 24;
+    done
+    ln -s -v /usr/lib/jvm/java-24-openjdk/bin/java /usr/bin/java24
+    add-test-command "/usr/lib/jvm/java-24-openjdk/bin/java --version"
+    add-test-command "java24 --version"
 }
 
 function add_debian_repository_components() {
@@ -375,7 +389,7 @@ function add_debian_repository_components() {
 
     while IFS= read -r line; do
       if [[ "$line" == "Components"* ]]; then
-        echo  "${line} non-free non-free-firmware contrib" >> "$out_file"
+        echo "${line} non-free non-free-firmware contrib" >> "$out_file"
       else
         echo "$line" >> "$out_file"
       fi
@@ -387,16 +401,21 @@ function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing asdf"
     local URL
+    curl --location --silent --output /tmp/asdf-release.json "https://api.github.com/repos/asdf-vm/asdf/releases/latest"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' | grep -o 'https://[^"]*')
+        URL=$(grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        URL=$(curl --location --silent "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' | grep -o 'https://[^"]*')
+        URL=$(grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
-    curl --location -o /tmp/asdf.tar.gz "$URL"
+    if [[ -z "$URL" ]]; then
+        cat /tmp/asdf-release.json
+    fi
+    rm /tmp/asdf-release.json
+    curl --location --output /tmp/asdf.tar.gz "$URL"
     tar -xf /tmp/asdf.tar.gz --directory /tmp
     rm /tmp/asdf.tar.gz
     mv /tmp/asdf /opt/tools/bin/asdf
@@ -407,6 +426,42 @@ function install_asdf() {
     asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
     add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
+}
+
+function install_openvpn() {
+  # CODE-CHECK-WHITELIST=add-aliases,add-history
+  colorecho "Installing OpenVPN"
+  fapt openvpn openresolv
+
+  # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
+  LINE=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  # shellcheck disable=SC2016
+  sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+  ((LINE++))
+  sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  LINE=$(($(grep -n 'down)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  LINE=$(($(grep -n 'resolvconf -d' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
+  # shellcheck disable=SC2016
+  sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
+  ((LINE++))
+  sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
+
+  add-test-command "openvpn --version"
+  add-to-list "OpenVPN,https://openvpn.net/,Fast and Easy Zero-Trust VPN Fully in Your Control"
+}
+
+function install_wireguard() {
+  # CODE-CHECK-WHITELIST=add-aliases,add-history
+  colorecho "Installing WireGuard"
+  fapt wireguard
+  add-test-command "wg-quick -h"
+  add-to-list "wireguard,https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
 }
 
 # Package dedicated to the basic things the env needs
@@ -427,21 +482,25 @@ function package_base() {
     cp -v /root/sources/assets/apt/preferences.d/* /etc/apt/preferences.d/
     apt-get update
     colorecho "Starting main programs install"
-    fapt man git lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
-    libffi-dev  zsh asciinema npm gem automake autoconf make cmake time gcc g++ file lsof \
+    fapt man git gh glab subversion lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
+    libffi-dev zsh asciinema npm gem automake autoconf make cmake time gcc g++ file lsof \
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
-    nim perl libwww-perl openjdk-17-jdk openvpn openresolv \
-    logrotate tmux tldr bat libxml2-utils virtualenv chromium libsasl2-dev \
+    nim perl libwww-perl openjdk-17-jdk \
+    logrotate tmux bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools
+    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep pv
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem
     install_locales
     cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
     cp -v /root/sources/assets/shells/bashrc ~/.bashrc
+    # Add /etc/zsh.d directory to import dynamically any script after /etc/zsh/zshrc
+    mkdir /etc/zsh.d && echo "test -d /etc/zsh.d && for f in \$(find -L /etc/zsh.d -maxdepth 1 -type f | sort); do source \$f; done" >> /etc/zsh/zshrc
+    # Add /etc/bash.d directory to import dynamically any script after /etc/bash.bashrc
+    mkdir /etc/bash.d && echo "test -d /etc/bash.d && for f in \$(find -L /etc/bash.d -maxdepth 1 -type f | sort); do source \$f; done" >> /etc/bash.bashrc
 
     install_asdf
 
@@ -462,11 +521,13 @@ function package_base() {
     # change default shell
     chsh -s /bin/zsh
 
+    add-history sshpass
     add-history dnsutils
     add-history samba
     add-history ssh
     add-history snmp
     add-history faketime
+    add-history ftp
 
     add-aliases php
     add-aliases python3
@@ -478,11 +539,14 @@ function package_base() {
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
 
-    # java11 install, and java17 as default
+    # java11 install, java21 install, and java17 as default
     install_java11
     install_java21
+    #install_java24  # Ready to be install when needed as replacement of java21 ?
     ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
+    ln -s -v /usr/lib/jvm/java-17-openjdk/bin/java /usr/bin/java17          # Add java17 bin
     update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
+    find /usr/lib/jvm -name 'src.zip' -delete                               # Remove leftover JDK source archives
 
     install_go                                          # Golang language
     install_ohmyzsh                                     # Awesome shell
@@ -497,21 +561,11 @@ function package_base() {
     add-test-command "bat --version"
     DEBIAN_FRONTEND=noninteractive fapt macchanger      # Macchanger
     install_gf                                          # wrapper around grep
+    install_openvpn
+    install_wireguard
     install_firefox
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
-
-    # openvpn
-    # Fixing openresolv to update /etc/resolv.conf without resolvectl daemon (with a fallback if no DNS server are supplied)
-    LINE=$(($(grep -n 'up)' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    sed -i "${LINE}"'i cp /etc/resolv.conf /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
-
-    LINE=$(($(grep -n 'resolvconf -a' /etc/openvpn/update-resolv-conf | cut -d ':' -f1) +1))
-    # shellcheck disable=SC2016
-    sed -i "${LINE}"'i [ "$((resolvconf -l "tun*" 2>/dev/null || resolvconf -l "tap*") | grep -vE "^(\s*|#.*)$")" ] && /sbin/resolvconf -u || cp /etc/resolv.conf.backup /etc/resolv.conf' /etc/openvpn/update-resolv-conf
-    ((LINE++))
-    sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
-    add-test-command "openvpn --version"
 
     # logrotate
     mv /root/sources/assets/logrotate/* /etc/logrotate.d/
@@ -520,10 +574,6 @@ function package_base() {
     # tmux
     cp -v /root/sources/assets/shells/tmux.conf ~/.tmux.conf
     touch ~/.hushlogin
-
-    # TLDR
-    mkdir -p ~/.local/share/tldr
-    tldr -u
 
     # NVM (install in context)
     zsh -c "source ~/.zshrc && nvm install node && nvm use default"
@@ -541,6 +591,10 @@ function package_base() {
     pip3 install -r /root/sources/assets/python/requirements.txt
 
     install_exegol-history
+
+    # TLDR
+    pipx install --system-site-packages tldr
+    /root/.local/bin/tldr -u
 
     post_install
     end_time=$(date +%s)

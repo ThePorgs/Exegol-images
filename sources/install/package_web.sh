@@ -22,16 +22,11 @@ function install_web_apt_tools() {
 }
 
 function install_weevely() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing weevely"
-    git -C /opt/tools clone --depth 1 https://github.com/epinna/weevely3
-    cd /opt/tools/weevely3 || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases weevely
+    pipx install --python 3.13 --system-site-packages git+https://github.com/epinna/weevely3
     add-history weevely
-    add-test-command "weevely.py --help"
+    add-test-command "weevely --help"
     add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
 }
 
@@ -58,10 +53,8 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2025-04-01"
-    if [[ "$(date +%Y%m%d)" -gt "$(date -d $temp_fix_limit +%Y%m%d)" ]]; then
-      criticalecho "Temp fix expired. Exiting."
-    else
+    local temp_fix_limit="2026-06-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
       pip3 install /tmp/wfuzz/
@@ -111,23 +104,36 @@ function install_amass() {
 function install_ffuf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ffuf"
-    git -C /opt/tools clone --depth 1 https://github.com/ffuf/ffuf.git
-    cd /opt/tools/ffuf || exit
-    go build .
-    mv ./ffuf /opt/tools/bin/
-    # https://github.com/ffuf/ffuf/issues/681
-    # go install github.com/ffuf/ffuf/v2@latest
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="amd64"
+
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    local ffuf_url
+    ffuf_url=$(curl --location --silent "https://api.github.com/repos/ffuf/ffuf/releases/latest" | grep 'browser_download_url.*ffuf.*linux_'"$arch"'.tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/ffuf.tar.gz "$ffuf_url"
+    tar -xf /tmp/ffuf.tar.gz --directory /opt/tools/bin/
     add-history ffuf
     add-test-command "ffuf --help"
     add-to-list "ffuf,https://github.com/ffuf/ffuf,Fast web fuzzer written in Go."
 }
 
 function install_dirsearch() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing dirsearch"
-    pipx install --system-site-packages git+https://github.com/maurosoria/dirsearch
+    git -C /opt/tools/ clone --depth 1 https://github.com/maurosoria/dirsearch
+    cd /opt/tools/dirsearch || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases dirsearch
     add-history dirsearch
-    add-test-command "dirsearch --help"
+    add-test-command "dirsearch.py --help"
     add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
 }
 
@@ -165,6 +171,7 @@ function install_nosqlmap() {
     git -C /opt/tools clone --depth 1 https://github.com/codingo/NoSQLMap.git
     cd /opt/tools/NoSQLMap || exit
     virtualenv --python python2 ./venv
+    sed -i 's/requests==2\.32\.4/requests==2.27.1/' setup.py
     catch_and_retry ./venv/bin/python2 setup.py install
     # https://github.com/codingo/NoSQLMap/issues/126
     rm -rf venv/lib/python2.7/site-packages/certifi-2023.5.7-py2.7.egg
@@ -195,8 +202,8 @@ function install_xspear() {
     rvm use 3.2.2@xspear --create
     gem install XSpear
     rvm use 3.2.2@default
-    add-aliases Xspear
-    add-history xspear
+    add-aliases XSpear
+    add-history XSpear
     add-test-command "XSpear --help"
     add-to-list "XSpear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
 }
@@ -272,7 +279,13 @@ function install_patator() {
     cd /opt/tools/patator || exit
     python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    # Temporary fix for 'setuptools' having removed the 'pkg_resources' library, see https://github.com/pypa/setuptools/issues/5174
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      echo 'setuptools<82' > build-constraints.txt
+      pip3 install --build-constraint build-constraints.txt -r requirements.txt
+    fi
+    #pip3 install -r requirements.txt
     deactivate
     add-aliases patator
     add-history patator
@@ -365,18 +378,6 @@ function install_testssl() {
     add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
 }
 
-function install_tls-scanner() {
-    colorecho "Installing TLS-Scanner"
-    fapt maven
-    git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/tls-attacker/TLS-Scanner
-    cd /opt/tools/TLS-Scanner || exit
-    mvn clean package -DskipTests=true
-    add-aliases tls-scanner
-    add-history tls-scanner
-    add-test-command "tls-scanner --help"
-    add-to-list "tls-scanner,https://github.com/tls-attacker/tls-scanner,a simple script to check the security of a remote TLS/SSL web server"
-}
-
 function install_cloudfail() {
     colorecho "Installing CloudFail"
     git -C /opt/tools/ clone --depth 1 https://github.com/m0rtem/CloudFail
@@ -395,9 +396,10 @@ function install_eyewitness() {
     colorecho "Installing EyeWitness"
     git -C /opt/tools/ clone --depth 1 https://github.com/FortyNorthSecurity/EyeWitness
     cd /opt/tools/EyeWitness || exit
+    fapt jq cmake xvfb chromium chromium-driver
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    ./Python/setup/setup.sh
+    pip3 install -r ./setup/requirements.txt
     deactivate
     add-aliases eyewitness
     add-history eyewitness
@@ -507,7 +509,7 @@ function install_jwt_tool() {
     # Running the tool to create the initial configuration and force it to returns 0
     python3 jwt_tool.py || :
     deactivate
-    
+
     # Configuration
     sed -i 's/^proxy = 127.0.0.1:8080/#proxy = 127.0.0.1:8080/' /root/.jwt_tool/jwtconf.ini
     sed -i 's|^wordlist = jwt-common.txt|wordlist = /opt/tools/jwt_tool/jwt-common.txt|' /root/.jwt_tool/jwtconf.ini
@@ -697,7 +699,8 @@ function install_nuclei() {
 function install_gau() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gau"
-    GO111MODULE=on go install -v github.com/lc/gau@latest
+    go install github.com/lc/gau/v2/cmd/gau@latest
+    asdf reshim golang
     add-history gau
     add-test-command "gau --help"
     add-to-list "gau,https://github.com/lc/gau,Fast tool for fetching URLs"
@@ -731,6 +734,36 @@ function install_httpx() {
     add-history httpx
     add-test-command "httpx --help"
     add-to-list "httpx,https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities / including outdated software versions and weak encryption protocols."
+}
+
+function install_alterx() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing alterx"
+    go install -v github.com/projectdiscovery/alterx/cmd/alterx@latest
+    asdf reshim golang
+    add-history alterx
+    add-test-command "alterx --help"
+    add-to-list "alterx,https://github.com/projectdiscovery/alterx,A tool for fast and customizable subdomain wordlist generator using DSL from ProjectDiscovery."
+}
+
+function install_chaos() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing chaos"
+    go install -v github.com/projectdiscovery/chaos-client/cmd/chaos@latest
+    asdf reshim golang
+    add-history chaos
+    add-test-command "chaos --help"
+    add-to-list "chaos,https://github.com/projectdiscovery/alterx,A Go client to communicate with Chaos dataset API from ProjectDiscovery."
+}
+
+function install_uncover() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing uncover"
+    go install -v github.com/projectdiscovery/uncover/cmd/uncover@latest
+    asdf reshim golang
+    add-history uncover
+    add-test-command "uncover --help"
+    add-to-list "uncover,https://github.com/projectdiscovery/uncover,A tool to Quickly discover exposed hosts on the internet using multiple search engines from ProjectDiscovery."
 }
 
 function install_anew() {
@@ -794,6 +827,7 @@ function install_burpsuite() {
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"
+    #add-test-gui-command "BurpSuiteCommunity"
     add-to-list "burpsuite,https://portswigger.net/burp,Web application security testing tool."
 }
 
@@ -855,11 +889,10 @@ function install_sqlmap() {
 function install_sslscan() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing sslscan"
-    git -C /opt/tools clone --depth 1 https://github.com/rbsec/sslscan.git
-    cd /opt/tools/sslscan || exit
+    git -C /tmp clone --depth 1 https://github.com/rbsec/sslscan.git
+    cd /tmp/sslscan || exit
     make static
-    mv /opt/tools/sslscan/sslscan /opt/tools/bin/sslscan
-    make clean
+    mv /tmp/sslscan/sslscan /opt/tools/bin/sslscan
     add-history sslscan
     add-test-command "sslscan --version"
     add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
@@ -903,31 +936,123 @@ function install_postman() {
     fapt libsecret-1-0
     add-history postman
     add-test-command "which postman"
+    #add-test-gui-command "postman"
     add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
 }
 
-function install_zap() {
-    colorecho "Installing ZAP"
-    local URL
-    URL=$(curl --location --silent "https://api.github.com/repos/zaproxy/zaproxy/releases/latest" | grep 'browser_download_url.*ZAP.*tar.gz"' | grep -o 'https://[^"]*')
-    curl --location -o /tmp/ZAP.tar.gz "$URL"
-    tar -xf /tmp/ZAP.tar.gz --directory /tmp
-    rm /tmp/ZAP.tar.gz
-    mv /tmp/ZAP* /opt/tools/zaproxy
-    ln -s /opt/tools/zaproxy/zap.sh /opt/tools/bin/zap
-    zap -cmd -addonupdate
-    add-aliases zaproxy
-    add-history zaproxy
-    add-test-command "zap -suppinfo"
-    add-to-list "Zed Attack Proxy (ZAP),https://www.zaproxy.org/,Web application security testing tool."
+function install_wpprobe() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing wpprobe"
+    go install -v github.com/Chocapikk/wpprobe@latest
+    asdf reshim golang
+    add-history wpprobe
+    add-test-command "wpprobe --help"
+    add-to-list "wpprobe,https://github.com/Chocapikk/wpprobe,A fast WordPress plugin enumeration tool."
 }
-    
+
+function install_caido() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Caido"
+    fapt libxss1
+    mkdir /opt/tools/caido
+    local arch
+    arch=$(uname -m)
+    local caido_json
+    caido_json=$(curl -s https://api.caido.io/releases/latest)
+
+    # Desktop
+    local caido_deb
+    caido_deb=$(echo "$caido_json" | grep -o '"link":"[^"]*"' | cut -d'"' -f4 | grep "linux-${arch}\.deb$")
+    local caido_file_name
+    caido_file_name=$(basename "$caido_deb")
+    wget "$caido_deb" -O "/opt/tools/caido/$caido_file_name"
+    dpkg -i /opt/tools/caido/"$caido_file_name"
+
+    # CLI
+    caido_cli=$(echo "$caido_json" | grep -o '"link":"[^"]*"' | cut -d'"' -f4 | grep "caido-cli-v.*-linux-${arch}\.tar\.gz$")
+    local caido_file_name_cli
+    caido_file_name_cli=$(basename "$caido_cli")
+    wget "$caido_cli" -O "/opt/tools/caido/$caido_file_name_cli"
+    tar -xvzf "/opt/tools/caido/$caido_file_name_cli" -C /opt/tools/bin/
+
+    add-history caido
+    add-test-gui-command "caido --no-sandbox"
+    add-test-command "caido-cli --help"
+    add-to-list "caido,https://docs.caido.io/quickstart/,A lightweight web security auditing toolkit."
+}
+
 function install_token_exploiter() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing Token Exploiter"
     pipx install --system-site-packages git+https://github.com/psyray/token-exploiter
     add-test-command "token-exploiter --help"
     add-to-list "token-exploiter,https://github.com/psyray/token-exploiter,Token Exploiter is a tool designed to analyze GitHub Personal Access Tokens."
+}
+
+function install_bbot() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing BBOT"
+    pipx install --system-site-packages bbot
+    add-history bbot
+    add-test-command "bbot --help"
+    add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
+}
+
+function install_subzy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing subzy"
+    asdf set golang 1.23.0
+    go install -v github.com/PentestPad/subzy@latest
+    asdf reshim golang
+    add-history subzy
+    add-test-command "subzy --help"
+    add-to-list "subzy,https://github.com/PentestPad/subzy,Subdomain takeover tool which checks for various cloud services and identifies if a subdomain is vulnerable."
+}
+
+function install_urldedupe() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing urldedupe"
+    git -C /tmp clone --depth 1 https://github.com/ameenmaali/urldedupe.git
+    cd /tmp/urldedupe || exit
+    cmake CMakeLists.txt
+    make
+    cp /tmp/urldedupe/urldedupe /opt/tools/bin/urldedupe
+    rm -r /tmp/urldedupe/
+    add-history urldedupe
+    add-test-command "urldedupe -h"
+    add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
+}
+
+function install_curlie() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases
+    colorecho "Installing curlie"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    local URL
+    URL=$(curl --location --silent "https://api.github.com/repos/rs/curlie/releases/latest" | grep 'browser_download_url.*curlie.*linux.*'"$arch"'.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/curlie.tar.gz "$URL"
+    tar -zxf /tmp/curlie.tar.gz --directory /tmp curlie
+    rm /tmp/curlie.tar.gz
+    mv /tmp/curlie /opt/tools/bin/curlie
+    add-test-command "curlie"
+    add-to-list "curlie,https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
+}
+
+function install_xxeinjector() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing XXEinjector"
+    wget https://raw.githubusercontent.com/enjoiz/XXEinjector/refs/heads/master/XXEinjector.rb -O /opt/tools/bin/XXEinjector.rb
+    chmod +x /opt/tools/bin/XXEinjector.rb
+    add-history xxeinjector
+    add-test-command "XXEinjector.rb | grep Example"
+    add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
 }
 
 # Package dedicated to applicative and active web pentest tools
@@ -963,8 +1088,6 @@ function package_web() {
     install_cmsmap                  # CMS scanner (Joomla, Wordpress, Drupal)
     install_moodlescan              # Moodle scanner
     install_testssl                 # SSL/TLS scanner
-    install_tls-scanner             # SSL/TLS scanner
-    # install_sslyze                # SSL/TLS scanner FIXME: Only AMD ?
     install_cloudfail               # Cloudflare misconfiguration detector
     install_eyewitness              # Website screenshoter
     install_oneforall               # OneForAll is a powerful subdomain integration tool
@@ -995,6 +1118,9 @@ function package_web() {
     install_hakrevdns               # Reverse DNS lookups
     install_httprobe                # Probe http
     install_httpx                   # Probe http
+    install_alterx                  # Subdomain wordlist generator
+    install_chaos                   # Exposed hosts discovery using multiple search engines
+    install_uncover                 # Quickly discover exposed hosts on the internet using multiple search engines.
     install_anew                    # A tool for adding new lines to files, skipping duplicates
     install_robotstester            # Robots.txt scanner
     install_naabu                   # Fast port scanner
@@ -1009,8 +1135,14 @@ function package_web() {
     install_jsluice                 # Extract URLs, paths, secrets, and other interesting data from JavaScript source code
     install_katana                  # A next-generation crawling and spidering framework
     install_postman                 # Postman - API platform for testing APIs
-    install_zap                     # Zed Attack Proxy
+    install_wpprobe                 # WPProbe - Tool for detecting WordPress plugins using misconfigured REST API endpoints
+    install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
+    install_bbot                    # Recursive Scanner
+    install_subzy                   # Subdomain takeover tool
+    install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
+    install_curlie                  # Mix of cURL and HTTPie
+    install_xxeinjector             # XXE injection testing tool
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

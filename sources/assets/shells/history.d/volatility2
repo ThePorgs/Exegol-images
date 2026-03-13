@@ -1,2 +1,5 @@
-volatility2 --profile=Win7SP1x86_23418 netscan -f file.dmp
-volatility2 --profile=SomeLinux -f file.dmp linux_netstat
+volatility2 -f memory.dmp imageinfo
+volatility2 -f memory.dmp --profile=Win7SP1x86 pstree
+volatility2 -f memory.dmp --profile=Win7SP1x86 netscan
+volatility2 -f memory.dmp --profile=Win7SP1x86 cmdline
+volatility2 -f memory.dmp --profile=Win7SP1x86 hashdump

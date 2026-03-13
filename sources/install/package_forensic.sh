@@ -26,9 +26,11 @@ function install_forensic_apt_tools() {
 }
 
 function install_binwalk() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing binwalk"
-    fapt squashfs-tools binwalk
-    add-aliases binwalk
+    cargo install --locked binwalk
+    fapt squashfs-tools
+    pipx install --system-site-packages jefferson ubi-reader uefi_firmware
     add-history binwalk
     add-test-command "binwalk --help"
     add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
@@ -57,6 +59,9 @@ function install_volatility2() {
 function install_volatility3() {
     colorecho "Installing volatility3"
     pipx install --system-site-packages git+https://github.com/volatilityfoundation/volatility3
+    # We are using the full path of 'pipx', because otherwise our catch and retry mechanism mess with the command
+    # https://github.com/volatilityfoundation/volatility3/blob/bd5fb7d61148afef031faade3efe68dcb012d95a/pyproject.toml#L23
+    /root/.pyenv/shims/pipx inject volatility3 'yara-python>=4.5.1,<5' 'capstone>=5.0.3,<6' 'pycryptodome>=3.21.0,<4' 'leechcorepyc>=2.19.2,<3; sys_platform != "darwin"' 'pillow>=10.0.0,<11.0.0'
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
@@ -94,11 +99,13 @@ function install_peepdf() {
 function install_jadx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jadx"
-    git -C /opt/tools/ clone --depth 1 https://github.com/skylot/jadx.git
-    cd /opt/tools/jadx || exit
-    ./gradlew dist
-    ln -v -s /opt/tools/jadx/build/jadx/bin/jadx /opt/tools/bin/jadx
-    ln -v -s /opt/tools/jadx/build/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
+    local jadx_url
+    jadx_url=$(curl --location --silent "https://api.github.com/repos/skylot/jadx/releases/latest" | grep 'browser_download_url.' | grep -o 'https://[^"]*' | head -n1)
+    curl --location -o /tmp/jadx.zip "$jadx_url"
+    unzip -q /tmp/jadx.zip -d /opt/tools/jadx
+    chmod +x /opt/tools/jadx/bin/jadx /opt/tools/jadx/bin/jadx-gui
+    ln -v -s /opt/tools/jadx/bin/jadx /opt/tools/bin/jadx
+    ln -v -s /opt/tools/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
     add-history jadx
     add-test-command "jadx --help"
     add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler"
@@ -108,10 +115,24 @@ function install_chainsaw() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing chainsaw"
     source "$HOME/.cargo/env"
-    cargo install chainsaw
+    git -C /opt/tools/ clone --depth 1 https://github.com/WithSecureLabs/chainsaw.git
+    cd /opt/tools/chainsaw || exit
+    cargo build --release
+    ln -v -s /opt/tools/chainsaw/target/release/chainsaw /opt/tools/bin/chainsaw
+    # Clean dependencies used to build the binary
+    rm -rf target/release/{deps,build,.fingerprint}
     add-history chainsaw
     add-test-command "chainsaw --help"
     add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
+}
+
+function install_oletools() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing oletools"
+    pipx install --system-site-packages oletools
+    add-history oletools
+    add-test-command "olevba --help"
+    add-to-list "oletools,https://github.com/decalage2/oletools,python tools to analyze MS OLE2 files and MS Office documents - for malware analysis - forensics and debugging."
 }
 
 # Package dedicated to forensic tools
@@ -128,6 +149,7 @@ function package_forensic() {
     install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
+    install_oletools                # Tools to analyze MS OLE2 files and MS Office documents
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

@@ -105,6 +105,6 @@ FUNC_NAME="${1:-default}"
 
 # Dynamic execution
 $FUNC_NAME "$@" || (
-  echo "An error occurred executing the '$FUNC_NAME' action. Your exegol (wrapper / image) version might be out of date to use this feature. Please update your wrapper and image."  | tee -a ~/banner.txt
+  echo "An error occurred executing the '$FUNC_NAME' action. Your exegol (wrapper / image) version might be out of date to use this feature. Please update your wrapper and image." | tee -a ~/banner.txt
   exit 1
 )

@@ -1,0 +1,24 @@
+name: Release Build Trigger
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+      - "*.*.*b*"
+
+jobs:
+  trigger-private-pipeline:
+    name: Trigger pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Pipeline Repo
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PIPELINE_PAT }}
+          repository: ThePorgs/Pipelines
+          event-type: release-pipeline
+          client-payload: |
+            {
+              "sha": "${{ github.sha }}",
+              "tag": "${{ github.ref_name }}",
+            }

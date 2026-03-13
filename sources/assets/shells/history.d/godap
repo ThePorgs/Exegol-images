@@ -1,0 +1,2 @@
+godap $TARGET --username $USER --password $PASSWORD --domain $DOMAIN
+godap $TARGET --username $USER --hashes $NT_HASH --domain $DOMAIN

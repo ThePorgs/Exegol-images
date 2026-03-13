@@ -1,0 +1,37 @@
+name: Nightly Build Trigger
+
+on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  trigger-private-pipeline:
+    name: Trigger pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get latest commit title (first line only)
+        id: get_commit_title
+        run: |
+          raw_title="$(git log -1 --pretty=%B | head -n 1)"
+          # Remove any potential dangerous characters
+          sanitized_title=$(echo "$raw_title" | tr -cd '[:print:]\n')
+          echo "commit_title=$sanitized_title" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger Pipeline Repo
+        uses: peter-evans/repository-dispatch@v2
+        # passing the title only, as a multi-line string is not supported
+        with:
+          token: ${{ secrets.PIPELINE_PAT }}
+          repository: ThePorgs/Pipelines
+          event-type: build-pipeline
+          client-payload: |
+            {
+              "sha": "${{ github.sha }}",
+              "commit_message": "${{ steps.get_commit_title.outputs.commit_title }}" 
+            }

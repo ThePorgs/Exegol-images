@@ -20,7 +20,15 @@ names = [
     "uaswitcher",
     "cookie-editor",
     "wappalyzer",
-    "multi-account-containers"
+    "multi-account-containers",
+    "multi-url-opener",
+    "caido-extension"
+]
+
+pinned_names = [
+    "foxyproxy-standard",
+    "wappalyzer",
+    "cookie-editor",
 ]
 
 def get_extension_id(extension_name):
@@ -45,7 +53,12 @@ def generate_firefox_policy():
 
             for name in names:
                 extension_guid = get_extension_id(name)
-                data['policies']['ExtensionSettings'][extension_guid] = {"installation_mode": "force_installed", "install_url": f"https://addons.mozilla.org/firefox/downloads/latest/{name}/latest.xpi"}
+                data['policies']['ExtensionSettings'][extension_guid] = {"installation_mode": "normal_installed", "install_url": f"https://addons.mozilla.org/firefox/downloads/latest/{name}/latest.xpi"}
+
+                if name in pinned_names:
+                    print(f"Pinning {name} to the navbar")
+                    # navbar = pinned, menupanel = in the puzzle menu
+                    data['policies']['ExtensionSettings'][extension_guid]['default_area'] = 'navbar'
 
             with open(f"{POLICY_PATH}{POLICY_FILENAME}", "w") as policy_file:
                 json.dump(data, policy_file)

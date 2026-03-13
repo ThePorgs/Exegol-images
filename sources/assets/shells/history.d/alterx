@@ -1,0 +1,2 @@
+alterx -l subdomains.txt | dnsx -a
+alterx -list subdomains.txt -enrich -p '{{word}}-{{year}}.{{suffix}}' -pp word=keywords.txt -pp year=2023
