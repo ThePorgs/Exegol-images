@@ -1,4 +1,0 @@
-tgssub.py -in "$CCACHE_PATH" -altservice "cifs/$HOSTNAME.$DOMAIN" -out newticket-cifs.ccache
-tgssub.py -in "$CCACHE_PATH" -altservice "http/$HOSTNAME.$DOMAIN" -out newticket-http.ccache
-tgssub.py -in "$CCACHE_PATH" -altservice "host/$HOSTNAME.$DOMAIN" -out newticket-host.ccache
-tgssub.py -in "$CCACHE_PATH" -altservice "ldap/$HOSTNAME.$DOMAIN" -out newticket-ldap.ccache
