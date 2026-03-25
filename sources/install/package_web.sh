@@ -812,6 +812,25 @@ function install_burpsuite() {
     cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
+    # init burp app files
+    echo "Starting burp"
+    echo y|/usr/lib/jvm/java-21-openjdk/bin/java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json > /dev/null &
+    local timeout_counter
+    timeout_counter=0
+    # Wait for Burp to init and start
+    while ! (netstat -lnt|grep -qEo "(127.0.0.1|0.0.0.0):8080")
+    do
+      if [[ $timeout_counter -lt 300 ]]; then
+        sleep 1
+        timeout_counter=$((timeout_counter+1))
+      else
+        criticalecho "Burp starting timed out.."
+        exit 1
+      fi
+    done
+    pkill -f '/opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar'
+    # Cleanup local burp database
+    rm -rf /root/.java/.userPrefs/burp
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"
