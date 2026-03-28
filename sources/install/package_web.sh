@@ -596,14 +596,9 @@ function install_jdwp_shellifier(){
 }
 
 function install_httpmethods() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httpmethods"
-    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
-    cd /opt/tools/httpmethods || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases httpmethods
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/httpmethods
     add-history httpmethods
     add-test-command "httpmethods.py --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
