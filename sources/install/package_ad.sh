@@ -210,7 +210,7 @@ function install_bloodhound-ce() {
     cp -r ./cmd/ui/dist/. ./cmd/api/src/api/static/assets
 
     # Build the API
-    asdf set golang 1.24.4
+    asdf set golang 1.26.1
 
      # See https://github.com/ThePorgs/Exegol-images/pull/667
     local temp_fix_limit="2026-08-10"
@@ -412,7 +412,7 @@ function install_privexchange() {
 function install_ruler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates from source..."
-    asdf set golang 1.25.0
+    asdf set golang 1.26.1
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
@@ -1523,7 +1523,7 @@ function install_adminer() {
 function install_goexec() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoExec"
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
     asdf reshim golang
     add-history goexec
