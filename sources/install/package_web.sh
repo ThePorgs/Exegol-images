@@ -1001,19 +1001,21 @@ function install_bbot() {
 }
 
 function install_jxscout() {
-	# CODE-CHECK-WHITELIST=add-aliases
-	colorecho "Installing jxscout"
-	fapt unzip
-	go install -v github.com/francisconeves97/jxscout/cmd/jxscout@latest
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jxscout"
-    fapt unzip
-    go install -v github.com/francisconeves97/jxscout/cmd/jxscout@latest
+    go install -v github.com/francisconeves97/jxscout/cmd/jxscout@v0.9.4
     asdf reshim golang
-    curl -fsSL https://bun.com/install | bash -s "bun-v1.2.12"
+    curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.12"
+    local bun_bin_dir="${HOME}/.bun/bin"
+    if [ -x "${bun_bin_dir}/bun" ]; then
+        ln -sf "${bun_bin_dir}/bun" /opt/tools/bin/bun
+    fi
+    if [ -x "${bun_bin_dir}/bunx" ]; then
+        ln -sf "${bun_bin_dir}/bunx" /opt/tools/bin/bunx
+    fi
     add-history jxscout
-    add-test-command "jxscout"
-    add-to-list "jxscout,https://github.com/francisconeves97/jxscout,a JavaScript analysis tool with superpowers for security researchers."
+    add-test-command "jxscout --help"
+    add-to-list "jxscout,https://github.com/francisconeves97/jxscout,JavaScript analysis tool with superpowers for security researchers."
 }
   
 function install_subzy() {
