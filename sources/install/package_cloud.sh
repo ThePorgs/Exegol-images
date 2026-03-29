@@ -33,12 +33,12 @@ function install_k9s() {
     cd /tmp || exit
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_amd64.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_amd64.tar.gz" | head -n 1 | grep -o 'https://[^"]*' | wget -qi -
         tar -zxvf k9s_Linux_amd64.tar.gz k9s
         rm k9s_Linux_amd64.tar.gz
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_arm64.tar.gz" | head -n 1 | cut -d : -f 2,3 | tr -d \" | wget -qi -
+        curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep "browser_download_url.*k9s_Linux_arm64.tar.gz" | head -n 1 | grep -o 'https://[^"]*' | wget -qi -
         tar -zxvf k9s_Linux_arm64.tar.gz k9s
         rm k9s_Linux_arm64.tar.gz
     else
@@ -115,11 +115,12 @@ function install_prowler() {
 
 function install_cloudmapper() {
     colorecho "Installing Cloudmapper"
-    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git 
+    git -C /opt/tools clone --depth 1 https://github.com/duo-labs/cloudmapper.git
     cd /opt/tools/cloudmapper || exit
     cp -v /root/sources/assets/patches/cloudmapper.patch cloudmapper.patch
     git apply --verbose cloudmapper.patch
-    python3 -m venv --system-site-packages ./venv
+    # Use Python 3.10: project unmaintained 3+ years; deps (e.g. lazy-object-proxy 1.6.0) fail on 3.11+ due to pkg_resources/setuptools. Patch pins lazy-object-proxy to 1.7.1.
+    python3.10 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install wheel
     pip3 install -r requirements.txt
@@ -142,6 +143,17 @@ function install_azure_cli() {
     add-to-list "azure-cli,https://github.com/Azure/azure-cli,A great cloud needs great tools; we're excited to introduce Azure CLI our next generation multi-platform command line experience for Azure."
 }
 
+function install_s3scanner() {
+    # CODE-CHECK-WHITELIST=add-aliases
+	colorecho "Installing s3scanner"
+    asdf set golang 1.24.4
+    go install -v github.com/sa7mon/s3scanner@latest
+    asdf reshim golang
+	add-history s3scanner
+	add-test-command "s3scanner -version"
+	add-to-list "s3scanner,https://github.com/sa7mon/S3Scanner,a go tool for s3 buckets misconfiguration across S3-compatible APIs"
+}
+
 # Package dedicated to cloud tools
 function package_cloud() {
     set_env
@@ -157,6 +169,7 @@ function package_cloud() {
     install_prowler
     install_cloudmapper
     install_azure_cli       # Command line for Azure
+    install_s3scanner		# S3 buckets misconfiguration scanner
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

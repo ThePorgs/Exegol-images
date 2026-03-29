@@ -7,7 +7,7 @@ function install_rfid_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing rfid apt tools"
     fapt libusb-dev autoconf nfct pcsc-tools pcscd libpcsclite-dev libpcsclite1 libnfc-dev libnfc-bin mfcuk
-    
+
     add-history libnfc
     add-history mfcuk
 

@@ -8,7 +8,7 @@ function install_network_apt_tools() {
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
     fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
-    rdesktop xtightvncviewer hydra mariadb-client redis-tools mitmproxy
+    rdesktop xtightvncviewer hydra mariadb-client redis-tools mitmproxy fping
 
     add-history wireshark
     add-history tshark
@@ -20,8 +20,10 @@ function install_network_apt_tools() {
     add-history traceroute
     add-history rdesktop
     add-history hydra
+    add-history mariadb
     add-history xfreerdp
     add-history mitmproxy
+    add-history fping
 
     add-test-command "wireshark --help"                             # Wireshark packet sniffer
     add-test-command "tshark --version"                             # Tshark packet sniffer
@@ -37,7 +39,9 @@ function install_network_apt_tools() {
     add-test-command "mariadb --version"                            # Mariadb client
     add-test-command "redis-cli --version"                          # Redis protocol
     add-test-command "mitmproxy --version"                          # MITMProxy
+    add-test-command "fping --help"                                 # fping
     
+
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
     add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
     add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
@@ -54,6 +58,7 @@ function install_network_apt_tools() {
     add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
     add-to-list "mitmproxy,https://github.com/mitmproxy/mitmproxy,mitmproxy is an interactive SSL/TLS-capable intercepting proxy with a console interface for HTTP/1 HTTP/2 and WebSockets."
+    add-to-list "fping,https://github.com/schweikert/fping,fping is a program to send ICMP echo probes to network hosts similar to ping but much better performing when pinging multiple hosts."
 }
 
 function install_proxychains() {
@@ -180,7 +185,7 @@ function install_penelope() {
     colorecho "Installing Penelope"
     pipx install --system-site-packages git+https://github.com/brightio/penelope.git
     add-history penelope 
-    add-test-command "which penelope.py" 
+    add-test-command "which penelope"
     add-to-list "penelope,https://github.com/brightio/penelope,Penelope is a shell handler designed to be easy to use and intended to replace netcat when exploiting RCE vulnerabilities."
 }
 
@@ -267,11 +272,21 @@ function install_tailscale() {
 function install_ligolo-ng() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ligolo-ng"
-    git -C /opt/tools clone --depth 1 https://github.com/nicocha30/ligolo-ng.git
-    cd /opt/tools/ligolo-ng || exit
-    go build -o agent cmd/agent/main.go
-    go build -o proxy cmd/proxy/main.go
-    ln -s /opt/tools/ligolo-ng/proxy /opt/tools/bin/ligolo-ng
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+
+    local ligolo_url
+    ligolo_url=$(curl --location --silent "https://api.github.com/repos/nicocha30/ligolo-ng/releases/latest" | grep 'browser_download_url.*ligolo-ng_proxy.*linux.*'"$arch"'.*tar.gz"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/ligolo.tar.gz "$ligolo_url"
+    tar -xf /tmp/ligolo.tar.gz --directory /tmp
+    mv /tmp/proxy /opt/tools/bin/ligolo-ng
     add-history ligolo-ng
     add-test-command "ligolo-ng --help"
     add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."

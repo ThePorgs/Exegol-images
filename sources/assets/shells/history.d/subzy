@@ -1,0 +1,4 @@
+subzy run --target "$DOMAIN"
+subzy run --targets subdomains.txt
+subzy run --targets subdomains.txt --hide_fails
+subzy run --targets subdomains.txt --concurrency 50 --output sto.json
