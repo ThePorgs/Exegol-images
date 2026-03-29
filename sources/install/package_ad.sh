@@ -211,6 +211,13 @@ function install_bloodhound-ce() {
 
     # Build the API
     asdf set golang 1.24.4
+
+     # See https://github.com/ThePorgs/Exegol-images/pull/667
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        sed -i 's/\s*STORAGE MAIN//' ./cmd/api/src/database/migration/migrations/v8.5.0.sql
+    fi
+
     go build -C cmd/api/src -o ${bloodhoundce_path}/bloodhound -ldflags "-X 'github.com/specterops/bloodhound/cmd/api/src/version.majorVersion=8' -X 'github.com/specterops/bloodhound/cmd/api/src/version.minorVersion=0' -X 'github.com/specterops/bloodhound/cmd/api/src/version.patchVersion=1'" github.com/specterops/bloodhound/cmd/api/src/cmd/bhapi
 
     # Force remove go and yarn cache that are not stored in standard locations
@@ -1551,26 +1558,7 @@ function install_godap() {
 function install_powerview() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powerview.py"
-    # When temp fix expires and upstream has fixed the SyntaxError (see sources/assets/upstream-issues/powerview-py-fstring-syntaxerror.md), revert to:
-    #   pipx install git+https://github.com/aniqfakhrul/powerview.py
-    #   add-history powerview.py
-    #   add-test-command "powerview --help"
-    #   add-to-list "Powerview.py,..."
-    # and remove: git clone, temp fix block, venv, pip install ., add-aliases; delete assets/shells/aliases.d/powerview.py and add CODE-CHECK-WHITELIST=add-aliases.
-    git -C /opt/tools clone --depth 1 https://github.com/aniqfakhrul/powerview.py
-    cd /opt/tools/powerview.py || exit
-    # https://github.com/aniqfakhrul/powerview.py/issues/224
-    # Temp fix: commit 79327239 introduced SyntaxError on Python 3.11 (f-string backslash in utils/shell.py). Checkout parent.
-    local temp_fix_limit="2026-08-10"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-        git fetch --unshallow
-        git checkout 1296e7a70a638694842ca5d13c6b510ca7cf0ce9
-    fi
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    deactivate
-    ln -v -s /opt/tools/powerview.py/venv/bin/powerview /opt/tools/bin/powerview
+    pipx install --system-site-packages git+https://github.com/aniqfakhrul/powerview.py
     add-history powerview.py
     add-test-command "powerview --help"
     add-to-list "Powerview.py,https://github.com/aniqfakhrul/powerview.py,PowerView.py is an alternative for the awesome original PowerView.ps1 script."
