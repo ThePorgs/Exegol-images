@@ -113,6 +113,15 @@ function install_mobsf() {
     add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated and all-in-one mobile application (Android/iOS/Windows) pen-testing malware analysis and security assessment framework"
 }
 
+function install_apkeep() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing apkeep"
+    cargo install --git https://github.com/EFForg/apkeep.git
+    add-history apkeep
+    add-test-command "apkeep --help"
+    add-to-list "apkeep,https://github.com/EFForg/apkeep,Download APK files from Google Play and other sources."
+}
+
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
     set_env
@@ -128,6 +137,7 @@ function package_mobile() {
     install_androguard              # Reverse engineering and analysis of Android applications
     install_mobsf                   # Automated mobile application testing framework
     post_install
+    install_apkeep                  # Command-line tool that downloads APK files directly from Google Play Store or APKPure  
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
     colorecho "Package mobile completed in $elapsed_time seconds."
