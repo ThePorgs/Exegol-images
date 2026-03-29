@@ -1,0 +1,1 @@
+alias dirsearch.py='/opt/tools/dirsearch/venv/bin/python3 /opt/tools/dirsearch/dirsearch.py'

@@ -85,7 +85,7 @@ function install_firefox_decrypt() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing firefox_decrypt"
     pipx install --system-site-packages git+https://github.com/unode/firefox_decrypt
-    add-test-command "firefox_decrypt --help"
+    add-test-command "firefox-decrypt --help"
     add-to-list "firefox_decrypt,https://github.com/unode/firefox_decrypt,Decrypt Firefox saved passwords."
 }
 
