@@ -204,6 +204,10 @@ function install_bloodhound-ce() {
     cd "${bloodhoundce_path}/src/" || exit
 
     # Reference: https://github.com/SpecterOps/BloodHound/blob/main/dockerfiles/bloodhound.Dockerfile
+    # BloodHound workspaces expect globalThis.crypto during build (Node >=19).
+    source ~/.nvm/nvm.sh
+    nvm install 20
+    nvm use 20
     yarn install
     yarn build
     mkdir -p ./cmd/api/src/api/static/assets
