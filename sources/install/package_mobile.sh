@@ -114,12 +114,14 @@ function install_mobsf() {
 }
 
 function install_apk2url() {
-    colorecho "Installing apk2url"
-    git -C /opt/tools/ clone --depth 1 https://github.com/n0mi1k/apk2url
+    # CODE-CHECK-WHITELIST=add-aliases
+    local APK2URL_COMMIT="d0ee6424797729233810c522e47c4a439e357491"
+    git -C /opt/tools/ clone https://github.com/n0mi1k/apk2url
+    git -C /opt/tools/apk2url checkout "${APK2URL_COMMIT}"
     chmod +x /opt/tools/apk2url/apk2url.sh
     ln -sf /opt/tools/apk2url/apk2url.sh /opt/tools/bin/apk2url
     add-history apk2url
-    add-test-command "apk2url --help"
+    add-test-command "apk2url /dev/null 2>&1 | grep -q 'Usage'"
     add-to-list "apk2url,https://github.com/n0mi1k/apk2url,Quickly extract URLs and secrets from APK files."
 }
 
