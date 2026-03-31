@@ -259,6 +259,17 @@ function install_nfsshell() {
     add-to-list "nfsshell,https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
 }
 
+function install_arsenal_ng() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing arsenal-ng"
+    asdf set golang 1.24.0
+    go install -v github.com/halilkirazkaya/arsenal-ng/cmd/arsenal-ng@latest
+    asdf reshim golang
+    add-history arsenal-ng
+    add-test-command "which arsenal-ng"
+    add-to-list "arsenal-ng,https://github.com/halilkirazkaya/arsenal-ng,Arsenal-NG is a modern command-line cheatsheet tool for penetration testers."
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -285,6 +296,7 @@ function package_misc() {
     install_thr             # https://www.thehacker.recipes/
     install_dtrx            # Intelligent archive extractor
     install_nfsshell        # NFS share interaction tool
+    install_arsenal_ng      # Cheatsheet tool for pentesters
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
