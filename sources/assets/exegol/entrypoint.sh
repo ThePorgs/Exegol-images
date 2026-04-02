@@ -15,7 +15,7 @@ function load_setups() {
   if [[ ! -f "/.exegol/.setup.lock" ]]; then
     # Execute initial setup if lock file doesn't exist
     echo >/.exegol/.setup.lock
-    /.exegol/load_supported_setups.sh &>>/var/log/exegol/load_setups.log && gzip /var/log/exegol/load_setups.log
+    /.exegol/load_supported_setups.sh
   fi
 }
 

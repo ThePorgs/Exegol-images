@@ -2,12 +2,12 @@
 
 # The following functions are used to log messages to the console
 #   By starting with [EXEGOL], the wrapper can catch the message and forward it to the user
-#   Logs that don't start with [EXEGOL] are not forwarded to the user, but they are still logged to /var/log/exegol/load_setups.log
+#   Logs that don't start with [EXEGOL] are not forwarded to the user, but they are still logged to /var/log/exegol/load_burp.log
 #   Using [INFO], [VERBOSE], [WARNING], [ERROR], [SUCCESS] tags so that the wrapper can catch them and forward them to the user with the corresponding logger level
 
 # This script being called by load_supported_setups.sh, we're in a lower level of logging, meaning the logger_info will not be defined here and shouldn't be used
 
-LOG_FILE="/var/log/exegol/load_setups.log"
+LOG_FILE="/var/log/exegol/load_burp_ca.log"
 
 function echo2log () {
   echo "trust-ca-burp.sh $(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG_FILE"
@@ -64,9 +64,9 @@ function trust_ca_burp_in_firefox() {
     local timeout_counter
     timeout_counter=0
     # Let time to Burp to init CA
-    while [[ -z $(netstat -lnt|grep -Eo "(127.0.0.1|0.0.0.0):$burp_port") ]]
+    while ! (netstat -lnt|grep -qEo "(127.0.0.1|0.0.0.0):$burp_port")
     do
-      if (( $timeout_counter < 120 )); then
+      if [[ $timeout_counter -lt 120 ]]; then
         sleep 0.5
         timeout_counter=$((timeout_counter+1))
       else
@@ -79,11 +79,11 @@ function trust_ca_burp_in_firefox() {
     # Download the CA to /tmp and update the CA path
     logger_debug 'Retrieving CA'
     local burp_ca_path="/opt/tools/firefox/cacert.der"
-    local burp_ca_name="PortSwigger CA"
     if ! wget -q "http://127.0.0.1:$burp_port/cert" -O "$burp_ca_path"; then
       kill "$burp_pid"
       rm -r "$(find /tmp/burp*.tmp -type d -printf '%T+ %p\n' | sort | head -n 1 | cut -d ' ' -f2)"  # Remove burp tmp files
       logger_error 'The CA cert could not be retrieved, please trust it manually'
+      exit 1
     fi
     kill "$burp_pid"
     rm -r "$(find /tmp/burp*.tmp -type d -printf '%T+ %p\n' | sort | head -n 1 | cut -d ' ' -f2)"  # Remove burp tmp files
@@ -92,5 +92,6 @@ function trust_ca_burp_in_firefox() {
 }
 
 trust_ca_burp_in_firefox
+gzip "$LOG_FILE"
 
 exit 0

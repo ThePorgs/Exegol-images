@@ -204,13 +204,17 @@ function install_bloodhound-ce() {
     cd "${bloodhoundce_path}/src/" || exit
 
     # Reference: https://github.com/SpecterOps/BloodHound/blob/main/dockerfiles/bloodhound.Dockerfile
+    # BloodHound workspaces expect globalThis.crypto during build (Node >=19).
+    source ~/.nvm/nvm.sh
+    nvm install 20
+    nvm use 20
     yarn install
     yarn build
     mkdir -p ./cmd/api/src/api/static/assets
     cp -r ./cmd/ui/dist/. ./cmd/api/src/api/static/assets
 
     # Build the API
-    asdf set golang 1.24.4
+    asdf set golang 1.26.1
 
      # See https://github.com/ThePorgs/Exegol-images/pull/667
     local temp_fix_limit="2026-08-10"
@@ -412,7 +416,7 @@ function install_privexchange() {
 function install_ruler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates from source..."
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
@@ -1523,7 +1527,7 @@ function install_adminer() {
 function install_goexec() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoExec"
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
     asdf reshim golang
     add-history goexec

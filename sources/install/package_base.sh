@@ -46,15 +46,13 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    # 1.24.4 needed for BloodHound-CE
-    asdf install golang 1.24.4
-    # 1.24.1 needed for GoExec
-    asdf install golang 1.24.1
-    # 1.23 needed by BloodHound-CE, and sensepost/ruler
+    # 1.26.1 needed for ruler, BloodHound-CE
+    asdf install golang 1.26.1
+    # 1.23.0 needed for bettercap, subzy
     asdf install golang 1.23.0
     # Default GO version: 1.22.2
     asdf install golang 1.22.2
-    asdf set --home golang 1.22.2 1.23.0 1.24.4 1.24.1
+    asdf set --home golang 1.22.2 1.23.0 1.26.1
     add-test-command "go version"
 }
 
