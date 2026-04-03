@@ -600,7 +600,7 @@ function install_httpmethods() {
     colorecho "Installing httpmethods"
     pipx install --system-site-packages git+https://github.com/ShutdownRepo/httpmethods
     add-history httpmethods
-    add-test-command "httpmethods.py --help"
+    add-test-command "httpmethods --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
 }
 
