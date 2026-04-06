@@ -1,2 +1,2 @@
-alias bloodbash='/opt/tools/bloodbash/venv/bin/python3 /opt/tools/bloodbash/BloodBash.py'
 alias bloodbash.py='/opt/tools/bloodbash/venv/bin/python3 /opt/tools/bloodbash/BloodBash.py'
+alias bloodbash='bloodbash.py'
