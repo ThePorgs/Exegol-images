@@ -908,9 +908,14 @@ function install_pywhisker() {
 }
 
 function install_manspider() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Manspider"
-    pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
+    git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER
+    cd /opt/tools/MANSPIDER || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    add-aliases manspider
     add-history manspider
     add-test-command "manspider --help"
     add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
