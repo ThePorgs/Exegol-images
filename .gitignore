@@ -112,3 +112,6 @@ shared-resources/
 
 # macOS files
 .DS_Store
+
+# my-resources API key
+sources/assets/exegol/skel/api/api_keys.sh

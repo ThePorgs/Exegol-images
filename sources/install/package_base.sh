@@ -463,6 +463,16 @@ function install_wireguard() {
   add-to-list "wireguard,https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
 }
 
+function install_yq_go() {
+  # CODE-CHECK-WHITELIST=add-aliases,add-history
+  colorecho "Installing yq-go"
+  local VERSION=v4.48.1
+  local PLATFORM=linux_amd64
+  wget "https://github.com/mikefarah/yq/releases/download/${VERSION}/yq_${PLATFORM}" -O /opt/tools/bin/yq-go
+  chmod +x /opt/tools/bin/yq-go
+  add-to-list "yq-go,https://github.com/mikefarah/yq,A lightweight and portable command-line YAML JSON INI and XML processor."
+}
+
 # Package dedicated to the basic things the env needs
 function package_base() {
     local start_time
