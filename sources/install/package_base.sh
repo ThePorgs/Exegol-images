@@ -102,11 +102,12 @@ function install_pyenv() {
         colorecho "Installing python${v}"
         pyenv install "$v"
     done
-    # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
+    # allowing python2, python3, python3.10, python3.11, python3.13 and python3.14 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
     #  --> python3.13 points to 3.13
     #  --> python3.10 points to 3.10
+    #  --> python3.14 points to 3.14
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -504,7 +505,8 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.13 3.10 2"
+    #  --> 3.14 required by Empire
+    PYTHON_VERSIONS="3.11 3.13 3.14 3.10 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
