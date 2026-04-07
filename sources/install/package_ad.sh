@@ -1629,6 +1629,20 @@ function install_daclsearch() {
     add-to-list "daclsearch,https://github.com/uknowsec/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
 }
 
+function install_bloodbash() {
+    colorecho "Installing bloodbash"
+    git -C /opt/tools/ clone --depth 1 https://github.com/dotnetrussell/bloodbash.git
+    cd /opt/tools/bloodbash || exit
+    python3 -m venv --system-site-packages ./venv/
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases bloodbash
+    add-history bloodbash
+    add-test-command "bloodbash.py --help"
+    add-to-list "bloodbash,https://github.com/DotNetRussell/BloodBash,BloodBash is a powerful standalone BloodHound / SharpHound + AzureHound JSON analyzer written in Python"
+}
+
 function install_evenmonitor() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing evenmonitor"
@@ -1758,6 +1772,7 @@ function package_ad() {
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
+    install_bloodbash              # Bloodhound in terminal
     install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
     post_install
     end_time=$(date +%s)
