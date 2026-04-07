@@ -357,6 +357,7 @@ trust_ca_certs_in_firefox
 deploy_arsenal_cheatsheet
 
 run_user_setup
+gzip "$LOG_FILE"
 
 wrapper_success "Successfully deployed [green]my-resources[/green]!"
 exit 0

@@ -46,15 +46,13 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    # 1.24.4 needed for BloodHound-CE
-    asdf install golang 1.24.4
-    # 1.24.1 needed for GoExec
-    asdf install golang 1.24.1
-    # 1.23 needed by BloodHound-CE, and sensepost/ruler
+    # 1.26.1 needed for ruler, BloodHound-CE
+    asdf install golang 1.26.1
+    # 1.23.0 needed for bettercap, subzy
     asdf install golang 1.23.0
     # Default GO version: 1.22.2
     asdf install golang 1.22.2
-    asdf set --home golang 1.22.2 1.23.0 1.24.4 1.24.1
+    asdf set --home golang 1.22.2 1.23.0 1.26.1
     add-test-command "go version"
 }
 
@@ -104,11 +102,12 @@ function install_pyenv() {
         colorecho "Installing python${v}"
         pyenv install "$v"
     done
-    # allowing python2, python3, python3.10, python3.11 and python3.13 to be found
+    # allowing python2, python3, python3.10, python3.11, python3.13 and python3.14 to be found
     #  --> python points to python3
     #  --> python3 points to python3.11
     #  --> python3.13 points to 3.13
     #  --> python3.10 points to 3.10
+    #  --> python3.14 points to 3.14
     #  --> python2 points to latest python2
     # shellcheck disable=SC2086
     pyenv global $PYTHON_VERSIONS
@@ -460,15 +459,16 @@ function install_wireguard() {
   # CODE-CHECK-WHITELIST=add-aliases,add-history
   colorecho "Installing WireGuard"
   fapt wireguard
-
-  # Patch wireguard start script https://github.com/WireGuard/wireguard-tools/pull/5
-  local temp_fix_limit="2026-08-10"
-  if check_temp_fix_expiry "$temp_fix_limit"; then
-    # shellcheck disable=SC2016
-    sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
-  fi
   add-test-command "wg-quick -h"
   add-to-list "wireguard,https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
+}
+
+function install_asciinema() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing asciinema (latest via cargo)"
+    cargo install --locked --git https://github.com/asciinema/asciinema
+    add-test-command "asciinema --version"
+    add-to-list "asciinema,https://github.com/asciinema/asciinema,Terminal session recorder"
 }
 
 # Package dedicated to the basic things the env needs
@@ -490,7 +490,7 @@ function package_base() {
     apt-get update
     colorecho "Starting main programs install"
     fapt man git gh glab subversion lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
-    libffi-dev zsh asciinema npm gem automake autoconf make cmake time gcc g++ file lsof \
+    libffi-dev zsh npm gem automake autoconf make cmake time gcc g++ file lsof \
     less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
@@ -513,7 +513,8 @@ function package_base() {
 
     # setup Python environment
     # the order matters (if 2 is before 3, `python` will point to Python 2)
-    PYTHON_VERSIONS="3.11 3.13 3.10 2"
+    #  --> 3.14 required by Empire
+    PYTHON_VERSIONS="3.11 3.13 3.14 3.10 2"
     install_pyenv
     pip2 install --no-cache-dir virtualenv
     local v
@@ -571,6 +572,7 @@ function package_base() {
     install_openvpn
     install_wireguard
     install_firefox
+    install_asciinema
 
     cp -v /root/sources/assets/grc/grc.conf /etc/grc.conf # grc
 
