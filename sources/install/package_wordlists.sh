@@ -20,7 +20,7 @@ function install_wordlists_apt_tools() {
 
 function install_cewl() {
     colorecho "Installing cewl"
-    rvm use 3.1.2@cewl --create # currently does not support a version higher than 3.1.2
+    rvm use 3.2.2@cewl --create
     gem install mime mime-types mini_exiftool nokogiri public_suffix rubyzip spider
     git -C /opt/tools clone --depth 1 https://github.com/digininja/CeWL.git
     bundle install --gemfile /opt/tools/CeWL/Gemfile
@@ -59,9 +59,9 @@ function install_seclists() {
 
 function install_pass_station() {
     colorecho "Installing Pass Station"
-    rvm use 3.1.2@pass-station --create # currently does not support a version higher than 3.1.2
+    rvm use 3.2.2@pass-station --create
     gem install pass-station
-    rvm use 3.1.2@default
+    rvm use 3.2.2@default
     add-aliases pass-station
     add-history pass-station
     add-test-command "pass-station --help"
