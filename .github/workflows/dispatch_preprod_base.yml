@@ -15,8 +15,11 @@ jobs:
     steps:
       - name: Compute image version
         id: version
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+          image_version="$(printf '%s' "$PR_TITLE" | cut -d ' ' -f 2)"
+          printf 'IMAGE_VERSION=%s\n' "$image_version" >> "$GITHUB_OUTPUT"
       - name: Trigger Pipeline Repo
         uses: peter-evans/repository-dispatch@v2
         with:
