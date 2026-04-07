@@ -1629,6 +1629,15 @@ function install_daclsearch() {
     add-to-list "daclsearch,https://github.com/uknowsec/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
 }
 
+function install_evenmonitor() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing evenmonitor"
+    pipx install --python 3.13 --system-site-packages git+https://github.com/NeffIsBack/EVENmonitor
+    add-history evenmonitor
+    add-test-command "EVENmonitor --help"
+    add-to-list "EVENmonitor,https://github.com/NeffIsBack/EVENmonitor,Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs "
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1749,6 +1758,7 @@ function package_ad() {
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
+    install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
