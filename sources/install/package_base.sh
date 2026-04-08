@@ -465,7 +465,7 @@ function install_wireguard() {
 function install_asciinema() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing asciinema (latest via cargo)"
-    cargo install --locked --git https://github.com/asciinema/asciinema
+    cargo install --root /usr/local/ --bin asciinema --locked --git https://github.com/asciinema/asciinema
     add-test-command "asciinema --version"
     add-to-list "asciinema,https://github.com/asciinema/asciinema,Terminal session recorder"
 }
