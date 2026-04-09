@@ -2,7 +2,7 @@
 
 # The following functions are used to log messages to the console
 #   By starting with [EXEGOL], the wrapper can catch the message and forward it to the user
-#   Logs that don't start with [EXEGOL] are not forwarded to the user, but they are still logged to /var/log/exegol/load_burp.log
+#   Logs that don't start with [EXEGOL] are not forwarded to the user, but they are still logged to /var/log/exegol/load_burp_ca.log
 #   Using [INFO], [VERBOSE], [WARNING], [ERROR], [SUCCESS] tags so that the wrapper can catch them and forward them to the user with the corresponding logger level
 
 # This script being called by load_supported_setups.sh, we're in a lower level of logging, meaning the logger_info will not be defined here and shouldn't be used

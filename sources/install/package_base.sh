@@ -46,7 +46,7 @@ function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    # 1.26.1 needed for ruler, BloodHound-CE
+    # 1.26.1 needed for ruler, BloodHound-CE, GoExec, s3scanner
     asdf install golang 1.26.1
     # 1.23.0 needed for bettercap, subzy
     asdf install golang 1.23.0
@@ -465,7 +465,12 @@ function install_wireguard() {
 function install_asciinema() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing asciinema (latest via cargo)"
-    cargo install --root /usr/local/ --bin asciinema --locked --git https://github.com/asciinema/asciinema
+    local temp_fix_limit="2026-09-01"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      # using specific version to avoid incompatibilities with shell-logging feature
+      cargo install --root /usr/local/ --bin asciinema --locked --version 3.2.0 asciinema
+    fi
+    #cargo install --root /usr/local/ --bin asciinema --locked asciinema
     add-test-command "asciinema --version"
     add-to-list "asciinema,https://github.com/asciinema/asciinema,Terminal session recorder"
 }
