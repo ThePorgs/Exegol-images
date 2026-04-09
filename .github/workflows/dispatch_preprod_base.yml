@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
       - name: Trigger Pipeline Repo
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
         with:
           token: ${{ secrets.PIPELINE_PAT }}
           repository: ThePorgs/Pipelines

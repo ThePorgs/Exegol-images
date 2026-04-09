@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Get latest commit title (first line only)
         id: get_commit_title
@@ -24,7 +24,7 @@ jobs:
           echo "commit_title=$sanitized_title" >> "$GITHUB_OUTPUT"
 
       - name: Trigger Pipeline Repo
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570 # v2
         # passing the title only, as a multi-line string is not supported
         with:
           token: ${{ secrets.PIPELINE_PAT }}
