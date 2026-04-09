@@ -1,3 +1,16 @@
+# Pinned GitHub Actions
+# - actions/checkout v4 @ 34e114876b0b11c390a56381ad16ebd13914f8d5
+#   - Repo: https://github.com/actions/checkout
+#   - Version: https://github.com/actions/checkout/tree/v4
+#   - Pinned: https://github.com/actions/checkout/commit/34e114876b0b11c390a56381ad16ebd13914f8d5
+# - ludeeus/action-shellcheck 2.0.0 @ 00cae500b08a931fb5698e11e79bfbd38e612a38
+#   - Repo: https://github.com/ludeeus/action-shellcheck
+#   - Version: https://github.com/ludeeus/action-shellcheck/tree/2.0.0
+#   - Pinned: https://github.com/ludeeus/action-shellcheck/commit/00cae500b08a931fb5698e11e79bfbd38e612a38
+# - docker/build-push-action v6 @ 10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+#   - Repo: https://github.com/docker/build-push-action
+#   - Version: https://github.com/docker/build-push-action/tree/v6
+#   - Pinned: https://github.com/docker/build-push-action/commit/10e90e3645eae34f1e60eeb005ba3a3d33f178e8
 name: External PR tests
 
 on:
@@ -49,7 +62,7 @@ jobs:
     runs-on: [self-hosted]
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       - name: Check colorecho
         run: python3 ~/exegol-pipelines-tools/code_compliance_check.py colorecho
       - name: Check add-aliases
@@ -63,7 +76,7 @@ jobs:
       - name: Temp-fix check
         run: python3 ~/exegol-pipelines-tools/code_compliance_check.py temp-fix
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@master
+        uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38
         env:
           SHELLCHECK_OPTS: -e SC1071 -e SC2148 -e SC1090 -e SC1091 -e SC2317
         with:
@@ -93,13 +106,13 @@ jobs:
       - name: Clean unused local volumes
         run: docker volume prune --force
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       - name: Prepare build
         id: prepare
         run: echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
       - name: Build the image
         if: success()
-        uses: docker/build-push-action@master
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
         with:
           load: true
           no-cache: true
