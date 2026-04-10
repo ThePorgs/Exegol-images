@@ -24,6 +24,5 @@ jobs:
           event-type: release-pipeline
           client-payload: |
             {
-              "sha": "${{ github.sha }}",
-              "tag": "${{ github.ref_name }}"
+              "version": "${{ github.ref_name }}"
             }
