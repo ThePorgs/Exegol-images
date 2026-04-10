@@ -72,7 +72,7 @@ function install_gdb_plugins() {
 }
 
 function install_angr() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing angr"
     fapt libffi-dev
     mkdir -p /opt/tools/angr || exit
@@ -83,7 +83,17 @@ function install_angr() {
     deactivate
     add-aliases angr
     add-test-command "angr -c 'import angr'"
-    add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework"
+    add-to-list "angr,https://github.com/angr/angr,A powerful and user-friendly binary analysis platform!"
+}
+
+function install_angr-management() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing angr-management"
+    fapt libxcb-cursor0
+    pipx install angr-management
+    add-history angr-management
+    add-test-command "angr-management --help"
+    add-to-list "angr-management,https://github.com/angr/angr-management,The official angr GUI."
 }
 
 function install_checksec-py() {
@@ -216,6 +226,7 @@ function package_reverse() {
     install_pwntools                # CTF framework and exploit development library
     install_gdb_plugins             # GDB plugins (pwndbg, PEDA, GEF)
     install_angr                    # Binary analysis
+    install_angr-management         # GUI for angr
     install_checksec-py             # Check security on binaries
     install_radare2                 # Awesome debugger
     install_ghidra
