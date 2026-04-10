@@ -146,7 +146,7 @@ function install_azure_cli() {
 function install_s3scanner() {
     # CODE-CHECK-WHITELIST=add-aliases
 	colorecho "Installing s3scanner"
-    asdf set golang 1.24.4
+    asdf set golang 1.26.1
     go install -v github.com/sa7mon/s3scanner@latest
     asdf reshim golang
 	add-history s3scanner

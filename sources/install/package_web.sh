@@ -596,16 +596,11 @@ function install_jdwp_shellifier(){
 }
 
 function install_httpmethods() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httpmethods"
-    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
-    cd /opt/tools/httpmethods || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases httpmethods
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/httpmethods
     add-history httpmethods
-    add-test-command "httpmethods.py --help"
+    add-test-command "httpmethods --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
 }
 
@@ -812,6 +807,35 @@ function install_burpsuite() {
     cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
+    # init burp app files
+    echo "Starting burp"
+    echo y|/usr/lib/jvm/java-21-openjdk/bin/java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json > /dev/null &
+    local burp_pid
+    burp_pid=$!
+    local timeout_counter
+    timeout_counter=0
+    # Wait for Burp to init and start
+    while ! (netstat -lnt|grep -qEo "(127.0.0.1|0.0.0.0):8080")
+    do
+      if ! kill -0 "$burp_pid" 2>/dev/null; then
+        criticalecho "Burp exited before becoming ready."
+        exit 1
+      fi
+      if [[ $timeout_counter -lt 300 ]]; then
+        sleep 1
+        timeout_counter=$((timeout_counter+1))
+      else
+        criticalecho "Burp starting timed out.."
+        kill "$burp_pid" 2>/dev/null || true
+        wait "$burp_pid" 2>/dev/null
+        exit 1
+      fi
+    done
+    kill "$burp_pid" 2>/dev/null || true
+    wait "$burp_pid" 2>/dev/null
+    # Cleanup local burp database
+    rm -rf /root/.java/.userPrefs/burp
+    rm -rf /tmp/burp*.tmp
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"

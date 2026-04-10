@@ -204,20 +204,24 @@ function install_bloodhound-ce() {
     cd "${bloodhoundce_path}/src/" || exit
 
     # Reference: https://github.com/SpecterOps/BloodHound/blob/main/dockerfiles/bloodhound.Dockerfile
+    # BloodHound workspaces expect globalThis.crypto during build (Node >=19).
+    source ~/.nvm/nvm.sh
+    nvm install 20
+    nvm use 20
     yarn install
     yarn build
     mkdir -p ./cmd/api/src/api/static/assets
     cp -r ./cmd/ui/dist/. ./cmd/api/src/api/static/assets
 
     # Build the API
-    asdf set golang 1.24.4
+    asdf set golang 1.26.1
 
      # See https://github.com/ThePorgs/Exegol-images/pull/667
     local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
         sed -i 's/\s*STORAGE MAIN//' ./cmd/api/src/database/migration/migrations/v8.5.0.sql
     fi
-    
+
     go build -C cmd/api/src -o ${bloodhoundce_path}/bloodhound -ldflags "-X 'github.com/specterops/bloodhound/cmd/api/src/version.majorVersion=8' -X 'github.com/specterops/bloodhound/cmd/api/src/version.minorVersion=0' -X 'github.com/specterops/bloodhound/cmd/api/src/version.patchVersion=1'" github.com/specterops/bloodhound/cmd/api/src/cmd/bhapi
 
     # Force remove go and yarn cache that are not stored in standard locations
@@ -412,7 +416,7 @@ function install_privexchange() {
 function install_ruler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates from source..."
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
@@ -526,7 +530,7 @@ function install_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    rvm use 3.1.2@evil-winrm --create
+    rvm use 3.2.2@evil-winrm --create
     gem install evil-winrm
     rvm use 3.2.2@default
     add-aliases evil-winrm
@@ -904,9 +908,14 @@ function install_pywhisker() {
 }
 
 function install_manspider() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Manspider"
-    pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
+    git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER
+    cd /opt/tools/MANSPIDER || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    add-aliases manspider
     add-history manspider
     add-test-command "manspider --help"
     add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
@@ -1523,7 +1532,7 @@ function install_adminer() {
 function install_goexec() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoExec"
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
     asdf reshim golang
     add-history goexec
@@ -1558,26 +1567,7 @@ function install_godap() {
 function install_powerview() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powerview.py"
-    # When temp fix expires and upstream has fixed the SyntaxError (see sources/assets/upstream-issues/powerview-py-fstring-syntaxerror.md), revert to:
-    #   pipx install git+https://github.com/aniqfakhrul/powerview.py
-    #   add-history powerview.py
-    #   add-test-command "powerview --help"
-    #   add-to-list "Powerview.py,..."
-    # and remove: git clone, temp fix block, venv, pip install ., add-aliases; delete assets/shells/aliases.d/powerview.py and add CODE-CHECK-WHITELIST=add-aliases.
-    git -C /opt/tools clone --depth 1 https://github.com/aniqfakhrul/powerview.py
-    cd /opt/tools/powerview.py || exit
-    # https://github.com/aniqfakhrul/powerview.py/issues/224
-    # Temp fix: commit 79327239 introduced SyntaxError on Python 3.11 (f-string backslash in utils/shell.py). Checkout parent.
-    local temp_fix_limit="2026-08-10"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-        git fetch --unshallow
-        git checkout 1296e7a70a638694842ca5d13c6b510ca7cf0ce9
-    fi
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    deactivate
-    ln -v -s /opt/tools/powerview.py/venv/bin/powerview /opt/tools/bin/powerview
+    pipx install --system-site-packages git+https://github.com/aniqfakhrul/powerview.py
     add-history powerview.py
     add-test-command "powerview --help"
     add-to-list "Powerview.py,https://github.com/aniqfakhrul/powerview.py,PowerView.py is an alternative for the awesome original PowerView.ps1 script."
@@ -1637,6 +1627,29 @@ function install_daclsearch() {
     add-history daclsearch
     add-test-command "daclsearch --help"
     add-to-list "daclsearch,https://github.com/uknowsec/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
+}
+
+function install_bloodbash() {
+    colorecho "Installing bloodbash"
+    git -C /opt/tools/ clone --depth 1 https://github.com/dotnetrussell/bloodbash.git
+    cd /opt/tools/bloodbash || exit
+    python3 -m venv --system-site-packages ./venv/
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases bloodbash
+    add-history bloodbash
+    add-test-command "bloodbash.py --help"
+    add-to-list "bloodbash,https://github.com/DotNetRussell/BloodBash,BloodBash is a powerful standalone BloodHound / SharpHound + AzureHound JSON analyzer written in Python"
+}
+
+function install_evenmonitor() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing evenmonitor"
+    pipx install --python 3.13 --system-site-packages git+https://github.com/NeffIsBack/EVENmonitor
+    add-history evenmonitor
+    add-test-command "EVENmonitor --help"
+    add-to-list "EVENmonitor,https://github.com/NeffIsBack/EVENmonitor,Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs "
 }
 
 # Package dedicated to internal Active Directory tools
@@ -1759,6 +1772,8 @@ function package_ad() {
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
+    install_bloodbash              # Bloodhound in terminal
+    install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

@@ -1,3 +1,8 @@
+# Pinned GitHub Actions
+# - peter-evans/repository-dispatch v2 @ bf47d102fdb849e755b0b0023ea3e81a44b6f570
+#   - Repo: https://github.com/peter-evans/repository-dispatch
+#   - Version: https://github.com/peter-evans/repository-dispatch/tree/v2
+#   - Pinned: https://github.com/peter-evans/repository-dispatch/commit/bf47d102fdb849e755b0b0023ea3e81a44b6f570
 name: Pre-release Base Build Trigger
 
 on:
@@ -15,10 +20,13 @@ jobs:
     steps:
       - name: Compute image version
         id: version
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          echo "IMAGE_VERSION=$(echo ${{ github.event.pull_request.title }} | cut -d ' ' -f 2)" >> $GITHUB_OUTPUT
+          image_version="$(printf '%s' "$PR_TITLE" | cut -d ' ' -f 2)"
+          printf 'IMAGE_VERSION=%s\n' "$image_version" >> "$GITHUB_OUTPUT"
       - name: Trigger Pipeline Repo
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570
         with:
           token: ${{ secrets.PIPELINE_PAT }}
           repository: ThePorgs/Pipelines
