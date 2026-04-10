@@ -25,5 +25,5 @@ jobs:
           client-payload: |
             {
               "sha": "${{ github.sha }}",
-              "tag": "${{ github.ref_name }}",
+              "tag": "${{ github.ref_name }}"
             }
