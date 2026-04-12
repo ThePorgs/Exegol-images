@@ -1,10 +1,17 @@
 import json
 import os
 import subprocess
+from enum import Enum
 
 BURP_CONFIG_FILE = "/root/.BurpSuite/UserConfigCommunity.json"
 BURPSUITE_EXTENSIONS_PATH = "/opt/tools/BurpSuiteCommunity/extensions/"
 BURP_MANIFEST_NAME = "BappManifest.bmf"
+LOG_FILE="/var/log/exegol/burp_config.log"
+
+class ExtensionType(Enum):
+    JAVA = 1
+    PYTHON = 2
+    RUBY = 3
 
 def load_burp_config(file_path):
     with open(file_path, "r") as file:
@@ -18,38 +25,39 @@ def burp_manifest_parsing(manifest_file):
     with open(manifest_file, "r") as file:
         for line in file.readlines():
             if line.startswith('ExtensionType:'):
-                extension_type = int(line.split(':')[1].strip())
+                extension_type = int(line.split(':', 1)[1].strip())
             elif line.startswith('Name:'):
-                name = line.split(':')[1].strip()
+                name = line.split(':', 1)[1].strip()
             elif line.startswith('RepoName:'):
-                repo_name = line.split(':')[1].strip()
+                repo_name = line.split(':', 1)[1].strip()
             elif line.startswith('EntryPoint:'):
-                entrypoint = line.split(':')[1].strip()
+                entrypoint = line.split(':', 1)[1].strip()
             elif line.startswith('BuildCommand:'):
-                build_command = line.split(':')[1].strip()
+                build_command = line.split(':', 1)[1].strip()
 
     if extension_type == 2: # Python extension do not need to be build
         build_command = None
 
     return name, extension_type, repo_name, entrypoint, build_command
 
-def add_extension_to_config(extensions):
-    burp_config = load_burp_config(BURP_CONFIG_FILE)
+def add_extension_to_config(burp_config, extensions):
     burp_config["user_options"]["extender"]["extensions"] = extensions
 
     save_json(BURP_CONFIG_FILE, burp_config)
 
 def build_extension(directory, build_command):
+    log_file = open(LOG_FILE, 'w')
     # Be very careful with that one buddy
     subprocess.run(
         [build_command],
         shell=True,
         cwd=directory,
         input=build_command.encode("utf-8"),
-        stdout=subprocess.DEVNULL,
+        stdout=log_file,
     )
+    log_file.close()
 
-def install_extensions():
+def install_extensions(burp_config):
     extensions = []
 
     for extension_directory in os.listdir(BURPSUITE_EXTENSIONS_PATH):
@@ -60,7 +68,7 @@ def install_extensions():
             name, extension_type, repo_name, entrypoint, build_command = burp_manifest_parsing(manifest_file)
             final_entrypoint = os.path.join(BURPSUITE_EXTENSIONS_PATH, extension_directory, entrypoint)
 
-            if extension_type == 1: # Java
+            if extension_type == ExtensionType.JAVA:
                 build_extension(fullpath_extension_directory, build_command)
 
                 extension_object = {
@@ -71,7 +79,7 @@ def install_extensions():
                     "name": name,
                     "output": "ui"
                 }
-            elif extension_type == 2: # Python
+            elif extension_type == ExtensionType.PYTHON:
                 extension_object = {
                     "errors": "ui",
                     "extension_file": final_entrypoint,
@@ -80,7 +88,7 @@ def install_extensions():
                     "name": name,
                     "output": "ui"
                 }
-            elif extension_type == 3: # Ruby
+            elif extension_type == ExtensionType.RUBY:
                 extension_object = {
                     "errors": "ui",
                     "extension_file": final_entrypoint,
@@ -92,7 +100,8 @@ def install_extensions():
 
             extensions.append(extension_object)
 
-    add_extension_to_config(extensions)
+    add_extension_to_config(burp_config, extensions)
 
 if __name__ == "__main__":
-    install_extensions()
+    burp_config = load_burp_config(BURP_CONFIG_FILE)
+    install_extensions(burp_config)

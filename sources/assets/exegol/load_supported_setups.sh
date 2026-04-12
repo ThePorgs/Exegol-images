@@ -330,8 +330,10 @@ function deploy_burpsuite() {
   [[ -f "$MY_SETUP_PATH/burpsuite/UserConfigCommunity.json" ]] && cp "$MY_SETUP_PATH/burpsuite/UserConfigCommunity.json" "/root/.BurpSuite/UserConfigCommunity.json"
 
   cat "$MY_SETUP_PATH/burpsuite/extensions.txt" | while read -r line; do
-    extension_name=$(echo $line | awk -F '/' '{print $NF}')
-    git clone "$line" "/opt/tools/BurpSuiteCommunity/extensions/$extension_name"
+    if [[ ${line:0:1} != '#' ]]; then
+      extension_name=$(echo $line | awk -F '/' '{print $NF}')
+      git clone "$line" "/opt/tools/BurpSuiteCommunity/extensions/$extension_name"
+    fi
   done
 
   python3 "/opt/tools/BurpSuiteCommunity/generate_config.py"
