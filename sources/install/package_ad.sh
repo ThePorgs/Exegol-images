@@ -204,13 +204,17 @@ function install_bloodhound-ce() {
     cd "${bloodhoundce_path}/src/" || exit
 
     # Reference: https://github.com/SpecterOps/BloodHound/blob/main/dockerfiles/bloodhound.Dockerfile
+    # BloodHound workspaces expect globalThis.crypto during build (Node >=19).
+    source ~/.nvm/nvm.sh
+    nvm install 20
+    nvm use 20
     yarn install
     yarn build
     mkdir -p ./cmd/api/src/api/static/assets
     cp -r ./cmd/ui/dist/. ./cmd/api/src/api/static/assets
 
     # Build the API
-    asdf set golang 1.24.4
+    asdf set golang 1.26.1
 
      # See https://github.com/ThePorgs/Exegol-images/pull/667
     local temp_fix_limit="2026-08-10"
@@ -412,7 +416,7 @@ function install_privexchange() {
 function install_ruler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates from source..."
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
@@ -526,7 +530,7 @@ function install_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    rvm use 3.1.2@evil-winrm --create
+    rvm use 3.2.2@evil-winrm --create
     gem install evil-winrm
     rvm use 3.2.2@default
     add-aliases evil-winrm
@@ -904,9 +908,14 @@ function install_pywhisker() {
 }
 
 function install_manspider() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Manspider"
-    pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
+    git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER
+    cd /opt/tools/MANSPIDER || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    add-aliases manspider
     add-history manspider
     add-test-command "manspider --help"
     add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
@@ -1523,7 +1532,7 @@ function install_adminer() {
 function install_goexec() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoExec"
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
     asdf reshim golang
     add-history goexec
@@ -1618,6 +1627,29 @@ function install_daclsearch() {
     add-history daclsearch
     add-test-command "daclsearch --help"
     add-to-list "daclsearch,https://github.com/uknowsec/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
+}
+
+function install_bloodbash() {
+    colorecho "Installing bloodbash"
+    git -C /opt/tools/ clone --depth 1 https://github.com/dotnetrussell/bloodbash.git
+    cd /opt/tools/bloodbash || exit
+    python3 -m venv --system-site-packages ./venv/
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases bloodbash
+    add-history bloodbash
+    add-test-command "bloodbash.py --help"
+    add-to-list "bloodbash,https://github.com/DotNetRussell/BloodBash,BloodBash is a powerful standalone BloodHound / SharpHound + AzureHound JSON analyzer written in Python"
+}
+
+function install_evenmonitor() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing evenmonitor"
+    pipx install --python 3.13 --system-site-packages git+https://github.com/NeffIsBack/EVENmonitor
+    add-history evenmonitor
+    add-test-command "EVENmonitor --help"
+    add-to-list "EVENmonitor,https://github.com/NeffIsBack/EVENmonitor,Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs "
 }
 
 # Package dedicated to internal Active Directory tools
@@ -1740,6 +1772,8 @@ function package_ad() {
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
+    install_bloodbash              # Bloodhound in terminal
+    install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

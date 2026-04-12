@@ -1,0 +1,2 @@
+bloodbash . --all
+bloodbash . --all --export=html --export-bh --dot
