@@ -832,6 +832,7 @@ function install_burpsuite() {
         exit 1
       fi
     done
+    echo "Burp started successfully. Killing the job now."
     kill "$burp_pid" 2>/dev/null || true
     wait "$burp_pid" 2>/dev/null || true
     # Cleanup local burp database
