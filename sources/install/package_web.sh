@@ -808,10 +808,11 @@ function install_burpsuite() {
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
     # init burp app files
+    local burp_pid
     echo "Starting burp"
     echo y|/usr/lib/jvm/java-21-openjdk/bin/java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json > /dev/null &
-    local burp_pid
     burp_pid=$!
+    echo "Burp is running with PID: $burp_pid"
     local timeout_counter
     timeout_counter=0
     # Wait for Burp to init and start
@@ -827,12 +828,12 @@ function install_burpsuite() {
       else
         criticalecho "Burp starting timed out.."
         kill "$burp_pid" 2>/dev/null || true
-        wait "$burp_pid" 2>/dev/null
+        wait "$burp_pid" 2>/dev/null || true
         exit 1
       fi
     done
     kill "$burp_pid" 2>/dev/null || true
-    wait "$burp_pid" 2>/dev/null
+    wait "$burp_pid" 2>/dev/null || true
     # Cleanup local burp database
     rm -rf /root/.java/.userPrefs/burp
     rm -rf /tmp/burp*.tmp
