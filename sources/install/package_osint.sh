@@ -228,7 +228,7 @@ function install_carbon14() {
     colorecho "Installing Carbon14"
     pipx install Carbon14
     add-history carbon14
-    add-test-command "carbon14.py --help"
+    add-test-command "carbon14 --help"
     add-to-list "carbon14,https://github.com/Lazza/carbon14,OSINT tool for estimating when a web page was written."
 }
 
