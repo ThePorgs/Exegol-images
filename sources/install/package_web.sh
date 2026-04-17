@@ -968,7 +968,6 @@ function install_caido() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Caido"
     fapt libxss1
-    mkdir /opt/tools/caido
     local arch
     arch=$(uname -m)
     local caido_json
@@ -979,15 +978,21 @@ function install_caido() {
     caido_deb=$(echo "$caido_json" | grep -o '"link":"[^"]*"' | cut -d'"' -f4 | grep "linux-${arch}\.deb$")
     local caido_file_name
     caido_file_name=$(basename "$caido_deb")
-    wget "$caido_deb" -O "/opt/tools/caido/$caido_file_name"
-    dpkg -i /opt/tools/caido/"$caido_file_name"
+    wget "$caido_deb" -O "/tmp/$caido_file_name"
+    dpkg -i /tmp/"$caido_file_name"
+
+    # Move caido from /opt/Caido to /opt/tools/Caido
+    mv /opt/Caido/ /opt/tools/
+    rm /usr/bin/caido
+    rm /etc/alternatives/caido
+    ln -sf /opt/tools/Caido/caido /usr/local/bin/caido
 
     # CLI
     caido_cli=$(echo "$caido_json" | grep -o '"link":"[^"]*"' | cut -d'"' -f4 | grep "caido-cli-v.*-linux-${arch}\.tar\.gz$")
     local caido_file_name_cli
     caido_file_name_cli=$(basename "$caido_cli")
-    wget "$caido_cli" -O "/opt/tools/caido/$caido_file_name_cli"
-    tar -xvzf "/opt/tools/caido/$caido_file_name_cli" -C /opt/tools/bin/
+    wget "$caido_cli" -O "/tmp/$caido_file_name_cli"
+    tar -xvzf "/tmp/$caido_file_name_cli" -C /opt/tools/bin/
 
     add-history caido
     add-test-gui-command "caido --no-sandbox"

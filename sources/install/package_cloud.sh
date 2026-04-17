@@ -138,6 +138,11 @@ function install_azure_cli() {
     curl -sL https://aka.ms/InstallAzureCLIDeb -o /tmp/azure-cli-install.sh
     bash /tmp/azure-cli-install.sh
     rm /tmp/azure-cli-install.sh
+
+    # Move az from /opt directory
+    mv /opt/az /opt/tools/az
+    mv /usr/bin/az /opt/tools/bin/
+    sed -i 's|"$bin_dir"/../../opt/az/bin/python3|"$bin_dir"/../az/bin/python3|g' /opt/tools/bin/az
     add-history azure-cli
     add-test-command "az version"
     add-to-list "azure-cli,https://github.com/Azure/azure-cli,A great cloud needs great tools; we're excited to introduce Azure CLI our next generation multi-platform command line experience for Azure."
