@@ -1012,6 +1012,24 @@ function install_bbot() {
     add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
 }
 
+function install_jxscout() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing jxscout"
+    go install -v github.com/francisconeves97/jxscout/cmd/jxscout@v0.9.4
+    asdf reshim golang
+    curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.12"
+    local bun_bin_dir="${HOME}/.bun/bin"
+    if [ -x "${bun_bin_dir}/bun" ]; then
+        ln -sf "${bun_bin_dir}/bun" /opt/tools/bin/bun
+    fi
+    if [ -x "${bun_bin_dir}/bunx" ]; then
+        ln -sf "${bun_bin_dir}/bunx" /opt/tools/bin/bunx
+    fi
+    add-history jxscout
+    add-test-command "jxscout --help"
+    add-to-list "jxscout,https://github.com/francisconeves97/jxscout,JavaScript analysis tool with superpowers for security researchers."
+}
+  
 function install_subzy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing subzy"
@@ -1153,6 +1171,7 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
+    install_jxscout                 # JavaScript analysis tool
     install_subzy                   # Subdomain takeover tool
     install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
