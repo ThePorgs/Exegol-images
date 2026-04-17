@@ -48,6 +48,14 @@ function install_metasploit() {
     fapt postgresql
     cp -r /root/.bundle /var/lib/postgresql
     chown -R postgres:postgres /var/lib/postgresql/.bundle
+    service postgresql start
+    # avoid permissions issues when impersonating postgres
+    cd /tmp || exit
+    sudo -u postgres psql -c "CREATE USER metasploit WITH PASSWORD 'exegol4thewin';"
+    sudo -u postgres psql -c "CREATE DATABASE metasploit;"
+    sudo -u postgres psql -c "ALTER DATABASE metasploit OWNER TO metasploit;"
+    service postgresql stop
+
     chmod -R o+rx /opt/tools/metasploit-framework/
     chmod 444 /opt/tools/metasploit-framework/.git/index # fatal: .git/index: index file open failed: Permission denied
     sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.3.8@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
