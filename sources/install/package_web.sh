@@ -807,6 +807,8 @@ function install_burpsuite() {
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
 
+    mv /root/sources/assets/burpsuite/* /opt/tools/BurpSuiteCommunity/
+
     # Install Jython
     JYTHON_VERSION="2.7.4"
     mkdir /opt/tools/BurpSuiteCommunity/jython
@@ -815,9 +817,6 @@ function install_burpsuite() {
     JRUBY_VERSION="9.4.12.0"
     mkdir /opt/tools/BurpSuiteCommunity/jruby
     wget https://repo1.maven.org/maven2/org/jruby/jruby-complete/${JRUBY_VERSION}/jruby-complete-${JRUBY_VERSION}.jar -O "/opt/tools/BurpSuiteCommunity/jruby/jruby-standalone.jar"
-
-    # Create a directory to hold extensions JAR
-    mkdir /opt/tools/BurpSuiteCommunity/extensions
 
     # init burp app files
     echo "Starting burp"
