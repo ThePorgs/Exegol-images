@@ -807,8 +807,6 @@ function install_burpsuite() {
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
 
-    mv /root/sources/assets/burpsuite/* /opt/tools/BurpSuiteCommunity/
-
     # Install Jython
     JYTHON_VERSION="2.7.4"
     mkdir /opt/tools/BurpSuiteCommunity/jython
