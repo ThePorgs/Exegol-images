@@ -4,9 +4,8 @@
             "user_interface":{
                 "look_and_feel":"Dark"
             }
-        }
-    },
-    "extender":{
+        },
+        "extender":{
             "extensions":[
                 
             ],
@@ -25,4 +24,5 @@
                 "automatically_update_bapps_on_startup":true
             }
         }
+    }
 }
