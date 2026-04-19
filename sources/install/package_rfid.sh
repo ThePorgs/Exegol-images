@@ -76,7 +76,12 @@ function install_proxmark3() {
     colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3GENERIC (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
     colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmark3/"
     fapt --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev liblz4-dev
-    git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
+    # git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
+    # build fail in latest version: https://github.com/RfidResearchGroup/proxmark3/issues/3250
+    local temp_fix_limit="2026-05-01"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      git -C /opt/tools/ clone -b v4.21611 --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
+    fi
     cd /opt/tools/proxmark3 || exit
     make clean
     make -j all PLATFORM=PM3GENERIC
