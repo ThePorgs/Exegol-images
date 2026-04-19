@@ -908,14 +908,9 @@ function install_pywhisker() {
 }
 
 function install_manspider() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Manspider"
-    git -C /opt/tools/ clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER
-    cd /opt/tools/MANSPIDER || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    deactivate
-    add-aliases manspider
+    pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
     add-history manspider
     add-test-command "manspider --help"
     add-to-list "manspider,https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
@@ -1079,13 +1074,7 @@ function install_ldaprelayscan() {
 function install_goldencopy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
-    cd /opt/tools/GoldenCopy || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    deactivate
-    ln -v -s /opt/tools/GoldenCopy/venv/bin/goldencopy /opt/tools/bin/goldencopy
+    pipx install --system-site-packages GoldenCopy
     add-history goldencopy
     add-test-command "goldencopy --help"
     add-to-list "goldencopy,https://github.com/Dramelac/GoldenCopy,Copy the properties and groups of a user from neo4j (bloodhound) to create an identical golden ticket"
