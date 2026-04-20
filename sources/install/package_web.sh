@@ -1059,6 +1059,17 @@ function install_curlie() {
     add-to-list "curlie,https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
 }
 
+function install_xsschecker() {
+	# CODE-CHECK-WHITELIST=add-aliases
+	colorecho "Installing xsschecker"
+	go install -v github.com/rix4uni/xsschecker@latest
+	asdf reshim golang
+	add-history xsschecker
+	add-test-command "xsschecker"
+	add-to-list "xsschecker,https://github.com/rix4uni/xsschecker,Tool for checking reflected endpoints to find possible XSS vulnerable endpoints."
+}
+
+
 function install_xxeinjector() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing XXEinjector"
@@ -1153,6 +1164,7 @@ function package_web() {
     install_caido                   # Caido
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
+    install_xsschecker              # Checker of reflected endpoints for potential xss vulnerability
     install_subzy                   # Subdomain takeover tool
     install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
