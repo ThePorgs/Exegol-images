@@ -113,6 +113,18 @@ function install_mobsf() {
     add-to-list "mobsf,https://github.com/MobSF/Mobile-Security-Framework-MobSF,Automated and all-in-one mobile application (Android/iOS/Windows) pen-testing malware analysis and security assessment framework"
 }
 
+function install_apk2url() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    local APK2URL_COMMIT="d0ee6424797729233810c522e47c4a439e357491"
+    git -C /opt/tools/ clone https://github.com/n0mi1k/apk2url
+    git -C /opt/tools/apk2url checkout "${APK2URL_COMMIT}"
+    chmod +x /opt/tools/apk2url/apk2url.sh
+    ln -sf /opt/tools/apk2url/apk2url.sh /opt/tools/bin/apk2url
+    add-history apk2url
+    add-test-command "apk2url /dev/null 2>&1 | grep -q 'Usage'"
+    add-to-list "apk2url,https://github.com/n0mi1k/apk2url,Quickly extract URLs and secrets from APK files."
+}
+
 # Package dedicated to mobile apps pentest tools
 function package_mobile() {
     set_env
@@ -127,6 +139,7 @@ function package_mobile() {
     install_objection               # Runtime mobile exploration toolkit
     install_androguard              # Reverse engineering and analysis of Android applications
     install_mobsf                   # Automated mobile application testing framework
+    install_apk2url                 # apk2url easily extracts URL and IP endpoints from an APK file.
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
