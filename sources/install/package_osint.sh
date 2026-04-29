@@ -249,8 +249,10 @@ function install_photon() {
 function install_ipinfo() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ipinfo"
-    # TODO: npm venv
-    sudo npm install ipinfo-cli --global
+
+    go install -v github.com/ipinfo/cli/ipinfo@ipinfo-3.3.1
+    asdf reshim golang
+
     add-history ipinfo
     add-test-command "ipinfo 127.0.0.1"
     add-to-list "ipinfo,https://github.com/ipinfo/cli,Get information about an IP address or hostname."
