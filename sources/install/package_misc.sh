@@ -259,6 +259,29 @@ function install_nfsshell() {
     add-to-list "nfsshell,https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
 }
 
+function install_foundry() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing foundry"
+    curl -sSL https://foundry.paradigm.xyz -o /tmp/get-foundry.sh
+    bash /tmp/get-foundry.sh
+    source /root/.zshenv
+    foundryup
+
+    # Rename binaries to avoid conflicts with other tools
+    mv /root/.foundry/bin/forge /root/.foundry/bin/foundry-forge
+    mv /root/.foundry/bin/cast /root/.foundry/bin/foundry-cast
+    mv /root/.foundry/bin/anvil /root/.foundry/bin/foundry-anvil
+    mv /root/.foundry/bin/chisel /root/.foundry/bin/foundry-chisel
+
+    add-history foundry
+
+    add-test-command "foundry-forge --help"
+    add-test-command "foundry-cast --help"
+    add-test-command "foundry-anvil --help"
+    add-test-command "foundry-chisel --help"
+    add-to-list "foundry,https://github.com/foundry-rs/foundry,fast, portable, and modular toolkit for Ethereum application development written in Rust."
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -285,6 +308,7 @@ function package_misc() {
     install_thr             # https://www.thehacker.recipes/
     install_dtrx            # Intelligent archive extractor
     install_nfsshell        # NFS share interaction tool
+    install_foundry         # Ethereum development toolkit 
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
