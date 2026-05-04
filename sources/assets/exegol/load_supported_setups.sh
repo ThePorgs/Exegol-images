@@ -325,6 +325,14 @@ function trust_ca_certs_in_firefox() {
   fi
 }
 
+function deploy_burpsuite() {
+  logger_verbose "Deploying Burpsuite User Config"
+  [[ -f "$MY_SETUP_PATH/burpsuite/UserConfigCommunity.json" ]] && cp "$MY_SETUP_PATH/burpsuite/UserConfigCommunity.json" "/root/.BurpSuite/UserConfigCommunity.json"
+
+  pip3 install -r /opt/tools/BurpSuiteCommunity/requirements.txt
+  python3 "/opt/tools/BurpSuiteCommunity/generate_config.py"
+}
+
 function _trust_ca_cert_in_firefox() {
   # internal function to trust a CA cert (.DER) given the path and the name to set
   logger_verbose "Trusting cert $2 ($1) in Firefox"
@@ -353,6 +361,7 @@ deploy_apt
 deploy_python3
 deploy_firefox_policy
 deploy_bloodhound
+deploy_burpsuite
 trust_ca_certs_in_firefox
 deploy_arsenal_cheatsheet
 

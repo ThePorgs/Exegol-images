@@ -4,6 +4,25 @@
             "user_interface":{
                 "look_and_feel":"Dark"
             }
+        },
+        "extender":{
+            "extensions":[
+                
+            ],
+            "java":{
+                "folder_for_loading_library_jar_files":""
+            },
+            "python":{
+                "folder_for_loading_modules":"",
+                "location_of_jython_standalone_jar_file":"/opt/tools/BurpSuiteCommunity/jython/jython-standalone.jar"
+            },
+            "ruby":{
+                "location_of_jruby_jar_file":"/opt/tools/BurpSuiteCommunity/jruby/jruby-standalone.jar"
+            },
+            "settings":{
+                "automatically_reload_extensions_on_startup":true,
+                "automatically_update_bapps_on_startup":true
+            }
         }
     }
 }
