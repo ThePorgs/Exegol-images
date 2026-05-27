@@ -154,6 +154,15 @@ function install_s3scanner() {
 	add-to-list "s3scanner,https://github.com/sa7mon/S3Scanner,a go tool for s3 buckets misconfiguration across S3-compatible APIs"
 }
 
+function install_pacu() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Pacu"
+    pipx install --system-site-packages pacu
+    add-history pacu
+    add-test-command "pacu --help"
+    add-to-list "pacu,https://github.com/RhinoSecurityLabs/pacu,The AWS exploitation framework for testing the security of Amazon Web Services environments."
+}
+
 # Package dedicated to cloud tools
 function package_cloud() {
     set_env
@@ -170,6 +179,7 @@ function package_cloud() {
     install_cloudmapper
     install_azure_cli       # Command line for Azure
     install_s3scanner		# S3 buckets misconfiguration scanner
+    install_pacu            # AWS exploitation framework
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
