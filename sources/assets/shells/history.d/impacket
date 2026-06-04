@@ -74,6 +74,7 @@ mssqlclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" -windows-auth
 dpapi.py credential -file "$CRED_FILE" -key "$DECRYPTED_MASTERKEY"
 dpapi.py masterkey -file "$MASTERKEY_FILE" -sid "$USER_SID" -hash "$NT_HASH"
 dpapi.py masterkey -file "$MASTERKEY_FILE" -sid "$USER_SID" -password "$MASTERKEY_PASSWORD"
+dpapi.py masterkey -file "$MASTERKEY_FILE" -pvk "$BACKUP_KEY"
 dpapi.py backupkeys --export -t "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 describeTicket.py "$CCACHE_PATH"
 tgssub.py -in "$CCACHE_PATH" -altservice "cifs/$HOSTNAME.$DOMAIN" -out newticket-cifs.ccache
