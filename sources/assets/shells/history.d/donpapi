@@ -1,1 +1,4 @@
-DonPAPI "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
+DonPAPI gui
+donpapi gui
+DonPAPI collect -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -t "$TARGET"
+donpapi collect -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -t "$TARGET"
