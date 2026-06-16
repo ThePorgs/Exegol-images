@@ -196,7 +196,7 @@ function install_linkedin2username() {
     cd /opt/tools/linkedin2username || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    pip3 install .
     deactivate
     add-aliases linkedin2username
     add-history linkedin2username
