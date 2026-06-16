@@ -1,0 +1,1 @@
+alias ua='shuf -n1 /opt/lists/seclists/Fuzzing/User-Agents/user-agents-whatismybrowserdotcom-large.txt'
