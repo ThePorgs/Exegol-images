@@ -216,10 +216,13 @@ function install_bloodhound-ce() {
     # Build the API
     asdf set golang 1.26.1
 
-     # See https://github.com/ThePorgs/Exegol-images/pull/667
-    local temp_fix_limit="2026-08-10"
+    # PostgreSQL 15 rejects inline `STORAGE MAIN` in BHCE SQL migrations (still present in v9.2.2).
+    # Patch all embedded migration SQL files before go build. See upstream-issues/bloodhound-ce-storage-main.md
+    # Revert when upstream removes STORAGE MAIN from migrations:
+    #   remove the temp_fix_limit block below and keep only the go build step.
+    local temp_fix_limit="2026-12-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
-        sed -i 's/\s*STORAGE MAIN//' ./cmd/api/src/database/migration/migrations/v8.5.0.sql
+        find ./cmd/api/src/database/migration/migrations -name '*.sql' -exec sed -i 's/[[:space:]]*STORAGE MAIN//' {} +
     fi
 
     go build -C cmd/api/src -o ${bloodhoundce_path}/bloodhound -ldflags "-X 'github.com/specterops/bloodhound/cmd/api/src/version.majorVersion=8' -X 'github.com/specterops/bloodhound/cmd/api/src/version.minorVersion=0' -X 'github.com/specterops/bloodhound/cmd/api/src/version.patchVersion=1'" github.com/specterops/bloodhound/cmd/api/src/cmd/bhapi
