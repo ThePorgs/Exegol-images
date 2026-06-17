@@ -157,7 +157,9 @@ function install_s3scanner() {
 function install_pacu() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Pacu"
-    pipx install --system-site-packages pacu
+    # Do not use --system-site-packages: it can mix base-image `requests` with pipx `urllib3`,
+    # triggering RequestsDependencyWarning at runtime (e.g. when running `pacu --help`).
+    pipx install pacu
     add-history pacu
     add-test-command "pacu --help"
     add-to-list "pacu,https://github.com/RhinoSecurityLabs/pacu,The AWS exploitation framework for testing the security of Amazon Web Services environments."
