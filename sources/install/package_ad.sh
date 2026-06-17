@@ -1618,7 +1618,7 @@ function install_daclsearch() {
     pipx install --system-site-packages git+https://github.com/cogiceo/daclsearch
     add-history daclsearch
     add-test-command "daclsearch --help"
-    add-to-list "daclsearch,https://github.com/uknowsec/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
+    add-to-list "daclsearch,https://github.com/cogiceo/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
 }
 
 function install_bloodbash() {

