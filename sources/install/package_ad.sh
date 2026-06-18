@@ -1644,6 +1644,15 @@ function install_evenmonitor() {
     add-to-list "EVENmonitor,https://github.com/NeffIsBack/EVENmonitor,Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs "
 }
 
+function install_bhcli() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing bhcli"
+    pipx install --system-site-packages git+https://github.com/exploide/bhcli 
+    add-history bhcli
+    add-test-command "bhcli --help"
+    add-to-list "bhcli,https://github.com/exploide/bhcli,CLI tool to interact with BloodHound CE API"
+}
+
 # Package dedicated to internal Active Directory tools
 function package_ad() {
     set_env
@@ -1766,6 +1775,7 @@ function package_ad() {
     install_impacket_og            # Impacket scripts (original version)
     install_bloodbash              # Bloodhound in terminal
     install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
+    install_bhcli		           # CLI tool to interact with BloodHound CE API
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

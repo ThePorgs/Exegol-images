@@ -1,0 +1,5 @@
+bhcli auth http://localhost:1030
+bhcli upload /path/to/bloodhound.zip
+bhcli stats -d "$DOMAIN"
+bhcli audit -d "$DOMAIN"
+bhcli clear-db --all
