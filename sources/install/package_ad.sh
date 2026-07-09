@@ -742,11 +742,12 @@ function install_gpp-decrypt() {
 function install_ntlmv1-multi() {
     colorecho "Installing ntlmv1 multi tool"
     git -C /opt/tools clone --depth 1 https://github.com/evilmog/ntlmv1-multi
-    cd /opt/tools/ntlmv1-multi || exit
+    pushd /opt/tools/ntlmv1-multi >/dev/null || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     pip3 install pycryptodome
     deactivate
+    popd >/dev/null || exit
     add-aliases ntlmv1-multi
     add-history ntlmv1-multi
     add-test-command "ntlmv1-multi.py --ntlmv1 SV01$::DOMAIN.LOCAL:AD1235DEAC142CD5FC2D123ADCF51A111ADF45C2345ADCF5:AD1235DEAC142CD5FC2D123ADCF51A111ADF45C2345ADCF5:1122334455667788"
