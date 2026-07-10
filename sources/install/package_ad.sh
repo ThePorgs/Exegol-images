@@ -1192,6 +1192,16 @@ function install_roastinthemiddle() {
     add-to-list "roastinthemiddle,https://github.com/Tw1sm/RITM,RoastInTheMiddle is a tool to intercept and relay NTLM authentication requests."
 }
 
+function install_relayinformer() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing RelayInformer"
+    git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/RelayInformer
+    pipx install --system-site-packages /opt/tools/RelayInformer/Python/
+    add-history relayinformer
+    add-test-command "relayinformer --help"
+    add-to-list "RelayInformer,https://github.com/zyn3rgy/RelayInformer,Determine EPA enforcement levels of popular NTLM relay targets from a Linux host."
+}
+
 function install_PassTheCert() {
     colorecho "Installing PassTheCert"
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
@@ -1743,6 +1753,7 @@ function package_ad() {
     install_msprobe
     install_masky
     install_roastinthemiddle
+    install_relayinformer           # Determine EPA enforcement levels of popular NTLM relay targets
     install_PassTheCert
     install_bqm                    # Deduplicate custom BloudHound queries from different datasets and merge them in one customqueries.json file.
     install_neo4j                  # Bloodhound dependency
