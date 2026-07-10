@@ -1,0 +1,4 @@
+relayinformer ldap --method LDAPS --dc-ip "$DC_IP"
+relayinformer ldap --method BOTH --dns -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+relayinformer http --url "https://pki.$DOMAIN/certsrv" --user "$DOMAIN/$USER" --password "$PASSWORD"
+relayinformer http --url "http://pki.$DOMAIN/certsrv" --user "$DOMAIN\\$USER" --hashes LM:NT
