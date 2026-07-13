@@ -115,6 +115,7 @@ function install_mobsf() {
 
 function install_apk2url() {
     # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing apk2url"
     local APK2URL_COMMIT="d0ee6424797729233810c522e47c4a439e357491"
     git -C /opt/tools/ clone https://github.com/n0mi1k/apk2url
     git -C /opt/tools/apk2url checkout "${APK2URL_COMMIT}"
