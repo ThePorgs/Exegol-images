@@ -1,1 +1,2 @@
-adwsdomaindump -u "$DOMAIN"\\"$USER" -p "$PASSWORD" -n "$DC_IP" "$DC_HOST"
+adwsdomaindump -u "$DOMAIN"\\"$USER" -p ":$NT_HASH" --outdir adwsdomaindump -n "$DC_IP" "$DC_HOST"
+adwsdomaindump -u "$DOMAIN"\\"$USER" -p "$PASSWORD" --outdir adwsdomaindump -n "$DC_IP" "$DC_HOST"

@@ -1,4 +1,5 @@
 aws configure --profile exegol
+aws --profile exegol sts get-caller-identity
 aws s3 ls s3://mybucket
-aws s3 iam list-users
-aws s3 iam get-user --user-name $USER
+aws iam list-users
+aws iam get-user --user-name $USER

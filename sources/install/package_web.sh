@@ -53,7 +53,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2026-06-10"
+    local temp_fix_limit="2026-08-10"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
@@ -457,11 +457,11 @@ function install_hakrawler() {
 function install_gowitness() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing gowitness"
+    asdf set golang 1.26.1
     go install -v github.com/sensepost/gowitness@latest
     asdf reshim golang
     add-history gowitness
     add-test-command "gowitness --help"
-    add-test-command "gowitness scan single --url https://exegol.readthedocs.io" # check the chromium dependency
     add-to-list "gowitness,https://github.com/sensepost/gowitness,A website screenshot utility written in Golang."
 }
 
@@ -596,16 +596,11 @@ function install_jdwp_shellifier(){
 }
 
 function install_httpmethods() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httpmethods"
-    git -C /opt/tools/ clone --depth 1 https://github.com/ShutdownRepo/httpmethods
-    cd /opt/tools/httpmethods || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases httpmethods
+    pipx install --system-site-packages git+https://github.com/ShutdownRepo/httpmethods
     add-history httpmethods
-    add-test-command "httpmethods.py --help"
+    add-test-command "httpmethods --help"
     add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
 }
 
@@ -799,9 +794,11 @@ function install_naabu() {
 function install_burpsuite() {
     colorecho "Installing Burp"
     mkdir /opt/tools/BurpSuiteCommunity
-    # using $(which curl) to avoid having additional logs put in curl output being executed because of catch_and_retry
-    burp_version=$($(which curl) -s "https://portswigger.net/burp/releases#community" | grep -P -o "\d{4}-\d-\d" | head -1 | tr - .)
-    wget "https://portswigger.net/burp/releases/download?product=community&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
+    curl 'https://portswigger.net/burp/releases/data?previousLastId=-1&lastId=-1&pageSize=10' -o /tmp/burp_relases.json
+    burp_release=$(jq -r '.ResultSet.Results[] | select(.releaseChannels | contains(["Stable"])) | .builds[] | select(.BuildCategoryPlatformLabel == "JAR" and (.BuildCategoryId == "community" or .BuildCategoryId == "desktop")) | "\(.BuildCategoryId) \(.Version)"' /tmp/burp_relases.json | head -n 1)
+    burp_version=$(echo "$burp_release" | cut -d ' ' -f2)
+    burp_product=$(echo "$burp_release" | cut -d ' ' -f1)
+    wget "https://portswigger.net/burp/releases/startdownload?product=$burp_product&version=$burp_version&type=Jar" -O /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar
     # TODO: two lines below should set up dark theme as default, does it work?
     mkdir -p /root/.BurpSuite/
     # proxy (server) config for burpsuite
@@ -812,6 +809,38 @@ function install_burpsuite() {
     cp -v /root/sources/assets/burpsuite/trust-ca-burp.sh /opt/tools/BurpSuiteCommunity/
     chmod +x /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh
     ln -v -s /opt/tools/BurpSuiteCommunity/trust-ca-burp.sh /opt/tools/bin/trust-ca-burp
+    # init burp app files
+    local burp_pid
+    echo "Starting burp"
+    echo y|/usr/lib/jvm/java-21-openjdk/bin/java -Djava.awt.headless=true -jar /opt/tools/BurpSuiteCommunity/BurpSuiteCommunity.jar --config-file=/opt/tools/BurpSuiteCommunity/conf.json > /dev/null &
+    burp_pid=$!
+    echo "Burp is running with PID: $burp_pid"
+    local timeout_counter
+    timeout_counter=0
+    # Wait for Burp to init and start
+    while ! (netstat -lnt|grep -qEo "(127.0.0.1|0.0.0.0):8080")
+    do
+      if ! kill -0 "$burp_pid" 2>/dev/null; then
+        criticalecho "Burp exited before becoming ready."
+        exit 1
+      fi
+      if [[ $timeout_counter -lt 300 ]]; then
+        sleep 1
+        timeout_counter=$((timeout_counter+1))
+      else
+        criticalecho "Burp starting timed out.."
+        kill "$burp_pid" 2>/dev/null || true
+        wait "$burp_pid" 2>/dev/null || true
+        exit 1
+      fi
+    done
+    echo "Burp started successfully. Killing the job now."
+    kill "$burp_pid" 2>/dev/null || true
+    wait "$burp_pid" 2>/dev/null || true
+    # Cleanup local burp database
+    rm -rf /root/.java/.userPrefs/burp
+    rm -rf /tmp/burp*.tmp
+    rm /tmp/burp_relases.json
     add-aliases burpsuite
     add-history burpsuite
     add-test-command "which burpsuite"

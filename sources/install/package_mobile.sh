@@ -31,7 +31,14 @@ function install_scrpy() {
                  meson ninja-build libsdl2-dev \
                  libavcodec-dev libavdevice-dev libavformat-dev libavutil-dev \
                  libswresample-dev libusb-1.0-0 libusb-1.0-0-dev
-    git clone --depth 1 https://github.com/Genymobile/scrcpy
+    # May 2026: scrcpy v4.0 requires SDL3; libsdl3 is not installable on Debian 12 (bookworm) in CI.
+    # Revert when base image provides SDL3 (Debian >= trixie): use libsdl3-0/libsdl3-dev and
+    # `git clone --depth 1 https://github.com/Genymobile/scrcpy` (see upstream-issues/scrcpy-sdl3-debian-bookworm.md).
+    local temp_fix_limit="2026-08-10"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      git clone --depth 1 --branch v3.3.4 https://github.com/Genymobile/scrcpy
+    fi
+    #git clone --depth 1 https://github.com/Genymobile/scrcpy
     # opening subshell to not have to cd back
     (
       cd scrcpy || exit

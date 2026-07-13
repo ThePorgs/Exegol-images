@@ -1,0 +1,2 @@
+EVENmonitor --dc-ip "$DC_IP" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+even --dc-ip "$DC_IP" -u "$USER" -p "$PASSWORD" -d "$DOMAIN"

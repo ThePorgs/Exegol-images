@@ -146,12 +146,23 @@ function install_azure_cli() {
 function install_s3scanner() {
     # CODE-CHECK-WHITELIST=add-aliases
 	colorecho "Installing s3scanner"
-    asdf set golang 1.24.4
+    asdf set golang 1.26.1
     go install -v github.com/sa7mon/s3scanner@latest
     asdf reshim golang
 	add-history s3scanner
 	add-test-command "s3scanner -version"
 	add-to-list "s3scanner,https://github.com/sa7mon/S3Scanner,a go tool for s3 buckets misconfiguration across S3-compatible APIs"
+}
+
+function install_pacu() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Pacu"
+    # Do not use --system-site-packages: it can mix base-image `requests` with pipx `urllib3`,
+    # triggering RequestsDependencyWarning at runtime (e.g. when running `pacu --help`).
+    pipx install pacu
+    add-history pacu
+    add-test-command "pacu --help"
+    add-to-list "pacu,https://github.com/RhinoSecurityLabs/pacu,The AWS exploitation framework for testing the security of Amazon Web Services environments."
 }
 
 # Package dedicated to cloud tools
@@ -170,6 +181,7 @@ function package_cloud() {
     install_cloudmapper
     install_azure_cli       # Command line for Azure
     install_s3scanner		# S3 buckets misconfiguration scanner
+    install_pacu            # AWS exploitation framework
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

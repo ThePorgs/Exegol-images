@@ -1,0 +1,2 @@
+pacu --list-modules
+pacu --session pentest

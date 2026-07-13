@@ -196,7 +196,7 @@ function install_linkedin2username() {
     cd /opt/tools/linkedin2username || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    pip3 install .
     deactivate
     add-aliases linkedin2username
     add-history linkedin2username
@@ -224,16 +224,11 @@ function install_waybackurls() {
 }
 
 function install_carbon14() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Carbon14"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Lazza/Carbon14
-    cd /opt/tools/Carbon14 || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    deactivate
-    add-aliases carbon14
+    pipx install Carbon14
     add-history carbon14
-    add-test-command "carbon14.py --help"
+    add-test-command "carbon14 --help"
     add-to-list "carbon14,https://github.com/Lazza/carbon14,OSINT tool for estimating when a web page was written."
 }
 
@@ -254,8 +249,10 @@ function install_photon() {
 function install_ipinfo() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ipinfo"
-    # TODO: npm venv
-    sudo npm install ipinfo-cli --global
+
+    go install -v github.com/ipinfo/cli/ipinfo@latest
+    asdf reshim golang
+
     add-history ipinfo
     add-test-command "ipinfo 127.0.0.1"
     add-to-list "ipinfo,https://github.com/ipinfo/cli,Get information about an IP address or hostname."
