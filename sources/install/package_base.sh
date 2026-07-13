@@ -458,6 +458,13 @@ function install_wireguard() {
   # CODE-CHECK-WHITELIST=add-aliases,add-history
   colorecho "Installing WireGuard"
   fapt wireguard
+
+  # If the script does NOT already contain the src_valid_mark check, apply the patch  (for older version)
+  # shellcheck disable=SC2016
+  if ! grep -qF '$(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1' "$(which wg-quick)"; then
+    # shellcheck disable=SC2016
+    sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
+  fi
   add-test-command "wg-quick -h"
   add-to-list "wireguard,https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
 }
