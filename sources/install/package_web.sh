@@ -1072,6 +1072,16 @@ function install_xxeinjector() {
     add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
 }
 
+function install_dalfox() {
+	# CODE-CHECK-WHITELIST=add-aliases
+	colorecho "Installing dalfox"
+	source "$HOME/.cargo/env"
+	cargo install dalfox
+	add-history dalfox
+	add-test-command "dalfox --help"
+	add-to-list "dalfox,https://github.com/hahwul/dalfox,a powerful open-source XSS scanner and utility focused on automation."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -1160,6 +1170,7 @@ function package_web() {
     install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
     install_xxeinjector             # XXE injection testing tool
+    install_dalfox	                # An automation tool for xss scanning
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

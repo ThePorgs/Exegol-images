@@ -1,0 +1,6 @@
+dalfox url "$TARGET" -b https://your-callback-url.com
+dalfox scan "$TARGET"
+dalfox scan urls.txt
+dalfox scan https://app/post --sxss-url https://app/feed
+dalfox server --api-key "your-secret-key"
+dalfox mcp
