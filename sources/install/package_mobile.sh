@@ -140,7 +140,7 @@ function package_mobile() {
     install_objection               # Runtime mobile exploration toolkit
     install_androguard              # Reverse engineering and analysis of Android applications
     install_mobsf                   # Automated mobile application testing framework
-    install_apk2url                 # apk2url easily extracts URL and IP endpoints from an APK file.
+    install_apk2url                 # Quickly extract URLs and secrets from APK files
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
