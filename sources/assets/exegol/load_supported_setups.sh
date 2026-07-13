@@ -359,4 +359,5 @@ deploy_arsenal_cheatsheet
 run_user_setup
 
 wrapper_success "Successfully deployed [green]my-resources[/green]!"
+gzip "$LOG_FILE"
 exit 0

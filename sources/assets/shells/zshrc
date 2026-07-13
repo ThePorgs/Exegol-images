@@ -79,3 +79,5 @@ else
   [ -d /opt/my-resources/setup/zsh ] || mkdir -p /opt/my-resources/setup/zsh
   cp /.exegol/skel/zsh/zshrc /opt/my-resources/setup/zsh/zshrc
 fi
+
+[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh

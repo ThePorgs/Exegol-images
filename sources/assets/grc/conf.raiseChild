@@ -1,0 +1,40 @@
+# GENERAL INFO
+regexp=.*\[\*\].*
+colours=blue
+=======
+# GENERAL WARNING
+regexp=.*\[\!\].*
+colours=yellow
+=======
+# GENERAL DEFAULT
+regexp=.*\[\-\].*
+colours=yellow
+=======
+# SUCCESS NT hashes
+regexp=.{1,120}:\d{1,4}:[0-9a-fA-F]{32}:[0-9a-fA-F]{32}:::
+colours=bold green
+=======
+# SUCCESS Kerberos AES256 key
+regexp=.{1,120}:aes256-cts-hmac-sha1-96s?:[0-9a-fA-F]{64}
+colours=green
+=======
+# SUCCESS Kerberos AES128 key
+regexp=.{1,120}:aes128-cts-hmac-sha1-96s?:[0-9a-fA-F]{32}
+colours=green
+=======
+# SUCCESS TGT obtained
+regexp=.*\[\*\].*TGT obtained.*
+colours=bold green
+=======
+# SUCCESS Golden ticket created
+regexp=.*\[\*\].*[Gg]olden ticket.*
+colours=bold green
+=======
+# INFO Enterprise Admin SID
+regexp=.*\[\*\].*Enterprise Admin SID.*
+colours=cyan
+=======
+# INFO Target user account
+regexp=.*\[\*\].*Target User account name.*
+colours=cyan
+=======

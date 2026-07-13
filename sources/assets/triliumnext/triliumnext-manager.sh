@@ -14,7 +14,8 @@ function get_config_values() {
 # Function to start the application
 function start_app() {
   get_config_values
-  nvm use default
+  nvm install --lts=jod >/dev/null
+  nvm use --lts=jod
   local log_file="/tmp/triliumnext.nohup.out"
   nohup npm --prefix /opt/tools/triliumnext run server:start &> "$log_file" &
   # npx --prefix /opt/tools/triliumnext/ nodemon src/main.ts  # this command can be used instead of npm run server:start, especially if one needs to pass the TRILIUM_DATA_DIR env var
@@ -49,7 +50,8 @@ function start_app() {
 # Function to test the application
 function test_app() {
   get_config_values
-  nvm use default
+  nvm install --lts=jod >/dev/null
+  nvm use --lts=jod
   npm --prefix /opt/tools/triliumnext run server:start &> /dev/null &
   NODE_PID=$!
 

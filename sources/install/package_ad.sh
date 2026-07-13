@@ -204,20 +204,27 @@ function install_bloodhound-ce() {
     cd "${bloodhoundce_path}/src/" || exit
 
     # Reference: https://github.com/SpecterOps/BloodHound/blob/main/dockerfiles/bloodhound.Dockerfile
+    # BloodHound workspaces expect globalThis.crypto during build (Node >=19).
+    source ~/.nvm/nvm.sh
+    nvm install 20
+    nvm use 20
     yarn install
     yarn build
     mkdir -p ./cmd/api/src/api/static/assets
     cp -r ./cmd/ui/dist/. ./cmd/api/src/api/static/assets
 
     # Build the API
-    asdf set golang 1.24.4
+    asdf set golang 1.26.1
 
-     # See https://github.com/ThePorgs/Exegol-images/pull/667
-    local temp_fix_limit="2026-08-10"
+    # PostgreSQL 15 rejects inline `STORAGE MAIN` in BHCE SQL migrations (still present in v9.2.2).
+    # Patch all embedded migration SQL files before go build. See upstream-issues/bloodhound-ce-storage-main.md
+    # Revert when upstream removes STORAGE MAIN from migrations:
+    #   remove the temp_fix_limit block below and keep only the go build step.
+    local temp_fix_limit="2026-12-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
-        sed -i 's/\s*STORAGE MAIN//' ./cmd/api/src/database/migration/migrations/v8.5.0.sql
+        find ./cmd/api/src/database/migration/migrations -name '*.sql' -exec sed -i 's/[[:space:]]*STORAGE MAIN//' {} +
     fi
-    
+
     go build -C cmd/api/src -o ${bloodhoundce_path}/bloodhound -ldflags "-X 'github.com/specterops/bloodhound/cmd/api/src/version.majorVersion=8' -X 'github.com/specterops/bloodhound/cmd/api/src/version.minorVersion=0' -X 'github.com/specterops/bloodhound/cmd/api/src/version.patchVersion=1'" github.com/specterops/bloodhound/cmd/api/src/cmd/bhapi
 
     # Force remove go and yarn cache that are not stored in standard locations
@@ -328,6 +335,7 @@ function install_impacket() {
     cp -v /root/sources/assets/grc/conf.getgpppassword /usr/share/grc/conf.getgpppassword
     cp -v /root/sources/assets/grc/conf.rbcd /usr/share/grc/conf.rbcd
     cp -v /root/sources/assets/grc/conf.describeTicket /usr/share/grc/conf.describeTicket
+    cp -v /root/sources/assets/grc/conf.raiseChild /usr/share/grc/conf.raiseChild
     add-aliases impacket
     add-history impacket
     # making sure we have the right mention of the fork
@@ -412,7 +420,7 @@ function install_privexchange() {
 function install_ruler() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Downloading ruler and form templates from source..."
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     go install -v github.com/sensepost/ruler@latest
     asdf reshim golang
     add-history ruler
@@ -526,7 +534,7 @@ function install_krbrelayx() {
 
 function install_evilwinrm() {
     colorecho "Installing evil-winrm"
-    rvm use 3.1.2@evil-winrm --create
+    rvm use 3.2.2@evil-winrm --create
     gem install evil-winrm
     rvm use 3.2.2@default
     add-aliases evil-winrm
@@ -1070,13 +1078,7 @@ function install_ldaprelayscan() {
 function install_goldencopy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
-    git -C /opt/tools/ clone --depth 1 https://github.com/Dramelac/GoldenCopy
-    cd /opt/tools/GoldenCopy || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    deactivate
-    ln -v -s /opt/tools/GoldenCopy/venv/bin/goldencopy /opt/tools/bin/goldencopy
+    pipx install --system-site-packages GoldenCopy
     add-history goldencopy
     add-test-command "goldencopy --help"
     add-to-list "goldencopy,https://github.com/Dramelac/GoldenCopy,Copy the properties and groups of a user from neo4j (bloodhound) to create an identical golden ticket"
@@ -1523,7 +1525,7 @@ function install_adminer() {
 function install_goexec() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoExec"
-    asdf set golang 1.24.1
+    asdf set golang 1.26.1
     CGO_ENABLED=0 go install -ldflags='-s -w' -v github.com/FalconOpsLLC/goexec@latest
     asdf reshim golang
     add-history goexec
@@ -1558,26 +1560,7 @@ function install_godap() {
 function install_powerview() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing powerview.py"
-    # When temp fix expires and upstream has fixed the SyntaxError (see sources/assets/upstream-issues/powerview-py-fstring-syntaxerror.md), revert to:
-    #   pipx install git+https://github.com/aniqfakhrul/powerview.py
-    #   add-history powerview.py
-    #   add-test-command "powerview --help"
-    #   add-to-list "Powerview.py,..."
-    # and remove: git clone, temp fix block, venv, pip install ., add-aliases; delete assets/shells/aliases.d/powerview.py and add CODE-CHECK-WHITELIST=add-aliases.
-    git -C /opt/tools clone --depth 1 https://github.com/aniqfakhrul/powerview.py
-    cd /opt/tools/powerview.py || exit
-    # https://github.com/aniqfakhrul/powerview.py/issues/224
-    # Temp fix: commit 79327239 introduced SyntaxError on Python 3.11 (f-string backslash in utils/shell.py). Checkout parent.
-    local temp_fix_limit="2026-08-10"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-        git fetch --unshallow
-        git checkout 1296e7a70a638694842ca5d13c6b510ca7cf0ce9
-    fi
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install .
-    deactivate
-    ln -v -s /opt/tools/powerview.py/venv/bin/powerview /opt/tools/bin/powerview
+    pipx install --system-site-packages git+https://github.com/aniqfakhrul/powerview.py
     add-history powerview.py
     add-test-command "powerview --help"
     add-to-list "Powerview.py,https://github.com/aniqfakhrul/powerview.py,PowerView.py is an alternative for the awesome original PowerView.ps1 script."
@@ -1636,7 +1619,45 @@ function install_daclsearch() {
     pipx install --system-site-packages git+https://github.com/cogiceo/daclsearch
     add-history daclsearch
     add-test-command "daclsearch --help"
-    add-to-list "daclsearch,https://github.com/uknowsec/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
+    add-to-list "daclsearch,https://github.com/cogiceo/daclsearch,Exhaustive search and flexible filtering of Active Directory ACEs"
+}
+
+function install_bloodbash() {
+    colorecho "Installing bloodbash"
+    git -C /opt/tools/ clone --depth 1 https://github.com/dotnetrussell/bloodbash.git
+    cd /opt/tools/bloodbash || exit
+    python3 -m venv --system-site-packages ./venv/
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-aliases bloodbash
+    add-history bloodbash
+    add-test-command "bloodbash.py --help"
+    add-to-list "bloodbash,https://github.com/DotNetRussell/BloodBash,BloodBash is a powerful standalone BloodHound / SharpHound + AzureHound JSON analyzer written in Python"
+}
+
+function install_evenmonitor() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing evenmonitor"
+    pipx install --python 3.13 --system-site-packages git+https://github.com/NeffIsBack/EVENmonitor
+    add-history evenmonitor
+    add-test-command "EVENmonitor --help"
+    add-to-list "EVENmonitor,https://github.com/NeffIsBack/EVENmonitor,Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs "
+}
+
+function install_tdo_dump() {
+    colorecho "Installing tdo_dump"
+    git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/tdo_dump
+    cd /opt/tools/tdo_dump || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install git+https://github.com/ThePorgs/impacket pycryptodome
+    deactivate
+    cp -v /root/sources/assets/grc/conf.tdo_dump /usr/share/grc/conf.tdo_dump
+    add-aliases tdo_dump
+    add-history tdo_dump
+    add-test-command "tdo_dump.py --help"
+    add-to-list "tdo_dump,https://github.com/AlmondOffSec/tdo_dump,Proof-of-Concept tool to dump trusted domain objects and extract trust credentials for lateral movement across domain boundaries"
 }
 
 # Package dedicated to internal Active Directory tools
@@ -1759,6 +1780,9 @@ function package_ad() {
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
+    install_bloodbash              # Bloodhound in terminal
+    install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
+    install_tdo_dump               # Dump trusted domain objects to extract trust credentials
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

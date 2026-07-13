@@ -1,0 +1,2 @@
+tdo_dump.py -u "$USER" -d "$DOMAIN" -t "$DC_FQDN" --hashes :"$NT_HASH" --tdo-guid "$TDO_GUID" --dsa-guid "$DSA_GUID"
+tdo_dump.py -u "$USER" -d "$DOMAIN" -t "$DC_FQDN" -p "$PASSWORD" --tdo-guid "$TDO_GUID" --dsa-guid "$DSA_GUID"

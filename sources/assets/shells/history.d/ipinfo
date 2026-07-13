@@ -1,1 +1,3 @@
 ipinfo 1.1.1.1
+ipinfo 1.1.1.1 -j
+cat ips.txt | ipinfo
