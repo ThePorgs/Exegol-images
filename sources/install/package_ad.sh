@@ -751,6 +751,8 @@ function install_ntlmv1-multi() {
     add-history ntlmv1-multi
     add-test-command "ntlmv1-multi.py --ntlmv1 SV01$::DOMAIN.LOCAL:AD1235DEAC142CD5FC2D123ADCF51A111ADF45C2345ADCF5:AD1235DEAC142CD5FC2D123ADCF51A111ADF45C2345ADCF5:1122334455667788"
     add-to-list "ntlmv1-multi,https://github.com/evilmog/ntlmv1-multi,Exploit a vulnerability in Microsoft Windows to gain system-level access."
+    # exit the ntlmv1-multi workdir, since it sets the python version to 3.14 and could mess up later installs
+    cd || exit
 }
 
 function install_hashonymize() {
