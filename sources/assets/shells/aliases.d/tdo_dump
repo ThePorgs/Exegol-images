@@ -1,0 +1,2 @@
+alias tdo_dump.py='/opt/tools/tdo_dump/venv/bin/python3 /opt/tools/tdo_dump/tdo_dump.py'
+alias tdo_dump='grc tdo_dump.py'

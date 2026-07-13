@@ -1,1 +1,2 @@
 semgrep -e '$X == $X' --lang=py path/to/src
+semgrep scan --sarif -o out.sarif .
