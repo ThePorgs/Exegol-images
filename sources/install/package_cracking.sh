@@ -30,10 +30,28 @@ function install_john() {
     cd /opt/tools/john/src || exit
     ./configure --disable-native-tests && make
     yes|cpan install Compress::Raw::Lzma
+    # Python *2john helpers are on PATH via $JOHN (#!/usr/bin/env python).
+    # Upstream doc/INSTALL uses: venv + pip install -r requirements.txt (~130MB).
+    # We ship a curated subset (~16MB after stripping pip/setuptools) for the common
+    # helpers; omitted niche deps: scapy (pcap/radius/oracle/apop), pytsk3+cryptography
+    # (fvde), pyhanko (pdf2john.py — use pdf2john.pl), lxml (krb), ldap3 (sspr), bsddb3
+    # (bitcoin). Full set remains: cd /opt/tools/john/run && python3 -m venv venv && ...
+    cd /opt/tools/john/run || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install --no-cache-dir asn1crypto pycryptodome olefile parsimonious cbor2 simplejson protobuf
+    pip3 uninstall -y pip setuptools wheel
+    deactivate
+    find ./venv -type d -name '__pycache__' -prune -exec rm -rf {} +
+    find . -maxdepth 1 -type f -name '*.py' -exec sed -i '1s|^#![[:space:]]*/usr/bin/env python[^ ]*|#!/opt/tools/john/run/venv/bin/python3|' {} +
+    cd / || exit
     add-aliases john-the-ripper
     add-history john-the-ripper
     add-test-command "john --help"
     add-test-command "7z2john.pl|& grep 'Usage'"
+    add-test-command "ssh2john.py|& grep 'Usage'"
+    add-test-command "pfx2john.py|& grep 'Usage'"
+    add-test-command "pem2john.py|& grep 'Usage'"
     add-to-list "john,https://github.com/openwall/john,John the Ripper password cracker."
 }
 
