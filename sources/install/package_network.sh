@@ -334,6 +334,27 @@ function install_sharker() {
     add-to-list "sharker,https://github.com/synacktiv/sharker,A fast and reliable network capture analyzer"
 }
 
+function install_ligolo-mp() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing Ligolo-MP"
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        local arch="amd64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        local arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    local URL
+    URL=$(curl --location --silent "https://api.github.com/repos/ttpreport/ligolo-mp/releases/latest" | grep 'browser_download_url.*ligolo-mp_linux.*'"$arch"'"' | grep -o 'https://[^"]*')
+    curl --location -o /tmp/ligolo-mp "$URL"
+    chmod +x /tmp/ligolo-mp
+    mv "/tmp/ligolo-mp" "/opt/tools/bin/ligolo-mp"
+    add-test-command "ligolo-mp --help"
+    add-to-list "ligolo-mp,https://github.com/ttpreport/ligolo-mp,Ligolo-MP is an advanced version of Ligolo-ng with client-server architecture to enable pentesters to play with multiple concurrent tunnels collaboratively"
+}
+
 # Package dedicated to network pentest tools
 function package_network() {
     set_env
@@ -364,6 +385,7 @@ function package_network() {
     install_ssh-audit               # SSH server audit
     install_penelope                # Shell handler
     install_sharker                 # A simple, reliable and reasonably fast network capture analyzer.
+    install_ligolo-mp               # Advanced Ligolo-NG fork with TUI and multiplayer capabilities
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
