@@ -1,0 +1,3 @@
+pytune.py entra_join -o Windows -d "$MACHINE_NAME" -f .roadtools_auth
+pytune.py enroll_intune -o Windows -d "$MACHINE_NAME" -f .roadtools_auth -c "$MACHINE_NAME_PFX"
+pytune.py checkin -o Windows -d "$MACHINE_NAME" -f .roadtools_auth -c "$MACHINE_NAME_PFX" -m "$MACHINE_NAME_MDM_PFX"

@@ -1,0 +1,1 @@
+alias findmeaccess.py='/opt/tools/FindMeAccess/venv/bin/python3 /opt/tools/FindMeAccess/findmeaccess.py'
