@@ -29,9 +29,9 @@ else
   cp /.exegol/skel/zsh/aliases /opt/my-resources/setup/zsh/aliases
 fi
 
-# sourcing exegol-history
-source /opt/tools/Exegol-history/profile.sh
-source $HOME/.cargo/env
+# sourcing exegol-history (installed later in package_base; guard for build-time sourcing)
+[ -f /opt/tools/Exegol-history/profile.sh ] && source /opt/tools/Exegol-history/profile.sh
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 
 # In case pipx ensurepath didn't work, and positioning pipx in priority
 export PATH="/root/.local/bin:$PATH"

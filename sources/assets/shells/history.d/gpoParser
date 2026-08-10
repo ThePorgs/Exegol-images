@@ -1,0 +1,2 @@
+gpoParser remote -d "$DOMAIN" -u "$USER" -p "$PASSWORD" -s "$DC_HOST" -o gpoParser.json
+gpoParser enrich -c gpoParser.json -b "bolt://127.0.0.1:7687" -U "neo4j" -P "exegol4thewin"

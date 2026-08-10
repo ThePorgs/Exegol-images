@@ -1,0 +1,36 @@
+# GENERAL INFO
+regexp=.*\[\+\].*
+colours=blue
+=======
+# GENERAL WARNING
+regexp=.*\[\!\].*
+colours=yellow
+=======
+# DEBUG
+regexp=.*\[\x\].*
+colours=dark
+=======
+# SUCCESS plain password hex
+regexp=.{1,120}:plain_password_hex:[0-9a-fA-F]+
+colours=bold green
+=======
+# SUCCESS NT hash (LM:NT::: without RID)
+regexp=.{1,120}:[0-9a-fA-F]{32}:[0-9a-fA-F]{32}:::
+colours=bold green
+=======
+# SUCCESS Kerberos AES256 key
+regexp=.{1,120}:aes256-cts-hmac-sha1-96:[0-9a-fA-F]{64}
+colours=green
+=======
+# SUCCESS Kerberos AES128 key
+regexp=.{1,120}:aes128-cts-hmac-sha1-96:[0-9a-fA-F]{32}
+colours=green
+=======
+# SECTION Dumping trusted domain object
+regexp=.*\[\+\].*Dumping trusted domain object.*
+colours=bold green
+=======
+# SECTION Dumping inter-realm trust keys
+regexp=.*\[\+\].*Dumping inter-realm trust keys.*
+colours=cyan
+=======

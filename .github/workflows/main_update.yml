@@ -1,0 +1,29 @@
+name: Fast-forward dev to main
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  fast-forward:
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          ssh-key: ${{ secrets.FF_KEY }}
+          fetch-depth: 0  # Full clone
+
+      - name: Fast-forward merge main into dev
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main:main
+          git merge --ff-only main
+
+      - name: Push changes
+        run: git push origin dev

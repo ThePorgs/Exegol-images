@@ -143,6 +143,10 @@ jobs:
       - name: Create a container from the built image
         run: |
           docker run --name exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} --rm -t -d ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} endless
+      - name: Install GUI requirements
+        if: success()
+        run: |
+          docker exec exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} bash -lc "apt update && apt install -y xvfb x11-utils xdotool imagemagick wmctrl"
       - name: Copy the unit tests script
         run: docker cp ~/exegol-pipelines-tools/run_unit_tests.py exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}:/.exegol/
       - name: Run the tests
