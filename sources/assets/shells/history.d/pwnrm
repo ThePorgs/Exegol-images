@@ -1,0 +1,5 @@
+pwnrm -u "$USER" -p "$PASSWORD" "$TARGET"
+pwnrm -u "$USER" -H "NT_HASH" "$TARGET"
+pwnrm -u "$USER"@"$DOMAIN" -k --ccache "/workspace/user.ccache" "$TARGET"
+pwnrm -u "$USER"@"$DOMAIN" --pfx admin.pfx --pfx-pass secret "$TARGET"
+pwnrm -u "$USER" -p "$PASSWORD" --credssp "$TARGET"
