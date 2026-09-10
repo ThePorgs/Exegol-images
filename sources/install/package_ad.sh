@@ -556,7 +556,7 @@ function install_pypykatz() {
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
@@ -800,7 +800,7 @@ function install_pygpoabuse() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -901,7 +901,7 @@ function install_pkinittools() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1074,7 +1074,7 @@ function install_ldaprelayscan() {
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
     # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi

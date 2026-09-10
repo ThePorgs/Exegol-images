@@ -33,7 +33,7 @@ function install_pyrit() {
     #  1. try to install pyrit with git clone + venv + setup.py install with python2 or 3 (without the git patch)
     #  2. if it works, remove the temp fix (and probably the patch as well)
     # Feb 23 2026: not a priority for now, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
       git -C /opt/tools/ clone https://github.com/JPaulMora/Pyrit

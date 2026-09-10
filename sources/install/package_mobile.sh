@@ -34,7 +34,7 @@ function install_scrpy() {
     # May 2026: scrcpy v4.0 requires SDL3; libsdl3 is not installable on Debian 12 (bookworm) in CI.
     # Revert when base image provides SDL3 (Debian >= trixie): use libsdl3-0/libsdl3-dev and
     # `git clone --depth 1 https://github.com/Genymobile/scrcpy` (see upstream-issues/scrcpy-sdl3-debian-bookworm.md).
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git clone --depth 1 --branch v3.3.4 https://github.com/Genymobile/scrcpy
     fi
@@ -108,7 +108,7 @@ function install_mobsf() {
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64
     # in the mean time, switching to manual venv and an alias for mobsf
     # Feb 23 2026: not a priority, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       python3.13 -m venv --system-site-packages ./venv
       catch_and_retry ./venv/bin/python3 -m pip install git+https://github.com/MobSF/yara-python-dex.git
