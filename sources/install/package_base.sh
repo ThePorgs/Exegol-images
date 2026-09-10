@@ -500,6 +500,8 @@ function package_base() {
     update
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
+    # Sudo keep EXEGOL specific environment variables
+    echo 'Defaults env_keep += "EXEGOL_*"' > /etc/sudoers.d/exegol_env
     # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh
