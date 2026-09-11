@@ -1613,13 +1613,13 @@ function install_pygoldengmsa() {
     add-to-list "pygoldengmsa,https://github.com/felixbillieres/pyGoldenGMSA, Cross-platform Python implementation of the GoldenGMSA attack for exploiting Group Managed Service Accounts (gMSA) in Active Directory. "
 }
 
-function install_evil-winrm-py() {
+function install_pwnrm() {
     # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing evil-winrm-py"
-    pipx install --system-site-package 'evil-winrm-py[kerberos]@git+https://github.com/adityatelange/evil-winrm-py'
-    add-history evil-winrm-py
-    add-test-command "evil-winrm-py --help"
-    add-to-list "evil-winrm-py,https://github.com/adityatelange/evil-winrm-py,Evil-WinRM. But in python"
+    colorecho "Installing pwnrm"
+    pipx install --system-site-package 'git+https://github.com/uziii2208/PwnRM'
+    add-history pwnrm
+    add-test-command "pwnrm --help"
+    add-to-list "pwnrm,https://github.com/uziii2208/PwnRM,Evil-WinRM. But in python and more featured"
 }
 
 function install_keytabextract() {
@@ -1796,7 +1796,7 @@ function package_ad() {
     install_godap                  # A complete terminal user interface (TUI) for LDAP
     install_powerview              # Powerview Python implementation
     install_pysnaffler             # Snaffler, but in Python
-    install_evil-winrm-py          # Evil-Winrm, but in Python
+    install_pwnrm                  # Evil-Winrm, but in Python and more featured
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
