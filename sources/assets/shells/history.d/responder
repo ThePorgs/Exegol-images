@@ -1,9 +1,9 @@
-Responder.py --interface "$INTERFACE" --analyze --lm --disable-ess
-Responder.py --interface "$INTERFACE" --analyze --disable-ess
-Responder.py --interface "$INTERFACE" --wpad --lm --disable-ess
-responder --interface "$INTERFACE" --analyze --lm --disable-ess
-responder --interface "$INTERFACE" --analyze --disable-ess
-responder --interface "$INTERFACE" --wpad --lm --disable-ess
+Responder.py --interface `fzf-if` --analyze --lm --disable-ess
+Responder.py --interface `fzf-if` --analyze --disable-ess
+Responder.py --interface `fzf-if` --wpad --lm --disable-ess
+responder --interface `fzf-if` --analyze --lm --disable-ess
+responder --interface `fzf-if` --analyze --disable-ess
+responder --interface `fzf-if` --wpad --lm --disable-ess
 responder-http-off
 responder-http-on
 responder-smb-off
