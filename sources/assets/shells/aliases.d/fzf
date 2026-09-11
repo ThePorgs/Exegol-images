@@ -4,3 +4,12 @@ alias fzf-haiti-hashcat='(){ haiti -e $1 | fzf --ansi | grep -E -o " [0-9]*]" | 
 alias fzf-haiti-john='(){ haiti -e $1 | fzf --ansi | grep -E -o "JtR: .*]" | cut -d "]" -f 1 | cut -d " " -f 2 ;}'
 alias hcat='(){ if [ -f "$1" ]; then hashcat -m $(fzf-haiti-hashcat $(head -n 1 "$1")) "$1" $(fzf-wordlists) "${@:2}"; elif [ -n "$1" ]; then hashcat -m $(fzf-haiti-hashcat "$1") "$1" $(fzf-wordlists) "${@:2}"; fi ;}'
 alias hjohn='(){ if [ -f "$1" ]; then john --format=$(fzf-haiti-john $(head -n 1 "$1")) --wordlist=$(fzf-wordlists) "${@:2}" $1; elif [ -n "$1" ]; then echo "$1" | john --format=$(fzf-haiti-john "$1") --wordlist=$(fzf-wordlists) "${@:2}" /dev/stdin; fi ;}'
+alias exh-krb='(){
+    ENV=$(find ~+ -name "*.ccache" -type f | fzf --preview="describeTicket.py {}" --header="Enter: Select, F1: Convert to .kirbi" --bind="f1:execute-silent(ticketConverter.py {} $(basename {} .ccache).kirbi)+abort") 
+    OUT=$(describeTicket.py "$ENV")
+    USER_TMP=$(echo "$OUT" | grep "User Name" | awk -F": " "{print \$2}")
+    DOMAIN_TMP=$(echo "$OUT" | grep "User Realm" | awk -F": " "{print \$2}")
+    export USER="$USER_TMP"
+    export DOMAIN="$DOMAIN_TMP"
+    export KRB5CCNAME="$ENV"
+}'
