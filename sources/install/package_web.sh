@@ -1072,6 +1072,15 @@ function install_xxeinjector() {
     add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
 }
 
+function install_badsecrets() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing badsecrets"
+    pipx install --system-site-packages badsecrets
+    add-history badsecrets
+    add-test-command "badsecrets -h"
+    add-to-list "badsecrets,https://github.com/blacklanternsecurity/badsecrets,A pure python library for identifying the use of known or very weak cryptographic secrets across a variety of platforms."
+}
+
 # Package dedicated to applicative and active web pentest tools
 function package_web() {
     set_env
@@ -1160,6 +1169,7 @@ function package_web() {
     install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
     install_xxeinjector             # XXE injection testing tool
+    install_badsecrets
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
