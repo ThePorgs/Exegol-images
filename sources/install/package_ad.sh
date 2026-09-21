@@ -216,11 +216,11 @@ function install_bloodhound-ce() {
     # Build the API
     asdf set golang 1.26.1
 
-    # PostgreSQL 15 rejects inline `STORAGE MAIN` in BHCE SQL migrations (still present in v9.2.2).
+    # PostgreSQL 15 rejects inline `STORAGE MAIN` in BHCE SQL migrations (still present in v9.7.1 init.sql).
     # Patch all embedded migration SQL files before go build. See upstream-issues/bloodhound-ce-storage-main.md
     # Revert when upstream removes STORAGE MAIN from migrations:
     #   remove the temp_fix_limit block below and keep only the go build step.
-    local temp_fix_limit="2026-12-01"
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
         find ./cmd/api/src/database/migration/migrations -name '*.sql' -exec sed -i 's/[[:space:]]*STORAGE MAIN//' {} +
     fi
@@ -555,8 +555,8 @@ function install_pypykatz() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-09-12"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
@@ -799,8 +799,8 @@ function install_pygpoabuse() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-09-12"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -900,8 +900,8 @@ function install_pkinittools() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-09-12"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1073,8 +1073,8 @@ function install_ldaprelayscan() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-09-12"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi

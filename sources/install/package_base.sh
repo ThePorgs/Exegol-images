@@ -480,12 +480,11 @@ function install_wireguard() {
 
 function install_asciinema() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Installing asciinema (latest via cargo)"
-    local temp_fix_limit="2026-10-01"
+    colorecho "Installing asciinema (cargo, pinned)"
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
-      # Using specific version to avoid incompatibilities with shell-logging feature
-      # Version bump must be made manually to check for compatibility issue
-      cargo install --root /usr/local/ --bin asciinema --locked --version 3.2.0 asciinema
+      # pin for shell-logging (`asciinema rec --stdin --command`); do not float to latest
+      cargo install --root /usr/local/ --bin asciinema --locked --version 3.2.1 asciinema
     fi
     #cargo install --root /usr/local/ --bin asciinema --locked asciinema
     add-test-command "asciinema --version"

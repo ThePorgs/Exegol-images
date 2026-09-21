@@ -94,9 +94,9 @@ function install_triliumnext() {
     colorecho "Installing TriliumNext"
     # TODO : switch to https://github.com/TriliumNext/Trilium
     fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
-    # Feb 23 2026: fixing Trilium version since they have switched to a monorepo using Nx and pnpm instead of npm (https://github.com/TriliumNext/Notes/discussions/1891)
-    # TODO: update the Trilium install method to use the right repo, as well as Nx and pnpm instead of npm
-    local temp_fix_limit="2026-09-12"
+    # Pin v0.93.0: upstream moved to TriliumNext/Trilium (Nx/pnpm). Rewrite install before dropping the pin.
+    # https://github.com/TriliumNext/Notes/discussions/1891
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --branch v0.93.0 --depth 1 https://github.com/triliumnext/notes.git triliumnext
     fi

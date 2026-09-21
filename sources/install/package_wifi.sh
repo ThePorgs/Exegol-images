@@ -28,17 +28,10 @@ function install_wifi_apt_tools() {
 function install_pyrit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pyrit"
-    # can't install with python3/python2 with latest changes.
-    # steps to remove temp fix:
-    #  1. try to install pyrit with git clone + venv + setup.py install with python2 or 3 (without the git patch)
-    #  2. if it works, remove the temp fix (and probably the patch as well)
-    # Feb 23 2026: not a priority for now, extending for 6 months
-    local temp_fix_limit="2026-09-12"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      # git -C /opt/tools clone --depth 1 https://github.com/JPaulMora/Pyrit
-      git -C /opt/tools/ clone https://github.com/JPaulMora/Pyrit
-      git -C /opt/tools/Pyrit checkout f0f1913c645b445dd391fb047b812b5ba511782c
-    fi
+    # Pyrit is unmaintained and only builds on this python2-era commit plus the aesni patch.
+    # Permanent pin until python2/pyrit is dropped from the image. Do not float to git HEAD.
+    git -C /opt/tools/ clone https://github.com/JPaulMora/Pyrit
+    git -C /opt/tools/Pyrit checkout f0f1913c645b445dd391fb047b812b5ba511782c
     cd /opt/tools/Pyrit || exit
     fapt libpq-dev
     virtualenv --python python2 ./venv

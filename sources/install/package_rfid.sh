@@ -76,12 +76,15 @@ function install_proxmark3() {
     colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3GENERIC (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
     colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmark3/"
     fapt --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev liblz4-dev
-    # git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
-    # master branch is not a latest stable version. We should use a version specific tag
-    local temp_fix_limit="2026-10-01"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      git -C /opt/tools/ clone -b v4.21611 --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
+    # master is not a stable release; clone the latest GitHub release tag
+    local proxmark_tag
+    curl --location --silent "https://api.github.com/repos/RfidResearchGroup/proxmark3/releases/latest" -o /tmp/proxmark3-release.json
+    proxmark_tag=$(jq --raw-output '.tag_name' /tmp/proxmark3-release.json)
+    rm -f /tmp/proxmark3-release.json
+    if [[ -z "$proxmark_tag" || "$proxmark_tag" == "null" ]]; then
+        criticalecho-noexit "Latest proxmark3 release not found" && return
     fi
+    git -C /opt/tools/ clone --depth 1 --branch "$proxmark_tag" https://github.com/RfidResearchGroup/proxmark3.git
     cd /opt/tools/proxmark3 || exit
     make clean
     make -j all PLATFORM=PM3GENERIC
