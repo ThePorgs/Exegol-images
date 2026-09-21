@@ -53,7 +53,7 @@ function install_wfuzz() {
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
     # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
@@ -280,7 +280,7 @@ function install_patator() {
     python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
     # Temporary fix for 'setuptools' having removed the 'pkg_resources' library, see https://github.com/pypa/setuptools/issues/5174
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       echo 'setuptools<82' > build-constraints.txt
       pip3 install --build-constraint build-constraints.txt -r requirements.txt

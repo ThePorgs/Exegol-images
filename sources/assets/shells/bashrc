@@ -10,4 +10,11 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 source <(asdf completion bash)
 export GOPATH=$(go env GOPATH)
 
-PS1="\[\e[37m\][\[\e[33m\]\D{%b %d, %Y - %T (%Z)}\[\e[37m\]]\[\e[m\]${LOGGING}\[\e[1;38;5;13m\] \h \[\e[1;34m\]\w $(prompt_char)\[\e[m\] "
+__exegol_exh_prompt() {
+  EXH_PROMPT=""
+  [[ -n "${USER}" ]] && EXH_PROMPT=$'\001\e[37m\002[\001\e[33m\002'"${USER}"$'\001\e[37m\002]\001\e[0m\002'
+  [[ -n "${DOMAIN}" && -n "${USER}" ]] && EXH_PROMPT=$'\001\e[37m\002[\001\e[33m\002'"${USER}@${DOMAIN}"$'\001\e[37m\002]\001\e[0m\002'
+}
+PROMPT_COMMAND="__exegol_exh_prompt${PROMPT_COMMAND:+;${PROMPT_COMMAND}}"
+
+PS1="${LOGGING}"'${EXH_PROMPT}'"\[\e[37m\][\[\e[33m\]\D{%b %d, %Y - %T (%Z)}\[\e[37m\]]\[\e[m\]\[\e[1;38;5;13m\] \h \[\e[1;34m\]\w $(prompt_char)\[\e[m\] "

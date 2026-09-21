@@ -18,7 +18,7 @@ function install_rsactftool() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Rsactftool"
     fapt libmpc-dev
-    local temp_fix_limit="2026-08-10"
+    local temp_fix_limit="2026-09-12"
     # z3-solver builds from source fail (C++20 format header); force using prebuilt wheels until upstream fixes
     if check_temp_fix_expiry "$temp_fix_limit"; then
         pipx install --system-site-packages --pip-args="--only-binary=z3-solver" git+https://github.com/RsaCtfTool/RsaCtfTool

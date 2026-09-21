@@ -481,9 +481,10 @@ function install_wireguard() {
 function install_asciinema() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing asciinema (latest via cargo)"
-    local temp_fix_limit="2026-09-01"
+    local temp_fix_limit="2026-10-01"
     if check_temp_fix_expiry "$temp_fix_limit"; then
-      # using specific version to avoid incompatibilities with shell-logging feature
+      # Using specific version to avoid incompatibilities with shell-logging feature
+      # Version bump must be made manually to check for compatibility issue
       cargo install --root /usr/local/ --bin asciinema --locked --version 3.2.0 asciinema
     fi
     #cargo install --root /usr/local/ --bin asciinema --locked asciinema
@@ -499,6 +500,8 @@ function package_base() {
     update
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
+    # Sudo keep EXEGOL specific environment variables
+    echo 'Defaults env_keep += "EXEGOL_*"' > /etc/sudoers.d/exegol_env
     # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh

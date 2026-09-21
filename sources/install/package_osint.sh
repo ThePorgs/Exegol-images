@@ -116,7 +116,7 @@ function install_simplyemail() {
 function install_theharvester() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing theHarvester"
-    pipx install --python 3.13 --system-site-packages git+https://github.com/laramies/theHarvester
+    pipx install --python 3.14 --system-site-packages git+https://github.com/laramies/theHarvester
     add-history theharvester
     add-test-command "theHarvester --help"
     add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts / subdomain names / virtual host / open ports / banners / and employee names from different public sources"
