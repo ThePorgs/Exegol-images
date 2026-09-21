@@ -1077,7 +1077,7 @@ function install_badsecrets() {
     colorecho "Installing badsecrets"
     pipx install --system-site-packages badsecrets
     add-history badsecrets
-    add-test-command "badsecrets -h"
+    add-test-command "badsecrets 'eyJhbGciOiJIUzI1NiJ9.eyJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkJhZFNlY3JldHMiLCJleHAiOjE1OTMxMzM0ODMsImlhdCI6MTQ2NjkwMzA4M30.ovqRikAo_0kKJ0GVrAwQlezymxrLGjcEiW_s3UJMMCo' |& grep 'Known Secret Found'"
     add-to-list "badsecrets,https://github.com/blacklanternsecurity/badsecrets,A pure python library for identifying the use of known or very weak cryptographic secrets across a variety of platforms."
 }
 
