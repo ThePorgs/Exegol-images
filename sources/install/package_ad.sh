@@ -1682,7 +1682,7 @@ function install_tdo_dump() {
 function install_soapy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing SOAPy"
-    pipx install --system-site-package git+'https://github.com/logangoins/SOAPy'
+    pipx install --system-site-packages git+https://github.com/logangoins/SOAPy
     add-history SOAPy
     add-test-command "SOAPy --help"
     add-to-list "soapy,https://github.com/logangoins/SOAPy,SOAPy is a Proof of Concept (PoC) utility for conducting offensive interaction with Active Directory Web Services (ADWS) through a SOCKS5 proxy."
