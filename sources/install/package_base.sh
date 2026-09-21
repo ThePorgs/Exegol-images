@@ -484,7 +484,8 @@ function install_asciinema() {
     local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       # pin for shell-logging (`asciinema rec --stdin --command`); do not float to latest
-      cargo install --root /usr/local/ --bin asciinema --locked --version 3.2.1 asciinema
+      # crates.io newest is 3.2.0. GitHub has v3.2.1 but it is not published to crates.io.
+      cargo install --root /usr/local/ --bin asciinema --locked --version 3.2.0 asciinema
     fi
     #cargo install --root /usr/local/ --bin asciinema --locked asciinema
     add-test-command "asciinema --version"
