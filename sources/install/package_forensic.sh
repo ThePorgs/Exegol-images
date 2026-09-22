@@ -100,7 +100,10 @@ function install_jadx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jadx"
     local jadx_url
-    jadx_url=$(curl --location --silent "https://api.github.com/repos/skylot/jadx/releases/latest" | grep 'browser_download_url.' | grep -o 'https://[^"]*' | head -n1)
+    jadx_url=$(curl --location --silent "https://api.github.com/repos/skylot/jadx/releases/latest" | grep -o 'https://github.com/skylot/jadx/releases/download/[^"]*/jadx-[0-9][^"]*\.zip' | grep -v -- '-gui-' | head -n1)
+    if [[ -z "$jadx_url" ]]; then
+        criticalecho "jadx release zip not found"
+    fi
     curl --location -o /tmp/jadx.zip "$jadx_url"
     unzip -q /tmp/jadx.zip -d /opt/tools/jadx
     chmod +x /opt/tools/jadx/bin/jadx /opt/tools/jadx/bin/jadx-gui
