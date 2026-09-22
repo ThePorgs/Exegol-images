@@ -259,7 +259,13 @@ function install_nfsshell() {
     add-test-command "nfsshell --help |& grep Usage"
     add-to-list "nfsshell,https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
 }
-
+function install_grimoire() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing grimoire"
+    pipx install --system-site-packages git+"https://github.com/PentHertz/grimoire"
+    add-test-command "grimoire --help"
+    add-to-list "grimoire,https://github.com/PentHertz/grimoire,Grimoire clones a curated set of security knowledge bases indexes all of their markdown/YAML into a single full-text search index and serves a fast web UI."
+}
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -286,6 +292,7 @@ function package_misc() {
     install_thr             # https://www.thehacker.recipes/
     install_dtrx            # Intelligent archive extractor
     install_nfsshell        # NFS share interaction tool
+    install_grimoire        # Offline offensive documentation
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
