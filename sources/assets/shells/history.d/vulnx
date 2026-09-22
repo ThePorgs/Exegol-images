@@ -1,0 +1,2 @@
+vulnx search "apache"
+vulnx search --json "ServiceNow" | jq '.results[].pocs'
