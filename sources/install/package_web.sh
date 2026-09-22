@@ -141,9 +141,11 @@ function install_ssrfmap() {
     colorecho "Installing SSRFmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap || exit
-    python3 -m venv --system-site-packages ./venv
+    # default python3 is 3.11; upstream requires >=3.12 (pyproject.toml)
+    python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    # requirements.txt was removed 2026-08-10; project is uv-managed and not pip-installable (package=false)
+    pip3 install dnslib==0.9.24 dnspython==2.6.1 flask==3.0.3 requests==2.31.0 tldextract==5.1.2
     deactivate
     add-aliases ssrfmap
     add-history ssrfmap
