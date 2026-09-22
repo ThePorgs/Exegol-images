@@ -1202,6 +1202,33 @@ function install_roastinthemiddle() {
     add-to-list "roastinthemiddle,https://github.com/Tw1sm/RITM,RoastInTheMiddle is a tool to intercept and relay NTLM authentication requests."
 }
 
+function install_relayinformer() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing RelayInformer"
+    git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/RelayInformer
+    rm -rf /opt/tools/RelayInformer/BOF
+    cd /opt/tools/RelayInformer/Python || exit
+    python3 -m venv --system-site-packages ./venv
+    # Reuse the existing original Impacket installation instead of installing RelayInformer's pinned copy
+    relayinformer_site_packages="$(./venv/bin/python3 -c 'import sysconfig; print(sysconfig.get_path("purelib"))')"
+    echo "$(/opt/tools/impacket-og/venv/bin/python3 -c 'import site; print(site.getsitepackages()[0])')" \
+        > "${relayinformer_site_packages}/impacket-og.pth"
+    source ./venv/bin/activate
+    pip3 install --no-cache-dir --no-deps .
+    pip3 install --no-cache-dir typer msldap requests-ntlm
+    # Override the system oscrypto package that is incompatible with Exegol's OpenSSL setup
+    pip3 install --no-cache-dir --force-reinstall \
+        "oscrypto @ git+https://github.com/wbond/oscrypto.git@d5f3437ed24257895ae1edd9e503cfb352e635a8"
+    pip3 uninstall -y pip setuptools wheel
+    deactivate
+    find ./venv -type d -name '__pycache__' -prune -exec rm -rf {} +
+    ln -v -s /opt/tools/RelayInformer/Python/venv/bin/relayinformer /opt/tools/bin/relayinformer
+    cd || exit
+    add-history relayinformer
+    add-test-command "relayinformer --help"
+    add-to-list "RelayInformer,https://github.com/zyn3rgy/RelayInformer,Determine EPA enforcement levels of popular NTLM relay targets from a Linux host."
+}
+
 function install_PassTheCert() {
     colorecho "Installing PassTheCert"
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
@@ -1800,6 +1827,7 @@ function package_ad() {
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
+    install_relayinformer           # Determine EPA enforcement levels of popular NTLM relay targets
     install_bloodbash              # Bloodhound in terminal
     install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
     install_tdo_dump               # Dump trusted domain objects to extract trust credentials
