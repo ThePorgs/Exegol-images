@@ -408,20 +408,30 @@ function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing asdf"
     local URL
-    curl --location --silent --output /tmp/asdf-release.json "https://api.github.com/repos/asdf-vm/asdf/releases/latest"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        URL=$(grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        URL=$(grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
-    else
+    # v0.20.1 published with no linux tarballs (immutable release, empty assets).
+    # Revert when latest ships amd64/arm64 tar.gz again: restore the API grep below.
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      if [[ $(uname -m) = 'x86_64' ]]; then
+        URL="https://github.com/asdf-vm/asdf/releases/download/v0.20.0/asdf-v0.20.0-linux-amd64.tar.gz"
+      elif [[ $(uname -m) = 'aarch64' ]]; then
+        URL="https://github.com/asdf-vm/asdf/releases/download/v0.20.0/asdf-v0.20.0-linux-arm64.tar.gz"
+      else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+      fi
     fi
-    if [[ -z "$URL" ]]; then
-        cat /tmp/asdf-release.json
-    fi
-    rm /tmp/asdf-release.json
+    # curl --location --silent --output /tmp/asdf-release.json "https://api.github.com/repos/asdf-vm/asdf/releases/latest"
+    # if [[ $(uname -m) = 'x86_64' ]]; then
+    #     URL=$(grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
+    # elif [[ $(uname -m) = 'aarch64' ]]; then
+    #     URL=$(grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
+    # else
+    #     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    # fi
+    # if [[ -z "$URL" ]]; then
+    #     cat /tmp/asdf-release.json
+    # fi
+    # rm /tmp/asdf-release.json
     curl --location --output /tmp/asdf.tar.gz "$URL"
     tar -xf /tmp/asdf.tar.gz --directory /tmp
     rm /tmp/asdf.tar.gz
