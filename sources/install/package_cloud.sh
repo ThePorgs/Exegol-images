@@ -165,6 +165,44 @@ function install_pacu() {
     add-to-list "pacu,https://github.com/RhinoSecurityLabs/pacu,The AWS exploitation framework for testing the security of Amazon Web Services environments."
 }
 
+function install_pytune() {
+    colorecho "Installing pytune"
+    git -C /opt/tools clone --depth 1 https://github.com/secureworks/pytune.git
+    cd /opt/tools/pytune || exit
+    # Remove unecessary dependency
+    sed -i "s/colr//" requirements.txt
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-test-command "pytune.py --help"
+    add-aliases pytune
+    add-history pytune
+    add-to-list "pytune,https://github.com/secureworks/pytune,Pytune is a post-exploitation tool for enrolling a fake device into Intune with mulitple platform support."
+}
+
+function install_findmeaccess() {
+    colorecho "Installing findmeaccess"
+    git -C /opt/tools clone --depth 1 https://github.com/absolomb/FindMeAccess
+    cd /opt/tools/FindMeAccess || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install -r requirements.txt
+    deactivate
+    add-test-command "findmeaccess.py --help"
+    add-aliases findmeaccess
+    add-history findmeaccess
+    add-to-list "findmeaccess,https://github.com/absolomb/FindMeAccess,FindMeAccess is a tool useful for finding gaps in Azure/M365 MFA requirements for different resources and client ids and user agents."
+}
+
+function install_merill_list() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing merill list"
+    wget https://raw.githubusercontent.com/merill/microsoft-info/main/_info/MicrosoftApps.json -O /opt/lists/MicrosoftApps.json
+    add-test-command "[[ -f '/opt/lists/MicrosoftApps.json' ]]"
+    add-to-list "merill list,https://github.com/merill/microsoft-info,This repository provides an up-to-date list of Microsoft first party apps and Graph Permissions that can be easily consumed by scripts."
+}
+
 # Package dedicated to cloud tools
 function package_cloud() {
     set_env
@@ -182,6 +220,9 @@ function package_cloud() {
     install_azure_cli       # Command line for Azure
     install_s3scanner		# S3 buckets misconfiguration scanner
     install_pacu            # AWS exploitation framework
+    install_pytune
+    install_findmeaccess
+    install_merill_list
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

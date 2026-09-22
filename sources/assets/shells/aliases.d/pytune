@@ -1,0 +1,1 @@
+alias pytune.py='/opt/tools/pytune/venv/bin/python3 /opt/tools/pytune/pytune.py'

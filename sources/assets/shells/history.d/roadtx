@@ -1,0 +1,6 @@
+roadtx gettokens -u "$USER" -p "$PASSWORD" -c `fzf-az-cid` -r aadgraph -ua edge
+roadtx interactiveauth -u "$USER" -p "$PASSWORD" -c `fzf-az-cid` -r aadgraph -ua edge
+roadtx interactiveauth -u "$USER" -p "$PASSWORD" -c `fzf-az-cid` -r aadgraph -ua edge --force-mfa
+roadtx browserprtauth -u "$USER" -p "$PASSWORD" -c `fzf-az-cid` -r aadgraph -ua edge
+roadtx prt -u "$USER" -p "$PASSWORD" --pfx-pass "$PFX_PASS" --cert-pfx "$PFX_CERT"
+roadtx listaliases
