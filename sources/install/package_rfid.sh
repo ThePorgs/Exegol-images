@@ -74,7 +74,7 @@ function install_mfdread() {
 function install_proxmark3() {
     colorecho "Installing proxmark3 client"
     colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3GENERIC (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
-    colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmark3/"
+    colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install SKIP_SETCAP=1' from /opt/tools/proxmark3/"
     fapt --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev liblz4-dev
     # master is not a stable release; clone the latest GitHub release tag
     local proxmark_tag
@@ -88,7 +88,9 @@ function install_proxmark3() {
     cd /opt/tools/proxmark3 || exit
     make clean
     make -j all PLATFORM=PM3GENERIC
-    make install PLATFORM=PM3GENERIC clean
+    # v4.23346+ setcap cap_net_raw,cap_net_admin+eip on the client. Docker's
+    # default bounding set has no NET_ADMIN, so execve then returns EPERM.
+    make install PLATFORM=PM3GENERIC SKIP_SETCAP=1 clean
     add-aliases proxmark3
     add-history proxmark3
     add-test-command "proxmark3 --version"
