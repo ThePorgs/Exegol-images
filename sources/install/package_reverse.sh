@@ -130,7 +130,13 @@ function install_ida() {
     colorecho "Installing IDA"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget "https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
+        # out7.hex-rays.com:443 connection refused, :80 returns 403.
+        # IDA Free 9+ is behind a named-license portal (my.hex-rays.com).
+        # Wayback has the last public 8.4 installer (same file as before).
+        local temp_fix_limit="2027-03-21"
+        if check_temp_fix_expiry "$temp_fix_limit"; then
+            wget "https://web.archive.org/web/20240921184600if_/https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
+        fi
         chmod +x /tmp/idafree_linux.run # This is the setup wizard
         /tmp/idafree_linux.run --mode unattended --prefix /opt/tools/idafree
         rm /tmp/idafree_linux.run
