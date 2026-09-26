@@ -114,8 +114,13 @@ function install_ghidra() {
     # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing Ghidra"
     local ghidra_url
-    ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep 'browser_download_url' | grep -o 'https://[^"]*')
-    curl --location -o /tmp/ghidra.zip "$ghidra_url"
+    # Compact GitHub JSON is one line: grep browser_download_url then https:// picks the
+    # API release URL first. GitHub also 403s curl HTTP/2 asset downloads from CI.
+    ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep -o 'https://github.com/NationalSecurityAgency/ghidra/releases/download/[^"]*/ghidra_[^"]*_PUBLIC_[^"]*\.zip' | head -n1)
+    if [[ -z "$ghidra_url" ]]; then
+        criticalecho "Ghidra release zip not found"
+    fi
+    wget --user-agent="Mozilla/5.0" "$ghidra_url" -O /tmp/ghidra.zip
     unzip -q /tmp/ghidra.zip -d /opt/tools # -q because too much useless verbose
     mv -v /opt/tools/ghidra_* /opt/tools/ghidra # ghidra always has a version number in the unzipped folder, lets make it consistent
     rm /tmp/ghidra.zip
