@@ -1,0 +1,3 @@
+SOAPy --users "$DOMAIN"/"$USER":"$PASSWORD"@"$TARGET"
+SOAPy --computers --kerberos "$DOMAIN"/"$USER"@"$TARGET"
+SOAPy --groups --nthash "$NT_HASH" "$DOMAIN"/"$USER"@"$TARGET"
