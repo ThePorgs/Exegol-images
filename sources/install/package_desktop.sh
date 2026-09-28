@@ -53,6 +53,8 @@ function install_xfce() {
 
     # Locale
     cp -rv /tmp/share/locale/* /usr/share/locale
+    # Must leave before wiping /tmp: a deleted cwd breaks later pipx/pyenv.
+    cd /tmp || exit
     rm -rf /tmp/*
 
     # Wallpapers

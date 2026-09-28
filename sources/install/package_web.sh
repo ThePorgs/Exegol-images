@@ -1037,7 +1037,9 @@ function install_urldedupe() {
     cmake CMakeLists.txt
     make
     cp /tmp/urldedupe/urldedupe /opt/tools/bin/urldedupe
-    rm -r /tmp/urldedupe/
+    # Must leave before rm: a deleted cwd breaks later pipx/pyenv (getcwd).
+    cd /tmp || exit
+    rm -rf /tmp/urldedupe/
     add-history urldedupe
     add-test-command "urldedupe -h"
     add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
