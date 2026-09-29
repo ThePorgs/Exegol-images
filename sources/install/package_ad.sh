@@ -1216,9 +1216,13 @@ function install_relayinformer() {
     source ./venv/bin/activate
     pip3 install --no-cache-dir --no-deps .
     pip3 install --no-cache-dir typer msldap requests-ntlm
-    # Override the system oscrypto package that is incompatible with Exegol's OpenSSL setup
-    pip3 install --no-cache-dir --force-reinstall \
-        "oscrypto @ git+https://github.com/wbond/oscrypto.git@d5f3437ed24257895ae1edd9e503cfb352e635a8"
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        pip3 install --no-cache-dir --force-reinstall \
+            "oscrypto @ git+https://github.com/wbond/oscrypto.git@d5f3437ed24257895ae1edd9e503cfb352e635a8"
+    fi
     pip3 uninstall -y pip setuptools wheel
     deactivate
     find ./venv -type d -name '__pycache__' -prune -exec rm -rf {} +
