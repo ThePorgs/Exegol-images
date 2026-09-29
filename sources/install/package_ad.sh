@@ -1211,8 +1211,7 @@ function install_relayinformer() {
     python3 -m venv --system-site-packages ./venv
     # Reuse the existing original Impacket installation instead of installing RelayInformer's pinned copy
     relayinformer_site_packages="$(./venv/bin/python3 -c 'import sysconfig; print(sysconfig.get_path("purelib"))')"
-    echo "$(/opt/tools/impacket-og/venv/bin/python3 -c 'import site; print(site.getsitepackages()[0])')" \
-        > "${relayinformer_site_packages}/impacket-og.pth"
+    /opt/tools/impacket-og/venv/bin/python3 -c 'import site; print(site.getsitepackages()[0])' > "${relayinformer_site_packages}/impacket-og.pth"
     source ./venv/bin/activate
     pip3 install --no-cache-dir --no-deps .
     pip3 install --no-cache-dir typer msldap requests-ntlm
