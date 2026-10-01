@@ -52,8 +52,8 @@ function install_wfuzz() {
     #pip3 install pycurl wfuzz  # uncomment when issue is fix
     mkdir /usr/share/wfuzz
     git -C /tmp clone --depth 1 https://github.com/xmendez/wfuzz.git
-    # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366
-    local temp_fix_limit="2026-08-10"
+    # Wait for fix / PR to be merged: https://github.com/xmendez/wfuzz/issues/366 (still open 2026-09-21)
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install pycurl  # remove this line and uncomment the first when issue is fix
       sed -i 's/pyparsing>=2.4\*;/pyparsing>=2.4.2;/' /tmp/wfuzz/setup.py
@@ -141,9 +141,11 @@ function install_ssrfmap() {
     colorecho "Installing SSRFmap"
     git -C /opt/tools/ clone --depth 1 https://github.com/swisskyrepo/SSRFmap
     cd /opt/tools/SSRFmap || exit
-    python3 -m venv --system-site-packages ./venv
+    # default python3 is 3.11; upstream requires >=3.12 (pyproject.toml)
+    python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install -r requirements.txt
+    # requirements.txt was removed 2026-08-10; project is uv-managed and not pip-installable (package=false)
+    pip3 install dnslib==0.9.24 dnspython==2.6.1 flask==3.0.3 requests==2.31.0 tldextract==5.1.2
     deactivate
     add-aliases ssrfmap
     add-history ssrfmap
@@ -279,8 +281,9 @@ function install_patator() {
     cd /opt/tools/patator || exit
     python3.13 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    # Temporary fix for 'setuptools' having removed the 'pkg_resources' library, see https://github.com/pypa/setuptools/issues/5174
-    local temp_fix_limit="2026-08-10"
+    # setuptools 82 dropped pkg_resources: https://github.com/pypa/setuptools/issues/5174
+    # Follow-up: patator is hatchling now; switch to pip install . / pipx and drop this pin.
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       echo 'setuptools<82' > build-constraints.txt
       pip3 install --build-constraint build-constraints.txt -r requirements.txt
@@ -1034,7 +1037,9 @@ function install_urldedupe() {
     cmake CMakeLists.txt
     make
     cp /tmp/urldedupe/urldedupe /opt/tools/bin/urldedupe
-    rm -r /tmp/urldedupe/
+    # Must leave before rm: a deleted cwd breaks later pipx/pyenv (getcwd).
+    cd /tmp || exit
+    rm -rf /tmp/urldedupe/
     add-history urldedupe
     add-test-command "urldedupe -h"
     add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
@@ -1070,6 +1075,15 @@ function install_xxeinjector() {
     add-history xxeinjector
     add-test-command "XXEinjector.rb | grep Example"
     add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
+}
+
+function install_badsecrets() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing badsecrets"
+    pipx install --system-site-packages badsecrets
+    add-history badsecrets
+    add-test-command "badsecrets 'eyJhbGciOiJIUzI1NiJ9.eyJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkJhZFNlY3JldHMiLCJleHAiOjE1OTMxMzM0ODMsImlhdCI6MTQ2NjkwMzA4M30.ovqRikAo_0kKJ0GVrAwQlezymxrLGjcEiW_s3UJMMCo' |& grep 'Known Secret Found'"
+    add-to-list "badsecrets,https://github.com/blacklanternsecurity/badsecrets,A pure python library for identifying the use of known or very weak cryptographic secrets across a variety of platforms."
 }
 
 # Package dedicated to applicative and active web pentest tools
@@ -1160,6 +1174,7 @@ function package_web() {
     install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
     install_xxeinjector             # XXE injection testing tool
+    install_badsecrets
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

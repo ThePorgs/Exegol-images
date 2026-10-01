@@ -1,0 +1,6 @@
+relayinformer http --url "https://pki.$DOMAIN/certsrv" --user "$DOMAIN/$USER" --password "$PASSWORD"
+relayinformer http --url "http://pki.$DOMAIN/certsrv" --user "$DOMAIN/$USER" --hashes :"$NT_HASH"
+relayinformer mssql --target "$TARGET" --user "$DOMAIN/$USER" --password "$PASSWORD"
+relayinformer mssql --target "$TARGET" --user "$DOMAIN/$USER" --hashes :"$NT_HASH"
+relayinformer ldap --method LDAPS --dc-ip "$DC_IP"
+relayinformer ldap --method BOTH --dc-ip "$DC_IP" --domain "$DOMAIN" --user "$USER" --password "$PASSWORD"

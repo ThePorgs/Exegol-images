@@ -1,8 +1,8 @@
 # Pinned GitHub Actions
-# - actions/checkout v4 @ 34e114876b0b11c390a56381ad16ebd13914f8d5
+# - actions/checkout v7.0.1 @ 3d3c42e5aac5ba805825da76410c181273ba90b1
 #   - Repo: https://github.com/actions/checkout
-#   - Version: https://github.com/actions/checkout/tree/v4
-#   - Pinned: https://github.com/actions/checkout/commit/34e114876b0b11c390a56381ad16ebd13914f8d5
+#   - Version: https://github.com/actions/checkout/tree/v7.0.1
+#   - Pinned: https://github.com/actions/checkout/commit/3d3c42e5aac5ba805825da76410c181273ba90b1
 # - ludeeus/action-shellcheck 2.0.0 @ 00cae500b08a931fb5698e11e79bfbd38e612a38
 #   - Repo: https://github.com/ludeeus/action-shellcheck
 #   - Version: https://github.com/ludeeus/action-shellcheck/tree/2.0.0
@@ -62,7 +62,7 @@ jobs:
     runs-on: [self-hosted]
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Check colorecho
         run: python3 ~/exegol-pipelines-tools/code_compliance_check.py colorecho
       - name: Check add-aliases
@@ -106,7 +106,7 @@ jobs:
       - name: Clean unused local volumes
         run: docker volume prune --force
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Prepare build
         id: prepare
         run: echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT

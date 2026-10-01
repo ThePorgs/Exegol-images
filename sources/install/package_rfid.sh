@@ -74,18 +74,20 @@ function install_mfdread() {
 function install_proxmark3() {
     colorecho "Installing proxmark3 client"
     colorecho "Compiling proxmark client for generic usage with PLATFORM=PM3GENERIC (read https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md#platform)"
-    colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install' from /opt/tools/proxmark3/"
+    colorecho "It can be compiled again for RDV4.0 with 'make clean && make all && make install SKIP_SETCAP=1' from /opt/tools/proxmark3/"
     fapt --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev qtbase5-dev libbz2-dev libbluetooth-dev liblz4-dev
-    # git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
-    # master branch is not a latest stable version. We should use a version specific tag
-    local temp_fix_limit="2026-10-01"
+    # master is not a stable release. Pin the latest tag; GitHub API /releases/latest 403s from CI.
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
-      git -C /opt/tools/ clone -b v4.21611 --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
+      git -C /opt/tools/ clone --depth 1 --branch v4.23346 https://github.com/RfidResearchGroup/proxmark3.git
     fi
+    # git -C /opt/tools/ clone --depth 1 https://github.com/RfidResearchGroup/proxmark3.git
     cd /opt/tools/proxmark3 || exit
     make clean
     make -j all PLATFORM=PM3GENERIC
-    make install PLATFORM=PM3GENERIC clean
+    # v4.23346+ setcap cap_net_raw,cap_net_admin+eip on the client. Docker's
+    # default bounding set has no NET_ADMIN, so execve then returns EPERM.
+    make install PLATFORM=PM3GENERIC SKIP_SETCAP=1 clean
     add-aliases proxmark3
     add-history proxmark3
     add-test-command "proxmark3 --version"
