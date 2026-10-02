@@ -108,10 +108,6 @@ function install_empire() {
     wget -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
     dpkg -i /tmp/packages-microsoft-prod.deb
     fapt apt-transport-https libicu-dev xclip zip
-    # Installing .NET 6.0 SDK
-    wget -O /tmp/dotnet-install.sh https://dot.net/v1/dotnet-install.sh
-    chmod +x /tmp/dotnet-install.sh
-    /tmp/dotnet-install.sh --channel 6.0
     install_powershell
     git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/BC-SECURITY/Empire
     cd /opt/tools/Empire || exit
