@@ -1629,6 +1629,15 @@ function install_pysnaffler() {
     add-to-list "pysnaffler,https://github.com/skelsec/pysnaffler,Snaffler. But in python."
 }
 
+function install_snaffler-ng() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing snaffler-ng"
+    pipx install --system-site-packages 'snaffler-ng[socks]'
+    add-history snaffler
+    add-test-command "snaffler --help"
+    add-to-list "snaffler-ng,https://github.com/totekuh/snaffler-ng,Python port of Snaffler using Impacket. Finds credentials and sensitive files on SMB shares."
+}
+
 function install_pygoldengmsa() {
     colorecho "Installing pyGoldenGMSA"
     git -C /opt/tools/ clone --depth 1 https://github.com/felixbillieres/pyGoldenGMSA.git
@@ -1835,6 +1844,7 @@ function package_ad() {
     install_godap                  # A complete terminal user interface (TUI) for LDAP
     install_powerview              # Powerview Python implementation
     install_pysnaffler             # Snaffler, but in Python
+    install_snaffler-ng            # Snaffler rules on SMB from Linux (Impacket)
     install_evil-winrm-py          # Evil-Winrm, but in Python
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs

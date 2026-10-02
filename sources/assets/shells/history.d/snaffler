@@ -1,0 +1,4 @@
+snaffler -u "$USER" -p "$PASSWORD" -d "$DOMAIN"
+snaffler -u "$USER" --hash "$NT_HASH" -d "$DOMAIN" --dc-host "$DC_HOST"
+KRB5CCNAME="$CCACHE_PATH" snaffler -k --use-kcache -d "$DOMAIN" --dc-host "$DC_HOST"
+snaffler -u "$USER" -p "$PASSWORD" --unc "//$TARGET/Share"
