@@ -190,15 +190,6 @@ function install_ohmyzsh() {
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/agkozak/zsh-z
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
-    # TEMP FIX: nvm v0.40.6 breaks alias resolution under zsh EXTENDED_GLOB (enabled by oh-my-zsh),
-    # so `nvm use default` fails after `nvm install node` with exit 3.
-    # https://github.com/nvm-sh/nvm/issues/3885 — fix PR: https://github.com/nvm-sh/nvm/pull/3891
-    # Revert when a release > 0.40.6 includes that fix: remove this checkout (zsh-nvm will keep latest).
-    # See sources/assets/upstream-issues/nvm-zsh-extendedglob-alias.md
-    local temp_fix_limit="2026-10-01"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      git -C "${NVM_DIR:-$HOME/.nvm}" checkout --quiet v0.40.5
-    fi
 }
 
 function install_pipx() {
