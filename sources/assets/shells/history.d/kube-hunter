@@ -1,0 +1,4 @@
+kube-hunter --remote "$TARGET"
+kube-hunter --remote "$TARGET" --active
+kube-hunter --remote "$TARGET" --report json
+kube-hunter --cidr "$TARGET"/24
