@@ -25,7 +25,7 @@ function install_rust_cargo() {
     colorecho "Installing rustc, cargo, rustup"
     # splitting curl | sh to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
-    sh /tmp/rustup.sh -y
+    sh /tmp/rustup.sh -y --profile minimal
     source "$HOME/.cargo/env"
     # Fast rust crate installation helper
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh -o /tmp/install-from-binstall-release.sh
