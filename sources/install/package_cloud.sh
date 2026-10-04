@@ -22,6 +22,7 @@ function install_kubectl() {
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm /opt/tools/kubectl/kubectl
     add-history kubectl
     add-test-command "kubectl --help"
     add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
