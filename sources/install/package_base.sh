@@ -190,15 +190,6 @@ function install_ohmyzsh() {
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/agkozak/zsh-z
     git -C ~/.oh-my-zsh/custom/plugins/ clone --depth 1 https://github.com/lukechilds/zsh-nvm
     zsh -c "source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh" # this is needed to start an instance of zsh to have the plugin set up
-    # TEMP FIX: nvm v0.40.6 breaks alias resolution under zsh EXTENDED_GLOB (enabled by oh-my-zsh),
-    # so `nvm use default` fails after `nvm install node` with exit 3.
-    # https://github.com/nvm-sh/nvm/issues/3885 — fix PR: https://github.com/nvm-sh/nvm/pull/3891
-    # Revert when a release > 0.40.6 includes that fix: remove this checkout (zsh-nvm will keep latest).
-    # See sources/assets/upstream-issues/nvm-zsh-extendedglob-alias.md
-    local temp_fix_limit="2026-10-01"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      git -C "${NVM_DIR:-$HOME/.nvm}" checkout --quiet v0.40.5
-    fi
 }
 
 function install_pipx() {
@@ -408,20 +399,30 @@ function install_asdf() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing asdf"
     local URL
-    curl --location --silent --output /tmp/asdf-release.json "https://api.github.com/repos/asdf-vm/asdf/releases/latest"
-    if [[ $(uname -m) = 'x86_64' ]]
-    then
-        URL=$(grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
-    elif [[ $(uname -m) = 'aarch64' ]]
-    then
-        URL=$(grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
-    else
+    # v0.20.1 published with no linux tarballs (immutable release, empty assets).
+    # Revert when latest ships amd64/arm64 tar.gz again: restore the API grep below.
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      if [[ $(uname -m) = 'x86_64' ]]; then
+        URL="https://github.com/asdf-vm/asdf/releases/download/v0.20.0/asdf-v0.20.0-linux-amd64.tar.gz"
+      elif [[ $(uname -m) = 'aarch64' ]]; then
+        URL="https://github.com/asdf-vm/asdf/releases/download/v0.20.0/asdf-v0.20.0-linux-arm64.tar.gz"
+      else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+      fi
     fi
-    if [[ -z "$URL" ]]; then
-        cat /tmp/asdf-release.json
-    fi
-    rm /tmp/asdf-release.json
+    # curl --location --silent --output /tmp/asdf-release.json "https://api.github.com/repos/asdf-vm/asdf/releases/latest"
+    # if [[ $(uname -m) = 'x86_64' ]]; then
+    #     URL=$(grep 'browser_download_url.*asdf.*linux-amd64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
+    # elif [[ $(uname -m) = 'aarch64' ]]; then
+    #     URL=$(grep 'browser_download_url.*asdf.*linux-arm64.tar.gz"' /tmp/asdf-release.json | grep -o 'https://[^"]*')
+    # else
+    #     criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    # fi
+    # if [[ -z "$URL" ]]; then
+    #     cat /tmp/asdf-release.json
+    # fi
+    # rm /tmp/asdf-release.json
     curl --location --output /tmp/asdf.tar.gz "$URL"
     tar -xf /tmp/asdf.tar.gz --directory /tmp
     rm /tmp/asdf.tar.gz
@@ -480,10 +481,11 @@ function install_wireguard() {
 
 function install_asciinema() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
-    colorecho "Installing asciinema (latest via cargo)"
-    local temp_fix_limit="2026-09-01"
+    colorecho "Installing asciinema (cargo, pinned)"
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
-      # using specific version to avoid incompatibilities with shell-logging feature
+      # pin for shell-logging (`asciinema rec --stdin --command`); do not float to latest
+      # crates.io newest is 3.2.0. GitHub has v3.2.1 but it is not published to crates.io.
       cargo install --root /usr/local/ --bin asciinema --locked --version 3.2.0 asciinema
     fi
     #cargo install --root /usr/local/ --bin asciinema --locked asciinema
@@ -499,6 +501,8 @@ function package_base() {
     update
     colorecho "Installing apt-fast for faster dep installs"
     apt-get install -y curl sudo wget
+    # Sudo keep EXEGOL specific environment variables
+    echo 'Defaults env_keep += "EXEGOL_*"' > /etc/sudoers.d/exegol_env
     # splitting curl | bash to avoid having additional logs put in curl output being executed because of catch_and_retry
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh

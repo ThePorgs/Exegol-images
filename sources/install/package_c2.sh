@@ -37,8 +37,8 @@ function install_metasploit() {
     gem install rex-text
 
     # fixes 'You have already activated timeout 0.2.0, but your Gemfile requires timeout 0.4.1. Since timeout is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports timeout as a default gem.'
-    # Feb 23 2026: no time to check for now, if it works, it works. Extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    # 2026-09-21: still needed until a full msf rebuild proves bundler/timeout is fine without it
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       gem install timeout --version 0.4.1
     fi
@@ -108,10 +108,6 @@ function install_empire() {
     wget -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
     dpkg -i /tmp/packages-microsoft-prod.deb
     fapt apt-transport-https libicu-dev xclip zip
-    # Installing .NET 6.0 SDK
-    wget -O /tmp/dotnet-install.sh https://dot.net/v1/dotnet-install.sh
-    chmod +x /tmp/dotnet-install.sh
-    /tmp/dotnet-install.sh --channel 6.0
     install_powershell
     git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/BC-SECURITY/Empire
     cd /opt/tools/Empire || exit

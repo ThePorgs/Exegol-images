@@ -216,11 +216,11 @@ function install_bloodhound-ce() {
     # Build the API
     asdf set golang 1.26.1
 
-    # PostgreSQL 15 rejects inline `STORAGE MAIN` in BHCE SQL migrations (still present in v9.2.2).
+    # PostgreSQL 15 rejects inline `STORAGE MAIN` in BHCE SQL migrations (still present in v9.7.1 init.sql).
     # Patch all embedded migration SQL files before go build. See upstream-issues/bloodhound-ce-storage-main.md
     # Revert when upstream removes STORAGE MAIN from migrations:
     #   remove the temp_fix_limit block below and keep only the go build step.
-    local temp_fix_limit="2026-12-01"
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
         find ./cmd/api/src/database/migration/migrations -name '*.sql' -exec sed -i 's/[[:space:]]*STORAGE MAIN//' {} +
     fi
@@ -555,8 +555,8 @@ function install_pypykatz() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing pypykatz"
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       git -C /opt/tools/ clone --depth 1 https://github.com/skelsec/pypykatz
       cd /opt/tools/pypykatz || exit
@@ -799,8 +799,8 @@ function install_pygpoabuse() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -900,8 +900,8 @@ function install_pkinittools() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1073,8 +1073,8 @@ function install_ldaprelayscan() {
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - no update as of Feb 23 2026, so still needed, extending for 6 months
-    local temp_fix_limit="2026-08-10"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
     if check_temp_fix_expiry "$temp_fix_limit"; then
       pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
     fi
@@ -1200,6 +1200,36 @@ function install_roastinthemiddle() {
     add-history roastinthemiddle
     add-test-command "roastinthemiddle --help"
     add-to-list "roastinthemiddle,https://github.com/Tw1sm/RITM,RoastInTheMiddle is a tool to intercept and relay NTLM authentication requests."
+}
+
+function install_relayinformer() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing RelayInformer"
+    git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/RelayInformer
+    rm -rf /opt/tools/RelayInformer/BOF
+    cd /opt/tools/RelayInformer/Python || exit
+    python3 -m venv --system-site-packages ./venv
+    # Reuse the existing original Impacket installation instead of installing RelayInformer's pinned copy
+    relayinformer_site_packages="$(./venv/bin/python3 -c 'import sysconfig; print(sysconfig.get_path("purelib"))')"
+    /opt/tools/impacket-og/venv/bin/python3 -c 'import site; print(site.getsitepackages()[0])' > "${relayinformer_site_packages}/impacket-og.pth"
+    source ./venv/bin/activate
+    pip3 install --no-cache-dir --no-deps .
+    pip3 install --no-cache-dir typer msldap requests-ntlm
+    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
+    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        pip3 install --no-cache-dir --force-reinstall \
+            "oscrypto @ git+https://github.com/wbond/oscrypto.git@d5f3437ed24257895ae1edd9e503cfb352e635a8"
+    fi
+    pip3 uninstall -y pip setuptools wheel
+    deactivate
+    find ./venv -type d -name '__pycache__' -prune -exec rm -rf {} +
+    ln -v -s /opt/tools/RelayInformer/Python/venv/bin/relayinformer /opt/tools/bin/relayinformer
+    cd || exit
+    add-history relayinformer
+    add-test-command "relayinformer --help"
+    add-to-list "RelayInformer,https://github.com/zyn3rgy/RelayInformer,Determine EPA enforcement levels of popular NTLM relay targets from a Linux host."
 }
 
 function install_PassTheCert() {
@@ -1599,6 +1629,15 @@ function install_pysnaffler() {
     add-to-list "pysnaffler,https://github.com/skelsec/pysnaffler,Snaffler. But in python."
 }
 
+function install_snaffler-ng() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing snaffler-ng"
+    pipx install --system-site-packages 'snaffler-ng[socks]'
+    add-history snaffler
+    add-test-command "snaffler --help"
+    add-to-list "snaffler-ng,https://github.com/totekuh/snaffler-ng,Python port of Snaffler using Impacket. Finds credentials and sensitive files on SMB shares."
+}
+
 function install_pygoldengmsa() {
     colorecho "Installing pyGoldenGMSA"
     git -C /opt/tools/ clone --depth 1 https://github.com/felixbillieres/pyGoldenGMSA.git
@@ -1677,6 +1716,15 @@ function install_tdo_dump() {
     add-history tdo_dump
     add-test-command "tdo_dump.py --help"
     add-to-list "tdo_dump,https://github.com/AlmondOffSec/tdo_dump,Proof-of-Concept tool to dump trusted domain objects and extract trust credentials for lateral movement across domain boundaries"
+}
+
+function install_soapy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing SOAPy"
+    pipx install --system-site-packages git+https://github.com/logangoins/SOAPy
+    add-history SOAPy
+    add-test-command "SOAPy --help"
+    add-to-list "soapy,https://github.com/logangoins/SOAPy,SOAPy is a Proof of Concept (PoC) utility for conducting offensive interaction with Active Directory Web Services (ADWS) through a SOCKS5 proxy."
 }
 
 # Package dedicated to internal Active Directory tools
@@ -1796,13 +1844,16 @@ function package_ad() {
     install_godap                  # A complete terminal user interface (TUI) for LDAP
     install_powerview              # Powerview Python implementation
     install_pysnaffler             # Snaffler, but in Python
+    install_snaffler-ng            # Snaffler rules on SMB from Linux (Impacket)
     install_evil-winrm-py          # Evil-Winrm, but in Python
     install_keytabextract          # Extract valuable information from keytab files
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
+    install_relayinformer           # Determine EPA enforcement levels of popular NTLM relay targets
     install_bloodbash              # Bloodhound in terminal
     install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
     install_tdo_dump               # Dump trusted domain objects to extract trust credentials
+    install_soapy
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

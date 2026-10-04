@@ -1,8 +1,8 @@
 # Pinned GitHub Actions
-# - actions/checkout v4 @ 34e114876b0b11c390a56381ad16ebd13914f8d5
+# - actions/checkout v7.0.1 @ 3d3c42e5aac5ba805825da76410c181273ba90b1
 #   - Repo: https://github.com/actions/checkout
-#   - Version: https://github.com/actions/checkout/tree/v4
-#   - Pinned: https://github.com/actions/checkout/commit/34e114876b0b11c390a56381ad16ebd13914f8d5
+#   - Version: https://github.com/actions/checkout/tree/v7.0.1
+#   - Pinned: https://github.com/actions/checkout/commit/3d3c42e5aac5ba805825da76410c181273ba90b1
 # - peter-evans/repository-dispatch v2 @ bf47d102fdb849e755b0b0023ea3e81a44b6f570
 #   - Repo: https://github.com/peter-evans/repository-dispatch
 #   - Version: https://github.com/peter-evans/repository-dispatch/tree/v2
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Get latest commit title (first line only)
         id: get_commit_title

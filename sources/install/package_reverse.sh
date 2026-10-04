@@ -114,8 +114,13 @@ function install_ghidra() {
     # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing Ghidra"
     local ghidra_url
-    ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep 'browser_download_url' | grep -o 'https://[^"]*')
-    curl --location -o /tmp/ghidra.zip "$ghidra_url"
+    # Compact GitHub JSON is one line: grep browser_download_url then https:// picks the
+    # API release URL first. GitHub also 403s curl HTTP/2 asset downloads from CI.
+    ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep -o 'https://github.com/NationalSecurityAgency/ghidra/releases/download/[^"]*/ghidra_[^"]*_PUBLIC_[^"]*\.zip' | head -n1)
+    if [[ -z "$ghidra_url" ]]; then
+        criticalecho "Ghidra release zip not found"
+    fi
+    wget --user-agent="Mozilla/5.0" "$ghidra_url" -O /tmp/ghidra.zip
     unzip -q /tmp/ghidra.zip -d /opt/tools # -q because too much useless verbose
     mv -v /opt/tools/ghidra_* /opt/tools/ghidra # ghidra always has a version number in the unzipped folder, lets make it consistent
     rm /tmp/ghidra.zip
@@ -130,7 +135,13 @@ function install_ida() {
     colorecho "Installing IDA"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget "https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
+        # out7.hex-rays.com:443 connection refused, :80 returns 403.
+        # IDA Free 9+ is behind a named-license portal (my.hex-rays.com).
+        # Wayback has the last public 8.4 installer (same file as before).
+        local temp_fix_limit="2027-03-21"
+        if check_temp_fix_expiry "$temp_fix_limit"; then
+            wget "https://web.archive.org/web/20240921184600if_/https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
+        fi
         chmod +x /tmp/idafree_linux.run # This is the setup wizard
         /tmp/idafree_linux.run --mode unattended --prefix /opt/tools/idafree
         rm /tmp/idafree_linux.run
