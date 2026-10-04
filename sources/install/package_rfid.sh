@@ -50,7 +50,7 @@ function install_libnfc-crypto1-crack() {
     tar xvf craptev1-v1.1.tar
     tar xvf crapto1-v3.3.tar --one-top-level
     make -j CFLAGS=-"-std=gnu99 -O3 -march=native -Wl,--allow-multiple-definition"
-    cp libnfc_crypto1_crack /opt/tools/bin
+    ln -s "/opt/tools/crypto1_bs/libnfc_crypto1_crack" /opt/tools/bin/libnfc_crypto1_crack
     rm /opt/tools/crypto1_bs/craptev1-v1.1.tar /opt/tools/crypto1_bs/crapto1-v3.3.tar
     add-aliases libnfc-crypto1-crack
     add-history libnfc-crypto1-crack
