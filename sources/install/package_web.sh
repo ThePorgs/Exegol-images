@@ -1118,6 +1118,8 @@ function install_mapcidr() {
     add-history mapcidr
     add-test-command "mapcidr --version"
     add-to-list "mapcidr,https://github.com/projectdiscovery/mapcidr,Utility program to perform multiple operations for a given subnet/CIDR ranges."
+}
+
 function install_badsecrets() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing badsecrets"
