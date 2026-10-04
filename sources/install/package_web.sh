@@ -1075,7 +1075,8 @@ function install_xxeinjector() {
 function install_tlsx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing tlsx"
-    go install -v github.com/projectdiscovery/tlsx/cmd/tlsx@latest
+    asdf set golang 1.26.1
+    go install -trimpath -ldflags="-s -w" -v github.com/projectdiscovery/tlsx/cmd/tlsx@latest
     asdf reshim golang
     add-history tlsx
     add-test-command "tlsx --version"
@@ -1085,7 +1086,8 @@ function install_tlsx() {
 function install_vulnx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing vulnx"
-    go install -v github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest
+    asdf set golang 1.26.1
+    go install -trimpath -ldflags="-s -w" -v github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest
     asdf reshim golang
     add-history vulnx
     add-test-command "vulnx --help"
@@ -1095,7 +1097,7 @@ function install_vulnx() {
 function install_urlfinder() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing URLFinder"
-    go install -v github.com/projectdiscovery/urlfinder/cmd/urlfinder@latest
+    go install -trimpath -ldflags="-s -w" -v github.com/projectdiscovery/urlfinder/cmd/urlfinder@latest
     asdf reshim golang
     add-history urlfinder
     add-test-command "urlfinder --version"
@@ -1105,7 +1107,8 @@ function install_urlfinder() {
 function install_mapcidr() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing mapCIDR"
-    go install -v github.com/projectdiscovery/mapcidr/cmd/mapcidr@latest
+    asdf set golang 1.26.1
+    go install -trimpath -ldflags="-s -w" -v github.com/projectdiscovery/mapcidr/cmd/mapcidr@latest
     asdf reshim golang
     add-history mapcidr
     add-test-command "mapcidr --version"
