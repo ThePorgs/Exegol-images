@@ -260,6 +260,29 @@ function install_nfsshell() {
     add-to-list "nfsshell,https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
 }
 
+function install_vnc-decrypt() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing vnc-decrypt"
+    cat > /opt/tools/bin/vnc-decrypt <<'EOF'
+#!/bin/bash
+vncdecrypt() {
+    local hex key fmt pv;
+    hex=$(printf '%s' "$1" | tr -d ' :\n' | tr 'A-F' 'a-f');
+    key="${2:-E84AD660C4721AE0}";
+    [ -z "$hex" ] && { echo "usage: vnc-decrypt <hex_password> [hex_des_key]" >&2; return 1; };
+    printf '%s' "$hex" | grep -Eq '^([0-9a-f]{2})+$' || { echo "error: password must be hex" >&2; return 1; };
+    hex=${hex:0:16};
+    fmt=$(printf '%s' "$hex" | sed 's/\(..\)/\\x\1/g');
+    printf "$fmt" | openssl enc -des-ecb -d -K "$key" -nopad 2>/dev/null | tr -d '\0';
+    echo;
+}
+vncdecrypt $@
+EOF
+    chmod +x /opt/tools/bin/vnc-decrypt
+    add-test-command "vnc-decrypt dbd83cfd727a1458 | grep 'password'"
+    add-to-list "vnc-decrypt,N/A,A small shell script that decrypt some VNC passwords."
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
