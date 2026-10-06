@@ -309,6 +309,7 @@ function package_misc() {
     install_thr             # https://www.thehacker.recipes/
     install_dtrx            # Intelligent archive extractor
     install_nfsshell        # NFS share interaction tool
+    install_vnc-decrypt
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
