@@ -261,7 +261,7 @@ function install_nfsshell() {
 }
 
 function install_vnc-decrypt() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing vnc-decrypt"
     cat > /opt/tools/bin/vnc-decrypt <<'EOF'
 #!/bin/bash
