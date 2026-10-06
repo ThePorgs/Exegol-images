@@ -1255,6 +1255,19 @@ function install_kerbrute() {
     add-to-list "kerbrute,${version},https://github.com/ropnop/kerbrute,A tool to perform Kerberos pre-auth bruteforcing"
 }
 
+function install_ldapnomnom() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing ldapnomnom"
+    asdf set golang 1.23.0
+    go install -v github.com/lkarlslund/ldapnomnom@latest
+    asdf reshim golang
+    add-history ldapnomnom
+    add-test-command "ldapnomnom --help"
+    local version
+    version="$(go_version ldapnomnom)"
+    add-to-list "ldapnomnom,${version},https://github.com/lkarlslund/ldapnomnom,High-speed Active Directory username enumeration through TCP LDAP Ping requests."
+}
+
 function install_ldeep() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing ldeep"
@@ -2041,6 +2054,7 @@ function package_ad() {
     install_goldencopy
     install_crackhound
     install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
+    install_ldapnomnom              # High-speed Active Directory username enumeration through TCP LDAP Ping requests
     install_ldeep
     install_rusthound
     install_rusthound-ce
