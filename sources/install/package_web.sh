@@ -1077,6 +1077,49 @@ function install_xxeinjector() {
     add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
 }
 
+function install_tlsx() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing tlsx"
+    asdf set golang 1.26.1
+    go install -trimpath -ldflags="-s -w" -v github.com/projectdiscovery/tlsx/cmd/tlsx@latest
+    asdf reshim golang
+    add-history tlsx
+    add-test-command "tlsx --version"
+    add-to-list "tlsx,https://github.com/projectdiscovery/tlsx,A fast and configurable TLS grabber focused on TLS based data collection and analysis."
+}
+
+function install_vulnx() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing vulnx"
+    asdf set golang 1.26.1
+    go install -trimpath -ldflags="-s -w" -v github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest
+    asdf reshim golang
+    add-history vulnx
+    add-test-command "vulnx --help"
+    add-to-list "vulnx,https://github.com/projectdiscovery/vulnx,Modern CLI for exploring vulnerability data with powerful search filtering and analysis capabilities."
+}
+
+function install_urlfinder() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing URLFinder"
+    go install -trimpath -ldflags="-s -w" -v github.com/projectdiscovery/urlfinder/cmd/urlfinder@latest
+    asdf reshim golang
+    add-history urlfinder
+    add-test-command "urlfinder --version"
+    add-to-list "urlfinder,https://github.com/projectdiscovery/urlfinder,URLFinder is a high-speed passive URL discovery tool designed to simplify and accelerate web asset discovery."
+}
+
+function install_mapcidr() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing mapCIDR"
+    asdf set golang 1.26.1
+    go install -trimpath -ldflags="-s -w" -v github.com/projectdiscovery/mapcidr/cmd/mapcidr@latest
+    asdf reshim golang
+    add-history mapcidr
+    add-test-command "mapcidr --version"
+    add-to-list "mapcidr,https://github.com/projectdiscovery/mapcidr,Utility program to perform multiple operations for a given subnet/CIDR ranges."
+}
+
 function install_badsecrets() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing badsecrets"
@@ -1174,6 +1217,10 @@ function package_web() {
     install_urldedupe               # Get back a list of deduplicated (unique) URL and query string combination. 
     install_curlie                  # Mix of cURL and HTTPie
     install_xxeinjector             # XXE injection testing tool
+    install_tlsx
+    install_vulnx
+    install_urlfinder
+    install_mapcidr
     install_badsecrets
     post_install
     end_time=$(date +%s)
