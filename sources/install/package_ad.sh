@@ -1065,26 +1065,6 @@ function install_pyfinduncommonshares() {
     add-to-list "pyFindUncommonShares,https://github.com/p0dalirius/pyFindUncommonShares,Script that can help identify shares that are not commonly found on a Windows system."
 }
 
-function install_ldaprelayscan() {
-    colorecho "Installing LdapRelayScan"
-    git -C /opt/tools/ clone --depth 1 https://github.com/zyn3rgy/LdapRelayScan
-    cd /opt/tools/LdapRelayScan || exit
-    python3 -m venv --system-site-packages ./venv
-    source ./venv/bin/activate
-    pip3 install -r requirements.txt
-    # without following fix, tool raises "oscrypto.errors.LibraryNotFoundError: Error detecting the version of libcrypto"
-    # see https://github.com/wbond/oscrypto/issues/78 - still open as of 2026-09-21, no PyPI release after 1.3.0
-    local temp_fix_limit="2027-03-21"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      pip3 install --force oscrypto@git+https://github.com/wbond/oscrypto.git
-    fi
-    deactivate
-    add-aliases ldaprelayscan
-    add-history ldaprelayscan
-    add-test-command "LdapRelayScan.py --help"
-    add-to-list "ldaprelayscan,https://github.com/zyn3rgy/LdapRelayScan,Check Domain Controllers for LDAP server protections regarding the relay of NTLM authentication."
-}
-
 function install_goldencopy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing GoldenCopy"
@@ -1797,7 +1777,6 @@ function package_ad() {
     install_pylaps
     install_pygoldengmsa
     install_pyfinduncommonshares
-    install_ldaprelayscan
     install_goldencopy
     install_crackhound
     install_kerbrute                # Tool to enumerate and bruteforce AD accounts through kerberos pre-authentication
