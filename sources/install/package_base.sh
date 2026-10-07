@@ -27,6 +27,7 @@ function install_rust_cargo() {
     curl https://sh.rustup.rs -sSf -o /tmp/rustup.sh
     sh /tmp/rustup.sh -y
     source "$HOME/.cargo/env"
+    rustup component remove rust-docs
     # Fast rust crate installation helper
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh -o /tmp/install-from-binstall-release.sh
     sh /tmp/install-from-binstall-release.sh
