@@ -263,21 +263,7 @@ function install_nfsshell() {
 function install_vnc-decrypt() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing vnc-decrypt"
-    cat > /opt/tools/bin/vnc-decrypt <<'EOF'
-#!/bin/bash
-vncdecrypt() {
-    local hex key fmt pv;
-    hex=$(printf '%s' "$1" | tr -d ' :\n' | tr 'A-F' 'a-f');
-    key="${2:-E84AD660C4721AE0}";
-    [ -z "$hex" ] && { echo "usage: vnc-decrypt <hex_password> [hex_des_key]" >&2; return 1; };
-    printf '%s' "$hex" | grep -Eq '^([0-9a-f]{2})+$' || { echo "error: password must be hex" >&2; return 1; };
-    hex=${hex:0:16};
-    fmt=$(printf '%s' "$hex" | sed 's/\(..\)/\\x\1/g');
-    printf "$fmt" | openssl enc -des-ecb -d -K "$key" -nopad 2>/dev/null | tr -d '\0';
-    echo;
-}
-vncdecrypt $@
-EOF
+    cp /root/sources/assets/vnc-decrypt/vnc-decrypt /opt/tools/bin/vnc-decrypt
     chmod +x /opt/tools/bin/vnc-decrypt
     add-test-command "vnc-decrypt dbd83cfd727a1458 | grep 'password'"
     add-to-list "vnc-decrypt,N/A,A small shell script that decrypt some VNC passwords."
