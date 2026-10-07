@@ -995,6 +995,8 @@ function install_caido() {
     wget "$caido_cli" -O "/opt/tools/caido/$caido_file_name_cli"
     tar -xvzf "/opt/tools/caido/$caido_file_name_cli" -C /opt/tools/bin/
 
+    rm /opt/tools/caido/"$caido_file_name" "/opt/tools/caido/$caido_file_name_cli"
+
     add-history caido
     add-test-gui-command "caido --no-sandbox"
     add-test-command "caido-cli --help"
