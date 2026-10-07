@@ -159,6 +159,10 @@ function install_bloodhound() {
     mkdir -p ~/.config/bloodhound
     cp -v /root/sources/assets/bloodhound/config.json ~/.config/bloodhound/config.json
     cp -v /root/sources/assets/bloodhound/customqueries.json ~/.config/bloodhound/customqueries.json
+    case "$(uname -m)" in x86_64) bh_arch=x64;; aarch64) bh_arch=arm64;; armv7l) bh_arch=armv7l;; esac
+    find /opt/tools/BloodHound4 -maxdepth 1 -name 'BloodHound-linux-*' ! -name "BloodHound-linux-${bh_arch}" -exec rm -rf {} +
+    rm -rf /opt/tools/BloodHound4/node_modules
+    zsh -c "source ~/.zshrc && nvm uninstall 16.13.0"
     add-aliases bloodhound
     add-history bloodhound
     add-test-command "ldd /opt/tools/BloodHound4/BloodHound"
