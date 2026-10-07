@@ -300,6 +300,8 @@ function install_bloodhound-ce() {
     # Configuration
     cp -v /root/sources/assets/bloodhound-ce/bloodhound.config.json "${bloodhoundce_path}"
 
+    rm -r "${bloodhoundce_path}/src"
+
     # the following test command probably needs to be changed. No idea how we can make sure bloodhound-ce works as intended.
     add-test-command "/opt/tools/BloodHound-CE/bloodhound --version |& grep 'Bloodhound API Version: v'"
     add-test-command "service postgresql start && sleep 5 && PGPASSWORD=exegol4thewin psql -U bloodhound -d bloodhound -h localhost -c '\l' && service postgresql stop"
