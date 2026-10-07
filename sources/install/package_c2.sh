@@ -127,37 +127,6 @@ function install_empire() {
     cd || exit
 }
 
-function install_havoc() {
-    colorecho "Installing Havoc"
-    git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/HavocFramework/Havoc
-    cd /opt/tools/Havoc || exit
-    # https://github.com/HavocFramework/Havoc/issues/516 (seems fixed but keeping commented tempfix just in case)
-    #    local temp_fix_limit="YYYY-MM-DD"
-    #    if check_temp_fix_expiry "$temp_fix_limit"; then
-    #      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
-    #      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
-    #      go mod download golang.org/x/sys
-    #      go mod download github.com/ugorji/go
-    #    fi
-
-    # Building Team Server
-    sed -i 's/golang-go//' teamserver/Install.sh
-    make ts-build
-    # ln -v -s /opt/tools/Havoc/havoc /opt/tools/bin/havoc
-    # Symbolic link above not needed because Havoc relies on absolute links, the user needs be changed directory when running havoc
-
-    # Building Client
-    fapt qtmultimedia5-dev libqt5websockets5-dev
-    make client-build || cat /opt/tools/Havoc/client/Build/CMakeFiles/CMakeOutput.log
-    # `make clean` removes binaries, so we could just manually remove the Build directory
-    rm -rf /opt/tools/Havoc/client/Build/
-
-    add-aliases havoc
-    add-history havoc
-    add-test-command "havoc "
-    add-to-list "Havoc,https://github.com/HavocFramework/Havoc,Command & Control Framework"
-}
-
 function install_villain() {
     colorecho "Installing Villain"
     git -C /opt/tools/ clone --depth 1 https://github.com/t3l3machus/Villain
@@ -183,7 +152,6 @@ function package_c2() {
     install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
-    install_havoc                   # C2 in Go
     install_villain                 # C2 using hoaxShell in Python
     post_install
     end_time=$(date +%s)
