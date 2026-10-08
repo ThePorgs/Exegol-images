@@ -16,9 +16,13 @@ function install_web_apt_tools() {
     add-test-command "prips --help"                      # Print the IP addresses in a given range
     add-test-command "swaks --version"                   # Featureful, flexible, scriptable, transaction-oriented SMTP test tool
 
-    add-to-list "dirb,https://github.com/v0re/dirb,Web Content Scanner"
-    add-to-list "prips,https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
-    add-to-list "swaks,https://github.com/jetmore/swaks,Swaks is a featureful flexible scriptable transaction-oriented SMTP test tool."
+    local version
+    version="$(apt_version dirb)"
+    add-to-list "dirb,${version},https://github.com/v0re/dirb,Web Content Scanner"
+    version="$(apt_version prips)"
+    add-to-list "prips,${version},https://manpages.ubuntu.com/manpages/focal/man1/prips.1.html,A utility for quickly generating IP ranges or enumerating hosts within a specified range."
+    version="$(apt_version swaks)"
+    add-to-list "swaks,${version},https://github.com/jetmore/swaks,Swaks is a featureful flexible scriptable transaction-oriented SMTP test tool."
 }
 
 function install_weevely() {
@@ -27,7 +31,9 @@ function install_weevely() {
     pipx install --python 3.13 --system-site-packages git+https://github.com/epinna/weevely3
     add-history weevely
     add-test-command "weevely --help"
-    add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
+    local version
+    version="$(pipx_version weevely3)"
+    add-to-list "weevely,${version},https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
 }
 
 function install_whatweb() {
@@ -40,7 +46,9 @@ function install_whatweb() {
     add-aliases whatweb
     add-history whatweb
     add-test-command "whatweb --version"
-    add-to-list "whatweb,https://github.com/urbanadventurer/WhatWeb,Next generation web scanner that identifies what websites are running."
+    local version
+    version="$(git_version /opt/tools/WhatWeb)"
+    add-to-list "whatweb,${version},https://github.com/urbanadventurer/WhatWeb,Next generation web scanner that identifies what websites are running."
 
 }
 
@@ -64,7 +72,9 @@ function install_wfuzz() {
     add-history wfuzz
     add-test-command "wfuzz --help"
     add-test-command "test -d '/usr/share/wfuzz/' || exit 1"
-    add-to-list "wfuzz,https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
+    local version
+    version="$(cli_version wfuzz --version)"
+    add-to-list "wfuzz,${version},https://github.com/xmendez/wfuzz,WFuzz is a web application vulnerability scanner that allows you to find vulnerabilities using a wide range of attack payloads and fuzzing techniques"
 }
 
 function install_gobuster() {
@@ -74,7 +84,9 @@ function install_gobuster() {
     asdf reshim golang
     add-history gobuster
     add-test-command "gobuster --help"
-    add-to-list "gobuster,https://github.com/OJ/gobuster,Tool to discover hidden files and directories."
+    local version
+    version="$(go_version gobuster)"
+    add-to-list "gobuster,${version},https://github.com/OJ/gobuster,Tool to discover hidden files and directories."
 }
 
 function install_kiterunner() {
@@ -88,7 +100,9 @@ function install_kiterunner() {
     ln -v -s "$(pwd)/dist/kr" /opt/tools/bin/kr
     add-history kiterunner
     add-test-command "kr --help"
-    add-to-list "kiterunner,https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments."
+    local version
+    version="$(git_version /opt/tools/kiterunner)"
+    add-to-list "kiterunner,${version},https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments."
 }
 
 function install_amass() {
@@ -98,7 +112,9 @@ function install_amass() {
     asdf reshim golang
     add-history amass
     add-test-command "amass -version"
-    add-to-list "amass,https://github.com/OWASP/Amass,A DNS enumeration / attack surface mapping & external assets discovery tool"
+    local version
+    version="$(go_version ...)"
+    add-to-list "amass,${version},https://github.com/OWASP/Amass,A DNS enumeration / attack surface mapping & external assets discovery tool"
 }
 
 function install_ffuf() {
@@ -120,7 +136,9 @@ function install_ffuf() {
     tar -xf /tmp/ffuf.tar.gz --directory /opt/tools/bin/
     add-history ffuf
     add-test-command "ffuf --help"
-    add-to-list "ffuf,https://github.com/ffuf/ffuf,Fast web fuzzer written in Go."
+    local version
+    version="$(cli_version ffuf --version)"
+    add-to-list "ffuf,${version},https://github.com/ffuf/ffuf,Fast web fuzzer written in Go."
 }
 
 function install_dirsearch() {
@@ -134,7 +152,9 @@ function install_dirsearch() {
     add-aliases dirsearch
     add-history dirsearch
     add-test-command "dirsearch.py --help"
-    add-to-list "dirsearch,https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
+    local version
+    version="$(git_version /opt/tools/dirsearch)"
+    add-to-list "dirsearch,${version},https://github.com/maurosoria/dirsearch,Tool for searching files and directories on a web site."
 }
 
 function install_ssrfmap() {
@@ -150,7 +170,9 @@ function install_ssrfmap() {
     add-aliases ssrfmap
     add-history ssrfmap
     add-test-command "ssrfmap.py --help"
-    add-to-list "ssrfmap,https://github.com/swisskyrepo/SSRFmap,a tool for testing SSRF vulnerabilities."
+    local version
+    version="$(git_version /opt/tools/SSRFmap)"
+    add-to-list "ssrfmap,${version},https://github.com/swisskyrepo/SSRFmap,a tool for testing SSRF vulnerabilities."
 }
 
 function install_gopherus() {
@@ -164,7 +186,9 @@ function install_gopherus() {
     add-aliases gopherus
     add-history gopherus
     add-test-command "gopherus.py --help"
-    add-to-list "gopherus,https://github.com/tarunkant/Gopherus,Gopherus is a simple command line tool for exploiting vulnerable Gopher servers."
+    local version
+    version="$(git_version /opt/tools/Gopherus)"
+    add-to-list "gopherus,${version},https://github.com/tarunkant/Gopherus,Gopherus is a simple command line tool for exploiting vulnerable Gopher servers."
 }
 
 function install_nosqlmap() {
@@ -182,7 +206,9 @@ function install_nosqlmap() {
     deactivate
     add-aliases nosqlmap
     add-test-command "nosqlmap.py --help"
-    add-to-list "nosqlmap,https://github.com/codingo/NoSQLMap,a Python tool for testing NoSQL databases for security vulnerabilities."
+    local version
+    version="$(git_version /opt/tools/NoSQLMap)"
+    add-to-list "nosqlmap,${version},https://github.com/codingo/NoSQLMap,a Python tool for testing NoSQL databases for security vulnerabilities."
 }
 
 function install_xsstrike() {
@@ -196,7 +222,9 @@ function install_xsstrike() {
     add-aliases xsstrike
     add-history xsstrike
     add-test-command "xsstrike.py --help"
-    add-to-list "xsstrike,https://github.com/s0md3v/XSStrike,a Python tool for detecting and exploiting XSS vulnerabilities."
+    local version
+    version="$(git_version /opt/tools/XSStrike)"
+    add-to-list "xsstrike,${version},https://github.com/s0md3v/XSStrike,a Python tool for detecting and exploiting XSS vulnerabilities."
 }
 
 function install_xspear() {
@@ -207,7 +235,9 @@ function install_xspear() {
     add-aliases XSpear
     add-history XSpear
     add-test-command "XSpear --help"
-    add-to-list "XSpear,https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
+    local version
+    version="$(gem_version XSpear)"
+    add-to-list "XSpear,${version},https://github.com/hahwul/XSpear,a powerful XSS scanning and exploitation tool."
 }
 
 function install_xsser() {
@@ -221,7 +251,9 @@ function install_xsser() {
     add-aliases xsser
     add-history xsser
     add-test-command "xsser --help"
-    add-to-list "xsser,https://github.com/epsylon/xsser,XSS scanner."
+    local version
+    version="$(git_version /opt/tools/xsser)"
+    add-to-list "xsser,${version},https://github.com/epsylon/xsser,XSS scanner."
 }
 
 function install_xsrfprobe() {
@@ -230,7 +262,9 @@ function install_xsrfprobe() {
     pipx install --system-site-packages git+https://github.com/0xInfection/XSRFProbe
     add-history xsrfprobe
     add-test-command "xsrfprobe --help"
-    add-to-list "xsrfprobe,https://github.com/0xInfection/XSRFProbe,a tool for detecting and exploiting Cross-Site Request Forgery (CSRF) vulnerabilities"
+    local version
+    version="$(pipx_version XSRFProbe)"
+    add-to-list "xsrfprobe,${version},https://github.com/0xInfection/XSRFProbe,a tool for detecting and exploiting Cross-Site Request Forgery (CSRF) vulnerabilities"
 }
 
 function install_bolt() {
@@ -244,7 +278,9 @@ function install_bolt() {
     add-aliases bolt
     add-history bolt
     add-test-command "bolt.py --help"
-    add-to-list "bolt,https://github.com/s0md3v/bolt,Bolt crawls the target website to the specified depth and stores all the HTML forms found in a database for further processing."
+    local version
+    version="$(git_version /opt/tools/Bolt)"
+    add-to-list "bolt,${version},https://github.com/s0md3v/bolt,Bolt crawls the target website to the specified depth and stores all the HTML forms found in a database for further processing."
 }
 
 function install_fuxploider() {
@@ -258,7 +294,9 @@ function install_fuxploider() {
     add-aliases fuxploider
     add-history fuxploider
     add-test-command "fuxploider.py --help"
-    add-to-list "fuxploider,https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
+    local version
+    version="$(git_version /opt/tools/fuxploider)"
+    add-to-list "fuxploider,${version},https://github.com/almandin/fuxploider,a Python tool for finding and exploiting file upload forms/directories."
 }
 
 function install_patator() {
@@ -280,7 +318,9 @@ function install_patator() {
     add-aliases patator
     add-history patator
     add-test-command "patator.py ftp_login --help"
-    add-to-list "patator,https://github.com/lanjelot/patator,Login scanner."
+    local version
+    version="$(git_version /opt/tools/patator)"
+    add-to-list "patator,${version},https://github.com/lanjelot/patator,Login scanner."
 }
 
 function install_joomscan() {
@@ -289,7 +329,9 @@ function install_joomscan() {
     add-aliases joomscan
     add-history joomscan
     add-test-command "joomscan --version"
-    add-to-list "joomscan,https://github.com/rezasp/joomscan,A tool to enumerate Joomla-based websites"
+    local version
+    version="$(git_version /opt/tools/joomscan)"
+    add-to-list "joomscan,${version},https://github.com/rezasp/joomscan,A tool to enumerate Joomla-based websites"
 }
 
 function install_wpscan() {
@@ -300,7 +342,9 @@ function install_wpscan() {
     add-aliases wpscan
     add-history wpscan
     add-test-command "wpscan --help"
-    add-to-list "wpscan,https://github.com/wpscanteam/wpscan,A tool to enumerate WordPress-based websites"
+    local version
+    version="$(gem_version wpscan)"
+    add-to-list "wpscan,${version},https://github.com/wpscanteam/wpscan,A tool to enumerate WordPress-based websites"
 }
 
 function install_droopescan() {
@@ -309,7 +353,9 @@ function install_droopescan() {
     pipx install --system-site-packages git+https://github.com/droope/droopescan.git
     add-history droopescan
     add-test-command "droopescan --help"
-    add-to-list "droopescan,https://github.com/droope/droopescan,Scan Drupal websites for vulnerabilities."
+    local version
+    version="$(pipx_version droopescan.git)"
+    add-to-list "droopescan,${version},https://github.com/droope/droopescan,Scan Drupal websites for vulnerabilities."
 }
 
 function install_drupwn() {
@@ -323,7 +369,9 @@ function install_drupwn() {
     add-aliases drupwn
     add-history drupwn
     add-test-command "drupwn --help"
-    add-to-list "drupwn,https://github.com/immunIT/drupwn,Drupal security scanner."
+    local version
+    version="$(git_version /opt/tools/drupwn)"
+    add-to-list "drupwn,${version},https://github.com/immunIT/drupwn,Drupal security scanner."
 }
 
 function install_cmsmap() {
@@ -337,7 +385,9 @@ function install_cmsmap() {
     # cmsmap -U PC
     add-history cmsmap
     add-test-command "cmsmap --help; cmsmap --help |& grep 'Post Exploitation'"
-    add-to-list "cmsmap,https://github.com/Dionach/CMSmap,Tool for security audit of web content management systems."
+    local version
+    version="$(pipx_version CMSmap.git)"
+    add-to-list "cmsmap,${version},https://github.com/Dionach/CMSmap,Tool for security audit of web content management systems."
 }
 
 function install_moodlescan() {
@@ -354,7 +404,9 @@ function install_moodlescan() {
     add-aliases moodlescan
     add-history moodlescan
     add-test-command "moodlescan.py --help"
-    add-to-list "moodlescan,https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities."
+    local version
+    version="$(git_version /opt/tools/moodlescan)"
+    add-to-list "moodlescan,${version},https://github.com/inc0d3/moodlescan,Scan Moodle sites for information and vulnerabilities."
 }
 
 function install_testssl() {
@@ -365,7 +417,9 @@ function install_testssl() {
     add-aliases testssl
     add-history testssl
     add-test-command "testssl.sh --help"
-    add-to-list "testssl,https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
+    local version
+    version="$(git_version /opt/tools/testssl.sh)"
+    add-to-list "testssl,${version},https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
 }
 
 function install_cloudfail() {
@@ -379,7 +433,9 @@ function install_cloudfail() {
     add-aliases cloudfail
     add-history cloudfail
     add-test-command "cloudfail.py --help"
-    add-to-list "cloudfail,https://github.com/m0rtem/CloudFail,a reconnaissance tool for identifying misconfigured CloudFront domains."
+    local version
+    version="$(git_version /opt/tools/CloudFail)"
+    add-to-list "cloudfail,${version},https://github.com/m0rtem/CloudFail,a reconnaissance tool for identifying misconfigured CloudFront domains."
 }
 
 function install_eyewitness() {
@@ -394,7 +450,9 @@ function install_eyewitness() {
     add-aliases eyewitness
     add-history eyewitness
     add-test-command "EyeWitness.py --help"
-    add-to-list "eyewitness,https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites / provide some server header info / and identify default credentials if possible."
+    local version
+    version="$(git_version /opt/tools/EyeWitness)"
+    add-to-list "eyewitness,${version},https://github.com/FortyNorthSecurity/EyeWitness,a tool to take screenshots of websites / provide some server header info / and identify default credentials if possible."
 }
 
 function install_oneforall() {
@@ -408,7 +466,9 @@ function install_oneforall() {
     add-aliases oneforall
     add-history oneforall
     add-test-command "oneforall.py check"
-    add-to-list "oneforall,https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
+    local version
+    version="$(git_version /opt/tools/OneForAll)"
+    add-to-list "oneforall,${version},https://github.com/shmilylty/OneForAll,a powerful subdomain collection tool."
 }
 
 function install_wafw00f() {
@@ -417,7 +477,9 @@ function install_wafw00f() {
     pipx install --system-site-packages wafw00F
     add-history wafw00f
     add-test-command "wafw00f --help"
-    add-to-list "wafw00f,https://github.com/EnableSecurity/wafw00f,a Python tool that helps to identify and fingerprint web application firewall (WAF) products."
+    local version
+    version="$(pipx_version wafw00F)"
+    add-to-list "wafw00f,${version},https://github.com/EnableSecurity/wafw00f,a Python tool that helps to identify and fingerprint web application firewall (WAF) products."
 }
 
 function install_corscanner() {
@@ -431,7 +493,9 @@ function install_corscanner() {
     add-aliases corscanner
     add-history corscanner
     add-test-command "cors_scan.py --help"
-    add-to-list "corscanner,https://github.com/chenjj/CORScanner,a Python script for finding CORS misconfigurations."
+    local version
+    version="$(git_version /opt/tools/CORScanner)"
+    add-to-list "corscanner,${version},https://github.com/chenjj/CORScanner,a Python script for finding CORS misconfigurations."
 }
 
 function install_hakrawler() {
@@ -441,7 +505,9 @@ function install_hakrawler() {
     asdf reshim golang
     add-history hakrawler
     add-test-command "hakrawler --help"
-    add-to-list "hakrawler,https://github.com/hakluke/hakrawler,a fast web crawler for gathering URLs and other information from websites"
+    local version
+    version="$(go_version hakrawler)"
+    add-to-list "hakrawler,${version},https://github.com/hakluke/hakrawler,a fast web crawler for gathering URLs and other information from websites"
 }
 
 function install_gowitness() {
@@ -452,7 +518,9 @@ function install_gowitness() {
     asdf reshim golang
     add-history gowitness
     add-test-command "gowitness --help"
-    add-to-list "gowitness,https://github.com/sensepost/gowitness,A website screenshot utility written in Golang."
+    local version
+    version="$(go_version gowitness)"
+    add-to-list "gowitness,${version},https://github.com/sensepost/gowitness,A website screenshot utility written in Golang."
 }
 
 function install_linkfinder() {
@@ -466,7 +534,9 @@ function install_linkfinder() {
     add-aliases linkfinder
     add-history linkfinder
     add-test-command "linkfinder.py --help"
-    add-to-list "linkfinder,https://github.com/GerbenJavado/LinkFinder,a Python script that finds endpoints and their parameters in JavaScript files."
+    local version
+    version="$(git_version /opt/tools/LinkFinder)"
+    add-to-list "linkfinder,${version},https://github.com/GerbenJavado/LinkFinder,a Python script that finds endpoints and their parameters in JavaScript files."
 }
 
 function install_timing_attack() {
@@ -477,7 +547,9 @@ function install_timing_attack() {
     add-aliases timing_attack
     add-history timing_attack
     add-test-command "timing_attack --help"
-    add-to-list "timing,https://github.com/ffleming/timing_attack,Tool to generate a timing profile for a given command."
+    local version
+    version="$(gem_version timing_attack)"
+    add-to-list "timing,${version},https://github.com/ffleming/timing_attack,Tool to generate a timing profile for a given command."
 }
 
 function install_updog() {
@@ -486,7 +558,9 @@ function install_updog() {
     pipx install --system-site-packages updog
     add-history updog
     add-test-command "updog --help"
-    add-to-list "updog,https://github.com/sc0tfree/updog,Simple replacement for Python's SimpleHTTPServer."
+    local version
+    version="$(pipx_version updog)"
+    add-to-list "updog,${version},https://github.com/sc0tfree/updog,Simple replacement for Python's SimpleHTTPServer."
 }
 
 function install_jwt_tool() {
@@ -509,7 +583,9 @@ function install_jwt_tool() {
     add-aliases jwt_tool
     add-history jwt_tool
     add-test-command "jwt_tool.py --help"
-    add-to-list "jwt,https://github.com/ticarpi/jwt_tool,a command-line tool for working with JSON Web Tokens (JWTs)"
+    local version
+    version="$(git_version /opt/tools/jwt_tool)"
+    add-to-list "jwt,${version},https://github.com/ticarpi/jwt_tool,a command-line tool for working with JSON Web Tokens (JWTs)"
 }
 
 function install_wuzz() {
@@ -519,7 +595,9 @@ function install_wuzz() {
     asdf reshim golang
     add-history wuzz
     add-test-command "wuzz --help"
-    add-to-list "wuzz,https://github.com/asciimoo/wuzz,a command-line tool for interacting with HTTP(S) web services"
+    local version
+    version="$(go_version wuzz)"
+    add-to-list "wuzz,${version},https://github.com/asciimoo/wuzz,a command-line tool for interacting with HTTP(S) web services"
 }
 
 function install_git-dumper() {
@@ -528,7 +606,9 @@ function install_git-dumper() {
     pipx install --system-site-packages git-dumper
     add-history git-dumper
     add-test-command "git-dumper --help"
-    add-to-list "git-dumper,https://github.com/arthaud/git-dumper,Small script to dump a Git repository from a website."
+    local version
+    version="$(pipx_version git-dumper)"
+    add-to-list "git-dumper,${version},https://github.com/arthaud/git-dumper,Small script to dump a Git repository from a website."
 }
 
 function install_gittools() {
@@ -544,7 +624,9 @@ function install_gittools() {
     add-test-command "extractor.sh --help|& grep 'USAGE: extractor.sh GIT-DIR DEST-DIR'"
     add-test-command "gitdumper.sh --help|& grep 'USAGE: http://target.tld/.git/'"
     add-test-command "gitfinder.py -h"
-    add-to-list "gittools,https://github.com/internetwache/GitTools,A collection of Git tools including a powerful Dumper for dumping Git repositories."
+    local version
+    version="$(git_version /opt/tools/GitTools)"
+    add-to-list "gittools,${version},https://github.com/internetwache/GitTools,A collection of Git tools including a powerful Dumper for dumping Git repositories."
 }
 
 function install_ysoserial() {
@@ -555,7 +637,9 @@ function install_ysoserial() {
     add-history ysoserial
     add-test-command "ysoserial --help|& grep 'spring-core:4.1.4.RELEASE'"
     add-test-command "ysoserial CommonsCollections4 'whoami'"
-    add-to-list "ysoserial,https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
+    local version
+    version="$(cli_version ysoserial --version)"
+    add-to-list "ysoserial,${version},https://github.com/frohoff/ysoserial,A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization."
 }
 
 function install_phpggc() {
@@ -564,7 +648,9 @@ function install_phpggc() {
     add-aliases phpggc
     add-history phpggc
     add-test-command "phpggc --help"
-    add-to-list "phpggc,https://github.com/ambionics/phpggc,Exploit generation tool for the PHP platform."
+    local version
+    version="$(git_version /opt/tools/phpggc)"
+    add-to-list "phpggc,${version},https://github.com/ambionics/phpggc,Exploit generation tool for the PHP platform."
 }
 
 function install_symfony-exploits(){
@@ -573,7 +659,9 @@ function install_symfony-exploits(){
     add-aliases symfony-exploits
     add-history symfony-exploits
     add-test-command "secret_fragment_exploit.py --help"
-    add-to-list "symfony-exploits,https://github.com/ambionics/symfony-exploits,Collection of Symfony exploits and PoCs."
+    local version
+    version="$(git_version /opt/tools/symfony-exploits)"
+    add-to-list "symfony-exploits,${version},https://github.com/ambionics/symfony-exploits,Collection of Symfony exploits and PoCs."
 }
 
 function install_jdwp_shellifier(){
@@ -582,7 +670,9 @@ function install_jdwp_shellifier(){
     add-aliases jdwp-shellifier
     add-history jdwp-shellifier
     add-test-command "jdwp-shellifier.py --help"
-    add-to-list "jdwp,https://github.com/IOActive/jdwp-shellifier,This exploitation script is meant to be used by pentesters against active JDWP service / in order to gain Remote Code Execution."
+    local version
+    version="$(git_version /opt/tools/jdwp-shellifier)"
+    add-to-list "jdwp,${version},https://github.com/IOActive/jdwp-shellifier,This exploitation script is meant to be used by pentesters against active JDWP service / in order to gain Remote Code Execution."
 }
 
 function install_httpmethods() {
@@ -591,7 +681,9 @@ function install_httpmethods() {
     pipx install --system-site-packages git+https://github.com/ShutdownRepo/httpmethods
     add-history httpmethods
     add-test-command "httpmethods --help"
-    add-to-list "httpmethods,https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
+    local version
+    version="$(pipx_version httpmethods)"
+    add-to-list "httpmethods,${version},https://github.com/ShutdownRepo/httpmethods,Tool for exploiting HTTP methods (e.g. PUT / DELETE / etc.)"
 }
 
 function install_h2csmuggler() {
@@ -605,7 +697,9 @@ function install_h2csmuggler() {
     add-aliases h2csmuggler
     add-history h2csmuggler
     add-test-command "h2csmuggler.py --help"
-    add-to-list "h2csmuggler,https://github.com/BishopFox/h2csmuggler,HTTP Request Smuggling tool using H2C upgrade"
+    local version
+    version="$(git_version /opt/tools/h2csmuggler)"
+    add-to-list "h2csmuggler,${version},https://github.com/BishopFox/h2csmuggler,HTTP Request Smuggling tool using H2C upgrade"
 }
 
 function install_byp4xx() {
@@ -615,7 +709,9 @@ function install_byp4xx() {
     asdf reshim golang
     add-history byp4xx
     add-test-command byp4xx
-    add-to-list "byp4xx,https://github.com/lobuhi/byp4xx,A Swiss Army knife for bypassing web application firewalls and filters."
+    local version
+    version="$(go_version byp4xx)"
+    add-to-list "byp4xx,${version},https://github.com/lobuhi/byp4xx,A Swiss Army knife for bypassing web application firewalls and filters."
 }
 
 function install_feroxbuster() {
@@ -630,7 +726,9 @@ function install_feroxbuster() {
     add-aliases feroxbuster
     add-history feroxbuster
     add-test-command "feroxbuster --help"
-    add-to-list "feroxbuster,https://github.com/epi052/feroxbuster,Simple / fast and recursive content discovery tool"
+    local version
+    version="$(cli_version feroxbuster --version)"
+    add-to-list "feroxbuster,${version},https://github.com/epi052/feroxbuster,Simple / fast and recursive content discovery tool"
 }
 
 function install_tomcatwardeployer() {
@@ -644,7 +742,9 @@ function install_tomcatwardeployer() {
     add-aliases tomcatwardeployer
     add-history tomcatwardeployer
     add-test-command "tomcatWarDeployer.py --help"
-    add-to-list "tomcatwardeployer,https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat."
+    local version
+    version="$(git_version /opt/tools/tomcatWarDeployer)"
+    add-to-list "tomcatwardeployer,${version},https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat."
 }
 
 function install_arjun() {
@@ -653,7 +753,9 @@ function install_arjun() {
     pipx install --system-site-packages arjun
     add-history arjun
     add-test-command "arjun --help"
-    add-to-list "arjun,https://github.com/s0md3v/Arjun,HTTP parameter discovery suite."
+    local version
+    version="$(pipx_version arjun)"
+    add-to-list "arjun,${version},https://github.com/s0md3v/Arjun,HTTP parameter discovery suite."
 }
 
 function install_nuclei() {
@@ -664,7 +766,9 @@ function install_nuclei() {
     nuclei -update-templates
     add-history nuclei
     add-test-command "nuclei --version"
-    add-to-list "nuclei,https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues / including XSS / SQL injection / and misconfigured servers."
+    local version
+    version="$(go_version nuclei)"
+    add-to-list "nuclei,${version},https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues / including XSS / SQL injection / and misconfigured servers."
 }
 
 function install_gau() {
@@ -674,7 +778,9 @@ function install_gau() {
     asdf reshim golang
     add-history gau
     add-test-command "gau --help"
-    add-to-list "gau,https://github.com/lc/gau,Fast tool for fetching URLs"
+    local version
+    version="$(go_version gau)"
+    add-to-list "gau,${version},https://github.com/lc/gau,Fast tool for fetching URLs"
 }
 
 function install_hakrevdns() {
@@ -684,7 +790,9 @@ function install_hakrevdns() {
     asdf reshim golang
     add-history hakrevdns
     add-test-command "hakrevdns --help|& grep 'Protocol to use for lookups'"
-    add-to-list "hakrevdns,https://github.com/hakluke/hakrevdns,Reverse DNS lookup utility that can help with discovering subdomains and other information."
+    local version
+    version="$(go_version hakrevdns)"
+    add-to-list "hakrevdns,${version},https://github.com/hakluke/hakrevdns,Reverse DNS lookup utility that can help with discovering subdomains and other information."
 }
 
 function install_httprobe() {
@@ -694,7 +802,9 @@ function install_httprobe() {
     asdf reshim golang
     add-history httprobe
     add-test-command "httprobe --help"
-    add-to-list "httprobe,https://github.com/tomnomnom/httprobe,A simple utility for enumerating HTTP and HTTPS servers."
+    local version
+    version="$(go_version httprobe)"
+    add-to-list "httprobe,${version},https://github.com/tomnomnom/httprobe,A simple utility for enumerating HTTP and HTTPS servers."
 }
 
 function install_httpx() {
@@ -704,7 +814,9 @@ function install_httpx() {
     asdf reshim golang
     add-history httpx
     add-test-command "httpx --help"
-    add-to-list "httpx,https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities / including outdated software versions and weak encryption protocols."
+    local version
+    version="$(go_version httpx)"
+    add-to-list "httpx,${version},https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities / including outdated software versions and weak encryption protocols."
 }
 
 function install_alterx() {
@@ -714,7 +826,9 @@ function install_alterx() {
     asdf reshim golang
     add-history alterx
     add-test-command "alterx --help"
-    add-to-list "alterx,https://github.com/projectdiscovery/alterx,A tool for fast and customizable subdomain wordlist generator using DSL from ProjectDiscovery."
+    local version
+    version="$(go_version alterx)"
+    add-to-list "alterx,${version},https://github.com/projectdiscovery/alterx,A tool for fast and customizable subdomain wordlist generator using DSL from ProjectDiscovery."
 }
 
 function install_chaos() {
@@ -724,7 +838,9 @@ function install_chaos() {
     asdf reshim golang
     add-history chaos
     add-test-command "chaos --help"
-    add-to-list "chaos,https://github.com/projectdiscovery/alterx,A Go client to communicate with Chaos dataset API from ProjectDiscovery."
+    local version
+    version="$(go_version chaos)"
+    add-to-list "chaos,${version},https://github.com/projectdiscovery/alterx,A Go client to communicate with Chaos dataset API from ProjectDiscovery."
 }
 
 function install_uncover() {
@@ -734,7 +850,9 @@ function install_uncover() {
     asdf reshim golang
     add-history uncover
     add-test-command "uncover --help"
-    add-to-list "uncover,https://github.com/projectdiscovery/uncover,A tool to Quickly discover exposed hosts on the internet using multiple search engines from ProjectDiscovery."
+    local version
+    version="$(go_version uncover)"
+    add-to-list "uncover,${version},https://github.com/projectdiscovery/uncover,A tool to Quickly discover exposed hosts on the internet using multiple search engines from ProjectDiscovery."
 }
 
 function install_anew() {
@@ -744,7 +862,9 @@ function install_anew() {
     asdf reshim golang
     add-history anew
     add-test-command "anew --help"
-    add-to-list "anew,https://github.com/tomnomnom/anew,A simple tool for filtering and manipulating text data / such as log files and other outputs."
+    local version
+    version="$(go_version anew)"
+    add-to-list "anew,${version},https://github.com/tomnomnom/anew,A simple tool for filtering and manipulating text data / such as log files and other outputs."
 }
 
 function install_robotstester() {
@@ -753,7 +873,9 @@ function install_robotstester() {
     pipx install --system-site-packages git+https://github.com/p0dalirius/robotstester
     add-history robotstester
     add-test-command "robotstester --help"
-    add-to-list "robotstester,https://github.com/p0dalirius/robotstester,Utility for testing whether a website's robots.txt file is correctly configured."
+    local version
+    version="$(pipx_version robotstester)"
+    add-to-list "robotstester,${version},https://github.com/p0dalirius/robotstester,Utility for testing whether a website's robots.txt file is correctly configured."
 }
 
 function install_naabu() {
@@ -764,7 +886,9 @@ function install_naabu() {
     asdf reshim golang
     add-history naabu
     add-test-command "naabu --help"
-    add-to-list "naabu,https://github.com/projectdiscovery/naabu,A fast and reliable port scanner that can detect open ports and services."
+    local version
+    version="$(go_version naabu)"
+    add-to-list "naabu,${version},https://github.com/projectdiscovery/naabu,A fast and reliable port scanner that can detect open ports and services."
 }
 
 function install_burpsuite() {
@@ -821,7 +945,9 @@ function install_burpsuite() {
     add-history burpsuite
     add-test-command "which burpsuite"
     #add-test-gui-command "BurpSuiteCommunity"
-    add-to-list "burpsuite,https://portswigger.net/burp,Web application security testing tool."
+    local version
+    version="$(normalize_version "${burp_version}")"
+    add-to-list "burpsuite,${version},https://portswigger.net/burp,Web application security testing tool."
 }
 
 function install_smuggler() {
@@ -832,7 +958,9 @@ function install_smuggler() {
     add-aliases smuggler
     add-history smuggler
     add-test-command "smuggler.py --help"
-    add-to-list "smuggler,https://github.com/defparam/smuggler,Smuggler is a tool that helps pentesters and red teamers to smuggle data into and out of the network even when there are multiple layers of security in place."
+    local version
+    version="$(git_version /opt/tools/smuggler)"
+    add-to-list "smuggler,${version},https://github.com/defparam/smuggler,Smuggler is a tool that helps pentesters and red teamers to smuggle data into and out of the network even when there are multiple layers of security in place."
 }
 
 function install_php_filter_chain_generator() {
@@ -841,7 +969,9 @@ function install_php_filter_chain_generator() {
     add-aliases php_filter_chain_generator
     add-history php_filter_chain_generator
     add-test-command "php_filter_chain_generator.py --help"
-    add-to-list "PHP filter chain generator,https://github.com/synacktiv/php_filter_chain_generator,A CLI to generate PHP filters chain / get your RCE without uploading a file if you control entirely the parameter passed to a require or an include in PHP!"
+    local version
+    version="$(cli_version 'PHP filter chain generator' --version)"
+    add-to-list "PHP filter chain generator,${version},https://github.com/synacktiv/php_filter_chain_generator,A CLI to generate PHP filters chain / get your RCE without uploading a file if you control entirely the parameter passed to a require or an include in PHP!"
 }
 
 function install_kraken() {
@@ -855,7 +985,9 @@ function install_kraken() {
     add-aliases kraken
     add-history kraken
     add-test-command "kraken.py -h"
-    add-to-list "Kraken,https://github.com/kraken-ng/Kraken,Kraken is a modular multi-language webshell focused on web post-exploitation and defense evasion. It supports three technologies (PHP / JSP and ASPX) and is core is developed in Python."
+    local version
+    version="$(git_version /opt/tools/Kraken)"
+    add-to-list "Kraken,${version},https://github.com/kraken-ng/Kraken,Kraken is a modular multi-language webshell focused on web post-exploitation and defense evasion. It supports three technologies (PHP / JSP and ASPX) and is core is developed in Python."
 }
 
 function install_soapui() {
@@ -866,7 +998,9 @@ function install_soapui() {
     add-aliases soapui
     add-history soapui
     add-test-command "/opt/tools/SoapUI/bin/testrunner.sh"
-    add-to-list "SoapUI,https://github.com/SmartBear/soapui,SoapUI is the world's leading testing tool for API testing."
+    local version
+    version="$(cli_version SoapUI --version)"
+    add-to-list "SoapUI,${version},https://github.com/SmartBear/soapui,SoapUI is the world's leading testing tool for API testing."
 }
 
 function install_sqlmap() {
@@ -876,7 +1010,9 @@ function install_sqlmap() {
     ln -s "/opt/tools/sqlmap/sqlmap.py" /opt/tools/bin/sqlmap
     add-history sqlmap
     add-test-command "sqlmap --version"
-    add-to-list "sqlmap,https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
+    local version
+    version="$(git_version /opt/tools/sqlmap)"
+    add-to-list "sqlmap,${version},https://github.com/sqlmapproject/sqlmap,Sqlmap is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws"
 }
 
 function install_sslscan() {
@@ -888,7 +1024,9 @@ function install_sslscan() {
     mv /tmp/sslscan/sslscan /opt/tools/bin/sslscan
     add-history sslscan
     add-test-command "sslscan --version"
-    add-to-list "sslscan,https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
+    local version
+    version="$(git_version /tmp/sslscan)"
+    add-to-list "sslscan,${version},https://github.com/rbsec/sslscan,a tool for testing SSL/TLS encryption on servers"
 }
 
 function install_jsluice() {
@@ -898,7 +1036,9 @@ function install_jsluice() {
     asdf reshim golang
     add-history jsluice
     add-test-command "jsluice --help"
-    add-to-list "jsluice,https://github.com/BishopFox/jsluice,Extract URLs / paths / secrets and other interesting data from JavaScript source code."
+    local version
+    version="$(go_version jsluice)"
+    add-to-list "jsluice,${version},https://github.com/BishopFox/jsluice,Extract URLs / paths / secrets and other interesting data from JavaScript source code."
 }
 
 function install_katana() {
@@ -908,7 +1048,9 @@ function install_katana() {
     asdf reshim golang
     add-history katana
     add-test-command "katana --help"
-    add-to-list "katana,https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
+    local version
+    version="$(go_version katana)"
+    add-to-list "katana,${version},https://github.com/projectdiscovery/katana,A next-generation crawling and spidering framework."
 }
 
 function install_postman() {
@@ -930,7 +1072,9 @@ function install_postman() {
     add-history postman
     add-test-command "which postman"
     #add-test-gui-command "postman"
-    add-to-list "postman,https://www.postman.com/,API platform for testing APIs"
+    local version
+    version="$(cli_version postman --version)"
+    add-to-list "postman,${version},https://www.postman.com/,API platform for testing APIs"
 }
 
 function install_wpprobe() {
@@ -940,7 +1084,9 @@ function install_wpprobe() {
     asdf reshim golang
     add-history wpprobe
     add-test-command "wpprobe --help"
-    add-to-list "wpprobe,https://github.com/Chocapikk/wpprobe,A fast WordPress plugin enumeration tool."
+    local version
+    version="$(go_version wpprobe)"
+    add-to-list "wpprobe,${version},https://github.com/Chocapikk/wpprobe,A fast WordPress plugin enumeration tool."
 }
 
 function install_caido() {
@@ -973,7 +1119,9 @@ function install_caido() {
     add-history caido
     add-test-gui-command "caido --no-sandbox"
     add-test-command "caido-cli --help"
-    add-to-list "caido,https://docs.caido.io/quickstart/,A lightweight web security auditing toolkit."
+    local version
+    version="$(cli_version caido --version)"
+    add-to-list "caido,${version},https://docs.caido.io/quickstart/,A lightweight web security auditing toolkit."
 }
 
 function install_token_exploiter() {
@@ -981,7 +1129,9 @@ function install_token_exploiter() {
     colorecho "Installing Token Exploiter"
     pipx install --system-site-packages git+https://github.com/psyray/token-exploiter
     add-test-command "token-exploiter --help"
-    add-to-list "token-exploiter,https://github.com/psyray/token-exploiter,Token Exploiter is a tool designed to analyze GitHub Personal Access Tokens."
+    local version
+    version="$(pipx_version token-exploiter)"
+    add-to-list "token-exploiter,${version},https://github.com/psyray/token-exploiter,Token Exploiter is a tool designed to analyze GitHub Personal Access Tokens."
 }
 
 function install_bbot() {
@@ -990,7 +1140,9 @@ function install_bbot() {
     pipx install --system-site-packages bbot
     add-history bbot
     add-test-command "bbot --help"
-    add-to-list "BBOT,https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
+    local version
+    version="$(pipx_version bbot)"
+    add-to-list "BBOT,${version},https://github.com/blacklanternsecurity/bbot,BEE·bot is a multipurpose scanner inspired by Spiderfoot built to automate your Recon and ASM."
 }
 
 function install_subzy() {
@@ -1001,7 +1153,9 @@ function install_subzy() {
     asdf reshim golang
     add-history subzy
     add-test-command "subzy --help"
-    add-to-list "subzy,https://github.com/PentestPad/subzy,Subdomain takeover tool which checks for various cloud services and identifies if a subdomain is vulnerable."
+    local version
+    version="$(go_version subzy)"
+    add-to-list "subzy,${version},https://github.com/PentestPad/subzy,Subdomain takeover tool which checks for various cloud services and identifies if a subdomain is vulnerable."
 }
 
 function install_urldedupe() {
@@ -1017,7 +1171,9 @@ function install_urldedupe() {
     rm -rf /tmp/urldedupe/
     add-history urldedupe
     add-test-command "urldedupe -h"
-    add-to-list "urldedupe,https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
+    local version
+    version="$(cli_version urldedupe --version)"
+    add-to-list "urldedupe,${version},https://github.com/ameenmaali/urldedupe,urldedupe is a c++ tool to quickly pass in a list of URLs and get back a list of deduplicated (unique) URL and query string combination."
 }
 
 function install_curlie() {
@@ -1039,7 +1195,9 @@ function install_curlie() {
     rm /tmp/curlie.tar.gz
     mv /tmp/curlie /opt/tools/bin/curlie
     add-test-command "curlie"
-    add-to-list "curlie,https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
+    local version
+    version="$(cli_version curlie --version)"
+    add-to-list "curlie,${version},https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
 }
 
 function install_xxeinjector() {
@@ -1049,7 +1207,9 @@ function install_xxeinjector() {
     chmod +x /opt/tools/bin/XXEinjector.rb
     add-history xxeinjector
     add-test-command "XXEinjector.rb | grep Example"
-    add-to-list "XXEinjector,https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
+    local version
+    version="$(cli_version XXEinjector --version)"
+    add-to-list "XXEinjector,${version},https://github.com/enjoiz/XXEinjector,A tool for XML External Entity (XXE) injection testing"
 }
 
 function install_tlsx() {
@@ -1060,7 +1220,9 @@ function install_tlsx() {
     asdf reshim golang
     add-history tlsx
     add-test-command "tlsx --version"
-    add-to-list "tlsx,https://github.com/projectdiscovery/tlsx,A fast and configurable TLS grabber focused on TLS based data collection and analysis."
+    local version
+    version="$(go_version tlsx)"
+    add-to-list "tlsx,${version},https://github.com/projectdiscovery/tlsx,A fast and configurable TLS grabber focused on TLS based data collection and analysis."
 }
 
 function install_vulnx() {
@@ -1071,7 +1233,9 @@ function install_vulnx() {
     asdf reshim golang
     add-history vulnx
     add-test-command "vulnx --help"
-    add-to-list "vulnx,https://github.com/projectdiscovery/vulnx,Modern CLI for exploring vulnerability data with powerful search filtering and analysis capabilities."
+    local version
+    version="$(go_version vulnx)"
+    add-to-list "vulnx,${version},https://github.com/projectdiscovery/vulnx,Modern CLI for exploring vulnerability data with powerful search filtering and analysis capabilities."
 }
 
 function install_urlfinder() {
@@ -1081,7 +1245,9 @@ function install_urlfinder() {
     asdf reshim golang
     add-history urlfinder
     add-test-command "urlfinder --version"
-    add-to-list "urlfinder,https://github.com/projectdiscovery/urlfinder,URLFinder is a high-speed passive URL discovery tool designed to simplify and accelerate web asset discovery."
+    local version
+    version="$(go_version urlfinder)"
+    add-to-list "urlfinder,${version},https://github.com/projectdiscovery/urlfinder,URLFinder is a high-speed passive URL discovery tool designed to simplify and accelerate web asset discovery."
 }
 
 function install_mapcidr() {
@@ -1092,7 +1258,9 @@ function install_mapcidr() {
     asdf reshim golang
     add-history mapcidr
     add-test-command "mapcidr --version"
-    add-to-list "mapcidr,https://github.com/projectdiscovery/mapcidr,Utility program to perform multiple operations for a given subnet/CIDR ranges."
+    local version
+    version="$(go_version mapcidr)"
+    add-to-list "mapcidr,${version},https://github.com/projectdiscovery/mapcidr,Utility program to perform multiple operations for a given subnet/CIDR ranges."
 }
 
 function install_badsecrets() {
@@ -1101,7 +1269,9 @@ function install_badsecrets() {
     pipx install --system-site-packages badsecrets
     add-history badsecrets
     add-test-command "badsecrets 'eyJhbGciOiJIUzI1NiJ9.eyJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkJhZFNlY3JldHMiLCJleHAiOjE1OTMxMzM0ODMsImlhdCI6MTQ2NjkwMzA4M30.ovqRikAo_0kKJ0GVrAwQlezymxrLGjcEiW_s3UJMMCo' |& grep 'Known Secret Found'"
-    add-to-list "badsecrets,https://github.com/blacklanternsecurity/badsecrets,A pure python library for identifying the use of known or very weak cryptographic secrets across a variety of platforms."
+    local version
+    version="$(pipx_version badsecrets)"
+    add-to-list "badsecrets,${version},https://github.com/blacklanternsecurity/badsecrets,A pure python library for identifying the use of known or very weak cryptographic secrets across a variety of platforms."
 }
 
 # Package dedicated to applicative and active web pentest tools

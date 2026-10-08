@@ -11,6 +11,10 @@
 #   - Repo: https://github.com/docker/build-push-action
 #   - Version: https://github.com/docker/build-push-action/tree/v6
 #   - Pinned: https://github.com/docker/build-push-action/commit/10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+# - actions/upload-artifact v7.0.2 @ cf430e030ddbb5b0abf93d22962f4752f3646cd9
+#   - Repo: https://github.com/actions/upload-artifact
+#   - Version: https://github.com/actions/upload-artifact/tree/v7.0.2
+#   - Pinned: https://github.com/actions/upload-artifact/commit/cf430e030ddbb5b0abf93d22962f4752f3646cd9
 name: External PR tests
 
 on:
@@ -161,6 +165,20 @@ jobs:
         if: always()
         run: |
           docker exec exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} cat /.exegol/unit_tests_success_commands.log
+      - name: Export installed_tools.csv
+        if: always()
+        run: |
+          docker cp exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}:/.exegol/installed_tools.csv \
+            installed_tools_${{ matrix.arch }}.csv
+          head -n 5 installed_tools_${{ matrix.arch }}.csv
+          wc -l installed_tools_${{ matrix.arch }}.csv
+      - name: Upload installed_tools.csv
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: installed-tools-${{ matrix.arch }}
+          path: installed_tools_${{ matrix.arch }}.csv
+          if-no-files-found: warn
       - name: Stop the container
         if: always()
         run: docker stop exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}

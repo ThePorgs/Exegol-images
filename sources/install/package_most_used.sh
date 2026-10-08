@@ -38,11 +38,17 @@ function install_most_used_apt_tools() {
     add-test-command "hashcat --help"                               # Password cracker
     add-test-command "fcrackzip --help"                             # Zip cracker
 
-    add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
-    add-to-list "weevely,https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
-    add-to-list "smbclient,https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
-    add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery"
-    add-to-list "fcrackzip,https://github.com/hyc/fcrackzip,Password cracker for zip archives."
+    local version
+    version="$(apt_version hydra)"
+    add-to-list "hydra,${version},https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
+    version="$(cli_version weevely --version)"
+    add-to-list "weevely,${version},https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
+    version="$(apt_version smbclient)"
+    add-to-list "smbclient,${version},https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
+    version="$(apt_version hashcat)"
+    add-to-list "hashcat,${version},https://hashcat.net/hashcat,A tool for advanced password recovery"
+    version="$(apt_version fcrackzip)"
+    add-to-list "fcrackzip,${version},https://github.com/hyc/fcrackzip,Password cracker for zip archives."
 }
 
 # Package dedicated to most used offensive tools

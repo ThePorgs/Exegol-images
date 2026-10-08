@@ -18,10 +18,15 @@ function install_misc_apt_tools() {
     add-test-command "rsync -h"                                    # File synchronization tool for efficiently copying and updating data between local or remote locations.
     add-test-command "keepassxc-cli --help"                            # Cross-platform password manager
 
-    add-to-list "rlwrap,https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history"
-    add-to-list "imagemagick,https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images."
-    add-to-list "rsync,https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations"
-    add-to-list "keepassxc,https://github.com/keepassxreboot/keepassxc,Cross-platform password manager"
+    local version
+    version="$(apt_version rlwrap)"
+    add-to-list "rlwrap,${version},https://github.com/hanslub42/rlwrap,rlwrap is a small utility that wraps input and output streams of executables / making it possible to edit and re-run input history"
+    version="$(apt_version imagemagick)"
+    add-to-list "imagemagick,${version},https://github.com/ImageMagick/ImageMagick,ImageMagick is a free and open-source image manipulation tool used to create / edit / compose / or convert bitmap images."
+    version="$(apt_version rsync)"
+    add-to-list "rsync,${version},https://packages.debian.org/sid/rsync,File synchronization tool for efficiently copying and updating data between local or remote locations"
+    version="$(apt_version keepassxc)"
+    add-to-list "keepassxc,${version},https://github.com/keepassxreboot/keepassxc,Cross-platform password manager"
 }
 
 function install_goshs() {
@@ -31,7 +36,9 @@ function install_goshs() {
     asdf reshim golang
     add-history goshs
     add-test-command "goshs -v"
-    add-to-list "goshs,https://github.com/patrickhener/goshs,Goshs is a replacement for Python's SimpleHTTPServer. It allows uploading and downloading via HTTP/S with either self-signed certificate or user provided certificate and you can use HTTP basic auth."
+    local version
+    version="$(go_version goshs)"
+    add-to-list "goshs,${version},https://github.com/patrickhener/goshs,Goshs is a replacement for Python's SimpleHTTPServer. It allows uploading and downloading via HTTP/S with either self-signed certificate or user provided certificate and you can use HTTP basic auth."
 }
 
 function install_shellerator() {
@@ -40,7 +47,9 @@ function install_shellerator() {
     pipx install --system-site-packages git+https://github.com/ShutdownRepo/shellerator
     add-history shellerator
     add-test-command "shellerator --help"
-    add-to-list "shellerator,https://github.com/ShutdownRepo/Shellerator,a simple command-line tool for generating shellcode"
+    local version
+    version="$(pipx_version shellerator)"
+    add-to-list "shellerator,${version},https://github.com/ShutdownRepo/Shellerator,a simple command-line tool for generating shellcode"
 }
 
 function install_uberfile() {
@@ -49,7 +58,9 @@ function install_uberfile() {
     pipx install --system-site-packages git+https://github.com/ShutdownRepo/uberfile
     add-history uberfile
     add-test-command "uberfile --help"
-    add-to-list "uberfile,https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget / curl / powershell / certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
+    local version
+    version="$(pipx_version uberfile)"
+    add-to-list "uberfile,${version},https://github.com/ShutdownRepo/Uberfile,Uberfile is a simple command-line tool aimed to help pentesters quickly generate file downloader one-liners in multiple contexts (wget / curl / powershell / certutil...). This project code is based on my other similar project for one-liner reverseshell generation Shellerator."
 }
 
 function install_aliasr() {
@@ -58,7 +69,9 @@ function install_aliasr() {
     add-aliases aliasr
     add-history aliasr
     add-test-command "aliasr --help"
-    add-to-list "aliasr,https://github.com/Mojo8898/aliasr,Aliasr is a modern and feature-rich TUI launcher for penetration testing commands inspired by Arsenal but with significantly improved functionality."
+    local version
+    version="$(pipx_version aliasr)"
+    add-to-list "aliasr,${version},https://github.com/Mojo8898/aliasr,Aliasr is a modern and feature-rich TUI launcher for penetration testing commands inspired by Arsenal but with significantly improved functionality."
 }
 
 function install_whatportis() {
@@ -69,7 +82,9 @@ function install_whatportis() {
     # echo y | whatportis --update
     add-history whatportis
     add-test-command "whatportis --version"
-    add-to-list "whatportis,https://github.com/ncrocfer/whatportis,Command-line tool to lookup port information"
+    local version
+    version="$(pipx_version whatportis)"
+    add-to-list "whatportis,${version},https://github.com/ncrocfer/whatportis,Command-line tool to lookup port information"
 }
 
 function install_searchsploit() {
@@ -80,7 +95,9 @@ function install_searchsploit() {
         git -C /opt/tools/ clone --depth 1 https://gitlab.com/exploit-database/exploitdb
         add-history searchsploit
         add-test-command "searchsploit --help; searchsploit --help |& grep 'You can use any number of search terms'"
-        add-to-list "searchsploit,https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
+        local version
+        version="$(git_version /opt/tools/exploitdb)"
+        add-to-list "searchsploit,${version},https://gitlab.com/exploit-database/exploitdb,A command line search tool for Exploit-DB"
     else
         colorecho "Searchsploit is already installed"
     fi
@@ -115,7 +132,9 @@ function install_triliumnext() {
     add-aliases triliumnext
     add-history triliumnext
     add-test-command "triliumnext-test"
-    add-to-list "TriliumNext,https://github.com/TriliumNext/Notes,Personal knowledge management system (successor to Trilium)."
+    local version
+    version="$(git_version /opt/tools/triliumnext)"
+    add-to-list "TriliumNext,${version},https://github.com/TriliumNext/Notes,Personal knowledge management system (successor to Trilium)."
 }
 
 function install_ngrok() {
@@ -136,7 +155,9 @@ function install_ngrok() {
     tar xvzf /tmp/ngrok.tgz -C /opt/tools/bin
     add-history ngrok
     add-test-command "ngrok version"
-    add-to-list "ngrok,https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet"
+    local version
+    version="$(cli_version ngrok version)"
+    add-to-list "ngrok,${version},https://github.com/inconshreveable/ngrok,Expose a local server behind a NAT or firewall to the internet"
 }
 
 function install_objectwalker() {
@@ -145,7 +166,9 @@ function install_objectwalker() {
     pipx install --system-site-packages git+https://github.com/p0dalirius/objectwalker
     add-history objectwalker
     add-test-command "objectwalker --help"
-    add-to-list "objectwalker,https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
+    local version
+    version="$(pipx_version objectwalker)"
+    add-to-list "objectwalker,${version},https://github.com/p0dalirius/objectwalker,A python module to explore the object tree to extract paths to interesting objects in memory."
 }
 
 function install_tig() {
@@ -157,7 +180,9 @@ function install_tig() {
     make install bindir=/opt/tools/bin sysconfdir=/etc
     # Need add-history ?
     add-test-command "tig --help"
-    add-to-list "tig,https://github.com/jonas/tig,Tig is an ncurses-based text-mode interface for git."
+    local version
+    version="$(cli_version tig --version)"
+    add-to-list "tig,${version},https://github.com/jonas/tig,Tig is an ncurses-based text-mode interface for git."
 }
 
 function install_yt-dlp() {
@@ -165,7 +190,9 @@ function install_yt-dlp() {
     colorecho "Installing yt-dlp"
     pipx install --system-site-packages git+https://github.com/yt-dlp/yt-dlp
     add-test-command "yt-dlp --help"
-    add-to-list "yt-dlp,https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes"
+    local version
+    version="$(pipx_version yt-dlp)"
+    add-to-list "yt-dlp,${version},https://github.com/yt-dlp/yt-dlp,A youtube-dl fork with additional features and fixes"
 }
 
 function install_cyberchef() {
@@ -183,7 +210,9 @@ function install_cyberchef() {
     rm /tmp/CyberChef.zip
     mv /opt/tools/CyberChef/CyberChef_*.html /opt/tools/CyberChef/CyberChef.html
     add-test-command "file /opt/tools/CyberChef/CyberChef.html"
-    add-to-list "CyberChef,https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
+    local version
+    version="$(cli_version CyberChef --version)"
+    add-to-list "CyberChef,${version},https://github.com/gchq/CyberChef/,The Cyber Swiss Army Knife"
 }
 
 function install_creds() {
@@ -192,7 +221,9 @@ function install_creds() {
     pipx install --system-site-packages git+https://github.com/ihebski/DefaultCreds-cheat-sheet
     add-history creds
     add-test-command "creds update"
-    add-to-list "creds,https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement. This document has several products default login/password gathered from multiple sources."
+    local version
+    version="$(pipx_version DefaultCreds-cheat-sheet)"
+    add-to-list "creds,${version},https://github.com/ihebski/DefaultCreds-cheat-sheet,One place for all the default credentials to assist pentesters during an engagement. This document has several products default login/password gathered from multiple sources."
 }
 
 function install_uploader() {
@@ -206,7 +237,9 @@ function install_uploader() {
     add-aliases uploader
     add-history uploader
     add-test-command "uploader --help"
-    add-to-list "uploader,https://github.com/Frozenka/uploader,Tool for quickly downloading files to a remote machine based on the target operating system"
+    local version
+    version="$(git_version /opt/tools/uploader)"
+    add-to-list "uploader,${version},https://github.com/Frozenka/uploader,Tool for quickly downloading files to a remote machine based on the target operating system"
 }
 
 function install_wesng() {
@@ -215,7 +248,9 @@ function install_wesng() {
     pipx install --system-site-packages git+https://github.com/bitsadmin/wesng
     add-history wesng
     add-test-command "wes --help"
-    add-to-list "wesng,https://github.com/bitsadmin/wesng,WES-NG is a tool based on the output of Windows's systeminfo utility which provides the list of vulnerabilities the OS is vulnerable to including any exploits for these vulnerabilities."
+    local version
+    version="$(pipx_version wesng)"
+    add-to-list "wesng,${version},https://github.com/bitsadmin/wesng,WES-NG is a tool based on the output of Windows's systeminfo utility which provides the list of vulnerabilities the OS is vulnerable to including any exploits for these vulnerabilities."
 }
 
 function install_glow() {
@@ -231,7 +266,8 @@ function install_glow() {
     rm -f /tmp/glow.tar.gz
     rm -rf "/tmp/glow_${version}_Linux_x86_64/"
     add-test-command "glow --help"
-    add-to-list "glow,https://github.com/charmbracelet/glow,glow is a tool to render Markdown inside the terminal."
+    version="$(cli_version glow --version)"
+    add-to-list "glow,${version},https://github.com/charmbracelet/glow,glow is a tool to render Markdown inside the terminal."
 }
 
 function install_thr() {
@@ -239,7 +275,9 @@ function install_thr() {
     colorecho "Installing thr"
     git -C /opt/tools/ clone --depth 1 https://github.com/The-Hacker-Recipes/The-Hacker-Recipes.git
     add-test-command "ls /opt/tools/The-Hacker-Recipes/"
-    add-to-list "thr,https://www.thehacker.recipes/,THR (The Hacker Recipes) is aimed at providing technical guides on various hacking topics."
+    local version
+    version="$(cli_version thr --version)"
+    add-to-list "thr,${version},https://www.thehacker.recipes/,THR (The Hacker Recipes) is aimed at providing technical guides on various hacking topics."
 }
 
 function install_dtrx() {
@@ -247,7 +285,9 @@ function install_dtrx() {
     colorecho "Installing dtrx"
     pipx install --system-site-packages dtrx
     add-test-command "dtrx --help"
-    add-to-list "dtrx,https://github.com/dtrx-py/dtrx,Do The Right eXtraction - don't remember what set of tar flags or where to pipe the output to extract it? no worries!"
+    local version
+    version="$(pipx_version dtrx)"
+    add-to-list "dtrx,${version},https://github.com/dtrx-py/dtrx,Do The Right eXtraction - don't remember what set of tar flags or where to pipe the output to extract it? no worries!"
 }
 function install_nfsshell() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
@@ -258,7 +298,9 @@ function install_nfsshell() {
     make -j
     mv nfsshell /opt/tools/bin/
     add-test-command "nfsshell --help |& grep Usage"
-    add-to-list "nfsshell,https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
+    local version
+    version="$(git_version /tmp/nfsshell)"
+    add-to-list "nfsshell,${version},https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
 }
 
 # Package dedicated to offensive miscellaneous tools

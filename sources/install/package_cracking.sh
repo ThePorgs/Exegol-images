@@ -18,10 +18,15 @@ function install_cracking_apt_tools() {
     add-test-command "pdfcrack --version"                               # PDF cracker
     add-test-command "bruteforce-luks -h |& grep 'Print progress info'" # Find the password of a LUKS encrypted volume
 
-    add-to-list "hashcat,https://hashcat.net/hashcat,A tool for advanced password recovery"
-    add-to-list "fcrackzip,https://github.com/hyc/fcrackzip,Password cracker for zip archives."
-    add-to-list "pdfcrack,https://github.com/robins/pdfcrack,A tool for cracking password-protected PDF files"
-    add-to-list "bruteforce-luks,https://github.com/glv2/bruteforce-luks,A tool to help recover encrypted LUKS2 containers"
+    local version
+    version="$(apt_version hashcat)"
+    add-to-list "hashcat,${version},https://hashcat.net/hashcat,A tool for advanced password recovery"
+    version="$(apt_version fcrackzip)"
+    add-to-list "fcrackzip,${version},https://github.com/hyc/fcrackzip,Password cracker for zip archives."
+    version="$(apt_version pdfcrack)"
+    add-to-list "pdfcrack,${version},https://github.com/robins/pdfcrack,A tool for cracking password-protected PDF files"
+    version="$(apt_version bruteforce-luks)"
+    add-to-list "bruteforce-luks,${version},https://github.com/glv2/bruteforce-luks,A tool to help recover encrypted LUKS2 containers"
 }
 
 function install_john() {
@@ -52,7 +57,9 @@ function install_john() {
     add-test-command "ssh2john.py|& grep 'Usage'"
     add-test-command "pfx2john.py|& grep 'Usage'"
     add-test-command "pem2john.py|& grep 'Usage'"
-    add-to-list "john,https://github.com/openwall/john,John the Ripper password cracker."
+    local version
+    version="$(git_version /opt/tools/john)"
+    add-to-list "john,${version},https://github.com/openwall/john,John the Ripper password cracker."
 }
 
 function install_name-that-hash() {
@@ -61,7 +68,9 @@ function install_name-that-hash() {
     pipx install --system-site-packages name-that-hash
     add-history name-that-hash
     add-test-command "nth --help"
-    add-to-list "name-that-hash,https://github.com/HashPals/Name-That-Hash,Online tool for identifying hashes."
+    local version
+    version="$(pipx_version name-that-hash)"
+    add-to-list "name-that-hash,${version},https://github.com/HashPals/Name-That-Hash,Online tool for identifying hashes."
 }
 
 function install_haiti() {
@@ -72,7 +81,9 @@ function install_haiti() {
     add-aliases haiti
     add-history haiti
     add-test-command "haiti --help"
-    add-to-list "haiti,https://github.com/noraj/haiti,haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
+    local version
+    version="$(gem_version haiti-hash)"
+    add-to-list "haiti,${version},https://github.com/noraj/haiti,haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
 }
 
 function install_geowordlists() {
@@ -81,7 +92,9 @@ function install_geowordlists() {
     pipx install --system-site-packages git+https://github.com/p0dalirius/GeoWordlists
     add-history geowordlists
     add-test-command "geowordlists --help"
-    add-to-list "geowordlists,https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city."
+    local version
+    version="$(pipx_version GeoWordlists)"
+    add-to-list "geowordlists,${version},https://github.com/p0dalirius/GeoWordlists,tool to generate wordlists of passwords containing cities at a defined distance around the client city."
 }
 
 function install_pkcrack() {
@@ -96,7 +109,9 @@ function install_pkcrack() {
     ln -s /opt/tools/pkcrack/bin/zipdecrypt /opt/tools/bin
     add-history pkcrack
     add-test-command 'pkcrack --help |& grep "Usage"'
-    add-to-list "pkcrack,https://github.com/keyunluo/pkcrack,tool to generate wordlists of passwords containing cities at a defined distance around the client city"
+    local version
+    version="$(git_version /opt/tools/pkcrack)"
+    add-to-list "pkcrack,${version},https://github.com/keyunluo/pkcrack,tool to generate wordlists of passwords containing cities at a defined distance around the client city"
 }
 
 function install_firefox_decrypt() {
@@ -104,7 +119,9 @@ function install_firefox_decrypt() {
     colorecho "Installing firefox_decrypt"
     pipx install --system-site-packages git+https://github.com/unode/firefox_decrypt
     add-test-command "firefox-decrypt --help"
-    add-to-list "firefox_decrypt,https://github.com/unode/firefox_decrypt,Decrypt Firefox saved passwords."
+    local version
+    version="$(pipx_version firefox_decrypt)"
+    add-to-list "firefox_decrypt,${version},https://github.com/unode/firefox_decrypt,Decrypt Firefox saved passwords."
 }
 
 # Package dedicated to offline cracking/bruteforcing tools

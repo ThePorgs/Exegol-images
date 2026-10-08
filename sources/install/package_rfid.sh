@@ -18,12 +18,19 @@ function install_rfid_apt_tools() {
     add-test-command "nfc-scan-device -h"                   # NFC library
     add-test-command "mfcuk -i whatever"                    # Tool for Darkside attack on Mifare Classic
 
-    add-to-list "libusb-dev,https://github.com/libusb/libusb,Library for USB device access"
-    add-to-list "autoconf,https://www.gnu.org/software/autoconf/autoconf.html,Tool for producing shell scripts to configure source code packages"
-    add-to-list "nfct,https://github.com/grundid/nfctools,Tool for Near Field Communication (NFC) devices"
-    add-to-list "pcsc,https://pcsclite.apdu.fr/,Middleware for smart card readers"
-    add-to-list "libnfc,https://github.com/grundid/nfctools,Library for Near Field Communication (NFC) devices"
-    add-to-list "mfcuk,https://github.com/nfc-tools/mfcuk,Implementation of an attack on Mifare Classic and Plus RFID cards"
+    local version
+    version="$(apt_version libusb-dev)"
+    add-to-list "libusb-dev,${version},https://github.com/libusb/libusb,Library for USB device access"
+    version="$(apt_version autoconf)"
+    add-to-list "autoconf,${version},https://www.gnu.org/software/autoconf/autoconf.html,Tool for producing shell scripts to configure source code packages"
+    version="$(apt_version nfct)"
+    add-to-list "nfct,${version},https://github.com/grundid/nfctools,Tool for Near Field Communication (NFC) devices"
+    version="$(apt_version pcsc)"
+    add-to-list "pcsc,${version},https://pcsclite.apdu.fr/,Middleware for smart card readers"
+    version="$(apt_version libnfc)"
+    add-to-list "libnfc,${version},https://github.com/grundid/nfctools,Library for Near Field Communication (NFC) devices"
+    version="$(apt_version mfcuk)"
+    add-to-list "mfcuk,${version},https://github.com/nfc-tools/mfcuk,Implementation of an attack on Mifare Classic and Plus RFID cards"
 }
 
 function install_mfoc() {
@@ -37,7 +44,9 @@ function install_mfoc() {
     make install clean
     add-history mfoc
     add-test-command "mfoc -h"
-    add-to-list "mfoc,https://github.com/nfc-tools/mfoc,Implementation of 'offline nested' attack by Nethemba"
+    local version
+    version="$(git_version /opt/tools/mfoc)"
+    add-to-list "mfoc,${version},https://github.com/nfc-tools/mfoc,Implementation of 'offline nested' attack by Nethemba"
 }
 
 function install_libnfc-crypto1-crack() {
@@ -55,7 +64,9 @@ function install_libnfc-crypto1-crack() {
     add-aliases libnfc-crypto1-crack
     add-history libnfc-crypto1-crack
     add-test-command "libnfc_crypto1_crack --help |& grep 'libnfc.buses'"
-    add-to-list "libnfc-crypto1-crack,https://github.com/droidnewbie2/acr122uNFC,Implementation of cryptographic attack on Mifare Classic RFID cards"
+    local version
+    version="$(cli_version libnfc-crypto1-crack --version)"
+    add-to-list "libnfc-crypto1-crack,${version},https://github.com/droidnewbie2/acr122uNFC,Implementation of cryptographic attack on Mifare Classic RFID cards"
 }
 
 function install_mfdread() {
@@ -69,7 +80,9 @@ function install_mfdread() {
     add-aliases mfdread
     add-history mfdread
     add-test-command "mfdread.py /opt/tools/mfdread/dump.mfd"
-    add-to-list "mfdread,https://github.com/zhovner/mfdread,Tool for reading/writing Mifare RFID tags"
+    local version
+    version="$(git_version /opt/tools/mfdread)"
+    add-to-list "mfdread,${version},https://github.com/zhovner/mfdread,Tool for reading/writing Mifare RFID tags"
 }
 
 function install_proxmark3() {
@@ -92,7 +105,9 @@ function install_proxmark3() {
     add-aliases proxmark3
     add-history proxmark3
     add-test-command "proxmark3 --version"
-    add-to-list "proxmark3,https://github.com/RfidResearchGroup/proxmark3,Open source RFID research toolkit."
+    local version
+    version="$(git_version /opt/tools/proxmark3)"
+    add-to-list "proxmark3,${version},https://github.com/RfidResearchGroup/proxmark3,Open source RFID research toolkit."
 }
 
 # Package dedicated to RFID/NCF pentest tools

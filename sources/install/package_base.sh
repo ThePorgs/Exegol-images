@@ -17,7 +17,9 @@ function install_exegol-history() {
     add-aliases exegol-history
     add-history exegol-history
     add-test-command "exh -h"
-    add-to-list "exegol-history,https://github.com/ThePorgs/Exegol-history,Credentials management for Exegol"
+    local version
+    version="$(git_version /opt/tools/Exegol-history)"
+    add-to-list "exegol-history,${version},https://github.com/ThePorgs/Exegol-history,Credentials management for Exegol"
 }
 
 function install_rust_cargo() {
@@ -40,7 +42,7 @@ function filesystem() {
     touch /.exegol/unit_tests_all_commands.txt
     touch /.exegol/unit_tests_gui_commands.txt
     touch /.exegol/installed_tools.csv
-    echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
+    echo "Tool,Version,Link,Description" >> /.exegol/installed_tools.csv
 }
 
 function install_go() {
@@ -135,7 +137,9 @@ function install_firefox() {
     add-history firefox
     add-test-command "cat /usr/lib/firefox-esr/distribution/policies.json|grep 'Exegol'"
     add-test-command "firefox --version"
-    add-to-list "firefox,https://www.mozilla.org,A web browser"
+    local version
+    version="$(apt_version firefox-esr)"
+    add-to-list "firefox,${version},https://www.mozilla.org,A web browser"
 }
 
 function install_rvm() {
@@ -178,7 +182,9 @@ function install_fzf() {
     add-aliases fzf
     add-test-command "source ~/.fzf.zsh && fzf-wordlists --help"
     add-test-command "source ~/.fzf.zsh && fzf --help"
-    add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
+    local version
+    version="$(git_version /opt/tools/fzf)"
+    add-to-list "fzf,${version},https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
 }
 
 function install_ohmyzsh() {
@@ -213,7 +219,9 @@ function install_pyftpdlib() {
     add-aliases pyftpdlib
     add-history pyftpdlib
     add-test-command "python3 -c 'import pyftpdlib'"
-    add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
+    local version
+    version="$(cli_version pyftpdlib --version)"
+    add-to-list "pyftpdlib,${version},https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
 }
 
 function install_yarn() {
@@ -222,7 +230,9 @@ function install_yarn() {
     npm install --global corepack
     corepack prepare yarn@stable --activate
     add-test-command "yarn --help"
-    add-to-list "yarn,https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
+    local version
+    version="$(cli_version yarn --version)"
+    add-to-list "yarn,${version},https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
 }
 
 function install_ultimate_vimrc() {
@@ -256,7 +266,9 @@ function install_neovim() {
     rm -rf squashfs-root nvim.appimage
     ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     add-test-command "nvim --version"
-    add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
+    local version
+    version="$(cli_version nvim --version)"
+    add-to-list "neovim,${version},https://neovim.io/,hyperextensible Vim-based text editor"
 }
 
 function install_mdcat() {
@@ -266,7 +278,9 @@ function install_mdcat() {
     cargo install mdcat --locked
     add-history mdcat
     add-test-command "mdcat --version"
-    add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
+    local version
+    version="$(go_version mdcat)"
+    add-to-list "mdcat,${version},https://github.com/swsnr/mdcat,Fancy cat for Markdown"
 }
 
 function install_gf() {
@@ -291,7 +305,9 @@ function install_gf() {
     add-history gf
     add-test-command "gf --list"
     add-test-command "ls ~/.gf |& grep 'redirect.json'"
-    add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
+    local version
+    version="$(go_version gf)"
+    add-to-list "gf,${version},https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
 function install_java11() {
@@ -469,7 +485,9 @@ function install_asdf() {
     mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
     asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
-    add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
+    local version
+    version="$(cli_version asdf version)"
+    add-to-list "asdf,${version},https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
 
 function install_openvpn() {
@@ -497,7 +515,9 @@ function install_openvpn() {
   sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
 
   add-test-command "openvpn --version"
-  add-to-list "OpenVPN,https://openvpn.net/,Fast and Easy Zero-Trust VPN Fully in Your Control"
+  local version
+  version="$(cli_version openvpn --version)"
+  add-to-list "OpenVPN,${version},https://openvpn.net/,Fast and Easy Zero-Trust VPN Fully in Your Control"
 }
 
 function install_wireguard() {
@@ -512,7 +532,9 @@ function install_wireguard() {
     sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
   fi
   add-test-command "wg-quick -h"
-  add-to-list "wireguard,https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
+  local version
+  version="$(apt_version wireguard)"
+  add-to-list "wireguard,${version},https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
 }
 
 function install_asciinema() {
@@ -526,7 +548,9 @@ function install_asciinema() {
     fi
     #cargo install --root /usr/local/ --bin asciinema --locked asciinema
     add-test-command "asciinema --version"
-    add-to-list "asciinema,https://github.com/asciinema/asciinema,Terminal session recorder"
+    local version
+    version="$(go_version asciinema)"
+    add-to-list "asciinema,${version},https://github.com/asciinema/asciinema,Terminal session recorder"
 }
 
 # Package dedicated to the basic things the env needs
@@ -605,9 +629,13 @@ function package_base() {
     add-test-command "xsel --version"
     add-test-command "xclip -version"
     add-test-command "wl-copy --version"
-    add-to-list "xsel,https://github.com/kfish/xsel,Command-line X11 selection and clipboard utility"
-    add-to-list "xclip,https://github.com/astrand/xclip,Command-line X11 clipboard interface"
-    add-to-list "wl-clipboard,https://github.com/bugaevc/wl-clipboard,Command-line Wayland clipboard utilities (wl-copy / wl-paste)"
+    local version
+    version="$(pipx_version tldr)"
+    add-to-list "xsel,${version},https://github.com/kfish/xsel,Command-line X11 selection and clipboard utility"
+    version="$(pipx_version tldr)"
+    add-to-list "xclip,${version},https://github.com/astrand/xclip,Command-line X11 clipboard interface"
+    version="$(pipx_version tldr)"
+    add-to-list "wl-clipboard,${version},https://github.com/bugaevc/wl-clipboard,Command-line Wayland clipboard utilities (wl-copy / wl-paste)"
 
     # Rust, Cargo, rvm
     install_rust_cargo
