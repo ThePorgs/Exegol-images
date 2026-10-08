@@ -27,16 +27,11 @@ function install_mobile_apt_tools() {
 function install_scrpy() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing scrcpy"
-    fapt ffmpeg libsdl2-2.0-0 adb \
-                 meson ninja-build libsdl2-dev \
+    fapt ffmpeg libsdl3-0 adb \
+                 meson ninja-build libsdl3-dev \
                  libavcodec-dev libavdevice-dev libavformat-dev libavutil-dev \
                  libswresample-dev libusb-1.0-0 libusb-1.0-0-dev
-    # scrcpy v4.x needs SDL3; Debian 12 (bookworm) has no libsdl3. Pin v3.3.4 until Debian 13.
-    local temp_fix_limit="2027-03-21"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      git clone --depth 1 --branch v3.3.4 https://github.com/Genymobile/scrcpy
-    fi
-    #git clone --depth 1 https://github.com/Genymobile/scrcpy
+    git clone --depth 1 https://github.com/Genymobile/scrcpy
     # opening subshell to not have to cd back
     (
       cd scrcpy || exit
@@ -100,7 +95,8 @@ function install_androguard() {
 function install_mobsf() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Mobile Security Framework"
-    fapt wkhtmltopdf libxmlsec1 libxmlsec1-dev
+    fapt libxmlsec1-dev
+    install_wkhtmltopdf
     git -C /opt/tools clone --depth 1 https://github.com/MobSF/Mobile-Security-Framework-MobSF MobSF
     cd /opt/tools/MobSF || exit
     # pipx --preinstall git+https://github.com/MobSF/yara-python-dex.git /opt/tools/MobSF would be needed for ARM64

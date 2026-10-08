@@ -7,8 +7,10 @@ function install_network_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
-    fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
+    fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp3-x11 \
     rdesktop xtightvncviewer hydra mariadb-client redis-tools mitmproxy fping
+    # FreeRDP 3 ships xfreerdp3; keep the historical xfreerdp name for history/docs.
+    ln -sf /usr/bin/xfreerdp3 /usr/bin/xfreerdp
 
     add-history wireshark
     add-history tshark
@@ -40,6 +42,7 @@ function install_network_apt_tools() {
     add-test-command "redis-cli --version"                          # Redis protocol
     add-test-command "mitmproxy --version"                          # MITMProxy
     add-test-command "fping --help"                                 # fping
+    add-test-command "xfreerdp --version"                           # FreeRDP 3 (xfreerdp3 symlink)
     
 
     add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
@@ -51,7 +54,7 @@ function install_network_apt_tools() {
     add-to-list "iptables,https://linux.die.net/man/8/iptables,Userspace command line tool for configuring kernel firewall"
     add-to-list "traceroute,https://github.com/iputils/iputils,Traceroute is a command which can show you the path a packet of information takes from your computer to one you specify."
     add-to-list "dns2tcp,https://github.com/alex-sector/dns2tcp,dns2tcp is a tool for relaying TCP connections over DNS."
-    add-to-list "freerdp2-x11,https://github.com/FreeRDP/FreeRDP,FreeRDP is a free implementation of the Remote Desktop Protocol (RDP) released under the Apache license."
+    add-to-list "freerdp3-x11,https://github.com/FreeRDP/FreeRDP,FreeRDP is a free implementation of the Remote Desktop Protocol (RDP) released under the Apache license."
     add-to-list "rdesktop,https://github.com/rdesktop/rdesktop,rdesktop is a client for Remote Desktop Protocol (RDP) used in a number of Microsoft products including Windows NT Terminal Server / Windows 2000 Server / Windows XP and Windows 2003 Server."
     add-to-list "xtightvncviewer,https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software."
     add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
@@ -137,7 +140,8 @@ function install_autorecon() {
     ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
     git -C /opt/tools clone --depth 1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
     ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
-    fapt dnsrecon wkhtmltopdf
+    fapt dnsrecon
+    install_wkhtmltopdf
     pipx install --system-site-packages git+https://github.com/Tib3rius/AutoRecon
     add-history autorecon
     # test below cannot work because test runner cannot have a valid display

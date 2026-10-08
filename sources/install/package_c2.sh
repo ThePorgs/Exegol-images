@@ -105,7 +105,7 @@ function install_sliver() {
 
 function install_empire() {
     colorecho "Installing Empire"
-    wget -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
+    wget -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb
     dpkg -i /tmp/packages-microsoft-prod.deb
     fapt apt-transport-https libicu-dev xclip zip
     install_powershell

@@ -25,34 +25,6 @@ function install_wifi_apt_tools() {
     add-to-list "cowpatty,https://github.com/joswr1ght/cowpatty,cowpatty is a tool for offline dictionary attacks against WPA-PSK (Pre-Shared Key) networks."
 }
 
-function install_pyrit() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing pyrit"
-    # Pyrit is unmaintained and only builds on this python2-era commit plus the aesni patch.
-    # Permanent pin until python2/pyrit is dropped from the image. Do not float to git HEAD.
-    git -C /opt/tools/ clone https://github.com/JPaulMora/Pyrit
-    git -C /opt/tools/Pyrit checkout f0f1913c645b445dd391fb047b812b5ba511782c
-    cd /opt/tools/Pyrit || exit
-    fapt libpq-dev
-    virtualenv --python python2 ./venv
-    source ./venv/bin/activate
-    pip2 install psycopg2-binary scapy
-    deactivate
-    # https://github.com/JPaulMora/Pyrit/issues/591
-    cp -v /root/sources/assets/patches/undefined-symbol-aesni-key.patch undefined-symbol-aesni-key.patch
-    git apply --verbose undefined-symbol-aesni-key.patch
-    source ./venv/bin/activate
-    python2 setup.py clean
-    python2 setup.py build
-    python2 setup.py install
-    deactivate
-    # Copy the binary because Wifite can't find it with a symlink - https://github.com/ThePorgs/Development/issues/183
-    cp ./venv/bin/pyrit /opt/tools/bin/
-    add-history pyrit
-    add-test-command "pyrit help"
-    add-to-list "pyrit,https://github.com/JPaulMora/Pyrit,Python-based WPA/WPA2-PSK attack tool."
-}
-
 function install_wifite2() {
     colorecho "Installing wifite2"
     git -C /opt/tools/ clone --depth 1 https://github.com/derv82/wifite2.git
@@ -69,8 +41,8 @@ function install_bettercap() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Bettercap"
     fapt libpcap-dev libusb-1.0-0-dev libnetfilter-queue-dev
-    asdf set golang 1.23.0
-    go install -v github.com/bettercap/bettercap/v2@latest
+    asdf set golang 1.26.1
+    CGO_LDFLAGS="-fuse-ld=bfd" go install -v github.com/bettercap/bettercap/v2@latest
     asdf reshim golang
     bettercap -eval "caplets.update; q"
     sed -i 's/set api.rest.username user/set api.rest.username bettercap/g' /usr/local/share/bettercap/caplets/http-ui.cap
@@ -85,7 +57,7 @@ function install_bettercap() {
 function install_hcxtools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing hcxtools"
-    fapt libpcap-dev libcurl4 libcurl4-openssl-dev libssl-dev openssl pkg-config
+    fapt libpcap-dev libcurl4t64 libcurl4-openssl-dev libssl-dev openssl pkg-config
     git -C /tmp clone --depth 1 https://github.com/ZerBea/hcxtools
     cd /tmp/hcxtools || exit
     make -j
@@ -116,7 +88,6 @@ function package_wifi() {
     local end_time
     start_time=$(date +%s)
     install_wifi_apt_tools
-    install_pyrit                   # Databases of pre-computed WPA/WPA2-PSK authentication phase
     install_wifite2                 # Retrieving password of a wireless access point (router)
     # install_hostapd-wpe           # Modified hostapd to facilitate AP impersonation attacks, FIXME broken install, need official release of hostapd-2.6.tar.gz
     install_bettercap               # MiTM tool

@@ -20,24 +20,11 @@ function install_sdr_apt_tools() {
     add-to-list "rtl-433,https://github.com/merbanan/rtl_433,Tool for decoding various wireless protocols/ signals such as those used by weather stations"
 }
 
-function install_mousejack() {
-    colorecho "Installing mousejack"
-    fapt sdcc binutils
-    git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/BastilleResearch/mousejack
-    cd /opt/tools/mousejack/nrf-research-firmware || exit
-    make -j
-    pip2 install libusb pyusb
-    add-aliases mousejack
-    add-history mousejack
-    add-test-command "nrf24-scanner.py --help"
-    add-test-command "nrf24-sniffer.py --help"
-    add-test-command "nrf24-network-mapper.py --help"
-    add-to-list "mousejack,https://github.com/BastilleResearch/mousejack,Exploit to take over a wireless mouse and keyboard"
-}
-
 function install_jackit() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing jackit"
+    # MouseJack exploit tooling. Requires a CrazyRadio PA already flashed with
+    # Bastille nRF research firmware (https://github.com/BastilleResearch/mousejack).
     pipx install --system-site-packages git+https://github.com/insecurityofthings/jackit
     add-history jackit
     add-test-command "jackit --help"
@@ -51,8 +38,7 @@ function package_sdr() {
     local end_time
     start_time=$(date +%s)
     install_sdr_apt_tools
-    install_mousejack               # tools for mousejacking
-    install_jackit                  # tools for mousejacking
+    install_jackit                  # MouseJack exploit (needs pre-flashed CrazyRadio PA)
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))

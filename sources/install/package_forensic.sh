@@ -36,26 +36,6 @@ function install_binwalk() {
     add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
 }
 
-function install_volatility2() {
-    colorecho "Installing volatility"
-    fapt pcregrep yara libjpeg-dev zlib1g-dev
-    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
-    cd /opt/tools/volatility || exit
-    virtualenv --python python2 ./venv
-    source ./venv/bin/activate
-    pip2 install pycryptodome distorm3 pillow openpyxl
-    pip2 install ujson --no-use-pep517
-    python2 setup.py install
-    deactivate
-    # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161
-    ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
-    add-aliases volatility2
-    # TODO: Improve volatility2 history
-    add-history volatility2
-    add-test-command "volatility2 --help"
-    add-to-list "volatility2,https://github.com/volatilityfoundation/volatility,Volatile memory extraction utility framework"
-}
-
 function install_volatility3() {
     colorecho "Installing volatility3"
     pipx install --system-site-packages git+https://github.com/volatilityfoundation/volatility3
@@ -85,15 +65,6 @@ function install_trid() {
     add-history trid
     add-test-command "trid '-?'; trid | grep 'This help'"
     add-to-list "trid,https://mark0.net/soft-trid-e.html,File identifier"
-}
-
-function install_peepdf() {
-    colorecho "Installing peepdf"
-    git -C /opt/tools clone --depth 1 https://github.com/jesparza/peepdf
-    add-aliases peepdf
-    add-history peepdf
-    add-test-command "peepdf.py --help"
-    add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
 }
 
 function install_jadx() {
@@ -146,10 +117,8 @@ function package_forensic() {
     start_time=$(date +%s)
     install_forensic_apt_tools
     install_binwalk                 # Tool to find embedded files
-    install_volatility2             # Memory analysis tool
-    install_volatility3             # Memory analysis tool v2
+    install_volatility3             # Memory analysis tool
     install_trid                    # filetype detection tool
-    install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
     install_oletools                # Tools to analyze MS OLE2 files and MS Office documents

@@ -16,20 +16,13 @@ function install_xfce() {
     # Dependencies
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
 
-    # bookworm python3-websockify is 0.10.0; need >= 0.12.0 (sid/trixie). Revisit on Debian 13.
-    local temp_fix_limit="2027-03-21"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      # Install websockify (min 0.12.0) explicit from sid repo
-      fapt python3-websockify/sid
-    fi
-
     # Icons
     fapt librsvg2-common papirus-icon-theme
 
-    # VNC
-    mkdir ~/.vnc
-    cp /root/sources/assets/desktop/configuration/xstartup.conf ~/.vnc/xstartup
-    chmod u+x ~/.vnc/xstartup
+    # VNC (TigerVNC 1.15+: XDG path ~/.config/tigervnc, not ~/.vnc)
+    mkdir -p ~/.config/tigervnc
+    cp /root/sources/assets/desktop/configuration/xstartup.conf ~/.config/tigervnc/xstartup
+    chmod u+x ~/.config/tigervnc/xstartup
 
     # Theme
     mkdir /root/.themes
@@ -103,7 +96,7 @@ function install_xfce() {
     vncserver -kill :0
     sleep 6
     # Remove log files of temp vncserver run ## TODO check if more
-    rm /root/.vnc/*.log /root/.xsession-errors
+    rm -f ~/.config/tigervnc/*.log ~/.xsession-errors
     [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
 
     # Binaries

@@ -93,7 +93,7 @@ function install_searchsploit() {
 function install_triliumnext() {
     colorecho "Installing TriliumNext"
     # TODO : switch to https://github.com/TriliumNext/Trilium
-    fapt libpng16-16 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
+    fapt libpng16-16t64 libpng-dev pkg-config autoconf libtool build-essential nasm libx11-dev libxkbfile-dev
     # Pin v0.93.0: upstream moved to TriliumNext/Trilium (Nx/pnpm). Rewrite install before dropping the pin.
     # https://github.com/TriliumNext/Notes/discussions/1891
     local temp_fix_limit="2027-03-21"
@@ -252,6 +252,7 @@ function install_dtrx() {
 function install_nfsshell() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing nfsshell"
+    fapt libtirpc-dev
     git -C /tmp clone --depth 1 https://github.com/Supermathie/nfsshell.git
     cd /tmp/nfsshell || exit
     make -j

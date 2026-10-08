@@ -98,21 +98,6 @@ function install_holehe() {
     add-to-list "holehe,https://github.com/megadose/holehe,mail osint tool finding out if it is used on websites."
 }
 
-function install_simplyemail() {
-    colorecho "Installing SimplyEmail"
-    git -C /opt/tools/ clone --branch master --depth 1 https://github.com/killswitch-GUI/SimplyEmail.git
-    cd /opt/tools/SimplyEmail/ || exit
-    fapt antiword odt2txt libxml2-dev libxslt1-dev
-    virtualenv --python python2 ./venv
-    source ./venv/bin/activate
-    pip2 install -r ./setup/requirments.txt
-    deactivate
-    add-aliases simplyemail
-    add-history simplyemail
-    add-test-command "SimplyEmail.py -l"
-    add-to-list "simplyemail,https://github.com/SimplySecurity/SimplyEmail,a scriptable command line tool for sending emails"
-}
-
 function install_theharvester() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing theHarvester"
@@ -129,21 +114,6 @@ function install_h8mail() {
     add-history h8mail
     add-test-command "h8mail --help"
     add-to-list "h8mail,https://github.com/khast3x/h8mail,Email OSINT and breach hunting."
-}
-
-function install_infoga() {
-    colorecho "Installing infoga"
-    git -C /opt/tools/ clone --depth 1 https://github.com/m4ll0k/Infoga
-    find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
-    cd /opt/tools/Infoga || exit
-    python2 -m virtualenv ./venv
-    source ./venv/bin/activate
-    pip2 install .
-    deactivate
-    add-aliases infoga
-    add-history infoga
-    add-test-command "infoga.py --help"
-    add-to-list "infoga,https://github.com/m4ll0k/Infoga,Information gathering tool for hacking."
 }
 
 function install_pwnedornot() {
@@ -574,10 +544,8 @@ function package_osint() {
     install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
     install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
     install_holehe                  # Check if the mail is used on different sites
-    install_simplyemail             # Gather emails
     install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
-    # install_infoga                  # Gathering email accounts informations TODO : 404, it seems the repo has been removed
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     install_ghunt                   # Investigate Google Accounts with emails
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers

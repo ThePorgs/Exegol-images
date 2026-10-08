@@ -61,6 +61,23 @@ function fapt() {
     apt-fast install -y --no-install-recommends "$@"
 }
 
+function install_wkhtmltopdf() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
+    colorecho "Installing wkhtmltopdf (upstream bookworm package)"
+    local deb_arch deb url
+    case "$(uname -m)" in
+        x86_64) deb_arch="amd64" ;;
+        aarch64) deb_arch="arm64" ;;
+        *) criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return ;;
+    esac
+    deb="wkhtmltox_0.12.6.1-3.bookworm_${deb_arch}.deb"
+    url="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/${deb}"
+    wget -O "/tmp/${deb}" "$url"
+    # Local .deb via apt so runtime deps are resolved.
+    fapt "/tmp/${deb}"
+    rm -f "/tmp/${deb}"
+}
+
 function set_cargo_env() {
     colorecho "Setting cargo environment"
     source "$HOME/.cargo/env"

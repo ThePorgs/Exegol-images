@@ -247,19 +247,6 @@ function install_bolt() {
     add-to-list "bolt,https://github.com/s0md3v/bolt,Bolt crawls the target website to the specified depth and stores all the HTML forms found in a database for further processing."
 }
 
-function install_kadimus() {
-    colorecho "Installing kadimus"
-    # TODO : Check if deps are already installed
-    fapt libcurl4-openssl-dev libpcre3-dev libssh-dev
-    git -C /opt/tools/ clone --depth 1 https://github.com/P0cL4bs/Kadimus
-    cd /opt/tools/Kadimus || exit
-    make -j
-    add-aliases kadimus
-    add-history kadimus
-    add-test-command "kadimus --help"
-    add-to-list "kadimus,https://github.com/P0cL4bs/Kadimus,a tool for detecting and exploiting file upload vulnerabilities"
-}
-
 function install_fuxploider() {
     colorecho "Installing fuxploider"
     git -C /opt/tools/ clone --depth 1 https://github.com/almandin/fuxploider.git
@@ -658,20 +645,6 @@ function install_tomcatwardeployer() {
     add-history tomcatwardeployer
     add-test-command "tomcatWarDeployer.py --help"
     add-to-list "tomcatwardeployer,https://github.com/mgeeky/tomcatwardeployer,Script to deploy war file in Tomcat."
-}
-
-function install_clusterd() {
-    colorecho "Installing clusterd"
-    git -C /opt/tools/ clone --depth 1 https://github.com/hatRiot/clusterd.git
-    cd /opt/tools/clusterd || exit
-    virtualenv --python python2 ./venv
-    source ./venv/bin/activate
-    pip2 install -r requirements.txt
-    deactivate
-    add-aliases clusterd
-    add-history clusterd
-    add-test-command "clusterd.py --help"
-    add-to-list "clusterd,https://github.com/hatRiot/clusterd,A tool to distribute and remotely manage Hacking Team's RCS agents."
 }
 
 function install_arjun() {
@@ -1154,7 +1127,6 @@ function package_web() {
     install_xsser                   # XSS scanner
     install_xsrfprobe               # CSRF scanner
     install_bolt                    # CSRF scanner
-    install_kadimus                 # LFI scanner
     install_fuxploider              # File upload scanner
     install_patator                 # Login scanner
     install_joomscan                # Joomla scanner
@@ -1187,7 +1159,6 @@ function package_web() {
     install_byp4xx                  # Tool to automate 40x errors bypass attempts
     install_feroxbuster             # ffuf but with multithreaded recursion
     install_tomcatwardeployer       # Apache Tomcat auto WAR deployment & pwning tool
-    install_clusterd                # Axis2/JBoss/ColdFusion/Glassfish/Weblogic/Railo scanner
     install_arjun                   # HTTP Parameter Discovery
     install_nuclei                  # Vulnerability scanner - Needed for gau install
     install_gau                     # fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan

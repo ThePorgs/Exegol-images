@@ -189,7 +189,9 @@ function install_bloodhound-ce() {
     fapt postgresql postgresql-client
 
     # only expose postgresql on localhost
-    sed -i 's/#listen_addresse/listen_addresse/' /etc/postgresql/15/main/postgresql.conf
+    local pg_conf
+    pg_conf=$(echo /etc/postgresql/*/main/postgresql.conf)
+    sed -i 's/#listen_addresse/listen_addresse/' "$pg_conf"
     service postgresql start
 
     # avoid permissions issues when impersonating postgres
@@ -711,7 +713,7 @@ function install_pth-tools() {
     colorecho "Installing pth-tools"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        fapt libreadline8 libreadline-dev
+        fapt libreadline8t64 libreadline-dev
         git -C /opt/tools clone --depth 1 https://github.com/byt3bl33d3r/pth-toolkit
         ln -s /usr/lib/x86_64-linux-gnu/libreadline.so /opt/tools/pth-toolkit/lib/libreadline.so.6
         add-aliases pth-tools
@@ -967,12 +969,9 @@ function install_pcredz() {
 
 function install_pywsus() {
     colorecho "Installing pywsus"
-    fapt libxml2-dev libxslt-dev
     git -C /opt/tools/ clone --depth 1 https://github.com/GoSecure/pywsus
     cd /opt/tools/pywsus || exit
     python3 -m venv --system-site-packages ./venv
-    # https://github.com/GoSecure/pywsus/pull/12
-    echo -e "beautifulsoup4==4.9.1\nlxml==4.9.1\nsoupsieve==2.0.1" > requirements.txt
     source ./venv/bin/activate
     pip3 install -r requirements.txt
     deactivate
@@ -1253,7 +1252,7 @@ function install_neo4j() {
     #echo 'deb https://debian.neo4j.com stable latest' | tee /etc/apt/sources.list.d/neo4j.list
     echo 'deb https://debian.neo4j.com stable 4.4' | tee /etc/apt/sources.list.d/neo4j.list
     apt-get update
-    fapt gnupg libgtk2.0-bin libcanberra-gtk-module libx11-xcb1 libva-glx2 libgl1-mesa-glx libgl1-mesa-dri libgconf-2-4 libasound2 libxss1 neo4j
+    fapt gnupg libgtk2.0-bin libcanberra-gtk3-module libx11-xcb1 libva-glx2 libgl1 libglx-mesa0 libgl1-mesa-dri libasound2t64 libxss1 neo4j
     # TODO: when temporary fix is not needed anymore add --> neo4j-admin dbms set-initial-password exegol4thewin
     # TODO: when temporary fix is not needed anymore remove following line
     neo4j-admin set-initial-password exegol4thewin
