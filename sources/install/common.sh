@@ -32,6 +32,10 @@ function add-to-list() {
 
 ### Version helpers (for installed_tools.csv Version column)
 # Each helper prints one version token or an empty string. They must not fail the build.
+# IMPORTANT: helpers must call `command <bin>` (not bare git/curl/go/pipx/…).
+# Those names are wrapped by catch_and_retry for network installs; expected non-zero
+# exits here (e.g. git describe on an untagged shallow clone) would otherwise burn
+# ~21 minutes of exponential backoff sleep per call and stall the image build.
 
 function normalize_version() {
     local version="${1:-}"
@@ -72,13 +76,14 @@ function git_version() {
     if [[ -z "$path" || ! -d "$path" ]]; then
         return 0
     fi
-    tag="$(git -C "$path" describe --exact-match --tags 2>/dev/null || true)"
+    # `command git` bypasses catch_and_retry; describe --exact-match fails on untagged clones by design
+    tag="$(command git -C "$path" describe --exact-match --tags 2>/dev/null || true)"
     if [[ -n "$tag" ]]; then
         normalize_version "$tag"
         return 0
     fi
     # Untagged shallow clones: commit date is more useful for changelogs than a short SHA
-    date="$(git -C "$path" log -1 --format=%cs 2>/dev/null || true)"
+    date="$(command git -C "$path" log -1 --format=%cs 2>/dev/null || true)"
     normalize_version "$date"
 }
 
@@ -88,7 +93,7 @@ function pipx_version() {
     if [[ -z "$name" ]]; then
         return 0
     fi
-    version="$(pipx list --json 2>/dev/null | jq -r --arg n "$name" '
+    version="$(command pipx list --json 2>/dev/null | jq -r --arg n "$name" '
         .venvs as $v
         | ($v[$n] // $v[$n | ascii_downcase] // empty)
         | .metadata.main_package.package_version // empty
@@ -123,7 +128,7 @@ function go_version() {
         return 0
     fi
     # Prefer the module version line from build info
-    modversion="$(go version -m "$real" 2>/dev/null | awk '/^\tmod\t/ { print $3; exit }' || true)"
+    modversion="$(command go version -m "$real" 2>/dev/null | awk '/^\tmod\t/ { print $3; exit }' || true)"
     normalize_version "$modversion"
 }
 
@@ -133,7 +138,7 @@ function cargo_version() {
     if [[ -z "$name" ]]; then
         return 0
     fi
-    version="$(cargo install --list 2>/dev/null | awk -v n="$name" '
+    version="$(command cargo install --list 2>/dev/null | awk -v n="$name" '
         $1 == n {
             ver=$2
             sub(/^v/, "", ver)
@@ -151,7 +156,7 @@ function gem_version() {
     if [[ -z "$name" ]]; then
         return 0
     fi
-    version="$(gem list -l "^${name}$" 2>/dev/null | awk -v n="$name" '
+    version="$(command gem list -l "^${name}$" 2>/dev/null | awk -v n="$name" '
         $1 == n {
             gsub(/[()]/, "", $2)
             split($2, parts, /,/)
@@ -169,7 +174,8 @@ function github_release_version() {
         return 0
     fi
     tempfile="$(mktemp)"
-    if curl --location --silent "https://api.github.com/repos/${repo}/releases/latest" -o "${tempfile}" 2>/dev/null; then
+    # Bypass catch_and_retry and bound runtime: empty version is fine if the API is unreachable
+    if command curl --location --silent --max-time 15 "https://api.github.com/repos/${repo}/releases/latest" -o "${tempfile}" 2>/dev/null; then
         tag="$(jq -r '.tag_name // empty' "${tempfile}" 2>/dev/null || true)"
     fi
     rm -f "${tempfile}"
