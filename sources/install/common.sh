@@ -57,9 +57,9 @@ function normalize_version() {
         d="${BASH_REMATCH[1]:6:2}"
         version="${y}-${m}-${d}"
     fi
-    # Reject placeholder / unusable versions
+    # Reject placeholder / unusable versions (keep real 0.1.0 releases)
     case "$version" in
-        ''|0.0.0|0.1.0|unknown|null|none|Undefined|undefined)
+        ''|0.0.0|unknown|null|none|Undefined|undefined)
             return 0
             ;;
     esac
@@ -93,6 +93,7 @@ function pipx_version() {
     if [[ -z "$name" ]]; then
         return 0
     fi
+    # $name must match the pipx venv key (see `pipx list`)
     version="$(command pipx list --json 2>/dev/null | jq -r --arg n "$name" '
         .venvs as $v
         | ($v[$n] // $v[$n | ascii_downcase] // empty)

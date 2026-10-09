@@ -371,7 +371,7 @@ function install_aclpwn() {
     add-history aclpwn
     add-test-command "aclpwn -h"
     local version
-    version="$(pipx_version aclpwn.py)"
+    version="$(pipx_version aclpwn)"
     add-to-list "aclpwn,${version},https://github.com/aas-n/aclpwn.py,Tool for testing the security of Active Directory access controls."
 }
 
@@ -1048,7 +1048,7 @@ function install_manspider() {
     add-history manspider
     add-test-command "manspider --help"
     local version
-    version="$(pipx_version MANSPIDER)"
+    version="$(pipx_version man-spider)"
     add-to-list "manspider,${version},https://github.com/blacklanternsecurity/MANSPIDER,Manspider will crawl every share on every target system. If provided creds don't work it will fall back to 'guest' then to a null session."
 }
 
@@ -1120,7 +1120,7 @@ function install_webclientservicescanner() {
     add-history webclientservicescanner
     add-test-command "webclientservicescanner --help"
     local version
-    version="$(pipx_version WebclientServiceScanner)"
+    version="$(pipx_version webclientservicescanner)"
     add-to-list "webclientservicescanner,${version},https://github.com/Hackndo/webclientservicescanner,Scans for web service endpoints"
 }
 
@@ -1768,7 +1768,7 @@ function install_adminer() {
     add-history adminer
     add-test-command "adminer --help"
     local version
-    version="$(pipx_version AD_Miner)"
+    version="$(pipx_version ad-miner)"
     add-to-list "AD-miner,${version},https://github.com/Mazars-Tech/AD_Miner,Active Directory audit tool that leverages cypher queries."
 }
 
