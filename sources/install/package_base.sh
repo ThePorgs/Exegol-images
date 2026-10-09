@@ -17,7 +17,9 @@ function install_exegol-history() {
     add-aliases exegol-history
     add-history exegol-history
     add-test-command "exh -h"
-    add-to-list "exegol-history,https://github.com/ThePorgs/Exegol-history,Credentials management for Exegol"
+    local version
+    version="$(git_version /opt/tools/Exegol-history)"
+    add-to-list "exegol-history,${version},https://github.com/ThePorgs/Exegol-history,Credentials management for Exegol"
 }
 
 function install_rust_cargo() {
@@ -40,16 +42,16 @@ function filesystem() {
     touch /.exegol/unit_tests_all_commands.txt
     touch /.exegol/unit_tests_gui_commands.txt
     touch /.exegol/installed_tools.csv
-    echo "Tool,Link,Description" >> /.exegol/installed_tools.csv
+    echo "Tool,Version,Link,Description" >> /.exegol/installed_tools.csv
 }
 
 function install_go() {
     # CODE-CHECK-WHITELIST=add-aliases,add-to-list,add-history
     colorecho "Installing go (Golang)"
     asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    # 1.26.1 needed for ruler, BloodHound-CE, GoExec, s3scanner
+    # 1.26.1 needed for ruler, BloodHound-CE, GoExec, s3scanner, bettercap
     asdf install golang 1.26.1
-    # 1.23.0 needed for bettercap, subzy
+    # 1.23.0 needed for subzy
     asdf install golang 1.23.0
     # Default GO version: 1.22.2
     asdf install golang 1.22.2
@@ -96,7 +98,7 @@ function install_pyenv() {
     set_python_env
     local v
     colorecho "Installing python2 (latest)"
-    fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses5-dev libncursesw5-dev libffi-dev liblzma-dev
+    fapt libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libncurses-dev libffi-dev liblzma-dev
     # Don't think it's needed, but if something fails, use command below
     # apt install xz-utils tk-dev
     for v in $PYTHON_VERSIONS; do
@@ -135,7 +137,9 @@ function install_firefox() {
     add-history firefox
     add-test-command "cat /usr/lib/firefox-esr/distribution/policies.json|grep 'Exegol'"
     add-test-command "firefox --version"
-    add-to-list "firefox,https://www.mozilla.org,A web browser"
+    local version
+    version="$(apt_version firefox-esr)"
+    add-to-list "firefox,${version},https://www.mozilla.org,A web browser"
 }
 
 function install_rvm() {
@@ -154,7 +158,13 @@ function install_rvm() {
     curl -sSL https://get.rvm.io -o /tmp/rvm.sh
     bash /tmp/rvm.sh --ruby="3.2.2" stable
     source /usr/local/rvm/scripts/rvm
-    rvm autolibs read-fail
+    #rvm autolibs read-fail
+    # https://github.com/rvm/rvm/issues/5597
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      rvm autolibs enable
+    fi
+    #rvm autolibs read-fail
     rvm rvmrc warning ignore allGemfiles
     rvm use 3.2.2@default
     rvm install ruby-3.3.8  # needed by metasploit-framework
@@ -172,7 +182,9 @@ function install_fzf() {
     add-aliases fzf
     add-test-command "source ~/.fzf.zsh && fzf-wordlists --help"
     add-test-command "source ~/.fzf.zsh && fzf --help"
-    add-to-list "fzf,https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
+    local version
+    version="$(git_version /opt/tools/fzf)"
+    add-to-list "fzf,${version},https://github.com/junegunn/fzf,🌸 A command-line fuzzy finder"
 }
 
 function install_ohmyzsh() {
@@ -207,7 +219,9 @@ function install_pyftpdlib() {
     add-aliases pyftpdlib
     add-history pyftpdlib
     add-test-command "python3 -c 'import pyftpdlib'"
-    add-to-list "pyftpdlib,https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
+    local version
+    version="$(cli_version pyftpdlib --version)"
+    add-to-list "pyftpdlib,${version},https://github.com/giampaolo/pyftpdlib/,Extremely fast and scalable Python FTP server library"
 }
 
 function install_yarn() {
@@ -216,7 +230,9 @@ function install_yarn() {
     npm install --global corepack
     corepack prepare yarn@stable --activate
     add-test-command "yarn --help"
-    add-to-list "yarn,https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
+    local version
+    version="$(cli_version yarn --version)"
+    add-to-list "yarn,${version},https://yarnpkg.com/,Yarn is a package manager that doubles down as project manager."
 }
 
 function install_ultimate_vimrc() {
@@ -232,30 +248,27 @@ function install_ultimate_vimrc() {
 function install_neovim() {
     colorecho "Installing neovim/nvim"
     # CODE-CHECK-WHITELIST=add-aliases,add-history
+    local nvim_arch
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        curl --location --output nvim.appimage "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
-        chmod u+x nvim.appimage
-        ./nvim.appimage --appimage-extract
-        mkdir /opt/tools/nvim
-        cp -rv squashfs-root/usr/* /opt/tools/nvim
-        rm -rf squashfs-root nvim.appimage
-        ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
+        nvim_arch="x86_64"
     elif [[ $(uname -m) = 'aarch64' ]]
     then
-        # Building, because when using release, error is raised: "./bin/nvim: /lib/aarch64-linux-gnu/libm.so.6: version `GLIBC_2.38' not found (required by ./bin/nvim)"
-        # https://github.com/neovim/neovim/issues/32496
-        # Would require a bump in glibc, using old releases, or manually building. So manual build it is.
-        fapt gettext
-        git clone --depth 1 https://github.com/neovim/neovim.git
-        cd neovim || exit
-        make CMAKE_BUILD_TYPE=RelWithDebInfo
-        make install
-        cd .. || exit
-        rm -rf ./neovim
+        nvim_arch="arm64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
+    curl --location --output nvim.appimage "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${nvim_arch}.appimage"
+    chmod u+x nvim.appimage
+    ./nvim.appimage --appimage-extract
+    mkdir /opt/tools/nvim
+    cp -rv squashfs-root/usr/* /opt/tools/nvim
+    rm -rf squashfs-root nvim.appimage
+    ln -v -s /opt/tools/nvim/bin/nvim /opt/tools/bin/nvim
     add-test-command "nvim --version"
-    add-to-list "neovim,https://neovim.io/,hyperextensible Vim-based text editor"
+    local version
+    version="$(cli_version nvim --version)"
+    add-to-list "neovim,${version},https://neovim.io/,hyperextensible Vim-based text editor"
 }
 
 function install_mdcat() {
@@ -265,7 +278,9 @@ function install_mdcat() {
     cargo install mdcat --locked
     add-history mdcat
     add-test-command "mdcat --version"
-    add-to-list "mdcat,https://github.com/swsnr/mdcat,Fancy cat for Markdown"
+    local version
+    version="$(go_version mdcat)"
+    add-to-list "mdcat,${version},https://github.com/swsnr/mdcat,Fancy cat for Markdown"
 }
 
 function install_gf() {
@@ -290,7 +305,9 @@ function install_gf() {
     add-history gf
     add-test-command "gf --list"
     add-test-command "ls ~/.gf |& grep 'redirect.json'"
-    add-to-list "gf,https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
+    local version
+    version="$(go_version gf)"
+    add-to-list "gf,${version},https://github.com/tomnomnom/gf,A wrapper around grep to avoid typing common patterns"
 }
 
 function install_java11() {
@@ -326,6 +343,40 @@ function install_java11() {
     ln -s -v /usr/lib/jvm/java-11-openjdk/bin/java /usr/bin/java11
     add-test-command "/usr/lib/jvm/java-11-openjdk/bin/java --version"
     add-test-command "java11 --version"
+}
+
+function install_java17() {
+    # CODE-CHECK-WHITELIST=add-history,add-aliases,add-to-list
+    colorecho "Installing java 17"
+    local ARCH
+    if [[ $(uname -m) = 'x86_64' ]]
+    then
+        ARCH="x64"
+    elif [[ $(uname -m) = 'aarch64' ]]
+    then
+        ARCH="aarch64"
+    else
+        criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
+    fi
+    local URL
+    curl --location --silent --output /tmp/openjdk17.json "https://api.github.com/repos/adoptium/temurin17-binaries/releases"
+    URL=$(grep 'browser_download_url.*jdk_'"$ARCH"'_linux.*tar.gz"' /tmp/openjdk17.json | grep -o 'https://[^"]*' | sort | tail -n1)
+    if [[ -z "$URL" ]]; then
+        cat /tmp/openjdk17.json
+    fi
+    rm /tmp/openjdk17.json
+    curl --location --output /tmp/openjdk17-jdk.tar.gz "$URL"
+    tar -xzf /tmp/openjdk17-jdk.tar.gz --directory /tmp
+    rm /tmp/openjdk17-jdk.tar.gz
+    mkdir -p "/usr/lib/jvm"
+    mv /tmp/jdk-17* /usr/lib/jvm/java-17-openjdk
+    for x in /usr/lib/jvm/java-17-openjdk/bin/*; do
+      BIN_NAME=$(echo "$x" | rev | cut -d '/' -f1 | rev)
+      update-alternatives --install "/usr/bin/$BIN_NAME" "$BIN_NAME" "$x" 17;
+    done
+    ln -s -v /usr/lib/jvm/java-17-openjdk/bin/java /usr/bin/java17
+    add-test-command "/usr/lib/jvm/java-17-openjdk/bin/java --version"
+    add-test-command "java17 --version"
 }
 
 function install_java21() {
@@ -434,7 +485,9 @@ function install_asdf() {
     mkdir -p "${ASDF_DATA_DIR:-$HOME/.asdf}/completions"
     asdf completion zsh > "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/_asdf"
     add-test-command "asdf version"
-    add-to-list "asdf,https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
+    local version
+    version="$(cli_version asdf version)"
+    add-to-list "asdf,${version},https://github.com/asdf-vm/asdf,Extendable version manager with support for ruby python go etc"
 }
 
 function install_openvpn() {
@@ -462,7 +515,9 @@ function install_openvpn() {
   sed -i "${LINE}"'i rm /etc/resolv.conf.backup' /etc/openvpn/update-resolv-conf
 
   add-test-command "openvpn --version"
-  add-to-list "OpenVPN,https://openvpn.net/,Fast and Easy Zero-Trust VPN Fully in Your Control"
+  local version
+  version="$(cli_version openvpn --version)"
+  add-to-list "OpenVPN,${version},https://openvpn.net/,Fast and Easy Zero-Trust VPN Fully in Your Control"
 }
 
 function install_wireguard() {
@@ -477,7 +532,9 @@ function install_wireguard() {
     sed -i 's/\[\[ \$proto == -4 \]\] && cmd sysctl -q net\.ipv4\.conf\.all\.src_valid_mark=1/[[ $proto == -4 ]] \&\& [[ $(sysctl -n net.ipv4.conf.all.src_valid_mark) -ne 1 ]] \&\& cmd sysctl -q net.ipv4.conf.all.src_valid_mark=1/' "$(which wg-quick)"
   fi
   add-test-command "wg-quick -h"
-  add-to-list "wireguard,https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
+  local version
+  version="$(apt_version wireguard)"
+  add-to-list "wireguard,${version},https://www.wireguard.com,WireGuard is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography"
 }
 
 function install_asciinema() {
@@ -491,7 +548,9 @@ function install_asciinema() {
     fi
     #cargo install --root /usr/local/ --bin asciinema --locked asciinema
     add-test-command "asciinema --version"
-    add-to-list "asciinema,https://github.com/asciinema/asciinema,Terminal session recorder"
+    local version
+    version="$(go_version asciinema)"
+    add-to-list "asciinema,${version},https://github.com/asciinema/asciinema,Terminal session recorder"
 }
 
 # Package dedicated to the basic things the env needs
@@ -508,7 +567,6 @@ function package_base() {
     curl -sL https://git.io/vokNn -o /tmp/apt-fast-install.sh
     bash /tmp/apt-fast-install.sh
     deploy_exegol
-    fapt software-properties-common
     add_debian_repository_components
     cp -v /root/sources/assets/apt/sources.list.d/* /etc/apt/sources.list.d/
     cp -v /root/sources/assets/apt/preferences.d/* /etc/apt/preferences.d/
@@ -516,13 +574,13 @@ function package_base() {
     colorecho "Starting main programs install"
     fapt man git gh glab subversion lsb-release pciutils pkg-config zip unzip kmod gnupg2 wget \
     libffi-dev zsh npm gem automake autoconf make cmake time gcc g++ file lsof \
-    less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy mlocate libtool \
+    less x11-apps net-tools vim nano jq iputils-ping iproute2 tidy plocate libtool \
     dos2unix ftp sshpass telnet nfs-common ncat netcat-traditional socat rdate putty \
     screen p7zip-full p7zip-rar unrar xz-utils xsltproc parallel tree ruby ruby-dev ruby-full bundler \
-    nim perl libwww-perl openjdk-17-jdk \
+    nim/sid perl libwww-perl \
     logrotate tmux bat libxml2-utils virtualenv chromium libsasl2-dev \
     libldap2-dev libssl-dev isc-dhcp-client sqlite3 dnsutils samba ssh snmp faketime php \
-    python3 python3-dev grc emacs-nox xsel xxd libnss3-tools htop ripgrep pv
+    python3 python3-dev grc emacs-nox xsel xclip wl-clipboard xxd libnss3-tools htop ripgrep pv
     apt-mark hold tzdata  # Prevent apt upgrade error when timezone sharing is enable
 
     filesystem
@@ -567,18 +625,28 @@ function package_base() {
     add-aliases grc
     add-aliases emacs-nox
     add-aliases xsel
+    add-aliases wl-clipboard
+    add-test-command "xsel --version"
+    add-test-command "xclip -version"
+    add-test-command "wl-copy --version"
+    local version
+    version="$(pipx_version tldr)"
+    add-to-list "xsel,${version},https://github.com/kfish/xsel,Command-line X11 selection and clipboard utility"
+    version="$(pipx_version tldr)"
+    add-to-list "xclip,${version},https://github.com/astrand/xclip,Command-line X11 clipboard interface"
+    version="$(pipx_version tldr)"
+    add-to-list "wl-clipboard,${version},https://github.com/bugaevc/wl-clipboard,Command-line Wayland clipboard utilities (wl-copy / wl-paste)"
 
     # Rust, Cargo, rvm
     install_rust_cargo
     install_rvm                                         # Ruby Version Manager
 
-    # java11 install, java21 install, and java17 as default
+    # java11 / java17 / java21, with java17 as default
     install_java11
+    install_java17
     install_java21
     #install_java24  # Ready to be install when needed as replacement of java21 ?
-    ln -s -v /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk    # To avoid determining the correct path based on the architecture
-    ln -s -v /usr/lib/jvm/java-17-openjdk/bin/java /usr/bin/java17          # Add java17 bin
-    update-alternatives --set java /usr/lib/jvm/java-17-openjdk-*/bin/java  # Set the default openjdk version to 17
+    update-alternatives --set java /usr/lib/jvm/java-17-openjdk/bin/java    # Set the default openjdk version to 17
     find /usr/lib/jvm -name 'src.zip' -delete                               # Remove leftover JDK source archives
 
     install_go                                          # Golang language

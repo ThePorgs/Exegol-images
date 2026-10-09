@@ -1,1 +1,0 @@
-infoga.py -d "$DOMAIN" -s all -b -r "$DOMAIN.txt" -v 2

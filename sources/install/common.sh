@@ -30,6 +30,207 @@ function add-to-list() {
   echo "$1" >> "/.exegol/installed_tools.csv"
 }
 
+### Version helpers (for installed_tools.csv Version column)
+# Each helper prints one version token or an empty string. They must not fail the build.
+# IMPORTANT: helpers must call `command <bin>` (not bare git/curl/go/pipx/…).
+# Those names are wrapped by catch_and_retry for network installs; expected non-zero
+# exits here (e.g. git describe on an untagged shallow clone) would otherwise burn
+# ~21 minutes of exponential backoff sleep per call and stall the image build.
+
+function normalize_version() {
+    local version="${1:-}"
+    local y m d
+    # trim whitespace / newlines
+    version="$(printf '%s' "$version" | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    # strip a single leading v/V before a digit
+    if [[ "$version" =~ ^[vV][0-9] ]]; then
+        version="${version:1}"
+    fi
+    # strip Debian/Ubuntu epoch (1:1.7 -> 1.7)
+    if [[ "$version" =~ ^[0-9]+: ]]; then
+        version="${version#*:}"
+    fi
+    # Go pseudo-version v0.0.0-YYYYmmddHHMMSS-abcdef -> YYYY-MM-DD
+    if [[ "$version" =~ ^0\.0\.0-([0-9]{8})[0-9]{6}-[0-9a-f]+$ ]]; then
+        y="${BASH_REMATCH[1]:0:4}"
+        m="${BASH_REMATCH[1]:4:2}"
+        d="${BASH_REMATCH[1]:6:2}"
+        version="${y}-${m}-${d}"
+    fi
+    # Reject placeholder / unusable versions (keep real 0.1.0 releases)
+    case "$version" in
+        ''|0.0.0|unknown|null|none|Undefined|undefined)
+            return 0
+            ;;
+    esac
+    # Reject 0.0.0+local / 0.0.0.post... style placeholders
+    if [[ "$version" == 0.0.0+* || "$version" == 0.0.0.* ]]; then
+        return 0
+    fi
+    printf '%s' "$version"
+}
+
+function git_version() {
+    local path="${1:-}"
+    local tag date
+    if [[ -z "$path" || ! -d "$path" ]]; then
+        return 0
+    fi
+    # `command git` bypasses catch_and_retry; describe --exact-match fails on untagged clones by design
+    tag="$(command git -C "$path" describe --exact-match --tags 2>/dev/null || true)"
+    if [[ -n "$tag" ]]; then
+        normalize_version "$tag"
+        return 0
+    fi
+    # Untagged shallow clones: commit date is more useful for changelogs than a short SHA
+    date="$(command git -C "$path" log -1 --format=%cs 2>/dev/null || true)"
+    normalize_version "$date"
+}
+
+function pipx_version() {
+    local name="${1:-}"
+    local version
+    if [[ -z "$name" ]]; then
+        return 0
+    fi
+    # $name must match the pipx venv key (see `pipx list`)
+    version="$(command pipx list --json 2>/dev/null | jq -r --arg n "$name" '
+        .venvs as $v
+        | ($v[$n] // $v[$n | ascii_downcase] // empty)
+        | .metadata.main_package.package_version // empty
+    ' 2>/dev/null || true)"
+    normalize_version "$version"
+}
+
+function apt_version() {
+    local pkg="${1:-}"
+    local version
+    if [[ -z "$pkg" ]]; then
+        return 0
+    fi
+    version="$(dpkg-query -W -f='${Version}' "$pkg" 2>/dev/null || true)"
+    normalize_version "$version"
+}
+
+function go_version() {
+    local bin="${1:-}"
+    local real modversion
+    if [[ -z "$bin" ]]; then
+        return 0
+    fi
+    # asdf shims are not Go binaries; resolve the real install path first
+    if command -v asdf >/dev/null 2>&1; then
+        real="$(asdf which "$bin" 2>/dev/null || true)"
+    fi
+    if [[ -z "$real" || ! -f "$real" ]]; then
+        real="$(command -v "$bin" 2>/dev/null || true)"
+    fi
+    if [[ -z "$real" || ! -f "$real" ]]; then
+        return 0
+    fi
+    # Prefer the module version line from build info
+    modversion="$(command go version -m "$real" 2>/dev/null | awk '/^\tmod\t/ { print $3; exit }' || true)"
+    normalize_version "$modversion"
+}
+
+function cargo_version() {
+    local name="${1:-}"
+    local version
+    if [[ -z "$name" ]]; then
+        return 0
+    fi
+    version="$(command cargo install --list 2>/dev/null | awk -v n="$name" '
+        $1 == n {
+            ver=$2
+            sub(/^v/, "", ver)
+            sub(/:$/, "", ver)
+            print ver
+            exit
+        }
+    ' || true)"
+    normalize_version "$version"
+}
+
+function gem_version() {
+    local name="${1:-}"
+    local version
+    if [[ -z "$name" ]]; then
+        return 0
+    fi
+    version="$(command gem list -l "^${name}$" 2>/dev/null | awk -v n="$name" '
+        $1 == n {
+            gsub(/[()]/, "", $2)
+            split($2, parts, /,/)
+            print parts[1]
+            exit
+        }
+    ' || true)"
+    normalize_version "$version"
+}
+
+function github_release_version() {
+    local repo="${1:-}"
+    local tempfile tag
+    if [[ -z "$repo" ]]; then
+        return 0
+    fi
+    tempfile="$(mktemp)"
+    # Bypass catch_and_retry and bound runtime: empty version is fine if the API is unreachable
+    if command curl --location --silent --max-time 15 "https://api.github.com/repos/${repo}/releases/latest" -o "${tempfile}" 2>/dev/null; then
+        tag="$(jq -r '.tag_name // empty' "${tempfile}" 2>/dev/null || true)"
+    fi
+    rm -f "${tempfile}"
+    normalize_version "$tag"
+}
+
+function cli_version() {
+    # usage: cli_version tool --version
+    #        cli_version tool version
+    local out version candidate
+    if [[ $# -lt 1 ]]; then
+        return 0
+    fi
+    # Bound runtime so a hanging CLI cannot stall the image build
+    out="$(timeout 8 "$@" 2>&1)" || true
+    # Strip ANSI color codes and log prefixes that inject timestamps
+    out="$(printf '%s' "$out" | sed -E 's/\x1b\[[0-9;]*m//g')"
+    out="$(printf '%s' "$out" | sed -E '/^time="/d')"
+
+    # Prefer an explicit "Version:" / "version:" field (k9s, nuclei, …)
+    version="$(printf '%s' "$out" | grep -ioE 'version[:[:space:]]+v?[0-9]+([._-][0-9A-Za-z]+){1,6}' | head -n1 | grep -oE 'v?[0-9]+([._-][0-9A-Za-z]+){1,6}' | head -n1 || true)"
+    if [[ -n "$version" ]]; then
+        normalize_version "$version"
+        return 0
+    fi
+
+    # Otherwise scan tokens; require at least major.minor (reject bare "2", dates-only, SHAs)
+    while read -r candidate; do
+        [[ -z "$candidate" ]] && continue
+        # skip ISO dates / datetimes
+        if [[ "$candidate" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2} ]]; then
+            continue
+        fi
+        # skip compact timestamps YYYYmmddHHMMSS
+        if [[ "$candidate" =~ ^[0-9]{14}$ ]]; then
+            continue
+        fi
+        # skip bare integers / short junk (build numbers, flag leftovers)
+        if [[ "$candidate" =~ ^[0-9]{1,6}$ ]]; then
+            continue
+        fi
+        # skip git SHAs
+        if [[ "$candidate" =~ ^[0-9a-fA-F]{7,40}$ ]]; then
+            continue
+        fi
+        # require a dotted / underscored multi-part version
+        if [[ ! "$candidate" =~ [0-9]+[._-][0-9A-Za-z]+ ]]; then
+            continue
+        fi
+        normalize_version "$candidate"
+        return 0
+    done < <(printf '%s' "$out" | grep -oE 'v?[0-9]+([._-][0-9A-Za-z]+){0,6}' || true)
+}
+
 function add-aliases() {
     colorecho "Adding aliases for: $*"
     # Removing add empty lines and the last trailing newline if any, and adding a trailing newline.
@@ -59,6 +260,23 @@ function fapt() {
       apt-get update
     fi
     apt-fast install -y --no-install-recommends "$@"
+}
+
+function install_wkhtmltopdf() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
+    colorecho "Installing wkhtmltopdf (upstream bookworm package)"
+    local deb_arch deb url
+    case "$(uname -m)" in
+        x86_64) deb_arch="amd64" ;;
+        aarch64) deb_arch="arm64" ;;
+        *) criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return ;;
+    esac
+    deb="wkhtmltox_0.12.6.1-3.bookworm_${deb_arch}.deb"
+    url="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/${deb}"
+    wget -O "/tmp/${deb}" "$url"
+    # Local .deb via apt so runtime deps are resolved.
+    fapt "/tmp/${deb}"
+    rm -f "/tmp/${deb}"
 }
 
 function set_cargo_env() {

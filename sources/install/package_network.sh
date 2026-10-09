@@ -7,8 +7,10 @@ function install_network_apt_tools() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing network apt tools"
     export DEBIAN_FRONTEND=noninteractive
-    fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp2-x11 \
+    fapt wireshark tshark hping3 masscan netdiscover tcpdump iptables traceroute dns2tcp freerdp3-x11 \
     rdesktop xtightvncviewer hydra mariadb-client redis-tools mitmproxy fping
+    # FreeRDP 3 ships xfreerdp3; keep the historical xfreerdp name for history/docs.
+    ln -sf /usr/bin/xfreerdp3 /usr/bin/xfreerdp
 
     add-history wireshark
     add-history tshark
@@ -40,25 +42,44 @@ function install_network_apt_tools() {
     add-test-command "redis-cli --version"                          # Redis protocol
     add-test-command "mitmproxy --version"                          # MITMProxy
     add-test-command "fping --help"                                 # fping
+    add-test-command "xfreerdp --version"                           # FreeRDP 3 (xfreerdp3 symlink)
     
 
-    add-to-list "wireshark,https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
-    add-to-list "tshark,https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
-    add-to-list "hping3,https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
-    add-to-list "masscan,https://github.com/robertdavidgraham/masscan,Masscan is an Internet-scale port scanner"
-    add-to-list "netdiscover,https://github.com/netdiscover-scanner/netdiscover,netdiscover is an active/passive address reconnaissance tool"
-    add-to-list "tcpdump,https://github.com/the-tcpdump-group/tcpdump,a powerful command-line packet analyzer for Unix-like systems"
-    add-to-list "iptables,https://linux.die.net/man/8/iptables,Userspace command line tool for configuring kernel firewall"
-    add-to-list "traceroute,https://github.com/iputils/iputils,Traceroute is a command which can show you the path a packet of information takes from your computer to one you specify."
-    add-to-list "dns2tcp,https://github.com/alex-sector/dns2tcp,dns2tcp is a tool for relaying TCP connections over DNS."
-    add-to-list "freerdp2-x11,https://github.com/FreeRDP/FreeRDP,FreeRDP is a free implementation of the Remote Desktop Protocol (RDP) released under the Apache license."
-    add-to-list "rdesktop,https://github.com/rdesktop/rdesktop,rdesktop is a client for Remote Desktop Protocol (RDP) used in a number of Microsoft products including Windows NT Terminal Server / Windows 2000 Server / Windows XP and Windows 2003 Server."
-    add-to-list "xtightvncviewer,https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software."
-    add-to-list "hydra,https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
-    add-to-list "mariadb-client,https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
-    add-to-list "redis-tools,https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
-    add-to-list "mitmproxy,https://github.com/mitmproxy/mitmproxy,mitmproxy is an interactive SSL/TLS-capable intercepting proxy with a console interface for HTTP/1 HTTP/2 and WebSockets."
-    add-to-list "fping,https://github.com/schweikert/fping,fping is a program to send ICMP echo probes to network hosts similar to ping but much better performing when pinging multiple hosts."
+    local version
+    version="$(apt_version wireshark)"
+    add-to-list "wireshark,${version},https://github.com/wireshark/wireshark,Wireshark is a network protocol analyzer that lets you see what’s happening on your network at a microscopic level."
+    version="$(apt_version tshark)"
+    add-to-list "tshark,${version},https://github.com/wireshark/wireshark,TShark is a terminal version of Wireshark."
+    version="$(apt_version hping3)"
+    add-to-list "hping3,${version},https://github.com/antirez/hping,A network tool able to send custom TCP/IP packets"
+    version="$(apt_version masscan)"
+    add-to-list "masscan,${version},https://github.com/robertdavidgraham/masscan,Masscan is an Internet-scale port scanner"
+    version="$(apt_version netdiscover)"
+    add-to-list "netdiscover,${version},https://github.com/netdiscover-scanner/netdiscover,netdiscover is an active/passive address reconnaissance tool"
+    version="$(apt_version tcpdump)"
+    add-to-list "tcpdump,${version},https://github.com/the-tcpdump-group/tcpdump,a powerful command-line packet analyzer for Unix-like systems"
+    version="$(apt_version iptables)"
+    add-to-list "iptables,${version},https://linux.die.net/man/8/iptables,Userspace command line tool for configuring kernel firewall"
+    version="$(apt_version traceroute)"
+    add-to-list "traceroute,${version},https://github.com/iputils/iputils,Traceroute is a command which can show you the path a packet of information takes from your computer to one you specify."
+    version="$(apt_version dns2tcp)"
+    add-to-list "dns2tcp,${version},https://github.com/alex-sector/dns2tcp,dns2tcp is a tool for relaying TCP connections over DNS."
+    version="$(apt_version freerdp3-x11)"
+    add-to-list "freerdp3-x11,${version},https://github.com/FreeRDP/FreeRDP,FreeRDP is a free implementation of the Remote Desktop Protocol (RDP) released under the Apache license."
+    version="$(cli_version tshark --version)"
+    add-to-list "rdesktop,${version},https://github.com/rdesktop/rdesktop,rdesktop is a client for Remote Desktop Protocol (RDP) used in a number of Microsoft products including Windows NT Terminal Server / Windows 2000 Server / Windows XP and Windows 2003 Server."
+    version="$(cli_version tshark --version)"
+    add-to-list "xtightvncviewer,${version},https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software."
+    version="$(cli_version tshark --version)"
+    add-to-list "hydra,${version},https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
+    version="$(cli_version tshark --version)"
+    add-to-list "mariadb-client,${version},https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
+    version="$(cli_version tshark --version)"
+    add-to-list "redis-tools,${version},https://github.com/antirez/redis-tools,redis-tools is a collection of Redis client utilities including redis-cli and redis-benchmark."
+    version="$(cli_version tshark --version)"
+    add-to-list "mitmproxy,${version},https://github.com/mitmproxy/mitmproxy,mitmproxy is an interactive SSL/TLS-capable intercepting proxy with a console interface for HTTP/1 HTTP/2 and WebSockets."
+    version="$(cli_version tshark --version)"
+    add-to-list "fping,${version},https://github.com/schweikert/fping,fping is a program to send ICMP echo probes to network hosts similar to ping but much better performing when pinging multiple hosts."
 }
 
 function install_proxychains() {
@@ -76,7 +97,9 @@ function install_proxychains() {
     add-history proxychains
     add-test-command "proxychains4 echo test"
     add-test-command "proxyresolv"
-    add-to-list "proxychains,https://github.com/rofl0r/proxychains,Proxy chains - redirect connections through proxy servers."
+    local version
+    version="$(git_version /opt/tools/proxychains-ng)"
+    add-to-list "proxychains,${version},https://github.com/rofl0r/proxychains,Proxy chains - redirect connections through proxy servers."
 }
 
 function install_remmina() {
@@ -93,7 +116,9 @@ function install_remmina() {
 rdp_use_client_keymap=1" > /root/.config/remmina/remmina.pref
 
     add-test-command "remmina --help"
-    add-to-list "remmina,https://github.com/FreeRDP/Remmina,Remote desktop client."
+    local version
+    version="$(apt_version remmina)"
+    add-to-list "remmina,${version},https://github.com/FreeRDP/Remmina,Remote desktop client."
 }
 
 function install_nmap() {
@@ -105,7 +130,9 @@ function install_nmap() {
     add-aliases nmap
     add-history nmap
     add-test-command "nmap --version"
-    add-to-list "nmap,https://nmap.org,The Network Mapper - a powerful network discovery and security auditing tool"
+    local version
+    version="$(apt_version nmap)"
+    add-to-list "nmap,${version},https://nmap.org,The Network Mapper - a powerful network discovery and security auditing tool"
 }
 
 function install_nmap-parse-output() {
@@ -117,7 +144,9 @@ function install_nmap-parse-output() {
     add-history nmap-parse-output
     # nmap-parse-output always exits with 1 if no argument is passed
     add-test-command "nmap-parse-output |& grep -E '^\[v.+\]'"
-    add-to-list "nmap-parse-ouptut,https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
+    local version
+    version="$(git_version /opt/tools/nmap-parse-output)"
+    add-to-list "nmap-parse-ouptut,${version},https://github.com/ernw/nmap-parse-output,Converts/manipulates/extracts data from a Nmap scan output."
 }
 
 function install_udpx(){
@@ -127,7 +156,9 @@ function install_udpx(){
     asdf reshim golang
     add-history udpx
     add-test-command "udpx --help"
-    add-to-list "udpx,https://github.com/nullt3r/udpx, Fast and lightweight - UDPX is a single-packet UDP scanner written in Go that supports the discovery of over 45 services with the ability to add custom ones."
+    local version
+    version="$(go_version udpx)"
+    add-to-list "udpx,${version},https://github.com/nullt3r/udpx, Fast and lightweight - UDPX is a single-packet UDP scanner written in Go that supports the discovery of over 45 services with the ability to add custom ones."
 }
 
 function install_autorecon() {
@@ -137,13 +168,16 @@ function install_autorecon() {
     ln -sv /opt/tools/oscanner/debian/helper-script/oscanner /usr/bin/oscanner
     git -C /opt/tools clone --depth 1 https://gitlab.com/kalilinux/packages/tnscmd10g.git
     ln -sv /opt/tools/tnscmd10g/tnscmd10g /usr/bin/tnscmd10g
-    fapt dnsrecon wkhtmltopdf
+    fapt dnsrecon
+    install_wkhtmltopdf
     pipx install --system-site-packages git+https://github.com/Tib3rius/AutoRecon
     add-history autorecon
     # test below cannot work because test runner cannot have a valid display
     # add-test-command "autorecon --version"
     add-test-command "autorecon --help"
-    add-to-list "autorecon,https://github.com/Tib3rius/AutoRecon,Multi-threaded network reconnaissance tool which performs automated enumeration of services."
+    local version
+    version="$(pipx_version AutoRecon)"
+    add-to-list "autorecon,${version},https://github.com/Tib3rius/AutoRecon,Multi-threaded network reconnaissance tool which performs automated enumeration of services."
 }
 
 function install_dnschef() {
@@ -157,7 +191,9 @@ function install_dnschef() {
     add-aliases dnschef
     add-history dnschef
     add-test-command "dnschef.py --help"
-    add-to-list "dnschef,https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
+    local version
+    version="$(git_version /opt/tools/dnschef)"
+    add-to-list "dnschef,${version},https://github.com/iphelix/dnschef,Tool for DNS MITM attacks"
 }
 
 function install_divideandscan() {
@@ -166,7 +202,9 @@ function install_divideandscan() {
     pipx install --system-site-packages git+https://github.com/snovvcrash/DivideAndScan
     add-history divideandscan
     add-test-command "divideandscan --help"
-    add-to-list "divideandscan,https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
+    local version
+    version="$(pipx_version DivideAndScan)"
+    add-to-list "divideandscan,${version},https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
 }
 
 function install_chisel() {
@@ -177,7 +215,9 @@ function install_chisel() {
     # TODO: add windows pre-compiled binaries in /opt/ressources/windows ?
     add-history chisel
     add-test-command "chisel --help"
-    add-to-list "chisel,https://github.com/jpillora/chisel,Go based TCP tunnel with authentication and encryption support"
+    local version
+    version="$(go_version chisel)"
+    add-to-list "chisel,${version},https://github.com/jpillora/chisel,Go based TCP tunnel with authentication and encryption support"
 }
 
 function install_penelope() {
@@ -186,7 +226,9 @@ function install_penelope() {
     pipx install --system-site-packages git+https://github.com/brightio/penelope.git
     add-history penelope 
     add-test-command "which penelope"
-    add-to-list "penelope,https://github.com/brightio/penelope,Penelope is a shell handler designed to be easy to use and intended to replace netcat when exploiting RCE vulnerabilities."
+    local version
+    version="$(pipx_version penelope.git)"
+    add-to-list "penelope,${version},https://github.com/brightio/penelope,Penelope is a shell handler designed to be easy to use and intended to replace netcat when exploiting RCE vulnerabilities."
 }
 
 function install_sshuttle() {
@@ -195,7 +237,9 @@ function install_sshuttle() {
     pipx install --system-site-packages git+https://github.com/sshuttle/sshuttle.git
     add-history sshuttle
     add-test-command "sshuttle --version"
-    add-to-list "sshuttle,https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
+    local version
+    version="$(pipx_version sshuttle.git)"
+    add-to-list "sshuttle,${version},https://github.com/sshuttle/sshuttle,Transparent proxy server that tunnels traffic through an SSH server"
 }
 
 function install_eaphammer() {
@@ -210,7 +254,9 @@ function install_eaphammer() {
     add-aliases eaphammer
     add-history eaphammer
     add-test-command "eaphammer -h"
-    add-to-list "eaphammer,https://github.com/s0lst1c3/eaphammer,EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks."
+    local version
+    version="$(git_version /opt/tools/eaphammer)"
+    add-to-list "eaphammer,${version},https://github.com/s0lst1c3/eaphammer,EAPHammer is a toolkit for performing targeted evil twin attacks against WPA2-Enterprise networks."
 }
 
 function install_fierce() {
@@ -219,7 +265,9 @@ function install_fierce() {
     pipx install --system-site-packages git+https://github.com/mschwager/fierce
     add-history fierce
     add-test-command "fierce --help"
-    add-to-list "fierce,https://github.com/mschwager/fierce,A DNS reconnaissance tool for locating non-contiguous IP space"
+    local version
+    version="$(pipx_version fierce)"
+    add-to-list "fierce,${version},https://github.com/mschwager/fierce,A DNS reconnaissance tool for locating non-contiguous IP space"
 }
 
 function install_dnsx() {
@@ -229,7 +277,9 @@ function install_dnsx() {
     asdf reshim golang
     add-history dnsx
     add-test-command "dnsx --help"
-    add-to-list "dnsx,https://github.com/projectdiscovery/dnsx,A tool for DNS reconnaissance that can help identify subdomains and other related domains."
+    local version
+    version="$(go_version dnsx)"
+    add-to-list "dnsx,${version},https://github.com/projectdiscovery/dnsx,A tool for DNS reconnaissance that can help identify subdomains and other related domains."
 }
 
 function install_massdns() {
@@ -241,7 +291,9 @@ function install_massdns() {
     ln -s /opt/tools/massdns/bin/massdns /opt/tools/bin/massdns
     add-history massdns
     add-test-command "massdns --help"
-    add-to-list "massdns,https://github.com/blechschmidt/massdns,MassDNS is a simple high-performance DNS stub resolver targeting those who seek to resolve a massive amount of domain names in the order of millions or even billions."
+    local version
+    version="$(git_version /opt/tools/massdns)"
+    add-to-list "massdns,${version},https://github.com/blechschmidt/massdns,MassDNS is a simple high-performance DNS stub resolver targeting those who seek to resolve a massive amount of domain names in the order of millions or even billions."
 }
 
 function install_shuffledns() {
@@ -251,7 +303,9 @@ function install_shuffledns() {
     asdf reshim golang
     add-history shuffledns
     add-test-command "shuffledns --help"
-    add-to-list "shuffledns,https://github.com/projectdiscovery/shuffledns,A fast and customizable DNS resolver that can be used for subdomain enumeration and other tasks."
+    local version
+    version="$(go_version shuffledns)"
+    add-to-list "shuffledns,${version},https://github.com/projectdiscovery/shuffledns,A fast and customizable DNS resolver that can be used for subdomain enumeration and other tasks."
 }
 
 function install_tailscale() {
@@ -266,7 +320,9 @@ function install_tailscale() {
     add-aliases tailscale
     add-history tailscale
     add-test-command "tailscale --help"
-    add-to-list "tailscale,https://github.com/tailscale/tailscale,A secure and easy-to-use VPN alternative that is designed for teams and businesses."
+    local version
+    version="$(apt_version tailscale)"
+    add-to-list "tailscale,${version},https://github.com/tailscale/tailscale,A secure and easy-to-use VPN alternative that is designed for teams and businesses."
 }
 
 function install_ligolo-ng() {
@@ -289,7 +345,9 @@ function install_ligolo-ng() {
     mv /tmp/proxy /opt/tools/bin/ligolo-ng
     add-history ligolo-ng
     add-test-command "ligolo-ng --help"
-    add-to-list "ligolo-ng,https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."
+    local version
+    version="$(github_release_version nicocha30/ligolo-ng)"
+    add-to-list "ligolo-ng,${version},https://github.com/nicocha30/ligolo-ng,An advanced yet simple tunneling tool that uses a TUN interface."
 }
 
 function install_rustscan() {
@@ -298,7 +356,9 @@ function install_rustscan() {
     cargo binstall -y rustscan
     add-history rustscan
     add-test-command "rustscan --help"
-    add-to-list "rustscan,https://github.com/RustScan/RustScan,The Modern Port Scanner"
+    local version
+    version="$(cargo_version rustscan)"
+    add-to-list "rustscan,${version},https://github.com/RustScan/RustScan,The Modern Port Scanner"
 }
 
 function install_legba() {
@@ -313,7 +373,9 @@ function install_legba() {
     ln -s /opt/tools/legba/target/release/legba /opt/tools/bin/legba
     add-history legba
     add-test-command "legba --help"
-    add-to-list "legba,https://github.com/evilsocket/legba,a multiprotocol credentials bruteforcer / password sprayer and enumerator built with Rust"
+    local version
+    version="$(git_version /opt/tools/legba)"
+    add-to-list "legba,${version},https://github.com/evilsocket/legba,a multiprotocol credentials bruteforcer / password sprayer and enumerator built with Rust"
 }
 
 function install_ssh-audit() {
@@ -322,7 +384,9 @@ function install_ssh-audit() {
     pipx install --system-site-packages git+https://github.com/jtesta/ssh-audit
     add-history ssh-audit
     add-test-command "ssh-audit --help"
-    add-to-list "ssh-audit,https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
+    local version
+    version="$(pipx_version ssh-audit)"
+    add-to-list "ssh-audit,${version},https://github.com/jtesta/ssh-audit,ssh-audit is a tool to test SSH server configuration for best practices."
 }
 
 function install_sharker() {
@@ -331,7 +395,9 @@ function install_sharker() {
     pipx install --system-site-packages git+https://github.com/synacktiv/sharker.git
     add-history sharker
     add-test-command "sharker --help"
-    add-to-list "sharker,https://github.com/synacktiv/sharker,A fast and reliable network capture analyzer"
+    local version
+    version="$(pipx_version sharker.git)"
+    add-to-list "sharker,${version},https://github.com/synacktiv/sharker,A fast and reliable network capture analyzer"
 }
 
 # Package dedicated to network pentest tools

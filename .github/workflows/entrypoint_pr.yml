@@ -11,6 +11,10 @@
 #   - Repo: https://github.com/docker/build-push-action
 #   - Version: https://github.com/docker/build-push-action/tree/v6
 #   - Pinned: https://github.com/docker/build-push-action/commit/10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+# - actions/upload-artifact v7.0.2 @ cf430e030ddbb5b0abf93d22962f4752f3646cd9
+#   - Repo: https://github.com/actions/upload-artifact
+#   - Version: https://github.com/actions/upload-artifact/tree/v7.0.2
+#   - Pinned: https://github.com/actions/upload-artifact/commit/cf430e030ddbb5b0abf93d22962f4752f3646cd9
 name: External PR tests
 
 on:
@@ -24,10 +28,9 @@ on:
       - "**.md"
 
 env:
-  # fake local registry for final images
+  # fake local registry for PR images
   FAKE_LOCAL_REGISTRY: "nwodtuhs/exegol-local"
 
-  # final image parameters
   IMAGE_TARGET_REGISTRY: "nwodtuhs/exegol-preprod"
   DOCKERFILE: "./Dockerfile"
 
@@ -84,27 +87,77 @@ jobs:
             zshrc
             bashrc
 
-  build:
-    name: Final image build
+  # One matrix leg = one arch end-to-end (build → test → CSV → clean).
+  # GitHub Actions does not support per-matrix-leg `needs`, so a separate
+  # `test` job with `needs: [build]` waits for ALL arches before any test
+  # starts. Keeping the pipeline in one job makes each arch independent:
+  # arm64 can upload its CSV while amd64 is still building.
+  image:
+    name: Build and test
     needs: [ init, code_check ]
-    # only running build if code check was a success
     if: needs.code_check.result == 'success'
     strategy:
       fail-fast: false
       matrix:
         arch: [ arm64, amd64 ]
+    # Build+test on the arch builder host (same machines previously used for
+    # both `builder` and `tester` labels; image stays local via load: true).
     runs-on:
       - self-hosted
       - builder
       - ${{ matrix.arch }}
     timeout-minutes: 360
+    env:
+      # Refuse to start a multi-hour no-cache build if the runner is already tight on space
+      MIN_FREE_GB: "50"
     steps:
-      - name: Clean dangling build cache
-        run: docker builder prune --force
-      - name: Clean Exegol dangling images
-        run: docker image prune --force --filter "label=org.exegol.app=Exegol"
-      - name: Clean unused local volumes
-        run: docker volume prune --force
+      # --- Preflight (mirrors Exegol-pipelines sub_preflight / sub_build_belt prune) ---
+      - name: Show disk and docker usage
+        run: |
+          set -euo pipefail
+          echo "[*] df -h"
+          df -h
+          echo "[*] docker system df"
+          docker system df || true
+          echo "[*] docker image ls"
+          docker image ls
+      - name: Prune dangling build data
+        run: |
+          set -euo pipefail
+          # Dangling only: --all would drop cache still usable by concurrent jobs
+          # on the same runner.
+          docker builder prune --force
+          docker buildx prune --force 2>/dev/null || true
+          docker image prune --force --filter "label=org.exegol.app=Exegol"
+          docker volume prune --force
+          # Leftover action-registry / build-push temp tars on the host
+          if [[ -n "${GITHUB_WORKSPACE:-}" ]]; then
+            find "${GITHUB_WORKSPACE}" -maxdepth 3 -type f -name '.docker_temp_*' -delete 2>/dev/null || true
+          fi
+          find "${HOME}/Projects/exegol-images/_work" -type f -name '.docker_temp_*' -delete 2>/dev/null || true
+      - name: Require free disk space
+        run: |
+          set -euo pipefail
+          echo "[*] df -h after prune"
+          df -h
+          echo "[*] docker system df after prune"
+          docker system df || true
+
+          DOCKER_ROOT="$(docker info --format '{{.DockerRootDir}}' 2>/dev/null || true)"
+          TARGET="/"
+          if [[ -n "${DOCKER_ROOT}" && -d "${DOCKER_ROOT}" ]]; then
+            TARGET="${DOCKER_ROOT}"
+          fi
+
+          AVAIL_KB="$(df -Pk "${TARGET}" | awk 'NR==2 {print $4}')"
+          AVAIL_GB="$((AVAIL_KB / 1024 / 1024))"
+          echo "[*] ${AVAIL_GB}G free on ${TARGET} (minimum ${MIN_FREE_GB}G)"
+          if [[ "${AVAIL_GB}" -lt "${MIN_FREE_GB}" ]]; then
+            echo "[-] STORAGE: only ${AVAIL_GB}G free on ${TARGET}, need at least ${MIN_FREE_GB}G"
+            echo "[-] Stopping before a multi-hour build fills the runner."
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Prepare build
@@ -125,22 +178,11 @@ jobs:
           file: ${{ needs.init.outputs.DOCKERFILE }}
           context: .
 
-  test:
-    name: Test image
-    needs: [ init, build ]
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [ arm64, amd64 ]
-    runs-on:
-      - self-hosted
-      - tester
-      - ${{ matrix.arch }}
-    timeout-minutes: 5
-    steps:
       - name: Inspect the image
+        if: success()
         run: docker inspect ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
       - name: Create a container from the built image
+        if: success()
         run: |
           docker run --name exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} --rm -t -d ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} endless
       - name: Install GUI requirements
@@ -148,6 +190,7 @@ jobs:
         run: |
           docker exec exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} bash -lc "apt update && apt install -y xvfb x11-utils xdotool imagemagick wmctrl"
       - name: Copy the unit tests script
+        if: success()
         run: docker cp ~/exegol-pipelines-tools/run_unit_tests.py exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}:/.exegol/
       - name: Run the tests
         if: success()
@@ -156,33 +199,48 @@ jobs:
       - name: Print the failed tests if any
         if: failure()
         run: |
-          docker exec exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} cat /.exegol/unit_tests_failed_commands.log
+          docker exec exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} cat /.exegol/unit_tests_failed_commands.log || true
       - name: Print the successful tests
         if: always()
         run: |
-          docker exec exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} cat /.exegol/unit_tests_success_commands.log
+          docker exec exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} cat /.exegol/unit_tests_success_commands.log || true
+      - name: Export installed_tools.csv
+        if: always()
+        run: |
+          docker cp exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}:/.exegol/installed_tools.csv \
+            installed_tools_${{ matrix.arch }}.csv \
+            && head -n 5 installed_tools_${{ matrix.arch }}.csv \
+            && wc -l installed_tools_${{ matrix.arch }}.csv \
+            || true
+      - name: Upload installed_tools.csv
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: installed-tools-${{ matrix.arch }}
+          path: installed_tools_${{ matrix.arch }}.csv
+          if-no-files-found: warn
       - name: Stop the container
         if: always()
-        run: docker stop exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker stop exegol-unit-tests-${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} || true
 
-  clean_runners:
-    name: Clean runner
-    needs: [ init, test ]
-    if: always()
-    # even if this job fails, it won't affect the success/fail status of the whole workflow
-    continue-on-error: true
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [ arm64, amd64 ]
-    runs-on:
-      - self-hosted
-      - builder
-      - ${{ matrix.arch }}
-    steps:
+      # --- Post clean (mirrors Exegol-pipelines clean_runners) ---
       - name: List docker images
+        if: always()
         run: docker image ls
       - name: Remove local image
-        # always removing image, no need to keep it on the runner
         if: always()
-        run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }}
+        run: docker rmi ${{ env.FAKE_LOCAL_REGISTRY }}:${{ needs.init.outputs.IMAGE_TAG }}-${{ matrix.arch }} || true
+      - name: Prune dangling data and leftover temps
+        if: always()
+        run: |
+          set -euo pipefail
+          # Dangling only so concurrent jobs keep their BuildKit cache
+          docker builder prune --force || true
+          docker buildx prune --force 2>/dev/null || true
+          docker image prune --force || true
+          if [[ -n "${GITHUB_WORKSPACE:-}" ]]; then
+            find "${GITHUB_WORKSPACE}" -maxdepth 3 -type f -name '.docker_temp_*' -delete 2>/dev/null || true
+          fi
+          find "${HOME}/Projects/exegol-images/_work" -type f -name '.docker_temp_*' -delete 2>/dev/null || true
+          docker system df || true
+          df -h / || true

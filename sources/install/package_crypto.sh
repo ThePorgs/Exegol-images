@@ -11,7 +11,9 @@ function install_tls-map() {
     add-aliases tls-map
     add-history tls-map
     add-test-command "tls-map --help"
-    add-to-list "tls-map,https://github.com/sec-it/tls-map,tls-map is a library for mapping TLS cipher algorithm names."
+    local version
+    version="$(gem_version tls-map)"
+    add-to-list "tls-map,${version},https://github.com/sec-it/tls-map,tls-map is a library for mapping TLS cipher algorithm names."
 }
 
 function install_rsactftool() {
@@ -25,7 +27,9 @@ function install_rsactftool() {
     fi
     add-history rsactftool
     add-test-command "RsaCtfTool --help"
-    add-to-list "rsactftool,https://github.com/RsaCtfTool/RsaCtfTool,The rsactftool tool is used for RSA cryptographic operations and analysis."
+    local version
+    version="$(pipx_version RsaCtfTool)"
+    add-to-list "rsactftool,${version},https://github.com/RsaCtfTool/RsaCtfTool,The rsactftool tool is used for RSA cryptographic operations and analysis."
 }
 
 function install_rsacracker() {
@@ -35,7 +39,9 @@ function install_rsacracker() {
     cargo install rsacracker
     add-history rsacracker
     add-test-command "rsacracker --help"
-    add-to-list "RsaCracker,https://github.com/skyf0l/RsaCracker,Powerful RSA cracker for CTFs. Supports RSA - X509 - OPENSSH in PEM and DER formats."
+    local version
+    version="$(go_version RsaCracker)"
+    add-to-list "RsaCracker,${version},https://github.com/skyf0l/RsaCracker,Powerful RSA cracker for CTFs. Supports RSA - X509 - OPENSSH in PEM and DER formats."
 }
 
 # Package dedicated to attack crypto

@@ -25,7 +25,9 @@ function install_kubectl() {
     rm /opt/tools/kubectl/kubectl
     add-history kubectl
     add-test-command "kubectl --help"
-    add-to-list "kubectl,https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
+    local version
+    version="$(cli_version kubectl version --client)"
+    add-to-list "kubectl,${version},https://kubernetes.io/docs/reference/kubectl/overview/,Command-line interface for managing Kubernetes clusters."
 }
 
 function install_k9s() {
@@ -49,7 +51,9 @@ function install_k9s() {
     mv k9s /opt/tools/bin/
     add-history k9s
     add-test-command "k9s --help"
-    add-to-list "k9s,https://github.com/derailed/k9s,TUI interface for managing Kubernetes clusters."
+    local version
+    version="$(cli_version k9s version)"
+    add-to-list "k9s,${version},https://github.com/derailed/k9s,TUI interface for managing Kubernetes clusters."
 }
 
 function install_awscli() {
@@ -72,7 +76,9 @@ function install_awscli() {
     # TODO: improve history : https://www.bluematador.com/learn/aws-cli-cheatsheet
     add-history aws
     add-test-command "aws --version"
-    add-to-list "awscli,https://aws.amazon.com/cli/,Command-line interface for Amazon Web Services."
+    local version
+    version="$(cli_version aws --version)"
+    add-to-list "awscli,${version},https://aws.amazon.com/cli/,Command-line interface for Amazon Web Services."
 }
 
 function install_scout() {
@@ -81,7 +87,9 @@ function install_scout() {
     pipx install --system-site-packages scoutsuite
     add-history scout
     add-test-command "scout --help"
-    add-to-list "scout,https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool which enables security posture assessment of cloud environments."
+    local version
+    version="$(pipx_version scoutsuite)"
+    add-to-list "scout,${version},https://github.com/nccgroup/ScoutSuite,Scout Suite is an open source multi-cloud security-auditing tool which enables security posture assessment of cloud environments."
 }
 
 function install_cloudsplaining() {
@@ -90,7 +98,9 @@ function install_cloudsplaining() {
     pipx install --system-site-packages cloudsplaining
     add-history cloudsplaining
     add-test-command "cloudsplaining --help"
-    add-to-list "cloudsplaining,https://github.com/salesforce/cloudsplaining,AWS IAM Security Assessment tool that identifies violations of least privilege and generates a risk-prioritized report."
+    local version
+    version="$(pipx_version cloudsplaining)"
+    add-to-list "cloudsplaining,${version},https://github.com/salesforce/cloudsplaining,AWS IAM Security Assessment tool that identifies violations of least privilege and generates a risk-prioritized report."
 }
 
 function install_cloudsploit() {
@@ -102,7 +112,9 @@ function install_cloudsploit() {
     add-aliases cloudsploit
     add-history cloudsploit
     add-test-command "cloudsploit -h"
-    add-to-list "cloudsploit,https://github.com/aquasecurity/cloudsploit,Cloud Security Posture Management"
+    local version
+    version="$(git_version /opt/tools/cloudsploit)"
+    add-to-list "cloudsploit,${version},https://github.com/aquasecurity/cloudsploit,Cloud Security Posture Management"
 }
 
 function install_prowler() {
@@ -111,7 +123,9 @@ function install_prowler() {
     pipx install --system-site-packages prowler
     add-history prowler
     add-test-command "prowler -h"
-    add-to-list "prowler,https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness."
+    local version
+    version="$(pipx_version prowler)"
+    add-to-list "prowler,${version},https://github.com/prowler-cloud/prowler,Perform Cloud Security best practices assessments / audits / incident response / compliance / continuous monitoring / hardening and forensics readiness."
 }
 
 function install_cloudmapper() {
@@ -129,7 +143,9 @@ function install_cloudmapper() {
     add-aliases cloudmapper
     add-history cloudmapper
     add-test-command 'cloudmapper.py --help |& grep "usage"'
-    add-to-list "cloudmapper,https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
+    local version
+    version="$(git_version /opt/tools/cloudmapper)"
+    add-to-list "cloudmapper,${version},https://github.com/duo-labs/cloudmapper,CloudMapper helps you analyze your Amazon Web Services (AWS) environments."
 }
 
 function install_azure_cli() {
@@ -141,7 +157,9 @@ function install_azure_cli() {
     rm /tmp/azure-cli-install.sh
     add-history azure-cli
     add-test-command "az version"
-    add-to-list "azure-cli,https://github.com/Azure/azure-cli,A great cloud needs great tools; we're excited to introduce Azure CLI our next generation multi-platform command line experience for Azure."
+    local version
+    version="$(cli_version az version)"
+    add-to-list "azure-cli,${version},https://github.com/Azure/azure-cli,A great cloud needs great tools; we're excited to introduce Azure CLI our next generation multi-platform command line experience for Azure."
 }
 
 function install_s3scanner() {
@@ -152,7 +170,9 @@ function install_s3scanner() {
     asdf reshim golang
 	add-history s3scanner
 	add-test-command "s3scanner -version"
-	add-to-list "s3scanner,https://github.com/sa7mon/S3Scanner,a go tool for s3 buckets misconfiguration across S3-compatible APIs"
+	local version
+	version="$(go_version s3scanner)"
+	add-to-list "s3scanner,${version},https://github.com/sa7mon/S3Scanner,a go tool for s3 buckets misconfiguration across S3-compatible APIs"
 }
 
 function install_pacu() {
@@ -163,7 +183,9 @@ function install_pacu() {
     pipx install pacu
     add-history pacu
     add-test-command "pacu --help"
-    add-to-list "pacu,https://github.com/RhinoSecurityLabs/pacu,The AWS exploitation framework for testing the security of Amazon Web Services environments."
+    local version
+    version="$(pipx_version pacu)"
+    add-to-list "pacu,${version},https://github.com/RhinoSecurityLabs/pacu,The AWS exploitation framework for testing the security of Amazon Web Services environments."
 }
 
 # Package dedicated to cloud tools
