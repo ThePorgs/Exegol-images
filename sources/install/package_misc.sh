@@ -303,6 +303,15 @@ function install_nfsshell() {
     add-to-list "nfsshell,${version},https://github.com/Supermathie/nfsshell,NFSShell is a tool for interacting with NFS shares without mounting them."
 }
 
+function install_vnc-decrypt() {
+    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    colorecho "Installing vnc-decrypt"
+    cp /root/sources/assets/vnc-decrypt/vnc-decrypt /opt/tools/bin/vnc-decrypt
+    chmod +x /opt/tools/bin/vnc-decrypt
+    add-test-command "vnc-decrypt dbd83cfd727a1458 | grep 'password'"
+    add-to-list "vnc-decrypt,N/A,A small shell script that decrypt some VNC passwords."
+}
+
 # Package dedicated to offensive miscellaneous tools
 function package_misc() {
     set_env
@@ -329,6 +338,7 @@ function package_misc() {
     install_thr             # https://www.thehacker.recipes/
     install_dtrx            # Intelligent archive extractor
     install_nfsshell        # NFS share interaction tool
+    install_vnc-decrypt
     post_install
     end_time=$(date +%s)
     local elapsed_time=$((end_time - start_time))
