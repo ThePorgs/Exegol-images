@@ -21,11 +21,17 @@ function install_steganography_apt_tools() {
     add-test-command "hexedit --help|& grep 'usage: hexedit'"   # View and edit files in hexadecimal or in ASCII
 
 
-    add-to-list "stegosuite,https://github.com/osde8info/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files."
-    add-to-list "steghide,https://github.com/StefanoDeVuono/steghide,steghide is a steganography program that is able to hide data in various kinds of image and audio files."
-    add-to-list "exif,https://exiftool.org/,Utility to read / write and edit metadata in image / audio and video files"
-    add-to-list "exiv2,https://github.com/Exiv2/exiv2,Image metadata library and toolset"
-    add-to-list "hexedit,https://github.com/pixel/hexedit,View and edit binary files"
+    local version
+    version="$(apt_version stegosuite)"
+    add-to-list "stegosuite,${version},https://github.com/osde8info/stegosuite,Stegosuite is a free steganography tool that allows you to hide data in image and audio files."
+    version="$(apt_version steghide)"
+    add-to-list "steghide,${version},https://github.com/StefanoDeVuono/steghide,steghide is a steganography program that is able to hide data in various kinds of image and audio files."
+    version="$(apt_version exif)"
+    add-to-list "exif,${version},https://exiftool.org/,Utility to read / write and edit metadata in image / audio and video files"
+    version="$(apt_version exiv2)"
+    add-to-list "exiv2,${version},https://github.com/Exiv2/exiv2,Image metadata library and toolset"
+    version="$(apt_version hexedit)"
+    add-to-list "hexedit,${version},https://github.com/pixel/hexedit,View and edit binary files"
 }
 
 function install_zsteg() {
@@ -36,7 +42,9 @@ function install_zsteg() {
     add-aliases zsteg
     add-history zsteg
     add-test-command "zsteg --help"
-    add-to-list "zsteg,https://github.com/zed-0xff/zsteg,Detect steganography hidden in PNG and BMP images"
+    local version
+    version="$(gem_version zsteg)"
+    add-to-list "zsteg,${version},https://github.com/zed-0xff/zsteg,Detect steganography hidden in PNG and BMP images"
 }
 
 function install_stegolsb() {
@@ -45,7 +53,9 @@ function install_stegolsb() {
     pipx install --system-site-packages stego-lsb
     add-history stegolsb
     add-test-command "stegolsb --version"
-    add-to-list "stegolsb,https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm"
+    local version
+    version="$(pipx_version stego-lsb)"
+    add-to-list "stegolsb,${version},https://github.com/KyTn/STEGOLSB,Steganography tool to hide data in BMP images using least significant bit algorithm"
 }
 
 # Package dedicated to steganography tools

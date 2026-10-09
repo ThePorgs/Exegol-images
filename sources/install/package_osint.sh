@@ -24,11 +24,17 @@ function install_osint_apt_tools() {
     add-test-command "tor --help"                                                # Tor proxy
     add-test-command "whois --help"                                                     # See information about a specific domain name or IP address
 
-    add-to-list "exiftool,https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading / writing and editing meta information in image / audio and video files."
-    add-to-list "exifprobe,https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."
-    add-to-list "dnsenum,https://github.com/fwaeytens/dnsenum,dnsenum is a tool for enumerating DNS information about a domain."
-    add-to-list "tor,https://github.com/torproject/tor,Anonymity tool that can help protect your privacy and online identity by routing your traffic through a network of servers."
-    add-to-list "whois,https://packages.debian.org/sid/whois,See information about a specific domain name or IP address."
+    local version
+    version="$(apt_version exiftool)"
+    add-to-list "exiftool,${version},https://github.com/exiftool/exiftool,ExifTool is a Perl library and command-line tool for reading / writing and editing meta information in image / audio and video files."
+    version="$(apt_version exifprobe)"
+    add-to-list "exifprobe,${version},https://github.com/hfiguiere/exifprobe,Exifprobe is a command-line tool to parse EXIF data from image files."
+    version="$(apt_version dnsenum)"
+    add-to-list "dnsenum,${version},https://github.com/fwaeytens/dnsenum,dnsenum is a tool for enumerating DNS information about a domain."
+    version="$(apt_version tor)"
+    add-to-list "tor,${version},https://github.com/torproject/tor,Anonymity tool that can help protect your privacy and online identity by routing your traffic through a network of servers."
+    version="$(apt_version whois)"
+    add-to-list "whois,${version},https://packages.debian.org/sid/whois,See information about a specific domain name or IP address."
 }
 
 function install_youtubedl() {
@@ -37,7 +43,9 @@ function install_youtubedl() {
     pipx install --system-site-packages youtube-dl
     add-history youtube-dl
     add-test-command "youtube-dl --version"
-    add-to-list "youtubedl,https://github.com/ytdl-org/youtube-dl,Download videos from YouTube and other sites."
+    local version
+    version="$(pipx_version youtube-dl)"
+    add-to-list "youtubedl,${version},https://github.com/ytdl-org/youtube-dl,Download videos from YouTube and other sites."
 }
 
 function install_sublist3r() {
@@ -46,7 +54,9 @@ function install_sublist3r() {
     pipx install --system-site-packages git+https://github.com/aboul3la/Sublist3r
     add-history sublist3r
     add-test-command "sublist3r --help"
-    add-to-list "sublist3r,https://github.com/aboul3la/Sublist3r,a Python tool designed to enumerate subdomains of websites."
+    local version
+    version="$(pipx_version Sublist3r)"
+    add-to-list "sublist3r,${version},https://github.com/aboul3la/Sublist3r,a Python tool designed to enumerate subdomains of websites."
 }
 
 function install_assetfinder() {
@@ -56,7 +66,9 @@ function install_assetfinder() {
     asdf reshim golang
     add-history assetfinder
     add-test-command "assetfinder --help"
-    add-to-list "assetfinder,https://github.com/tomnomnom/assetfinder,Tool to find subdomains and IP addresses associated with a domain."
+    local version
+    version="$(go_version assetfinder)"
+    add-to-list "assetfinder,${version},https://github.com/tomnomnom/assetfinder,Tool to find subdomains and IP addresses associated with a domain."
 }
 
 function install_subfinder() {
@@ -66,7 +78,9 @@ function install_subfinder() {
     asdf reshim golang
     add-history subfinder
     add-test-command "subfinder -version"
-    add-to-list "subfinder,https://github.com/projectdiscovery/subfinder,Tool to find subdomains associated with a domain."
+    local version
+    version="$(go_version subfinder)"
+    add-to-list "subfinder,${version},https://github.com/projectdiscovery/subfinder,Tool to find subdomains associated with a domain."
 }
 
 function install_findomain() {
@@ -86,7 +100,9 @@ function install_findomain() {
     rm /tmp/findomain.zip
     add-history findomain
     add-test-command "findomain --version"
-    add-to-list "findomain,https://github.com/findomain/findomain,The fastest and cross-platform subdomain enumerator."
+    local version
+    version="$(cli_version findomain --version)"
+    add-to-list "findomain,${version},https://github.com/findomain/findomain,The fastest and cross-platform subdomain enumerator."
 }
 
 function install_holehe() {
@@ -95,22 +111,9 @@ function install_holehe() {
     pipx install --system-site-packages holehe
     add-history holehe
     add-test-command "holehe --help"
-    add-to-list "holehe,https://github.com/megadose/holehe,mail osint tool finding out if it is used on websites."
-}
-
-function install_simplyemail() {
-    colorecho "Installing SimplyEmail"
-    git -C /opt/tools/ clone --branch master --depth 1 https://github.com/killswitch-GUI/SimplyEmail.git
-    cd /opt/tools/SimplyEmail/ || exit
-    fapt antiword odt2txt libxml2-dev libxslt1-dev
-    virtualenv --python python2 ./venv
-    source ./venv/bin/activate
-    pip2 install -r ./setup/requirments.txt
-    deactivate
-    add-aliases simplyemail
-    add-history simplyemail
-    add-test-command "SimplyEmail.py -l"
-    add-to-list "simplyemail,https://github.com/SimplySecurity/SimplyEmail,a scriptable command line tool for sending emails"
+    local version
+    version="$(pipx_version holehe)"
+    add-to-list "holehe,${version},https://github.com/megadose/holehe,mail osint tool finding out if it is used on websites."
 }
 
 function install_theharvester() {
@@ -119,7 +122,9 @@ function install_theharvester() {
     pipx install --python 3.14 --system-site-packages git+https://github.com/laramies/theHarvester
     add-history theharvester
     add-test-command "theHarvester --help"
-    add-to-list "theharvester,https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts / subdomain names / virtual host / open ports / banners / and employee names from different public sources"
+    local version
+    version="$(pipx_version theHarvester)"
+    add-to-list "theharvester,${version},https://github.com/laramies/theHarvester,Tool for gathering e-mail accounts / subdomain names / virtual host / open ports / banners / and employee names from different public sources"
 }
 
 function install_h8mail() {
@@ -128,22 +133,9 @@ function install_h8mail() {
     pipx install --system-site-packages h8mail
     add-history h8mail
     add-test-command "h8mail --help"
-    add-to-list "h8mail,https://github.com/khast3x/h8mail,Email OSINT and breach hunting."
-}
-
-function install_infoga() {
-    colorecho "Installing infoga"
-    git -C /opt/tools/ clone --depth 1 https://github.com/m4ll0k/Infoga
-    find /opt/tools/Infoga/ -type f -print0 | xargs -0 dos2unix
-    cd /opt/tools/Infoga || exit
-    python2 -m virtualenv ./venv
-    source ./venv/bin/activate
-    pip2 install .
-    deactivate
-    add-aliases infoga
-    add-history infoga
-    add-test-command "infoga.py --help"
-    add-to-list "infoga,https://github.com/m4ll0k/Infoga,Information gathering tool for hacking."
+    local version
+    version="$(pipx_version h8mail)"
+    add-to-list "h8mail,${version},https://github.com/khast3x/h8mail,Email OSINT and breach hunting."
 }
 
 function install_pwnedornot() {
@@ -159,7 +151,9 @@ function install_pwnedornot() {
     add-aliases pwnedornot
     add-history pwnedornot
     add-test-command "pwnedornot.py --help"
-    add-to-list "pwnedornot,https://github.com/thewhiteh4t/pwnedOrNot,Check if a password has been leaked in a data breach."
+    local version
+    version="$(git_version /opt/tools/pwnedOrNot)"
+    add-to-list "pwnedornot,${version},https://github.com/thewhiteh4t/pwnedOrNot,Check if a password has been leaked in a data breach."
 }
 
 function install_phoneinfoga() {
@@ -178,7 +172,9 @@ function install_phoneinfoga() {
     rm /tmp/phoneinfoga.tar.gz
     add-history phoneinfoga
     add-test-command "phoneinfoga help"
-    add-to-list "phoneinfoga,https://github.com/sundowndev/PhoneInfoga,Information gathering & OSINT framework for phone numbers."
+    local version
+    version="$(cli_version phoneinfoga --version)"
+    add-to-list "phoneinfoga,${version},https://github.com/sundowndev/PhoneInfoga,Information gathering & OSINT framework for phone numbers."
 }
 
 function install_maigret() {
@@ -187,7 +183,9 @@ function install_maigret() {
     pipx install --system-site-packages git+https://github.com/soxoj/maigret.git
     add-history maigret
     add-test-command "maigret --help"
-    add-to-list "maigret,https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results"
+    local version
+    version="$(pipx_version maigret.git)"
+    add-to-list "maigret,${version},https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results"
 }
 
 function install_linkedin2username() {
@@ -201,7 +199,9 @@ function install_linkedin2username() {
     add-aliases linkedin2username
     add-history linkedin2username
     add-test-command "linkedin2username.py --help"
-    add-to-list "linkedin2username,https://github.com/initstring/linkedin2username,Generate a list of LinkedIn usernames from a company name."
+    local version
+    version="$(git_version /opt/tools/linkedin2username)"
+    add-to-list "linkedin2username,${version},https://github.com/initstring/linkedin2username,Generate a list of LinkedIn usernames from a company name."
 }
 
 function install_toutatis() {
@@ -210,7 +210,9 @@ function install_toutatis() {
     pipx install --system-site-packages git+https://github.com/megadose/toutatis
     add-history toutatis
     add-test-command "toutatis --help"
-    add-to-list "toutatis,https://github.com/megadose/Toutatis,Toutatis is a tool that allows you to extract information from instagrams accounts such as e-mails / phone numbers and more."
+    local version
+    version="$(pipx_version toutatis)"
+    add-to-list "toutatis,${version},https://github.com/megadose/Toutatis,Toutatis is a tool that allows you to extract information from instagrams accounts such as e-mails / phone numbers and more."
 }
 
 function install_waybackurls() {
@@ -220,7 +222,9 @@ function install_waybackurls() {
     asdf reshim golang
     add-history waybackurls
     add-test-command "waybackurls -h"
-    add-to-list "waybackurls,https://github.com/tomnomnom/waybackurls,Fetch all the URLs that the Wayback Machine knows about for a domain."
+    local version
+    version="$(go_version waybackurls)"
+    add-to-list "waybackurls,${version},https://github.com/tomnomnom/waybackurls,Fetch all the URLs that the Wayback Machine knows about for a domain."
 }
 
 function install_carbon14() {
@@ -229,7 +233,9 @@ function install_carbon14() {
     pipx install Carbon14
     add-history carbon14
     add-test-command "carbon14 --help"
-    add-to-list "carbon14,https://github.com/Lazza/carbon14,OSINT tool for estimating when a web page was written."
+    local version
+    version="$(pipx_version Carbon14)"
+    add-to-list "carbon14,${version},https://github.com/Lazza/carbon14,OSINT tool for estimating when a web page was written."
 }
 
 function install_photon() {
@@ -243,7 +249,9 @@ function install_photon() {
     add-aliases photon
     add-history photon
     add-test-command "photon.py --help"
-    add-to-list "photon,https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs / files / intel & endpoints from a target."
+    local version
+    version="$(git_version /opt/tools/photon)"
+    add-to-list "photon,${version},https://github.com/s0md3v/Photon,a fast web crawler which extracts URLs / files / intel & endpoints from a target."
 }
 
 function install_ipinfo() {
@@ -255,7 +263,9 @@ function install_ipinfo() {
 
     add-history ipinfo
     add-test-command "ipinfo 127.0.0.1"
-    add-to-list "ipinfo,https://github.com/ipinfo/cli,Get information about an IP address or hostname."
+    local version
+    version="$(go_version ipinfo)"
+    add-to-list "ipinfo,${version},https://github.com/ipinfo/cli,Get information about an IP address or hostname."
 }
 
 function install_constellation() {
@@ -273,7 +283,9 @@ function install_constellation() {
     # TODO ARM64 install
     # TODO add-test-command
     add-history constellation
-    add-to-list "constellation,https://github.com/constellation-app/Constellation,Find and exploit vulnerabilities in mobile applications."
+    local version
+    version="$(cli_version constellation --version)"
+    add-to-list "constellation,${version},https://github.com/constellation-app/Constellation,Find and exploit vulnerabilities in mobile applications."
 }
 
 function install_maltego() {
@@ -283,7 +295,9 @@ function install_maltego() {
     dpkg -i /tmp/maltegov4.3_package.deb
     add-history maltego
     add-test-command "file /usr/share/maltego/bin/maltego"
-    add-to-list "maltego,https://www.paterva.com/web7/downloads.php,A tool used for open-source intelligence and forensics"
+    local version
+    version="$(cli_version maltego --version)"
+    add-to-list "maltego,${version},https://www.paterva.com/web7/downloads.php,A tool used for open-source intelligence and forensics"
 }
 
 function install_spiderfoot() {
@@ -298,7 +312,9 @@ function install_spiderfoot() {
     add-history spiderfoot
     add-test-command "spiderfoot --help"
     add-test-command "spiderfoot-cli --help"
-    add-to-list "spiderfoot,https://github.com/smicallef/spiderfoot,A reconnaissance tool that automatically queries over 100 public data sources"
+    local version
+    version="$(git_version /opt/tools/spiderfoot)"
+    add-to-list "spiderfoot,${version},https://github.com/smicallef/spiderfoot,A reconnaissance tool that automatically queries over 100 public data sources"
 }
 
 function install_finalrecon() {
@@ -314,7 +330,9 @@ function install_finalrecon() {
     add-aliases finalrecon
     add-history finalrecon
     add-test-command "finalrecon.py --help"
-    add-to-list "finalrecon,https://github.com/thewhiteh4t/FinalRecon,A web reconnaissance tool that gathers information about web pages"
+    local version
+    version="$(git_version /opt/tools/FinalRecon)"
+    add-to-list "finalrecon,${version},https://github.com/thewhiteh4t/FinalRecon,A web reconnaissance tool that gathers information about web pages"
 }
 
 function install_pwndb() {
@@ -329,7 +347,9 @@ function install_pwndb() {
     add-aliases pwndb
     add-history pwndb
     add-test-command "pwndb.py --help"
-    add-to-list "pwndb,https://github.com/davidtavarez/pwndb,A command-line tool for searching the pwndb database of compromised credentials."
+    local version
+    version="$(git_version /opt/tools/pwndb)"
+    add-to-list "pwndb,${version},https://github.com/davidtavarez/pwndb,A command-line tool for searching the pwndb database of compromised credentials."
 }
 
 function install_githubemail() {
@@ -339,7 +359,9 @@ function install_githubemail() {
     npm install --global github-email
     add-history github-email
     add-test-command "github-email whatever"
-    add-to-list "githubemail,https://github.com/paulirish/github-email,a command-line tool to retrieve a user's email from Github."
+    local version
+    version="$(cli_version githubemail --version)"
+    add-to-list "githubemail,${version},https://github.com/paulirish/github-email,a command-line tool to retrieve a user's email from Github."
 }
 
 function install_recondog() {
@@ -353,7 +375,9 @@ function install_recondog() {
     add-aliases recondog
     add-history recondog
     add-test-command "recondog --help"
-    add-to-list "recondog,https://github.com/s0md3v/ReconDog,a reconnaissance tool for performing information gathering on a target."
+    local version
+    version="$(git_version /opt/tools/ReconDog)"
+    add-to-list "recondog,${version},https://github.com/s0md3v/ReconDog,a reconnaissance tool for performing information gathering on a target."
 }
 
 function install_gron() {
@@ -363,7 +387,9 @@ function install_gron() {
     asdf reshim golang
     add-history gron
     add-test-command "gron --help"
-    add-to-list "gron,https://github.com/tomnomnom/gron,Make JSON greppable!"
+    local version
+    version="$(go_version gron)"
+    add-to-list "gron,${version},https://github.com/tomnomnom/gron,Make JSON greppable!"
 }
 
 function install_ignorant() {
@@ -372,7 +398,9 @@ function install_ignorant() {
     pipx install --system-site-packages git+https://github.com/megadose/ignorant
     add-history ignorant
     add-test-command "ignorant --help"
-    add-to-list "ignorant,https://github.com/megadose/ignorant,holehe but for phone numbers."
+    local version
+    version="$(pipx_version ignorant)"
+    add-to-list "ignorant,${version},https://github.com/megadose/ignorant,holehe but for phone numbers."
 }
 
 function install_trevorspray() {
@@ -385,7 +413,9 @@ function install_trevorspray() {
     pipx install --system-site-packages .
     add-history trevorspray
     add-test-command "trevorspray --help"
-    add-to-list "trevorspray,https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules / and more"
+    local version
+    version="$(git_version /opt/tools/TREVORspray)"
+    add-to-list "trevorspray,${version},https://github.com/blacklanternsecurity/TREVORspray,TREVORspray is a modular password sprayer with threading SSH proxying loot modules / and more"
 }
 
 function install_gitfive() {
@@ -394,7 +424,9 @@ function install_gitfive() {
     colorecho "Installing GitFive"
     pipx install --system-site-packages git+https://github.com/mxrch/GitFive
     add-test-command "gitfive --help"
-    add-to-list "GitFive,https://github.com/mxrch/GitFive,GitFive is an OSINT tool to investigate GitHub profiles."
+    local version
+    version="$(pipx_version GitFive)"
+    add-to-list "GitFive,${version},https://github.com/mxrch/GitFive,GitFive is an OSINT tool to investigate GitHub profiles."
 }
 
 function install_geopincer() {
@@ -409,7 +441,9 @@ function install_geopincer() {
     add-aliases geopincer
     add-history geopincer
     add-test-command "geopincer.py --help"
-    add-to-list "GeoPincer,https://github.com/tloja/GeoPincer,GeoPincer is a script that leverages OpenStreetMap's Overpass API in order to search for locations."
+    local version
+    version="$(git_version /opt/tools/GeoPincer)"
+    add-to-list "GeoPincer,${version},https://github.com/tloja/GeoPincer,GeoPincer is a script that leverages OpenStreetMap's Overpass API in order to search for locations."
 }
 
 function install_yalis() {
@@ -421,7 +455,9 @@ function install_yalis() {
     mv ./yalis /opt/tools/bin/
     add-history yalis
     add-test-command 'yalis --help|& grep "Usage of yalis"'
-    add-to-list "Yalis,https://github.com/EatonChips/yalis,Yet Another LinkedIn Scraper"
+    local version
+    version="$(git_version /tmp/yalis)"
+    add-to-list "Yalis,${version},https://github.com/EatonChips/yalis,Yet Another LinkedIn Scraper"
 }
 
 function install_murmurhash() {
@@ -435,7 +471,9 @@ function install_murmurhash() {
     add-aliases MurMurHash
     add-history MurMurHash
     add-test-command "MurMurHash.py"
-    add-to-list "MurMurHash,https://github.com/QU35T-code/MurMurHash,This little tool is to calculate a MurmurHash value of a favicon to hunt phishing websites on the Shodan platform."
+    local version
+    version="$(git_version /opt/tools/MurMurHash)"
+    add-to-list "MurMurHash,${version},https://github.com/QU35T-code/MurMurHash,This little tool is to calculate a MurmurHash value of a favicon to hunt phishing websites on the Shodan platform."
 }
 
 function install_blackbird() {
@@ -451,7 +489,9 @@ function install_blackbird() {
     add-aliases blackbird
     add-history blackbird
     add-test-command "blackbird.py --help"
-    add-to-list "Blackbird,https://github.com/p1ngul1n0/blackbird,An OSINT tool to search fast for accounts by username across 581 sites."
+    local version
+    version="$(git_version /opt/tools/blackbird)"
+    add-to-list "Blackbird,${version},https://github.com/p1ngul1n0/blackbird,An OSINT tool to search fast for accounts by username across 581 sites."
 }
 
 function install_sherlock() {
@@ -460,7 +500,9 @@ function install_sherlock() {
     pipx install --system-site-packages sherlock-project
     add-history sherlock
     add-test-command "sherlock --help"
-    add-to-list "Sherlock,https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks."
+    local version
+    version="$(pipx_version sherlock-project)"
+    add-to-list "Sherlock,${version},https://github.com/sherlock-project/sherlock,Hunt down social media accounts by username across social networks."
 }
 
 function install_censys() {
@@ -469,7 +511,9 @@ function install_censys() {
     pipx install --system-site-packages censys
     add-history censys
     add-test-command "censys --help"
-    add-to-list "Censys,https://github.com/censys/censys-python,An easy-to-use and lightweight API wrapper for Censys APIs"
+    local version
+    version="$(pipx_version censys)"
+    add-to-list "Censys,${version},https://github.com/censys/censys-python,An easy-to-use and lightweight API wrapper for Censys APIs"
 }
 
 function install_gomapenum() {
@@ -481,7 +525,9 @@ function install_gomapenum() {
     mv ./src /opt/tools/bin/gomapenum
     add-history gomapenum
     add-test-command "gomapenum --help"
-    add-to-list "GoMapEnum,https://github.com/nodauf/GoMapEnum,Nothing new but existing techniques are brought together in one tool."
+    local version
+    version="$(git_version /tmp/GoMapEnum)"
+    add-to-list "GoMapEnum,${version},https://github.com/nodauf/GoMapEnum,Nothing new but existing techniques are brought together in one tool."
 }
 
 function install_pymeta() {
@@ -498,7 +544,9 @@ function install_pymeta() {
   ln -v -s /opt/tools/pymeta/venv/bin/pymeta /opt/tools/bin/
   add-history pymeta
   add-test-command "pymeta -h"
-  add-to-list "pymeta,https://github.com/m8sec/pymeta,Google and Bing scraping osint tool"
+  local version
+  version="$(git_version /opt/tools/pymeta)"
+  add-to-list "pymeta,${version},https://github.com/m8sec/pymeta,Google and Bing scraping osint tool"
 }
 
 function install_recon_ng() {
@@ -513,7 +561,9 @@ function install_recon_ng() {
     deactivate
     add-aliases recon-ng
     add-test-command "recon-ng --help"
-    add-to-list "recon-ng,https://github.com/lanmaster53/recon-ng,External recon tool."
+    local version
+    version="$(git_version /opt/tools/recon-ng)"
+    add-to-list "recon-ng,${version},https://github.com/lanmaster53/recon-ng,External recon tool."
 }
 
 function install_instaloader() {
@@ -521,7 +571,9 @@ function install_instaloader() {
     colorecho "Installing Instaloader"
     pipx install --system-site-packages instaloader
     add-test-command "instaloader --help"
-    add-to-list "Instaloader,https://github.com/instaloader/instaloader,Download content/captions/metadata from Instagram"
+    local version
+    version="$(pipx_version instaloader)"
+    add-to-list "Instaloader,${version},https://github.com/instaloader/instaloader,Download content/captions/metadata from Instagram"
 }
 
 function install_ghunt() {
@@ -530,7 +582,9 @@ function install_ghunt() {
     pipx install --system-site-packages ghunt
     add-history ghunt
     add-test-command "ghunt --help"
-    add-to-list "GHunt,https://github.com/mxrch/GHunt,Investigate Google Accounts with emails"
+    local version
+    version="$(pipx_version ghunt)"
+    add-to-list "GHunt,${version},https://github.com/mxrch/GHunt,Investigate Google Accounts with emails"
 }
 
 function install_zehef() {
@@ -544,7 +598,9 @@ function install_zehef() {
     deactivate
     add-aliases zehef
     add-test-command "zehef.py --help"
-    add-to-list "Zehef,https://github.com/N0rz3/Zehef,Zehef is an osint tool to track emails"
+    local version
+    version="$(git_version /opt/tools/Zehef)"
+    add-to-list "Zehef,${version},https://github.com/N0rz3/Zehef,Zehef is an osint tool to track emails"
 }
 
 function install_metagoofil() {
@@ -558,7 +614,9 @@ function install_metagoofil() {
     deactivate
     add-aliases metagoofil
     add-test-command "metagoofil.py --help"
-    add-to-list "Metagoofil,https://github.com/opsdisk/metagoofil,Metagoofil is a tool for gathering metadata of a website"
+    local version
+    version="$(git_version /opt/tools/metagoofil)"
+    add-to-list "Metagoofil,${version},https://github.com/opsdisk/metagoofil,Metagoofil is a tool for gathering metadata of a website"
 }
 
 # Package dedicated to osint, recon and passive tools
@@ -574,10 +632,8 @@ function package_osint() {
     install_subfinder               # Subfinder is a subdomain discovery tool that discovers valid subdomains for websites
     install_findomain               # Findomain Monitoring Service use OWASP Amass, Sublist3r, Assetfinder and Subfinder
     install_holehe                  # Check if the mail is used on different sites
-    install_simplyemail             # Gather emails
     install_theharvester            # Gather emails, subdomains, hosts, employee names, open ports and banners
     install_h8mail                  # Email OSINT & Password breach hunting tool
-    # install_infoga                  # Gathering email accounts informations TODO : 404, it seems the repo has been removed
     install_pwnedornot              # OSINT Tool for Finding Passwords of Compromised Email Addresses
     install_ghunt                   # Investigate Google Accounts with emails
     install_phoneinfoga             # Advanced information gathering & OSINT framework for phone numbers

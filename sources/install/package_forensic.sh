@@ -18,11 +18,17 @@ function install_forensic_apt_tools() {
     add-test-command "fdisk --help"     # Creating and manipulating disk partition table
     add-test-command "blkcalc -V"       # Collection of command line tools that allow you to investigate disk images
 
-    add-to-list "pst-utils,https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
-    add-to-list "foremost,https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers / footers / and internal data structures."
-    add-to-list "testdisk,https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
-    add-to-list "fdisk,https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool"
-    add-to-list "sleuthkit,https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
+    local version
+    version="$(apt_version pst-utils)"
+    add-to-list "pst-utils,${version},https://manpages.debian.org/jessie/pst-utils/readpst.1,pst-utils is a set of tools for working with Outlook PST files."
+    version="$(apt_version foremost)"
+    add-to-list "foremost,${version},https://doc.ubuntu-fr.org/foremost,Foremost is a forensic tool for recovering files based on their headers / footers / and internal data structures."
+    version="$(apt_version testdisk)"
+    add-to-list "testdisk,${version},https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
+    version="$(apt_version fdisk)"
+    add-to-list "fdisk,${version},https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool"
+    version="$(apt_version sleuthkit)"
+    add-to-list "sleuthkit,${version},https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
 }
 
 function install_binwalk() {
@@ -33,27 +39,9 @@ function install_binwalk() {
     pipx install --system-site-packages jefferson ubi-reader uefi_firmware
     add-history binwalk
     add-test-command "binwalk --help"
-    add-to-list "binwalk,https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
-}
-
-function install_volatility2() {
-    colorecho "Installing volatility"
-    fapt pcregrep yara libjpeg-dev zlib1g-dev
-    git -C /opt/tools/ clone --depth 1 https://github.com/volatilityfoundation/volatility
-    cd /opt/tools/volatility || exit
-    virtualenv --python python2 ./venv
-    source ./venv/bin/activate
-    pip2 install pycryptodome distorm3 pillow openpyxl
-    pip2 install ujson --no-use-pep517
-    python2 setup.py install
-    deactivate
-    # https://github.com/volatilityfoundation/volatility/issues/535#issuecomment-407571161
-    ln -s /usr/local/lib/python2.7/dist-packages/usr/lib/libyara.so /usr/lib/libyara.so
-    add-aliases volatility2
-    # TODO: Improve volatility2 history
-    add-history volatility2
-    add-test-command "volatility2 --help"
-    add-to-list "volatility2,https://github.com/volatilityfoundation/volatility,Volatile memory extraction utility framework"
+    local version
+    version="$(pipx_version uefi_firmware)"
+    add-to-list "binwalk,${version},https://github.com/ReFirmLabs/binwalk,Binwalk is a tool for analyzing / reverse engineering / and extracting firmware images."
 }
 
 function install_volatility3() {
@@ -65,7 +53,9 @@ function install_volatility3() {
     add-aliases volatility3
     add-history volatility3
     add-test-command "volatility3 --help"
-    add-to-list "volatility3,https://github.com/volatilityfoundation/volatility3,Advanced memory forensics framework"
+    local version
+    version="$(pipx_version volatility3)"
+    add-to-list "volatility3,${version},https://github.com/volatilityfoundation/volatility3,Advanced memory forensics framework"
 }
 
 function install_trid() {
@@ -84,16 +74,9 @@ function install_trid() {
     add-aliases trid
     add-history trid
     add-test-command "trid '-?'; trid | grep 'This help'"
-    add-to-list "trid,https://mark0.net/soft-trid-e.html,File identifier"
-}
-
-function install_peepdf() {
-    colorecho "Installing peepdf"
-    git -C /opt/tools clone --depth 1 https://github.com/jesparza/peepdf
-    add-aliases peepdf
-    add-history peepdf
-    add-test-command "peepdf.py --help"
-    add-to-list "peepdf,https://github.com/jesparza/peepdf,peepdf is a Python tool to explore PDF files in order to find out if the file can be harmful or not."
+    local version
+    version="$(cli_version trid --version)"
+    add-to-list "trid,${version},https://mark0.net/soft-trid-e.html,File identifier"
 }
 
 function install_jadx() {
@@ -111,7 +94,9 @@ function install_jadx() {
     ln -v -s /opt/tools/jadx/bin/jadx-gui /opt/tools/bin/jadx-gui
     add-history jadx
     add-test-command "jadx --help"
-    add-to-list "jadx,https://github.com/skylot/jadx,Java decompiler"
+    local version
+    version="$(cli_version jadx --version)"
+    add-to-list "jadx,${version},https://github.com/skylot/jadx,Java decompiler"
 }
 
 function install_chainsaw() {
@@ -126,7 +111,9 @@ function install_chainsaw() {
     rm -rf target/release/{deps,build,.fingerprint}
     add-history chainsaw
     add-test-command "chainsaw --help"
-    add-to-list "chainsaw,https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
+    local version
+    version="$(git_version /opt/tools/chainsaw)"
+    add-to-list "chainsaw,${version},https://github.com/WithSecureLabs/chainsaw,Rapidly Search and Hunt through Windows Forensic Artefacts"
 }
 
 function install_oletools() {
@@ -135,7 +122,9 @@ function install_oletools() {
     pipx install --system-site-packages oletools
     add-history oletools
     add-test-command "olevba --help"
-    add-to-list "oletools,https://github.com/decalage2/oletools,python tools to analyze MS OLE2 files and MS Office documents - for malware analysis - forensics and debugging."
+    local version
+    version="$(pipx_version oletools)"
+    add-to-list "oletools,${version},https://github.com/decalage2/oletools,python tools to analyze MS OLE2 files and MS Office documents - for malware analysis - forensics and debugging."
 }
 
 # Package dedicated to forensic tools
@@ -146,10 +135,8 @@ function package_forensic() {
     start_time=$(date +%s)
     install_forensic_apt_tools
     install_binwalk                 # Tool to find embedded files
-    install_volatility2             # Memory analysis tool
-    install_volatility3             # Memory analysis tool v2
+    install_volatility3             # Memory analysis tool
     install_trid                    # filetype detection tool
-    install_peepdf                  # PDF analysis
     install_jadx                    # Dex to Java decompiler
     install_chainsaw                # Rapidly Search and Hunt through Windows Forensic Artefacts
     install_oletools                # Tools to analyze MS OLE2 files and MS Office documents

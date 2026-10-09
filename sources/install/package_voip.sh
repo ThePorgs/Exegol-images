@@ -9,7 +9,9 @@ function install_sipvicious() {
     pipx install --system-site-packages git+https://github.com/enablesecurity/sipvicious.git
     add-history sipvicious_svcrack
     add-test-command "sipvicious_svcrack --version"
-    add-to-list "sipvicious,https://github.com/enablesecurity/sipvicious,Enumeration and MITM tool for SIP devices"
+    local version
+    version="$(pipx_version sipvicious.git)"
+    add-to-list "sipvicious,${version},https://github.com/enablesecurity/sipvicious,Enumeration and MITM tool for SIP devices"
 }
 
 # Package dedicated to VOIP/SIP pentest tools

@@ -14,8 +14,11 @@ function install_wordlists_apt_tools() {
     add-test-command "crunch --help" # Wordlist generator
     add-test-command "cupp --help"   # User password profiler
 
-    add-to-list "crunch,https://github.com/crunchsec/crunch,A wordlist generator where you can specify a standard character set or a character set you specify."
-    add-to-list "cupp,https://github.com/Mebus/cupp,Cupp is a tool used to generate personalized password lists based on target information."
+    local version
+    version="$(apt_version crunch)"
+    add-to-list "crunch,${version},https://github.com/crunchsec/crunch,A wordlist generator where you can specify a standard character set or a character set you specify."
+    version="$(apt_version cupp)"
+    add-to-list "cupp,${version},https://github.com/Mebus/cupp,Cupp is a tool used to generate personalized password lists based on target information."
 }
 
 function install_cewl() {
@@ -28,7 +31,9 @@ function install_cewl() {
     add-aliases cewl
     add-history cewl
     add-test-command "cewl --help"
-    add-to-list "cewl,https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results"
+    local version
+    version="$(git_version /opt/tools/CeWL)"
+    add-to-list "cewl,${version},https://digi.ninja/projects/cewl.php,Generates custom wordlists by spidering a target's website and parsing the results"
 }
 
 function install_cewler() {
@@ -37,7 +42,9 @@ function install_cewler() {
     pipx install --system-site-packages cewler
     add-history cewler
     add-test-command "cewler --help"
-    add-to-list "cewler,https://github.com/roys/cewler,CeWL alternative in Python"
+    local version
+    version="$(pipx_version cewler)"
+    add-to-list "cewler,${version},https://github.com/roys/cewler,CeWL alternative in Python"
 }
 
 function install_seclists() {
@@ -52,9 +59,12 @@ function install_seclists() {
     mkdir -p /usr/share/wordlists
     ln -v -s /opt/lists/seclists /usr/share/wordlists/seclists
     ln -v -s /opt/lists/rockyou.txt /usr/share/wordlists/rockyou.txt
+    rm /opt/lists/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz
     add-test-command "[[ -f '/opt/lists/rockyou.txt' ]]"
     add-test-command "[[ -d '/opt/lists/seclists/Discovery/' ]]"
-    add-to-list "seclists,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
+    local version
+    version=""""
+    add-to-list "seclists,${version},https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
 }
 
 function install_pass_station() {
@@ -65,7 +75,9 @@ function install_pass_station() {
     add-aliases pass-station
     add-history pass-station
     add-test-command "pass-station --help"
-    add-to-list "pass,https://github.com/hashcat/hashcat,TODO"
+    local version
+    version="$(gem_version pass-station)"
+    add-to-list "pass,${version},https://github.com/hashcat/hashcat,TODO"
 }
 
 function install_username-anarchy() {
@@ -74,7 +86,9 @@ function install_username-anarchy() {
     add-aliases username-anarchy
     add-history username-anarchy
     add-test-command "username-anarchy --help"
-    add-to-list "username-anarchy,https://github.com/urbanadventurer/username-anarchy,Tools for generating usernames when penetration testing. Usernames are half the password brute force problem."
+    local version
+    version="$(git_version /opt/tools/username-anarchy)"
+    add-to-list "username-anarchy,${version},https://github.com/urbanadventurer/username-anarchy,Tools for generating usernames when penetration testing. Usernames are half the password brute force problem."
 }
 
 function install_genusernames() {
@@ -92,7 +106,9 @@ function install_genusernames() {
     } >> ~/.zshrc
     add-history genusernames
     add-test-command "genusernames 'john doe'"
-    add-to-list "genusernames,https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."
+    local version
+    version="$(cli_version genusernames --version)"
+    add-to-list "genusernames,${version},https://gitlab.com/-/snippets/2480505/raw/main/bash,GenUsername is a Python tool for generating a list of usernames based on a name or email address."
 }
 
 function install_onelistforall() {
@@ -101,7 +117,9 @@ function install_onelistforall() {
     wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallmicro.txt -P /opt/lists/
     wget https://raw.githubusercontent.com/six2dez/OneListForAll/main/onelistforallshort.txt -P /opt/lists/
     add-test-command "[[ -f '/opt/lists/onelistforallshort.txt' ]]"
-    add-to-list "onelistforall,https://github.com/six2dez/OneListForAll,Rockyou for web fuzzing"
+    local version
+    version="$(cli_version onelistforall --version)"
+    add-to-list "onelistforall,${version},https://github.com/six2dez/OneListForAll,Rockyou for web fuzzing"
 }
 
 
@@ -136,15 +154,19 @@ function install_rules(){
     install_rules_from_repo "NSAKEY" "nsa-rules" "master" \
         "_NSAKEY.v1.dive.rule" \
         "_NSAKEY.v2.dive.rule"
-    add-to-list "NSAKEY rules,https://github.com/NSAKEY/nsa-rules,Password cracking rules and masks for hashcat"
+    local version
+    version=""""
+    add-to-list "NSAKEY rules,${version},https://github.com/NSAKEY/nsa-rules,Password cracking rules and masks for hashcat"
 
     install_rules_from_repo "praetorian-inc" "Hob0Rules" "master" \
         "d3adhob0.rule" \
         "hob064.rule"
-    add-to-list "Hob0Rules rules,https://github.com/praetorian-inc/Hob0Rules,Password cracking rules for Hashcat based on statistics and industry patterns"
+    version=""""
+    add-to-list "Hob0Rules rules,${version},https://github.com/praetorian-inc/Hob0Rules,Password cracking rules for Hashcat based on statistics and industry patterns"
 
     install_rules_from_repo "stealthsploit" "OneRuleToRuleThemStill" "main" "OneRuleToRuleThemStill.rule"
-    add-to-list "OneRuleToRuleThemStill rules,https://github.com/stealthsploit/OneRuleToRuleThemStill,One rule to crack all passwords. A revamped - optimised and updated version of the original OneRuleToRuleThemAll hashcat rule"
+    version=""""
+    add-to-list "OneRuleToRuleThemStill rules,${version},https://github.com/stealthsploit/OneRuleToRuleThemStill,One rule to crack all passwords. A revamped - optimised and updated version of the original OneRuleToRuleThemAll hashcat rule"
 
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
@@ -160,7 +182,8 @@ function install_rules(){
         "rules/private.v5/pantagrule.private.v5.one.gz" \
         "rules/private.v5/pantagrule.private.v5.popular.rule.gz" \
         "rules/private.v5/pantagrule.private.v5.random.rule.gz"
-    add-to-list "Pantagrule rules,https://github.com/rarecoil/pantagrule,large hashcat rulesets generated from real-world compromised passwords"
+    version=""""
+    add-to-list "Pantagrule rules,${version},https://github.com/rarecoil/pantagrule,large hashcat rulesets generated from real-world compromised passwords"
 }
 
 
