@@ -39,7 +39,7 @@ function add-to-list() {
 
 function normalize_version() {
     local version="${1:-}"
-    local y m d
+    local y m d base
     # trim whitespace / newlines
     version="$(printf '%s' "$version" | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     # strip a single leading v/V before a digit
@@ -57,14 +57,48 @@ function normalize_version() {
         d="${BASH_REMATCH[1]:6:2}"
         version="${y}-${m}-${d}"
     fi
+    # Debian / PEP 440 local suffix: 3.15.0+dfsg-2.1+deb13u3, 1.7+git…, 2.0.18+incompatible
+    if [[ "$version" == *+* ]]; then
+        version="${version%%+*}"
+    fi
+    # Debian tilde suffix: 153.4.0esr-1~deb13u1, 0.7.91~git…
+    if [[ "$version" == *~* ]]; then
+        version="${version%%~*}"
+    fi
+    # Python .devN / .postN (0.14.0.dev0 → 0.14.0)
+    version="$(printf '%s' "$version" | sed -E 's/\.(dev|post)[0-9]+.*//')"
+    # git describe / smali noise: 2.6.1-gabcdef, 2.5.2.gitHASH-debian, 1.4.2-build.84
+    version="$(printf '%s' "$version" | sed -E \
+        -e 's/-g[0-9a-fA-F]+$//' \
+        -e 's/\.git[0-9a-fA-F].*$//' \
+        -e 's/-debian$//' \
+        -e 's/-build\..*$//')"
+    # Debian packaging revision (-1, -2.1, -10.1) but never ISO dates YYYY-MM-DD
+    if [[ ! "$version" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
+        && [[ "$version" =~ ^(.*)-([0-9]+([.][0-9]+)*)$ ]]; then
+        base="${BASH_REMATCH[1]}"
+        # keep prerelease-looking bases (1.2.3-rc1 already handled above as non-numeric rev)
+        version="$base"
+    fi
+    # WireGuard-style X.Y.YYYYMMDD (often >10 chars) → YYYY-MM-DD
+    if [[ "$version" =~ ^[0-9]+\.[0-9]+\.([0-9]{8})$ ]]; then
+        y="${BASH_REMATCH[1]:0:4}"
+        m="${BASH_REMATCH[1]:4:2}"
+        d="${BASH_REMATCH[1]:6:2}"
+        version="${y}-${m}-${d}"
+    fi
     # Reject placeholder / unusable versions (keep real 0.1.0 releases)
     case "$version" in
-        ''|0.0.0|unknown|null|none|Undefined|undefined)
+        ''|0.0|0.0.0|unknown|null|none|Undefined|undefined)
             return 0
             ;;
     esac
     # Reject 0.0.0+local / 0.0.0.post... style placeholders
     if [[ "$version" == 0.0.0+* || "$version" == 0.0.0.* ]]; then
+        return 0
+    fi
+    # Changelog-friendly cap: drop leftovers still longer than 10 chars
+    if [[ ${#version} -gt 10 ]]; then
         return 0
     fi
     printf '%s' "$version"

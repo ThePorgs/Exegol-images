@@ -1073,7 +1073,8 @@ function install_postman() {
     add-test-command "which postman"
     #add-test-gui-command "postman"
     local version
-    version="$(cli_version postman --version)"
+    # postman --version prints Electron/Chromium noise; package.json has the real app version
+    version="$(normalize_version "$(jq -r '.version // empty' /opt/tools/postman/app/resources/app/package.json 2>/dev/null || true)")"
     add-to-list "postman,${version},https://www.postman.com/,API platform for testing APIs"
 }
 
@@ -1120,7 +1121,8 @@ function install_caido() {
     add-test-gui-command "caido --no-sandbox"
     add-test-command "caido-cli --help"
     local version
-    version="$(cli_version caido --version)"
+    # GUI electron binary is noisy; release JSON already has the version we downloaded
+    version="$(normalize_version "$(printf '%s' "$caido_json" | jq -r '.version // empty')")"
     add-to-list "caido,${version},https://docs.caido.io/quickstart/,A lightweight web security auditing toolkit."
 }
 
