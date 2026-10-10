@@ -1377,6 +1377,38 @@ function install_relayinformer() {
     add-to-list "RelayInformer,${version},https://github.com/zyn3rgy/RelayInformer,Determine EPA enforcement levels of popular NTLM relay targets from a Linux host."
 }
 
+function install_wsuks() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing wsuks"
+    fapt python3-nftables nftables
+    git -C /opt/tools/ clone --depth 1 https://github.com/NeffIsBack/wsuks
+    rm -rf /opt/tools/wsuks/media
+    cd /opt/tools/wsuks || exit
+    python3 -m venv --system-site-packages ./venv
+    wsuks_site_packages="$(./venv/bin/python3 -c 'import sysconfig; print(sysconfig.get_path("purelib"))')"
+    # Reuse original Impacket; wsuks declares <0.13 but this layout deliberately uses the image's version.
+    /opt/tools/impacket-og/venv/bin/python3 -c 'import site; print(site.getsitepackages()[0])' > "${wsuks_site_packages}/impacket-og.pth"
+    # Expose only Debian's nftables package to pyenv, including its schema.json resource.
+    ln -v -s "$(/usr/bin/python3 -c 'import nftables; from pathlib import Path; print(Path(nftables.__file__).parent)')" "${wsuks_site_packages}/nftables"
+    source ./venv/bin/activate
+    pip3 install --no-cache-dir --no-deps .
+    pip3 install --no-cache-dir \
+        'scapy>=2.6.1,<3' 'termcolor>=2.4,<3' 'bs4>=0.0.2,<0.0.3' \
+        'lxml>=6,<7' 'netifaces>=0.11,<0.12' 'registrypol>=1,<2' jsonschema
+    pip3 uninstall -y pip setuptools wheel
+    deactivate
+    find ./venv -type d -name '__pycache__' -prune -exec rm -rf {} +
+    ln -v -s /opt/tools/wsuks/venv/bin/wsuks /opt/tools/bin/wsuks
+    cd || exit
+    add-history wsuks
+    # Plain --help can raise an argparse AssertionError when usage wraps on Python 3.11; serve-only help works.
+    add-test-command "wsuks --serve-only --help"
+    add-test-command "wsuks --version"
+    add-test-command "/opt/tools/wsuks/venv/bin/python3 -c 'from nftables import Nftables; assert Nftables().json_validate({\"nftables\": []})'"
+    add-test-command "/opt/tools/wsuks/venv/bin/python3 -c 'import impacket; from pathlib import Path; assert Path(impacket.__file__).resolve().is_relative_to(Path(\"/opt/tools/impacket-og\"))'"
+    add-to-list "wsuks,https://github.com/NeffIsBack/wsuks,Automates WSUS discovery and HTTP or HTTPS update interception."
+}
+
 function install_PassTheCert() {
     colorecho "Installing PassTheCert"
     git -C /opt/tools/ clone --depth 1 https://github.com/AlmondOffSec/PassTheCert
@@ -2078,6 +2110,7 @@ function package_ad() {
     install_daclsearch             # Exhaustive search and flexible filtering of Active Directory ACEs
     install_impacket_og            # Impacket scripts (original version)
     install_relayinformer           # Determine EPA enforcement levels of popular NTLM relay targets
+    install_wsuks                  # WSUS discovery and update interception
     install_bloodbash              # Bloodhound in terminal
     install_evenmonitor            # Monitor the Windows Event Log with grep-like features or filtering for specific Event IDs
     install_tdo_dump               # Dump trusted domain objects to extract trust credentials
