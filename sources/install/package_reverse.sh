@@ -90,7 +90,10 @@ function install_angr() {
     cd /opt/tools/angr || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip install angr
+    # Python 3.11 resolves angr 9.2.x. pyvex 9.2.213 depends on an unpinned bitstring,
+    # and bitstring 5.0.0 removed ConstBitStream, which that pyvex still references.
+    # angr 10 (Python >=3.12) already pins bitstring<5.
+    pip install angr 'bitstring<5'
     deactivate
     add-aliases angr
     add-test-command "angr -c 'import angr'"
