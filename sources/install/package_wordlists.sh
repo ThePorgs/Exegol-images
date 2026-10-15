@@ -77,7 +77,7 @@ function install_pass_station() {
     add-test-command "pass-station --help"
     local version
     version="$(gem_version pass-station)"
-    add-to-list "pass,${version},https://github.com/hashcat/hashcat,TODO"
+    add-to-list "pass-station,${version},https://github.com/noraj/pass-station,Search default credentials for thousands of products and vendors"
 }
 
 function install_username-anarchy() {
@@ -119,7 +119,7 @@ function install_onelistforall() {
     add-test-command "[[ -f '/opt/lists/onelistforallshort.txt' ]]"
     local version
     version="$(cli_version onelistforall --version)"
-    add-to-list "onelistforall,${version},https://github.com/six2dez/OneListForAll,Rockyou for web fuzzing"
+    add-to-list "onelistforall,${version},https://github.com/six2dez/OneListForAll,Large combined wordlist for web content fuzzing"
 }
 
 

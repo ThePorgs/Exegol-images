@@ -204,7 +204,7 @@ function install_divideandscan() {
     add-test-command "divideandscan --help"
     local version
     version="$(pipx_version DivideAndScan)"
-    add-to-list "divideandscan,${version},https://github.com/snovvcrash/divideandscan,Advanced subdomain scanner"
+    add-to-list "divideandscan,${version},https://github.com/snovvcrash/divideandscan,Split a full port scan into smaller targeted Nmap runs"
 }
 
 function install_chisel() {

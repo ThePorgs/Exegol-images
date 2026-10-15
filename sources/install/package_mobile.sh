@@ -22,9 +22,9 @@ function install_mobile_apt_tools() {
     version="$(apt_version android-tools-adb)"
     add-to-list "android-tools-adb,${version},https://developer.android.com/studio/command-line/adb,A collection of tools for debugging Android applications"
     version="$(apt_version zipalign)"
-    add-to-list "zipalign,${version},https://developer.android.com/studio/command-line/zipalign,arguably the most important step to optimize your APK file"
+    add-to-list "zipalign,${version},https://developer.android.com/studio/command-line/zipalign,Align uncompressed files in an APK so they can be read directly from the archive"
     version="$(apt_version apksigner)"
-    add-to-list "apksigner,${version},https://source.android.com/security/apksigning,arguably the most important step to optimize your APK file"
+    add-to-list "apksigner,${version},https://source.android.com/security/apksigning,Sign Android APKs and verify their signatures"
     version="$(apt_version apktool)"
     add-to-list "apktool,${version},https://github.com/iBotPeaches/Apktool,It is a tool for reverse engineering 3rd party / closed / binary Android apps."
 }

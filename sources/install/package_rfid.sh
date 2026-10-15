@@ -24,13 +24,13 @@ function install_rfid_apt_tools() {
     version="$(apt_version autoconf)"
     add-to-list "autoconf,${version},https://www.gnu.org/software/autoconf/autoconf.html,Tool for producing shell scripts to configure source code packages"
     version="$(apt_version nfct)"
-    add-to-list "nfct,${version},https://github.com/grundid/nfctools,Tool for Near Field Communication (NFC) devices"
+    add-to-list "nfct,${version},https://netfilter.org/projects/libnetfilter_conntrack/index.html,Command-line tool for the netfilter connection tracking system"
     version="$(apt_version pcsc)"
     add-to-list "pcsc,${version},https://pcsclite.apdu.fr/,Middleware for smart card readers"
     version="$(apt_version libnfc)"
-    add-to-list "libnfc,${version},https://github.com/grundid/nfctools,Library for Near Field Communication (NFC) devices"
+    add-to-list "libnfc,${version},https://github.com/nfc-tools/libnfc,Library for Near Field Communication (NFC) devices"
     version="$(apt_version mfcuk)"
-    add-to-list "mfcuk,${version},https://github.com/nfc-tools/mfcuk,Implementation of an attack on Mifare Classic and Plus RFID cards"
+    add-to-list "mfcuk,${version},https://github.com/nfc-tools/mfcuk,Darkside attack against Mifare Classic cards"
 }
 
 function install_mfoc() {
@@ -82,7 +82,7 @@ function install_mfdread() {
     add-test-command "mfdread.py /opt/tools/mfdread/dump.mfd"
     local version
     version="$(git_version /opt/tools/mfdread)"
-    add-to-list "mfdread,${version},https://github.com/zhovner/mfdread,Tool for reading/writing Mifare RFID tags"
+    add-to-list "mfdread,${version},https://github.com/zhovner/mfdread,Parse Mifare Classic dump files into a readable form"
 }
 
 function install_proxmark3() {

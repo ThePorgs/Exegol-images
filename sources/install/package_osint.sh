@@ -153,7 +153,7 @@ function install_pwnedornot() {
     add-test-command "pwnedornot.py --help"
     local version
     version="$(git_version /opt/tools/pwnedOrNot)"
-    add-to-list "pwnedornot,${version},https://github.com/thewhiteh4t/pwnedOrNot,Check if a password has been leaked in a data breach."
+    add-to-list "pwnedornot,${version},https://github.com/thewhiteh4t/pwnedOrNot,Look up passwords leaked for a compromised email address."
 }
 
 function install_phoneinfoga() {
@@ -185,7 +185,7 @@ function install_maigret() {
     add-test-command "maigret --help"
     local version
     version="$(pipx_version maigret.git)"
-    add-to-list "maigret,${version},https://github.com/soxoj/maigret,Collects information about a target email (or domain) from Google and Bing search results"
+    add-to-list "maigret,${version},https://github.com/soxoj/maigret,Collect a dossier on a username across thousands of websites"
 }
 
 function install_linkedin2username() {
@@ -285,7 +285,7 @@ function install_constellation() {
     add-history constellation
     local version
     version="$(cli_version constellation --version)"
-    add-to-list "constellation,${version},https://github.com/constellation-app/Constellation,Find and exploit vulnerabilities in mobile applications."
+    add-to-list "constellation,${version},https://github.com/constellation-app/Constellation,Graph tool for visualising and exploring OSINT data."
 }
 
 function install_maltego() {
@@ -527,7 +527,7 @@ function install_gomapenum() {
     add-test-command "gomapenum --help"
     local version
     version="$(git_version /tmp/GoMapEnum)"
-    add-to-list "GoMapEnum,${version},https://github.com/nodauf/GoMapEnum,Nothing new but existing techniques are brought together in one tool."
+    add-to-list "GoMapEnum,${version},https://github.com/nodauf/GoMapEnum,Enumerate users and spray passwords against Azure ADFS OWA O365 and Teams."
 }
 
 function install_pymeta() {
@@ -546,7 +546,7 @@ function install_pymeta() {
   add-test-command "pymeta -h"
   local version
   version="$(git_version /opt/tools/pymeta)"
-  add-to-list "pymeta,${version},https://github.com/m8sec/pymeta,Google and Bing scraping osint tool"
+  add-to-list "pymeta,${version},https://github.com/m8sec/pymeta,Download public documents and extract metadata such as usernames and software"
 }
 
 function install_recon_ng() {

@@ -102,7 +102,7 @@ function install_kiterunner() {
     add-test-command "kr --help"
     local version
     version="$(git_version /opt/tools/kiterunner)"
-    add-to-list "kiterunner,${version},https://github.com/assetnote/kiterunner,Tool for operating Active Directory environments."
+    add-to-list "kiterunner,${version},https://github.com/assetnote/kiterunner,Discover hidden API routes and web content."
 }
 
 function install_amass() {
@@ -188,7 +188,7 @@ function install_gopherus() {
     add-test-command "gopherus.py --help"
     local version
     version="$(git_version /opt/tools/Gopherus)"
-    add-to-list "gopherus,${version},https://github.com/tarunkant/Gopherus,Gopherus is a simple command line tool for exploiting vulnerable Gopher servers."
+    add-to-list "gopherus,${version},https://github.com/tarunkant/Gopherus,Generate Gopher payloads for SSRF attacks against common services."
 }
 
 function install_nosqlmap() {
@@ -280,7 +280,7 @@ function install_bolt() {
     add-test-command "bolt.py --help"
     local version
     version="$(git_version /opt/tools/Bolt)"
-    add-to-list "bolt,${version},https://github.com/s0md3v/bolt,Bolt crawls the target website to the specified depth and stores all the HTML forms found in a database for further processing."
+    add-to-list "bolt,${version},https://github.com/s0md3v/bolt,Scan websites for Cross-Site Request Forgery in HTML forms."
 }
 
 function install_fuxploider() {
@@ -320,7 +320,7 @@ function install_patator() {
     add-test-command "patator.py ftp_login --help"
     local version
     version="$(git_version /opt/tools/patator)"
-    add-to-list "patator,${version},https://github.com/lanjelot/patator,Login scanner."
+    add-to-list "patator,${version},https://github.com/lanjelot/patator,Multi-protocol brute-forcer for authentication."
 }
 
 function install_joomscan() {
@@ -549,7 +549,7 @@ function install_timing_attack() {
     add-test-command "timing_attack --help"
     local version
     version="$(gem_version timing_attack)"
-    add-to-list "timing,${version},https://github.com/ffleming/timing_attack,Tool to generate a timing profile for a given command."
+    add-to-list "timing,${version},https://github.com/ffleming/timing_attack,Perform timing attacks against web applications."
 }
 
 function install_updog() {
@@ -816,7 +816,7 @@ function install_httpx() {
     add-test-command "httpx --help"
     local version
     version="$(go_version httpx)"
-    add-to-list "httpx,${version},https://github.com/projectdiscovery/httpx,A tool for identifying web technologies and vulnerabilities / including outdated software versions and weak encryption protocols."
+    add-to-list "httpx,${version},https://github.com/projectdiscovery/httpx,Probe HTTP servers for status codes titles and technologies."
 }
 
 function install_alterx() {
@@ -960,7 +960,7 @@ function install_smuggler() {
     add-test-command "smuggler.py --help"
     local version
     version="$(git_version /opt/tools/smuggler)"
-    add-to-list "smuggler,${version},https://github.com/defparam/smuggler,Smuggler is a tool that helps pentesters and red teamers to smuggle data into and out of the network even when there are multiple layers of security in place."
+    add-to-list "smuggler,${version},https://github.com/defparam/smuggler,Test websites for HTTP request smuggling."
 }
 
 function install_php_filter_chain_generator() {

@@ -49,7 +49,7 @@ function install_shellerator() {
     add-test-command "shellerator --help"
     local version
     version="$(pipx_version shellerator)"
-    add-to-list "shellerator,${version},https://github.com/ShutdownRepo/Shellerator,a simple command-line tool for generating shellcode"
+    add-to-list "shellerator,${version},https://github.com/ShutdownRepo/Shellerator,Generate bind and reverse shell one-liners in several languages"
 }
 
 function install_uberfile() {

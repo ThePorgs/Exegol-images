@@ -517,7 +517,7 @@ function install_openvpn() {
   add-test-command "openvpn --version"
   local version
   version="$(cli_version openvpn --version)"
-  add-to-list "OpenVPN,${version},https://openvpn.net/,Fast and Easy Zero-Trust VPN Fully in Your Control"
+  add-to-list "OpenVPN,${version},https://openvpn.net/,Open-source VPN that tunnels network traffic over TLS"
 }
 
 function install_wireguard() {

@@ -13,7 +13,7 @@ function install_tls-map() {
     add-test-command "tls-map --help"
     local version
     version="$(gem_version tls-map)"
-    add-to-list "tls-map,${version},https://github.com/sec-it/tls-map,tls-map is a library for mapping TLS cipher algorithm names."
+    add-to-list "tls-map,${version},https://github.com/sec-it/tls-map,CLI and library that maps TLS cipher names across IANA OpenSSL GnuTLS and NSS."
 }
 
 function install_rsactftool() {

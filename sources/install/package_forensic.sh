@@ -26,7 +26,7 @@ function install_forensic_apt_tools() {
     version="$(apt_version testdisk)"
     add-to-list "testdisk,${version},https://github.com/cgsecurity/testdisk,Partition recovery and file undelete utility"
     version="$(apt_version fdisk)"
-    add-to-list "fdisk,${version},https://github.com/karelzak/util-linux,Collection of basic system utilities / including fdisk partitioning tool"
+    add-to-list "fdisk,${version},https://github.com/karelzak/util-linux,Create and manipulate disk partition tables"
     version="$(apt_version sleuthkit)"
     add-to-list "sleuthkit,${version},https://github.com/sleuthkit/sleuthkit,Forensic toolkit to analyze volume and file system data"
 }

@@ -27,7 +27,7 @@ function install_steganography_apt_tools() {
     version="$(apt_version steghide)"
     add-to-list "steghide,${version},https://github.com/StefanoDeVuono/steghide,steghide is a steganography program that is able to hide data in various kinds of image and audio files."
     version="$(apt_version exif)"
-    add-to-list "exif,${version},https://exiftool.org/,Utility to read / write and edit metadata in image / audio and video files"
+    add-to-list "exif,${version},https://github.com/libexif/exif,Show and edit EXIF metadata in JPEG files"
     version="$(apt_version exiv2)"
     add-to-list "exiv2,${version},https://github.com/Exiv2/exiv2,Image metadata library and toolset"
     version="$(apt_version hexedit)"

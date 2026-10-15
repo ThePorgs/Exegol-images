@@ -26,7 +26,7 @@ function install_cracking_apt_tools() {
     version="$(apt_version pdfcrack)"
     add-to-list "pdfcrack,${version},https://github.com/robins/pdfcrack,A tool for cracking password-protected PDF files"
     version="$(apt_version bruteforce-luks)"
-    add-to-list "bruteforce-luks,${version},https://github.com/glv2/bruteforce-luks,A tool to help recover encrypted LUKS2 containers"
+    add-to-list "bruteforce-luks,${version},https://github.com/glv2/bruteforce-luks,Recover the password of a LUKS encrypted volume"
 }
 
 function install_john() {
@@ -70,7 +70,7 @@ function install_name-that-hash() {
     add-test-command "nth --help"
     local version
     version="$(pipx_version name-that-hash)"
-    add-to-list "name-that-hash,${version},https://github.com/HashPals/Name-That-Hash,Online tool for identifying hashes."
+    add-to-list "name-that-hash,${version},https://github.com/HashPals/Name-That-Hash,Identify the type of a hash from the command line."
 }
 
 function install_haiti() {
@@ -111,7 +111,7 @@ function install_pkcrack() {
     add-test-command 'pkcrack --help |& grep "Usage"'
     local version
     version="$(git_version /opt/tools/pkcrack)"
-    add-to-list "pkcrack,${version},https://github.com/keyunluo/pkcrack,tool to generate wordlists of passwords containing cities at a defined distance around the client city"
+    add-to-list "pkcrack,${version},https://github.com/keyunluo/pkcrack,Known-plaintext attack against legacy PKZIP encryption"
 }
 
 function install_firefox_decrypt() {

@@ -372,7 +372,7 @@ function install_aclpwn() {
     add-test-command "aclpwn -h"
     local version
     version="$(pipx_version aclpwn)"
-    add-to-list "aclpwn,${version},https://github.com/aas-n/aclpwn.py,Tool for testing the security of Active Directory access controls."
+    add-to-list "aclpwn,${version},https://github.com/aas-n/aclpwn.py,Exploit Active Directory ACL paths found by BloodHound."
 }
 
 function install_impacket() {
@@ -527,7 +527,7 @@ function install_darkarmour() {
     add-test-command "darkarmour.py --help"
     local version
     version="$(git_version /opt/tools/darkarmour)"
-    add-to-list "darkarmour,${version},https://github.com/bats3c/darkarmour,a tool to detect and evade common antivirus products"
+    add-to-list "darkarmour,${version},https://github.com/bats3c/darkarmour,Obfuscate Windows payloads to evade antivirus"
 }
 
 function install_amber() {
@@ -548,7 +548,7 @@ function install_amber() {
     add-test-command "amber --help"
     local version
     version="$(go_version amber)"
-    add-to-list "amber,${version},https://github.com/EgeBalci/amber,Forensic tool to recover browser history / cookies and credentials"
+    add-to-list "amber,${version},https://github.com/EgeBalci/amber,Pack a Windows executable into position-independent shellcode"
 }
 
 function install_powershell() {
@@ -660,7 +660,7 @@ function install_enyx() {
     add-test-command "enyx.py"
     local version
     version="$(git_version /opt/tools/Enyx)"
-    add-to-list "enyx,${version},https://github.com/trickster0/enyx,Framework for building offensive security tools."
+    add-to-list "enyx,${version},https://github.com/trickster0/enyx,Enumerate SNMP services over IPv6."
 }
 
 function install_enum4linux-ng() {
@@ -741,7 +741,7 @@ function install_oaburl() {
     add-test-command "oaburl.py --help"
     local version
     version="$(cli_version oaburl --version)"
-    add-to-list "oaburl,${version},https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py,Find Open redirects and other vulnerabilities."
+    add-to-list "oaburl,${version},https://gist.githubusercontent.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438/raw/96ec2f68a905eed4d519d9734e62edba96fd15ff/oaburl.py,Retrieve the Exchange Offline Address Book URL from a server."
 }
 
 function install_lnkup() {
@@ -854,7 +854,7 @@ function install_ntlmv1-multi() {
     add-test-command "ntlmv1-multi.py --ntlmv1 SV01$::DOMAIN.LOCAL:AD1235DEAC142CD5FC2D123ADCF51A111ADF45C2345ADCF5:AD1235DEAC142CD5FC2D123ADCF51A111ADF45C2345ADCF5:1122334455667788"
     local version
     version="$(git_version /opt/tools/ntlmv1-multi)"
-    add-to-list "ntlmv1-multi,${version},https://github.com/evilmog/ntlmv1-multi,Exploit a vulnerability in Microsoft Windows to gain system-level access."
+    add-to-list "ntlmv1-multi,${version},https://github.com/evilmog/ntlmv1-multi,Convert NTLMv1 responses into formats accepted by hashcat and crack.sh."
     # exit the ntlmv1-multi workdir, since it sets the python version to 3.14 and could mess up later installs
     cd || exit
 }
@@ -879,7 +879,7 @@ function install_gosecretsdump() {
     add-test-command "gosecretsdump -version"
     local version
     version="$(go_version gosecretsdump)"
-    add-to-list "gosecretsdump,${version},https://github.com/c-sto/gosecretsdump,Implements NTLMSSP network authentication protocol in Go"
+    add-to-list "gosecretsdump,${version},https://github.com/c-sto/gosecretsdump,Dump NTDS hashes and registry secrets in the style of secretsdump"
 }
 
 function install_adidnsdump() {
@@ -923,7 +923,7 @@ function install_bloodhound-import() {
     add-test-command "bloodhound-import --help"
     local version
     version="$(pipx_version bloodhound-import)"
-    add-to-list "bloodhound-import,${version},https://github.com/fox-it/BloodHound.py,Import data into BloodHound for analyzing active directory trust relationships"
+    add-to-list "bloodhound-import,${version},https://github.com/fox-it/bloodhound-import,Import BloodHound collector data into a Neo4j database"
 }
 
 function install_bloodhound-quickwin() {
@@ -939,7 +939,7 @@ function install_bloodhound-quickwin() {
     add-test-command "bloodhound-quickwin --help"
     local version
     version="$(git_version /opt/tools/bloodhound-quickwin)"
-    add-to-list "bloodhound-quickwin,${version},https://github.com/kaluche/bloodhound-quickwin,A tool for BloodHounding on Windows machines without .NET or Powershell installed"
+    add-to-list "bloodhound-quickwin,${version},https://github.com/kaluche/bloodhound-quickwin,Print quick wins from a BloodHound Neo4j database"
 }
 
 function install_ldapsearch-ad() {
@@ -978,7 +978,7 @@ function install_petitpotam() {
     add-test-command "petitpotam.py --help"
     local version
     version="$(git_version /opt/tools/PetitPotam)"
-    add-to-list "petitpotam,${version},https://github.com/topotam/PetitPotam,Windows machine account manipulation"
+    add-to-list "petitpotam,${version},https://github.com/topotam/PetitPotam,Coerce Windows hosts to authenticate via the MS-EFSRPC protocol"
 }
 
 function install_dfscoerce() {
@@ -1005,7 +1005,7 @@ function install_coercer() {
     add-test-command "coercer --help"
     local version
     version="$(pipx_version Coercer)"
-    add-to-list "coercer,${version},https://github.com/p0dalirius/coercer,DFS-R target coercion tool"
+    add-to-list "coercer,${version},https://github.com/p0dalirius/coercer,Coerce Windows servers to authenticate to an attacker through many RPC methods"
 }
 
 function install_pkinittools() {
@@ -1082,7 +1082,7 @@ function install_pcredz() {
     add-test-command "PCredz --help"
     local version
     version="$(git_version /opt/tools/PCredz)"
-    add-to-list "pcredz,${version},https://github.com/lgandx/PCredz,PowerShell credential dumper"
+    add-to-list "pcredz,${version},https://github.com/lgandx/PCredz,Extract credentials from a packet capture or a live network interface"
 }
 
 function install_pywsus() {
@@ -1098,7 +1098,7 @@ function install_pywsus() {
     add-test-command "pywsus.py --help"
     local version
     version="$(git_version /opt/tools/pywsus)"
-    add-to-list "pywsus,${version},https://github.com/GoSecure/pywsus,Python implementation of a WSUS client"
+    add-to-list "pywsus,${version},https://github.com/GoSecure/pywsus,Offensive WSUS server for pushing updates to Windows clients"
 }
 
 function install_donpapi() {
@@ -1121,7 +1121,7 @@ function install_webclientservicescanner() {
     add-test-command "webclientservicescanner --help"
     local version
     version="$(pipx_version webclientservicescanner)"
-    add-to-list "webclientservicescanner,${version},https://github.com/Hackndo/webclientservicescanner,Scans for web service endpoints"
+    add-to-list "webclientservicescanner,${version},https://github.com/Hackndo/webclientservicescanner,Find hosts where the WebClient service is running"
 }
 
 function install_certipy() {
@@ -1137,7 +1137,7 @@ function install_certipy() {
     add-test-command "certipy --version"
     local version
     version="$(git_version /opt/tools/Certipy)"
-    add-to-list "certipy,${version},https://github.com/ly4k/Certipy,Python tool to create and sign certificates"
+    add-to-list "certipy,${version},https://github.com/ly4k/Certipy,Enumerate and abuse Active Directory Certificate Services"
 }
 
 function install_shadowcoerce() {
@@ -1153,7 +1153,7 @@ function install_shadowcoerce() {
     add-test-command "shadowcoerce.py --help"
     local version
     version="$(git_version /opt/tools/ShadowCoerce)"
-    add-to-list "shadowcoerce,${version},https://github.com/ShutdownRepo/shadowcoerce,Utility for bypassing the Windows Defender antivirus by hiding a process within a legitimate process."
+    add-to-list "shadowcoerce,${version},https://github.com/ShutdownRepo/shadowcoerce,Coerce a Windows host to authenticate via the MS-FSRVP protocol."
 }
 
 function install_gmsadumper() {
@@ -1169,7 +1169,7 @@ function install_gmsadumper() {
     add-test-command "gMSADumper.py --help"
     local version
     version="$(git_version /opt/tools/gMSADumper)"
-    add-to-list "gmsadumper,${version},https://github.com/micahvandeusen/gMSADumper,A tool for extracting credentials and other information from a Microsoft Active Directory domain."
+    add-to-list "gmsadumper,${version},https://github.com/micahvandeusen/gMSADumper,Read Group Managed Service Account password blobs the current user can access."
 }
 
 function install_pylaps() {
@@ -1185,7 +1185,7 @@ function install_pylaps() {
     add-test-command "pyLAPS.py --help"
     local version
     version="$(git_version /opt/tools/pyLAPS)"
-    add-to-list "pylaps,${version},https://github.com/p0dalirius/pylaps,Utility for enumerating and querying LDAP servers."
+    add-to-list "pylaps,${version},https://github.com/p0dalirius/pylaps,Read and write LAPS passwords stored in Active Directory."
 }
 
 function install_pyfinduncommonshares() {
@@ -1228,7 +1228,7 @@ function install_crackhound() {
     add-test-command "crackhound.py --help"
     local version
     version="$(git_version /opt/tools/CrackHound)"
-    add-to-list "crackhound,${version},https://github.com/trustedsec/crackhound,A fast WPA/WPA2/WPA3 WiFi Handshake capture / password recovery and analysis tool"
+    add-to-list "crackhound,${version},https://github.com/trustedsec/crackhound,Load cracked plaintext passwords into a BloodHound Neo4j database"
 }
 
 function install_kerbrute() {
@@ -1252,7 +1252,7 @@ function install_ldeep() {
     add-test-command "ldeep --help"
     local version
     version="$(pipx_version ldeep)"
-    add-to-list "ldeep,${version},https://github.com/franc-pentest/ldeep,ldeep is a tool to discover hidden paths on Web servers."
+    add-to-list "ldeep,${version},https://github.com/franc-pentest/ldeep,LDAP enumeration utility for Active Directory."
 }
 
 function install_rusthound() {
@@ -1287,7 +1287,7 @@ function install_certsync() {
     add-test-command "certsync --help"
     local version
     version="$(pipx_version certsync)"
-    add-to-list "certsync,${version},https://github.com/zblurx/certsync,certsync is a tool that helps you synchronize certificates between two directories."
+    add-to-list "certsync,${version},https://github.com/zblurx/certsync,Dump NT hashes from a domain controller with a golden certificate."
 }
 
 function install_keepwn() {
@@ -1298,7 +1298,7 @@ function install_keepwn() {
     add-test-command "KeePwn --help"
     local version
     version="$(pipx_version KeePwn)"
-    add-to-list "KeePwn,${version},https://github.com/Orange-Cyberdefense/KeePwn,KeePwn is a tool that extracts passwords from KeePass 1.x and 2.x databases."
+    add-to-list "KeePwn,${version},https://github.com/Orange-Cyberdefense/KeePwn,Find KeePass installations and extract secrets from them."
 }
 
 function install_pre2k() {
@@ -1309,7 +1309,7 @@ function install_pre2k() {
     add-test-command "pre2k --help"
     local version
     version="$(pipx_version pre2k)"
-    add-to-list "pre2k,${version},https://github.com/garrettfoster13/pre2k,pre2k is a tool to check if a Windows domain has any pre-2000 Windows 2000 logon names still in use."
+    add-to-list "pre2k,${version},https://github.com/garrettfoster13/pre2k,Find pre-Windows 2000 computer accounts that still use their default password."
 }
 
 function install_msprobe() {
@@ -1320,7 +1320,7 @@ function install_msprobe() {
     add-test-command "msprobe --help"
     local version
     version="$(pipx_version msprobe)"
-    add-to-list "msprobe,${version},https://github.com/puzzlepeaches/msprobe,msprobe is a tool to identify Microsoft Windows hosts and servers that are running certain services."
+    add-to-list "msprobe,${version},https://github.com/puzzlepeaches/msprobe,Find on-prem Microsoft services to target for password spraying and enumeration."
 }
 
 function install_masky() {
@@ -1342,7 +1342,7 @@ function install_roastinthemiddle() {
     add-test-command "roastinthemiddle --help"
     local version
     version="$(pipx_version RITM)"
-    add-to-list "roastinthemiddle,${version},https://github.com/Tw1sm/RITM,RoastInTheMiddle is a tool to intercept and relay NTLM authentication requests."
+    add-to-list "roastinthemiddle,${version},https://github.com/Tw1sm/RITM,Intercept Kerberos traffic and downgrade it to crackable RC4 hashes."
 }
 
 function install_relayinformer() {
@@ -1390,7 +1390,7 @@ function install_PassTheCert() {
     add-test-command "passthecert.py --help"
     local version
     version="$(git_version /opt/tools/PassTheCert)"
-    add-to-list "PassTheCert,${version},https://github.com/AlmondOffSec/PassTheCert,PassTheCert is a tool to extract Active Directory user password hashes from a domain controller's local certificate store."
+    add-to-list "PassTheCert,${version},https://github.com/AlmondOffSec/PassTheCert,Authenticate to LDAP and other Windows services with a client certificate."
 }
 
 function install_bqm() {
@@ -1403,7 +1403,7 @@ function install_bqm() {
     add-test-command "bqm --help"
     local version
     version="$(gem_version bqm)"
-    add-to-list "bqm,${version},https://github.com/Acceis/bqm,Tool to deduplicate custom BloudHound queries from different datasets and merge them in one file."
+    add-to-list "bqm,${version},https://github.com/Acceis/bqm,Tool to deduplicate custom BloodHound queries from different datasets and merge them in one file."
 }
 
 function install_neo4j() {
@@ -1529,7 +1529,7 @@ function install_netexec() {
     add-test-command "netexec --help"
     local version
     version="$(git_version /opt/tools/NetExec)"
-    add-to-list "netexec,${version},https://github.com/Pennyw0rth/NetExec,Network scanner (Crackmapexec updated)."
+    add-to-list "netexec,${version},https://github.com/Pennyw0rth/NetExec,Enumerate and attack network services. Successor to CrackMapExec."
 }
 
 function install_extractbitlockerkeys() {
