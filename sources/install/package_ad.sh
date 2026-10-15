@@ -1044,7 +1044,19 @@ function install_pywhisker() {
 function install_manspider() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Manspider"
-    pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER
+    # pipx install --system-site-packages git+https://github.com/blacklanternsecurity/MANSPIDER  # uncomment when issue is fixed
+    # hatchling rejects the BLS impacket git dependency unless direct references are allowed.
+    # https://github.com/blacklanternsecurity/MANSPIDER/issues/129
+    # When fixed, remove the temp_fix_limit block and restore the pipx install above.
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        git -C /tmp clone --depth 1 https://github.com/blacklanternsecurity/MANSPIDER
+        if ! grep -q 'allow-direct-references' /tmp/MANSPIDER/pyproject.toml; then
+            printf '\n[tool.hatch.metadata]\nallow-direct-references = true\n' >> /tmp/MANSPIDER/pyproject.toml
+        fi
+        pipx install --system-site-packages /tmp/MANSPIDER
+        rm -rf /tmp/MANSPIDER
+    fi
     add-history manspider
     add-test-command "manspider --help"
     local version
