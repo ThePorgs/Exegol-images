@@ -1418,7 +1418,9 @@ function install_wsuks() {
     add-test-command "wsuks --version"
     add-test-command "/opt/tools/wsuks/venv/bin/python3 -c 'from nftables import Nftables; assert Nftables().json_validate({\"nftables\": []})'"
     add-test-command "/opt/tools/wsuks/venv/bin/python3 -c 'import impacket; from pathlib import Path; assert Path(impacket.__file__).resolve().is_relative_to(Path(\"/opt/tools/impacket-og\"))'"
-    add-to-list "wsuks,https://github.com/NeffIsBack/wsuks,Automates WSUS discovery and HTTP or HTTPS update interception."
+    local version
+    version="$(git_version /opt/tools/wsuks)"
+    add-to-list "wsuks,${version},https://github.com/NeffIsBack/wsuks,Automates WSUS discovery and HTTP or HTTPS update interception."
 }
 
 function install_PassTheCert() {
