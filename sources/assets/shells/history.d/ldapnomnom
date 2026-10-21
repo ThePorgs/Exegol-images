@@ -1,0 +1,5 @@
+echo domainadmin | ldapnomnom --server "$DC_IP" --parallel 1
+ldapnomnom --input usernames.txt --output valid_users.txt --server "$DC_IP" --parallel 4
+ldapnomnom --mode generate --minlength 1 --maxlength 5 --charset abcdefghijklmnopqrstuvwxyz --server "$DC_IP" --parallel 8 --output valid_users.txt
+ldapnomnom --input usernames.txt --output valid_users.txt --dnsdomain "$DOMAIN" --maxservers 8 --parallel 8
+ldapnomnom --input usernames.txt --output valid_users.txt --server "$DC_HOST" --port 636 --tlsmode tls --throttle 20 --maxrequests 1000
