@@ -1,0 +1,21 @@
+foundry-cast call $ADDRESS "$FUNCTION_NAME()" --rpc-url $RPC_URL
+
+foundry-cast send $ADDRESS "$FUNCTION_NAME($ARG_TYPES)" $ARG_VALUES --private-key $PK --rpc-url $RPC_URL
+
+foundry-cast storage $ADDRESS $SLOT --rpc-url $RPC_URL
+
+foundry-forge create $CONTRACT_PATH:$CONTRACT_NAME \
+    --broadcast \
+    --rpc-url $RPC_URL \
+    --private-key $PK \
+    --constructor-args $CONSTRUCTOR_ARGS
+
+foundry-cast estimate $ADDRESS "$FUNCTION_NAME($ARG_TYPES)" $ARG_VALUES --rpc-url $RPC_URL
+
+foundry-cast balance $ADDRESS --rpc-url $RPC_URL
+
+foundry-cast interface $ADDRESS --rpc-url $RPC_URL
+
+foundry-cast 4byte-decode $SELECTOR
+
+foundry-cast calldata-decode "$FUNCTION_SIGNATURE" $CALLDATA
