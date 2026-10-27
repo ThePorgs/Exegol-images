@@ -266,7 +266,7 @@ function install_vnc-decrypt() {
     cp /root/sources/assets/vnc-decrypt/vnc-decrypt /opt/tools/bin/vnc-decrypt
     chmod +x /opt/tools/bin/vnc-decrypt
     add-test-command "vnc-decrypt dbd83cfd727a1458 | grep 'password'"
-    add-to-list "vnc-decrypt,N/A,A small shell script that decrypt some VNC passwords."
+    add-to-list "vnc-decrypt,,,Decrypts VNC passwords from config files using the UltraVNC default key or a custom DES key."
 }
 
 # Package dedicated to offensive miscellaneous tools
