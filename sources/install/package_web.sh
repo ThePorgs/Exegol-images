@@ -808,7 +808,6 @@ function install_httprobe() {
 }
 
 function install_httpx() {
-    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httpx"
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
     asdf reshim golang
