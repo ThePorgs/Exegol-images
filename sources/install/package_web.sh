@@ -811,6 +811,7 @@ function install_httpx() {
     colorecho "Installing httpx"
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
     asdf reshim golang
+    add-aliases httpx
     add-history httpx
     add-test-command "httpx --help"
     local version
