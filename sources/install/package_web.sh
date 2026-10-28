@@ -808,12 +808,14 @@ function install_httprobe() {
 }
 
 function install_httpx() {
+    # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing httpx"
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
     asdf reshim golang
-    add-aliases httpx
+    # Debian 13 ships Encode's client as /usr/bin/httpx, which wins over the asdf shim on zsh PATH.
+    ln -sfn "$(asdf which httpx)" /opt/tools/bin/httpx
     add-history httpx
-    add-test-command "httpx --help"
+    add-test-command "httpx -version |& grep -i projectdiscovery"
     local version
     version="$(go_version httpx)"
     add-to-list "httpx,${version},https://github.com/projectdiscovery/httpx,Probe HTTP servers for status codes titles and technologies."
