@@ -364,17 +364,6 @@ function install_mitm6_pip() {
     add-to-list "mitm6,${version},https://github.com/fox-it/mitm6,Tool to conduct a man-in-the-middle attack against IPv6 protocols."
 }
 
-function install_aclpwn() {
-    # CODE-CHECK-WHITELIST=add-aliases
-    colorecho "Installing aclpwn with pip"
-    pipx install --system-site-packages git+https://github.com/aas-n/aclpwn.py
-    add-history aclpwn
-    add-test-command "aclpwn -h"
-    local version
-    version="$(pipx_version aclpwn)"
-    add-to-list "aclpwn,${version},https://github.com/aas-n/aclpwn.py,Exploit Active Directory ACL paths found by BloodHound."
-}
-
 function install_impacket() {
     colorecho "Installing Impacket scripts (Exegol fork)"
     pipx install --system-site-packages git+https://github.com/ThePorgs/impacket
@@ -2013,7 +2002,6 @@ function package_ad() {
     install_cypheroth               # Bloodhound dependency
     # install_mitm6_sources         # Install mitm6 from sources
     install_mitm6_pip               # DNS server misconfiguration exploiter
-    install_aclpwn                  # ACL exploiter
     install_impacket                # Network protocols scripts
     install_pykek                   # AD vulnerability exploiter
     install_lsassy                  # Credentials extracter
