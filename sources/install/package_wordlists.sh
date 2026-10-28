@@ -48,7 +48,7 @@ function install_cewler() {
 }
 
 function install_seclists() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing seclists"
     git -C /opt/lists clone --single-branch --branch master --depth 1 https://github.com/danielmiessler/SecLists.git seclists
     cd /opt/lists/seclists|| exit
@@ -62,9 +62,7 @@ function install_seclists() {
     rm /opt/lists/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz
     add-test-command "[[ -f '/opt/lists/rockyou.txt' ]]"
     add-test-command "[[ -d '/opt/lists/seclists/Discovery/' ]]"
-    local version
-    version=""""
-    add-to-list "seclists,${version},https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
+    add-to-list "seclists,,https://github.com/danielmiessler/SecLists,A collection of multiple types of lists used during security assessments"
 }
 
 function install_pass_station() {
@@ -148,25 +146,21 @@ function install_rules_from_repo() {
 }
 
 function install_rules(){
-    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-test-command,add-to-list
     colorecho "Installing rules"
 
     install_rules_from_repo "NSAKEY" "nsa-rules" "master" \
         "_NSAKEY.v1.dive.rule" \
         "_NSAKEY.v2.dive.rule"
-    local version
-    version=""""
-    add-to-list "NSAKEY rules,${version},https://github.com/NSAKEY/nsa-rules,Password cracking rules and masks for hashcat"
+    add-to-list "NSAKEY rules,,https://github.com/NSAKEY/nsa-rules,Password cracking rules and masks for hashcat"
 
     install_rules_from_repo "praetorian-inc" "Hob0Rules" "master" \
         "d3adhob0.rule" \
         "hob064.rule"
-    version=""""
-    add-to-list "Hob0Rules rules,${version},https://github.com/praetorian-inc/Hob0Rules,Password cracking rules for Hashcat based on statistics and industry patterns"
+    add-to-list "Hob0Rules rules,,https://github.com/praetorian-inc/Hob0Rules,Password cracking rules for Hashcat based on statistics and industry patterns"
 
     install_rules_from_repo "stealthsploit" "OneRuleToRuleThemStill" "main" "OneRuleToRuleThemStill.rule"
-    version=""""
-    add-to-list "OneRuleToRuleThemStill rules,${version},https://github.com/stealthsploit/OneRuleToRuleThemStill,One rule to crack all passwords. A revamped - optimised and updated version of the original OneRuleToRuleThemAll hashcat rule"
+    add-to-list "OneRuleToRuleThemStill rules,,https://github.com/stealthsploit/OneRuleToRuleThemStill,One rule to crack all passwords. A revamped - optimised and updated version of the original OneRuleToRuleThemAll hashcat rule"
 
     install_rules_from_repo "rarecoil" "pantagrule" "master" \
         "rules/hashesorg.v6/pantagrule.hashorg.v6.hybrid.rule.gz" \
@@ -182,8 +176,7 @@ function install_rules(){
         "rules/private.v5/pantagrule.private.v5.one.gz" \
         "rules/private.v5/pantagrule.private.v5.popular.rule.gz" \
         "rules/private.v5/pantagrule.private.v5.random.rule.gz"
-    version=""""
-    add-to-list "Pantagrule rules,${version},https://github.com/rarecoil/pantagrule,large hashcat rulesets generated from real-world compromised passwords"
+    add-to-list "Pantagrule rules,,https://github.com/rarecoil/pantagrule,large hashcat rulesets generated from real-world compromised passwords"
 }
 
 

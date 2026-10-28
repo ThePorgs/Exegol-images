@@ -304,7 +304,7 @@ function install_nfsshell() {
 }
 
 function install_vnc-decrypt() {
-    # CODE-CHECK-WHITELIST=add-aliases,add-history
+    # CODE-CHECK-WHITELIST=add-aliases,add-history,add-to-list
     colorecho "Installing vnc-decrypt"
     cp /root/sources/assets/vnc-decrypt/vnc-decrypt /opt/tools/bin/vnc-decrypt
     chmod +x /opt/tools/bin/vnc-decrypt

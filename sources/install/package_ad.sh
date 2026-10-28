@@ -1258,15 +1258,13 @@ function install_ldapnomnom() {
 }
 
 function install_cldap_ping() {
-    # CODE-CHECK-WHITELIST=add-aliases
+    # CODE-CHECK-WHITELIST=add-aliases,add-to-list
     colorecho "Installing cldap_ping"
     wget -O /opt/tools/bin/cldap_ping.py https://raw.githubusercontent.com/4ndr3w6/cldap_ping/main/cldap_ping.py
     chmod +x /opt/tools/bin/cldap_ping.py
     add-history cldap_ping
     add-test-command "cldap_ping.py --help"
-    local version
-    version=""
-    add-to-list "cldap_ping,${version},https://github.com/4ndr3w6/cldap_ping,Active Directory username enumeration through UDP CLDAP Ping requests."
+    add-to-list "cldap_ping,,https://github.com/4ndr3w6/cldap_ping,Active Directory username enumeration through UDP CLDAP Ping requests."
 }
 
 function install_ldeep() {
