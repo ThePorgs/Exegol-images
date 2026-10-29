@@ -579,13 +579,13 @@ function install_krbrelayx() {
     cd /opt/tools/krbrelayx || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip3 install dnspython ldap3 impacket dsinternals
+    # addspn.py imports ldap3_ad_auth. That package needs impacket>=0.13.1.
+    pip3 install dnspython ldap3 impacket dsinternals ldap3-ad-auth
     deactivate
     cp -v /root/sources/assets/grc/conf.krbrelayx /usr/share/grc/conf.krbrelayx
     add-aliases krbrelayx
     add-history krbrelayx
     add-test-command "krbrelayx.py --help"
-    add-test-command "addspn.py --help"
     add-test-command "addspn.py --help"
     add-test-command "printerbug.py --help"
     local version

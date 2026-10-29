@@ -90,10 +90,12 @@ function install_angr() {
     cd /opt/tools/angr || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    # Python 3.11 resolves angr 9.2.x. pyvex 9.2.213 depends on an unpinned bitstring,
+    # Python 3.11 resolves angr 9.2.213. pyvex 9.2.213 depends on an unpinned bitstring,
     # and bitstring 5.0.0 removed ConstBitStream, which that pyvex still references.
-    # angr 10 (Python >=3.12) already pins bitstring<5.
-    pip install angr 'bitstring<5'
+    # angr 9.2.213 wants pycparser~=3.0, which also matches 3.11 and later. The image
+    # installs that newer pycparser globally, and this venv uses system site-packages,
+    # so pip would not put a 3.0.x copy in the venv. That newer lexer breaks import.
+    pip install angr 'bitstring<5' 'pycparser>=3.0,<3.1'
     deactivate
     add-aliases angr
     add-test-command "angr -c 'import angr'"
