@@ -1,0 +1,2 @@
+tlsx -u "$TARGET" -san -cn -silent
+tlsx -u "$TARGET" -expired -self-signed -mismatched -revoked -untrusted -tv
