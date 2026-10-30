@@ -291,8 +291,8 @@ function install_constellation() {
 function install_maltego() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing Maltego"
-    wget https://maltego-downloads.s3.us-east-2.amazonaws.com/linux/Maltego.v4.3.0.deb -O /tmp/maltegov4.3_package.deb
-    dpkg -i /tmp/maltegov4.3_package.deb
+    wget https://downloads.maltego.com/maltego-v4/linux/Maltego.v4.14.0.deb -O /tmp/maltego.deb
+    dpkg -i /tmp/maltego.deb
     add-history maltego
     add-test-command "file /usr/share/maltego/bin/maltego"
     local version
