@@ -91,6 +91,10 @@
           {
             "url": "http://127.0.0.1:1337/",
             "name": "Starkiller (Empire Web ui)"
+          },
+          {
+            "url": "http://127.0.0.1:5000/",
+            "name": "Roadrecon GUI"
           }
         ]
       },
