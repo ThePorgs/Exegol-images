@@ -23,6 +23,9 @@ function install_xfce() {
     mkdir -p ~/.config/tigervnc
     cp /root/sources/assets/desktop/configuration/xstartup.conf ~/.config/tigervnc/xstartup
     chmod u+x ~/.config/tigervnc/xstartup
+    # The wrapper still logs desktop-start to ~/.vnc/startup.log. The directory
+    # must exist or the redirect fails and the desktop never starts.
+    mkdir -p ~/.vnc
 
     # Theme
     mkdir /root/.themes
