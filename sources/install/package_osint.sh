@@ -606,7 +606,14 @@ function install_zehef() {
 function install_metagoofil() {
     # CODE-CHECK-WHITELIST=add-history
     colorecho "Installing Metagoofil"
-    git -C /opt/tools clone --depth 1 https://github.com/opsdisk/metagoofil
+    # Upstream v1.5.0 does not parse on Python 3 (https://github.com/opsdisk/metagoofil/issues/56).
+    # Clone the fork branch until https://github.com/opsdisk/metagoofil/pull/57 is merged.
+    # When merged, remove the temp_fix_limit block and uncomment the clone below.
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+        git -C /opt/tools clone --depth 1 --branch fix-python3-except-parentheses https://github.com/ShutdownRepo/metagoofil
+    fi
+    #git -C /opt/tools clone --depth 1 https://github.com/opsdisk/metagoofil
     cd /opt/tools/metagoofil || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
