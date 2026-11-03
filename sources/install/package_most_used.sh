@@ -41,12 +41,14 @@ function install_most_used_apt_tools() {
     local version
     version="$(apt_version hydra)"
     add-to-list "hydra,${version},https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
+    add-suggestions "hydra,medusa"
     version="$(cli_version weevely --version)"
     add-to-list "weevely,${version},https://github.com/epinna/weevely3,a webshell designed for post-exploitation purposes that can be extended over the network at runtime."
     version="$(apt_version smbclient)"
     add-to-list "smbclient,${version},https://github.com/samba-team/samba,SMBclient is a command-line utility that allows you to access Windows shared resources"
     version="$(apt_version hashcat)"
     add-to-list "hashcat,${version},https://hashcat.net/hashcat,A tool for advanced password recovery"
+    add-suggestions "hashcat,pyrit,ophcrack"
     version="$(apt_version fcrackzip)"
     add-to-list "fcrackzip,${version},https://github.com/hyc/fcrackzip,Password cracker for zip archives."
 }

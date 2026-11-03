@@ -72,6 +72,7 @@ function install_network_apt_tools() {
     add-to-list "xtightvncviewer,${version},https://www.commandlinux.com/man-page/man1/xtightvncviewer.1.html,xtightvncviewer is an open source VNC client software."
     version="$(cli_version tshark --version)"
     add-to-list "hydra,${version},https://github.com/vanhauser-thc/thc-hydra,Hydra is a parallelized login cracker which supports numerous protocols to attack."
+    add-suggestions "hydra,medusa"
     version="$(cli_version tshark --version)"
     add-to-list "mariadb-client,${version},https://github.com/MariaDB/server,MariaDB is a community-developed fork of the MySQL relational database management system. The mariadb-client package includes command-line utilities for interacting with a MariaDB server."
     version="$(cli_version tshark --version)"

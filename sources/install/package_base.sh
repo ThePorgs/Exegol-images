@@ -587,8 +587,6 @@ function package_base() {
     install_locales
     cp -v /root/sources/assets/shells/exegol_shells_rc /opt/.exegol_shells_rc
     cp -v /root/sources/assets/shells/exegol_command_not_found.sh /opt/.exegol_command_not_found.sh
-    cp -v /root/sources/assets/shells/missing-commands.csv /opt/.exegol_missing_commands
-    add-test-command "bash -c 'source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint LdapRelayScan.py' 2>&1 | grep -q relayinformer"
     cp -v /root/sources/assets/shells/bashrc ~/.bashrc
     # Add /etc/zsh.d directory to import dynamically any script after /etc/zsh/zshrc
     mkdir /etc/zsh.d && echo "test -d /etc/zsh.d && for f in \$(find -L /etc/zsh.d -maxdepth 1 -type f | sort); do source \$f; done" >> /etc/zsh/zshrc

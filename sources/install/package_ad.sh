@@ -629,6 +629,7 @@ function install_pypykatz() {
     local version
     version="$(git_version /opt/tools/pypykatz)"
     add-to-list "pypykatz,${version},https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
+    add-suggestions "pypykatz,mimikatz"
 }
 
 function install_krbjack() {
@@ -661,6 +662,7 @@ function install_enum4linux-ng() {
     local version
     version="$(pipx_version enum4linux-ng)"
     add-to-list "enum4linux-ng,${version},https://github.com/cddmp/enum4linux-ng,Tool for enumerating information from Windows and Samba systems."
+    add-suggestions "enum4linux-ng,enum4linux"
 }
 
 function install_zerologon() {
@@ -1399,6 +1401,8 @@ function install_relayinformer() {
     local version
     version="$(git_version /opt/tools/RelayInformer)"
     add-to-list "RelayInformer,${version},https://github.com/zyn3rgy/RelayInformer,Determine EPA enforcement levels of popular NTLM relay targets from a Linux host."
+    add-suggestions "relayinformer,LdapRelayScan.py"
+    add-test-command "bash -c 'source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint LdapRelayScan.py' 2>&1 | grep -q relayinformer"
 }
 
 function install_wsuks() {
@@ -1588,6 +1592,7 @@ function install_netexec() {
     local version
     version="$(git_version /opt/tools/NetExec)"
     add-to-list "netexec,${version},https://github.com/Pennyw0rth/NetExec,Enumerate and attack network services. Successor to CrackMapExec."
+    add-suggestions "netexec,crackmapexec,cme"
 }
 
 function install_extractbitlockerkeys() {
@@ -1693,6 +1698,7 @@ function install_bloodyAD() {
     local version
     version="$(pipx_version bloodyAD)"
     add-to-list "bloodyAD,${version},https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
+    add-suggestions "bloodyAD,aclpwn"
 }
 
 function install_autobloody() {

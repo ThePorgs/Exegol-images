@@ -72,6 +72,7 @@ function install_aliasr() {
     local version
     version="$(pipx_version aliasr)"
     add-to-list "aliasr,${version},https://github.com/Mojo8898/aliasr,Aliasr is a modern and feature-rich TUI launcher for penetration testing commands inspired by Arsenal but with significantly improved functionality."
+    add-suggestions "aliasr,arsenal"
 }
 
 function install_whatportis() {

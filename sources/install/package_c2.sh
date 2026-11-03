@@ -16,6 +16,7 @@ function install_pwncat() {
     local version
     version="$(pipx_version pwncat-vl)"
     add-to-list "pwncat-vl,${version},https://github.com/Chocapikk/pwncat-vl,Maintained fork of pwncat-cs with recent fixes and enhancements."
+    add-suggestions "pwncat-vl,pwncat,pwncat-cs"
 }
 
 function install_metasploit() {
@@ -109,6 +110,7 @@ function install_sliver() {
     local version
     version="$(cli_version sliver --version)"
     add-to-list "sliver,${version},https://github.com/BishopFox/sliver,Open source / cross-platform and extensible C2 framework"
+    add-suggestions "sliver-client,havoc,mythic,covenant,merlin"
 }
 
 function install_empire() {

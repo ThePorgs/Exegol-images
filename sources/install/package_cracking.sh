@@ -21,6 +21,7 @@ function install_cracking_apt_tools() {
     local version
     version="$(apt_version hashcat)"
     add-to-list "hashcat,${version},https://hashcat.net/hashcat,A tool for advanced password recovery"
+    add-suggestions "hashcat,pyrit,ophcrack"
     version="$(apt_version fcrackzip)"
     add-to-list "fcrackzip,${version},https://github.com/hyc/fcrackzip,Password cracker for zip archives."
     version="$(apt_version pdfcrack)"
@@ -84,6 +85,7 @@ function install_haiti() {
     local version
     version="$(gem_version haiti-hash)"
     add-to-list "haiti,${version},https://github.com/noraj/haiti,haiti is a A CLI tool (and library) to identify hash types (hash type identifier)."
+    add-suggestions "haiti,hashid,hash-identifier"
 }
 
 function install_geowordlists() {

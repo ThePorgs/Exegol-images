@@ -186,6 +186,7 @@ function install_maigret() {
     local version
     version="$(pipx_version maigret.git)"
     add-to-list "maigret,${version},https://github.com/soxoj/maigret,Collect a dossier on a username across thousands of websites"
+    add-suggestions "maigret,osrframework-cli,usufy"
 }
 
 function install_linkedin2username() {
