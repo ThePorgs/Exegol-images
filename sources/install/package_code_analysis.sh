@@ -11,7 +11,9 @@ function install_brakeman() {
     add-aliases brakeman
     add-history brakeman
     add-test-command "brakeman --help"
-    add-to-list "brakeman,https://github.com/presidentbeef/brakeman,Static analysis tool for Ruby on Rails applications"
+    local version
+    version="$(gem_version brakeman)"
+    add-to-list "brakeman,${version},https://github.com/presidentbeef/brakeman,Static analysis tool for Ruby on Rails applications"
 }
 
 function install_semgrep() {
@@ -20,7 +22,9 @@ function install_semgrep() {
     pipx install --system-site-packages semgrep
     add-history semgrep
     add-test-command "semgrep --help"
-    add-to-list "semgrep,https://github.com/returntocorp/semgrep/,Static analysis tool that supports multiple languages and can find a variety of vulnerabilities and coding errors."
+    local version
+    version="$(pipx_version semgrep)"
+    add-to-list "semgrep,${version},https://github.com/returntocorp/semgrep/,Static analysis tool that supports multiple languages and can find a variety of vulnerabilities and coding errors."
 }
 
 function install_pp-finder() {
@@ -32,7 +36,10 @@ function install_pp-finder() {
     npm install -g pp-finder
     add-history pp-finder
     add-test-command "npm ls -g|grep pp-finder"
-    add-to-list "pp-finder,https://github.com/yeswehack/pp-finder,Prototype pollution finder tool for javascript. pp-finder lets you find prototype pollution candidates in your code."
+    local version
+    version="$(npm ls -g --depth=0 pp-finder 2>/dev/null | grep -oE 'pp-finder@[0-9]+([._-][0-9A-Za-z]+)+' | head -n1 | cut -d@ -f2 || true)"
+    version="$(normalize_version "${version}")"
+    add-to-list "pp-finder,${version},https://github.com/yeswehack/pp-finder,Prototype pollution finder tool for javascript. pp-finder lets you find prototype pollution candidates in your code."
 }
 
 function install_gitleaks() {
@@ -55,7 +62,9 @@ function install_gitleaks() {
     mv /tmp/gitleaks /opt/tools/bin/gitleaks
     add-history gitleaks
     add-test-command "gitleaks --help"
-    add-to-list "gitleaks,https://github.com/trufflesecurity/gitleaks,Gitleaks scans hardcoded secrets in git repositories and folders."
+    local version
+    version="$(cli_version gitleaks --version)"
+    add-to-list "gitleaks,${version},https://github.com/trufflesecurity/gitleaks,Gitleaks scans hardcoded secrets in git repositories and folders."
 }
 
 function install_trufflehog() {
@@ -79,7 +88,9 @@ function install_trufflehog() {
     mv /tmp/trufflehog /opt/tools/bin/trufflehog
     add-history trufflehog
     add-test-command "trufflehog --help"
-    add-to-list "trufflehog,https://github.com/trufflesecurity/trufflehog,Find verify and analyze hardcoded secrets in git repositories folders buckets and more."
+    local version
+    version="$(cli_version trufflehog --version)"
+    add-to-list "trufflehog,${version},https://github.com/trufflesecurity/trufflehog,Find verify and analyze hardcoded secrets in git repositories folders buckets and more."
 }
 
 # Package dedicated to SAST and DAST tools

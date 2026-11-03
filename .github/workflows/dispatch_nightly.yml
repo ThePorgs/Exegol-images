@@ -3,10 +3,10 @@
 #   - Repo: https://github.com/actions/checkout
 #   - Version: https://github.com/actions/checkout/tree/v7.0.1
 #   - Pinned: https://github.com/actions/checkout/commit/3d3c42e5aac5ba805825da76410c181273ba90b1
-# - peter-evans/repository-dispatch v2 @ bf47d102fdb849e755b0b0023ea3e81a44b6f570
+# - peter-evans/repository-dispatch v4.0.1 @ 28959ce8df70de7be546dd1250a005dd32156697
 #   - Repo: https://github.com/peter-evans/repository-dispatch
-#   - Version: https://github.com/peter-evans/repository-dispatch/tree/v2
-#   - Pinned: https://github.com/peter-evans/repository-dispatch/commit/bf47d102fdb849e755b0b0023ea3e81a44b6f570
+#   - Version: https://github.com/peter-evans/repository-dispatch/tree/v4.0.1
+#   - Pinned: https://github.com/peter-evans/repository-dispatch/commit/28959ce8df70de7be546dd1250a005dd32156697
 name: Nightly Build Trigger
 
 on:
@@ -33,7 +33,7 @@ jobs:
           echo "commit_title=$sanitized_title" >> "$GITHUB_OUTPUT"
 
       - name: Trigger Pipeline Repo
-        uses: peter-evans/repository-dispatch@bf47d102fdb849e755b0b0023ea3e81a44b6f570
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697
         # passing the title only, as a multi-line string is not supported
         with:
           token: ${{ secrets.PIPELINE_PAT }}

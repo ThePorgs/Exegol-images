@@ -66,3 +66,6 @@ EXEGOL_HOSTNAME="%m"
 # Add my-resources custom tools to PATH if my-resources is activated
 # Must be at the end of the file to be first in the PATH !
 [ -d /opt/my-resources/bin ] && export PATH="/opt/my-resources/bin:$PATH"
+
+# Missing-command hints. After PATH setup so a later install stays silent.
+[ -f /opt/.exegol_command_not_found.sh ] && source /opt/.exegol_command_not_found.sh

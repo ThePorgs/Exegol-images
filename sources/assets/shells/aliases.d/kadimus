@@ -1,1 +1,0 @@
-function kadimus { (cd /opt/tools/Kadimus && /opt/tools/Kadimus/kadimus "$@") }

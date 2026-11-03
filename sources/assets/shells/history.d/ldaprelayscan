@@ -1,1 +1,0 @@
-LdapRelayScan.py -method BOTH -dc-ip "$DC_IP" -u "$USER" -p "$PASSWORD"

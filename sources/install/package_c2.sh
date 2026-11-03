@@ -13,7 +13,9 @@ function install_pwncat() {
     pipx inject pwncat-vl cryptography==36.0.2
     add-history pwncat
     add-test-command "pwncat-vl --version"
-    add-to-list "pwncat-vl,https://github.com/Chocapikk/pwncat-vl,Maintained fork of pwncat-cs with recent fixes and enhancements."
+    local version
+    version="$(pipx_version pwncat-vl)"
+    add-to-list "pwncat-vl,${version},https://github.com/Chocapikk/pwncat-vl,Maintained fork of pwncat-cs with recent fixes and enhancements."
 }
 
 function install_metasploit() {
@@ -64,7 +66,9 @@ function install_metasploit() {
     add-test-command "msfdb status"
     add-test-command "msfvenom --list platforms"
     add-test-command "msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f exe > /tmp/test.exe && file /tmp/test.exe|grep 'PE32 executable' && rm /tmp/test.exe"
-    add-to-list "metasploit,https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
+    local version
+    version="$(git_version /opt/tools/metasploit-framework)"
+    add-to-list "metasploit,${version},https://github.com/rapid7/metasploit-framework,A popular penetration testing framework that includes many exploits and payloads"
 }
 
 function install_routersploit() {
@@ -74,7 +78,9 @@ function install_routersploit() {
     pipx inject routersploit colorama
     add-aliases routersploit
     add-test-command "routersploit --help"
-    add-to-list "routersploit,https://github.com/threat9/routersploit,Security audit tool for routers."
+    local version
+    version="$(pipx_version routersploit)"
+    add-to-list "routersploit,${version},https://github.com/threat9/routersploit,Security audit tool for routers."
 }
 
 function install_sliver() {
@@ -100,18 +106,16 @@ function install_sliver() {
     add-history sliver
     add-test-command "sliver-server help"
     add-test-command "sliver-client help"
-    add-to-list "sliver,https://github.com/BishopFox/sliver,Open source / cross-platform and extensible C2 framework"
+    local version
+    version="$(cli_version sliver --version)"
+    add-to-list "sliver,${version},https://github.com/BishopFox/sliver,Open source / cross-platform and extensible C2 framework"
 }
 
 function install_empire() {
     colorecho "Installing Empire"
-    wget -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
+    wget -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb
     dpkg -i /tmp/packages-microsoft-prod.deb
     fapt apt-transport-https libicu-dev xclip zip
-    # Installing .NET 6.0 SDK
-    wget -O /tmp/dotnet-install.sh https://dot.net/v1/dotnet-install.sh
-    chmod +x /tmp/dotnet-install.sh
-    /tmp/dotnet-install.sh --channel 6.0
     install_powershell
     git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/BC-SECURITY/Empire
     cd /opt/tools/Empire || exit
@@ -126,40 +130,11 @@ function install_empire() {
     add-aliases empire
     add-history empire
     add-test-command "ps-empire server --help"
-    add-to-list "empire,https://github.com/BC-SECURITY/Empire,post-exploitation and adversary emulation framework"
+    local version
+    version="$(git_version /opt/tools/Empire)"
+    add-to-list "empire,${version},https://github.com/BC-SECURITY/Empire,post-exploitation and adversary emulation framework"
     # exit the Empire workdir, since it sets the python version to 3.12 and could mess up later installs
     cd || exit
-}
-
-function install_havoc() {
-    colorecho "Installing Havoc"
-    git -C /opt/tools/ clone --depth 1 --recursive --shallow-submodules https://github.com/HavocFramework/Havoc
-    cd /opt/tools/Havoc || exit
-    # https://github.com/HavocFramework/Havoc/issues/516 (seems fixed but keeping commented tempfix just in case)
-    #    local temp_fix_limit="YYYY-MM-DD"
-    #    if check_temp_fix_expiry "$temp_fix_limit"; then
-    #      git -C /opt/tools/ clone https://github.com/HavocFramework/Havoc
-    #      git -C /opt/tools/Havoc checkout ea3646e055eb1612dcc956130fd632029dbf0b86
-    #      go mod download golang.org/x/sys
-    #      go mod download github.com/ugorji/go
-    #    fi
-
-    # Building Team Server
-    sed -i 's/golang-go//' teamserver/Install.sh
-    make ts-build
-    # ln -v -s /opt/tools/Havoc/havoc /opt/tools/bin/havoc
-    # Symbolic link above not needed because Havoc relies on absolute links, the user needs be changed directory when running havoc
-
-    # Building Client
-    fapt qtmultimedia5-dev libqt5websockets5-dev
-    make client-build || cat /opt/tools/Havoc/client/Build/CMakeFiles/CMakeOutput.log
-    # `make clean` removes binaries, so we could just manually remove the Build directory
-    rm -rf /opt/tools/Havoc/client/Build/
-
-    add-aliases havoc
-    add-history havoc
-    add-test-command "havoc "
-    add-to-list "Havoc,https://github.com/HavocFramework/Havoc,Command & Control Framework"
 }
 
 function install_villain() {
@@ -173,7 +148,9 @@ function install_villain() {
     add-aliases villain
     add-history villain
     add-test-command "Villain.py -h"
-    add-to-list "Villain,https://github.com/t3l3machus/Villain,Command & Control Framework"
+    local version
+    version="$(git_version /opt/tools/Villain)"
+    add-to-list "Villain,${version},https://github.com/t3l3machus/Villain,Command & Control Framework"
 }
 
 # Package dedicated to command & control frameworks
@@ -187,7 +164,6 @@ function package_c2() {
     install_metasploit              # Offensive framework
     install_routersploit            # Exploitation Framework for Embedded Devices
     install_sliver                  # Sliver is an open source cross-platform adversary emulation/red team framework
-    install_havoc                   # C2 in Go
     install_villain                 # C2 using hoaxShell in Python
     post_install
     end_time=$(date +%s)
