@@ -1902,17 +1902,44 @@ function install_pysnaffler() {
     local version
     version="$(git_version /opt/tools/pysnaffler)"
     add-to-list "pysnaffler,${version},https://github.com/skelsec/pysnaffler,Snaffler. But in python."
+    add-suggestions "pysnaffler,snaffler"
+    add-test-command "bash -c 'shopt -s expand_aliases; source /opt/.exegol_aliases && source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint snaffler' 2>&1 | grep -q pysnaffler"
 }
 
 function install_snaffler-ng() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing snaffler-ng"
     pipx install --system-site-packages 'snaffler-ng[socks]'
-    add-history snaffler
-    add-test-command "snaffler --help"
+    # pipx ships the console script as "snaffler". Keep that name free for the suggester.
+    mv -v /root/.local/bin/snaffler /root/.local/bin/snaffler-ng
+    add-history snaffler-ng
+    add-test-command "snaffler-ng --help"
+    add-test-command "bash -c '! command -v snaffler'"
     local version
     version="$(pipx_version 'snaffler-ng[socks]')"
     add-to-list "snaffler-ng,${version},https://github.com/totekuh/snaffler-ng,Python port of Snaffler using Impacket. Finds credentials and sensitive files on SMB shares."
+    add-suggestions "snaffler-ng,snaffler"
+    add-test-command "bash -c 'source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint snaffler' 2>&1 | grep -q snaffler-ng"
+}
+
+function install_snafflepy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing SnafflePy"
+    # Upstream console script is "snaffler". Expose this one as snafflepy so that name stays free for the suggester.
+    git -C /opt/tools/ clone --depth 1 https://github.com/S3cur3Th1sSh1t/SnafflePy
+    cd /opt/tools/SnafflePy || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    ln -sv /opt/tools/SnafflePy/venv/bin/snaffler /opt/tools/bin/snafflepy
+    add-history snafflepy
+    add-test-command "snafflepy --help"
+    local version
+    version="$(git_version /opt/tools/SnafflePy)"
+    add-to-list "snafflepy,${version},https://github.com/S3cur3Th1sSh1t/SnafflePy,Python port of Snaffler with the upstream rules and an HTML report"
+    add-suggestions "snafflepy,snaffler"
+    add-test-command "bash -c 'source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint snaffler' 2>&1 | grep -q snafflepy"
 }
 
 function install_pygoldengmsa() {
@@ -2136,6 +2163,7 @@ function package_ad() {
     install_remotemonologue        # A tool to coerce NTLM authentications via DCOM
     install_godap                  # A complete terminal user interface (TUI) for LDAP
     install_powerview              # Powerview Python implementation
+    install_snafflepy              # Before the other Snaffler ports so `snaffler` suggests it first
     install_pysnaffler             # Snaffler, but in Python
     install_snaffler-ng            # Snaffler rules on SMB from Linux (Impacket)
     install_evil-winrm-py          # Evil-Winrm, but in Python
