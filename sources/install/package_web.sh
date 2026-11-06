@@ -411,15 +411,15 @@ function install_moodlescan() {
 
 function install_testssl() {
     colorecho "Installing testssl"
-    # TODO : Check if deps are already installed
-    fapt bsdmainutils
-    git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
+    # drwetter/testssl.sh is a new empty repo created 2026-11-05T11:43:33Z.
+    # The project lives at https://github.com/testssl/testssl.sh.
+    git -C /opt/tools/ clone --depth 1 https://github.com/testssl/testssl.sh.git
     add-aliases testssl
     add-history testssl
     add-test-command "testssl.sh --help"
     local version
     version="$(git_version /opt/tools/testssl.sh)"
-    add-to-list "testssl,${version},https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
+    add-to-list "testssl,${version},https://github.com/testssl/testssl.sh,a tool for testing SSL/TLS encryption on servers"
     add-suggestions "testssl.sh,sslyze"
 }
 
