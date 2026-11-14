@@ -210,6 +210,8 @@ function install_cyberchef() {
     unzip -o /tmp/CyberChef.zip -d /opt/tools/CyberChef/
     rm /tmp/CyberChef.zip
     mv /opt/tools/CyberChef/CyberChef_*.html /opt/tools/CyberChef/CyberChef.html
+    # Apply dark theme
+    sed -i 's/theme:"classic"/theme:"dark"/' /opt/tools/CyberChef/assets/main.js
     add-test-command "file /opt/tools/CyberChef/CyberChef.html"
     local version
     version="$(cli_version CyberChef --version)"
