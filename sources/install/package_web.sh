@@ -1136,6 +1136,40 @@ function install_caido() {
     add-suggestions "caido,zap,zaproxy,zap.sh"
 }
 
+function install_crossfyre_workbench() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing Crossfyre Workbench"
+    local arch
+    arch=$(uname -m)
+    case "$arch" in
+        x86_64|aarch64) ;;
+        *) criticalecho-noexit "This installation function doesn't support architecture $arch" && return ;;
+    esac
+    # latest.json lists the release's packages, each with its arch and sha256. It goes to a
+    # file because the curl wrapper also prints to stdout.
+    local release=/tmp/crossfyre-workbench-latest.json
+    curl --location --silent --fail --output "$release" "https://bins.crossfyre.io/workbench/latest.json"
+    local deb_url
+    deb_url=$(jq -r --arg arch "$arch" '.links[] | select(.os == "linux" and .arch == $arch and .format == "deb") | .link' "$release")
+    local deb_sha256
+    deb_sha256=$(jq -r --arg arch "$arch" '.links[] | select(.os == "linux" and .arch == $arch and .format == "deb") | .sha256' "$release")
+    if [[ -z "$deb_url" || -z "$deb_sha256" ]]; then
+        criticalecho "No Crossfyre Workbench .deb for $arch in latest.json"
+    fi
+    local deb_file
+    deb_file="/tmp/$(basename "$deb_url")"
+    curl --location --silent --fail --output "$deb_file" "$deb_url"
+    echo "$deb_sha256  $deb_file" | sha256sum --check --status || criticalecho "Checksum mismatch for $deb_file"
+    # Through apt rather than dpkg -i, so the GTK and WebKitGTK dependencies get installed
+    fapt "$deb_file"
+    local version
+    version="$(normalize_version "$(jq -r '.version // empty' "$release")")"
+    rm -f "$deb_file" "$release"
+    add-history crossfyre-workbench
+    add-test-command "crossfyre-workbench --version"
+    add-to-list "crossfyre-workbench,${version},https://crossfyre.io/workbench,Local intercepting proxy and manual testing workbench."
+}
+
 function install_token_exploiter() {
     # CODE-CHECK-WHITELIST=add-aliases,add-history
     colorecho "Installing Token Exploiter"
@@ -1368,6 +1402,7 @@ function package_web() {
     install_postman                 # Postman - API platform for testing APIs
     install_wpprobe                 # WPProbe - Tool for detecting WordPress plugins using misconfigured REST API endpoints
     install_caido                   # Caido
+    install_crossfyre_workbench     # Crossfyre Workbench
     install_token_exploiter         # Github personal token Analyzer
     install_bbot                    # Recursive Scanner
     install_subzy                   # Subdomain takeover tool
