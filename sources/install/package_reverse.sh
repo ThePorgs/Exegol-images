@@ -150,7 +150,7 @@ function install_ghidra() {
     mv -v /opt/tools/ghidra_* /opt/tools/ghidra # ghidra always has a version number in the unzipped folder, lets make it consistent
     rm /tmp/ghidra.zip
     version=$(sed -n 's/^application\.version=//p' /opt/tools/ghidra/Ghidra/application.properties)
-    cp /root/sources/assets/ghidra/preferences ~/.config/ghidra/ghidra_${version}_PUBLIC/
+    cp /root/sources/assets/ghidra/preferences "/root/.config/ghidra/ghidra_${version}_PUBLIC/"
     add-aliases ghidra
     add-history ghidra
     # TODO add-test-command GUI app
