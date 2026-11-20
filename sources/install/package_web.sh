@@ -709,7 +709,14 @@ function install_h2csmuggler() {
 function install_byp4xx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing byp4xx"
-    go install -v github.com/lobuhi/byp4xx@latest
+    # @latest (d0c81997 / PR #33, 2026-11-20) does not compile: unused net/http,
+    # and wg/verbose redeclared. Pin last known-good tip until upstream fixes it.
+    # Wait for fix: https://github.com/lobuhi/byp4xx/issues/39
+    # When fixed: remove the temp_fix_limit block and restore @latest.
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      go install -v github.com/lobuhi/byp4xx@b337580a3a62
+    fi
     asdf reshim golang
     add-history byp4xx
     add-test-command byp4xx
