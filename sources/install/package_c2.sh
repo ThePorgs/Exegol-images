@@ -53,6 +53,9 @@ function install_metasploit() {
     chown -R postgres:postgres /var/lib/postgresql/.bundle
     chmod -R o+rx /opt/tools/metasploit-framework/
     chmod 444 /opt/tools/metasploit-framework/.git/index # fatal: .git/index: index file open failed: Permission denied
+    # Rails 8+ (railties secret_key_base) mkdir's tmp/ during msfdb init as postgres
+    mkdir -p /opt/tools/metasploit-framework/tmp
+    chown postgres:postgres /opt/tools/metasploit-framework/tmp
     sudo -u postgres sh -c "git config --global --add safe.directory /opt/tools/metasploit-framework && /usr/local/rvm/gems/ruby-3.3.8@metasploit-framework/wrappers/bundle exec /opt/tools/metasploit-framework/msfdb init"
     cp -r /var/lib/postgresql/.msf4 /root
 
