@@ -138,6 +138,7 @@ function install_ghidra() {
     # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing Ghidra"
     local ghidra_url
+    local version
     # Compact GitHub JSON is one line: grep browser_download_url then https:// picks the
     # API release URL first. GitHub also 403s curl HTTP/2 asset downloads from CI.
     ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep -o 'https://github.com/NationalSecurityAgency/ghidra/releases/download/[^"]*/ghidra_[^"]*_PUBLIC_[^"]*\.zip' | head -n1)
@@ -148,11 +149,12 @@ function install_ghidra() {
     unzip -q /tmp/ghidra.zip -d /opt/tools # -q because too much useless verbose
     mv -v /opt/tools/ghidra_* /opt/tools/ghidra # ghidra always has a version number in the unzipped folder, lets make it consistent
     rm /tmp/ghidra.zip
+    version=$(sed -n 's/^application\.version=//p' /opt/tools/ghidra/Ghidra/application.properties)
+    mkdir -p "/root/.config/ghidra/ghidra_${version}_PUBLIC/"
+    cp /root/sources/assets/ghidra/preferences "/root/.config/ghidra/ghidra_${version}_PUBLIC/"
     add-aliases ghidra
     add-history ghidra
     # TODO add-test-command GUI app
-    local version
-    version="$(cli_version ghidra --version)"
     add-to-list "ghidra,${version},https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools."
     add-suggestions "ghidra,cutter"
 }

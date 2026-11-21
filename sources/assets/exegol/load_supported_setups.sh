@@ -343,6 +343,14 @@ function deploy_arsenal_cheatsheet () {
   # This specific path is fetched by default by arsenal to load custom cheatsheet
 }
 
+function deploy_ghidra_config () {
+  # Function to add a custom Ghidra preference file
+  wrapper_verbose "Deploying custom Ghidra config"
+  if [[ -f "$MY_SETUP_PATH/ghidra/preferences" ]]; then
+      cp "$MY_SETUP_PATH/ghidra/preferences" /root/.config/ghidra/ghidra_*_PUBLIC/
+  fi
+}
+
 init
 
 deploy_zsh
@@ -355,6 +363,7 @@ deploy_firefox_policy
 deploy_bloodhound
 trust_ca_certs_in_firefox
 deploy_arsenal_cheatsheet
+deploy_ghidra_config
 
 run_user_setup
 
