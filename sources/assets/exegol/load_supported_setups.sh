@@ -343,6 +343,13 @@ function deploy_arsenal_cheatsheet () {
   # This specific path is fetched by default by arsenal to load custom cheatsheet
 }
 
+function deploy_api_key () {
+  # Function to deploy api key
+  wrapper_verbose "Deploying API keys"
+  source "$MY_SETUP_PATH/api/api_keys.sh"
+  $MY_SETUP_PATH/api/deploy_api_keys.sh
+}
+
 init
 
 deploy_zsh
@@ -355,6 +362,7 @@ deploy_firefox_policy
 deploy_bloodhound
 trust_ca_certs_in_firefox
 deploy_arsenal_cheatsheet
+deploy_api_key
 
 run_user_setup
 
