@@ -1285,7 +1285,21 @@ function install_rusthound() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    cargo install rusthound
+    # cargo install rusthound (crates.io 1.1.69) resolves/locks time 0.3.30, which
+    # fails on modern rustc: E0282 in time-0.3.30/src/format_description/parse/*.rs.
+    # Clone upstream, bump the transitive time crate, install from path.
+    # Wait for fix: https://github.com/NH-RED-TEAM/RustHound/issues/40
+    # When fixed: remove the temp_fix_limit block and restore `cargo install rusthound`.
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      git -C /tmp clone --depth 1 https://github.com/NH-RED-TEAM/RustHound.git
+      cd /tmp/RustHound || exit
+      cargo update -p time
+      cargo install --path .
+      # Must leave before rm: a deleted cwd breaks later steps (getcwd).
+      cd /tmp || exit
+      rm -rf /tmp/RustHound
+    fi
     add-history rusthound
     add-test-command "rusthound --help"
     local version
