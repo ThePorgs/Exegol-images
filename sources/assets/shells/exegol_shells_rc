@@ -29,9 +29,9 @@ else
   cp /.exegol/skel/zsh/aliases /opt/my-resources/setup/zsh/aliases
 fi
 
-# sourcing exegol-history
-source /opt/tools/Exegol-history/profile.sh
-source $HOME/.cargo/env
+# sourcing exegol-history (installed later in package_base; guard for build-time sourcing)
+[ -f /opt/tools/Exegol-history/profile.sh ] && source /opt/tools/Exegol-history/profile.sh
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 
 # In case pipx ensurepath didn't work, and positioning pipx in priority
 export PATH="/root/.local/bin:$PATH"
@@ -58,10 +58,7 @@ function prompt_char {
 
 LOGGING=""
 
-parent_command="$(ps -ocommand= $(ps -oppid= $PPID 2>/dev/null | awk '{print $1}') 2>/dev/null | head -n1 | awk '{print $1}')"
-if [[ "$parent_command" == 'script' || "$parent_command" == 'asciinema' ]]; then
-    LOGGING="[🔴]"
-fi
+[ -n "${EXEGOL_START_SHELL_LOGGING:-}" ] && LOGGING="[🔴]"
 
 EXEGOL_HOSTNAME="%m"
 [[ -z "${EXEGOL_NAME}" ]] && EXEGOL_HOSTNAME="%m" || EXEGOL_HOSTNAME="$EXEGOL_NAME (%m)"
@@ -69,3 +66,6 @@ EXEGOL_HOSTNAME="%m"
 # Add my-resources custom tools to PATH if my-resources is activated
 # Must be at the end of the file to be first in the PATH !
 [ -d /opt/my-resources/bin ] && export PATH="/opt/my-resources/bin:$PATH"
+
+# Missing-command hints. After PATH setup so a later install stays silent.
+[ -f /opt/.exegol_command_not_found.sh ] && source /opt/.exegol_command_not_found.sh

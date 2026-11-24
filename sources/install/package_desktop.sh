@@ -16,20 +16,16 @@ function install_xfce() {
     # Dependencies
     fapt tigervnc-standalone-server tigervnc-xorg-extension tigervnc-viewer novnc websockify xfce4 dbus-x11 intltool libtool tigervnc-tools
 
-    # temp fix to use latest websockify (min 0.12.0 to fix fedora daemon issue) waiting for apt stable repo to be up-to-date
-    local temp_fix_limit="2026-08-10"
-    if check_temp_fix_expiry "$temp_fix_limit"; then
-      # Install websockify (min 0.12.0) explicit from sid repo
-      fapt python3-websockify/sid
-    fi
-
     # Icons
     fapt librsvg2-common papirus-icon-theme
 
-    # VNC
-    mkdir ~/.vnc
-    cp /root/sources/assets/desktop/configuration/xstartup.conf ~/.vnc/xstartup
-    chmod u+x ~/.vnc/xstartup
+    # VNC (TigerVNC 1.15+: XDG path ~/.config/tigervnc, not ~/.vnc)
+    mkdir -p ~/.config/tigervnc
+    cp /root/sources/assets/desktop/configuration/xstartup.conf ~/.config/tigervnc/xstartup
+    chmod u+x ~/.config/tigervnc/xstartup
+    # The wrapper still logs desktop-start to ~/.vnc/startup.log. The directory
+    # must exist or the redirect fails and the desktop never starts.
+    mkdir -p ~/.vnc
 
     # Theme
     mkdir /root/.themes
@@ -53,6 +49,8 @@ function install_xfce() {
 
     # Locale
     cp -rv /tmp/share/locale/* /usr/share/locale
+    # Must leave before wiping /tmp: a deleted cwd breaks later pipx/pyenv.
+    cd /tmp || exit
     rm -rf /tmp/*
 
     # Wallpapers
@@ -101,7 +99,10 @@ function install_xfce() {
     vncserver -kill :0
     sleep 6
     # Remove log files of temp vncserver run ## TODO check if more
-    rm /root/.vnc/*.log /root/.xsession-errors
+    rm -f ~/.config/tigervnc/*.log ~/.xsession-errors
+    # The temporary server leaves /tmp/.X11-unix in the image. An empty
+    # directory must not be what desktop-start treats as "no X server".
+    rm -rf /tmp/.X11-unix /tmp/.X*-lock
     [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
 
     # Binaries

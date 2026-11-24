@@ -2,6 +2,11 @@
 ldapsearch -H ldap://$TARGET -D "$USER@$DOMAIN" -w "$PASSWORD" -b "DC=DOMAIN,DC=LOCAL" -E '1.2.840.113556.1.4.417' "(isDeleted=TRUE)"
 # Show recycled objects
 ldapsearch -H ldap://$TARGET -D "$USER@$DOMAIN" -w "$PASSWORD" -b "DC=DOMAIN,DC=LOCAL" -E '1.2.840.113556.1.4.2064' "(isDeleted=TRUE)"
-ldapsearch -h "$DC_IP" -x -s "base" "namingcontexts"
-ldapsearch -h "$TARGET" -x -b "DC=DOMAIN,DC=LOCAL"
+# Query RootDSE naming contexts anonymously
+ldapsearch -x -H "ldap://$DC_IP" -s base -b "" "(objectClass=*)" namingContexts
+# Query all RootDSE attributes anonymously
+ldapsearch -x -H "ldap://$DC_IP" -s base -b "" "(objectClass=*)" "*" "+"
+# Attempt an anonymous domain search (requires anonymous LDAP operations and suitable ACLs)
 ldapsearch -H ldap://$TARGET -x -b "DC=DOMAIN,DC=LOCAL"
+# Search the domain with a simple bind
+ldapsearch -H ldap://$TARGET -x -D "$USER@$DOMAIN" -w "$PASSWORD" -b "DC=DOMAIN,DC=LOCAL" "(objectClass=*)"

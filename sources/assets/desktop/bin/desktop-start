@@ -1,14 +1,25 @@
 #!/bin/bash
 
-# Function to find the first available display ID
+# Function to find the first available display ID.
+# A bind-mounted /tmp/.X11-unix lists the host's servers as socket files, which
+# `ss` cannot see from another network namespace. Abstract X sockets live in
+# the network namespace, so on host network another container's server shows
+# up in `ss` and not in this container's /tmp. Both have to be consulted: the
+# image build leaves an empty /tmp/.X11-unix behind, and trusting that
+# directory alone makes every host-network container pick :2.
 find_available_display() {
-  # Search for available socket if the X11 socket directory is not available
+  local -a x11_sockets=()
+  local id
+
   if [ -d /tmp/.X11-unix/ ]; then
-    readarray -t x11_sockets < <(find "/tmp/.X11-unix/" -type s -printf "%f\n" | cut -d 'X' -f2)
-  else
-    # X11 not shared, need to check socket
-    readarray -t x11_sockets < <(ss -x | grep X11| cut -d 'X' -f3 | cut -d ' ' -f 1 | sort -u)
+    while IFS= read -r id; do
+      [ -n "$id" ] && x11_sockets+=("$id")
+    done < <(find /tmp/.X11-unix/ -type s -printf '%f\n' 2>/dev/null | grep -oE '[0-9]+$')
   fi
+
+  while IFS= read -r id; do
+    [ -n "$id" ] && x11_sockets+=("$id")
+  done < <(ss -lx 2>/dev/null | grep -oE 'X11-unix/X[0-9]+' | grep -oE '[0-9]+$' | sort -u)
 
   local max_num=1
 

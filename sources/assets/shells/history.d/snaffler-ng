@@ -1,0 +1,4 @@
+snaffler-ng --username "$USER" --password "$PASSWORD" --domain "$DOMAIN"
+snaffler-ng --username "$USER" --hash "$NT_HASH" --domain "$DOMAIN" --dc-host "$DC_HOST"
+KRB5CCNAME="$CCACHE_PATH" snaffler-ng --kerberos --use-kcache --domain "$DOMAIN" --dc-host "$DC_HOST"
+snaffler-ng --username "$USER" --password "$PASSWORD" --unc "//$TARGET/Share"

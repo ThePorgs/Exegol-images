@@ -15,7 +15,9 @@ function install_reverse_apt_tools() {
     then
         fapt ltrace
         add-test-command "ltrace --version"
-        add-to-list "ltrace,https://github.com/dkogan/ltrace,ltrace is a debugging program for Linux and Unix that intercepts and records dynamic library calls that are called by an executed process."
+        local version
+        version="$(apt_version ltrace)"
+        add-to-list "ltrace,${version},https://github.com/dkogan/ltrace,ltrace is a debugging program for Linux and Unix that intercepts and records dynamic library calls that are called by an executed process."
     else
         criticalecho-noexit "This installation function doesn't support architecture $(uname -m)" && return
     fi
@@ -23,9 +25,12 @@ function install_reverse_apt_tools() {
     add-test-command "nasm --version" # Netwide Assembler
     add-test-command "strace --version"
 
-    add-to-list "nasm,https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity."
-    add-to-list "wabt,https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm) including assembler and disassembler / a syntax checker / and a binary format validator."
-    add-to-list "strace,https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process."
+    version="$(apt_version nasm)"
+    add-to-list "nasm,${version},https://github.com/netwide-assembler/nasm,NASM is an 80x86 assembler designed for portability and modularity."
+    version="$(apt_version wabt)"
+    add-to-list "wabt,${version},https://github.com/WebAssembly/wabt,The WebAssembly Binary Toolkit (WABT) is a suite of tools for WebAssembly (Wasm) including assembler and disassembler / a syntax checker / and a binary format validator."
+    version="$(apt_version strace)"
+    add-to-list "strace,${version},https://github.com/strace/strace,strace is a debugging utility for Linux that allows you to monitor and diagnose system calls made by a process."
 }
 
 function install_pwntools() {
@@ -37,7 +42,10 @@ function install_pwntools() {
     pip install .
     add-test-command "python -c 'import pwn'"
     add-test-command "python3 -c 'import pwn'"
-    add-to-list "pwntools,https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
+    local version
+    version="$(git_version /opt/tools/pwntools)"
+    add-to-list "pwntools,${version},https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
+    add-suggestions "ROPgadget,ropper,ropgadget"
 }
 
 function install_gdb_plugins() {
@@ -49,18 +57,22 @@ function install_gdb_plugins() {
     git -C /opt/tools/gdb clone --depth 1 https://github.com/pwndbg/pwndbg
     cd /opt/tools/gdb/pwndbg || exit
     ./setup.sh
-    add-to-list "pwndbg,https://github.com/pwndbg/pwndbg,a GDB plugin that makes debugging with GDB suck less"
+    local version
+    version="$(cli_version pwndbg --version)"
+    add-to-list "pwndbg,${version},https://github.com/pwndbg/pwndbg,a GDB plugin that makes debugging with GDB suck less"
 
     # PEDA
     colorecho "Installing PEDA GDB plugin"
     git -C /opt/tools/gdb clone --depth 1 https://github.com/longld/peda.git
-    add-to-list "peda,https://github.com/longld/peda,Python Exploit Development Assistance for GDB."
+    version="$(cli_version peda --version)"
+    add-to-list "peda,${version},https://github.com/longld/peda,Python Exploit Development Assistance for GDB."
 
     # GEF
     colorecho "Installing GEF GDB plugin"
     mkdir -p /opt/tools/gdb/gef
     wget "https://raw.githubusercontent.com/hugsy/gef/refs/heads/main/gef.py" -O /opt/tools/gdb/gef/gef.py
-    add-to-list "gef,https://github.com/hugsy/gef,A modern experience for GDB with advanced debugging capabilities for exploit devs & reverse engineers on Linux."
+    version="$(cli_version gef --version)"
+    add-to-list "gef,${version},https://github.com/hugsy/gef,A modern experience for GDB with advanced debugging capabilities for exploit devs & reverse engineers on Linux."
 
     # GDB
     cp -v /root/sources/assets/shells/gdbinit ~/.gdbinit
@@ -79,11 +91,18 @@ function install_angr() {
     cd /opt/tools/angr || exit
     python3 -m venv --system-site-packages ./venv
     source ./venv/bin/activate
-    pip install angr
+    # Python 3.11 resolves angr 9.2.213. pyvex 9.2.213 depends on an unpinned bitstring,
+    # and bitstring 5.0.0 removed ConstBitStream, which that pyvex still references.
+    # angr 9.2.213 wants pycparser~=3.0, which also matches 3.11 and later. The image
+    # installs that newer pycparser globally, and this venv uses system site-packages,
+    # so pip would not put a 3.0.x copy in the venv. That newer lexer breaks import.
+    pip install angr 'bitstring<5' 'pycparser>=3.0,<3.1'
     deactivate
     add-aliases angr
     add-test-command "angr -c 'import angr'"
-    add-to-list "angr,https://github.com/angr/angr,a platform-agnostic binary analysis framework"
+    local version
+    version="$(cli_version angr --version)"
+    add-to-list "angr,${version},https://github.com/angr/angr,a platform-agnostic binary analysis framework"
 }
 
 function install_checksec-py() {
@@ -97,7 +116,9 @@ function install_checksec-py() {
     add-aliases checksec
     add-history checksec
     add-test-command "checksec.py --help"
-    add-to-list "checksec-py,https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
+    local version
+    version="$(cli_version checksec-py --version)"
+    add-to-list "checksec-py,${version},https://github.com/Wenzel/checksec.py,Python wrapper script for checksec.sh from paX."
 }
 
 function install_radare2() {
@@ -107,22 +128,33 @@ function install_radare2() {
     /opt/tools/radare2/sys/install.sh
     add-history radare2
     add-test-command "radare2 -h"
-    add-to-list "radare2,https://github.com/radareorg/radare2,A complete framework for reverse-engineering and analyzing binaries"
+    local version
+    version="$(git_version /opt/tools/radare2)"
+    add-to-list "radare2,${version},https://github.com/radareorg/radare2,A complete framework for reverse-engineering and analyzing binaries"
+    add-suggestions "r2,rizin"
 }
 
 function install_ghidra() {
     # CODE-CHECK-WHITELIST=add-test-command
     colorecho "Installing Ghidra"
     local ghidra_url
-    ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep 'browser_download_url' | grep -o 'https://[^"]*')
-    curl --location -o /tmp/ghidra.zip "$ghidra_url"
+    # Compact GitHub JSON is one line: grep browser_download_url then https:// picks the
+    # API release URL first. GitHub also 403s curl HTTP/2 asset downloads from CI.
+    ghidra_url=$(curl --location --silent "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest" | grep -o 'https://github.com/NationalSecurityAgency/ghidra/releases/download/[^"]*/ghidra_[^"]*_PUBLIC_[^"]*\.zip' | head -n1)
+    if [[ -z "$ghidra_url" ]]; then
+        criticalecho "Ghidra release zip not found"
+    fi
+    wget --user-agent="Mozilla/5.0" "$ghidra_url" -O /tmp/ghidra.zip
     unzip -q /tmp/ghidra.zip -d /opt/tools # -q because too much useless verbose
     mv -v /opt/tools/ghidra_* /opt/tools/ghidra # ghidra always has a version number in the unzipped folder, lets make it consistent
     rm /tmp/ghidra.zip
     add-aliases ghidra
     add-history ghidra
     # TODO add-test-command GUI app
-    add-to-list "ghidra,https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools."
+    local version
+    version="$(cli_version ghidra --version)"
+    add-to-list "ghidra,${version},https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools."
+    add-suggestions "ghidra,cutter"
 }
 
 function install_ida() {
@@ -130,7 +162,13 @@ function install_ida() {
     colorecho "Installing IDA"
     if [[ $(uname -m) = 'x86_64' ]]
     then
-        wget "https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
+        # out7.hex-rays.com:443 connection refused, :80 returns 403.
+        # IDA Free 9+ is behind a named-license portal (my.hex-rays.com).
+        # Wayback has the last public 8.4 installer (same file as before).
+        local temp_fix_limit="2027-03-21"
+        if check_temp_fix_expiry "$temp_fix_limit"; then
+            wget "https://web.archive.org/web/20240921184600if_/https://out7.hex-rays.com/files/idafree84_linux.run" -O /tmp/idafree_linux.run
+        fi
         chmod +x /tmp/idafree_linux.run # This is the setup wizard
         /tmp/idafree_linux.run --mode unattended --prefix /opt/tools/idafree
         rm /tmp/idafree_linux.run
@@ -140,7 +178,9 @@ function install_ida() {
     add-aliases ida
     add-history ida
     # TODO add-test-command GUI app
-    add-to-list "ida,https://www.hex-rays.com/products/ida/,Interactive disassembler for software analysis."
+    local version
+    version="$(cli_version ida --version)"
+    add-to-list "ida,${version},https://www.hex-rays.com/products/ida/,Interactive disassembler for software analysis."
 }
 
 function install_binaryninja() {
@@ -156,7 +196,9 @@ function install_binaryninja() {
     fi
     # TODO add-test-command GUI app
     # TODO replace dashes by commas once `add-to-list` supports commas in tool description
-    add-to-list "binaryninja,https://binary.ninja,An interactive decompiler - disassembler - debugger and binary analysis platform built by reverse engineers for reverse engineers."
+    local version
+    version="$(cli_version binaryninja --version)"
+    add-to-list "binaryninja,${version},https://binary.ninja,An interactive decompiler - disassembler - debugger and binary analysis platform built by reverse engineers for reverse engineers."
 }
 
 
@@ -168,7 +210,9 @@ function install_jd-gui() {
     add-aliases jd-gui
     add-history jd-gui
     # TODO add-test-command GUI app
-    add-to-list "jd-gui,https://github.com/java-decompiler/jd-gui,A standalone Java Decompiler GUI"
+    local version
+    version="$(cli_version jd-gui --version)"
+    add-to-list "jd-gui,${version},https://github.com/java-decompiler/jd-gui,A standalone Java Decompiler GUI"
 }
 
 function install_pwninit() {
@@ -178,7 +222,9 @@ function install_pwninit() {
     cargo binstall -y pwninit
     add-history pwninit
     add-test-command "pwninit --help"
-    add-to-list "pwninit,https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
+    local version
+    version="$(cargo_version pwninit)"
+    add-to-list "pwninit,${version},https://github.com/io12/pwninit,A tool for automating starting binary exploit challenges"
 }
 
 function install_pycdc() {
@@ -193,7 +239,9 @@ function install_pycdc() {
     add-history pycdc
     add-test-command "pycdc --help"
     add-test-command "pycdas --help"
-    add-to-list "pycdc,https://github.com/zrax/pycdc,Python bytecode disassembler and decompiler."
+    local version
+    version="$(git_version /tmp/pycdc)"
+    add-to-list "pycdc,${version},https://github.com/zrax/pycdc,Python bytecode disassembler and decompiler."
 }
 
 function install_vt(){
@@ -203,7 +251,9 @@ function install_vt(){
     asdf reshim golang
     add-history vt
     add-test-command "vt --help"
-    add-to-list "vt,https://github.com/VirusTotal/vt-cli,A command-line interface for VirusTotal."
+    local version
+    version="$(go_version vt)"
+    add-to-list "vt,${version},https://github.com/VirusTotal/vt-cli,A command-line interface for VirusTotal."
 }
 
 # Package dedicated to reverse engineering tools

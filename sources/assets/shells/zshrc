@@ -21,17 +21,17 @@ if [[ -o interactive ]]; then
   TIME_="%{$fg[white]%}[%{$fg[red]%}%D{%b %d, %Y - %T (%Z)}%{$fg[white]%}]%{$reset_color%}"
 
   update_prompt() {
-    DB_PROMPT=""
+    EXH_PROMPT=""
 
-    if [[ ! -z "${USER}" ]]; then
-      DB_PROMPT="%{$fg[white]%}[%{$fg[yellow]%}${USER}%{$fg[white]%}]%{$reset_color%}"
+    if [[ -n "${USER}" ]]; then
+      EXH_PROMPT="%{$fg[white]%}[%{$fg[yellow]%}${USER}%{$fg[white]%}]%{$reset_color%}"
     fi
 
-    if [[ ! -z "${DOMAIN}" && ! -z "${USER}" ]]; then
-      DB_PROMPT="%{$fg[white]%}[%{$fg[yellow]%}${USER}@${DOMAIN}%{$fg[white]%}]%{$reset_color%}"
+    if [[ -n "${DOMAIN}" && -n "${USER}" ]]; then
+      EXH_PROMPT="%{$fg[white]%}[%{$fg[yellow]%}${USER}@${DOMAIN}%{$fg[white]%}]%{$reset_color%}"
     fi
 
-    PROMPT="$LOGGING$DB_PROMPT$TIME_%{$FX[bold]$FG[013]%} $EXEGOL_HOSTNAME %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_char)%{$reset_color%} "
+    PROMPT="$LOGGING$EXH_PROMPT$TIME_%{$FX[bold]$FG[013]%} $EXEGOL_HOSTNAME %{$fg_bold[blue]%}%(!.%1~.%c) $(prompt_char)%{$reset_color%} "
   }
 
   add-zsh-hook precmd update_prompt

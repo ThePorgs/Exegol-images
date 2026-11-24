@@ -1,0 +1,3 @@
+cldap_ping.py --target "$DC_IP" --username administrator
+cldap_ping.py --target "$DC_IP" --file usernames.txt --output valid_users_udp.txt
+cldap_ping.py --target "$DC_IP" --file usernames.txt --delay 0.1 --output valid_users_udp.txt --quiet
