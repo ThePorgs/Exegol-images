@@ -56,6 +56,7 @@ function install_volatility3() {
     local version
     version="$(pipx_version volatility3)"
     add-to-list "volatility3,${version},https://github.com/volatilityfoundation/volatility3,Advanced memory forensics framework"
+    add-suggestions "vol,volatility,volatility2,vol2"
 }
 
 function install_trid() {

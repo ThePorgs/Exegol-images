@@ -100,6 +100,9 @@ function install_xfce() {
     sleep 6
     # Remove log files of temp vncserver run ## TODO check if more
     rm -f ~/.config/tigervnc/*.log ~/.xsession-errors
+    # The temporary server leaves /tmp/.X11-unix in the image. An empty
+    # directory must not be what desktop-start treats as "no X server".
+    rm -rf /tmp/.X11-unix /tmp/.X*-lock
     [[ -d "/root/.config/xfce4/" ]] || echo "Directory /root/.config/xfce4/ does not exist."
 
     # Binaries

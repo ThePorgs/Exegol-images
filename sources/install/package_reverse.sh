@@ -45,6 +45,7 @@ function install_pwntools() {
     local version
     version="$(git_version /opt/tools/pwntools)"
     add-to-list "pwntools,${version},https://github.com/Gallopsled/pwntools,a CTF framework and exploit development library"
+    add-suggestions "ROPgadget,ropper,ropgadget"
 }
 
 function install_gdb_plugins() {
@@ -130,6 +131,7 @@ function install_radare2() {
     local version
     version="$(git_version /opt/tools/radare2)"
     add-to-list "radare2,${version},https://github.com/radareorg/radare2,A complete framework for reverse-engineering and analyzing binaries"
+    add-suggestions "r2,rizin"
 }
 
 function install_ghidra() {
@@ -152,6 +154,7 @@ function install_ghidra() {
     local version
     version="$(cli_version ghidra --version)"
     add-to-list "ghidra,${version},https://github.com/NationalSecurityAgency/ghidra,Software reverse engineering suite of tools."
+    add-suggestions "ghidra,cutter"
 }
 
 function install_ida() {

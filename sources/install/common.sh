@@ -282,6 +282,34 @@ function add-test-command() {
     echo "$*" >> "/.exegol/unit_tests_all_commands.txt"
 }
 
+# add-suggestions "installed,old[,old...]"
+# One quoted CSV record. First field is the command this function installs.
+# Every field after it is a name a user might type. Each old name is stored as
+# its own "old,installed" line. Two installs can list the same old name.
+function add-suggestions() {
+    local record="${1:-}"
+    local installed name
+    local -a fields
+    local -i i
+    if [[ $# -ne 1 || "$record" != *,* ]]; then
+        criticalecho "add-suggestions expects \"installed,old[,old...]\""
+    fi
+    IFS=',' read -r -a fields <<< "$record"
+    installed="${fields[0]:-}"
+    if [[ -z "$installed" || ${#fields[@]} -lt 2 ]]; then
+        criticalecho "add-suggestions expects \"installed,old[,old...]\""
+    fi
+    for name in "${fields[@]}"; do
+        if [[ -z "$name" || "$name" == *"/"* || "$name" == *" "* ]]; then
+            criticalecho "add-suggestions name must be one command token: ${name}"
+        fi
+    done
+    colorecho "Adding suggestions for ${installed}: ${record#*,}"
+    for ((i = 1; i < ${#fields[@]}; i++)); do
+        echo "${fields[i]},${installed}" >> /opt/.exegol_missing_commands
+    done
+}
+
 function add-test-gui-command() {
     colorecho "Adding build pipeline test gui command: $*"
     echo "$*" >> "/.exegol/unit_tests_gui_commands.txt"

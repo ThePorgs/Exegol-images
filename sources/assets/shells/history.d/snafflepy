@@ -1,0 +1,6 @@
+snafflepy --stdout --domain "$DOMAIN" --domaincontroller "$DC_HOST" --user "$USER" --password "$PASSWORD" --html report.html
+snafflepy --stdout --comptarget "$TARGET" --user "$USER" --hashes ":$NT_HASH" --domain "$DOMAIN"
+KRB5CCNAME="$CCACHE_PATH" snafflepy --stdout --comptarget "$TARGET" --kerberos --domain "$DOMAIN" --dc-ip "$DC_IP"
+snafflepy --stdout --dirtarget "\\\\$TARGET\\Share" --user "$USER" --password "$PASSWORD" --domain "$DOMAIN"
+snafflepy --stdout --domain "$DOMAIN" --user "$USER" --password "$PASSWORD" --plus --interest 3 --snaffle ./snaffled --html report.html
+snafflepy --stdout --domain "$DOMAIN" --user "$USER" --password "$PASSWORD" --maxthreads 30 --sharesonly --snaffle ./snaffled --html report.html

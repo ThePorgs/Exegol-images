@@ -411,15 +411,16 @@ function install_moodlescan() {
 
 function install_testssl() {
     colorecho "Installing testssl"
-    # TODO : Check if deps are already installed
-    fapt bsdmainutils
-    git -C /opt/tools/ clone --depth 1 https://github.com/drwetter/testssl.sh.git
+    # drwetter/testssl.sh is a new empty repo created 2026-11-05T11:43:33Z.
+    # The project lives at https://github.com/testssl/testssl.sh.
+    git -C /opt/tools/ clone --depth 1 https://github.com/testssl/testssl.sh.git
     add-aliases testssl
     add-history testssl
     add-test-command "testssl.sh --help"
     local version
     version="$(git_version /opt/tools/testssl.sh)"
-    add-to-list "testssl,${version},https://github.com/drwetter/testssl.sh,a tool for testing SSL/TLS encryption on servers"
+    add-to-list "testssl,${version},https://github.com/testssl/testssl.sh,a tool for testing SSL/TLS encryption on servers"
+    add-suggestions "testssl.sh,sslyze"
 }
 
 function install_cloudfail() {
@@ -496,6 +497,7 @@ function install_corscanner() {
     local version
     version="$(git_version /opt/tools/CORScanner)"
     add-to-list "corscanner,${version},https://github.com/chenjj/CORScanner,a Python script for finding CORS misconfigurations."
+    add-suggestions "cors_scan.py,corsy"
 }
 
 function install_hakrawler() {
@@ -521,6 +523,7 @@ function install_gowitness() {
     local version
     version="$(go_version gowitness)"
     add-to-list "gowitness,${version},https://github.com/sensepost/gowitness,A website screenshot utility written in Golang."
+    add-suggestions "gowitness,aquatone"
 }
 
 function install_linkfinder() {
@@ -586,6 +589,7 @@ function install_jwt_tool() {
     local version
     version="$(git_version /opt/tools/jwt_tool)"
     add-to-list "jwt,${version},https://github.com/ticarpi/jwt_tool,a command-line tool for working with JSON Web Tokens (JWTs)"
+    add-suggestions "jwt_tool.py,jwt-crack,jwtcrack,jwtninja"
 }
 
 function install_wuzz() {
@@ -705,7 +709,14 @@ function install_h2csmuggler() {
 function install_byp4xx() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing byp4xx"
-    go install -v github.com/lobuhi/byp4xx@latest
+    # @latest (d0c81997 / PR #33, 2026-11-20) does not compile: unused net/http,
+    # and wg/verbose redeclared. Pin last known-good tip until upstream fixes it.
+    # Wait for fix: https://github.com/lobuhi/byp4xx/issues/39
+    # When fixed: remove the temp_fix_limit block and restore @latest.
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      go install -v github.com/lobuhi/byp4xx@b337580a3a62
+    fi
     asdf reshim golang
     add-history byp4xx
     add-test-command byp4xx
@@ -729,6 +740,7 @@ function install_feroxbuster() {
     local version
     version="$(cli_version feroxbuster --version)"
     add-to-list "feroxbuster,${version},https://github.com/epi052/feroxbuster,Simple / fast and recursive content discovery tool"
+    add-suggestions "feroxbuster,dirbuster"
 }
 
 function install_tomcatwardeployer() {
@@ -756,6 +768,7 @@ function install_arjun() {
     local version
     version="$(pipx_version arjun)"
     add-to-list "arjun,${version},https://github.com/s0md3v/Arjun,HTTP parameter discovery suite."
+    add-suggestions "arjun,paramspider"
 }
 
 function install_nuclei() {
@@ -769,6 +782,7 @@ function install_nuclei() {
     local version
     version="$(go_version nuclei)"
     add-to-list "nuclei,${version},https://github.com/projectdiscovery/nuclei,A fast and customizable vulnerability scanner that can detect a wide range of issues / including XSS / SQL injection / and misconfigured servers."
+    add-suggestions "nuclei,nikto,w3af,arachni,skipfish"
 }
 
 function install_gau() {
@@ -1126,6 +1140,7 @@ function install_caido() {
     # GUI electron binary is noisy; release JSON already has the version we downloaded
     version="$(normalize_version "$(printf '%s' "$caido_json" | jq -r '.version // empty')")"
     add-to-list "caido,${version},https://docs.caido.io/quickstart/,A lightweight web security auditing toolkit."
+    add-suggestions "caido,zap,zaproxy,zap.sh"
 }
 
 function install_token_exploiter() {
@@ -1160,6 +1175,7 @@ function install_subzy() {
     local version
     version="$(go_version subzy)"
     add-to-list "subzy,${version},https://github.com/PentestPad/subzy,Subdomain takeover tool which checks for various cloud services and identifies if a subdomain is vulnerable."
+    add-suggestions "subzy,subjack"
 }
 
 function install_urldedupe() {
@@ -1202,6 +1218,7 @@ function install_curlie() {
     local version
     version="$(cli_version curlie --version)"
     add-to-list "curlie,${version},https://github.com/rs/curlie,Curlie is a frontend to curl that adds the ease of use of httpie without compromising on features and performance"
+    add-suggestions "curlie,http,httpie"
 }
 
 function install_xxeinjector() {

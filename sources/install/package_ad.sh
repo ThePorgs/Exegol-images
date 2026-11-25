@@ -629,6 +629,7 @@ function install_pypykatz() {
     local version
     version="$(git_version /opt/tools/pypykatz)"
     add-to-list "pypykatz,${version},https://github.com/skelsec/pypykatz,a Python library for mimikatz-like functionality"
+    add-suggestions "pypykatz,mimikatz"
 }
 
 function install_krbjack() {
@@ -661,6 +662,7 @@ function install_enum4linux-ng() {
     local version
     version="$(pipx_version enum4linux-ng)"
     add-to-list "enum4linux-ng,${version},https://github.com/cddmp/enum4linux-ng,Tool for enumerating information from Windows and Samba systems."
+    add-suggestions "enum4linux-ng,enum4linux"
 }
 
 function install_zerologon() {
@@ -1283,7 +1285,21 @@ function install_rusthound() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing RustHound"
     fapt gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64
-    cargo install rusthound
+    # cargo install rusthound (crates.io 1.1.69) resolves/locks time 0.3.30, which
+    # fails on modern rustc: E0282 in time-0.3.30/src/format_description/parse/*.rs.
+    # Clone upstream, bump the transitive time crate, install from path.
+    # Wait for fix: https://github.com/NH-RED-TEAM/RustHound/issues/40
+    # When fixed: remove the temp_fix_limit block and restore `cargo install rusthound`.
+    local temp_fix_limit="2027-03-21"
+    if check_temp_fix_expiry "$temp_fix_limit"; then
+      git -C /tmp clone --depth 1 https://github.com/NH-RED-TEAM/RustHound.git
+      cd /tmp/RustHound || exit
+      cargo update -p time
+      cargo install --path .
+      # Must leave before rm: a deleted cwd breaks later steps (getcwd).
+      cd /tmp || exit
+      rm -rf /tmp/RustHound
+    fi
     add-history rusthound
     add-test-command "rusthound --help"
     local version
@@ -1399,6 +1415,8 @@ function install_relayinformer() {
     local version
     version="$(git_version /opt/tools/RelayInformer)"
     add-to-list "RelayInformer,${version},https://github.com/zyn3rgy/RelayInformer,Determine EPA enforcement levels of popular NTLM relay targets from a Linux host."
+    add-suggestions "relayinformer,LdapRelayScan.py"
+    add-test-command "bash -c 'source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint LdapRelayScan.py' 2>&1 | grep -q relayinformer"
 }
 
 function install_wsuks() {
@@ -1588,6 +1606,7 @@ function install_netexec() {
     local version
     version="$(git_version /opt/tools/NetExec)"
     add-to-list "netexec,${version},https://github.com/Pennyw0rth/NetExec,Enumerate and attack network services. Successor to CrackMapExec."
+    add-suggestions "netexec,crackmapexec,cme"
 }
 
 function install_extractbitlockerkeys() {
@@ -1693,6 +1712,7 @@ function install_bloodyAD() {
     local version
     version="$(pipx_version bloodyAD)"
     add-to-list "bloodyAD,${version},https://github.com/CravateRouge/bloodyAD,bloodyAD is an Active Directory privilege escalation swiss army knife."
+    add-suggestions "bloodyAD,aclpwn"
 }
 
 function install_autobloody() {
@@ -1896,17 +1916,44 @@ function install_pysnaffler() {
     local version
     version="$(git_version /opt/tools/pysnaffler)"
     add-to-list "pysnaffler,${version},https://github.com/skelsec/pysnaffler,Snaffler. But in python."
+    add-suggestions "pysnaffler,snaffler"
+    add-test-command "bash -c 'shopt -s expand_aliases; source /opt/.exegol_aliases && source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint snaffler' 2>&1 | grep -q pysnaffler"
 }
 
 function install_snaffler-ng() {
     # CODE-CHECK-WHITELIST=add-aliases
     colorecho "Installing snaffler-ng"
     pipx install --system-site-packages 'snaffler-ng[socks]'
-    add-history snaffler
-    add-test-command "snaffler --help"
+    # pipx ships the console script as "snaffler". Keep that name free for the suggester.
+    mv -v /root/.local/bin/snaffler /root/.local/bin/snaffler-ng
+    add-history snaffler-ng
+    add-test-command "snaffler-ng --help"
+    add-test-command "bash -c '! command -v snaffler'"
     local version
     version="$(pipx_version 'snaffler-ng[socks]')"
     add-to-list "snaffler-ng,${version},https://github.com/totekuh/snaffler-ng,Python port of Snaffler using Impacket. Finds credentials and sensitive files on SMB shares."
+    add-suggestions "snaffler-ng,snaffler"
+    add-test-command "bash -c 'source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint snaffler' 2>&1 | grep -q snaffler-ng"
+}
+
+function install_snafflepy() {
+    # CODE-CHECK-WHITELIST=add-aliases
+    colorecho "Installing SnafflePy"
+    # Upstream console script is "snaffler". Expose this one as snafflepy so that name stays free for the suggester.
+    git -C /opt/tools/ clone --depth 1 https://github.com/S3cur3Th1sSh1t/SnafflePy
+    cd /opt/tools/SnafflePy || exit
+    python3 -m venv --system-site-packages ./venv
+    source ./venv/bin/activate
+    pip3 install .
+    deactivate
+    ln -sv /opt/tools/SnafflePy/venv/bin/snaffler /opt/tools/bin/snafflepy
+    add-history snafflepy
+    add-test-command "snafflepy --help"
+    local version
+    version="$(git_version /opt/tools/SnafflePy)"
+    add-to-list "snafflepy,${version},https://github.com/S3cur3Th1sSh1t/SnafflePy,Python port of Snaffler with the upstream rules and an HTML report"
+    add-suggestions "snafflepy,snaffler"
+    add-test-command "bash -c 'source /opt/.exegol_command_not_found.sh && exegol_missing_command_hint snaffler' 2>&1 | grep -q snafflepy"
 }
 
 function install_pygoldengmsa() {
@@ -2130,6 +2177,7 @@ function package_ad() {
     install_remotemonologue        # A tool to coerce NTLM authentications via DCOM
     install_godap                  # A complete terminal user interface (TUI) for LDAP
     install_powerview              # Powerview Python implementation
+    install_snafflepy              # Before the other Snaffler ports so `snaffler` suggests it first
     install_pysnaffler             # Snaffler, but in Python
     install_snaffler-ng            # Snaffler rules on SMB from Linux (Impacket)
     install_evil-winrm-py          # Evil-Winrm, but in Python
