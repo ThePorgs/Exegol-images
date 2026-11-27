@@ -275,10 +275,10 @@ function install_bloodhound-ce() {
     local sharphound_name
     local sharphound_name_lowercase
     curl --location --silent "https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest" -o "${curl_tempfile}"
-    sharphound_url=$(jq --raw-output '.assets[].browser_download_url | select(contains("debug") | not) | select(contains("sha256") | not)' "${curl_tempfile}")
-    sharphound_name=$(jq --raw-output '.assets[].name | select(contains("debug") | not) | select(contains("sha256") | not)' "${curl_tempfile}")
+    sharphound_url=$(jq --raw-output '.assets[].browser_download_url | select(contains("debug") | not) | select (endswith("_windows_x86.zip"))' "${curl_tempfile}")
+    sharphound_name=$(jq --raw-output '.assets[].name | select(contains("debug") | not) | select (endswith("_windows_x86.zip"))' "${curl_tempfile}")
     # lowercase fix: https://github.com/ThePorgs/Exegol-images/pull/405
-    sharphound_name_lowercase=$(jq --raw-output '.assets[].name | ascii_downcase | select(contains("debug") | not) | select(contains("sha256") | not)' "${curl_tempfile}")
+    sharphound_name_lowercase=$(jq --raw-output '.assets[].name | ascii_downcase | select(contains("debug") | not) | select (endswith("_windows_x86.zip"))' "${curl_tempfile}")
     wget --directory-prefix "${sharphound_path}" "${sharphound_url}"
     if [[ ! -f "${sharphound_path}/${sharphound_name}" ]]; then
         echo "Error: SharpHound file '${sharphound_name}' was not downloaded successfully to '${sharphound_path}'."
